@@ -17,13 +17,40 @@
 
 Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
-    $cursor = $osiris->projects->find(['start_date' => ['$exists' => false]]);
-    foreach ($cursor as $doc) {
-        $osiris->projects->updateOne(
-            ['_id' => $doc['_id']],
-            ['$set' => ['start_date' => format_date($doc['start'] ?? '', 'Y-m-d'), 'end_date' => format_date($doc['end'] ?? '', 'Y-m-d')]]
-        );
-    }
+    
+    // $cursor = $osiris->projects->find(['start_date' => ['$exists' => false]]);
+    // foreach ($cursor as $doc) {
+    //     $osiris->projects->updateOne(
+    //         ['_id' => $doc['_id']],
+    //         ['$set' => ['start_date' => format_date($doc['start'] ?? '', 'Y-m-d'), 'end_date' => format_date($doc['end'] ?? '', 'Y-m-d')]]
+    //     );
+    // }
+
+    
+    include_once BASEPATH . "/php/Project.php";
+    $Project = new Project;
+    // Drittmittel
+    $osiris->adminProjects->deleteOne(['id' => 'drittmittel']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'drittmittel',
+        'icon' => 'hand-coins',
+        'color' => '#B61F29',
+        'name' => 'Third-party funding',
+        'name_de' => 'Drittmittel',
+        'modules' => $Project->fields['Drittmittel']
+    ]);
+
+    $osiris->adminProjects->deleteOne(['id' => 'stipendium']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'stipendium',
+        'icon' => 'tip-jar',
+        'color' => '#63a308',
+        'name' => 'Scholarship',
+        'name_de' => 'Stipendium',
+        'modules' => $Project->fields['Stipendium']
+    ]);
+    
+
     // $filter = "$and":[{"authors.last":"Eberth"},{"authors.user":{"$ne":"seb14"}}];
     // $filter = ['authors.last' => 'Eberth', 'authors.user' => ['$ne' => 'seb14']];
     // $cursor = $osiris->activities->find($filter);

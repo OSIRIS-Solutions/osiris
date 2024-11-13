@@ -62,6 +62,41 @@ Route::get('/admin/categories', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+
+Route::get('/admin/project', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang("Project Settings", "Projekt-Einstellungen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/projects.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/admin/project/(.*)', function ($type) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $project = $osiris->adminProjects->findOne(['id'=> $type]);
+    if (empty($project)){
+        $project = array();
+    } else {
+        $project = DB::doc2Arr($project);
+    }
+
+    $breadcrumb = [
+        ['name' => lang("Project Settings", "Projekt-Einstellungen"), 'path'=> '/admin/project'],
+        ['name' => $type]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/project.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/categories/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');

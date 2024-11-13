@@ -1008,12 +1008,27 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                 <div class="box p-20">
                     <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
                     <h5 class="m-0">
-                        <?php if ($h['type'] == 'created') {
-                            echo lang('Created by ', 'Erstellt von ');
-                        } else {
-                            echo lang('Edited by ', 'Bearbeitet von ');
+                        <?php
+                        switch ($h['type']) {
+                            case 'created':
+                                echo lang('Created by ', 'Erstellt von ');
+                                break;
+                            case 'edited':
+                                echo lang('Edited by ', 'Bearbeitet von ');
+                                break;
+                            case 'deleted':
+                                echo lang('Deleted by ', 'Gelöscht von ');
+                                break;
+                            case 'imported':
+                                echo lang('Imported by ', 'Importiert von ');
+                                break;
+                            default:
+                                echo $h['type'] . ' by ';
+                                break;
                         }
-                        echo $DB->getNameFromId($h['user']);
+                        if (isset($h['user']) && !empty($h['user']))
+                            echo $DB->getNameFromId($h['user']);
+                        else echo "OSIRIS System";
                         ?>
                     </h5>
 

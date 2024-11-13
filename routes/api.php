@@ -78,7 +78,7 @@ function return_rest($data, $count = 0, $status = 200)
             'msg' => $data
         );
     }
-    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
 }
 
 Route::get('/api/test', function () {
@@ -184,33 +184,49 @@ Route::get('/api/activities', function () {
         echo return_rest($result, count($result));
         die;
     }
-    $result = $osiris->activities->find($filter, ['sort' => ['year' => -1]])->toArray();
+    $result = $osiris->activities->find(
+        $filter, 
+        ['sort' => ['year' => -1],
+        // 'project'=>[
+        //     'id' => strval($doc['_id']),
+        //     'activity' => 
+        //     'print' => $rendered['print'],
+        //     'icon' => $rendered['icon'] ?? '',
+        //     'type' => $rendered['type'] ?? '',
+        //     'subtype' => $rendered['subtype'] ?? '',
+        //     'year' => $doc['year'] ?? 0,
+        //     'authors' => $rendered['authors'] ?? '',
+        //     'title' => $rendered['title'] ?? '',
+        //     'departments' => $rendered['depts'],
+        // ]
+        ]
+        )->toArray();
 
     if (isset($_GET['full'])) {
         echo return_rest($result, count($result));
         die;
     }
-    $table = [];
-    foreach ($result as $doc) {
-        if (isset($doc['rendered'])) {
-            $rendered = $doc['rendered'];
-        } else {
-            $rendered = renderActivities(['_id' => $doc['_id']]);
-        }
+    // $table = [];
+    // foreach ($result as $doc) {
+    //     if (isset($doc['rendered'])) {
+    //         $rendered = $doc['rendered'];
+    //     } else {
+    //         $rendered = renderActivities(['_id' => $doc['_id']]);
+    //     }
 
-        $table[] = [
-            'id' => strval($doc['_id']),
-            'activity' => $rendered['web'],
-            'print' => $rendered['print'],
-            'icon' => $rendered['icon'] ?? '',
-            'type' => $rendered['type'] ?? '',
-            'subtype' => $rendered['subtype'] ?? '',
-            'year' => $doc['year'] ?? 0,
-            'authors' => $rendered['authors'] ?? '',
-            'title' => $rendered['title'] ?? '',
-            'departments' => $rendered['depts'],
-        ];
-    }
+    //     $table[] = [
+    //         'id' => strval($doc['_id']),
+    //         'activity' => $rendered['web'],
+    //         'print' => $rendered['print'],
+    //         'icon' => $rendered['icon'] ?? '',
+    //         'type' => $rendered['type'] ?? '',
+    //         'subtype' => $rendered['subtype'] ?? '',
+    //         'year' => $doc['year'] ?? 0,
+    //         'authors' => $rendered['authors'] ?? '',
+    //         'title' => $rendered['title'] ?? '',
+    //         'departments' => $rendered['depts'],
+    //     ];
+    // }
     echo return_rest($table, count($table));
 });
 

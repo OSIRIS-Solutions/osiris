@@ -570,6 +570,13 @@ $expert = isset($_GET['expert']) ;
                 label: lang('Updated by (Abbreviation)', 'Aktualisiert von (Kürzel)'),
                 type: 'string'
             },
+            {
+                id: 'imported',
+                label: lang('Imported at', 'Importiert am'),
+                type: 'datetime',
+                input: 'date'
+            },
+
             <?php
             foreach ($osiris->adminFields->find() as $field) {
                 $f = [

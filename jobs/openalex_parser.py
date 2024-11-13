@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from pymongo import MongoClient
 import configparser
 import os
@@ -19,6 +20,7 @@ class OpenAlexParser():
             "book-track": "book",
             "journal-article": "article",
             "article": "article",
+            "letter": "others",
             "book-part": "book",
             "other": "others",
             "book": "book",
@@ -222,7 +224,9 @@ class OpenAlexParser():
             'open_access': work['open_access']['is_oa'],
             'oa_status': work['open_access']['oa_status'],
             'correction': False,
-            'epub': False
+            'epub': False,
+            'created': datetime.now().strftime("%Y-%m-%d"),
+            
         }
         if (typ == 'others'):
             element['doc_type'] = work['type'].title()
@@ -259,6 +263,34 @@ class OpenAlexParser():
                 element['duplicate'] = id
                 break
         return element
+    
+    def history(self):
+        # "history": [
+        # {
+        #     "date": "2024-09-05",
+        #     "user": "juk20",
+        #     "type": "created",
+        #     "data": {
+        #         "type": "publication",
+        #         "subtype": "Preprint",
+        #         "title": "Expanding data on cultivation media and microbial traits",
+        #         "authors": "Koblitz, J., Kawashima, S., Hidaka, K., Okabeppu, Y., Onoda, S., Otsuka, R. and Ichikawa, N.",
+        #         "year": "2024",
+        #         "month": "August",
+        #         "day": "30",
+        #         "doi": "DOI: 10.37044/osf.io/qxpn8",
+        #         "magazine": "BioHackrXiv",
+        #         "link": "https://osf.io/preprints/biohackrxiv/qxpn8",
+        #         "oa_status": "open",
+        #         "open_access": " yes"
+        #     }
+        # },
+        return {
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "user": None,
+            "type": "imported",
+            "data": {}
+        }
     
     def get_work(self, id, idtype='doi', ignoreDupl=True):
         work = self.openalex.get_single_work(id, idtype)
@@ -308,6 +340,8 @@ class OpenAlexParser():
             if element.get('duplicate'):
                 print(f'Activity might have a duplicate (DOI {element["doi"]}) and was omitted.')
                 continue
+            element['history'] = [self.history()]
+            element['imported'] = datetime.now().strftime("%Y-%m-%d")
             self.osiris['activities'].insert_one(element)
 
 

@@ -22,6 +22,38 @@ class Project
 {
     public $project = array();
 
+    public const FIELDS = [
+        'abstract',
+        'contact',
+        'coordinator',
+        'funder',
+        'funding_number',
+        'funding_organization',
+        'grant_income_proposed',
+        'grant_income',
+        'grant_subproject_proposed',
+        'grant_subproject',
+        'grant_sum_proposed',
+        'grant_sum',
+        'internal_number',
+        'nagoya',
+        'countries',
+        'name',
+        'personnel',
+        'public',
+        'purpose',
+        'ressources',
+        'role',
+        'scholar',
+        'scholarship',
+        'status',
+        'supervisor',
+        'time',
+        'title',
+        'university',
+        'website',
+    ];
+
     public $fields = [
         'Drittmittel' => [
             'name',
