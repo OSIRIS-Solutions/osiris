@@ -28,7 +28,7 @@
     <?= lang('Project Settings', 'Projekt-Einstellungen') ?>
 </h1>
 
-<form action="<?= ROOTPATH ?>/crud/admin/project" method="post" id="group-form">
+<form action="<?= ROOTPATH ?>/crud/admin/project/update/<?=$project['_id']?>" method="post" id="group-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/project">
     <div class="box">
 
@@ -66,8 +66,32 @@
                     <input type="text" class="form-control" name="values[name_de]" value="<?= $project['name_de'] ?? '' ?>">
                 </div>
             </div>
+        </div>
+
+        <hr>
+        <div class="content">
+
+            <?php if ($Settings->featureEnabled('portal')) { ?>
+                <div class="mb-20">
+                    <input type="hidden" name="values[portfolio]" value="">
+                    <div class="custom-checkbox">
+                        <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($project['portfolio'] ?? false) ? 'checked' : '' ?>>
+                        <label for="portfolio-question">
+                            <?= lang('This type of project should be visible in OSIRIS Portfolio.', 'Diese Art von Projekt sollte in OSIRIS Portfolio sichtbar sein.') ?>
+                        </label>
+                    </div>
+                </div>
+            <?php } ?>
+            <div class="custom-checkbox mb-10 danger">
+                <input type="checkbox" id="disable" value="true" name="values[disabled]" <?= ($project['disabled'] ?? false) ? 'checked' : '' ?>>
+                <label for="disable"><?= lang('Deactivate', 'Deaktivieren') ?></label>
+            </div>
+            <span class="text-muted">
+                <?= lang('Deactivated projects are retained for past activities, but no new ones can be added.', 'Deaktivierte Projektkategorien bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
+            </span>
 
         </div>
+
         <hr>
         <div class="content">
             <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
@@ -123,18 +147,12 @@
                     </div>
                 </div>
             </div>
+            <p>
+                <i class="ph ph-info text-signal"></i>
+                <?=lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.')?>
+            </p>
         </div>
-        <hr>
-        <div class="content">
-            <div class="custom-checkbox mb-10 danger">
-                <input type="checkbox" id="disable" value="true" name="values[disabled]" <?= ($project['disabled'] ?? false) ? 'checked' : '' ?>>
-                <label for="disable"><?= lang('Deactivate', 'Deaktivieren') ?></label>
-            </div>
-            <span class="text-muted">
-                <?= lang('Deactivated types are retained for past activities, but no new ones can be added.', 'Deaktivierte Typen bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
-            </span>
-        </div>
-
+       
     </div>
     <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 </form>

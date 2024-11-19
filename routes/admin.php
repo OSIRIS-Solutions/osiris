@@ -81,15 +81,15 @@ Route::get('/admin/project/(.*)', function ($type) {
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    $project = $osiris->adminProjects->findOne(['id'=> $type]);
-    if (empty($project)){
+    $project = $osiris->adminProjects->findOne(['id' => $type]);
+    if (empty($project)) {
         $project = array();
     } else {
         $project = DB::doc2Arr($project);
     }
 
     $breadcrumb = [
-        ['name' => lang("Project Settings", "Projekt-Einstellungen"), 'path'=> '/admin/project'],
+        ['name' => lang("Project Settings", "Projekt-Einstellungen"), 'path' => '/admin/project'],
         ['name' => $type]
     ];
     include BASEPATH . "/header.php";
@@ -601,7 +601,7 @@ Route::post('/crud/admin/add-user', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
 
-    
+
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
         $msg = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");
         include BASEPATH . "/header.php";
@@ -623,10 +623,88 @@ Route::post('/crud/admin/add-user', function () {
     }
     $person['created'] = date('d.m.Y');
     $person['roles'] = array_keys($person['roles'] ?? []);
-    
+
     $person['is_active'] = true;
 
     $osiris->persons->insertOne($person);
 
     header("Location: " . ROOTPATH . "/admin/users?success=" . $person['username']);
 }, 'login');
+
+
+
+Route::post('/crud/project/create', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (!isset($_POST['values'])) die("no values given");
+
+    $values = validateValues($_POST['values'], $DB);
+
+    $collection = $osiris->adminProjects;
+
+    // check if category ID already exists:
+    $category_exist = $collection->findOne(['id' => $values['id']]);
+    if (!empty($category_exist)) {
+        header("Location: " . ROOTPATH . "/admin/project?msg=ID does already exist.");
+        die();
+    }
+
+    $insertOneResult  = $collection->insertOne($values);
+    // $id = $insertOneResult->getInsertedId();
+    $id = $values['id'];
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $red = str_replace("*", $id, $_POST['redirect']);
+        header("Location: " . $red . "?msg=success");
+        die();
+    }
+
+    echo json_encode([
+        'inserted' => $insertOneResult->getInsertedCount(),
+        'id' => $id,
+    ]);
+});
+
+Route::post('/crud/admin/project/update/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (!isset($_POST['values'])) die("no values given");
+
+
+    $collection = $osiris->adminProjects;
+
+    $values = validateValues($_POST['values'], $DB);
+
+    // check if ID has changed
+    if (isset($_POST['original_id']) && $_POST['original_id'] != $values['id']) {
+        // update all connected activities 
+        $osiris->activities->updateMany(
+            ['type' => $_POST['original_id']],
+            ['$set' => ['type' => $values['id']]]
+        );
+    }
+    // checkbox default
+    $values['disabled'] = $values['disabled'] ?? false;
+
+    // add information on updating process
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = $_SESSION['username'];
+
+    $mongo_id = $DB->to_ObjectID($id);
+    $updateResult = $collection->updateOne(
+        ['_id' => $mongo_id],
+        ['$set' => $values]
+    );
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        die();
+    }
+
+    echo json_encode([
+        'inserted' => $updateResult->getModifiedCount(),
+        'id' => $id,
+    ]);
+});

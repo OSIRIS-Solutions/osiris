@@ -559,9 +559,9 @@ function sel($index, $value)
                     </label>
                     <div>
                         <input type="radio" name="values[nagoya]" id="nagoya-yes" value="yes" <?= ($nagoya == 'yes') ? 'checked' : '' ?>>
-                        <label for="nagoya-yes">Yes</label>
+                        <label for="nagoya-yes"><?=lang('Yes', 'Ja')?></label>
                         <input type="radio" name="values[nagoya]" id="nagoya-no" value="no" <?= ($nagoya == 'no') ? 'checked' : '' ?>>
-                        <label for="nagoya-no">No</label>
+                        <label for="nagoya-no"><?=lang('No', 'Nein')?></label>
                     </div>
 
                     <div id="ressource-nagoya" style="display: <?= ($nagoya == 'yes') ? 'block' : 'none' ?>;">
@@ -667,9 +667,9 @@ function sel($index, $value)
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= ($res['material'] ?? false) ? 'checked' : '' ?>>
-                                <label for="material-yes">Yes</label>
+                                <label for="material-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= ($res['material'] ?? false) ? '' : 'checked' ?>>
-                                <label for="material-no">No</label>
+                                <label for="material-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= ($res['material'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
@@ -689,9 +689,9 @@ function sel($index, $value)
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= ($res['personnel'] ?? false) ? 'checked' : '' ?>>
-                                <label for="personnel-yes">Yes</label>
+                                <label for="personnel-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= ($res['personnel'] ?? false) ? '' : 'checked' ?>>
-                                <label for="personnel-no">No</label>
+                                <label for="personnel-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= ($res['personnel'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
@@ -710,9 +710,9 @@ function sel($index, $value)
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= ($res['room'] ?? false) ? 'checked' : '' ?>>
-                                <label for="room-yes">Yes</label>
+                                <label for="room-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= ($res['room'] ?? false) ? '' : 'checked' ?>>
-                                <label for="room-no">No</label>
+                                <label for="room-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= ($res['room'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
@@ -732,9 +732,9 @@ function sel($index, $value)
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= ($res['other'] ?? false) ? 'checked' : '' ?>>
-                                <label for="other-yes">Yes</label>
+                                <label for="other-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= ($res['other'] ?? false) ? '' : 'checked' ?>>
-                                <label for="other-no">No</label>
+                                <label for="other-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= ($res['other'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>

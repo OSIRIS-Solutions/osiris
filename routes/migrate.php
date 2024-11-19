@@ -30,25 +30,124 @@ Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/Project.php";
     $Project = new Project;
     // Drittmittel
-    $osiris->adminProjects->deleteOne(['id' => 'drittmittel']);
+    $osiris->adminProjects->deleteOne(['id' => 'third-party']);
     $osiris->adminProjects->insertOne([
-        'id' => 'drittmittel',
+        'id' => 'third-party',
         'icon' => 'hand-coins',
         'color' => '#B61F29',
         'name' => 'Third-party funding',
         'name_de' => 'Drittmittel',
-        'modules' => $Project->fields['Drittmittel']
+        'modules' => [
+            'abstract',
+            'public',
+            'internal_number',
+            'website',
+            'grant_sum',
+            'grant_income',
+            'funder',
+            'funding_organization',
+            'funding_number',
+            'grant_sum_proposed',
+            'grant_income_proposed',
+            'personnel',
+            'ressources',
+            'contact',
+            'purpose',
+            'role',
+            'coordinator',
+            'nagoya',
+        ],
+        'topics' => true,
+        'disabled' => false,
+        'portfolio' => true
     ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Drittmittel'],
+        ['$set'=> ['type'=> 'third-party']]
+    );
 
-    $osiris->adminProjects->deleteOne(['id' => 'stipendium']);
+    $osiris->adminProjects->deleteOne(['id' => 'stipendate']);
     $osiris->adminProjects->insertOne([
-        'id' => 'stipendium',
+        'id' => 'stipendate',
         'icon' => 'tip-jar',
         'color' => '#63a308',
         'name' => 'Scholarship',
         'name_de' => 'Stipendium',
-        'modules' => $Project->fields['Stipendium']
+        'modules' => [
+            'abstract',
+            'public',
+            'internal_number',
+            'website',
+            'grant_sum',
+            'grant_income',
+            'supervisor',
+            'scholar',
+            'scholarship',
+            'university',
+        ],
+        'topics' => false,
+        'disabled' => false,
+        'portfolio' => true
     ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Stipendium'],
+        ['$set'=> ['type'=> 'stipendiate']]
+    );
+
+    $osiris->adminProjects->deleteOne(['id' => 'subproject']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'subproject',
+        'icon' => 'hand-coins',
+        'color' => '#B61F29',
+        'name' => 'Subproject',
+        'name_de' => 'Teilprojekt',
+        'modules' => [
+            // 'name',
+            // 'title',
+            // 'time',
+            'abstract',
+            'public',
+            'internal_number',
+            'grant_subproject',
+            'funding_number',
+            'grant_subproject_proposed',
+            'personnel',
+            'ressources',
+            'contact',
+        ],
+        'topics' => false,
+        'disabled' => false,
+        'portfolio' => true
+    ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Teilprojekt'],
+        ['$set'=> ['type'=> 'subproject']]
+    );
+    
+    $osiris->adminProjects->deleteOne(['id' => 'self-funded']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'self-funded',
+        'icon' => 'piggy-bank',
+        'color' => '#ECAF00',
+        'name' => 'Self-funded',
+        'name_de' => 'Eigenfinanziert',
+        'modules' => [
+            'abstract',
+            'public',
+            'internal_number',
+            'website',
+            'personnel',
+            'ressources',
+            'contact',
+        ],
+        'topics' => false,
+        'disabled' => false,
+        'portfolio' => false
+    ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Eigenfinanziert'],
+        ['$set'=> ['type'=> 'self-funded']]
+    );
     
 
     // $filter = "$and":[{"authors.last":"Eberth"},{"authors.user":{"$ne":"seb14"}}];

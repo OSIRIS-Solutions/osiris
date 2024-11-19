@@ -554,6 +554,10 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-bookmarks" aria-hidden="true"></i>
                                 <?= lang('Activities', 'Aktivitäten') ?>
                             </a>
+                            <a href="<?= ROOTPATH ?>/admin/project" class="with-icon <?= $pageactive('admin/project') ?>">
+                                <i class="ph ph-star" aria-hidden="true"></i>
+                                <?= lang('Projects', 'Projekte') ?>
+                            </a>
                             <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
                                 <i class="ph ph-wrench" aria-hidden="true"></i>
                                 <?= lang('Features', 'Funktionen') ?>
