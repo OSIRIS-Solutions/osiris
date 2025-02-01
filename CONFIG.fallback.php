@@ -22,8 +22,6 @@ if (USER_MANAGEMENT == 'LDAP') {
         die("Error in your CONFIG: USER_MANAGEMENT is set to LDAP, but LDAP_PORT is not set.");
     if (!defined('LDAP_USER'))
         die("Error in your CONFIG: USER_MANAGEMENT is set to LDAP, but LDAP_USER is not set.");
-    if (!defined('LDAP_DOMAIN'))
-        die("Error in your CONFIG: USER_MANAGEMENT is set to LDAP, but LDAP_DOMAIN is not set.");
     if (!defined('LDAP_PASSWORD'))
         die("Error in your CONFIG: USER_MANAGEMENT is set to LDAP, but LDAP_PASSWORD is not set.");
     if (!defined('LDAP_BASEDN'))

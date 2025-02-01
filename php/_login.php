@@ -38,7 +38,7 @@ function LDAPconnect($username, $password)
     if (!$bind) {
         $error = ldap_error($connect);
         ldap_close($connect);
-        return "Fehler bei der Verbindung mit dem LDAP-Server: " . $error;
+        return lang("Error while connecting to the LDAP server:", "Fehler bei der Verbindung mit dem LDAP-Server: ") . $error;
     }
 
     return $connect;

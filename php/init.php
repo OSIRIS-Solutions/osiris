@@ -14,7 +14,9 @@ $osiris = $DB->db;
 
 // get installed OSIRIS version
 $version = $osiris->system->findOne(['key' => 'version']);
-if (empty($version) && !str_ends_with($_SERVER['REQUEST_URI'], '/install')) { ?>
+if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
+    // just let the install script run
+} elseif (empty($version)) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
     <div class="align-items-center container d-flex h-full">
@@ -40,10 +42,7 @@ if (empty($version) && !str_ends_with($_SERVER['REQUEST_URI'], '/install')) { ?>
     </div>
 <?php
     die;
-}
-
-define('OSIRIS_DB_VERSION', $version['value']);
-if (OSIRIS_DB_VERSION != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
+} else if ($version['value'] != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
     <div class="align-items-center container d-flex h-full">
@@ -56,7 +55,7 @@ if (OSIRIS_DB_VERSION != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'
                 ) ?>
             </p>
             <p class="text-muted">
-                <small>Installed: <?= OSIRIS_DB_VERSION ?></small> | <small>Latest: <?= OSIRIS_VERSION ?></small>
+                <small>Installed: <?= $version['value'] ?></small> | <small>Latest: <?= OSIRIS_VERSION ?></small>
             </p>
             <a href="<?= ROOTPATH ?>/migrate" class="btn danger">
                 <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
@@ -65,7 +64,13 @@ if (OSIRIS_DB_VERSION != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'
     </div>
 <?php
     die;
-}
+} 
+// if (empty($version)) {
+//     $osiris->system->insertOne(['key' => 'version', 'value' => OSIRIS_VERSION]);
+//     $version = $osiris->system->findOne(['key' => 'version']);
+// }
+define('OSIRIS_DB_VERSION', $version['value'] ?? '0.0.0');
+
 
 
 

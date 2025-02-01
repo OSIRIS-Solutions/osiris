@@ -14,6 +14,24 @@
  * @license     MIT
  */
 
+ 
+
+Route::get('/user/test', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/LDAPInterface.php";
+
+    try {
+        $ldap = new LDAPInterface();
+        $user = $ldap->fetchUsers();
+        dump($user, true);
+    
+        $ldap->close();
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    
+});
+
 Route::get('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
