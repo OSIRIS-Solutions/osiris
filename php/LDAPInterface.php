@@ -45,6 +45,9 @@ class LDAPInterface
 
     public function bind($username, $password)
     {
+        if (!defined('LDAP_DOMAIN')) {
+            throw new Exception("LDAP_DOMAIN is not defined.");
+        }
         if (str_contains(LDAP_DOMAIN, '%s')) {
             $dn = sprintf(LDAP_DOMAIN, $username);
         } else {
