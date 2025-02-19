@@ -336,6 +336,13 @@ class Settings
         return $return;
     }
 
+    function topicLabel(){
+        if (!$this->featureEnabled('topics')) return '';
+        $settings = $this->get('topics_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
+
     function topicChooser($selected = [])
     {
         if (!$this->featureEnabled('topics')) return '';
@@ -346,7 +353,7 @@ class Settings
         $selected = DB::doc2Arr($selected);
 ?>
         <div class="form-group" id="topic-widget">
-            <h5><?= lang('Research Topics', 'Forschungsbereiche') ?></h5>
+            <h5><?= $this->topicLabel() ?></h5>
             <!-- make suire that an empty value is submitted in case no checkbox is ticked -->
             <input type="hidden" name="values[topics]" value="">
             <div>

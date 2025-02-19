@@ -23,14 +23,14 @@
 <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 
 <!-- all variables for this page -->
 <script>
     const CURRENT_USER = '<?= $user ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/profile.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/profile.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/achievements.css?<?= filemtime(BASEPATH . '/css/achievements.css') ?>">
@@ -279,7 +279,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         $head = (in_array($user, $dept['head'] ?? []));
                         if ($selected) { ?>
                             <tr>
-                                <td class="indent-<?=$row['indent']?>">
+                                <td class="indent-<?= $row['indent'] ?>">
                                     <a href="<?= ROOTPATH ?>/groups/view/<?= $row['id'] ?>">
                                         <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                     </a>
@@ -292,7 +292,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             </tr>
                         <?php } else { ?>
                             <tr>
-                                <td class="text-muted indent-<?=$row['indent']?>">
+                                <td class="text-muted indent-<?= $row['indent'] ?>">
                                     <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                 </td>
                             </tr>
@@ -380,6 +380,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
                 <i class="ph ph-edit ph-fw"></i>
                 <!-- <?= lang('Edit user profile', 'Bearbeite Profil') ?> -->
+            </a>
+            <a href="<?= ROOTPATH ?>/claim" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
+                <i class="ph ph-hand ph-fw"></i>
+                <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
         <form action="<?= ROOTPATH ?>/download" method="post">
@@ -929,14 +933,26 @@ if ($currentuser) { ?>
                                             ['interests' => $user]
                                         ]
                                     ]
-                                ]
+                                ],
+                                'dismissed' => ['$ne' => $user]
                             ],
                             ['sort' => ['start' => 1]]
                         )->toArray();
                         ?>
                         <table class="table simple">
                             <?php foreach ($conferences as $n => $c) {
-                                // 
+                                $past = strtotime($c['end']) > time();
+                                if ($past) {
+                                    $days = ceil((strtotime($c['start']) - time()) / 86400);
+                                    $days = $days > 0 ? $days : 0;
+                                    $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+                                }
+                                // user is interested in conference
+                                $interest = in_array($user, DB::doc2Arr($c['interests'] ?? []));
+                                $participate = in_array($user, DB::doc2Arr($c['participants'] ?? []));
+                                $interestTooltip = $interest ? lang('Click to remove interest', 'Klicken um Interesse zu entfernen') : lang('Click to show interest', 'Klicken um Interesse zu zeigen');
+                                $participateTooltip = $participate ? lang('Click to remove participation', 'Klicken um Teilnahme zu entfernen') : lang('Click to show participation', 'Klicken um Teilnahme zu zeigen');
+
                             ?>
                                 <tr>
                                     <td>
@@ -951,10 +967,10 @@ if ($currentuser) { ?>
                                                     </a>
                                                 <?php } ?>
                                             </h6>
-
-                                            <!-- <a class="" onclick="toggleDetails(this)">
-                                                <i class="ph ph-caret-down"></i>
-                                            </a> -->
+                                            <!-- dismiss btn -->
+                                            <a class="text-danger" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'dismissed')" data-toggle="tooltip" data-title="<?= lang('Dismiss', 'Verwerfen') ?>">
+                                                <i class="ph ph-x"></i>
+                                            </a>
                                         </div>
                                         <p class="my-5 text-muted">
                                             <?= $c['title_full'] ?? '' ?>
@@ -971,16 +987,7 @@ if ($currentuser) { ?>
                                         <div class="btn-toolbar font-size-12">
                                             <?php
                                             // check if conference is in the future
-                                            if (strtotime($c['end']) > time()) {
-                                                $days = ceil((strtotime($c['start']) - time()) / 86400);
-                                                $days = $days > 0 ? $days : 0;
-                                                $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
-
-                                                // user is interested in conference
-                                                $interest = in_array($user, DB::doc2Arr($c['interests'] ?? []));
-                                                $participate = in_array($user, DB::doc2Arr($c['participants'] ?? []));
-                                                $interestTooltip = $interest ? lang('Click to remove interest', 'Klicken um Interesse zu entfernen') : lang('Click to show interest', 'Klicken um Interesse zu zeigen');
-                                                $participateTooltip = $participate ? lang('Click to remove participation', 'Klicken um Teilnahme zu entfernen') : lang('Click to show participation', 'Klicken um Teilnahme zu zeigen');
+                                            if ($past) {
                                             ?>
                                                 <div class="btn-group">
                                                     <small class="btn small cursor-default">

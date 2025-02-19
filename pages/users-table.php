@@ -78,7 +78,7 @@
 
 
             <?php if ($Settings->featureEnabled('topics')) { ?>
-                <h6><?= lang('Research Topics', 'Forschungsbereiche') ?>
+                <h6><?= $Settings->topicLabel() ?>
                     <a class="float-right" onclick="filterUsers('#filter-unit .active', null, 5)"><i class="ph ph-x"></i></a>
                 </h6>
 

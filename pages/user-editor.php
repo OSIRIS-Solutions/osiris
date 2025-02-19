@@ -132,14 +132,14 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
             </div>
             <div class="col-sm">
                 <label for="first"><?= lang('First name', 'Vorname') ?></label>
-                <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : '' ?>>
+                <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : 'required' ?> >
                 <?php if (in_array('first', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
             </div>
             <div class="col-sm">
                 <label for="last"><?= lang('Last name', 'Nachname') ?></label>
-                <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : '' ?>>
+                <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : 'required' ?> >
                 <?php if (in_array('last', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>

@@ -22,10 +22,10 @@ $form = $form ?? array();
 $color = $form['color'] ?? '#000000';
 $member = 0;
 
-$id = $form['id'] ?? '';
+$id = $form['id'] ?? null;
 
 $formaction = ROOTPATH;
-if (!empty($form) && isset($form['_id'])) {
+if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/categories/update/" . $form['_id'];
     $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
     $url = ROOTPATH . "/admin/categories/" . $id;

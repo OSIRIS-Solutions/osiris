@@ -4,6 +4,8 @@ include_once BASEPATH . "/php/Document.php";
 include_once BASEPATH . "/php/example-document.php";
 $Document = new Document();
 
+$example = 'default';
+
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     if (!DB::is_ObjectID($_GET['id'])) {
         echo lang('The ID you entered is not valid. Please use a valid activity ID.');
@@ -15,39 +17,72 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             echo lang("Sorry, the activity was not found in the database. We will use the default example.");
         } else {
             $form = $new;
+            $example = strval($new['_id']);
         }
+    }
+} elseif (isset($_GET['type']) && !empty($_GET['type'])) {
+    // get newest 
+    $new = $osiris->activities->findOne(
+        ['type' => $_GET['type']],
+        ['sort' => ['_id' => -1]]
+    );
+    if (empty($new)) {
+        echo lang("Sorry, the activity was not found in the database. We will use the default example.");
+    } else {
+        $form = $new;
+        $example = strval($new['_id']);
     }
 }
 
 $Document->setDocument($form);
-
-$template = '';
-
-if (isset($_GET['type'])){
-    $t = $osiris->adminTypes->findOne(['id'=>$_GET['type']]);
-    $templates = $t['template'];
-    $template = $templates['print'];
-}
-
 ?>
 
 <div class="container">
 
-    <h1>Template Builder</h1>
-    <span class="badge danger"><i class="ph ph-warning"></i> BETA</span>
+    <h1>
+        Template Builder
+        <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
+    </h1>
 
-    <h2>
-        <?= lang('All available templates', 'Alle verfügbaren Templates') ?>
-    </h2>
 
-    <form>
-        <div class="form-group floating-form">
-            <input type="text" name="id" placeholder="id" class="form-control" value="<?= $_GET['id'] ?? '' ?>">
-            <label for="id">
-                <?= lang('Enter activity ID and press enter for displaying a specific example', 'Gib eine Aktivitäts-ID an und drücke Enter, um ein spezifisches Beispiel zu zeigen.') ?>
+    <form class="row row-eq-spacing">
+        <div class="col floating-form">
+            <select name="type" id="type-id" class="form-control">
+                <option value="">Select a type</option>
+                <?php
+                $types = $osiris->adminTypes->find([], ['sort' => ['parent' => 1]]);
+                foreach ($types as $type) {
+                    echo '<option value="' . $type['id'] . '">' . ucfirst($type['parent']) . ' > '. $type['name'] . '</option>';
+                }
+                ?>
+            </select>
+            <label for="type-id">
+                <?= lang('Select a type to load the template', 'Wähle einen Typen aus, um das Template zu laden.') ?>
             </label>
         </div>
+        <div class="col floating-form">
+            <input type="text" name="id" placeholder="id" class="form-control" value="<?= $_GET['id'] ?? '' ?>">
+            <label for="id">
+                <?= lang('Enter activity ID for displaying a specific example', 'Gib eine für ein spezifisches Beispiel eine Aktivitäts-ID an') ?>
+            </label>
+        </div>
+        <div class="col flex-grow-0">
+            <button class="btn primary large" type="submit">Load</button>
+        </div>
     </form>
+
+    <hr>
+
+    <p>
+        <?=lang('In the following, ', 'Im folgenden wird')?>
+        <?php if (DB::is_ObjectID($example)) { ?>
+            <a href="<?=ROOTPATH?>/activities/view/<?=$example?>"><?=lang('a real example', 'ein echtes Beispiel')?></a>
+        <?php } else { ?>
+            <?=lang('a dummy dataset', 'ein Dummy-Datensatz')?>
+        <?php } ?>
+        <?=lang('is used to show the template builder.', 'eingesetzt, um die Auswirkung des Template-Builders zu veranschaulichen.')?>
+        
+    </p>
 
 
     <div class="row row-eq-spacing">
@@ -91,7 +126,7 @@ if (isset($_GET['type'])){
 
                     <button class="btn link small ml-10" type="button" onclick="addElement('br')"><i class="ph ph-key-return"></i></button>
                 </div>
-                <textarea name="template" id="template" class="form-control" placeholder="Start creating your template here"><?=$template?></textarea>
+                <textarea name="template" id="template" class="form-control" placeholder="Start creating your template here"><?= $template ?></textarea>
                 <div class="example-area">
                     <b><?= lang('Example', 'Beispiel') ?>:</b>
                     <div id="example" style="min-height: 3rem;"></div>

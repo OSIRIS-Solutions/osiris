@@ -94,7 +94,7 @@ $UM = strtoupper(USER_MANAGEMENT);
 
         <hr>
 
-        <a class='link d-block' href='<?= ROOTPATH ?>/auth/reset-password'>
+        <a class='link d-block' href='<?= ROOTPATH ?>/auth/forgot-password'>
             <?= lang('Forgot password?', 'Password vergessen?') ?></a>
         <a class='link' href='<?= ROOTPATH ?>/auth/new-user'>
             <?= lang('No account? Register now', 'Noch keinen Account? Jetzt registrieren') ?>

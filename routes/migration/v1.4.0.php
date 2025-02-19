@@ -33,6 +33,20 @@ foreach ($cursor as $doc) {
 }
 echo "<p>Migrated project date time for better search.</p>";
 
+$cursor = $osiris->activities->find(['start_date' => ['$exists' => false]]);
+foreach ($cursor as $doc) {
+    $start = valueFromDateArray($doc['start'] ?? $doc);
+    if (array_key_exists('end', DB::doc2Arr($doc)) && is_null($doc['end'])) {
+        $end = null;
+    } else {
+        $end = valueFromDateArray($doc['end'] ?? $doc['start'] ?? $doc);
+    }
+    $osiris->activities->updateOne(
+        ['_id' => $doc['_id']],
+        ['$set' => ['start_date' => $start, 'end_date' => $end]]
+    );
+}
+echo "<p>Migrated activity date time for better search.</p>";
 
 // migrate person socials
 $cursor = $osiris->persons->find(['socials' => ['$exists' => false]]);

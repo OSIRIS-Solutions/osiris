@@ -241,7 +241,7 @@ if (!$Settings->hasPermission('projects.view')) {
             </div> -->
 
             <?php if ($Settings->featureEnabled('topics')) { ?>
-                <h6><?= lang('Research Topics', 'Forschungsbereiche') ?></h6>
+                <h6><?= $Settings->topicLabel() ?></h6>
 
                 <div class="filter">
                     <table id="filter-type" class="table small simple">

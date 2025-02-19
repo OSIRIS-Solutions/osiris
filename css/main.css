@@ -4898,10 +4898,17 @@ input[type=number] {
   padding-left: 1.8rem;
 }
 
-select.form-control[multiple] option:checked {
-  background-color: var(--primary-color-30);
+select.form-control[multiple] option {
   padding: 0.5rem 0.8rem;
-  margin: -0.25rem -0.8rem;
+  margin: 0 -0.8rem;
+}
+
+select.form-control[multiple] option:checked, select.form-control[multiple] option:focus {
+  background-color: var(--primary-color-30);
+}
+
+select.form-control[multiple] option:hover {
+  background-color: var(--primary-color-20);
 }
 
 /*
@@ -12490,7 +12497,10 @@ a.concept:hover {
   align-items: center;
   margin-right: 0.5rem;
 }
-
+.topic-pill:hover {
+  color: white;
+  opacity: 0.8;
+}
 .topic-pill::before {
   /* white circle */
   content: "";
@@ -12586,12 +12596,6 @@ a.concept:hover {
 .unit-table td.indent-4::before {
   left: 8rem;
   content: "\e046";
-}
-
-select option:checked {
-  background-color: var(--primary-color-30);
-  padding: 0.5rem 1rem;
-  margin: -0.25rem -1rem;
 }
 
 /*!

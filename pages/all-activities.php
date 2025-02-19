@@ -87,7 +87,7 @@ $user = $user ?? $_SESSION['username'];
                     <th><?= lang('Title', 'Titel') ?></th>
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('Year', 'Jahr') ?></th>
-                    <th><?= lang('Research Topics', 'Forschungsbereiche') ?></th>
+                    <th><?= $Settings->topicLabel() ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -217,7 +217,7 @@ $user = $user ?? $_SESSION['username'];
             </div>
 
             <?php if ($Settings->featureEnabled('topics')) { ?>
-                <h6><?= lang('Research Topics', 'Forschungsbereiche') ?></h6>
+                <h6><?= $Settings->topicLabel() ?></h6>
 
                 <div class="filter">
                     <table id="filter-type" class="table small simple">

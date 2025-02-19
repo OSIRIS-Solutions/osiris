@@ -95,6 +95,10 @@ function conferenceToggle(el, id, type = 'interests') {
         data: { type: type, conference: id },
         success: function (data) {
             if (data) {
+                if (type == 'dismissed') {
+                    $(el).closest('tr').remove()
+                    return
+                }
                 $('#conference-' + type).toggleClass('active')
                 $(el).toggleClass('active')
                 $(el).find('b').html(data)

@@ -828,3 +828,63 @@ Route::post('/crud/queries', function () {
     ]);
     return $updateResult->getInsertedId();
 });
+
+
+
+Route::get('/claim/?(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (empty($user)) $user = $_SESSION['username'];
+
+    $scientist = $DB->getPerson($user);
+    $name = $scientist['displayname'];
+
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
+        ['name' => lang("Claim", "Beanspruchen")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/claim.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::post('/claim/?(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (empty($user)) $user = $_SESSION['username'];
+
+    if (empty($_POST['activity'])) {
+        header("Location: " . ROOTPATH . "/claim/$user?msg=no+activity+selected");
+        die;
+    }
+
+    if (empty($_POST['last']) || empty($_POST['first'])) {
+        header("Location: " . ROOTPATH . "/claim/$user?msg=no+valid+submission");
+        die;
+    }
+
+    $last = explode(";", $_POST['last']);
+    $first = explode(";", $_POST['first']);
+    $activities = $_POST['activity'];
+
+    $N = 0;
+    foreach ($activities as $key) {
+        $mongo_id = DB::to_ObjectID($key);
+        // update specific author (by name) in activity
+        $updateResult = $osiris->activities->updateOne(
+            ['_id' => $mongo_id, 'authors' => ['$elemMatch' => ['user' => null, 'last' => ['$in' => $last], 'first' => ['$in' => $first]]]],
+            ['$set' => [
+                'authors.$.user' => $user
+            ]]
+        );
+        $N += $updateResult->getModifiedCount();
+    }
+
+    $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
+    header("Location: " . ROOTPATH . "/profile/$user");
+
+
+}, 'login');

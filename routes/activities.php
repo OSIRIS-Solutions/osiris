@@ -441,10 +441,15 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     if (isset($values['authors'])) {
         // check if authors have been changed
         $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['authors' => 1]]);
-        $old = $old['authors'] ?? [];
+        $old = DB::doc2Arr($old['authors'] ?? []);
+        // filter old authors without user
+        $old = array_filter($old, function ($a) {
+            return !empty($a['user']);
+        });
         // avoid updating user if last and first name are the same
         foreach ($old as $o) {
             foreach ($values['authors'] as $i => $a) {
+                // if (empty($o['user'])) continue;
                 if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
                     $values['authors'][$i]['user'] = $o['user'];
                     break;

@@ -56,7 +56,7 @@ Route::get('/dashboard', function () {
     include BASEPATH . "/pages/dashboard.php";
 
     if ($Settings->hasPermission('report.dashboard')) {
-        echo '<a href="' . ROOTPATH . '/controlling" class="btn danger lg float-right">Controlling</a>';
+        echo '<a href="' . ROOTPATH . '/controlling" class="btn danger lg float-right">'.lang("Lock activities", "Aktivitäten sperren").'</a>';
 
         echo '<h1 class="m-0">Controlling-Dashboard</h1>';
         include BASEPATH . "/pages/dashboard-controlling.php";

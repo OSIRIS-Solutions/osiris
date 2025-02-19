@@ -71,13 +71,13 @@
 
 
 <script>
-    var counter = <?= $i ?? 0 ?>;
+    var projectCounter = <?= $i ?? 0 ?>;
     const tr = $('#project-list tr').first()
 
     function addProjectRow() {
-        counter++;
+        projectCounter++;
         const row = tr.clone()
-        row.find('select').first().attr('name', 'projects[' + counter + ']');
+        row.find('select').first().attr('name', 'projects[' + projectCounter + ']');
         $('#project-list').append(row)
     }
 </script>
