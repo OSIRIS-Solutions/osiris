@@ -277,10 +277,6 @@ $affiliation = $Settings->get('affiliation_details');
             <p class="text-primary mt-0">
                 <?= lang('You are using the LDAP interface for your user management.', 'Ihr nutzt die LDAP-Schnittstelle fürs Nutzer-Management.') ?>
             </p>
-            <?php
-            break;
-            // TODO: continue
-            ?>
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
 
 
