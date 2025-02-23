@@ -38,7 +38,7 @@ function return_permission_denied()
         'count' => 0,
         'error' => 'PermissionDenied',
         'msg' => 'You need a valid API key for this request.'
-    ), JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    ), JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
 }
 
 function return_rest($data, $count = 0, $status = 200)
