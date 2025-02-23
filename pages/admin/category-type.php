@@ -196,7 +196,11 @@ if (!empty($form) && isset($form['_id'])) {
         <hr>
 
         <div class="content">
-            <label for="module" class="font-weight-bold">Modules:</label>
+            <label for="module" class="font-weight-bold"><?=lang('Data fields', 'Datenfelder')?>:</label>
+            
+            <a href="<?=ROOTPATH?>/admin/module-helper?type=<?=$st?>" target="_blank" rel="noopener noreferrer" class="ml-10">
+                <?=lang('Field overview', 'Datenfelder-Übersicht')?> <i class="ph ph-arrow-square-out ml-5"></i>
+            </a>
             <div class="author-widget">
                 <div class="author-list p-10">
                     <?php
@@ -258,7 +262,11 @@ if (!empty($form) && isset($form['_id'])) {
         <hr>
 
         <div class="content">
-            <label for="format" class="font-weight-bold">Templates:</label>
+            <label for="format" class="font-weight-bold">Templates:</label> 
+
+            <a href="<?=ROOTPATH?>/admin/templates?type=<?=$st?>" target="_blank" rel="noopener noreferrer" class="ml-10">
+                <?=lang('Template builder', 'Template-Baukasten')?> <i class="ph ph-arrow-square-out ml-5"></i>
+            </a>
 
             <div class="input-group mb-10">
                 <div class="input-group-prepend">

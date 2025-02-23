@@ -33,7 +33,6 @@
 </h1>
 
 <?php
-
 $reports = $osiris->adminReports->find();
 
 if (empty($reports)) {

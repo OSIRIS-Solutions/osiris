@@ -45,16 +45,12 @@ for ($i = 0; $i < 4; $i++) {
 }
 asort($quarters);
 
-$stats = array(
-    "publication" => [],
-    "poster" => [],
-    "lecture" => [],
-    "review" => [],
-    "teaching" => [],
-    "students" => [],
-    "software" => [],
-    "misc" => [],
-);
+$stats = [];
+$activities = [];
+foreach ($osiris->adminCategories->find() as $cat) {
+    $activities[$cat['id']] = $cat['color'];
+    $stats[$cat['id']] = [];
+}
 
 
 $impacts = [];

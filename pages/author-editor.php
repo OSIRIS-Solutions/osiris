@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page to see all activities
  * 
@@ -29,9 +30,9 @@
     <h1>
         <i class="ph ph-users"></i>
         <?php if ($role == 'authors') { ?>
-        <?= lang('Edit authors', 'Bearbeite die Autoren') ?>
+            <?= lang('Edit authors', 'Bearbeite die Autoren') ?>
         <?php } else { ?>
-        <?= lang('Edit editors', 'Bearbeite die Editoren') ?>
+            <?= lang('Edit editors', 'Bearbeite die Editoren') ?>
         <?php } ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/activities/update-authors/<?= $id ?>" method="post">
@@ -40,10 +41,11 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Last name <span class="text-danger">*</span></th>
-                    <th>First name</th>
+                    <th><?= lang('Last name', 'Nachname') ?> <span class="text-danger">*</span></th>
+                    <th><?= lang('First name', 'Vorname') ?></th>
                     <th>Position</th>
                     <th><?= $Settings->get('affiliation') ?></th>
+                    <th><?= lang('Units', 'Einheiten') ?> *</th>
                     <th>Username</th>
                     <th></th>
                 </tr>
@@ -62,12 +64,12 @@
                         </td>
                         <td>
                             <?php if (isset($author['position'])) { ?>
-                            <select name="authors[<?= $i ?>][position]" class="form-control">
-                                <option value="first" <?= ($author['position'] == 'first' ? 'selected' : '') ?>>first</option>
-                                <option value="middle" <?= ($author['position'] == 'middle' ? 'selected' : '') ?>>middle</option>
-                                <option value="corresponding" <?= ($author['position'] == 'corresponding' ? 'selected' : '') ?>>corresponding</option>
-                                <option value="last" <?= ($author['position'] == 'last' ? 'selected' : '') ?>>last</option>
-                            </select>
+                                <select name="authors[<?= $i ?>][position]" class="form-control">
+                                    <option value="first" <?= ($author['position'] == 'first' ? 'selected' : '') ?>>first</option>
+                                    <option value="middle" <?= ($author['position'] == 'middle' ? 'selected' : '') ?>>middle</option>
+                                    <option value="corresponding" <?= ($author['position'] == 'corresponding' ? 'selected' : '') ?>>corresponding</option>
+                                    <option value="last" <?= ($author['position'] == 'last' ? 'selected' : '') ?>>last</option>
+                                </select>
                             <?php } else { ?>
                                 NA
                             <?php } ?>
@@ -79,8 +81,34 @@
                             </div>
                         </td>
                         <td>
-                        <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
-                        <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
+                            <?php
+                            if ($author['aoi'] ?? 0) {
+                                $selected = DB::doc2Arr($author['units'] ?? []);
+                                if (!is_array($selected)) $selected = [];
+                                $person_units = $osiris->persons->findOne(['username' => $author['user']], ['units' => 1]);
+                                $person_units = $person_units['units'] ?? [];
+                                if (empty($person_units)) {
+                                    echo '<small class="text-danger">No units found</small>';
+                                } else {
+                                    $person_units = array_column(DB::doc2Arr($person_units), 'unit');
+                            ?>
+                                    <select class="form-control" name="authors[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
+                                        <?php foreach ($person_units as $unit) { ?>
+                                            <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
+                                        <?php } ?>
+                                    </select>
+                                <?php
+                                }
+                            } else { ?>
+                                <small>
+                                    <?= lang('Not applicable', 'Nicht zutreffend') ?>
+                                </small>
+                            <?php } ?>
+
+                        </td>
+                        <td>
+                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
+                            <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
                         </td>
                         <td>
                             <button class="btn text-danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
@@ -91,7 +119,7 @@
             <tfoot>
                 <tr id="last-row">
                     <td></td>
-                    <td colspan="6">
+                    <td colspan="7">
                         <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= lang('Add author', 'Autor hinzufügen') ?></button>
                     </td>
                 </tr>
@@ -102,18 +130,23 @@
             <i class="ph ph-check"></i>
             <?= lang('Submit', 'Bestätigen') ?>
         </button>
-    </form>
 
-</div>
-
-
+        
 <datalist id="user-list">
     <?php
-    $all_users = $osiris->persons->find(['username' => ['$ne'=>null]]);
+    $all_users = $osiris->persons->find(['username' => ['$ne' => null]]);
     foreach ($all_users as $s) { ?>
         <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
     <?php } ?>
 </datalist>
+    </form>
+
+    <p>
+        * <?= lang('In case you have edited the username or affiliation, please save once before editing this.', 'Falls du den Nutzernamen oder die Affiliation geändert hast, bitte zuerst einmal speichern, damit du die Einheiten bearbeiten kannst.') ?>
+    </p>
+
+</div>
+
 
 <script>
     var counter = <?= $i ?>;

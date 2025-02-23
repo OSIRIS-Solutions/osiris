@@ -28,7 +28,80 @@ class Document extends Settings
     private $DB = null;
     private $id = null;
 
-    private $custom_fields = [];
+    public $custom_fields = [];
+
+    public $templates = [
+        "affiliation" => ["affiliation"],
+        "authors" => ["authors"],
+        "supervisor" => ["authors"],
+        "scientist" => ["authors"],
+        "authors-last-f" => ["authors"],
+        "authors-last-first" => ["authors"],
+        "authors-f-last" => ["authors"],
+        "authors-f.-last" => ["authors"],
+        "authors-first-last" => ["authors"],
+        "book-series" => ["series"],
+        "book-title" => ["book"],
+        "category" => ["category"],
+        "city" => ["city"],
+        "conference" => ["conference"],
+        "correction" => ["correction"],
+        "start" => ["year", "month", "day"],
+        "end" => ["year", "month", "day"],
+        "date" => ["year", "month", "day"],
+        "date-range" => ["start", "end"],
+        "date-range-ongoing" => ["start", "end"],
+        "year" => ["year", "month", "day"],
+        "month" => ["year", "month", "day"],
+        "details" => ["details"],
+        "doctype" => ["doc_type"],
+        "doi" => ["doi"],
+        "edition" => ["edition"],
+        "editor" => ["editors"],
+        "editorial" => ["editor_type"],
+        "file-icons" => ["file-icons"],
+        "guest" => ["category"],
+        "isbn" => ["isbn"],
+        "issn" => ["issn"],
+        "issue" => ["issue"],
+        "iteration" => ["iteration"],
+        "journal" => ["journal"],
+        "journal-abbr" => ["journal"],
+        "lecture-invited" => ["invited_lecture"],
+        "lecture-type" => ["lecture_type"],
+        "link" => ["link"],
+        "software-link" => ["link"],
+        "location" => ["location"],
+        "magazine" => ["magazine"],
+        "online-ahead-of-print" => ["epub"],
+        "openaccess" => ["open_access"],
+        "openaccess-status" => ["oa_status"],
+        "pages" => ["pages"],
+        "person" => ["name", "affiliation", "academic_title"],
+        "publisher" => ["publisher"],
+        "pubmed" => ["pubmed"],
+        "pubtype" => ["pubtype"],
+        "review-description" => ["title"],
+        "review-type" => ["title"],
+        "semester-select" => [],
+        "subtype" => ["subtype"],
+        "software-type" => ["software_type"],
+        "software-venue" => ["software_venue"],
+        "status" => ["status"],
+        "student-category" => ["category"],
+        "thesis" => ["category"],
+        "teaching-category" => ["category"],
+        "teaching-course" => ["title", "module", "module_id"],
+        "teaching-course-short" => ["title", "module", "module_id"],
+        "title" => ["title"],
+        "university" => ["publisher"],
+        "version" => ["version"],
+        "volume" => ["volume"],
+        "country" => ["country"],
+        "nationality" => ["nationality"],
+        "gender" => ["gender"],
+        "volume-issue-pages" => ["volume"],
+    ];
 
 
     function __construct($highlight = true, $usecase = 'web')
@@ -47,10 +120,6 @@ class Document extends Settings
         if (!is_array($doc)) {
             $doc = DB::doc2Arr($doc);
         }
-
-
-
-        // dump(($doc));
         $this->doc = $doc;
         $this->getActivityType();
         $this->initSchema();
@@ -216,10 +285,6 @@ class Document extends Settings
             case 'lecture':
                 $this->schemaType = "PresentationDigitalDocument";
                 return;
-                // case 'project':
-                //     $this->schemaType = "ResearchProject";
-                //     return;
-
             default:
                 break;
         }
@@ -298,81 +363,6 @@ class Document extends Settings
         $this->typeArr = $this->getActivity($type);
         $this->subtype = $this->doc['subtype'];
         $this->subtypeArr = $this->getActivity($this->type, $this->subtype);
-        // return;
-
-        // if (!isset($this->get('activities')[$type])) return;
-        // if (!isset($this->doc['subtype'])) {
-
-        //     $subtype = $type;
-        //     switch ($type) {
-        //         case 'publication':
-        //             $subtype = strtolower(trim($this->doc['pubtype'] ?? $type));
-        //             switch ($subtype) {
-        //                 case 'journal article':
-        //                 case 'journal-article':
-        //                     $subtype = "article";
-        //                     break 2;
-        //                 case 'magazine article':
-        //                     $subtype = "magazine";
-        //                     break 2;
-        //                 case 'book-chapter':
-        //                 case 'book chapter':
-        //                 case 'book-editor':
-        //                 case 'publication':
-        //                     $subtype = "chapter";
-        //                     break 2;
-        //                 default:
-        //                     break 2;
-        //             }
-        //         case 'review':
-        //             switch (strtolower($this->doc['role'] ?? '')) {
-        //                 case 'editorial':
-        //                 case 'editor':
-        //                     $subtype = "editorial";
-        //                     break 2;
-        //                 case 'grant-rev':
-        //                     $subtype = "grant-rev";
-        //                     break 2;
-        //                 case 'thesis-rev':
-        //                     $subtype = "thesis-rev";
-        //                     break 2;
-        //                 default:
-        //                     $subtype = "review";
-        //                     break 2;
-        //             }
-
-        //         case 'misc':
-        //             $subtype = $this->doc['iteration'] ?? '';
-        //             if ($subtype == 'once' || $subtype == 'annual') {
-        //                 $subtype = "misc-" . $subtype;
-        //             }
-        //             break;
-        //         case 'students':
-        //             $cat = strtolower(trim($this->doc['category'] ?? 'thesis'));
-        //             if (str_contains($cat, "thesis") || $cat == 'doktorand:in' || $cat == 'students') {
-        //                 $subtype = "students";
-        //                 break;
-        //             }
-        //             $subtype = "guests";
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // } else {
-        //     $subtype = $this->doc['subtype'];
-        // }
-
-        // $this->subtype = $subtype;
-        // if (isset($this->typeArr['subtypes'][$subtype])) {
-        //     $this->subtypeArr = $this->typeArr['subtypes'][$subtype];
-        //     return;
-        // }
-        // foreach ($this->typeArr['subtypes'] as $st) {
-        //     if ($st['id'] == $subtype) {
-        //         $this->subtypeArr = $st;
-        //         return;
-        //     }
-        // }
     }
 
     function activity_badge()
@@ -392,7 +382,29 @@ class Document extends Settings
         return $str . " $sep " . end($array);
     }
 
-    public static function abbreviateAuthor($last, $first, $reverse = true, $space = '&nbsp;')
+    public static function abbreviateAuthorFormat($last, $first, $format = 'last, f.')
+    {
+        // 'last, f'
+        // 'f last'
+        // 'last, first'
+        // 'first last'
+        switch ($format) {
+            case 'last, f':
+                return Document::abbreviateAuthor($last, $first, true, '&nbsp;', '');
+            case 'last, first':
+                return $last . ',&nbsp;' . $first;
+            case 'first last':
+                return $first . '&nbsp;' . $last;
+            case 'f. last':
+                return Document::abbreviateAuthor($last, $first, false, '&nbsp;', '.');
+            case 'f last':
+                return Document::abbreviateAuthor($last, $first, false, '&nbsp;', '');
+            default:
+                return Document::abbreviateAuthor($last, $first, true, '&nbsp;', '.');
+        }
+    }
+
+    public static function abbreviateAuthor($last, $first, $reverse = true, $space = '&nbsp;', $abbr_symbol = '.')
     {
         $fn = "";
         if ($first) :
@@ -401,7 +413,7 @@ class Document extends Settings
                 if ($name == '-')
                     $fn .= '-';
                 else
-                    $fn .= "" . mb_substr($name, 0, 1) . ".";
+                    $fn .= "" . mb_substr($name, 0, 1) . $abbr_symbol;
             }
         endif;
         if (empty(trim($fn))) return $last;
@@ -409,7 +421,7 @@ class Document extends Settings
         return $fn . $space . $last;
     }
 
-    function formatAuthors($raw_authors)
+    function formatAuthors($raw_authors, $format = 'last, f.')
     {
         $this->appendix = '';
         if (empty($raw_authors)) return '';
@@ -431,7 +443,7 @@ class Document extends Settings
         foreach ($raw_authors as $n => $a) {
             if (!$this->full) {
                 if ($n > 9) break;
-                $author = Document::abbreviateAuthor($a['last'], $a['first']);
+                $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
                 if ($this->highlight === true) {
                     //if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
                 } else if ($this->highlight && $a['user'] == $this->highlight) {
@@ -447,7 +459,7 @@ class Document extends Settings
                 }
                 $authors[] = $author;
             } else {
-                $author = Document::abbreviateAuthor($a['last'], $a['first']);
+                $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
                 if ($this->usecase == 'portal') {
                     if (isset($a['user']) && !empty($a['user'])) {
                         $person = $this->DB->getPerson($a['user']);
@@ -499,14 +511,19 @@ class Document extends Settings
 
     public function getAffiliationTypes()
     {
-        $aoi_authors = array_filter(DB::doc2Arr($this->doc['authors']), function ($a) {
+        $authors = DB::doc2Arr($this->doc['authors']);
+        $aoi_authors = array_filter($authors, function ($a) {
             return $a['aoi'] ?? false;
         });
         $pos = array_unique(array_column($aoi_authors, 'position'));
         $aff = [];
-        if (count($this->doc['authors']) == 1 && count($aoi_authors) == 1)
+        if (empty($authors) || empty($pos)) {
+            $aff[] = 'unspecified';
+            return $aff;
+        }
+        if (count($authors) == 1 && count($aoi_authors) == 1)
             $aff[] = 'single';
-        if (count($this->doc['authors']) == count($aoi_authors))
+        if (count($authors) == count($aoi_authors))
             $aff[] = 'all';
         if (in_array('first', $pos))
             $aff[] = 'first';
@@ -520,8 +537,6 @@ class Document extends Settings
             $aff[] = 'middle';
         if (empty($aoi_authors))
             $aff[] = 'none';
-        elseif (empty($pos))
-            $aff[] = 'unspecified';
         if (in_array('corresponding', $pos))
             $aff[] = 'corresponding';
         if (!in_array('first', $pos))
@@ -537,8 +552,13 @@ class Document extends Settings
         return $aff;
     }
 
-    public function getCooperationType($affPos=null, $depts = [])
+    public function getCooperationType($affPos = null, $depts = [])
     {
+        global $Departments;
+        if (!empty($depts)) {
+            $departments = array_keys($Departments);
+            $depts = array_intersect(DB::doc2Arr($depts), $departments);
+        }
         if (is_null($affPos)) $affPos = $this->getAffiliationTypes();
         if (in_array('none', $affPos)) return 'none';
         if (in_array('single', $affPos)) return 'individual';
@@ -732,15 +752,26 @@ class Document extends Settings
         return $this->doc[$field] ?? $default;
     }
 
-    public function get_field($module)
+    public function get_field($module, $default = '')
     {
-        $default = '';
         if ($this->usecase == 'list') $default = '-';
         switch ($module) {
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
             case "authors": // ["authors"],
+            case "supervisor": // ["authors"],
+            case "scientist": // ["authors"],
                 return $this->formatAuthors($this->getVal('authors', []));
+            case "authors-last-f":
+                return $this->formatAuthors($this->getVal('authors', []), $format = 'last, f');
+            case "authors-f-last":
+                return $this->formatAuthors($this->getVal('authors', []), $format = 'f last');
+            case "authors-f.-last":
+                return $this->formatAuthors($this->getVal('authors', []), $format = 'f. last');
+            case "authors-last-first":
+                return $this->formatAuthors($this->getVal('authors', []), $format = 'last, first');
+            case "authors-first-last":
+                return $this->formatAuthors($this->getVal('authors', []), $format = 'first last');
             case "book-series": // ["series"],
                 return $this->getVal('series');
             case "book-title": // ["book"],
@@ -776,8 +807,9 @@ class Document extends Settings
                         $date = lang("since ", "seit ");
                         $date .= Document::format_month($this->doc['start']['month']) . ' ' . $this->doc['start']['year'];
                     }
+                    return $date;
                 }
-                return $date;
+                return $this->fromToDate($this->doc, null);
             case "year": // ["year", "month", "day"],
                 return $this->getVal('year');
             case "month": // ["year", "month", "day"],
@@ -862,23 +894,18 @@ class Document extends Settings
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
             case "openaccess": // ["open_access"],
-            case "openaccess-status": // ["open_access"],
+                case "open_access": // ["open_access"],
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $oa = '<i class="icon-open-access text-success" title="Open Access (' . $status . ')"></i>';
                 } else {
                     $oa = '<i class="icon-closed-access text-danger" title="Closed Access"></i>';
                 }
-                if ($this->usecase == 'list') return $oa . " " . $status;
+                if ($this->usecase == 'list') return $oa . " (" . $status . ")";
                 return $oa;
 
-            case "open_access": // ["open_access"],
-                if (!empty($this->getVal('open_access', false))) {
-                    return '<i class="icon-open-access text-success" title="Open Access"></i> yes';
-                } else {
-                    return '<i class="icon-closed-access text-danger" title="Closed Access"></i> no';
-                }
-            case "oa_status": // ["open_access"],
+            case "oa_status": // ["oa_status"],
+            case "openaccess-status": // ["oa_status"],
                 return $this->getVal('oa_status', 'Unknown Status');
 
             case "pages": // ["pages"],
@@ -897,8 +924,6 @@ class Document extends Settings
                 return $this->getVal('title');
             case "review-type": // ["title"],
                 return $this->getVal('review-type');
-            case "scientist": // ["authors"],
-                return $this->formatAuthors($this->getVal('authors', []));
             case "semester-select": // [],
                 return '';
             case "subtype":
@@ -923,8 +948,6 @@ class Document extends Settings
                 return $this->getVal('status');
             case "student-category": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
-            case "supervisor": // ["authors"],
-                return $this->formatAuthors($this->getVal('authors', []));
             case "thesis": // ["category"],
                 switch ($this->getVal('thesis')) {
                     case 'doctor':
@@ -941,12 +964,14 @@ class Document extends Settings
             case "teaching-course": // ["title", "module", "module_id"],
                 if (isset($this->doc['module_id'])) {
                     $m = $this->DB->getConnected('teaching', $this->getVal('module_id'));
+                    if (empty($m)) return $this->getVal('module') ?? '';
                     return $m['module'] . ': ' . $m['title'];
                 }
                 return $this->getVal('title');
             case "teaching-course-short": // ["title", "module", "module_id"],
                 if (isset($this->doc['module_id'])) {
                     $m = $this->DB->getConnected('teaching', $this->getVal('module_id'));
+                    if (empty($m)) return $this->getVal('module') ?? '';
                     return $m['module'];
                 }
                 return 'Unknown';
@@ -990,13 +1015,14 @@ class Document extends Settings
                 }
                 return $val;
             default:
-                $val = $this->getVal($module);
+                $val = $this->getVal($module, '-');
                 // only in german because standard is always english
                 if (lang('en', 'de') == 'de' && isset($this->custom_fields[$module])) {
                     foreach ($this->custom_fields[$module] as $field) {
                         if ($val == $field[0] ?? '') return lang(...$field);
                     }
                 }
+                if (is_array($val)) return implode(", ", $val);
                 return $val;
         }
     }

@@ -50,7 +50,7 @@ function sel($index, $value)
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
 
 <div class="container w-600">
 

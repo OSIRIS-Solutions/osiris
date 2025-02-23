@@ -65,18 +65,18 @@
 <!-- modules to copy -->
 <div class="hidden">
     <div class="step" id="text">
-        <h4>
-            <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <?= lang('Text', 'Text') ?>
-            <button type="button" class="btn link" onclick="$(this).closest('.step').remove()"><i class="ph ph-trash" aria-label="Delete"></i></button>
-        </h4>
-        <input type="hidden" class="hidden" name="values[*][type]" value="text">
-        <select name="values[*][level]" class="form-control w-auto" required>
+        <i class="ph ph-dots-six-vertical text-muted handle"></i>
+        <i class="ph ph-text-t text-secondary ph-2x"></i>
+        <select name="values[*][level]" class="form-control small w-auto d-inline-block ml-10" required>
             <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
             <option value="h2"><?= lang('Heading 2', 'Überschrift 2') ?></option>
             <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
             <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
         </select>
+                <button type="button" class="btn link float-right" onclick="$(this).closest('.step').remove()"><i class="ph ph-trash" aria-label="Delete"></i></button>
+
+        <input type="hidden" class="hidden" name="values[*][type]" value="text">
+
         <div class="mt-10">
             <textarea type="text" class="form-control" name="values[*][text]" placeholder="<?= lang('Content', 'Inhalt') ?>" required></textarea>
         </div>

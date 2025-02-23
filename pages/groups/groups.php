@@ -157,7 +157,7 @@ $style = $_GET['style'] ?? 'cards';
                                 <?php
                                 $children = $Groups->getChildren($group['id']);
                                 ?>
-                                <?= $osiris->persons->count(['depts' => ['$in' => $children],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
+                                <?= $osiris->persons->count(['units.unit' => ['$in' => $children],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>

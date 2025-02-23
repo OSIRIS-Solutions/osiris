@@ -131,7 +131,15 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 {
                     type: 'natural',
                     targets: 4,
-                    data: 'if'
+                    data: 'if',
+                    render: function(data, type, full, meta) {
+                        if (!data) return '';
+                        var impact = data.impact ?? 0;
+                        if (data.year) {
+                            return `<span data-toggle="tooltip" data-title="${data.year}">${impact}</span>`;
+                        }
+                        return impact;
+                    }
                 },
                 {
                     type: 'natural',

@@ -19,7 +19,8 @@
 $level = $Groups->getLevel($id);
 
 $children = $Groups->getChildren($group['id']);
-$persons = $osiris->persons->find(['depts' => ['$in' => $children], 'is_active' => ['$in' => [true, 'true', 1, '1']]], ['sort' => ['last' => 1]])->toArray();
+
+$persons = $Groups->getAllPersons($children);
 
 if (isset($group['head'])) {
     $head = $group['head'];
@@ -42,9 +43,9 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=CSS_JS_VERSION?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-graph.js"></script>
+<!-- <script src="<?= ROOTPATH ?>/js/d3-graph.js"></script> -->
 
 <!-- all variables for this page -->
 <script>
@@ -52,7 +53,7 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
     const DEPT_TREE = <?= json_encode($children) ?>;
     const DEPT = '<?= $id ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/units.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/units.js?v=<?=CSS_JS_VERSION?>"></script>
 
 
 <style>
@@ -169,16 +170,18 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
             <span class="index"><?= count($users) ?></span>
         </a>
 
-        <a onclick="navigate('graph')" id="btn-graph" class="btn">
-            <i class="ph ph-graph" aria-hidden="true"></i>
-            <?= lang('Graph')  ?>
-        </a>
+        <?php if ($level !== 0) { ?>
+            <a onclick="navigate('graph')" id="btn-graph" class="btn">
+                <i class="ph ph-graph" aria-hidden="true"></i>
+                <?= lang('Graph')  ?>
+            </a>
+        <?php } ?>
 
         <?php if ($level !== 0) { ?>
 
             <?php
             $publication_filter = [
-                'authors.user' => ['$in' => $users],
+                'authors.units' => ['$in' => $children],
                 'type' => 'publication'
             ];
             $count_publications = $osiris->activities->count($publication_filter);
@@ -193,7 +196,7 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
 
             <?php
             $activities_filter = [
-                'authors.user' => ['$in' => $users],
+                'authors.units' => ['$in' => $children],
                 'type' => ['$ne' => 'publication']
             ];
             $count_activities = $osiris->activities->count($activities_filter);
@@ -242,12 +245,12 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
                 <?php } ?>
             <?php } ?>
 
-        <?php } ?>
+            <a onclick="navigate('collab')" id="btn-collab" class="btn">
+                <i class="ph ph-users-three" aria-hidden="true"></i>
+                <?= lang('Other units', 'Andere Einheiten')  ?>
+            </a>
 
-        <a onclick="navigate('collab')" id="btn-collab" class="btn">
-            <i class="ph ph-users-three" aria-hidden="true"></i>
-            <?= lang('Other units', 'Andere Einheiten')  ?>
-        </a>
+        <?php } ?>
 
     </nav>
 
@@ -594,16 +597,18 @@ $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($
 
     </section>
 
+    <?php if ($level !== 0) { ?>
 
-    <section id="graph" style="display:none">
-        <h3><?= lang('Graph', 'Graph') ?></h3>
+        <section id="graph" style="display:none">
+            <h3><?= lang('Graph', 'Graph') ?></h3>
 
-        <p class="text-muted m-0">
-            <?= lang('Based on publications with associated affiliations.', 'Basierend auf affilierten Publikationen.') ?>
-        </p>
-        <div id="collabGraph"></div>
+            <p class="text-muted m-0">
+                <?= lang('Based on publications with associated affiliations.', 'Basierend auf affilierten Publikationen.') ?>
+            </p>
+            <div id="collabGraph" class="mw-full w-800"></div>
 
-    </section>
+        </section>
+    <?php } ?>
 
 </div>
 

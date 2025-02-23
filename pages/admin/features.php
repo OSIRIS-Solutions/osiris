@@ -349,6 +349,30 @@
             </div>
 
         </div>
+
+        
+        <div class="form-group">
+                <label for="position">
+                    <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+                </label>
+
+                <?php
+                    $label = $Settings->get('topics_label');
+                ?>
+                
+
+                <div class="row row-eq-spacing my-0">
+                    <div class="col-md-6">
+                        <label for="topics_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                        <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="topics_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                        <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
+                    </div>
+                </div>
+            </div>
+
         <?php
         $n_topics = $osiris->topics->count();
         $list_fields = $osiris->adminFields->find(['format' => 'list'])->toArray();

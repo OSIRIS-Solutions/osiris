@@ -51,25 +51,6 @@ $data = $_POST['values'] ?? [];
 
     <div class="form-row row-eq-spacing">
         <div class="col-sm">
-            <label for="dept"><?= lang('Department', 'Abteilung') ?></label>
-           
-        <?php
-        $tree = $Groups->getHierarchyTree();
-        ?>
-        <div class="form-group">
-            <?= lang('Select multiple with <kbd>Ctrl</kbd>.', 'Wähle mehrere mit <kbd>Strg</kbd>.') ?>
-
-            <select name="values[depts][]" id="dept" class="form-control" multiple="multiple" size="5">
-                <option value="">Unknown</option>
-                <?php
-                foreach ($tree as $d => $dept) { ?>
-                    <option value="<?= $d ?>" <?= (in_array($d, $data['depts']??[])) == $d ? 'selected' : '' ?>><?= $dept ?></option>
-                <?php } ?>
-            </select>
-
-        </div>
-        </div>
-        <div class="col-sm">
             <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>">
         </div>

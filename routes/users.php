@@ -58,7 +58,7 @@ Route::get('/image/(.*)', function ($user) {
         // if (str_starts_with($img, '/')) {
         //     $img = explode(',', $img)[1];
         // }
-        
+
         $img = base64_decode($img);
     }
     header('Content-Type: ' . $type);
@@ -100,6 +100,26 @@ Route::get('/user/edit/(.*)', function ($user) {
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/user-editor.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/user/units/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    $data = $DB->getPerson($user);
+    if (empty($data)) {
+        header("Location: " . ROOTPATH . "/user/browse");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => $data['name'], 'path' => "/profile/$user"],
+        ['name' => lang("Edit units", "Einheiten bearbeiten")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/user-units.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -329,7 +349,8 @@ Route::post('/synchronize-users', function () {
             "first",
             "last",
             "name",
-            "depts",
+            // "depts",
+            "units",
             "username",
             "created",
             "created_by",
@@ -361,7 +382,7 @@ Route::post('/synchronize-users', function () {
 
             $osiris->persons->updateOne(
                 ['username' => $username],
-                ['$set' => ['is_active' => ['$ne'=>false]]]
+                ['$set' => ['is_active' => ['$ne' => false]]]
             );
             echo "<p><i class='ph ph-user-check text-danger'></i> $name ($username) reactivated.</p>";
         }
@@ -405,11 +426,11 @@ Route::post('/synchronize-users', function () {
 });
 
 
-Route::post('/synchronize-attributes', function(){
+Route::post('/synchronize-attributes', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/_login.php";
 
-    if (!$Settings->hasPermission('user.synchronize')){
+    if (!$Settings->hasPermission('user.synchronize')) {
         echo "<p>Permission denied.</p>";
         die();
     }
@@ -478,7 +499,6 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['cv'] = $cv;
     }
 
-
     // if new password is set, update password
     if (isset($_POST['password']) && !empty($_POST['password'])) {
         // check if old password matches
@@ -500,7 +520,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
             );
         }
     }
-    if (isset($values['position_both'])){
+    if (isset($values['position_both'])) {
         $pos = explode(";;", $values['position_both']);
         $person['position'] = $pos[0];
         $person['position_de'] = trim($pos[1] ?? '');
@@ -534,6 +554,89 @@ Route::post('/crud/users/update/(.*)', function ($user) {
 });
 
 
+Route::post('/crud/users/units/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+
+    if (!isset($_POST['values']) && isset($_POST['id'])) {
+        // first get the unit that should be deleted
+        $unit = $osiris->persons->findOne(
+            ['username' => $user, 'units.id' => $_POST['id']],
+            ['projection' => ['units.$' => 1]]
+        );
+        if (empty($unit)) {
+            echo "Unit not found.";
+            die();
+        }
+        $unit = $unit['units'][0];
+
+        // delete unit
+        $osiris->persons->updateOne(
+            ['username' => $user],
+            ['$pull' => ['units' => ['id' => $_POST['id']]]]
+        );
+
+        // update all activities that have this user as author
+        if ($unit['scientific']) {
+            // only necessary if unit is scientific
+            $filter = ['authors.user' => $user];
+            if (isset($unit['start'])) {
+                $filter['start_date'] = ['$gte' => $unit['start']];
+            }
+            if (isset($unit['end'])) {
+                $filter['start_date'] = ['$lte' => $unit['end']];
+            }
+            // render all activities that match the filter
+            renderAuthorUnitsMany($filter);
+        }
+
+        header("Location: " . ROOTPATH . "/user/units/$user?msg=delete-success");
+        die();
+    }
+
+    // transform values if needed
+    $values = $_POST['values'];
+    $values['scientific'] = boolval($values['scientific'] ?? false);
+    $values['start'] = !empty($values['start']) ? $values['start'] : null;
+    $values['end'] = !empty($values['end']) ? $values['end'] : null;
+
+    if (isset($_POST['id'])) {
+        // update existing unit
+        $values['id'] = $_POST['id'];
+        $osiris->persons->updateOne(
+            ['username' => $user, 'units.id' => $_POST['id']],
+            ['$set' => ['units.$' => $values]]
+        );
+    } else {
+        // add new unit
+        $values['id'] = uniqid();
+        $osiris->persons->updateOne(
+            ['username' => $user],
+            ['$push' => ['units' => $values]]
+        );
+    }
+
+    // update all activities that have this user as author
+
+    $filter = ['authors.user' => $user];
+    // if (isset($values['start'])) {
+    //     $filter['start_date'] = ['$gte' => $values['start']];
+    // }
+    // if (isset($values['end'])) {
+    //     $filter['start_date'] = ['$lte' => $values['end']];
+    // }
+    renderAuthorUnitsMany($filter);
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        die();
+    }
+    echo json_encode([
+        'updated' => $updateResult->getModifiedCount()
+    ]);
+});
+
+
 Route::post('/crud/users/delete/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
@@ -551,7 +654,8 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
         "first",
         "last",
         "name",
-        "depts",
+        // "depts",
+        "units",
         "username",
         "created",
         "created_by",
@@ -701,7 +805,6 @@ Route::post('/crud/users/approve', function () {
 });
 
 
-
 Route::post('/crud/queries', function () {
     include_once BASEPATH . "/php/init.php";
     if (isset($_POST['id'])) {
@@ -725,3 +828,63 @@ Route::post('/crud/queries', function () {
     ]);
     return $updateResult->getInsertedId();
 });
+
+
+
+Route::get('/claim/?(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (empty($user)) $user = $_SESSION['username'];
+
+    $scientist = $DB->getPerson($user);
+    $name = $scientist['displayname'];
+
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
+        ['name' => lang("Claim", "Beanspruchen")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/claim.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::post('/claim/?(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (empty($user)) $user = $_SESSION['username'];
+
+    if (empty($_POST['activity'])) {
+        header("Location: " . ROOTPATH . "/claim/$user?msg=no+activity+selected");
+        die;
+    }
+
+    if (empty($_POST['last']) || empty($_POST['first'])) {
+        header("Location: " . ROOTPATH . "/claim/$user?msg=no+valid+submission");
+        die;
+    }
+
+    $last = explode(";", $_POST['last']);
+    $first = explode(";", $_POST['first']);
+    $activities = $_POST['activity'];
+
+    $N = 0;
+    foreach ($activities as $key) {
+        $mongo_id = DB::to_ObjectID($key);
+        // update specific author (by name) in activity
+        $updateResult = $osiris->activities->updateOne(
+            ['_id' => $mongo_id, 'authors' => ['$elemMatch' => ['user' => null, 'last' => ['$in' => $last], 'first' => ['$in' => $first]]]],
+            ['$set' => [
+                'authors.$.user' => $user
+            ]]
+        );
+        $N += $updateResult->getModifiedCount();
+    }
+
+    $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
+    header("Location: " . ROOTPATH . "/profile/$user");
+
+
+}, 'login');

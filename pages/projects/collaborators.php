@@ -226,4 +226,4 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 </form>
 
 <script src="<?= ROOTPATH ?>/js/papaparse.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/collaborators.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?=CSS_JS_VERSION?>"></script>

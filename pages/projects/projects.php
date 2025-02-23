@@ -140,44 +140,44 @@ if (!$Settings->hasPermission('projects.view')) {
 
             <h6>
                 <?= lang('By status', 'Nach Status') ?>
-                <a class="float-right" onclick="filterProjects('#filter-status .active', null, 6)"><i class="ph ph-x"></i></a>
+                <a class="float-right" onclick="filterProjects('#filter-status .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'approved', 6)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a></td>
+                        <td> <a onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'finished', 6)" class="item text-success"><?= lang('finished', 'abgeschlossen') ?></a></td>
+                        <td> <a onclick="filterProjects(this, 'finished', 7)" class="item text-success"><?= lang('finished', 'abgeschlossen') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
-                        <td> <a onclick="filterProjects(this, 'applied', 6)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
+                        <td> <a onclick="filterProjects(this, 'applied', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
-                        <td> <a onclick="filterProjects(this, 'rejected', 6)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
+                        <td> <a onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
                     </tr>
                 </table>
             </div>
 
             <h6>
                 <?= lang('By role', 'Nach Rolle') ?>
-                <a class="float-right" onclick="filterProjects('#filter-role .active', null, 4)"><i class="ph ph-x"></i></a>
+                <a class="float-right" onclick="filterProjects('#filter-role .active', null, 5)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
                 <table id="filter-role" class="table small simple">
                     <tr style="--highlight-color: var(--signal-color)">
                         <td>
-                            <a onclick="filterProjects(this, 'Coordinator', 4)" class="item colorless"><i class="ph ph-crown text-signal"></i> <?= lang('Coordinator', 'Koordinator') ?></a>
+                            <a onclick="filterProjects(this, 'Coordinator', 5)" class="item colorless"><i class="ph ph-crown text-signal"></i> <?= lang('Coordinator', 'Koordinator') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
                         <td>
-                            <a onclick="filterProjects(this, 'Partner', 4)" class="item colorless"><i class="ph ph-handshake text-muted"></i> <?= lang('Partner') ?></a>
+                            <a onclick="filterProjects(this, 'Partner', 5)" class="item colorless"><i class="ph ph-handshake text-muted"></i> <?= lang('Partner') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
                         <td>
-                            <a onclick="filterProjects(this, 'associated', 4)" class="item colorless"><i class="ph ph-address-book text-muted"></i> <?= lang('Accociate', 'Beteiligt') ?></a>
+                            <a onclick="filterProjects(this, 'associated', 5)" class="item colorless"><i class="ph ph-address-book text-muted"></i> <?= lang('Accociate', 'Beteiligt') ?></a>
                         </td>
                     </tr>
                 </table>
@@ -206,14 +206,14 @@ if (!$Settings->hasPermission('projects.view')) {
 
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
-                <a class="float-right" onclick="filterProjects('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
+                <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
-                <table id="filter-unit" class="table small simple">
+                <table id="filter-units" class="table small simple">
                     <?php foreach ($Departments as $id => $dept) { ?>
                         <tr <?= $Groups->cssVar($id) ?>>
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 7)" class="item d-block colorless" id="<?= $id ?>-btn">
+                                <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 8)" class="item d-block colorless" id="<?= $id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -241,16 +241,19 @@ if (!$Settings->hasPermission('projects.view')) {
             </div> -->
 
             <?php if ($Settings->featureEnabled('topics')) { ?>
-                <h6><?= lang('Research Topics', 'Forschungsbereiche') ?></h6>
+                <h6>
+                    <?= $Settings->topicLabel() ?>
+                    <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
+                </h6>
 
                 <div class="filter">
-                    <table id="filter-type" class="table small simple">
+                    <table id="filter-topics" class="table small simple">
                         <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
                             $id = $a['id'];
                         ?>
                             <tr style="--highlight-color:  <?= $a['color'] ?>;">
                                 <td>
-                                    <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 8)" class="item" id="<?= $id ?>-btn">
+                                    <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 9)" class="item" id="<?= $id ?>-btn">
                                         <span style="color: var(--highlight-color)">
                                             <?= lang($a['name'], $a['name_en'] ?? null) ?>
                                         </span>
@@ -292,8 +295,12 @@ if (!$Settings->hasPermission('projects.view')) {
             key: 'funder'
         },
         {
-            title: lang('Date range', 'Zeitraum'),
-            key: 'date_range'
+            title: lang('Start date', 'Startdatum'),
+            key: 'start_date'
+        },
+        {
+            title: lang('End date', 'Enddatum'),
+            key: 'end_date'
         },
         {
             title: lang('Role', 'Rolle'),
@@ -309,15 +316,11 @@ if (!$Settings->hasPermission('projects.view')) {
         },
         {
             title: lang('Units', 'Einheiten'),
-            key: 'unit'
+            key: 'units'
         },
         {
             title: lang('Topics', 'Themen'),
             key: 'topics'
-        },
-        {
-            title: lang('Persons', 'Personen'),
-            key: 'persons'
         },
         {
             title: lang('Funding organization', 'Förderorganisation'),
@@ -334,22 +337,22 @@ if (!$Settings->hasPermission('projects.view')) {
     ]
 
     function renderType(data) {
-        if (data == 'Eigenfinanziert') {
+        if (data == 'Eigenfinanziert' || data == 'self-funded') {
             return `<span class="badge text-signal">
                         <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
                         </span>`
         }
-        if (data == 'Stipendium') {
+        if (data == 'Stipendium' || data == 'stipendiate') {
             return `<span class="badge text-success no-wrap">
                         <i class="ph ph-tip-jar"></i>&nbsp;${lang('Stipendiate', 'Stipendium')}
                         </span>`
         }
-        if (data == 'Drittmittel') {
+        if (data == 'Drittmittel' || data == 'third-party') {
             return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Third-party funded', 'Drittmittel')}
                         </span>`
         }
-        if (data == 'Teilprojekt') {
+        if (data == 'Teilprojekt' || data == 'subproject') {
             return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
                         </span>`
@@ -395,7 +398,7 @@ if (!$Settings->hasPermission('projects.view')) {
             case 'approved':
                 return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
             case 'finished':
-                return `<span class='badge success'>${lang('finished', 'abgeschlossen')}</span>`;
+                return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
             case 'applied':
                 return `<span class='badge signal'>${lang('applied', 'beantragt')}</span>`;
             case 'rejected':
@@ -417,6 +420,27 @@ if (!$Settings->hasPermission('projects.view')) {
         return topics;
     }
 
+    function renderDate(data) {
+        var start = data.start_date;
+        // format from ISO to MM/YYYY
+        if (start) {
+            start = new Date(start).toLocaleDateString('de-DE', {
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        var end = data.end_date;
+        if (end) {
+            end = new Date(end).toLocaleDateString('de-DE', {
+                month: 'short',
+                year: 'numeric'
+            });
+            return `${start} - ${end}`;
+        } else {
+            return start;
+        }
+    }
+
     $(document).ready(function() {
         dataTable = new DataTable('#project-table', {
             ajax: {
@@ -424,7 +448,7 @@ if (!$Settings->hasPermission('projects.view')) {
                 // add data to the request
                 data: {
                     json: '<?= json_encode($filter) ?>',
-                    formatted: true
+                    // formatted: true
                 },
             },
             type: 'GET',
@@ -433,8 +457,7 @@ if (!$Settings->hasPermission('projects.view')) {
             language: {
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
-            buttons: [
-                {
+            buttons: [{
                     text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
                     className: 'btn small text-primary mr-10',
                     action: function(e, dt, node, config) {
@@ -470,17 +493,19 @@ if (!$Settings->hasPermission('projects.view')) {
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
+                        console.log(row);
+                        // row.persons.map(a => a.name).join(', ')
                         return `
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/projects/view/${row.id}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/projects/view/${row._id['$oid']}">${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">
-                         <p class="text-muted mt-0">${row.date_range}</p>
+                         <p class="text-muted mt-0">${renderDate(row)}</p>
                         
-                        ${row.persons.join(', ')}
+                        ${row.persons.map(a => a.name).join(', ')}
 
                         </div>
                         <hr />
@@ -505,80 +530,93 @@ if (!$Settings->hasPermission('projects.view')) {
                 },
                 {
                     target: 2,
-                    data: 'funder',
+                    data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('Funder', 'Drinmmittelgeber')
+                    header: lang('Funder', 'Drittmmittelgeber'),
+                    render: (data, type, row) => renderFunder(row)
                 },
                 {
                     target: 3,
-                    data: 'date_range',
+                    data: 'start_date',
                     searchable: true,
                     visible: false,
-                    header: lang('Date range', 'Zeitraum')
+                    header: lang('Start date', 'Startdatum')
                 },
                 {
                     target: 4,
-                    data: 'role',
+                    data: 'end_date',
                     searchable: true,
                     visible: false,
-                    header: lang('Role', 'Rolle')
+                    header: lang('End date', 'Enddatum')
                 },
                 {
                     target: 5,
-                    data: 'applicant',
+                    data: 'role',
                     searchable: true,
                     visible: false,
-                    header: lang('Applicant', 'Antragsteller')
+                    defaultContent: '',
+                    header: lang('Role', 'Rolle')
                 },
                 {
                     target: 6,
+                    data: 'applicant',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Applicant', 'Antragsteller')
+                },
+                {
+                    target: 7,
                     data: 'status',
                     searchable: true,
                     visible: false,
                     header: lang('Status', 'Status')
                 },
                 {
-                    target: 7,
+                    target: 8,
                     data: 'units',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     header: lang('Units', 'Einheiten')
                 },
                 {
-                    target: 8,
+                    target: 9,
                     data: 'topics',
                     searchable: true,
                     visible: false,
-                    header: lang('Topics', 'Forschungsbereiche')
-                },
-                {
-                    target: 9,
-                    data: 'funding_organization',
-                    searchable: true,
-                    visible: false,
-                    header: lang('Funding organization', 'Förderorganisation')
+                    defaultContent: '',
+                    header: lang('Topics', 'Forschungsbereiche'),
+                    render: (data, type, row) => {
+                        if (Array.isArray(data)) {
+                            return data.join(', ')
+                        }
+                    }
                 },
                 {
                     target: 10,
-                    data: 'name',
+                    data: 'funding_organization',
                     searchable: true,
                     visible: false,
-                    header: lang('Project', 'Projekt')
+                    defaultContent: '',
+                    header: lang('Funding organization', 'Förderorganisation')
                 },
                 {
                     target: 11,
-                    data: 'title',
-                    searchable: false,
+                    data: 'name',
+                    searchable: true,
                     visible: false,
-                    header: lang('Title', 'Titel')
+                    defaultContent: '',
+                    header: lang('Project', 'Projekt')
                 },
                 {
                     target: 12,
-                    data: 'start',
-                    searchable: true,
+                    data: 'title',
+                    searchable: false,
                     visible: false,
-                    header: lang('Start date', 'Startdatum')
+                    defaultContent: '',
+                    header: lang('Title', 'Titel')
                 }
             ],
             order: [
@@ -598,16 +636,16 @@ if (!$Settings->hasPermission('projects.view')) {
             var hash = readHash();
             console.log(hash);
             if (hash.status !== undefined) {
-                filterProjects(document.getElementById(hash.status + '-btn'), hash.status, 6)
+                filterProjects(document.getElementById(hash.status + '-btn'), hash.status, 7)
             }
-            if (hash.unit !== undefined) {
-                filterProjects(document.getElementById(hash.unit + '-btn'), hash.unit, 7)
+            if (hash.units !== undefined) {
+                filterProjects(document.getElementById(hash.unit + '-btn'), hash.unit, 8)
             }
             if (hash.role !== undefined) {
-                filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 4)
+                filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 5)
             }
             if (hash.topics !== undefined) {
-                filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 8)
+                filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
             }
 
             if (hash.search !== undefined) {
@@ -634,6 +672,7 @@ if (!$Settings->hasPermission('projects.view')) {
 
 
     function filterProjects(btn, activity = null, column = 1) {
+        console.log(column);
         var tr = $(btn).closest('tr')
         var table = tr.closest('table')
         $('#filter-' + column).remove()

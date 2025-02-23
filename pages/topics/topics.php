@@ -21,7 +21,7 @@ $topics  = $osiris->topics->find();
 
 <h1>
     <i class="ph ph-puzzle-piece"></i>
-    <?= lang('Research Topics', 'Forschungsbereiche') ?>
+    <?= $Settings->topicLabel() ?>
 </h1>
 
 <?php if ($Settings->hasPermission('topics.edit')) { ?>

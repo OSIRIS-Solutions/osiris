@@ -22,7 +22,7 @@ function navigate(key) {
             initActivities('#publication-table', {
                 page: 'my-activities',
                 display_activities: 'web',
-                user: { '$in': USERS },
+                'authors.units': DEPT,
                 type: 'publication'
             })
             // impactfactors('chart-impact', 'chart-impact-canvas', { user: {'$in': USERS} })
@@ -35,7 +35,7 @@ function navigate(key) {
             initActivities('#activities-table', {
                 page: 'my-activities',
                 display_activities: 'web',
-                user: { '$in': USERS },
+                'authors.units': DEPT,
                 type: { '$ne': 'publication' }
             })
             // activitiesChart('chart-activities', 'chart-activities-canvas', { user: {'$in': USERS} })
@@ -55,15 +55,18 @@ function navigate(key) {
         case 'graph':
             if (collabGraphExists) break;
             collabGraphExists = true;
-            collabGraph('#collabGraph', { dept: DEPT })
+            collabGraph('#collabGraph', { dept: DEPT, single: true })
             break;
 
         case 'persons':
             if (personsExists) break;
             personsExists = true;
             userTable('#user-table', {
-                filter: { depts: { '$in': DEPT_TREE }, 'is_active': true },
-                subtitle: 'position'
+                filter: {
+                    'units': DEPT_TREE,
+                    is_active: { '$ne': false }
+                },
+                subtitle: 'position',
             })
             break;
 
@@ -85,7 +88,7 @@ function navigate(key) {
         case 'wordcloud':
             if (wordcloudExists) break;
             wordcloudExists = true;
-            wordcloud('#wordcloud-chart', { user: { '$in': USERS } })
+            wordcloud('#wordcloud-chart', { 'units': DEPT_TREE })
             break;
         default:
             break;
@@ -128,17 +131,78 @@ function collabChart(selector, data) {
 
 
 function collabGraph(selector, data) {
+    // coauthorNetwork(selector, data)
     $.ajax({
         type: "GET",
-        url: ROOTPATH + "/api/dashboard/department-graph",
+        url: ROOTPATH + "/api/dashboard/author-network",
         data: data,
         dataType: "json",
         success: function (response) {
             console.log(response);
-            Graph(response.data, selector, 800, 500);
+            var matrix = response.data.matrix;
+            var DEPTS = response.data.labels;
+
+            var data = Object.values(DEPTS);
+            var labels = data.map(item => item['name']);
+
+            // var colors = []
+            var links = []
+            var depts_in_use = {};
+
+            data.forEach(function (d, i) {
+                // colors.push(d.dept.color ?? '#cccccc');
+                var link = null
+                if (i !== 0) link = ROOTPATH + "/profile/" + d.user
+                links.push(link)
+
+                if (d.dept.id && depts_in_use[d.dept.id] === undefined)
+                    depts_in_use[d.dept.id] = d.dept;
+            })
+
+            Chords(selector, matrix, labels, null, data, links, false, null);
+
+
+            var legend = d3.select('#legend')
+                .append('div').attr('class', 'content')
+
+            legend.append('div')
+                .style('font-weight', 'bold')
+                .attr('class', 'mb-5')
+                .text(lang("Departments", "Abteilungen"))
+
+            for (const dept in depts_in_use) {
+                if (Object.hasOwnProperty.call(depts_in_use, dept)) {
+                    const d = depts_in_use[dept];
+                    var row = legend.append('div')
+                        .attr('class', 'd-flex mb-5')
+                        .style('color', d.color)
+                    row.append('div')
+                        .style('background-color', d.color)
+                        .style("width", "2rem")
+                        .style("height", "2rem")
+                        .style("border-radius", ".5rem")
+                        .style("display", "inline-block")
+                        .style("margin-right", "1rem")
+                    row.append('span').text(d.name)
+                }
+            }
+
         },
         error: function (response) {
             console.log(response);
         }
     });
+    // $.ajax({
+    //     type: "GET",
+    //     url: ROOTPATH + "/api/dashboard/department-graph",
+    //     data: data,
+    //     dataType: "json",
+    //     success: function (response) {
+    //         console.log(response);
+    //         Graph(response.data, selector, 800, 500);
+    //     },
+    //     error: function (response) {
+    //         console.log(response);
+    //     }
+    // });
 }

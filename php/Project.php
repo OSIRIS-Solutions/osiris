@@ -590,11 +590,13 @@ class Project
         $units = [];
         $Groups = new Groups();
 
+        $start = $this->project['start_date'];
         foreach ($this->project['persons'] as $person) {
-            $u = $person['units'] ?? null;
+            $u = DB::doc2Arr($person['units'] ?? []);
             if (empty($u)) {
-                $p = $this->db->persons->findOne(['username' => $person['user']]);
-                $u = DB::doc2Arr($p['depts'] ?? []);
+               $u = $Groups->getPersonUnit($person['user'], $start);
+               if (empty($u)) continue;
+               $u = array_column($u, 'unit');
             }
 
             if (!empty($u)) {
@@ -602,6 +604,6 @@ class Project
             }
         }
         if (!$depts_only) return $units;
-        return $Groups->personDepts($units);
+        return $Groups->deptHierarchies($units);
     }
 }

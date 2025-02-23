@@ -36,14 +36,18 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $values[$key] = "10." . $value[1];
             }
-            // dump($value);
-            // die;
         } else if ($key == 'authors' || $key == "editors") {
             $values[$key] = array();
             $i = 0;
             foreach ($value as $author) {
                 if (is_array($author)) {
                     $author['approved'] = ($author['user'] ?? '') == $_SESSION['username'];
+                    if (isset($author['aoi'])) {
+                        $author['aoi'] = boolval($author['aoi']);
+                    }
+                    if (isset($author['sws'])) {
+                        $author['sws'] = floatval($author['sws']);
+                    }
                     $values[$key][] = $author;
                     continue;
                 }

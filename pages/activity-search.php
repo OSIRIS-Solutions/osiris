@@ -543,9 +543,18 @@ $filters = array_map(function ($f) {
 
             } else {
                 var selected_columns = []
+                var array_columns = {}
                 $('#column-select input:checked').each(function() {
-                    selected_columns.push($(this).attr('id').replace('column-', ''))
+                    var id = $(this).attr('id').replace('column-', '')
+                    if (id.includes('.')) {
+                        id = id.split('.')
+                        array_columns[id[0]] = id[1]
+                        id = id[0]
+                    }
+                    selected_columns.push(id)
                 })
+
+                console.log(array_columns);
 
                 // add dynamic column heads
                 first_row.forEach(field => {
@@ -559,15 +568,28 @@ $filters = array_map(function ($f) {
                     // remove from selected columns
                     selected_columns = selected_columns.filter(column => column !== field);
                     // get name from `fields`
+                    console.log(field);
 
                     const filter = fields.find(f => f.id == field);
                     var r = {
                         data: field,
-                        title: filter ? filter.label : field
+                        title: filter ? filter.label : field,
+                        defaultContent: '-'
                     }
                     if (field == 'id') {
                         r.render = function(data, type, row, meta) {
                             return `<a href="<?= ROOTPATH ?>/activity/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
+                        }
+                    } else if (array_columns[field]) {
+                        var array_column = array_columns[field]
+                        console.log(array_column);
+                        r.render = function(data, type, row, meta) {
+                            // if array:
+                                console.log(data);
+                            if (Array.isArray(data)) {
+                                data = data[0]
+                            }
+                            return data[array_column].join(', ') ?? data;
                         }
                     }
                     return r

@@ -3,7 +3,11 @@
 function Graph(graph, selector, width = 800, height = 500) {
 
     // color Scale for ED Annotation
-    //var color = d3.scaleOrdinal(d3.schemeCategory10);
+    // var color = d3.scaleOrdinal(d3.schemeCategory10);
+    // color scale for the nodes depending on count
+    var colors = d3.scaleSequential(d3.schemeCategory10)
+        .domain([0, 100])
+        .interpolator(d3.interpolateViridis);
 
     var zoom = d3.zoom()
         .scaleExtent([.2, 10])
@@ -15,7 +19,7 @@ function Graph(graph, selector, width = 800, height = 500) {
     // const svgdiv = d3.select(selector)
     // const svgdiv = d3.create('div')
     // var colors = d3.scaleOrdinal()
-    //     .domain(d3.range(labels.length))
+    //     .domain(d3.range(graph.nodes.length))
     //     .range(colors);
 
     const svg = d3.select(selector).append("svg")
@@ -52,18 +56,10 @@ function Graph(graph, selector, width = 800, height = 500) {
         .force("link", d3.forceLink(graph.links).id(d => d.id).strength(1))
         .force("x", d3.forceX())
         .force("y", d3.forceY())
-        .force('collide', d3.forceCollide((d) => Math.sqrt(d.value) * 2 + 4))
+        .force('collide', d3.forceCollide((d) => Math.sqrt(d.value) * 4 + 4))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        // .alphaTarget(1)
         .on("tick", ticked);
 
-    // const force = d3.forceSimulation(graph.nodes)
-    // .force("link", d3.forceLink(graph.links).id(d => d.id))
-    // .force("charge", d3.forceManyBody().strength(-100).distanceMax(200).distanceMin(15))
-    // .force("x", d3.forceX())
-    // .force("y", d3.forceY())
-    // // .force("center", d3.forceCenter(width / 2, height / 2))
-    // .on("tick", ticked);
 
     function dragstarted(d) {
         d3.event.sourceEvent.stopPropagation();
@@ -89,30 +85,6 @@ function Graph(graph, selector, width = 800, height = 500) {
         d.fy = null;
     }
 
-
-    // build the arrow.
-    // svg.append("svg:defs").selectAll("marker")
-    //     .data(["green", "red", "black"]) // Different link/path types can be defined here
-    //     .enter().append("svg:marker") // This section adds in the arrows
-    //     .attr("id", function (d) {
-    //         return d;
-    //     })
-    //     .attr("viewBox", "0 -5 10 10")
-    //     .attr("refX", 20)
-    //     .attr("refY", 0)
-    //     .attr("markerWidth", 12)
-    //     .attr("markerHeight", 12)
-    //     .attr("markerUnits", "userSpaceOnUse")
-    //     .style("fill", function (d) {
-    //         if (d == "red") { return "FireBrick" }
-    //         if (d == "green") { return "ForestGreen" }
-    //         return "black";
-    //     })
-    //     .attr("orient", "auto-start-reverse")
-    //     .append("svg:path")
-    //     .attr("d", "M0,-5L10,0L0,5");
-
-
     const link = container.selectAll(".link")
         .data(graph.links).enter()
         .append('path')
@@ -121,17 +93,11 @@ function Graph(graph, selector, width = 800, height = 500) {
         })
         .attr("stroke-width", function (d) {
             return Math.sqrt(d.value);
-            // return 1
         })
         .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
-        // .style("stroke-dasharray", function (d, i) {
-        //     if (d.type == 'relation') return null
-        //     return ("5, 5")
-        // })
         .attr('id', function (d, i) { return 'edgepath' + i })
         .attr("class", "link")
-    // .attr("marker-end", "url(#black)")
 
     var edgepaths = container
         .selectAll(".edgepath")
@@ -180,7 +146,7 @@ function Graph(graph, selector, width = 800, height = 500) {
     node.append('rect')
         .style("stroke-width", "1")
         .style("stroke", "white")
-        .attr('fill', (d) => (d.color))
+        .attr('fill', (d) => (colors(d.value)))
         .attr("width", function (d) {
             if (d.group == 2) return 10;
             return Math.sqrt(d.value)*2 + 4;

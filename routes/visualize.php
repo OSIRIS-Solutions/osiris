@@ -56,7 +56,7 @@ Route::get('/dashboard', function () {
     include BASEPATH . "/pages/dashboard.php";
 
     if ($Settings->hasPermission('report.dashboard')) {
-        echo '<a href="' . ROOTPATH . '/controlling" class="btn danger lg float-right">Controlling</a>';
+        echo '<a href="' . ROOTPATH . '/controlling" class="btn danger lg float-right">'.lang("Lock activities", "Aktivitäten sperren").'</a>';
 
         echo '<h1 class="m-0">Controlling-Dashboard</h1>';
         include BASEPATH . "/pages/dashboard-controlling.php";
@@ -65,5 +65,16 @@ Route::get('/dashboard', function () {
         echo '<h1 class="m-0">' . lang('Scientist', 'Wissenschaftler') . '-Dashboard</h1>';
         include BASEPATH . "/pages/dashboard-scientist.php";
     }
+    include BASEPATH . "/footer.php";
+});
+
+// pivot table
+Route::get('/pivot', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang('Pivot Table', 'Pivot-Tabelle')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/pivot.php";
     include BASEPATH . "/footer.php";
 });

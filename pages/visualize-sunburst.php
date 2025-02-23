@@ -86,7 +86,7 @@ function updateRecursive(array &$arr, $activities, $parentusers = [])
 {
     global $osiris, $links;
     foreach ($arr as &$val) {
-        $users = $osiris->persons->find(['depts' => $val['id']])->toArray();
+        $users = $osiris->persons->find(['units.unit' => $val['id']])->toArray();
         $usernames = [];
         // uncomment if users that belong to parent group should be skipped
         // $usernames = array_column($users, 'username');
@@ -176,7 +176,7 @@ updateRecursive($flare, $activities);
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-sunburst.js?v=3"></script>
+<script src="<?= ROOTPATH ?>/js/d3-sunburst.js?v=<?=CSS_JS_VERSION?>"></script>
 <script>
     var flare = JSON.parse('<?= json_encode($flare[0]) ?>')
     chart('#flare', flare);

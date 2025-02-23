@@ -45,7 +45,7 @@ if (empty($form) || !isset($form['_id'])) {
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
 
 
 <h3 class="title">

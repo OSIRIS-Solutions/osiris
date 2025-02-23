@@ -85,7 +85,7 @@ function sel($index, $value)
     }
 </style>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
 
 <h3 class="title">
     <?= $title ?>

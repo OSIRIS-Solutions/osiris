@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     // read hash to navigate
     var hash = window.location.hash;
-    if (hash) {
+    if (hash && hash.includes('#section-')) {
         navigate(hash.replace('#section-', ''));
     }
 });

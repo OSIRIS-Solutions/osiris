@@ -23,7 +23,17 @@
 <div class="row row-eq-spacing mb-0">
 
     <?php
+    $d_colors = [];
+    $d_labels = [];
+    foreach ($activities as $cat => $color) {
+        $d_colors[] = $color . '95';
+        $d_labels[] = $Settings->title($cat);
+    }
     foreach ($quarters as $q => $d) {
+        $d_activities = [];
+        foreach ($activities as $cat => $color) {
+            $d_activities[$cat] = $d['activities'][$cat] ?? 0;
+        }
     ?>
         <div class="col-md-6 col-lg-3">
             <div class="box">
@@ -39,25 +49,16 @@
 
                     <script>
                         var ctx = document.getElementById('overview-<?= $q ?>')
-                        var raw_data = JSON.parse('<?= json_encode($d['activities']) ?>')
+                        var raw_data = JSON.parse('<?= json_encode($d_activities) ?>')
                         console.log(raw_data);
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
                                 // labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
-                                labels: Object.keys(raw_data),
+                                labels: <?= json_encode($d_labels) ?>,
                                 datasets: [{
                                     data: Object.values(raw_data),
-                                    backgroundColor: [
-                                        "#006EB795",
-                                        "#f7810495",
-                                        "#00808395",
-                                        "#1FA13895",
-                                        "#00000095",
-                                        "#5F272A95",
-                                        "#9a499c95",
-                                        "#57575695",
-                                    ],
+                                    backgroundColor: <?= json_encode($d_colors) ?>,
                                     borderColor: '#464646', //'',
                                     borderWidth: 1,
                                     borderRadius: 4

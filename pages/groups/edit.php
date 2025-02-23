@@ -100,9 +100,9 @@ function sel($index, $value)
 </style>
 
 <script>
-    const UNIT = '<?=$id?>';
+    const UNIT = '<?= $id ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script src="<?= ROOTPATH ?>/js/groups-editor.js"></script>
 
 
@@ -219,7 +219,7 @@ function sel($index, $value)
                     <label for="inactive-check">
                         <?= lang('Mark group as inactive', 'Gruppe als inaktiv markieren') ?>
                     </label>
-                </div> 
+                </div>
             </div>
 
             <div class="row row-eq-spacing mt-0">
@@ -452,14 +452,24 @@ function sel($index, $value)
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
                 <th><?= lang('Position', 'Position') ?></th>
+                <th><?= lang('Since', 'seit') ?></th>
                 <th><?= lang('Actions', 'Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $persons = $osiris->persons->find(['depts' => $id, 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]]);
+            $persons = $Groups->getAllPersons($id);
             foreach ($persons as $p) {
                 $is_head = in_array($p['username'], $heads);
+                $unit = [];
+                if (!empty($p['units'] ?? null)) {
+                    // look for the units.unit id
+                    $units = array_filter(DB::doc2Arr($p['units']), function ($u) use ($id) {
+                        return $u['unit'] == $id;
+                    });
+                    if (!empty($units))
+                        $unit = array_values($units)[0];
+                }
             ?>
                 <tr>
                     <td><?= $p['last'] ?>, <?= $p['first'] ?></td>
@@ -471,7 +481,14 @@ function sel($index, $value)
                         <?= $p['position'] ?? '-' ?>
                     </td>
                     <td>
-                        <a href="<?= ROOTPATH ?>/persons/view/<?= $p['username'] ?>" class="btn small">
+                        <?php if ($unit['start'] ?? false) { ?>
+                            <?= date('d.m.Y', strtotime($unit['start'])) ?>
+                        <?php } else { ?>
+                            <em class="text-muted"><?= lang('undefined', 'undefiniert') ?></em>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/profile/<?= $p['username'] ?>" class="btn small">
                             <i class="ph ph-eye"></i> <?= lang('View', 'Ansehen') ?>
                         </a>
                         <form action="<?= ROOTPATH ?>/crud/groups/removeperson/<?= $id ?>" method="post" class="d-inline">
@@ -513,17 +530,126 @@ function sel($index, $value)
             <span class="close">&times;</span>
             <h2><?= lang('Add person', 'Person hinzufügen') ?></h2>
             <form action="<?= ROOTPATH ?>/crud/groups/addperson/<?= $id ?>" method="post">
+
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/groups/edit/<?= $id ?>#section-personnel">
+
                 <div class="form-group">
-                    <label for="username"><?= lang('Username', 'Benutzername') ?></label>
+                    <label for="person-username"><?= lang('Person', 'Person') ?></label>
                     <!-- select for distinct user names from DB -->
-                    <select name="username" id="username" class="form-control">
-                        <?php foreach ($osiris->persons->find(['is_active' => ['$ne' => false], 'depts' => ['$ne' => $id]], ['sort' => ['last' => 1]]) as $person) { ?>
+                    <select name="username" id="person-username" class="form-control" required>
+                        <option value="" disabled selected><?= lang('Select person', 'Person auswählen') ?></option>
+                        <?php foreach ($osiris->persons->find(['is_active' => ['$ne' => false], 'units.unit' => ['$ne' => $id]], ['sort' => ['last' => 1]]) as $person) { ?>
                             <option value="<?= $person['username'] ?>"><?= $person['last'] . ', ' . $person['first'] ?></option>
                         <?php } ?>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="start"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                    <input type="date" name="start" id="person-start" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
+                    <select class="form-control" id="scientific" name="scientific">
+                        <option value="1"><?= lang('yes', 'ja') ?></option>
+                        <option value="0"><?= lang('no', 'nein') ?></option>
+                    </select>
+                </div>
+
+                <div id="person-affiliated" style="display: none;">
+                    <p>
+                        <?= lang('This person is currently affiliated with the following units without end date:', 'Diese Person ist zurzeit zu folgenden Einheiten zugehörig (bei denen kein Enddatum angegeben ist):') ?>
+                    </p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><?= lang('Unit', 'Einheit') ?></th>
+                                <th><?= lang('Since', 'seit') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        <?= lang('Should the existing unit be retained or terminated?', 'Soll die vorhandene Einheit beibehalten oder beendet werden?') ?>
+                    </p>
+
+                    <div class="form-group">
+                        <div class="custom-radio">
+                            <input type="radio" name="change-or-add" id="person-add" value="add" checked="checked">
+                            <label for="person-add">
+                                <b><?= lang('Add', 'Hinzufügen') ?>:</b>
+                                <?= lang('Add this unit as additional unit and keep other units unchanged.', 'Füge diese Einheit der Person zusätzlich hinzu und behalte die vorhandenen Einheiten ungeändert.') ?>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-radio">
+                            <input type="radio" name="change-or-add" id="person-change" value="change">
+                            <label for="person-change">
+                                <b><?= lang('Change', 'Wechseln') ?>:</b>
+                                <?= lang('Terminate existing units and add this unit as new.', 'Beende bestehende Einheiten und füge diese Einheit als neue hinzu.') ?>
+                            </label>
+                            <br>
+                            <small class="text-danger" id="person-change-warning">
+                                <?= lang('Only possible when a starting date is set.', 'Nur möglich, wenn ein Anfangsdatum ausgewählt ist.') ?>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn"><?= lang('Add', 'Hinzufügen') ?></button>
             </form>
+
+            <script>
+                $('#person-username').on('change', function() {
+                    var username = $(this).val();
+                    if (username) {
+                        $.get('<?= ROOTPATH ?>/api/users/' + username + '?columns[]=units', function(data) {
+                            console.log(data);
+                            var units = data.data.units;
+                            if (!units) {
+                                $('#person-affiliated').hide();
+                                return;
+                            } else {
+                                var filtered_units = units.filter(function(unit) {
+                                    //only show units that are not in the past
+                                    return unit.end == null;
+                                });
+                                if (filtered_units.length == 0) {
+                                    $('#person-affiliated').hide();
+                                    return;
+                                }
+                                $('#person-affiliated').show();
+                                var tbody = $('#person-affiliated tbody');
+                                tbody.empty();
+                                filtered_units.forEach(function(unit) {
+                                    var tr = $('<tr>');
+                                    tr.append($('<td>').html(
+                                        `<a href="<?= ROOTPATH ?>/groups/view/${unit.unit}" target='_blank'>${unit.unit}</a>`
+                                    ));
+                                    tr.append($('<td>').html(
+                                        unit.start ? new Date(unit.start).toLocaleDateString() : '<em>undefined</em>'
+                                    ));
+                                    tbody.append(tr);
+                                });
+                            }
+
+                        });
+                    }
+                });
+
+                $('input[name="change-or-add"]').on('change', function() {
+                    if ($(this).val() == 'change') {
+                        $('#person-start').prop('required', true);
+                    } else {
+                        $('#person-start').prop('required', false);
+                    }
+                });
+            </script>
         </div>
     </div>
 </div>

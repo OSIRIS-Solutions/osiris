@@ -33,7 +33,7 @@ $level = $Groups->getLevel($id);
 $parent = $osiris->groups->findOne(['id' => $group['parent']]);
 
 $child_ids = $Groups->getChildren($id);
-$persons = $osiris->persons->find(['depts' => ['$in' => $child_ids], 'is_active' => ['$ne'=>false]], ['sort' => ['last' => 1]])->toArray();
+$persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne'=>false]], ['sort' => ['last' => 1]])->toArray();
 
 if (isset($group['head'])) {
 
@@ -127,7 +127,7 @@ $_SESSION['last_group'] = $id;
     <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 
 
-    <!-- <script src="<?= ROOTPATH ?>/js/d3-chords.js?v=2"></script> -->
+    <!-- <script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=CSS_JS_VERSION?>"></script> -->
     <!-- <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script> -->
 
     <!-- all variables for this page -->
@@ -139,7 +139,7 @@ $_SESSION['last_group'] = $id;
         const DEPT = '<?= $id ?>';
         const PORTALPATH = '<?=PORTALPATH?>';
     </script>
-    <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=3"></script>
+    <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?=CSS_JS_VERSION?>"></script>
 
 
     <style>

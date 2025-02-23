@@ -117,12 +117,22 @@ if (!empty($form) && isset($form['id'])) {
                     </tbody>
                 </table>
                 <button class="btn" type="button" onclick="addValuesRow()"><i class="ph ph-plus-circle"></i></button>
+
+                <!-- multiple? -->
+                <div class="form-group mt-20">
+                    <label for="multiple"><?=lang('Multiple Select?', 'Mehrfachauswahl möglich?')?></label>
+                    <select class="form-control" name="values[multiple]" id="multiple">
+                        <option value="0" <?= ($form['multiple'] ?? 0) == 0 ? 'selected' : '' ?>>No</option>
+                        <option value="1" <?= ($form['multiple'] ?? 0) == 1 ? 'selected' : '' ?>>Yes</option>
+                    </select>
+                </div>
             </fieldset>
 
 
             <button type="submit" class="btn success" id="submitBtn"><?= $btntext ?></button>
 
         </div>
+    </div>
 
 
 </form>

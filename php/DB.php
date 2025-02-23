@@ -187,6 +187,9 @@ class DB
         $first = trim($first);
         if (strlen($first) == 1) $first .= ".";
 
+        // make sure that collation does not mingle here
+        $options = ['collation' => ['locale' => 'en', 'strength' => 1]];
+
         try {
             // $veryfirst = explode(' ', $first)[0];
             $abbr = $this->abbreviateName($first);
@@ -195,20 +198,19 @@ class DB
             $user = $this->db->persons->findOne([
                 '$or' => [
                     // if user has not set alternative names yet, 'names'=>['$exist'=>false]
-                    ['last' => $last, 'first' => $first],
+                    ['last' => $last, 'first' => $first, 'names'=>['$exist'=>false]],
                     // otherwise, we respect the names that have been set
                     ['names' => "$last, $first"],
                     ['names' => "$last, $abbr"],
-                    // ['names' => "$last, $abbr."]
                 ]
-            ]);
+            ], $options);
         } catch (\Throwable $th) {
             $user = $this->db->persons->findOne([
                 '$or' => [
                     ['last' => $last, 'first' => $first],
                     ['names' => "$last, $first"]
                 ]
-            ]);
+            ], $options);
         }
 
         if (empty($user) || empty($user['username'] ?? null)) return null;

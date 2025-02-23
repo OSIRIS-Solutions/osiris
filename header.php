@@ -76,10 +76,10 @@ $pageactive = function ($p) use ($page) {
     <title><?= $pagetitle ?? 'OSIRIS' ?></title>
 
     <!-- Icon font -->
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=2" rel="stylesheet" />
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/fill/style.css?v=2" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/fill/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
     <!-- for open access icons -->
-    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=2" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
 
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?<?= filemtime(BASEPATH . '/css/main.css') ?>">
     <?php
@@ -394,12 +394,45 @@ $pageactive = function ($p) use ($page) {
                     </div>
 
                     <nav>
+
+                        <style>
+                            .sidebar-menu>a.inline-btn,
+                            .sidebar-menu nav>a.inline-btn {
+                                position: absolute;
+                                right: 2rem;
+                                margin: .5rem;
+                                background: white;
+                                padding: .5rem;
+                                width: 3rem;
+                                height: 3rem;
+                                font-size: 1.4rem;
+                                border-radius: var(--border-radius);
+                            }
+
+                            .sidebar-menu>a.inline-btn:not(.active),
+                            .sidebar-menu nav>a.inline-btn:not(.active) {
+                                display: none;
+                            }
+
+                            .sidebar-menu:hover>a.inline-btn:not(.active),
+                            .sidebar-menu:hover nav>a.inline-btn:not(.active) {
+                                display: block;
+                            }
+                        </style>
+
+                        <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?=lang('Advanced Search', 'Erweiterte Suche')?>">
+                            <i class="ph ph-magnifying-glass-plus"></i>
+                        </a>
                         <a href="<?= ROOTPATH ?>/activities" class="with-icon <?= $pageactive('activities') ?>">
                             <i class="ph ph-folders" aria-hidden="true"></i>
                             <?= lang('All activities', 'Alle Aktivitäten') ?>
                         </a>
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
+
+                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?=lang('Advanced Search', 'Erweiterte Suche')?>">
+                                <i class="ph ph-magnifying-glass-plus"></i>
+                            </a>
                             <a href="<?= ROOTPATH ?>/projects" class="with-icon <?= $pageactive('projects') ?>">
                                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
                                 <?= lang('Projects', 'Projekte') ?>
@@ -433,7 +466,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->featureEnabled('topics')) { ?>
                             <a href="<?= ROOTPATH ?>/topics" class="with-icon <?= $pageactive('topics') ?>">
                                 <i class="ph ph-puzzle-piece" aria-hidden="true"></i>
-                                <?= lang('Research Topics', 'Forschungsbereiche') ?>
+                                <?= $Settings->topicLabel() ?>
                             </a>
                         <?php } ?>
 
@@ -470,7 +503,7 @@ $pageactive = function ($p) use ($page) {
                         </a>
                         <a href="<?= ROOTPATH ?>/groups" class="with-icon <?= $pageactive('groups') ?>">
                             <i class="ph ph-users-three" aria-hidden="true"></i>
-                            <?= lang('Organisational Units', 'Organisationen') ?>
+                            <?= lang('Organisational Units', 'Einheiten') ?>
                         </a>
 
                         <!-- <a href="<?= ROOTPATH ?>/expertise" class="with-icon <?= $pageactive('expertise') ?>">
@@ -491,7 +524,7 @@ $pageactive = function ($p) use ($page) {
                         <?= lang('Visualization', 'Visualisierung') ?>
                     </div>
                     <nav>
-                        <!-- <a href="<?= ROOTPATH ?>/activities/search" class="with-icon <?= $pageactive('search') ?>">
+                        <!-- <a href="<?= ROOTPATH ?>/activities/search" class="with-icon <?= $pageactive('activities/search') ?>">
                             <i class="ph ph-magnifying-glass-plus" aria-hidden="true"></i>
                             <?= lang('Advanced search', 'Erweiterte Suche') ?>
                         </a> -->
@@ -506,6 +539,10 @@ $pageactive = function ($p) use ($page) {
                             <?= lang('Visualizations', 'Visualisierung') ?>
                         </a>
 
+                        <a href="<?= ROOTPATH ?>/pivot" class="with-icon <?= $pageactive('pivot') ?>">
+                            <i class="ph ph-table" aria-hidden="true"></i>
+                            <?= lang('Pivot table', 'Pivot-Tabelle') ?>
+                        </a>
                     </nav>
 
 

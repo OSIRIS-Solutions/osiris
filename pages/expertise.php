@@ -24,7 +24,8 @@ $cursor = $osiris->persons->aggregate([
             'is_active' => ['$ne'=>false]
         ]
     ],
-    ['$project' => ['expertise' => 1, 'displayname' => 1, 'depts' => 1, 'username' => 1]],
+    ['$sort' => ['last' => 1]],
+    ['$project' => ['expertise' => 1, 'displayname' => 1, 'username' => 1]],
     ['$unwind' => '$expertise'],
     [
         '$group' => [
@@ -40,10 +41,21 @@ $cursor = $osiris->persons->aggregate([
 
 <style>
     .badge {
-        color: var(--highlight-color) !important;
-        font-weight: 500;
+        font-weight: bold;
     }
+<?php foreach ($Groups->tree['children'] as $d) { ?>
+    .badge.<?= $d['id'] ?> {
+        background-color: <?= $d['color'] ?>30;
+        color: <?= $d['color'] ?> !important;
+    }
+    .badge.<?= $d['id'] ?>:hover {
+        background-color: <?= $d['color'] ?>;
+        color: white !important;
+    }
+<?php } ?>
+    
 </style>
+
 
 <h1 class="mt-0">
     <i class="fal ph-lg ph-barbell text-osiris"></i>
@@ -55,26 +67,32 @@ $cursor = $osiris->persons->aggregate([
     <i class="ph ph-x" onclick="$(this).prev().val('');filterFAQ('')"></i>
 </div>
 
-<div class="row row-eq-spacing-md">
+<table class="table">
 
     <?php foreach ($cursor as $doc) { ?>
-        <div class="col-md-6 col-xl-4 expertise">
-            <div class="box mt-0">
-                <div class="content">
-                    <h3 class="title"><?= strtoupper($doc['_id']) ?></h3>
-                    <p class="text-muted"><?= $doc['count'] ?> <?= lang('experts found:', 'Expert:innen gefunden:') ?></p>
+        <tr class="expertise">
+            <td class="">
+                    <h3 class="mt-0"><?= strtoupper($doc['_id']) ?></h3>
+                    <small class="text-muted"><?= $doc['count'] ?> <?= lang('experts found:', 'Expert:innen gefunden:') ?></small><br>
                     <?php foreach ($doc['users'] as $u) { 
-                        $color = 'bg-light';
-                        if (isset($u['depts'][0])) {
-                            $color = $Groups->cssVar($u['depts'][0]);
+                        $color = 'var(--highlight-color) ';
+                        $units = $Groups->getPersonUnit($u['username']);
+                        $unit = '';
+                        if (!empty($units)) {
+                            $unit = $Groups->deptHierarchy(array_column($units, 'unit'), 1);
+                            $color = $unit['color'] ?? $color;
                         }
-                        ?><a href="<?= ROOTPATH ?>/profile/<?= $u['username'] ?>" class="badge mr-5 mb-5" <?=$color?>><?= $u['displayname'] ?></a><?php 
+                        ?><a href="<?= ROOTPATH ?>/profile/<?= $u['username'] ?>" class="badge mr-5 mb-5 <?=$unit['id'] ?? ''?>"><?= $u['displayname'] ?></a><?php 
                     } ?>
-                </div>
-            </div>
-        </div>
+            </td>
+        </tr>
     <?php } ?>
-</div>
+    <tr id="not-found" style="display: none;">
+        <td class="text-center">
+            <h3><?= lang('No results found.', 'Keine Ergebnisse gefunden.') ?></h3>
+        </td>
+    </tr>
+</table>
 
 
 <script>
@@ -87,6 +105,11 @@ $cursor = $osiris->persons->aggregate([
         console.log(input);
         $('.expertise').hide()
         $('.expertise:contains("' + input + '")').show()
+        if ($('.expertise:visible').length == 0) {
+            $('#not-found').show()
+        } else {
+            $('#not-found').hide()
+        }
     }
 </script>
 <?php if (isset($_GET['search'])) { ?>

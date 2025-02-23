@@ -400,8 +400,7 @@ Route::post('/crud/projects/create', function () {
         }
     }
 
-    // dump($values, true);
-    // die;
+    $values = renderAuthorUnits($values, [], 'persons');
 
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
@@ -463,6 +462,9 @@ Route::post('/crud/projects/update/([A-Za-z0-9]*)', function ($id) {
             ['$set' => $sub]
         );
     }
+
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderAuthorUnits($values, [], 'persons');
 
     $id = $DB->to_ObjectID($id);
     $updateResult = $collection->updateOne(

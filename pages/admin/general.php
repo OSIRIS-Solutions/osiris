@@ -258,7 +258,7 @@ $affiliation = $Settings->get('affiliation_details');
                 'department' => [
                     'name' => lang('Department', 'Abteilung'),
                     'example' => 'department', // Beispiel: "IT Department"
-                ],//description
+                ], //description
                 'is_active' => [
                     'name' => lang('Active', 'Aktiv'),
                     'example' => 'useraccountcontrol', // Beispiel: "512" (Aktiv) oder "514" (Deaktiviert)
@@ -274,10 +274,15 @@ $affiliation = $Settings->get('affiliation_details');
             ];
 
     ?>
-            <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
             <p class="text-primary mt-0">
-        <?=lang('You are using the LDAP interface for your user management.', 'Ihr nutzt die LDAP-Schnittstelle fürs Nutzer-Management.')?>
-    </p>
+                <?= lang('You are using the LDAP interface for your user management.', 'Ihr nutzt die LDAP-Schnittstelle fürs Nutzer-Management.') ?>
+            </p>
+            <?php
+            break;
+            // TODO: continue
+            ?>
+            <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
+
 
                 <h2 class="title">
                     <?= lang('LDAP Settings', 'LDAP-Einstellungen') ?>
@@ -297,23 +302,23 @@ $affiliation = $Settings->get('affiliation_details');
                         <tr>
                             <th><?= lang('Person attribute in OSIRIS', 'Personen-Attribut in OSIRIS') ?></th>
                             <th><?= lang('LDAP variable (leave empty to manage the field in OSIRIS)', 'LDAP-Variable (leer lassen, um das Feld in OSIRIS zu managen)') ?></th>
-                            <th><?=lang('Example', 'Beispiel')?></th>
+                            <th><?= lang('Example', 'Beispiel') ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($attributeMappings as $field => $ldap_field): 
+                        <?php foreach ($attributeMappings as $field => $ldap_field):
                             $f = $fields[$field];
-                            ?>
+                        ?>
                             <tr>
                                 <td>
                                     <?= htmlspecialchars($f['name'] ?? $field) ?>
                                 </td>
                                 <td>
-                                    <input type="text" name="field[<?= $field ?>]" id="field-<?=$field?>" value="<?= htmlspecialchars($ldap_field) ?>" class="form-control">
+                                    <input type="text" name="field[<?= $field ?>]" id="field-<?= $field ?>" value="<?= htmlspecialchars($ldap_field) ?>" class="form-control">
                                 </td>
                                 <td class="text-muted">
                                     <?= htmlspecialchars($f['example']) ?>
-                                    <a onclick="$('#field-<?=$field?>').val('<?=$f['example']?>')" ><?=lang('Take', 'Übernehmen')?></a>
+                                    <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= lang('Take', 'Übernehmen') ?></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -326,7 +331,7 @@ $affiliation = $Settings->get('affiliation_details');
             break;
 
         case 'AUTH': ?>
-            
+
             <!-- <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
                 <div class="box primary padded">
 

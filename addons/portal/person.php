@@ -40,8 +40,8 @@ $Format = new Document(false, 'portal');
             </h1>
             <p class="my-0 lead"><?= lang($scientist['position'] ?? '', $scientist['position_de'] ?? null) ?></p>
             <?php
-            foreach ($scientist['depts'] as $i => $d) {
-                $dept = $Groups->getGroup($d);
+            foreach ($scientist['units'] as $i => $d) {
+                $dept = $Groups->getGroup($d['unit']);
                 if ($i > 0) echo ', ';
             ?>
                 <a href="<?= PORTALPATH ?>/group/<?= $dept['id'] ?>" style="color:<?= $dept['color'] ?? 'inherit' ?>">

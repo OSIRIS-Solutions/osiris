@@ -65,6 +65,45 @@ Route::get('/admin/(general|roles|features)', function ($page) {
 }, 'login');
 
 
+Route::get('/admin/templates', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang("Activity Types", "Aktivitäts-Typen"), 'path' => "/admin/categories"],
+    ];
+
+    $type = null;
+    $template = '';
+    if (isset($_GET['type']) && !empty($_GET['type'])) {
+        $type = $_GET['type'];
+        $typeArr = $osiris->adminTypes->findOne(['id' => $type]);
+        if (!empty($typeArr)) {
+            $breadcrumb[] = ['name' => lang($typeArr['name'], $typeArr['name_de']), 'path' => "/admin/types/$type"];
+
+            $templates = $typeArr['template'];
+            $template = $templates['print'];
+        }
+    }
+    $breadcrumb[] = ['name' => lang("Templates", "Vorlagen")];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/template-builder.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/admin/module-helper', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Modules.php";
+    $breadcrumb = [
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("New", "Neu")],
+        ['name' => lang("Data fields", "Datenfelder")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/module-helper.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
@@ -72,7 +111,7 @@ Route::get('/admin/categories', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Categories", "Kategorien")]
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien")]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/categories.php";
@@ -86,7 +125,7 @@ Route::get('/admin/categories/new', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Categories", "Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -109,7 +148,7 @@ Route::get('/admin/categories/(.*)', function ($id) {
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Categories", "Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
 
@@ -131,7 +170,7 @@ Route::get('/admin/types/new', function () {
 
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Categories", "Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang("New Type", "Neuer Typ")]
     ];
     $t = $_GET['parent'] ?? '';
@@ -185,7 +224,7 @@ Route::get('/admin/types/(.*)', function ($id) {
 
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Categories", "Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
@@ -296,7 +335,7 @@ Route::post('/crud/admin/general', function () {
         }
     }
 
-    if (isset($_POST['staff'])){
+    if (isset($_POST['staff'])) {
         $staff = [];
         if (isset($_POST['staff']['free'])) {
             $staff['free'] = boolval($_POST['staff']['free']);
@@ -304,7 +343,7 @@ Route::post('/crud/admin/general', function () {
         if (isset($_POST['staff']['positions']) && !empty($_POST['staff']['positions'])) {
             $en = $_POST['staff']['positions'];
             $de = $_POST['staff']['positions_de'] ?? $en;
-    
+
             $staff['positions'] = [];
             foreach ($en as $i => $e) {
                 $staff['positions'][] = [
@@ -319,7 +358,7 @@ Route::post('/crud/admin/general', function () {
             'value' => $staff
         ]);
     }
-    
+
 
     if (isset($_FILES["logo"])) {
         $filename = htmlspecialchars(basename($_FILES["logo"]["name"]));
@@ -469,6 +508,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     if (!isset($_POST['values'])) die("no values given");
+    $values = validateValues($_POST['values'], $DB);
 
     if ($col == 'categories') {
         $collection = $osiris->adminCategories;
@@ -476,9 +516,12 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
     } else {
         $collection = $osiris->adminTypes;
         $key = 'subtype';
+        // types need a categorie a.k.a. parent
+        if (!isset($values['parent'])) {
+            die("Type must have a parent category.");
+        }
     }
 
-    $values = validateValues($_POST['values'], $DB);
 
     // check if ID has changed
     if (isset($_POST['original_id']) && $_POST['original_id'] != $values['id']) {
@@ -487,13 +530,19 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
             [$key => $_POST['original_id']],
             ['$set' => [$key => $values['id']]]
         );
+        $_POST['redirect'] = ROOTPATH."/admin/types/" . $values['id'];
+
+        if ($col == 'categories') {
+            // update all connected types
+            $osiris->adminTypes->updateMany(
+                ['parent' => $_POST['original_id']],
+                ['$set' => ['parent' => $values['id']]]
+            );
+            $_POST['redirect'] = ROOTPATH."/admin/categories/" . $values['id'];
+        }
     }
 
     if ($col == 'types') {
-        // types need a categorie a.k.a. parent
-        if (!isset($values['parent'])) {
-            die("Type must have a parent category.");
-        }
         // check if parent has changed
         if (isset($_POST['original_parent']) && $_POST['original_parent'] != $values['parent']) {
             // update all connected activities 
@@ -590,56 +639,14 @@ Route::post('/crud/categories/update-order', function () {
 
 Route::post('/crud/admin/mail-test', function () {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/MailSender.php";
 
     // include_once BASEPATH . "/php/mail.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    // get mail settings:
-    $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
-    $mail = DB::doc2Arr($mail);
-    // if (empty($mail)) {
-    //     $msg = 'mail-settings-not-set';
-    //     header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg);
-    //     die();
-    // }
-
-    // mail contains email (from), smtp_server, smtp_port, smtp_user, smtp_password, smtp_security
-
-    $msg = 'mail-sent';
     $to = $_POST['email'];
-    $subject = "OSIRIS Test Mail";
-    $message = "This is a test mail from OSIRIS. If you received this mail, everything is set up correctly.";
 
-    $Mailer = new PHPMailer\PHPMailer\PHPMailer(true);
-
-    $Mailer->isSMTP();
-    $Mailer->Host = $mail['smtp_server'] ?? 'localhost';
-    if (isset($mail['user']) && isset($mail['smtp_password'])) {
-        $Mailer->SMTPAuth = true;
-        $Mailer->Username = $mail['smtp_user'];
-        $Mailer->Password = $mail['smtp_password'];
-    }
-    if (isset($mail['smtp_security'])) {
-        if ($mail['smtp_security'] == 'ssl')
-            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        elseif ($mail['smtp_security'] == 'tls')
-            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-    }
-
-    $Mailer->Port = $mail['smtp_port'] ?? 25;
-
-    $Mailer->setFrom($mail['email'] ?? 'no-reply@osiris-app.de', 'OSIRIS');
-    $Mailer->addAddress($to);
-    $Mailer->isHTML(true);
-
-    $Mailer->Subject = $subject;
-    $Mailer->Body = $message;
-
-    try {
-        $Mailer->send();
-    } catch (PHPMailer\PHPMailer\Exception $e) {
-        $msg = "mail-error: " . $Mailer->ErrorInfo;
-    }
+    sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
 
     header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg);
 }, 'login');
@@ -651,7 +658,7 @@ Route::post('/crud/admin/add-user', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
 
-    
+
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
         $msg = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");
         include BASEPATH . "/header.php";
@@ -679,7 +686,7 @@ Route::post('/crud/admin/add-user', function () {
     }
     $person['created'] = date('d.m.Y');
     $person['roles'] = array_keys($person['roles'] ?? []);
-    
+
     $person['new'] = true;
     $person['is_active'] = true;
 
@@ -687,7 +694,6 @@ Route::post('/crud/admin/add-user', function () {
 
     header("Location: " . ROOTPATH . "/admin/users?success=" . $person['username']);
 }, 'login');
-
 
 
 Route::post('/crud/admin/projects/create', function () {

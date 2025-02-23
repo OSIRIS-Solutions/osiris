@@ -99,7 +99,8 @@ Route::get('/activities/online-search', function () {
         ['name' => lang("Search in Pubmed", "Suche in Pubmed")]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/online-search.php";
+    include BASEPATH . "/pages/pubmed-search.php";
+    // include BASEPATH . "/pages/online-search.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -233,11 +234,6 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
 
     // first
     $form1 = $DB->getActivity($id1);
-    // if (($form1['locked'] ?? false) && !$USER['is_controlling']) {
-    //     header("Location: " . ROOTPATH . "/activities/view/$id?msg=locked");
-    // }
-
-    // second
     $form2 = $DB->getActivity($id2);
 
 
@@ -249,7 +245,13 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
         // $form = array_merge_recursive($form1, $form2);
         $keys = array_keys(array_merge($form1, $form2));
         $ignore = [
-            'rendered', 'editor-comment',  'updated', 'updated_by',  'created', 'created_by', 'duplicate'
+            'rendered',
+            'editor-comment',
+            'updated',
+            'updated_by',
+            'created',
+            'created_by',
+            'duplicate'
         ];
 
         $Format->setDocument($form1);
@@ -392,7 +394,9 @@ Route::post('/crud/activities/create', function () {
         }
     }
 
-    
+    if (isset($values['authors'])) {
+        $values = renderAuthorUnits($values);
+    }
 
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
@@ -433,13 +437,30 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
         unset($values['editors']);
     }
 
-    // add information on updating process
-    // $values['updated'] = date('Y-m-d');
-    // $values['updated_by'] = $_SESSION['username'];
-    $values = $DB->updateHistory($values, $id);
+    // add information on units
+    if (isset($values['authors'])) {
+        // check if authors have been changed
+        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['authors' => 1]]);
+        $old = DB::doc2Arr($old['authors'] ?? []);
+        // filter old authors without user
+        $old = array_filter($old, function ($a) {
+            return !empty($a['user']);
+        });
+        // avoid updating user if last and first name are the same
+        foreach ($old as $o) {
+            foreach ($values['authors'] as $i => $a) {
+                // if (empty($o['user'])) continue;
+                if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
+                    $values['authors'][$i]['user'] = $o['user'];
+                    break;
+                }
+            }
+        }
+        $values = renderAuthorUnits($values, $old);
+    }
 
-    // dump($values, true);
-    // die;
+    // add information on updating process
+    $values = $DB->updateHistory($values, $id);
 
     $id = $DB->to_ObjectID($id);
     $updateResult = $collection->updateOne(
@@ -611,9 +632,6 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
     } else {
         $values = $_POST['projects'];
         $values = validateValues($values, $DB);
-        // dump($values);
-        // die;
-
 
         $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
@@ -634,7 +652,11 @@ Route::post('/crud/activities/update-authors/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
 
     $authors = [];
+    $units = [];
     foreach ($_POST['authors'] as $i => $a) {
+        if (isset($a['units']) && !empty($a['units']) && is_array($a['units'])) {
+            $units = array_merge($units, $a['units']);
+        }
         $authors[] = [
             'last' => $a['last'],
             'first' => $a['first'],
@@ -643,12 +665,21 @@ Route::post('/crud/activities/update-authors/([A-Za-z0-9]*)', function ($id) {
             //|| ($_SESSION['username'] == $a['user'] ?? '')
             'user' => empty($a['user']) ? null : $a['user'],
             'approved' => boolval($a['approved'] ?? false),
+            // 'orcid' => $a['orcid'] ?? null,
+            'units' => $a['units'] ?? null,
+            'manually' => true
         ];
     }
 
+    $units = array_unique($units);
+    foreach ($units as $unit) {
+        $units = array_merge($units, $Groups->getParents($unit, true));
+    }
+    $units = array_unique($units);
+
     $osiris->activities->updateOne(
         ['_id' => $id],
-        ['$set' => ["authors" => $authors]]
+        ['$set' => ["authors" => $authors, "units" => $units]]
     );
 
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
@@ -728,14 +759,26 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
     // add author name to list of names of user
     $osiris->persons->updateOne(
         ['username' => $_SESSION['username']],
-        ['$addToSet' => ['names' => $author['last'] . ", " . $author['first']]
-    ]);
+        [
+            '$addToSet' => ['names' => $author['last'] . ", " . $author['first']]
+        ]
+    );
+
+    $units = $author['units'] ?? null;
 
     $updateResult = $osiris->activities->updateOne(
         $filter,
-        ['$set' => ["$role.$index.user" => $_SESSION['username'], "$role.$index.approved" => true]
-    ]);
+        [
+            '$set' => [
+                "$role.$index.user" => $_SESSION['username'], 
+                "$role.$index.approved" => true,
+                "$role.$index.aoi" => true,
+                ]
+        ]
+    );
 
+    include_once BASEPATH . "/php/Render.php";
+    renderAuthorUnitsMany(['_id' => $id]);
 
     // $updateCount = $updateResult->getModifiedCount();
 

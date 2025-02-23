@@ -82,6 +82,8 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
 // journal/check-metrics
 Route::get('/journal/check-metrics', function () {
     include_once BASEPATH . "/php/init.php";
+    // enhance time limit
+    set_time_limit(6000);
     // first check the year from https://osiris-app.de/api/v1
     $url = "https://osiris-app.de/api/v1";
     $curl = curl_init();
@@ -95,7 +97,7 @@ Route::get('/journal/check-metrics', function () {
     $year = $result['year'] ?? date('Y');
     // {"metrics.year": {$ne: 2023}}
     $collection = $osiris->journals;
-    $cursor = $collection->find(['metrics.year' => ['$ne' => $year]], ['issn' => 1]);
+    $cursor = $collection->find(['metrics.year' => ['$ne' => $year], 'no_metrics'=> ['$ne'=>true]], ['issn' => 1]);
     $N = 0;
     foreach ($cursor as $doc) {
         $issn = $doc['issn'] ?? [];
@@ -124,6 +126,11 @@ Route::get('/journal/check-metrics', function () {
             }
         }
         if (empty($metrics)) {
+            // make sure to skip for future check
+            $updateResult = $collection->updateOne(
+                ['_id' => $doc['_id']],
+                ['$set' => ['no_metrics' => true]]
+            );
             continue;
         }
         # sort metrics by year
@@ -146,6 +153,10 @@ Route::get('/journal/check-metrics', function () {
         $N++;
     }
     $_SESSION['msg'] = "Updated metrics of $N journals";
+    if ($N > 100) {
+        $_SESSION['msg'] .= " (max. 100). Please reload to check more.";
+        die;
+    }
 
     header("Location: " . ROOTPATH . "/journal");
 });

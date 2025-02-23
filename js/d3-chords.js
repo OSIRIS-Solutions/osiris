@@ -146,9 +146,13 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
 
     /// Create scale and layout functions ///
 
-    var colors = d3.scaleOrdinal()
+    if (colors == null){
+        var colors = d3.scaleOrdinal(d3.schemeCategory20b);
+    } else {
+        var colors = d3.scaleOrdinal()
         .domain(d3.range(labels.length))
         .range(colors);
+    }
 
     //A "custom" d3 chord function that automatically sorts the order of the chords in such a manner to reduce overlap	
     var chord = customChordLayout()
@@ -316,11 +320,17 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
     var chord = svg.selectAll("path.chord")
         .data(chord.chords)
         .enter().append("path")
-        .attr("class", "chord")
         .style("opacity", opacityDefault)
         .attr("d", path)
         .on("mouseover", mouseoverChord)
-        .on("mouseout", mouseoutChord);
+        .on("mouseout", mouseoutChord)
+        .attr('class', function (d) {
+            if (d.target.index == d.source.index) {
+                return 'chord self';
+            } else {
+                return 'chord';
+            }
+        });
 
     if (useGradient) {
         console.log(useGradient);

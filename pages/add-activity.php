@@ -62,9 +62,9 @@ function val($index, $default = '')
 
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=2"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
 
-<script src="<?= ROOTPATH ?>/js/add-activity.js?v=3"></script>
+<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?=CSS_JS_VERSION?>"></script>
 
 
 <div class="modal" id="add-event" tabindex="-1" role="dialog">
@@ -655,4 +655,4 @@ function val($index, $default = '')
 <?php } ?>
 
 
-<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=2"></script> -->
+<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?=CSS_JS_VERSION?>"></script> -->

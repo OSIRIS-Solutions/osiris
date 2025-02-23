@@ -75,7 +75,7 @@ $institute = $Settings->get('affiliation_details');
 </script>
 
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-<script src="<?= ROOTPATH ?>/js/projects.js?v=1"></script>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?=CSS_JS_VERSION?>"></script>
 
 <style>
     td .key {
@@ -642,7 +642,7 @@ $institute = $Settings->get('affiliation_details');
                 <table class="table">
                     <tbody>
                         <?php
-                        $units = $Project->getUnits();
+                        $units = $project['units'] ?? [];
                         // $tree =  $Groups->getPersonHierarchyTree($units);
                         if (!empty($units)) {
                             $hierarchy = $Groups->getPersonHierarchyTree($units);

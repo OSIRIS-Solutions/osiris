@@ -188,14 +188,7 @@ Route::post('/download', function () {
         $filename .= "_" . trim($params['user']);
     }
     if (isset($params['dept']) && !empty($params['dept'])) {
-        $users = [];
-        $cursor = $osiris->persons->find(['dept' => $params['dept']], ['projection' => ['username' => 1]]);
-
-        foreach ($cursor as $u) {
-            if (empty($u['username'] ?? '')) continue;
-            $users[] = strtolower($u['username']);
-        }
-        $filter['$and'][] = array('authors.user'=> ['$in' => $users]); //, ['editors.user' => ['$in'=>$users]]]
+        $filter['$and'][] = array('units' => $params['dept']);
         $filename .= "_" . trim($params['dept']);
     }
     if (isset($params['id']) && !empty($params['id'])) {
