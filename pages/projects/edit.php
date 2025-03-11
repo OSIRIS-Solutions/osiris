@@ -23,7 +23,9 @@ $form = $form ?? array();
 $type = $type ?? $_GET['type'] ?? $form['type'] ?? 'Drittmittel';
 $fields = $Project->getFields($type);
 
-if (empty($form) || !isset($form['_id'])) {
+$new_project = empty($form) || !isset($form['_id']);
+
+if ($new_project) {
     $formaction = ROOTPATH . "/crud/projects/create";
     $url = ROOTPATH . "/projects/view/*";
 } else {
@@ -54,7 +56,7 @@ function sel($index, $value)
 
 <div class="container w-600">
 
-    <?php if (empty($form)) { ?>
+    <?php if ($new_project) { ?>
         <h3 class="title">
             <?= lang('Add new project', 'Neues Projekt') ?>
         </h3>
@@ -70,7 +72,7 @@ function sel($index, $value)
 
 
     <!-- only new projects can be changed -->
-    <?php if (empty($form)) { ?><?php } ?>
+    <?php if ($new_project) { ?><?php } ?>
     <?php
     // get current url without query string
     $current_url = strtok($_SERVER["REQUEST_URI"], '?');
@@ -78,7 +80,6 @@ function sel($index, $value)
 
 
     <?php if ($type != 'Teilprojekt') { ?>
-
         <div class="select-btns">
             <a href="<?= $current_url ?>?type=Drittmittel" class="btn select text-danger <?= $type == 'Drittmittel' ? 'active' : '' ?>">
                 <i class="ph ph-hand-coins"></i>
@@ -120,7 +121,6 @@ function sel($index, $value)
             <h6 class="mt-0">
                 <?= lang('General information', 'Allgemeine Informationen') ?>
             </h6>
-            <?php if (in_array('name', $fields)) { ?>
 
                 <div class="form-group floating-form">
                     <input type="text" class="form-control" name="values[name]" id="name" required value="<?= val('name') ?>" maxlength="30" placeholder="Short title">
@@ -128,9 +128,7 @@ function sel($index, $value)
                         <?= lang('Short title', 'Kurztitel') ?>
                     </label>
                 </div>
-            <?php } ?>
 
-            <?php if (in_array('title', $fields)) { ?>
                 <div class="form-group">
                     <div class=" lang-<?= lang('en', 'de') ?>">
                         <label for="title" class="required floating-title">
@@ -149,22 +147,6 @@ function sel($index, $value)
                         initQuill(document.getElementById('title-editor'));
                     </script>
                 </div>
-            <?php } ?>
-
-            <?php if (in_array('status', $fields)) { ?>
-                <div class="form-group floating-form">
-                    <select class="form-control" id="status" name="values[status]" required autocomplete="off">
-                        <option value="applied" <?= sel('status', 'applied') ?>><?= lang('applied', 'beantragt') ?></option>
-                        <option value="approved" <?= sel('status', 'approved') ?>><?= lang('approved', 'bewilligt') ?></option>
-                        <option value="rejected" <?= sel('status', 'rejected') ?>><?= lang('rejected', 'abgelehnt') ?></option>
-                        <option value="finished" <?= sel('status', 'abgeschlossen') ?>><?= lang('finished', 'abgeschlossen') ?></option>
-                    </select>
-
-                    <label class="required" for="status">
-                        <?= lang('Status', 'Status') ?>
-                    </label>
-                </div>
-            <?php } ?>
 
 
             <?php if (in_array('time', $fields)) { ?>
@@ -288,7 +270,7 @@ function sel($index, $value)
                 <?php if (in_array('supervisor', $fields)) {
 
                     $selected = '';
-                    if (empty($form)) {
+                    if ($new_project) {
                         include_once BASEPATH . "/php/Groups.php";
                         // default: head of group
                         $dept = $USER['depts'] ?? [];

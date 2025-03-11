@@ -51,6 +51,13 @@ Route::get('/projects/search', function () {
 }, 'login');
 
 
+// Route::get('/projects/kdsf', function () {
+//     include
+
+
+
+// });
+
 Route::get('/projects/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];

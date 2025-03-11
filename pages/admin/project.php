@@ -36,22 +36,19 @@
 
 <form action="<?= ROOTPATH ?>/crud/admin/project/update/<?=$project['_id']?>" method="post" id="group-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/project">
+    <?php if (isset($type) && $type != 'new') { ?>
+        <input type="hidden" name="original_id" value="<?= $type ?>">
+    <?php } ?>
+
     <div class="box">
-
         <div class="content">
-
             <div class="row row-eq-spacing">
-
-                <?php if (isset($type) && $type != 'new') { ?>
-                    <input type="hidden" name="original_id" value="<?= $type ?>">
-                <?php } ?>
-
-                <div class="col-sm-2">
-                    <label for="icon" class="required">ID</label>
+                <div class="col-sm" >
+                    <label for="id" class="required">ID</label>
                     <input type="text" class="form-control" name="values[id]" required value="<?= $type == 'new' ? '' : $type ?>" oninput="sanitizeID(this)">
                     <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm" >
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
 
                     <div class="input-group">
@@ -63,6 +60,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm" >
+                    <label for="color" class="required "><?=lang('Color', 'Farbe')?></label>
+                    <input type="color" class="form-control" name="values[color]" required value="<?= $project['color'] ?? '' ?>">
+                </div>
+            </div>
+
+
+            <div class="row row-eq-spacing">
                 <div class="col-sm">
                     <label for="name" class="required ">Name (en)</label>
                     <input type="text" class="form-control" name="values[name]" required value="<?= $project['name'] ?? '' ?>">

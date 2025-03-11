@@ -4,13 +4,21 @@
     <?=lang('Project Settings', 'Projekt-Einstellungen')?>
 </h1>
 
-<!-- 
+
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/admin/project/new">
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
     </a>
-</div> -->
+
+    <a class="btn" href="<?= ROOTPATH ?>/admin/project/vocabulary">
+        <i class="ph ph-list"></i>
+        <?= lang('Vocabulary', 'Vokabular') ?>
+    </a>
+</div>
+
+
+
 
 
 <?php
