@@ -523,7 +523,7 @@ function sel($index, $value)
 
 
             <?php
-            if (in_array('kdsf-fkk', $fields)) {
+            if (in_array('kdsf-ffk', $fields)) {
                 include_once BASEPATH . "/components/kdsf-ffk-select.php";
             }
             ?>

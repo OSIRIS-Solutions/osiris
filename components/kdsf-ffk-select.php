@@ -70,6 +70,10 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
         font-size: 1.2rem;
         color: var(--muted-color);
     }
+
+    .kdsf-category .ph-question {
+        cursor: pointer;
+    }
 </style>
 <div class="kdsf-widget">
     <label for="kdsf-ffk">

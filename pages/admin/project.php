@@ -1,6 +1,5 @@
-<?php if (empty($project)) { 
+<?php if (empty($project)) {
     $route = ROOTPATH . '/admin/project/create';
-
 } ?>
 
 
@@ -34,7 +33,7 @@
     <?= lang('Project Settings', 'Projekt-Einstellungen') ?>
 </h1>
 
-<form action="<?= ROOTPATH ?>/crud/admin/project/update/<?=$project['_id']?>" method="post" id="group-form">
+<form action="<?= ROOTPATH ?>/crud/admin/project/update/<?= $project['_id'] ?>" method="post" id="group-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/project">
     <?php if (isset($type) && $type != 'new') { ?>
         <input type="hidden" name="original_id" value="<?= $type ?>">
@@ -43,12 +42,12 @@
     <div class="box">
         <div class="content">
             <div class="row row-eq-spacing">
-                <div class="col-sm" >
+                <div class="col-sm">
                     <label for="id" class="required">ID</label>
                     <input type="text" class="form-control" name="values[id]" required value="<?= $type == 'new' ? '' : $type ?>" oninput="sanitizeID(this)">
                     <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
                 </div>
-                <div class="col-sm" >
+                <div class="col-sm">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
 
                     <div class="input-group">
@@ -60,8 +59,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm" >
-                    <label for="color" class="required "><?=lang('Color', 'Farbe')?></label>
+                <div class="col-sm">
+                    <label for="color" class="required "><?= lang('Color', 'Farbe') ?></label>
                     <input type="color" class="form-control" name="values[color]" required value="<?= $project['color'] ?? '' ?>">
                 </div>
             </div>
@@ -103,14 +102,58 @@
 
         </div>
 
-        <hr>
+    </div>
+    <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+</form>
+
+
+<h2><?= lang('Phases', 'Phasen') ?></h2>
+
+<?php
+$phases = $project['phases'] ?? [
+    [
+        'name' => 'Proposal',
+        'name_de' => 'Antrag',
+        'modules' => [],
+
+    ]
+];
+foreach ($phases as $phase) { ?>
+    <div class="box">
         <div class="content">
+            <div class="row row-eq-spacing">
+                <div class="col-sm">
+                    <label for="name" class="required ">Name (en)</label>
+                    <input type="text" class="form-control" name="values[name]" required value="<?= $phase['name'] ?? '' ?>">
+                </div>
+                <div class="col-sm">
+                    <label for="name_de" class="">Name (de)</label>
+                    <input type="text" class="form-control" name="values[name_de]" value="<?= $phase['name_de'] ?? '' ?>">
+                </div>
+                <div class="col-sm">
+                    <label for="color" class="required" ><?= lang('Color', 'Farbe') ?></label>
+                   <div class="input-group">
+                   <select name="values[color]" class="form-control color-select">
+                        <option value="muted">muted</option>
+                        <option value="primary">primary</option>
+                        <option value="secondary">secondary</option>
+                        <option value="success">success</option>
+                        <option value="danger">danger</option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="ph ph-fill ph-circle text-<?= $phase['color'] ?? 'muted' ?>" id="test-icon"></i>
+                        </span>
+                    </div>
+                   </div>
+                </div>
+            </div>
             <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
             <div class="author-widget">
                 <div class="author-list p-10">
                     <?php
                     $module_lst = [];
-                    foreach ($project['modules'] ?? array() as $module) {
+                    foreach ($phase['modules'] ?? array() as $module) {
                         $req = '';
                         $name = trim($module);
                         if (str_ends_with($name, '*')) {
@@ -160,13 +203,19 @@
             </div>
             <p>
                 <i class="ph ph-info text-signal"></i>
-                <?=lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.')?>
+                <?= lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.') ?>
             </p>
         </div>
-       
     </div>
-    <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
-</form>
+<?php } ?>
+
+
+<script>
+    $('.color-select').change(function() {
+        $(this).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + $(this).val());
+    });
+</script>
+
 
 
 <?php if (!empty($form)) { ?>

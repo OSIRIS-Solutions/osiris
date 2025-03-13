@@ -46,7 +46,8 @@ class Project
             'role',
             'coordinator',
             'nagoya',
-            'countries'
+            'countries',
+            'kdsf-ffk',
         ],
         'Stipendium' => [
             'name',
@@ -129,6 +130,7 @@ class Project
         'internal_number',
         'nagoya',
         'countries',
+        'kdsf-ffk',
         'name',
         'personnel',
         'public',
