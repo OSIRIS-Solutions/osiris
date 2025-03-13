@@ -18,6 +18,7 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
         -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
         -webkit-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
         box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+        margin: 2rem 0;
     }
 
     .kdsf-widget label {
@@ -125,9 +126,12 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
                 tooltip.on('click', function() {
                     $(this).next().slideToggle();
                 })
-                let info = '';
-                if (item.scope_notes) {
-                    info = '<div class="kdsf-tooltip">' + lang(item.scope_notes.en, item.scope_notes.de) + '</div>';
+                let info = $('<div class="kdsf-tooltip">');
+                if (item.scope_notes && item.scope_notes.en !== undefined) {
+                    info.text(lang(item.scope_notes.en, item.scope_notes.de));
+                }
+                if (item.examples && item.examples.en !== undefined) {
+                    info.append('<br><b>'+lang('Examples', 'Beispiele')+': </b>'+ lang(item.examples.en, item.examples.de));
                 }
                 li.append(checkbox, ' ' + lang(item.labels.en, item.labels.de) + ' ', tooltip,  info);
             }
