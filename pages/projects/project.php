@@ -75,7 +75,7 @@ $institute = $Settings->get('affiliation_details');
 </script>
 
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-<script src="<?= ROOTPATH ?>/js/projects.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <style>
     td .key {
@@ -444,8 +444,17 @@ $institute = $Settings->get('affiliation_details');
                                         case 'countries': ?>
                                             <span class="key"><?= lang('Countries', 'Länder') ?></span>
                                             <ul class="list signal mb-0">
-                                                <?php foreach ($project['countries'] ?? [] as $c) { ?>
-                                                    <li><?= Country::get($c) ?></li>
+                                                <?php foreach ($project['countries'] ?? [] as $c) {
+                                                    $iso = $c;
+                                                    $role = '';
+                                                    if (isset($c['country'])) {
+                                                        $iso = $c['country'];
+                                                    }
+                                                    if (isset($c['role'])) {
+                                                        $role = ' (' . $c['role'] . ')';
+                                                    }
+                                                ?>
+                                                    <li><?= Country::get($iso) . $role ?></li>
                                                 <?php } ?>
                                             </ul>
                                         <?php break;

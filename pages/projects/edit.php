@@ -52,7 +52,7 @@ function sel($index, $value)
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <div class="container w-600">
 
@@ -122,31 +122,31 @@ function sel($index, $value)
                 <?= lang('General information', 'Allgemeine Informationen') ?>
             </h6>
 
-                <div class="form-group floating-form">
-                    <input type="text" class="form-control" name="values[name]" id="name" required value="<?= val('name') ?>" maxlength="30" placeholder="Short title">
-                    <label for="project" class="required">
-                        <?= lang('Short title', 'Kurztitel') ?>
+            <div class="form-group floating-form">
+                <input type="text" class="form-control" name="values[name]" id="name" required value="<?= val('name') ?>" maxlength="30" placeholder="Short title">
+                <label for="project" class="required">
+                    <?= lang('Short title', 'Kurztitel') ?>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class=" lang-<?= lang('en', 'de') ?>">
+                    <label for="title" class="required floating-title">
+                        <?php if ($type == 'Teilprojekt') {
+                            echo lang('Full title of the subproject / work package', 'Voller Titel des Teilprojektes / Arbeitspaketes');
+                        } else {
+                            echo lang('Full title of the project', 'Voller Titel des Projekts');
+                        } ?>
                     </label>
+
+                    <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
+                    <input type="text" class="form-control hidden" name="values[title]" id="title" required value="<?= val('title') ?>">
                 </div>
 
-                <div class="form-group">
-                    <div class=" lang-<?= lang('en', 'de') ?>">
-                        <label for="title" class="required floating-title">
-                            <?php if ($type == 'Teilprojekt') {
-                                echo lang('Full title of the subproject / work package', 'Voller Titel des Teilprojektes / Arbeitspaketes');
-                            } else {
-                                echo lang('Full title of the project', 'Voller Titel des Projekts');
-                            } ?>
-                        </label>
-
-                        <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
-                        <input type="text" class="form-control hidden" name="values[title]" id="title" required value="<?= val('title') ?>">
-                    </div>
-
-                    <script>
-                        initQuill(document.getElementById('title-editor'));
-                    </script>
-                </div>
+                <script>
+                    initQuill(document.getElementById('title-editor'));
+                </script>
+            </div>
 
 
             <?php if (in_array('time', $fields)) { ?>
@@ -491,7 +491,7 @@ function sel($index, $value)
                         <div class="custom-checkbox">
                             <input type="checkbox" id="public-check" <?= val('public', false) ? 'checked' : '' ?> name="values[public]">
                             <label for="public-check">
-                                <?=lang('Approval of the internet presentation of the approved project', 'Zustimmung zur Internetpräsentation des bewilligten Vorhabens')?>
+                                <?= lang('Approval of the internet presentation of the approved project', 'Zustimmung zur Internetpräsentation des bewilligten Vorhabens') ?>
                             </label>
                         </div>
                     </div>
@@ -522,11 +522,95 @@ function sel($index, $value)
             <?php } ?>
 
 
-<?php
-                // if (in_array('kdsf', $fields)) {
-                    include_once BASEPATH . "/components/kdsf-ffk-select.php";
-                // }
-?>
+            <?php
+            if (in_array('kdsf-fkk', $fields)) {
+                include_once BASEPATH . "/components/kdsf-ffk-select.php";
+            }
+            ?>
+
+            <?php if (in_array('countries', $fields)) {
+                $countries = $form['countries'] ?? [];
+                include_once BASEPATH . "/php/Country.php";
+            ?>
+
+                <b>
+                    <?= lang('Countries you will do research on/in:', 'Länder über/in denen Forschung betrieben wird:') ?>
+                </b>
+
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('Role', 'Rolle') ?></th>
+                            <th><?= lang('Action', 'Aktion') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody id="country-list">
+                        <?php foreach ($countries as $country) {
+                            if (empty($country) || !isset($country['iso'])) continue;
+                            $iso = $country['iso'];
+                            $role = $country['role'] ?? 'both';
+                        ?>
+                            <tr>
+                                <td><?= Country::get($iso) ?></td>
+                                <td><?= $role ?></td>
+                                <td>
+                                    <a onclick="$(this).closest('tr').remove()"><?= lang('Remove', 'Entfernen') ?></a>
+                                    <input type="text" name="values[countries][]" value="<?= $iso ?>;<?= $role ?>" hidden>
+
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <div class="input-group small d-inline-flex w-auto">
+                                    <select id="add-country" class="form-control">
+                                        <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                                        <?php foreach (Country::COUNTRIES as $iso => $name) { ?>
+                                            <option value="<?= $iso ?>"><?= $name ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <select id="add-country-role" class="form-control">
+                                        <option value="" disabled checked><?= lang('Please select a role', 'Bitte wähle einen Typ aus') ?></option>
+                                        <option value="source"><?= lang('Source', 'Quellland') ?></option>
+                                        <option value="target"><?= lang('Target', 'Zielland') ?></option>
+                                        <option value="both"><?= lang('Both', 'Beide') ?></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn secondary" type="button" onclick="addCountry(event);">
+                                            <i class="ph ph-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <script>
+                    function addCountry(event) {
+                        var el = $('#add-country')
+                        var data = el.val()
+                        var type = $('#add-country-role').val()
+                        if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                            event.preventDefault();
+                            if (data) {
+                                let tr = $('<tr>')
+                                tr.append('<td>' + el.find('option:selected').text() + '</td>')
+                                tr.append('<td>' + type + '</td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('Remove', 'Entfernen') ?></a><input type="text" name="values[countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                $('#country-list').append(tr)
+                            }
+                            $(el).val('')
+                            return false;
+                        }
+                    }
+                </script>
+            <?php } ?>
+
 
 
             <?php if (in_array('nagoya', $fields) && $Settings->featureEnabled('nagoya')) {
@@ -558,8 +642,8 @@ function sel($index, $value)
                             <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
                         </b>
 
-                        <div class="author-widget" id="author-widget">
-                            <div class="author-list p-10" id="author-list">
+                        <div class="author-widget" id="nagoya-country-widget">
+                            <div class="author-list p-10" id="nagoya-country-list">
                                 <?php foreach ($countries as $iso) { ?>
                                     <div class='author'>
                                         <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
@@ -571,27 +655,27 @@ function sel($index, $value)
                             </div>
                             <div class="footer">
                                 <div class="input-group small d-inline-flex w-auto">
-                                    <select id="add-country" class="form-control">
+                                    <select id="add-nagoya-country" class="form-control">
                                         <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
                                         <?php foreach (Country::COUNTRIES as $iso => $name) { ?>
                                             <option value="<?= $iso ?>"><?= $name ?></option>
                                         <?php } ?>
                                     </select>
                                     <div class="input-group-append">
-                                        <button class="btn secondary" type="button" onclick="addCountry(event);">
+                                        <button class="btn secondary" type="button" onclick="addNagoyaCountry(event);">
                                             <i class="ph ph-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <script>
-                                function addCountry(event) {
-                                    var el = $('#add-country')
+                                function addNagoyaCountry(event) {
+                                    var el = $('#add-nagoya-country')
                                     var data = el.val()
                                     if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
                                         event.preventDefault();
                                         if (data) {
-                                            $('#author-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
+                                            $('#nagoya-country-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
                                         }
                                         $(el).val('')
                                         return false;
@@ -739,8 +823,8 @@ function sel($index, $value)
                 <?php } ?>
             <?php } ?>
 
-             <!-- if topics are registered, you can choose them here -->
-        <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
+            <!-- if topics are registered, you can choose them here -->
+            <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
 
             <button class="btn secondary" type="submit" id="submit-btn">
                 <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>

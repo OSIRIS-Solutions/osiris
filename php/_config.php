@@ -100,6 +100,16 @@ function validateValues($values, $DB)
         } else if ($key == 'kdsf-ffk') {
             $values[$key] = array_map('strval', $value);
             continue;
+        } else if ($key == 'countries'){
+            $countries = [];
+            foreach ($value as $country) {
+                $country = explode(';', $country, 2);
+                $countries[] = [
+                    'country' => $country[0],
+                    'role' => $country[1] ?? ''
+                ];
+            }
+            $values[$key] = $countries;
         } else if (is_array($value)) {
             $values[$key] = validateValues($value, $DB);
         } else if ($key == 'issn') {
