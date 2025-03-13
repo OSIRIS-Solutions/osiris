@@ -415,13 +415,22 @@ class Project
     }
     public function getDuration()
     {
-        $year1 = $this->project['start']['year'];
-        $year2 = $this->project['end']['year'];
+        if (!isset($this->project['start']) || !isset($this->project['end']))
+            return '-';
 
-        $month1 = $this->project['start']['month'];
-        $month2 = $this->project['end']['month'];
+        $start = $this->project['start_date']; // in format yyyy-mm-dd
+        $end = $this->project['end_date']; // in format yyyy-mm-dd
 
-        return (($year2 - $year1) * 12) + ($month2 - $month1) + 1;
+        // get number of month between start and end
+        $start = new DateTime($start);
+        $end = new DateTime($end);
+        $interval = $start->diff($end);
+        $years = $interval->y;
+        $months = $interval->m;
+
+        $total_month = $years * 12 + $months + 1;
+        return $total_month;
+        
     }
     public function getProgress()
     {
