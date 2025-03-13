@@ -331,7 +331,7 @@ if (isset($_GET['subtype']) && isset($_GET['subtype']['id'])) {
 
                                             </div>
                                             <div class=" footer">
-                                                <div class="input-group sm d-inline-flex w-auto">
+                                                <div class="input-group small d-inline-flex w-auto">
                                                     <select class="module-input form-control">
                                                         <option value="" disabled selected><?= lang('Add module ...', 'Füge Module hinzu ...') ?></option>
                                                         <?php

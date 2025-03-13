@@ -79,51 +79,51 @@ CSS variables (CSS custom properties)
   --osiris-color: #f78104;
   --secondary-color: #f78104;
   --secondary-color-light: #faab36;
-  --secondary-color-very-light: rgb(253.4, 229.8, 204.8);
+  --secondary-color-very-light: #fde6cd;
   --secondary-color-dark: #e95709;
-  --secondary-color-very-dark: rgb(49.4, 25.8, 0.8);
+  --secondary-color-very-dark: #311a01;
   --secondary-color-20: rgba(247, 129, 4, 0.2);
   --secondary-color-30: rgba(247, 129, 4, 0.3);
   --secondary-color-60: rgba(247, 129, 4, 0.6);
   --primary-color: #008083;
   --primary-color-light: #249ea0;
-  --primary-color-very-light: rgb(204, 229.6, 230.2);
+  --primary-color-very-light: #cce6e6;
   --primary-color-dark: #005f60;
-  --primary-color-very-dark: rgb(0, 25.6, 26.2);
+  --primary-color-very-dark: #001a1a;
   --primary-color-20: rgba(0, 128, 131, 0.2);
   --primary-color-30: rgba(0, 128, 131, 0.3);
   --primary-color-60: rgba(0, 128, 131, 0.6);
   --link-color: var(--primary-color);
   --link-color-hover: var(--primary-color-light);
   --success-color: #63a308;
-  --success-color-light: rgb(111.48, 170.36, 27.76);
-  --success-color-very-light: rgb(223.8, 236.6, 205.6);
-  --success-color-dark: rgb(91.08, 149.96, 7.36);
-  --success-color-very-dark: rgb(19.8, 32.6, 1.6);
+  --success-color-light: #6faa1c;
+  --success-color-very-light: #e0edce;
+  --success-color-dark: #5b9607;
+  --success-color-very-dark: #142102;
   --success-color-20: rgba(99, 163, 8, 0.2);
   --success-color-30: rgba(99, 163, 8, 0.3);
   --success-color-60: rgba(99, 163, 8, 0.6);
   --danger-color: #B61F29;
-  --danger-color-light: rgb(187.84, 48.92, 58.12);
-  --danger-color-very-light: rgb(240.4, 210.2, 212.2);
-  --danger-color-dark: rgb(167.44, 28.52, 37.72);
-  --danger-color-very-dark: rgb(36.4, 6.2, 8.2);
+  --danger-color-light: #bc313a;
+  --danger-color-very-light: #f0d2d4;
+  --danger-color-dark: #a71d26;
+  --danger-color-very-dark: #240608;
   --danger-color-20: rgba(182, 31, 41, 0.2);
   --danger-color-30: rgba(182, 31, 41, 0.3);
   --danger-color-60: rgba(182, 31, 41, 0.6);
   --muted-color: #878787;
-  --muted-color-light: rgb(144.6, 144.6, 144.6);
+  --muted-color-light: #919191;
   --muted-color-very-light: #e7e7e7;
-  --muted-color-dark: rgb(124.2, 124.2, 124.2);
+  --muted-color-dark: #7c7c7c;
   --muted-color-very-dark: #1b1b1b;
   --muted-color-20: rgba(135, 135, 135, 0.2);
   --muted-color-30: rgba(135, 135, 135, 0.3);
   --muted-color-60: rgba(135, 135, 135, 0.6);
   --signal-color: #ECAF00;
-  --signal-color-light: rgb(237.52, 181.4, 20.4);
-  --signal-color-very-light: rgb(251.2, 239, 204);
-  --signal-color-dark: rgb(217.12, 161, 0);
-  --signal-color-very-dark: rgb(47.2, 35, 0);
+  --signal-color-light: #eeb514;
+  --signal-color-very-light: #fbefcc;
+  --signal-color-dark: #d9a100;
+  --signal-color-very-dark: #2f2300;
   --signal-color-20: rgba(236, 175, 0, 0.2);
   --signal-color-30: rgba(236, 175, 0, 0.3);
   --signal-color-60: rgba(236, 175, 0, 0.6);
@@ -4461,162 +4461,104 @@ input[type=number] {
 }
 
 /* Input group */
+/* Input group */
 .input-group {
   position: relative;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -ms-flex-align: stretch;
   align-items: stretch;
   width: 100%;
 }
-
 .input-group > .form-control {
   position: relative;
-  -ms-flex: 1 1 0%;
   flex: 1 1 0%;
   min-width: 0;
   margin-bottom: 0;
 }
-
-.input-group-prepend,
-.input-group-append {
-  display: -ms-flexbox;
+.input-group-prepend, .input-group-append {
   display: flex;
 }
-
-.input-group-prepend > .btn,
-.input-group-append > .btn {
+.input-group-prepend > .btn, .input-group-append > .btn {
   position: relative;
   border-color: var(--border-color);
 }
-
-.input-group.sm > .form-control {
+.input-group.small > .form-control {
   height: 2.6rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  padding: 0 0.8rem;
   font-size: 1.2rem;
 }
-
-.input-group.lg > .form-control {
+.input-group.small .input-group-text {
+  padding: 0 0.8rem;
+  font-size: 1.2rem;
+}
+.input-group.large > .form-control {
   height: 4rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  padding: 0 0.8rem;
+  font-size: 1.8rem;
+}
+.input-group.large .input-group-text {
+  padding: 0 0.8rem;
   font-size: 1.8rem;
 }
 
 /* Input group text */
 .input-group-text {
   white-space: nowrap;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-align: center;
   align-items: center;
   text-align: center;
   height: 100%;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  padding: 0 0.8rem;
   color: var(--text-color);
   background-color: var(--body-color);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius);
-  -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
-  -webkit-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
   box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
 }
 
-.input-group.sm .input-group-text {
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
-  font-size: 1.2rem;
-}
-
-.input-group.lg .input-group-text {
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
-  font-size: 1.8rem;
-}
-
 /* Input group button */
-.input-group.sm > .input-group-prepend > .btn,
-.input-group.sm > .input-group-append > .btn {
+.input-group.small > .input-group-prepend > .btn, .input-group.small > .input-group-append > .btn {
   height: 2.6rem;
   line-height: 2.6rem;
-  padding: 0 1rem;
-  font-size: 1.2rem;
+  padding: 0 0.8rem;
+  font-size: inherit;
 }
-
-.input-group.lg > .input-group-prepend > .btn,
-.input-group.lg > .input-group-append > .btn {
-  height: 4rem;
-  line-height: 4rem;
-  padding: 0 2rem;
-  font-size: 1.8rem;
-}
-
-.input-group.sm > .input-group-prepend > .btn-square,
-.input-group.sm > .input-group-append > .btn-square {
+.input-group.small > .input-group-prepend > .square, .input-group.small > .input-group-append > .square {
   width: 2.6rem;
   padding-left: 0;
   padding-right: 0;
 }
-
-.input-group.lg > .input-group-prepend > .btn-square,
-.input-group.lg > .input-group-append > .btn-square {
+.input-group.small > .input-group-prepend > .rounded, .input-group.small > .input-group-append > .rounded {
+  border-radius: 2.6rem;
+}
+.input-group.large > .input-group-prepend > .btn, .input-group.large > .input-group-append > .btn {
+  height: 4rem;
+  line-height: 4rem;
+  padding: 0 0.8rem;
+  font-size: inherit;
+}
+.input-group.large > .input-group-prepend > .square, .input-group.large > .input-group-append > .square {
   width: 4rem;
   padding-left: 0;
   padding-right: 0;
 }
-
-.input-group.sm > .input-group-prepend > .btn-rounded,
-.input-group.sm > .input-group-append > .btn-rounded {
-  border-radius: 2.6rem;
-}
-
-.input-group.lg > .input-group-prepend > .btn-rounded,
-.input-group.lg > .input-group-append > .btn-rounded {
+.input-group.large > .input-group-prepend > .rounded, .input-group.large > .input-group-append > .rounded {
   border-radius: 4rem;
 }
 
 /* Input group borders */
-.input-group > .form-control:not(:first-child),
-.input-group-prepend:not(:first-child) > .input-group-text,
-.input-group-append:not(:first-child) > .input-group-text,
-.input-group-prepend:not(:first-child) > .btn,
-.input-group-append:not(:first-child) > .btn {
+.input-group > .form-control:not(:first-child), .input-group-prepend:not(:first-child) > .input-group-text, .input-group-append:not(:first-child) > .input-group-text, .input-group-prepend:not(:first-child) > .btn, .input-group-append:not(:first-child) > .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-
-.input-group > .form-control:not(:last-child),
-.input-group-prepend:not(:last-child) > .input-group-text,
-.input-group-append:not(:last-child) > .input-group-text,
-.input-group-prepend:not(:last-child) > .btn,
-.input-group-append:not(:last-child) > .btn {
+.input-group > .form-control:not(:last-child), .input-group-prepend:not(:last-child) > .input-group-text, .input-group-append:not(:last-child) > .input-group-text, .input-group-prepend:not(:last-child) > .btn, .input-group-append:not(:last-child) > .btn {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
-.input-group > .form-control:focus,
-.input-group-prepend > .btn:focus,
-.input-group-prepend > .btn.active,
-.input-group-append > .btn:focus,
-.input-group-append > .btn.active {
+.input-group > .form-control:focus, .input-group-prepend > .btn:focus, .input-group-prepend > .btn.active, .input-group-append > .btn:focus, .input-group-append > .btn.active {
   z-index: 1;
 }
-
-.input-group > .form-control:not(:first-child) {
-  margin-left: calc(-1 * var(--border-width));
-}
-
-.input-group-prepend:not(:first-child) > .input-group-text,
-.input-group-append:not(:first-child) > .input-group-text {
-  margin-left: calc(-1 * var(--border-width));
-}
-
-.input-group-prepend:not(:first-child) > .btn,
-.input-group-append:not(:first-child) > .btn {
+.input-group > .form-control:not(:first-child), .input-group-prepend:not(:first-child) > .input-group-text, .input-group-append:not(:first-child) > .input-group-text, .input-group-prepend:not(:first-child) > .btn, .input-group-append:not(:first-child) > .btn {
   margin-left: calc(-1 * var(--border-width));
 }
 
@@ -4625,106 +4567,72 @@ input[type=number] {
 .input-group-append > .btn {
   border-color: var(--button-border-color);
 }
-
-.input-group-prepend > .btn:hover,
-.input-group-append > .btn:hover {
-  border-color: var(--button-border-color);
-}
-
-.input-group-prepend > .btn:focus,
+.input-group-prepend > .btn:hover, .input-group-prepend > .btn:focus, .input-group-prepend > .btn.active,
+.input-group-append > .btn:hover,
 .input-group-append > .btn:focus,
-.input-group-prepend > .btn.active,
 .input-group-append > .btn.active {
   border-color: var(--button-border-color);
 }
-
-/* Link button */
-.input-group-prepend > .btn.btn-link,
-.input-group-append > .btn.btn-link {
+.input-group-prepend > .link,
+.input-group-append > .link {
   border-color: var(--button-border-color);
 }
-
-.input-group-prepend > .btn.btn-link:hover,
-.input-group-append > .btn.btn-link:hover {
+.input-group-prepend > .link:hover, .input-group-prepend > .link:focus, .input-group-prepend > .link.active,
+.input-group-append > .link:hover,
+.input-group-append > .link:focus,
+.input-group-append > .link.active {
   border-color: var(--button-border-color);
 }
-
-.input-group-prepend > .btn.btn-link:focus,
-.input-group-append > .btn.btn-link:focus,
-.input-group-prepend > .btn.btn-link.active,
-.input-group-append > .btn.btn-link.active {
-  border-color: var(--button-border-color);
-}
-
-/* secondary button */
 .input-group-prepend > .btn.secondary,
 .input-group-append > .btn.secondary {
   border-color: var(--secondary-color);
 }
-
 .input-group-prepend > .btn.secondary:hover,
 .input-group-append > .btn.secondary:hover {
   border-color: var(--secondary-color-light);
 }
-
-.input-group-prepend > .btn.secondary:focus,
+.input-group-prepend > .btn.secondary:focus, .input-group-prepend > .btn.secondary.active,
 .input-group-append > .btn.secondary:focus,
-.input-group-prepend > .btn.secondary.active,
 .input-group-append > .btn.secondary.active {
   border-color: var(--secondary-color);
 }
-
-/* Success button */
 .input-group-prepend > .btn.success,
 .input-group-append > .btn.success {
   border-color: var(--success-color);
 }
-
 .input-group-prepend > .btn.success:hover,
 .input-group-append > .btn.success:hover {
   border-color: var(--success-color-light);
 }
-
-.input-group-prepend > .btn.success:focus,
+.input-group-prepend > .btn.success:focus, .input-group-prepend > .btn.success.active,
 .input-group-append > .btn.success:focus,
-.input-group-prepend > .btn.success.active,
 .input-group-append > .btn.success.active {
   border-color: var(--success-color);
 }
-
-/* muted button */
-.input-group-prepend > .btn.btn-muted,
-.input-group-append > .btn.btn-muted {
+.input-group-prepend > .btn.muted,
+.input-group-append > .btn.muted {
   border-color: #878787;
 }
-
-.input-group-prepend > .btn.btn-muted:hover,
-.input-group-append > .btn.btn-muted:hover {
-  border-color: rgb(144.6, 144.6, 144.6);
+.input-group-prepend > .btn.muted:hover,
+.input-group-append > .btn.muted:hover {
+  border-color: #919191;
 }
-
-.input-group-prepend > .btn.btn-muted:focus,
-.input-group-append > .btn.btn-muted:focus,
-.input-group-prepend > .btn.btn-muted.active,
-.input-group-append > .btn.btn-muted.active {
+.input-group-prepend > .btn.muted:focus, .input-group-prepend > .btn.muted.active,
+.input-group-append > .btn.muted:focus,
+.input-group-append > .btn.muted.active {
   border-color: #878787;
 }
-
-/* Danger button */
-.input-group-prepend > .btn.btn-danger,
-.input-group-append > .btn.btn-danger {
+.input-group-prepend > .btn.danger,
+.input-group-append > .btn.danger {
   border-color: var(--danger-color);
 }
-
-.input-group-prepend > .btn.btn-danger:hover,
-.input-group-append > .btn.btn-danger:hover {
+.input-group-prepend > .btn.danger:hover,
+.input-group-append > .btn.danger:hover {
   border-color: var(--danger-color-light);
 }
-
-.input-group-prepend > .btn.btn-danger:focus,
-.input-group-append > .btn.btn-danger:focus,
-.input-group-prepend > .btn.btn-danger.active,
-.input-group-append > .btn.btn-danger.active {
+.input-group-prepend > .btn.danger:focus, .input-group-prepend > .btn.danger.active,
+.input-group-append > .btn.danger:focus,
+.input-group-append > .btn.danger.active {
   border-color: var(--danger-color);
 }
 
@@ -6982,7 +6890,7 @@ Boxes, tiles, and title bar
   font-size: 2.4rem;
 }
 .pagination a.direction:hover, .pagination button.direction:hover {
-  background-color: rgb(242.25, 242.25, 242.25);
+  background-color: #f2f2f2;
 }
 .pagination a.active, .pagination a:not(.direction):hover, .pagination button.active, .pagination button:not(.direction):hover {
   color: white;
@@ -12596,6 +12504,25 @@ a.concept:hover {
 .unit-table td.indent-4::before {
   left: 8rem;
   content: "\e046";
+}
+
+.badge.kdsf {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  max-width: 4.2rem;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  /* display: inline-block; */
+  overflow: hidden;
+  background-color: var(--secondary-color-20);
+  vertical-align: text-bottom;
+}
+
+.badge.kdsf:hover {
+  max-width: 100%;
+  white-space: normal;
 }
 
 /*!

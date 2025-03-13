@@ -395,15 +395,6 @@ if (array_sum($a) === 0) {
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>?epub=true" class="btn small">
                             <?= lang('No longer <q>Online ahead of print</q> (Review)', 'Nicht länger <q>Online ahead of print</q> (Review)') ?>
                         </a>
-                        <!-- <div class="input-group sm w-500 d-inline-flex">
-                            <input type="date" class="form-control" value="<?= valueFromDateArray(["year" => $doc['year'], "month" => $doc['month'], "day" => $doc['day'] ?? 1]) ?>">
-                            <div class="input-group-append">
-                                <button class="btn" type="button" onclick="todo()">
-                                    <i class="ph ph-x"></i>
-                                    <?= lang('No longer <q>Online ahead of print</q> and officially issued under this date.', 'Kein <q>Online ahead of print</q> mehr und unter diesem Datum offiziell veröffentlicht.') ?>
-                                </button>
-                            </div>
-                        </div> -->
                     </div>
                 </td>
             </tr>

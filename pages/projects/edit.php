@@ -522,6 +522,12 @@ function sel($index, $value)
             <?php } ?>
 
 
+<?php
+                // if (in_array('kdsf', $fields)) {
+                    include_once BASEPATH . "/components/kdsf-ffk-select.php";
+                // }
+?>
+
 
             <?php if (in_array('nagoya', $fields) && $Settings->featureEnabled('nagoya')) {
                 $countries = $form['nagoya_countries'] ?? [];
@@ -564,15 +570,15 @@ function sel($index, $value)
 
                             </div>
                             <div class="footer">
-                                <div class="input-group sm d-inline-flex w-auto">
-                                    <select id="add-country">
+                                <div class="input-group small d-inline-flex w-auto">
+                                    <select id="add-country" class="form-control">
                                         <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
                                         <?php foreach (Country::COUNTRIES as $iso => $name) { ?>
                                             <option value="<?= $iso ?>"><?= $name ?></option>
                                         <?php } ?>
                                     </select>
                                     <div class="input-group-append">
-                                        <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
+                                        <button class="btn secondary" type="button" onclick="addCountry(event);">
                                             <i class="ph ph-plus"></i>
                                         </button>
                                     </div>

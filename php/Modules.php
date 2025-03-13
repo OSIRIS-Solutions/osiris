@@ -1258,7 +1258,7 @@ class Modules
                         </div>
                         <div class="footer">
 
-                            <div class="input-group sm d-inline-flex w-auto">
+                            <div class="input-group small d-inline-flex w-auto">
                                 <input type="text" placeholder="<?= lang('Add author ...', 'Füge Autor hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
@@ -1791,7 +1791,7 @@ class Modules
                             <?= $this->editors ?>
                         </div>
                         <div class="footer">
-                            <div class="input-group sm d-inline-flex w-auto">
+                            <div class="input-group small d-inline-flex w-auto">
                                 <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Editor hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">

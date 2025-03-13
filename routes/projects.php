@@ -51,13 +51,6 @@ Route::get('/projects/search', function () {
 }, 'login');
 
 
-// Route::get('/projects/kdsf', function () {
-//     include
-
-
-
-// });
-
 Route::get('/projects/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
@@ -429,7 +422,6 @@ Route::post('/crud/projects/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->projects;
-
 
     // $user_project = in_array($user, array_column(DB::doc2Arr($project['persons']), 'user'));
     // $edit_perm = ($Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
