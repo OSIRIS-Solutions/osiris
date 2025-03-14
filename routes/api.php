@@ -294,7 +294,7 @@ Route::get('/api/html', function () {
             'id' => strval($doc['_id']),
             'html' => $rendered['print'],
             'year' => $doc['year'] ?? null,
-            'departments' => $rendered['depts'],
+            'departments' => $doc['units'] ?? [],
             'link' => $link
         ];
         $result[] = $entry;
