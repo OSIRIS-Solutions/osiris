@@ -11,7 +11,7 @@
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
     </a>
 
-    <a class="btn" href="<?= ROOTPATH ?>/admin/project/vocabulary">
+    <a class="btn" href="<?= ROOTPATH ?>/admin/vocabulary">
         <i class="ph ph-list"></i>
         <?= lang('Vocabulary', 'Vokabular') ?>
     </a>

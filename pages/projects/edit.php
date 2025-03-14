@@ -50,6 +50,11 @@ function sel($index, $value)
     return val($index) == $value ? 'selected' : '';
 }
 
+
+// load defined vocabularies
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
+
 ?>
 
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
@@ -201,11 +206,11 @@ function sel($index, $value)
             <?php if (in_array('purpose', $fields)) { ?>
                 <div class="form-group floating-form">
                     <select class="form-control" name="values[purpose]" id="purpose">
-                        <option value="research" <?= sel('purpose', 'research') ?>><?= lang('Research', 'Forschung') ?></option>
-                        <option value="teaching" <?= sel('purpose', 'teaching') ?>><?= lang('Teaching', 'Lehre') ?></option>
-                        <option value="promotion" <?= sel('purpose', 'promotion') ?>><?= lang('Promotion of young scientists', 'Förderung des wissenschaftlichen Nachwuchs') ?></option>
-                        <option value="transfer" <?= sel('purpose', 'transfer') ?>><?= lang('Transfer', 'Transfer') ?></option>
-                        <option value="others" <?= sel('purpose', 'others') ?>><?= lang('Other purpose', 'Sonstiger Zweck') ?></option>
+                        <?php
+                        $vocab = $Vocabulary->getValues('project-purpose');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= sel('funder', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
                     </select>
                     <label for="purpose">
                         <?= lang('Purpose of the project', 'Zwecks des Projekts') ?>
@@ -310,18 +315,11 @@ function sel($index, $value)
                 <?php if (in_array('funder', $fields)) { ?>
                     <div class="form-group floating-form">
                         <select class="form-control" name="values[funder]" value="<?= val('funder') ?>" required id="funder">
-                            <!-- <option <?= sel('funder', 'Eigenmittel') ?>>Eigenmittel</option> -->
-                            <option <?= sel('funder', 'DFG') ?>>DFG</option>
-                            <option <?= sel('funder', 'Bund') ?>>Bund</option>
-                            <option <?= sel('funder', 'Bundesländer') ?>>Bundesländer</option>
-                            <option <?= sel('funder', 'Wirtschaft') ?>>Wirtschaft</option>
-                            <option <?= sel('funder', 'EU') ?>>EU</option>
-                            <option <?= sel('funder', 'Stiftungen') ?>>Stiftungen</option>
-                            <option <?= sel('funder', 'Leibniz Wettbewerb') ?>>Leibniz Wettbewerb</option>
-                            <option <?= sel('funder', 'Sonstige Drittmittelgeber') ?>>Sonstige Drittmittelgeber</option>
-                            <!-- <option>Sonstige öffentliche internationale Förderorganisationen</option>
-                <option>Nicht erklärt (Private Mittelgeber)</option>
-                <option>Nicht erklärt (Öffentliche Mittelgeber)</option> -->
+                            <?php
+                            $vocab = $Vocabulary->getValues('funder');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>" <?= sel('funder', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
                         </select>
                         <label for="funder" class="required">
                             <?= lang('Third-party funder', 'Drittmittelgeber') ?>
@@ -356,10 +354,11 @@ function sel($index, $value)
                     <?php if (in_array('role', $fields)) { ?>
                         <div class="col floating-form">
                             <select class="form-control" name="values[role]" id="role">
-                                <option value="coordinator" <?= sel('role', 'coordinator') ?>><?= lang('Coordinator', 'Koordinator') ?></option>
-                                <option value="partner" <?= sel('role', 'partner') ?>><?= lang('Partner') ?></option>
-                                <option value="associated" <?= sel('role', 'associated') ?>><?= lang('Associated', 'Beteiligt') ?></option>
-
+                                <?php
+                                $vocab = $Vocabulary->getValues('project-institute-role');
+                                foreach ($vocab as $v) { ?>
+                                    <option value="<?= $v['id'] ?>" <?= sel('funder', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                <?php } ?>
                             </select>
                             <label for="role">
                                 <?= lang('Role of', 'Rolle von') ?> <?= $Settings->get('affiliation') ?>

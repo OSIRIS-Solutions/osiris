@@ -258,6 +258,21 @@ Route::get('/settings/activities', function () {
     ]);
 });
 
+
+Route::get('/admin/vocabulary', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Vocabulary", "Vokabular")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/vocabulary.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/settings/modules', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -291,6 +306,7 @@ Route::get('/admin/projects', function () {
     include BASEPATH . "/pages/admin/projects.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
 
 Route::get('/admin/projects/(.*)', function ($type) {
     include_once BASEPATH . "/php/init.php";
@@ -770,4 +786,29 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         'inserted' => $updateResult->getModifiedCount(),
         'id' => $id,
     ]);
+});
+
+
+Route::post('/crud/admin/vocabularies/([a-z\-]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (!isset($_POST['values'])) die("no values given");
+    $doc = [
+        'id' => $id,
+        'values' => $_POST['values']
+    ];
+
+    // delete old vocabulary
+    $osiris->adminVocabularies->deleteOne(['id' => $id]);
+    // insert new vocabulary
+    $osiris->adminVocabularies->insertOne($doc);
+
+    $_SESSION['msg'] = lang(
+        "Vocabulary <q>$id</q> successfully saved.",
+        "Vokabular <q>$id</q> erfolgreich gespeichert."
+    );
+
+    $red = ROOTPATH . "/admin/vocabulary";
+    header("Location: " . $red);
 });

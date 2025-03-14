@@ -383,7 +383,7 @@ $institute = $Settings->get('affiliation_details');
                                         <?php break;
                                         case 'funder': ?>
                                             <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
-                                            <?= $project['funder'] ?? '-' ?>
+                                            <?= $Project->getFunder() ?>
                                         <?php break;
                                         case 'funding_organization': ?>
                                             <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>

@@ -1,8 +1,24 @@
-<?php if (empty($project)) {
+<?php
+
+/**
+ * Admin page for project settings
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ *
+ * @package     OSIRIS
+ * @since       1.4.1
+ * 
+ * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
+if (empty($project)) {
     $route = ROOTPATH . '/admin/project/create';
 }
 
-$project['stages']['proposal'] = [
+$project['phases']['proposal'] = [
     'name' => 'Proposal',
     'name_de' => 'Antrag',
     'modules' => [
@@ -148,67 +164,64 @@ $project['stages']['proposal'] = [
                     <div class="col-sm">
                         <label for="name_de" class="">Name (de)</label>
                         <input type="text" class="form-control" name="values[name_de]" value="<?= $project['name_de'] ?? '' ?>">
-                    </div> <div class="col-sm">
-                    <label for="color" class="required" ><?= lang('Color', 'Farbe') ?></label>
-                   <div class="input-group">
-                   <select name="values[color]" class="form-control color-select">
-                        <option value="muted">muted</option>
-                        <option value="primary">primary</option>
-                        <option value="secondary">secondary</option>
-                        <option value="success">success</option>
-                        <option value="danger">danger</option>
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="ph ph-fill ph-circle text-<?= $phase['color'] ?? 'muted' ?>" id="test-icon"></i>
-                        </span>
                     </div>
-                   </div>
-                </div>
-            </div>
-                </div>
-
-
-                <?php if ($Settings->featureEnabled('portal')) { ?>
-                    <div class="my-20">
-                        <input type="hidden" name="values[portfolio]" value="">
-                        <div class="custom-checkbox">
-                            <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($info['portfolio'] ?? false) ? 'checked' : '' ?>>
-                            <label for="portfolio-question">
-                                <?= lang('This type of project should be visible in OSIRIS Portfolio.', 'Diese Art von Projekt sollte in OSIRIS Portfolio sichtbar sein.') ?>
-                            </label>
+                    <div class="col-sm">
+                        <label for="color" class="required"><?= lang('Color', 'Farbe') ?></label>
+                        <div class="input-group">
+                            <select name="values[color]" class="form-control color-select">
+                                <option value="muted">muted</option>
+                                <option value="primary">primary</option>
+                                <option value="secondary">secondary</option>
+                                <option value="success">success</option>
+                                <option value="danger">danger</option>
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="ph ph-fill ph-circle text-<?= $phase['color'] ?? 'muted' ?>" id="test-icon"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                <?php } ?>
+                </div>
             </div>
 
-            <hr>
 
-            <div class="content">
-                <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
-
-                <?php
-                foreach (Project::FIELDS as $m) {
-                ?>
+            <?php if ($Settings->featureEnabled('portal')) { ?>
+                <div class="my-20">
+                    <input type="hidden" name="values[portfolio]" value="">
                     <div class="custom-checkbox">
-                        <input type="checkbox" id="module-<?= $m ?>" value="1" name="values[stages][<?= $key ?>][modules][<?= $m ?>]" <?= ($info['modules'][$m] ?? false) ? 'checked' : '' ?>>
-                        <label for="module-<?= $m ?>">
-                            <?= lang($m, $m) ?>
+                        <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($info['portfolio'] ?? false) ? 'checked' : '' ?>>
+                        <label for="portfolio-question">
+                            <?= lang('This type of project should be visible in OSIRIS Portfolio.', 'Diese Art von Projekt sollte in OSIRIS Portfolio sichtbar sein.') ?>
                         </label>
                     </div>
-                <?php } ?>
-
-            </div>
-            <p>
-                <i class="ph ph-info text-signal"></i>
-                <?= lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.') ?>
-            </p>
+                </div>
+            <?php } ?>
         </div>
 
+        <hr>
+
+        <div class="content">
+            <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
+
+            <?php
+            foreach (Project::FIELDS as $m) {
+            ?>
+                <div class="custom-checkbox">
+                    <input type="checkbox" id="module-<?= $m ?>" value="1" name="values[stages][<?= $key ?>][modules][<?= $m ?>]" <?= ($info['modules'][$m] ?? false) ? 'checked' : '' ?>>
+                    <label for="module-<?= $m ?>">
+                        <?= lang($m, $m) ?>
+                    </label>
+                </div>
+            <?php } ?>
+
         </div>
+        <p>
+            <i class="ph ph-info text-signal"></i>
+            <?= lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.') ?>
+        </p>
 
     <?php } ?>
-
 
     <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 </form>

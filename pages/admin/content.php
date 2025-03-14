@@ -18,13 +18,17 @@
 </h1>
 
 <div class="link-list">
-    <a href="<?= ROOTPATH ?>/admin/categories" class="">
-        <i class="ph ph-bookmarks text-secondary" aria-hidden="true"></i>
-        <?= lang('Activities', 'Aktivitäten') ?>
-    </a>
     <a href="<?= ROOTPATH ?>/admin/fields" class="">
         <i class="ph ph-textbox text-secondary" aria-hidden="true"></i>
         <?= lang('Custom fields') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/admin/vocabulary" class="">
+        <i class="ph ph-book-bookmark text-secondary" aria-hidden="true"></i>
+        <?= lang('Vocabularies', 'Vokabular') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/admin/categories" class="">
+        <i class="ph ph-bookmarks text-secondary" aria-hidden="true"></i>
+        <?= lang('Activities', 'Aktivitäten') ?>
     </a>
     <a href="<?= ROOTPATH ?>/admin/projects" class="">
         <i class="ph ph-tree-structure text-secondary" aria-hidden="true"></i>

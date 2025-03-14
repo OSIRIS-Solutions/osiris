@@ -15,10 +15,11 @@
  */
 
 require_once "DB.php";
+require_once "Vocabulary.php";
 require_once "Country.php";
 require_once "Groups.php";
 
-class Project
+class Project extends Vocabulary
 {
     public $project = array();
 
@@ -154,13 +155,13 @@ class Project
         'finished' => 'abgeschlossen',
     ];
 
-    public const PURPOSE = [
-        'research' => 'Forschung',
-        'teaching' => 'Lehre',
-        'promotion' => 'Förderung des wissenschaftlichen Nachwuchs',
-        'transfer' => 'Transfer',
-        'others' => 'Sonstiger Zweck',
-    ];
+    // public const PURPOSE = [
+    //     'research' => 'Forschung',
+    //     'teaching' => 'Lehre',
+    //     'promotion' => 'Förderung des wissenschaftlichen Nachwuchs',
+    //     'transfer' => 'Transfer',
+    //     'others' => 'Sonstiger Zweck',
+    // ];
 
     public const TYPE = [
         'Drittmittel' => 'Drittmittel',
@@ -170,11 +171,11 @@ class Project
         'other' => 'Sonstiges',
     ];
 
-    public const ROLE = [
-        'coordinator' => 'Koordinator',
-        'partner' => 'Partner',
-        'associated' => 'Beteiligt',
-    ];
+    // public const ROLE = [
+    //     'coordinator' => 'Koordinator',
+    //     'partner' => 'Partner',
+    //     'associated' => 'Beteiligt',
+    // ];
 
     public const FUNDING = [
         'funding' => 'Förderung',
@@ -183,16 +184,16 @@ class Project
         'subproject' => 'Teilprojekt',
         'other' => 'Sonstiges',
     ];
-    public const FUNDER = [
-        'DFG',
-        'Bund',
-        'Bundesländer',
-        'Wirtschaft',
-        'EU',
-        'Stiftungen',
-        'Leibniz Wettbewerb',
-        'Sonstige Drittmittelgeber',
-    ];
+    // public const FUNDER = [
+    //     'DFG',
+    //     'Bund',
+    //     'Bundesländer',
+    //     'Wirtschaft',
+    //     'EU',
+    //     'Stiftungen',
+    //     'Leibniz Wettbewerb',
+    //     'Sonstige Drittmittelgeber',
+    // ];
 
     public const PERSON_ROLE = [
         'PI' => 'Projektleitung',
@@ -238,14 +239,12 @@ class Project
         'collaborators'
     ];
 
-    private $db;
-
     function __construct($project = null)
     {
+        parent::__construct();
+
         if ($project !== null)
             $this->project = $project;
-        $DB = new DB();
-        $this->db = $DB->db;
     }
 
     public function getFields($type)
@@ -312,11 +311,8 @@ class Project
 
     public function getRoleRaw()
     {
-        if (($this->project['role'] ?? '') == 'coordinator')
-            return lang('Coordinator', 'Koordinator');
-        if (($this->project['role'] ?? '') == 'associated')
-            return lang('Associated', 'Beteiligt');
-        return 'Partner';
+        $role = $this->project['role'] ?? 'associated';
+        return $this->getValue('project-institute-role', $role);
     }
 
     public function getRole()
@@ -355,22 +351,16 @@ class Project
         }
     }
 
+    public function getFunder()
+    {
+        $funder = $this->project['funder'] ?? 'others';
+        return $this->getValue('funder', $funder);
+    }
+
     public function getPurpose()
     {
-        switch ($this->project['purpose'] ?? '') {
-            case "research":
-                return lang('Research', 'Forschung');
-            case "teaching":
-                return lang('Teaching', 'Lehre');
-            case "promotion":
-                return lang('Promotion of young scientists', 'Förderung des wissenschaftlichen Nachwuchs');
-            case "transfer":
-                return lang('Transfer', 'Transfer');
-            case "others":
-                return lang('Other purpose', 'Sonstiger Zweck');
-            default:
-                return '-';
-        }
+        $purpose = $this->project['purpose'] ?? 'others';
+        return $this->getValue('project-purpose', $purpose);
     }
     function getFundingNumbers($seperator)
     {
