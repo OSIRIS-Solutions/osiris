@@ -19,9 +19,8 @@ Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Groups.php";
     
-    set_time_limit(6000);
+    set_time_limit(6000);  
 
-  
     include_once BASEPATH . "/php/Project.php";
     $Project = new Project;
     // Drittmittel
@@ -128,8 +127,6 @@ Route::get('/migrate/test', function () {
     );
 
     echo "<p>Updated project types.</p>";
-
-
 
     // $cursor = $osiris->persons->find(['science_unit' => ['$exists' => false]]);
 
@@ -410,6 +407,10 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/v1.4.0.php";
     }
 
+    if (version_compare($DBversion, '1.4.1', '<')) {
+        include BASEPATH . "/routes/migration/v1.4.1.php";
+    }
+
     echo "<p>Rerender activities</p>";
     include_once BASEPATH . "/php/Render.php";
     renderActivities();
@@ -530,6 +531,5 @@ Route::post('/migrate/custom-fields-to-topics', function () {
 
     include BASEPATH . "/footer.php";
 });
-
 
 

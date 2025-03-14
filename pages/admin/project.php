@@ -1,6 +1,45 @@
 <?php if (empty($project)) {
     $route = ROOTPATH . '/admin/project/create';
-} ?>
+}
+
+$project['stages']['proposal'] = [
+    'name' => 'Proposal',
+    'name_de' => 'Antrag',
+    'modules' => [
+        'abstract',
+        'public',
+        'internal_number',
+        'website',
+        'grant_sum',
+        'funder',
+        'funding_number',
+        'grant_sum_proposed',
+        'personnel',
+        'ressources',
+        'contact',
+        'purpose',
+        'role',
+        'coordinator',
+        'nagoya',
+    ],
+    'topics' => true,
+    'disabled' => false,
+    'portfolio' => true,
+    'has_subprojects' => true,
+    'inherits' => [
+        'status',
+        'website',
+        'grant_sum',
+        'funder',
+        'grant_sum_proposed',
+        'purpose',
+        'role',
+        'coordinator',
+    ]
+];
+
+
+?>
 
 
 <div class="modal" id="unique" tabindex="-1" role="dialog">
@@ -41,6 +80,10 @@
 
     <div class="box">
         <div class="content">
+            <h2>
+                <?= lang('General', 'Allgemein') ?>
+            </h2>
+
             <div class="row row-eq-spacing">
                 <div class="col-sm">
                     <label for="id" class="required">ID</label>
@@ -76,61 +119,36 @@
                     <input type="text" class="form-control" name="values[name_de]" value="<?= $project['name_de'] ?? '' ?>">
                 </div>
             </div>
-        </div>
 
-        <hr>
-        <div class="content">
-
-            <?php if ($Settings->featureEnabled('portal')) { ?>
-                <div class="mb-20">
-                    <input type="hidden" name="values[portfolio]" value="">
-                    <div class="custom-checkbox">
-                        <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($project['portfolio'] ?? false) ? 'checked' : '' ?>>
-                        <label for="portfolio-question">
-                            <?= lang('This type of project should be visible in OSIRIS Portfolio.', 'Diese Art von Projekt sollte in OSIRIS Portfolio sichtbar sein.') ?>
-                        </label>
-                    </div>
-                </div>
-            <?php } ?>
             <div class="custom-checkbox mb-10 danger">
-                <input type="checkbox" id="disable" value="true" name="values[disabled]" <?= ($project['disabled'] ?? false) ? 'checked' : '' ?>>
+                <input type="checkbox" id="disable" value="true" name="values[disabled]" <?= ($info['disabled'] ?? false) ? 'checked' : '' ?>>
                 <label for="disable"><?= lang('Deactivate', 'Deaktivieren') ?></label>
             </div>
             <span class="text-muted">
                 <?= lang('Deactivated projects are retained for past activities, but no new ones can be added.', 'Deaktivierte Projektkategorien bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
             </span>
-
         </div>
 
     </div>
-    <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
-</form>
 
+    <h2>
+        Phases
+    </h2>
 
-<h2><?= lang('Phases', 'Phasen') ?></h2>
+    <?php foreach ($project['phases'] ?? [] as $key => $info) { ?>
 
-<?php
-$phases = $project['phases'] ?? [
-    [
-        'name' => 'Proposal',
-        'name_de' => 'Antrag',
-        'modules' => [],
+        <div class="box">
+            <div class="content">
 
-    ]
-];
-foreach ($phases as $phase) { ?>
-    <div class="box">
-        <div class="content">
-            <div class="row row-eq-spacing">
-                <div class="col-sm">
-                    <label for="name" class="required ">Name (en)</label>
-                    <input type="text" class="form-control" name="values[name]" required value="<?= $phase['name'] ?? '' ?>">
-                </div>
-                <div class="col-sm">
-                    <label for="name_de" class="">Name (de)</label>
-                    <input type="text" class="form-control" name="values[name_de]" value="<?= $phase['name_de'] ?? '' ?>">
-                </div>
-                <div class="col-sm">
+                <div class="row row-eq-spacing">
+                    <div class="col-sm">
+                        <label for="name" class="required ">Name (en)</label>
+                        <input type="text" class="form-control" name="values[name]" required value="<?= $project['name'] ?? '' ?>">
+                    </div>
+                    <div class="col-sm">
+                        <label for="name_de" class="">Name (de)</label>
+                        <input type="text" class="form-control" name="values[name_de]" value="<?= $project['name_de'] ?? '' ?>">
+                    </div> <div class="col-sm">
                     <label for="color" class="required" ><?= lang('Color', 'Farbe') ?></label>
                    <div class="input-group">
                    <select name="values[color]" class="form-control color-select">
@@ -148,74 +166,52 @@ foreach ($phases as $phase) { ?>
                    </div>
                 </div>
             </div>
-            <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
-            <div class="author-widget">
-                <div class="author-list p-10">
-                    <?php
-                    $module_lst = [];
-                    foreach ($phase['modules'] ?? array() as $module) {
-                        $req = '';
-                        $name = trim($module);
-                        if (str_ends_with($name, '*')) {
-                            $name = str_replace('*', '', $name);
-                            $module = $name . "*";
-                            $req = 'required';
-                        }
-                        $module_lst[] = $name;
-                    ?>
-                        <div class='author <?= $req ?>' ondblclick="toggleRequired(this)">
-                            <?= $name ?>
-                            <input type='hidden' name='values[modules][]' value='<?= $module ?>'>
-                            <a onclick='$(this).parent().remove()'>&times;</a>
-                        </div>
-                    <?php } ?>
-
                 </div>
-                <div class=" footer">
-                    <div class="input-group small d-inline-flex w-auto">
-                        <select class="module-input form-control">
-                            <option value="" disabled selected><?= lang('Add module ...', 'Füge Module hinzu ...') ?></option>
-                            <?php
-                            // read custom modules first
-                            $custom_modules = $osiris->adminFields->distinct('id');
-                            if (!empty($custom_modules)) {
-                                foreach ($custom_modules as $m) {
-                                    if (in_array($m, $module_lst)) continue;
-                            ?>
-                                    <option><?= $m ?></option>
-                                <?php } ?>
-                                <option disabled>---</option>
-                            <?php
-                            }
-                            foreach (Project::FIELDS as $m) {
-                                if (in_array($m, $module_lst)) continue;
-                            ?>
-                                <option><?= $m ?></option>
-                            <?php } ?>
-                        </select>
-                        <div class="input-group-append">
-                            <button class="btn secondary h-full" type="button" onclick="addModule();">
-                                <i class="ph ph-plus"></i>
-                            </button>
+
+
+                <?php if ($Settings->featureEnabled('portal')) { ?>
+                    <div class="my-20">
+                        <input type="hidden" name="values[portfolio]" value="">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($info['portfolio'] ?? false) ? 'checked' : '' ?>>
+                            <label for="portfolio-question">
+                                <?= lang('This type of project should be visible in OSIRIS Portfolio.', 'Diese Art von Projekt sollte in OSIRIS Portfolio sichtbar sein.') ?>
+                            </label>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
+            </div>
+
+            <hr>
+
+            <div class="content">
+                <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
+
+                <?php
+                foreach (Project::FIELDS as $m) {
+                ?>
+                    <div class="custom-checkbox">
+                        <input type="checkbox" id="module-<?= $m ?>" value="1" name="values[stages][<?= $key ?>][modules][<?= $m ?>]" <?= ($info['modules'][$m] ?? false) ? 'checked' : '' ?>>
+                        <label for="module-<?= $m ?>">
+                            <?= lang($m, $m) ?>
+                        </label>
+                    </div>
+                <?php } ?>
+
             </div>
             <p>
                 <i class="ph ph-info text-signal"></i>
                 <?= lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.') ?>
             </p>
         </div>
-    </div>
-<?php } ?>
+
+        </div>
+
+    <?php } ?>
 
 
-<script>
-    $('.color-select').change(function() {
-        $(this).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + $(this).val());
-    });
-</script>
-
+    <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+</form>
 
 
 <?php if (!empty($form)) { ?>
@@ -243,6 +239,11 @@ foreach ($phases as $phase) { ?>
 
 <?php } ?>
 
+<script>
+    $('.color-select').change(function() {
+        $(this).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + $(this).val());
+    });
+</script>
 
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>
