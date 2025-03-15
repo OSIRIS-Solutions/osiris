@@ -1,5 +1,5 @@
 # Use php:8.0-cli as base image
-FROM php:8.0-cli
+FROM php:8.1-cli
 
 # Author label (optional)
 LABEL authors="Paul C. Gaida"
@@ -43,6 +43,11 @@ RUN composer install --ignore-platform-reqs --no-interaction
 
 # Copy project files
 COPY . .
+
+# Berechtigungen für das img-Verzeichnis setzen
+RUN mkdir -p /var/www/html/img && \
+    chown -R www-data:www-data /var/www/html/img && \
+    chmod -R 775 /var/www/html/img
 
 # Expose XDebug port
 EXPOSE 9003

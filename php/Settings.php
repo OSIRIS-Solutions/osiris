@@ -3,6 +3,9 @@
 require_once "DB.php";
 include_once "Groups.php";
 
+/**
+ * Represents the application settings, including user roles, features, and activities.
+ */
 class Settings
 {
     /**
@@ -94,7 +97,7 @@ class Settings
 
     function printProfilePicture($user, $class = "", $embed = false)
     {
-        $root = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . ROOTPATH;
+        $root = $this->getRequestScheme() . "://" . $_SERVER['HTTP_HOST'] . ROOTPATH;
         $default = '<img src="' . $root . '/img/no-photo.png" alt="Profilbild" class="' . $class . '">';
 
         if (empty($user)) return $default;
@@ -120,6 +123,26 @@ class Settings
             $img = "$root/img/users/$user.jpg?v=$v";
             return ' <img src="' . $img . '" alt="Profilbild" class="' . $class . '">';
         }
+    }
+
+
+    /**
+     * Determines the request scheme (http or https) based on server variables.
+     *
+     * @return string The request scheme ('http' or 'https').
+     */
+    public function getRequestScheme(): string
+    {
+        if (!empty($_SERVER['REQUEST_SCHEME'])) {
+            return $_SERVER['REQUEST_SCHEME'];
+        }
+
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === 443)) {
+            return 'https';
+        }
+
+        return 'http';
     }
 
     /**

@@ -6,6 +6,8 @@ services:
     container_name: osiris
     volumes:
       - .:/var/www/html
+      - ./img:/var/www/html/img:rw
+
     ports:
       - "8080:80"
     depends_on:
