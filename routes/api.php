@@ -272,6 +272,8 @@ Route::get('/api/html', function () {
         'year' => ['$gte' => 2023]
     ]);
 
+    $depts = array_keys($Departments);
+
     foreach ($docs as $i => $doc) {
         if (isset($_GET['limit']) && $i >= $_GET['limit']) break;
 
@@ -290,11 +292,14 @@ Route::get('/api/html', function () {
             $link = $doc['link'];
         }
 
+        $units = DB::doc2Arr($doc['units'] ?? []);
+        // only show DSMZ departments with intersection
+        $units = array_intersect($depts, $units);
         $entry = [
             'id' => strval($doc['_id']),
             'html' => $rendered['print'],
             'year' => $doc['year'] ?? null,
-            'departments' => $doc['units'] ?? [],
+            'departments' => array_values($units),
             'link' => $link
         ];
         $result[] = $entry;

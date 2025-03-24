@@ -21,7 +21,7 @@ $Project = new Project();
 
 $form = $form ?? array();
 $type = $type ?? $_GET['type'] ?? $form['type'] ?? 'Drittmittel';
-$fields = $Project->getFields($type);
+$fields = $Project->getFieldsLegacy($type);
 
 $new_project = empty($form) || !isset($form['_id']);
 
@@ -213,7 +213,7 @@ $Vocabulary = new Vocabulary();
                         <?php } ?>
                     </select>
                     <label for="purpose">
-                        <?= lang('Purpose of the project', 'Zwecks des Projekts') ?>
+                        <?= lang('Purpose of the project', 'Zweck des Projekts') ?>
                     </label>
                 </div>
             <?php } ?>
@@ -224,7 +224,7 @@ $Vocabulary = new Vocabulary();
                     <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234">
 
                     <label for="internal_number">
-                        <?= lang('Kostenträger') ?>
+                        <?= lang('Internal ID', 'Interne ID') ?>
                     </label>
                 </div>
             <?php } ?>
@@ -322,7 +322,7 @@ $Vocabulary = new Vocabulary();
                             <?php } ?>
                         </select>
                         <label for="funder" class="required">
-                            <?= lang('Third-party funder', 'Drittmittelgeber') ?>
+                            <?= lang('Funder (Category)', 'Förderer (Kategorie)') ?>
                         </label>
                     </div>
                 <?php } ?>
@@ -332,7 +332,7 @@ $Vocabulary = new Vocabulary();
                         <input type="text" class="form-control" name="values[funding_organization]" value="<?= val('funding_organization') ?>" id="funding_organization" required placeholder="DFG">
 
                         <label for="funding_organization" class="required">
-                            <?= lang('Funding organization', 'Zuwendungsgeber') ?>
+                            <?= lang('Funding organization', 'Förderorganisation') ?>
                             <!-- Förderorganisation laut KDSF -->
                         </label>
                     </div>

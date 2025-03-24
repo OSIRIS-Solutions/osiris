@@ -18,6 +18,13 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $vocabularies = $Vocabulary->getVocabularies();
 ?>
+<style>
+    table.simple tr td {
+        background-color: white;
+    }
+
+</style>
+
 
 <h1>
     <i class="ph ph-book-bookmark text-primary"></i>
@@ -35,7 +42,7 @@ $vocabularies = $Vocabulary->getVocabularies();
 
 <?php foreach ($vocabularies as $vocab) { ?>
 
-    <form action="<?= ROOTPATH ?>/crud/admin/vocabularies/<?= $vocab['id'] ?>" method="POST" class="box padded">
+    <form action="<?= ROOTPATH ?>/crud/admin/vocabularies/<?= $vocab['id'] ?>" method="POST" class="box padded" id="vocabulary-<?=$id?>">
         <h2 class="title">
             <span class="badge primary float-sm-right">
                 <?= $vocab['category'] ?>
@@ -53,6 +60,7 @@ $vocabularies = $Vocabulary->getVocabularies();
         <table class="table simple">
             <thead>
                 <tr>
+                    <th></th>
                     <th>
                         <?= lang('ID') ?>
                     </th>
@@ -74,6 +82,9 @@ $vocabularies = $Vocabulary->getVocabularies();
                     $inactive = ($v['inactive'] ?? false) ? 'checked' : '';
                 ?>
                     <tr>
+                        <td class="w-50">
+                            <i class="ph ph-dots-six-vertical text-muted handle"></i>
+                        </td>
                         <td>
                             <input type="hidden" name="values[<?= $i ?>][id]" value="<?= $v['id'] ?>">
                             <code class="code"><?= $v['id'] ?></code>
@@ -99,6 +110,7 @@ $vocabularies = $Vocabulary->getVocabularies();
 
             <tfoot>
                 <tr>
+                    <td class="w-50 bg-white"></td>
                     <td colspan="4" class="bg-white">
                         <button type="button" class="btn small primary" onclick="addRow(this)">
                             <i class="ph ph-plus"></i>
@@ -118,6 +130,7 @@ $vocabularies = $Vocabulary->getVocabularies();
 
 <?php } ?>
 
+<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 
 <script>
     function addRow(btn) {
@@ -152,4 +165,10 @@ $vocabularies = $Vocabulary->getVocabularies();
         `;
         tbody.appendChild(tr);
     }
+
+    $(document).ready(function() {
+        $('tbody').sortable({
+            handle: ".handle",
+        });
+    });
 </script>

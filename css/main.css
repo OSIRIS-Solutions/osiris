@@ -4133,6 +4133,34 @@ input[type=number] {
   border-color: var(--secondary-color);
 }
 
+.checkbox-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.checkbox-badge label {
+  margin-bottom: 0.5rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  padding-left: 3rem;
+}
+
+.checkbox-badge label:before {
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.checkbox-badge label:after {
+  left: 1.1rem;
+  top: 0.8rem;
+}
+
+.checkbox-badge input[type=checkbox]:checked ~ label {
+  background-color: var(--secondary-color-20);
+}
+
 /* Radio */
 .custom-radio {
   display: block;
@@ -12526,6 +12554,14 @@ a.concept:hover {
 .badge.kdsf:hover {
   max-width: 100%;
   white-space: normal;
+}
+
+.handle {
+  cursor: move;
+}
+
+.ui-sortable-helper {
+  border-top: 1px solid var(--border-color);
 }
 
 /*!

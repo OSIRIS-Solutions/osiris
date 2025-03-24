@@ -115,38 +115,41 @@ class Project extends Vocabulary
             'website',
         ]
     ];
-    public const FIELDS = [
-        'abstract',
-        'contact',
-        'coordinator',
-        'funder',
-        'funding_number',
-        'funding_organization',
-        'grant_income_proposed',
-        'grant_income',
-        'grant_subproject_proposed',
-        'grant_subproject',
-        'grant_sum_proposed',
-        'grant_sum',
-        'internal_number',
-        'nagoya',
-        'countries',
-        'kdsf-ffk',
-        'name',
-        'personnel',
-        'public',
-        'purpose',
-        'ressources',
-        'role',
-        'scholar',
-        'scholarship',
-        'status',
-        'supervisor',
-        'time',
-        'title',
-        'university',
-        'website',
+
+    public $FIELDS = [
+        ['id' => 'abstract', 'en' => 'Abstract', 'de' => 'Zusammenfassung', 'required' => false, 'kdsf' => null],
+        ['id' => 'contact', 'en' => 'Applicant', 'de' => 'Antragstellende Person', 'required' => true, 'kdsf' => null],
+        ['id' => 'coordinator', 'en' => 'Coordinator facility', 'de' => 'Koordinator-Einrichtung', 'required' => false, 'kdsf' => null],
+        ['id' => 'countries', 'en' => 'Countries', 'de' => 'Länder', 'required' => false, 'kdsf' => true],
+        ['id' => 'funder', 'en' => 'Funder (Category)', 'de' => 'Förderer (Kategorie)', 'required' => false, 'kdsf' => null],
+        ['id' => 'funding_number', 'en' => 'Funding reference number', 'de' => 'Förderkennzeichen', 'required' => false, 'kdsf' => 'KDSF-B-3-2'],
+        ['id' => 'funding_organization', 'en' => 'Funding organization', 'de' => 'Zuwendungsgeber', 'required' => false, 'kdsf' => 'KDSF-B-3-6'],
+        // ['id'=>'grant_income_proposed', 'en'=>'Proposed grant sum ()', 'de'=> 'Beantragte Fördersumme ()', 'required'=>false, 'kdsf'=>null],
+        // ['id'=>'grant_income', 'en'=>'', 'de'=> '', 'required'=>false, 'kdsf'=>null],
+        ['id' => 'grant_subproject_proposed', 'en' => 'Proposed grant sum (Subproject)', 'de' => 'Beantragte Fördersumme (Teilprojekt)', 'required' => false, 'kdsf' => null],
+        ['id' => 'grant_subproject', 'en' => 'Grant sum (Subproject)', 'de' => 'Fördersumme (Teilprojekt)', 'required' => false, 'kdsf' => null],
+        ['id' => 'grant_sum_proposed', 'en' => 'Proposed grant sum', 'de' => 'Beantragte Fördersumme ', 'required' => false, 'kdsf' => null],
+        ['id' => 'grant_sum', 'en' => 'Grant sum', 'de' => 'Fördersumme', 'required' => false, 'kdsf' => 'KDSF-B-3-4'],
+        ['id' => 'internal_number', 'en' => 'Internal ID', 'de' => 'Interne ID', 'required' => false, 'kdsf' => null],
+        ['id' => 'nagoya', 'en' => 'Nagoya Protocol', 'de' => 'Nagoya Protocol', 'required' => false, 'kdsf' => null],
+        ['id' => 'kdsf-ffk', 'en' => 'Research fields (KDSF)', 'de' => 'Forschungsfelder (KDSF)', 'required' => false, 'kdsf' => 'KDSF-B-2-6'],
+        ['id' => 'name', 'en' => 'Short title', 'de' => 'Kurztitel', 'required' => true, 'kdsf' => null],
+        ['id' => 'public', 'en' => 'Public presentation consent', 'de' => 'Zustimmung zur öffentlichen Präsentation', 'required' => false, 'kdsf' => null],
+        ['id' => 'purpose', 'en' => 'Purpose', 'de' => 'Zweck', 'required' => false, 'kdsf' => 'KDSF-B-2-5'],
+        ['id' => 'personnel', 'en' => 'Personnel measures planned', 'de' => 'Geplante Personalmaßnahmen', 'required' => false, 'kdsf' => null],
+        ['id' => 'in-kind', 'en' => 'In-kind personnel', 'de' => 'Umfang des geplanten eigenen Personaleinsatzes', 'required' => false, 'kdsf' => null],
+        ['id' => 'ressources', 'en' => 'Additional resources', 'de' => 'Zusätzliche Ressourcen', 'required' => false, 'kdsf' => null],
+        ['id' => 'role', 'en' => 'Role of the institute', 'de' => 'Rolle des Instituts', 'required' => false, 'kdsf' => null],
+        ['id' => 'scholar', 'en' => 'Scholar', 'de' => 'Stipendiat:in', 'required' => false, 'kdsf' => null],
+        ['id' => 'scholarship', 'en' => 'Scholarship institution', 'de' => 'Stipendiengeber', 'required' => false, 'kdsf' => null],
+        ['id' => 'status', 'en' => 'Status', 'de' => 'Status', 'required' => true, 'kdsf' => null],
+        ['id' => 'supervisor', 'en' => 'Supervisor', 'de' => 'Betreuende Person', 'required' => false, 'kdsf' => null],
+        ['id' => 'time', 'en' => 'Time period', 'de' => 'Zeitraum', 'required' => true, 'kdsf' => 'KDSF-B-2-3, KDSF-B-2-4'],
+        ['id' => 'title', 'en' => 'Full title', 'de' => 'Voller Titel', 'required' => true, 'kdsf' => 'KDSF-B-2-2'],
+        ['id' => 'university', 'en' => 'Partner University', 'de' => 'Partner-Universität', 'required' => false, 'kdsf' => null],
+        ['id' => 'website', 'en' => 'Website', 'de' => 'Webseite', 'required' => false, 'kdsf' => null],
     ];
+
 
     public const STATUS = [
         'applied' => 'beantragt',
@@ -243,11 +246,43 @@ class Project extends Vocabulary
     {
         parent::__construct();
 
+        $this->initFields();
+
         if ($project !== null)
             $this->project = $project;
     }
 
-    public function getFields($type)
+    public function initFields()
+    {
+        $custom_fields = $this->db->adminFields->find();
+        foreach ($custom_fields as $field) {
+            $this->FIELDS[] = [
+                'id' => $field['id'],
+                'en' => $field['name'],
+                'de' => $field['name_de'],
+                'required' => false,
+                'kdsf' => null,
+                'custom' => true,
+            ];
+        }
+
+        // check if topics are enabled
+        $topics = $this->db->adminFeatures->findOne(['feature' => 'topics']);
+        if ($topics['enabled'] ?? false) {
+            $label = $this->db->adminGeneral->findOne(['key' => 'topics_label']);
+            if (empty($label) || empty($label['value'])) $label = ['en' => 'Research topics', 'de' => 'Forschungsbereiche'];
+            else $label = $label['value'];
+            $this->FIELDS[] = [
+                'id' => 'topics',
+                'en' => $label['en'],
+                'de' => $label['de'],
+                'required' => false,
+                'kdsf' => null,
+            ];
+        }
+    }
+
+    public function getFieldsLegacy($type)
     {
         return $this->fields[$type] ?? $this->fields['default'];
     }
@@ -277,6 +312,7 @@ class Project extends Vocabulary
                 return "<span class='badge'>-</span>";
         }
     }
+
     public function getType()
     {
         $type = $this->project['type'] ?? 'Drittmittel';
@@ -422,7 +458,6 @@ class Project extends Vocabulary
 
         $total_month = $years * 12 + $months + 1;
         return $total_month;
-        
     }
     public function getProgress()
     {
@@ -595,9 +630,9 @@ class Project extends Vocabulary
         foreach ($this->project['persons'] as $person) {
             $u = DB::doc2Arr($person['units'] ?? []);
             if (empty($u)) {
-               $u = $Groups->getPersonUnit($person['user'], $start);
-               if (empty($u)) continue;
-               $u = array_column($u, 'unit');
+                $u = $Groups->getPersonUnit($person['user'], $start);
+                if (empty($u)) continue;
+                $u = array_column($u, 'unit');
             }
 
             if (!empty($u)) {

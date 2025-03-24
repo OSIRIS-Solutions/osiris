@@ -290,7 +290,7 @@ $institute = $Settings->get('affiliation_details');
                 <table class="table">
 
                     <?php
-                    $fields = $Project->getFields($project['type'] ?? 'Drittmittel');
+                    $fields = $Project->getFieldsLegacy($project['type'] ?? 'Drittmittel');
                     // dump($fields);
                     $inherited = [];
 

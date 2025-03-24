@@ -293,6 +293,20 @@ Route::get('/settings/modules', function () {
 
 
 
+Route::get('/admin/persons', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Persons", "Personen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/persons.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/projects', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
@@ -308,22 +322,27 @@ Route::get('/admin/projects', function () {
 }, 'login');
 
 
-Route::get('/admin/projects/(.*)', function ($type) {
+Route::get('/admin/projects/([1234])/(.*)', function ($stage, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    $project = $osiris->adminProjects->findOne(['id'=> $type]);
-    if (empty($project)){
+    if (DB::is_ObjectID($id)) {
+        $project = $osiris->adminProjects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    } else {
+        $project = $osiris->adminProjects->findOne(['id' => $id]);
+    }
+    if (empty($project)) {
         $project = array();
     } else {
         $project = DB::doc2Arr($project);
     }
+    $type = $project['id'];
 
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Projects", "Projekte"), 'path'=> '/admin/projects'],
-        ['name' => $type]
+        ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
+        ['name' => $type . ' - ' . $stage . '/4']
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/project.php";
@@ -546,7 +565,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
             [$key => $_POST['original_id']],
             ['$set' => [$key => $values['id']]]
         );
-        $_POST['redirect'] = ROOTPATH."/admin/types/" . $values['id'];
+        $_POST['redirect'] = ROOTPATH . "/admin/types/" . $values['id'];
 
         if ($col == 'categories') {
             // update all connected types
@@ -554,7 +573,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
                 ['parent' => $_POST['original_id']],
                 ['$set' => ['parent' => $values['id']]]
             );
-            $_POST['redirect'] = ROOTPATH."/admin/categories/" . $values['id'];
+            $_POST['redirect'] = ROOTPATH . "/admin/categories/" . $values['id'];
         }
     }
 
@@ -749,21 +768,159 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    if (!isset($_POST['values'])) die("no values given");
-
-
     $collection = $osiris->adminProjects;
+    $mongo_id = $DB->to_ObjectID($id);
 
-    $values = validateValues($_POST['values'], $DB);
+    $original = $collection->findOne(['_id' => $mongo_id]);
+    if (empty($original)) {
+        header("Location: " . ROOTPATH . "/admin/projects?msg=not-found");
+        die;
+    }
+    $original_phases = DB::doc2Arr($original['phases'] ?? []);
+
+    dump($original, true);
+    dump($_POST, true);
+    echo "<hr>";
+
+    $stage = $_POST['stage'] ?? 1;
+
+    $values = validateValues($_POST['values'] ?? [], $DB);
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = $_SESSION['username'];
+    $values['stage'] = $stage;
+
+    if ($stage == 1) {
+        // first stage: update basic information and set phases
+
+        if ($original['id'] != $values['id']) {
+            // update all connected projects with this type 
+            $osiris->projects->updateMany(
+                ['type' => $original['id']],
+                ['$set' => ['type' => $values['id']]]
+            );
+        }
+
+        if (isset($_POST['phasedef'])) {
+            $phases = [];
+
+            foreach ($_POST['phasedef'] as $phase) {
+                // check if phase exists
+                $og_phase = array_filter($original_phases, function ($p) use ($phase) {
+                    return $p['id'] == $phase['id'];
+                });
+
+                if (empty($og_phase)) {
+                    // new phase
+                    $phases[] = [
+                        'id' => $phase['id'],
+                        'name' => $phase['en'],
+                        'name_de' => $phase['de']
+                    ];
+                } else {
+                    // update phase
+                    $og_phase = array_shift($og_phase);
+                    $og_phase['name'] = $phase['en'];
+                    $og_phase['name_de'] = $phase['de'];
+                    $phases[] = $og_phase;
+                }
+            }
+            $values['phases'] = $phases;
+        }
+
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+        header("Location: " . ROOTPATH . "/admin/projects/2/$id");
+        die;
+    } elseif ($stage == 2) {
+
+        if (!isset($_POST['phase'])) {
+            $_SESSION['msg'] = lang("No phases given.", "Keine Phasen angegeben.");
+            header("Location: " . ROOTPATH . "/admin/projects/1/$id");
+            die;
+        }
+
+        $values['phases'] = [];
+        foreach ($_POST['phase'] as $phase_id => $phase) {
+            $og_phase = array_filter($original_phases, function ($p) use ($phase_id) {
+                return $p['id'] == $phase_id;
+            });
+
+            $new = [
+                'id' => $phase_id,
+                'name' => $phase['name'],
+                'name_de' => $phase['name_de'],
+                'color' => $phase['color'],
+                'portfoio' => boolval($phase['portfoio'] ?? false),
+                'modules' => $phase['modules'] ?? [],
+                'disabled' => boolval($phase['disabled'] ?? false),
+            ];
+            if (!empty($og_phase)) {
+                $og_phase = array_shift($og_phase);
+                $new['previous'] = $og_phase['previous'] ?? null;
+            }
+            $values['phases'][] = $new;
+        }
+
+
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+        header("Location: " . ROOTPATH . "/admin/projects/3/$id");
+        die;
+    } else if ($stage == 3) {
+        if (!isset($_POST['previous'])) {
+            $_SESSION['msg'] = lang("No phases given.", "Keine Phasen angegeben.");
+            header("Location: " . ROOTPATH . "/admin/projects/3/$id");
+            die;
+        }
+        $values['phases'] = [];
+        foreach ($_POST['previous'] as $phase_id => $prev) {
+            if ($prev == '') $prev = null;
+            $og_phase = array_filter($original_phases, function ($p) use ($phase_id) {
+                return $p['id'] == $phase_id;
+            });
+            $og_phase = array_shift($og_phase);
+            $og_phase['previous'] = $prev;
+
+            $values['phases'][] = $og_phase;
+        }
+
+
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+        header("Location: " . ROOTPATH . "/admin/projects/4/$id");
+        die;
+    } else if ($stage == 4) {
+        $values['has_subprojects'] = boolval($values['has_subprojects'] ?? false);
+        $values['inherits'] = $values['inherits'] ?? [];
+
+        
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+        $name = lang($original['name'] ?? $original['id'], $original['name_de'] ?? null);
+        $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
+        header("Location: " . ROOTPATH . "/admin/projects");
+        die;
+    }
+
+
+
+    dump($values, true);
+    die;
 
     // check if ID has changed
-    if (isset($_POST['original_id']) && $_POST['original_id'] != $values['id']) {
-        // update all connected activities 
-        $osiris->activities->updateMany(
-            ['type' => $_POST['original_id']],
-            ['$set' => ['type' => $values['id']]]
-        );
-    }
+
     // checkbox default
     $values['disabled'] = $values['disabled'] ?? false;
 
@@ -809,6 +966,6 @@ Route::post('/crud/admin/vocabularies/([a-z\-]*)', function ($id) {
         "Vokabular <q>$id</q> erfolgreich gespeichert."
     );
 
-    $red = ROOTPATH . "/admin/vocabulary";
+    $red = ROOTPATH . "/admin/vocabulary#vocabulary-$id";
     header("Location: " . $red);
 });

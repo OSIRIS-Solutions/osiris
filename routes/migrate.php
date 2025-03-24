@@ -18,8 +18,8 @@
 Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Groups.php";
-    
-    set_time_limit(6000);  
+
+    set_time_limit(6000);
 
     include_once BASEPATH . "/php/Project.php";
     $Project = new Project;
@@ -31,22 +31,60 @@ Route::get('/migrate/test', function () {
         'color' => '#B61F29',
         'name' => 'Third-party funding',
         'name_de' => 'Drittmittel',
-        'modules' => [
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'funder',
-            'funding_number',
-            'grant_sum_proposed',
-            'personnel',
-            'ressources',
-            'contact',
-            'purpose',
-            'role',
-            'coordinator',
-            'nagoya',
+        'phases' => [
+            [
+                'name' => 'Proposal',
+                'name_de' => 'Antrag',
+                'id' => 'proposal',
+                'color' => 'signal',
+                'modules' => [
+                    'abstract',
+                    'public',
+                    // 'internal_number',
+                    // 'website',
+                    // 'grant_sum',
+                    'funder',
+                    // 'funding_number',
+                    'grant_sum_proposed',
+                    'personnel',
+                    'ressources',
+                    'contact',
+                    'purpose',
+                    'role',
+                    'coordinator',
+                    'nagoya',
+                ],
+                'disabled' => false,
+                'portfolio' => false,
+                'previous' => null,
+            ],
+            [
+                'name' => 'Accepted',
+                'name_de' => 'Angenommen',
+                'id' => 'approved',
+                'color' => 'success',
+                'modules' => [
+                    // 'abstract',
+                    // 'public',
+                    'internal_number',
+                    'website',
+                    'grant_sum',
+                    // 'funder',
+                    'funding_number',
+                    // 'grant_sum_proposed',
+                    // 'personnel',
+                    // 'ressources',
+                    // 'contact',
+                    // 'purpose',
+                    // 'role',
+                    // 'coordinator',
+                    'nagoya',
+                    'topics'
+                ],
+                'disabled' => false,
+                'portfolio' => true,
+                'previous' => 'proposal',
+            ]
         ],
         'topics' => true,
         'disabled' => false,
@@ -65,7 +103,7 @@ Route::get('/migrate/test', function () {
     ]);
     $osiris->projects->updateMany(
         ['type' => 'Drittmittel'],
-        ['$set'=> ['type'=> 'third-party']]
+        ['$set' => ['type' => 'third-party']]
     );
 
     $osiris->adminProjects->deleteOne(['id' => 'stipendate']);
@@ -92,13 +130,13 @@ Route::get('/migrate/test', function () {
     ]);
     $osiris->projects->updateMany(
         ['type' => 'Stipendium'],
-        ['$set'=> ['type'=> 'stipendiate']]
+        ['$set' => ['type' => 'stipendiate']]
     );
 
     $osiris->adminProjects->deleteOne(['id' => 'subproject']);
     $osiris->projects->updateMany(
-        ['type' => ['$in' => ['Teilprojekt', 'subproject']] ],
-        ['$set'=> ['type'=> 'third-party', 'subproject' => true] ]
+        ['type' => ['$in' => ['Teilprojekt', 'subproject']]],
+        ['$set' => ['type' => 'third-party', 'subproject' => true]]
     );
 
     $osiris->adminProjects->deleteOne(['id' => 'self-funded']);
@@ -123,7 +161,7 @@ Route::get('/migrate/test', function () {
     ]);
     $osiris->projects->updateMany(
         ['type' => 'Eigenfinanziert'],
-        ['$set'=> ['type'=> 'self-funded']]
+        ['$set' => ['type' => 'self-funded']]
     );
 
     echo "<p>Updated project types.</p>";
@@ -531,5 +569,3 @@ Route::post('/migrate/custom-fields-to-topics', function () {
 
     include BASEPATH . "/footer.php";
 });
-
-
