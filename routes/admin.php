@@ -814,13 +814,15 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
                     $phases[] = [
                         'id' => $phase['id'],
                         'name' => $phase['en'],
-                        'name_de' => $phase['de']
+                        'name_de' => $phase['de'],
+                        'color' => $phase['color'] ?? 'muted',
                     ];
                 } else {
                     // update phase
                     $og_phase = array_shift($og_phase);
                     $og_phase['name'] = $phase['en'];
                     $og_phase['name_de'] = $phase['de'];
+                    $og_phase['color'] = $phase['color'] ?? 'muted';
                     $phases[] = $og_phase;
                 }
             }
@@ -848,19 +850,17 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
                 return $p['id'] == $phase_id;
             });
 
-            $new = [
-                'id' => $phase_id,
-                'name' => $phase['name'],
-                'name_de' => $phase['name_de'],
-                'color' => $phase['color'],
+            if (empty($og_phase)) {
+                $_SESSION['msg'] = lang("Phase <q>$phase_id</q> not found.", "Phase <q>$phase_id</q> nicht gefunden.");
+               continue;
+            }
+            $new = DB::doc2Arr(array_shift($og_phase));
+            $new = array_merge($new, [
                 'portfoio' => boolval($phase['portfoio'] ?? false),
                 'modules' => $phase['modules'] ?? [],
                 'disabled' => boolval($phase['disabled'] ?? false),
-            ];
-            if (!empty($og_phase)) {
-                $og_phase = array_shift($og_phase);
-                $new['previous'] = $og_phase['previous'] ?? null;
-            }
+            ]);
+
             $values['phases'][] = $new;
         }
 

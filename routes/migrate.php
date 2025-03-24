@@ -35,7 +35,7 @@ Route::get('/migrate/test', function () {
             [
                 'name' => 'Proposal',
                 'name_de' => 'Antrag',
-                'id' => 'proposal',
+                'id' => 'proposed',
                 'color' => 'signal',
                 'modules' => [
                     'abstract',

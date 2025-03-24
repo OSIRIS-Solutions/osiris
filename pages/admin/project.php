@@ -166,8 +166,8 @@ $phases = $project['phases'] ?? [];
                 </p>
 
                 <p>
-                    <b><?=lang('Reuse existing phases', 'Phasen wiederverwenden')?></b>:
-                    
+                    <b><?= lang('Reuse existing phases', 'Phasen wiederverwenden') ?></b>:
+
                     <b class="text-danger">TODO</b>
                 </p>
 
@@ -178,6 +178,7 @@ $phases = $project['phases'] ?? [];
                             <th>ID</th>
                             <th>Name (english)</th>
                             <th>Name (deutsch)</th>
+                            <th><?= lang('Color', 'Farbe') ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -203,6 +204,27 @@ $phases = $project['phases'] ?? [];
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" name="phasedef[<?= $row_id ?>][de]" value="<?= $ph['name_de'] ?? '' ?>">
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $color = $ph['color'] ?? 'muted';
+                                        ?>
+
+                                        <div class="input-group">
+                                            <select name="phasedef[<?= $row_id ?>][color]" class="form-control color-select color" onchange="colorSelect(this)">
+                                                <option value="muted" <?= $color == 'muted' ? 'selected' : '' ?>>muted</option>
+                                                <option value="signal" <?= $color == 'signal' ? 'selected' : '' ?>>signal</option>
+                                                <option value="success" <?= $color == 'success' ? 'selected' : '' ?>>success</option>
+                                                <option value="danger" <?= $color == 'danger' ? 'selected' : '' ?>>danger</option>
+                                                <option value="primary" <?= $color == 'primary' ? 'selected' : '' ?>>primary</option>
+                                                <option value="secondary" <?= $color == 'secondary' ? 'selected' : '' ?>>secondary</option>
+                                            </select>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="ph ph-fill ph-circle text-<?= $color ?>" id="test-icon"></i>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
                                         <?php if ($n_phase == 0) { ?>
@@ -242,6 +264,23 @@ $phases = $project['phases'] ?? [];
                                     <input type="text" class="form-control" name="phasedef[${row_id}][de]" value="" required>
                                 </td>
                                 <td>
+                                    <div class="input-group">
+                                        <select name="phasedef[${row_id}][color]" class="form-control color-select color" onchange="colorSelect(this)">
+                                            <option value="muted">muted</option>
+                                            <option value="signal">signal</option>
+                                            <option value="success">success</option>
+                                            <option value="danger">danger</option>
+                                            <option value="primary">primary</option>
+                                            <option value="secondary">secondary</option>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="ph ph-fill ph-circle text-muted" id="test-icon"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
                                     <a onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
                                 </td>
                             </tr>
@@ -251,6 +290,11 @@ $phases = $project['phases'] ?? [];
                         handle: ".handle",
                         // change: function( event, ui ) {}
                     });
+
+                    function colorSelect(el) {
+                        let val = el.value;
+                        $(el).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + val);
+                    }
                 </script>
 
             </div>
@@ -598,43 +642,11 @@ $phases = $project['phases'] ?? [];
 
             <div class="box phase" id="phase-<?= $phase_id ?>" data-id="<?= $phase_id ?>">
                 <div class="content">
+                    <b>Phase</b>
+                    <code class="code float-right text-<?=$phase['color'] ?? 'muted'?>"><?= $phase_id ?></code>
                     <h2 class="title">
-                        <?= lang('Phase', 'Phase') ?> <code class="code"><?= $phase_id ?></code>
+                        <div class="badge <?=$phase['color'] ?? 'muted'?>"><?= lang($phase['name'], $phase['name_de']) ?></div>
                     </h2>
-
-                    <div class="row row-eq-spacing">
-                        <div class="col-sm">
-                            <label for="name" class="required ">Name (en)</label>
-                            <input type="text" class="form-control name" name="phase[<?= $phase_id ?>][name]" required value="<?= $phase['name'] ?? '' ?>">
-                        </div>
-                        <div class="col-sm">
-                            <label for="name_de" class="">Name (de)</label>
-                            <input type="text" class="form-control" name="phase[<?= $phase_id ?>][name_de]" value="<?= $phase['name_de'] ?? '' ?>">
-                        </div>
-                        <div class="col-sm">
-                            <?php
-                            $color = $phase['color'] ?? 'muted';
-                            ?>
-
-                            <label for="color" class="required"><?= lang('Color', 'Farbe') ?></label>
-                            <div class="input-group">
-                                <select name="phase[<?= $phase_id ?>][color]" class="form-control color-select color">
-                                    <option value="muted" <?= $color == 'muted' ? 'selected' : '' ?>>muted</option>
-                                    <option value="signal" <?= $color == 'signal' ? 'selected' : '' ?>>signal</option>
-                                    <option value="success" <?= $color == 'success' ? 'selected' : '' ?>>success</option>
-                                    <option value="danger" <?= $color == 'danger' ? 'selected' : '' ?>>danger</option>
-                                    <option value="primary" <?= $color == 'primary' ? 'selected' : '' ?>>primary</option>
-                                    <option value="secondary" <?= $color == 'secondary' ? 'selected' : '' ?>>secondary</option>
-                                </select>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                                        <i class="ph ph-fill ph-circle text-<?= $color ?>" id="test-icon"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- disabled -->
                     <!-- <div class="custom-checkbox mb-10 danger">
                         <input type="checkbox" id="disable-<?= $phase_id ?>" value="true" name="phase[<?= $phase_id ?>][disabled]" <?= ($phase['disabled'] ?? false) ? 'checked' : '' ?>>
@@ -708,7 +720,7 @@ $phases = $project['phases'] ?? [];
          * Third stage of this form: subprojects
          */
 
-         $subprojects = $project['has_subprojects'] ?? false;
+        $subprojects = $project['has_subprojects'] ?? false;
     ?>
 
 
@@ -731,16 +743,23 @@ $phases = $project['phases'] ?? [];
                     <?= lang('Inherited data fields from main project', 'Datenfelder, die vom Hauptprojekt übernommen werden') ?>
                 </h5>
                 <p>
-                    <?= lang('This data fields cannot be edited in the project itself but are always copied from the parent project.', 'Diese Datenfelder können nicht im Teilprojekt selbst bearbeitet werden, sondern werden immer aus dem übergeordneten Projekt übernommen.') ?>
+                    <?= lang('These data fields cannot be edited in the project itself but are always copied from the parent project.', 'Diese Datenfelder können nicht im Teilprojekt selbst bearbeitet werden, sondern werden immer aus dem übergeordneten Projekt übernommen.') ?>
                 </p>
 
                 <div class="">
-                    <?php foreach ($Project->FIELDS as $m) {
+                    <?php
+                    $modules = [];
+                    foreach ($phases as $phase) {
+                        $modules = array_merge($modules, DB::doc2Arr($phase['modules'] ?? []));
+                    }
+                    $modules = array_unique($modules);
+                    foreach ($Project->FIELDS as $m) {
                         // if ($m['required'] ?? false) continue;
                         $inherits = DB::doc2Arr($project['inherits'] ?? []);
+                        if (!in_array($m['id'], $modules)) continue;
                     ?>
                         <div class="custom-checkbox checkbox-badge">
-                            <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?=$m['id']?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
+                            <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
                             <label for="subprojects-<?= $m['id'] ?>">
                                 <?= lang($m['en'], $m['de']) ?>
                             </label>
@@ -756,6 +775,11 @@ $phases = $project['phases'] ?? [];
         </div>
 
 
+
+        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/3/<?= $type ?>">
+            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
+            <i class="ph ph-arrow-fat-line-left"></i>
+        </a>
 
         <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 
@@ -783,11 +807,3 @@ $phases = $project['phases'] ?? [];
     <?php } ?>
 
 <?php } ?>
-
-
-
-<script>
-    $('.color-select').change(function() {
-        $(this).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + $(this).val());
-    });
-</script>
