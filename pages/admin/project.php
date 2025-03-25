@@ -44,6 +44,48 @@ $phases = $project['phases'] ?? [];
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.18.0/flowchart.min.js" integrity="sha512-FX1RpRt8RDEtTiFbDxg4u62QUJXhVE+cVE1mBD0iSOpj/ZZ/VNyZKlwhBT39QMcP5KEYS3yU8wh6Qpa57qVnbg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 
 
+<style>
+    .checkbox-badge.custom-checkbox label:after {
+        content: "\E182";
+        position: absolute;
+        display: none;
+        left: 0.7rem;
+        top: 0.5rem;
+        width: 0.6rem;
+        height: 1rem;
+        border: unset;
+        border-width: unset;
+        -webkit-transform: unset;
+        -ms-transform: unset;
+        transform: unset;
+        font-family: 'Phosphor';
+        font-weight: bold;
+        color: white;
+    }
+
+    .checkbox-badge.custom-checkbox input[type=checkbox]:checked~label:before {
+        background-color: var(--signal-color);
+        border-color: var(--signal-color);
+    }
+
+    .checkbox-badge input[type=checkbox]:checked~label {
+        background-color: var(--signal-color-20);
+    }
+
+
+    .checkbox-badge.custom-checkbox.required-state label:after {
+        content: '\E0AA';
+    }
+
+    .checkbox-badge.required-state input[type=checkbox]:checked~label {
+        background-color: var(--danger-color-20);
+    }
+
+    .checkbox-badge.custom-checkbox.required-state input[type=checkbox]:checked~label:before {
+        background-color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+</style>
 
 
 <div class="modal" id="unique" tabindex="-1" role="dialog">
@@ -643,9 +685,9 @@ $phases = $project['phases'] ?? [];
             <div class="box phase" id="phase-<?= $phase_id ?>" data-id="<?= $phase_id ?>">
                 <div class="content">
                     <b>Phase</b>
-                    <code class="code float-right text-<?=$phase['color'] ?? 'muted'?>"><?= $phase_id ?></code>
+                    <code class="code float-right text-<?= $phase['color'] ?? 'muted' ?>"><?= $phase_id ?></code>
                     <h2 class="title">
-                        <div class="badge <?=$phase['color'] ?? 'muted'?>"><?= lang($phase['name'], $phase['name_de']) ?></div>
+                        <div class="badge <?= $phase['color'] ?? 'muted' ?>"><?= lang($phase['name'], $phase['name_de']) ?></div>
                     </h2>
                     <!-- disabled -->
                     <!-- <div class="custom-checkbox mb-10 danger">
@@ -676,20 +718,58 @@ $phases = $project['phases'] ?? [];
                     <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?> *</label>
                     <br>
                     <?php
+                        $modules = DB::doc2Arr($phase['modules'] ?? []);
+                        $modules = array_column($modules, 'required', 'module');
                     foreach ($Project->FIELDS as $m) {
                         if ($m['required'] ?? false) continue;
-                        $modules = DB::doc2Arr($phase['modules'] ?? []);
+                        $active = array_key_exists($m['id'], $modules);
+                        $required = $active && $modules[$m['id']] ;
+                        $value = $m['id'] . ($required ? '*' : '');
                     ?>
-                        <div class="custom-checkbox checkbox-badge">
-                            <input type="checkbox" id="module-<?= $phase_id ?>-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="phase[<?= $phase_id ?>][modules][]" <?= (in_array($m['id'], $modules)) ? 'checked' : '' ?>>
+                        <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
+                            <input type="checkbox" 
+                                id="module-<?= $phase_id ?>-<?= $m['id'] ?>"
+                                data-attribute="<?= $m['id'] ?>"
+                                value="<?= $value ?>"
+                                name="phase[<?= $phase_id ?>][modules][]"
+                                <?= $active ? 'checked' : '' ?>
+                                onclick="toggleCheckboxStates(this)">
                             <label for="module-<?= $phase_id ?>-<?= $m['id'] ?>">
                                 <?= lang($m['en'], $m['de']) ?>
                             </label>
                         </div>
                     <?php } ?>
+
+                    <p>
+                        <i class="ph ph-info text-signal"></i>
+                        <?= lang('You can mark a field as active by clicking on it and mark it as required by clicking again. Required fields are marked with an asterisk (*).', 'Du kannst ein Feld als aktiv markieren, indem du darauf klickst, und es als erforderlich markieren, indem du erneut darauf klickst. Erforderliche Felder sind mit einem Sternchen (*) gekennzeichnet.') ?>
+                    </p>
                 </div>
 
             </div>
+
+            <script>
+                function toggleCheckboxStates(el) {
+                    // if is checked but not .required-state, check still and set required state
+                    // else just uncheck and remove required state
+                    let parent = el.closest('.checkbox-badge');
+                    let val = el.getAttribute('data-attribute');
+                    console.log(el.checked);
+                    if (!el.checked && !parent.classList.contains('required-state')) {
+                        parent.classList.add('required-state');
+                        el.checked = true;
+                        el.value = val + '*';
+                    } else if (el.checked) {
+                        // parent.classList.add('required-state');
+                        el.checked = true;
+                        el.value = val;
+                    } else {
+                        parent.classList.remove('required-state');
+                        el.checked = false;
+                        el.value = val;
+                    }
+                }
+            </script>
 
 
         <?php } ?>
@@ -740,6 +820,22 @@ $phases = $project['phases'] ?? [];
                 </span>
 
                 <h5>
+                    <?=lang('Phase', 'Phase')?>
+                </h5>
+
+                <p>
+                    <?= lang('In which phase should the subprojects be created?', 'In welcher Phase sollen die Teilprojekte erstellt werden?') ?>
+                </p>
+
+                <select name="values[subproject_phase]" class="form-control w-auto">
+                    <?php foreach ($phases as $phase) { ?>
+                        <option value="<?= $phase['id'] ?>" <?= ($project['subproject_phase'] ?? '') == $phase['id'] ? 'selected' : '' ?>>
+                            <?= lang($phase['name'], $phase['name_de']) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+
+                <h5>
                     <?= lang('Inherited data fields from main project', 'Datenfelder, die vom Hauptprojekt übernommen werden') ?>
                 </h5>
                 <p>
@@ -750,13 +846,17 @@ $phases = $project['phases'] ?? [];
                     <?php
                     $modules = [];
                     foreach ($phases as $phase) {
-                        $modules = array_merge($modules, DB::doc2Arr($phase['modules'] ?? []));
+                        $ms = DB::doc2Arr($phase['modules'] ?? []);
+                        $modules = array_merge($modules, array_column($ms, 'module'));
                     }
                     $modules = array_unique($modules);
+                    $modules[] = 'title';
+                    $modules[] = 'date';
+                    $modules[] = 'status';
                     foreach ($Project->FIELDS as $m) {
                         // if ($m['required'] ?? false) continue;
                         $inherits = DB::doc2Arr($project['inherits'] ?? []);
-                        if (!in_array($m['id'], $modules)) continue;
+                        if (!in_array($m['id'], $modules) ) continue;
                     ?>
                         <div class="custom-checkbox checkbox-badge">
                             <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
@@ -766,10 +866,6 @@ $phases = $project['phases'] ?? [];
                         </div>
                     <?php } ?>
                 </div>
-                <p>
-                    <i class="ph ph-info text-signal"></i>
-                    <?= lang('Please note that name, title, status, and time are always a required part of the form.', 'Zur Information: Name, Titel, Status und Zeitrahmen des Projektes sind immer Teil des Formulars sowie Pflichfelder.') ?>
-                </p>
 
             </div>
         </div>

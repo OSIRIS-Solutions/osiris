@@ -778,9 +778,9 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     }
     $original_phases = DB::doc2Arr($original['phases'] ?? []);
 
-    dump($original, true);
-    dump($_POST, true);
-    echo "<hr>";
+    // dump($original, true);
+    // dump($_POST, true);
+    // echo "<hr>";
 
     $stage = $_POST['stage'] ?? 1;
 
@@ -854,10 +854,25 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
                 $_SESSION['msg'] = lang("Phase <q>$phase_id</q> not found.", "Phase <q>$phase_id</q> nicht gefunden.");
                continue;
             }
+            $modules = [];
+            foreach ($phase['modules'] ?? [] as $m) {
+                if (str_ends_with($m, '*')){
+                    $m = substr($m, 0, -1);
+                    $modules[] = [
+                        'module' => $m,
+                        'required' => true
+                    ];
+                } else {
+                    $modules[] = [
+                        'module' => $m,
+                        'required' => false
+                    ];
+                }
+            }
             $new = DB::doc2Arr(array_shift($og_phase));
             $new = array_merge($new, [
                 'portfoio' => boolval($phase['portfoio'] ?? false),
-                'modules' => $phase['modules'] ?? [],
+                'modules' => $modules,
                 'disabled' => boolval($phase['disabled'] ?? false),
             ]);
 
@@ -922,27 +937,27 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     // check if ID has changed
 
     // checkbox default
-    $values['disabled'] = $values['disabled'] ?? false;
+    // $values['disabled'] = $values['disabled'] ?? false;
 
-    // add information on updating process
-    $values['updated'] = date('Y-m-d');
-    $values['updated_by'] = $_SESSION['username'];
+    // // add information on updating process
+    // $values['updated'] = date('Y-m-d');
+    // $values['updated_by'] = $_SESSION['username'];
 
-    $mongo_id = $DB->to_ObjectID($id);
-    $updateResult = $collection->updateOne(
-        ['_id' => $mongo_id],
-        ['$set' => $values]
-    );
+    // $mongo_id = $DB->to_ObjectID($id);
+    // $updateResult = $collection->updateOne(
+    //     ['_id' => $mongo_id],
+    //     ['$set' => $values]
+    // );
 
-    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
-        die();
-    }
+    // if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+    //     header("Location: " . $_POST['redirect'] . "?msg=update-success");
+    //     die();
+    // }
 
-    echo json_encode([
-        'inserted' => $updateResult->getModifiedCount(),
-        'id' => $id,
-    ]);
+    // echo json_encode([
+    //     'inserted' => $updateResult->getModifiedCount(),
+    //     'id' => $id,
+    // ]);
 });
 
 
