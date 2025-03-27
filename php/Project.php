@@ -282,6 +282,38 @@ class Project extends Vocabulary
         }
     }
 
+    public function getProjectType($id)
+    {
+        $filter = [
+            'id' => $id
+        ];
+        $type = $this->db->adminProjects->findOne($filter);
+        return DB::doc2Arr($type);
+    }
+
+    public function getProjectTypes($include_hidden = false)
+    {
+        $filter = [];
+        if (!$include_hidden) $filter = ['disabled' => false];
+        return $this->db->adminProjects->find($filter)->toArray();
+    }
+
+    public function getFields($type_id, $phase)
+    {
+        $type = $this->db->adminProjects->findOne(['id' => $type_id]);
+        if (empty($type)) return [];
+        $phases = $type['phases'] ?? [];
+
+        $fields = [];
+        foreach ($phases as $p) {
+            if ($p['id'] == $phase) {
+                $fields = $p['modules'] ?? [];
+                break;
+            }
+        }
+        return DB::doc2Arr($fields);
+    }
+
     public function getFieldsLegacy($type)
     {
         return $this->fields[$type] ?? $this->fields['default'];

@@ -904,6 +904,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
 
             $values['phases'][] = $og_phase;
         }
+        // $values['phases'] = array_values($values['phases']);
 
 
         $updateResult = $collection->updateOne(
