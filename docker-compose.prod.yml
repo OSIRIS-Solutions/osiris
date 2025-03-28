@@ -1,22 +1,27 @@
+name: osiris-prod
 services:
+  nginx:
+    build: ./nginx/
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/html/
+      - ./img:/var/www/html/img:rw
+
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: prod.Dockerfile
     container_name: osiris
-    volumes:
-      - .:/var/www/html
-      - ./img:/var/www/html/img:rw
-
-    ports:
-      - "8080:80"
     depends_on:
       - mongo
+    expose:
+      - 9000
+    volumes:
+      - .:/var/www/html/
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
       - OSIRIS_DB_HOST=mongo
-    command: >
-      sh -c "composer install --ignore-platform-reqs && php -S 0.0.0.0:80 -t /var/www/html"
 
   mongo:
     image: mongo:6.0

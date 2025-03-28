@@ -38,6 +38,10 @@ mongorestore  dump/
 composer update --ignore-platform-reqs
 
 ### Using Docker the docker environment for debugging with xdebug
+#### Start dev environment
+`docker compose -f docker-compose.dev.yml up -d --build`
+Open web browser and go to **localhost:8080**
+
 #### Configure Your IDE (e.g., PhpStorm)
 To use XDebug for step debugging, configure your IDE accordingly:
 1. **Set Debugging Port**:
