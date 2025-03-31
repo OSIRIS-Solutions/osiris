@@ -531,12 +531,12 @@ $institute = $Settings->get('affiliation_details');
                                                         ['user' => '', 'role' => '']
                                                     ];
                                                 }
+                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]]);
                                                 foreach ($persons as $i => $con) { ?>
                                                     <tr>
                                                         <td class="">
                                                             <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
                                                                 <?php
-                                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]]);
                                                                 foreach ($all_users as $s) { ?>
                                                                     <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
                                                                         <?= "$s[last], $s[first] ($s[username])" ?>
