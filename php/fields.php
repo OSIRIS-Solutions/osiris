@@ -292,6 +292,13 @@ $FIELDS = [
         'type' => 'string'
     ],
     [
+        'id' => 'journal_id',
+        'module_of' => $typeModules['journal_id'] ?? [],
+        'usage' => [],
+        'label' => lang('Journal ID'),
+        'type' => 'string'
+    ],
+    [
         'id' => 'issn',
         'module_of' => $typeModules['issn'] ?? [],
         'usage' => [
@@ -330,6 +337,16 @@ $FIELDS = [
             'columns'
         ],
         'label' => lang('Month', 'Monat'),
+        'type' => 'integer'
+    ],
+    [
+        'id' => 'day',
+        'module_of' => $typeModules['day'] ?? [],
+        'usage' => [
+            'filter',
+            'columns'
+        ],
+        'label' => lang('Day', 'Tag'),
         'type' => 'integer'
     ],
     [
@@ -700,7 +717,7 @@ $FIELDS = [
     ],
     [
         'id' => 'epub',
-        'module_of' => $typeModules['epub'] ?? [],
+        'module_of' => $typeModules['online-ahead-of-print'] ?? [],
         'usage' => [
             'filter',
             'columns'

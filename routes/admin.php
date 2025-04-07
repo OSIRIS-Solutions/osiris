@@ -182,6 +182,36 @@ Route::get('/admin/types/new', function () {
 }, 'login');
 
 
+Route::get('/admin/type-schema/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    
+    $type = $osiris->adminTypes->findOne(['id' => $id]);
+    if (empty($type)) {
+        header("Location: " . ROOTPATH . "/admin/categories?msg=not-found");
+        die;
+    }
+    $name = lang($type['name'], $type['name_de']);
+
+    $t = $type['parent'];
+    $parent = $osiris->adminCategories->findOne(['id' => $t]);
+    $color = $parent['color'] ?? '#000000';
+    $st = $type['id'];
+
+    $breadcrumb = [
+        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
+        ['name' => $name, 'path' => "/admin/types/" . $id],
+        ['name' => lang("Schema", "Schema")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/category-type-schema.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 
 Route::get('/admin/types/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";

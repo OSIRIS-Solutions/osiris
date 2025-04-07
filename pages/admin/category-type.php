@@ -376,6 +376,10 @@ if (!empty($form) && isset($form['_id'])) {
 
 <?php } ?>
 
+<a href="<?=ROOTPATH?>/admin/type-schema/<?=$id?>" class="btn">
+    <i class="ph ph-code"></i> <?= lang('Type schema', 'Typ-Schema') ?>
+</a>
+
 
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>
