@@ -641,14 +641,12 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-shield-check" aria-hidden="true"></i>
                                 <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/admin/fields" class="with-icon <?= $pageactive('admin/fields') ?>">
-                                <i class="ph ph-textbox" aria-hidden="true"></i>
-                                <?= lang('Custom fields') ?>
+
+                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                <?= lang('Contents', 'Inhalte') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/admin/categories" class="with-icon <?= $pageactive('admin/categories') ?>">
-                                <i class="ph ph-bookmarks" aria-hidden="true"></i>
-                                <?= lang('Activities', 'Aktivitäten') ?>
-                            </a>
+                           
                             <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
                                 <i class="ph ph-wrench" aria-hidden="true"></i>
                                 <?= lang('Features', 'Funktionen') ?>

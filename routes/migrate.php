@@ -28,11 +28,213 @@
 Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Groups.php";
-    
+
     set_time_limit(6000);
 
-    
+    include_once BASEPATH . "/php/Project.php";
+    $Project = new Project;
+    // Drittmittel
+    $osiris->adminProjects->deleteOne(['id' => 'third-party']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'third-party',
+        'icon' => 'hand-coins',
+        'color' => '#B61F29',
+        'name' => 'Third-party funding',
+        'name_de' => 'Drittmittel',
+        'phases' => [
+            [
+                'name' => 'Proposal',
+                'name_de' => 'Antrag',
+                'id' => 'proposed',
+                'color' => 'signal',
+                'modules' => [
+                    'abstract',
+                    'public',
+                    // 'internal_number',
+                    // 'website',
+                    // 'grant_sum',
+                    'funder',
+                    // 'funding_number',
+                    'grant_sum_proposed',
+                    'personnel',
+                    'ressources',
+                    'contact',
+                    'purpose',
+                    'role',
+                    'coordinator',
+                    'nagoya',
+                ],
+                'disabled' => false,
+                'portfolio' => false,
+                'previous' => null,
+            ],
+            [
+                'name' => 'Accepted',
+                'name_de' => 'Angenommen',
+                'id' => 'approved',
+                'color' => 'success',
+                'modules' => [
+                    // 'abstract',
+                    // 'public',
+                    'internal_number',
+                    'website',
+                    'grant_sum',
+                    // 'funder',
+                    'funding_number',
+                    // 'grant_sum_proposed',
+                    // 'personnel',
+                    // 'ressources',
+                    // 'contact',
+                    // 'purpose',
+                    // 'role',
+                    // 'coordinator',
+                    'nagoya',
+                    'topics'
+                ],
+                'disabled' => false,
+                'portfolio' => true,
+                'previous' => 'proposal',
+            ]
+        ],
+        'topics' => true,
+        'disabled' => false,
+        'portfolio' => true,
+        'has_subprojects' => true,
+        'inherits' => [
+            'status',
+            'website',
+            'grant_sum',
+            'funder',
+            'grant_sum_proposed',
+            'purpose',
+            'role',
+            'coordinator',
+        ]
+    ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Drittmittel'],
+        ['$set' => ['type' => 'third-party']]
+    );
 
+    $osiris->adminProjects->deleteOne(['id' => 'stipendate']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'stipendate',
+        'icon' => 'tip-jar',
+        'color' => '#63a308',
+        'name' => 'Scholarship',
+        'name_de' => 'Stipendium',
+        'modules' => [
+            'abstract',
+            'public',
+            'internal_number',
+            'website',
+            'grant_sum',
+            'supervisor',
+            'scholar',
+            'scholarship',
+            'university',
+        ],
+        'topics' => false,
+        'disabled' => false,
+        'portfolio' => true
+    ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Stipendium'],
+        ['$set' => ['type' => 'stipendiate']]
+    );
+
+    $osiris->adminProjects->deleteOne(['id' => 'subproject']);
+    $osiris->projects->updateMany(
+        ['type' => ['$in' => ['Teilprojekt', 'subproject']]],
+        ['$set' => ['type' => 'third-party', 'subproject' => true]]
+    );
+
+    $osiris->adminProjects->deleteOne(['id' => 'self-funded']);
+    $osiris->adminProjects->insertOne([
+        'id' => 'self-funded',
+        'icon' => 'piggy-bank',
+        'color' => '#ECAF00',
+        'name' => 'Self-funded',
+        'name_de' => 'Eigenfinanziert',
+        'modules' => [
+            'abstract',
+            'public',
+            'internal_number',
+            'website',
+            'personnel',
+            'ressources',
+            'contact',
+        ],
+        'topics' => false,
+        'disabled' => false,
+        'portfolio' => false
+    ]);
+    $osiris->projects->updateMany(
+        ['type' => 'Eigenfinanziert'],
+        ['$set' => ['type' => 'self-funded']]
+    );
+
+    echo "<p>Updated project types.</p>";
+
+    // $cursor = $osiris->persons->find(['science_unit' => ['$exists' => false]]);
+
+    // foreach ($cursor as $doc) {
+    //     $depts = DB::doc2Arr($doc['depts'] ?? []);
+    //     $science_unit = $depts[0] ?? null;
+    //     dump($science_unit, true);
+    //     $osiris->persons->updateOne(
+    //         ['_id' => $doc['_id']],
+    //         ['$set' => ['science_unit' => $science_unit]]
+    //     );
+    // }
+    // $cursor = $osiris->activities->find(['units' => ['$exists' => false]]);
+    // foreach ($cursor as $doc) {
+    //     // calculate depts
+    //     dump($doc, true);
+    // }
+    // $cursor = $osiris->projects->find(['start_date' => ['$exists' => false]]);
+    // foreach ($cursor as $doc) {
+    //     $osiris->projects->updateOne(
+    //         ['_id' => $doc['_id']],
+    //         ['$set' => ['start_date' => format_date($doc['start'] ?? '', 'Y-m-d'), 'end_date' => format_date($doc['end'] ?? '', 'Y-m-d')]]
+    //     );
+    // }
+    // $filter = "$and":[{"authors.last":"Eberth"},{"authors.user":{"$ne":"seb14"}}];
+    // $filter = ['authors.last' => 'Eberth', 'authors.user' => ['$ne' => 'seb14']];
+    // $cursor = $osiris->activities->find($filter);
+    // foreach ($cursor as $doc) {
+    //     dump($doc, true);
+    //     $osiris->activities->updateOne(
+    //         ['_id' => $doc['_id']],
+    //         ['$set' => ['authors.$[elem].user' => 'seb14']],
+    //         ['arrayFilters' => [['elem.last' => 'Eberth']]]
+    //     );
+    // }
+    // writeMail();
+
+
+    // render teaser from abstract of publications
+    // $cursor = $osiris->projects->find(['teaser' => ['$exists' => false]]);
+    // foreach ($cursor as $doc) {
+    //     $abstract_en = $doc['public_abstract'] ?? $doc['abstract'] ?? '';
+    //     $abstract_de = $doc['public_abstract_de'] ?? $abstract_en;
+    //     // $teaser_de = substr($doc['abstract'], 0, 200);
+    //     // break at words or sentences
+    //     $teaser_en = get_preview($abstract_en, 200);
+    //     $teaser_de = get_preview($abstract_de, 200);
+
+    //     dump($teaser_en, true);
+    //     dump($teaser_de, true);
+
+    //     if (empty($teaser_en) && empty($teaser_de)) continue;
+
+    //     $osiris->projects->updateOne(
+    //         ['_id' => $doc['_id']],
+    //         ['$set' => ['teaser_en' => $teaser_en, 'teaser_de' => $teaser_de]]
+    //     );
+    // }
+
+    // echo "Done";
 });
 
 

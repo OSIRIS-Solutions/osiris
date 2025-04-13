@@ -155,7 +155,7 @@ if (
     &&
     isset($_SESSION['username']) && !empty($_SESSION['username'])
 ) {
-    include_once BASEPATH . "/routes/components.php";
+    include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
     include_once BASEPATH . "/routes/controlling.php";
     include_once BASEPATH . "/routes/database.php";

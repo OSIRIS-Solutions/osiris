@@ -82,7 +82,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 </script>
 
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-<script src="<?= ROOTPATH ?>/js/projects.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <style>
     td .key {
@@ -297,7 +297,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 <table class="table">
 
                     <?php
-                    $fields = $Project->getFields($project['type'] ?? 'Drittmittel');
+                    $fields = $Project->getFieldsLegacy($project['type'] ?? 'Drittmittel');
                     // dump($fields);
                     $inherited = [];
 
@@ -390,7 +390,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                                         <?php break;
                                         case 'funder': ?>
                                             <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
-                                            <?= $project['funder'] ?? '-' ?>
+                                            <?= $Project->getFunder() ?>
                                         <?php break;
                                         case 'funding_organization': ?>
                                             <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>
@@ -452,10 +452,18 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                                         case 'countries': ?>
                                             <span class="key"><?= lang('Countries', 'Länder') ?></span>
                                             <ul class="list signal mb-0">
-                                                <?php 
-                                                $lang = lang('name', 'name_de');
-                                                foreach ($project['countries'] ?? [] as $c) { ?>
-                                                    <li><?= $DB->getCountry($c, $lang) ?></li>
+                                                <?php $lang = lang('name', 'name_de');
+                                                foreach ($project['countries'] ?? [] as $c) {
+                                                    $iso = $c;
+                                                    $role = '';
+                                                    if (isset($c['country'])) {
+                                                        $iso = $c['country'];
+                                                    }
+                                                    if (isset($c['role'])) {
+                                                        $role = ' (' . $c['role'] . ')';
+                                                    }
+                                                ?>
+                                                    <li><?= $DB->getCountry($c, $lang) . $role ?></li>
                                                 <?php } ?>
                                             </ul>
                                         <?php break;
@@ -532,12 +540,12 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                                                         ['user' => '', 'role' => '']
                                                     ];
                                                 }
+                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]]);
                                                 foreach ($persons as $i => $con) { ?>
                                                     <tr>
                                                         <td class="">
                                                             <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
                                                                 <?php
-                                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]]);
                                                                 foreach ($all_users as $s) { ?>
                                                                     <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
                                                                         <?= "$s[last], $s[first] ($s[username])" ?>

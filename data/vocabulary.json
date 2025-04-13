@@ -1,0 +1,147 @@
+[
+    {
+        "id": "funder",
+        "category": "Project",
+        "name": "Funder",
+        "name_de": "Förderer",
+        "description": "The organization that provides funding for a project.",
+        "description_de": "Die Organisation, die die Finanzierung für ein Projekt bereitstellt.",
+        "values": [
+            {
+                "id": "DFG",
+                "en": "DFG",
+                "de": "DFG"
+            },
+            {
+                "id": "Bund",
+                "en": "Bund",
+                "de": "Bund"
+            },
+            {
+                "id": "Bundesländer",
+                "en": "Federal states",
+                "de": "Bundesländer"
+            },
+            {
+                "id": "Wirtschaft",
+                "en": "Economy",
+                "de": "Wirtschaft"
+            },
+            {
+                "id": "EU",
+                "en": "EU",
+                "de": "EU"
+            },
+            {
+                "id": "Stiftungen",
+                "en": "Foundations",
+                "de": "Stiftungen"
+            },
+            {
+                "id": "Leibniz Wettbewerb",
+                "en": "Leibniz Competition",
+                "de": "Leibniz Wettbewerb"
+            },
+            {
+                "id": "Sonstige Drittmittelgeber",
+                "en": "Other third-party funders",
+                "de": "Sonstige Drittmittelgeber"
+            }
+        ]
+    },
+    {
+        "id": "project-person-role",
+        "category": "Project",
+        "name": "Project Role",
+        "name_de": "Projektrolle",
+        "description": "The role of the person in the project.",
+        "description_de": "Die Rolle der Person im Projekt.",
+        "values": [
+            {
+                "id": "Projektleitung",
+                "en": "Project management",
+                "de": "Projektleitung"
+            },
+            {
+                "id": "Wissenschaftliche Mitarbeit",
+                "en": "Scientific staff",
+                "de": "Wissenschaftliche Mitarbeit"
+            },
+            {
+                "id": "Technische Mitarbeit",
+                "en": "Technical staff",
+                "de": "Technische Mitarbeit"
+            },
+            {
+                "id": "Studentische Mitarbeit",
+                "en": "Student staff",
+                "de": "Studentische Mitarbeit"
+            },
+            {
+                "id": "Sonstige Mitarbeit",
+                "en": "Other staff",
+                "de": "Sonstige Mitarbeit"
+            }
+        ]
+    },
+    {
+        "id": "project-institute-role",
+        "category": "Project",
+        "name": "Role of the Institute",
+        "name_de": "Rolle des Instituts",
+        "description": "The role of the institute in the project.",
+        "description_de": "Die Rolle des Instituts im Projekt.",
+        "values": [
+            {
+                "id": "coordinator",
+                "en": "Coordinator",
+                "de": "Koordinator"
+            },
+            {
+                "id": "partner",
+                "en": "Partner",
+                "de": "Partner"
+            },
+            {
+                "id": "associated",
+                "en": "Associated partner",
+                "de": "Assoziierter Partner"
+            }
+        ]
+    },
+    {
+        "id": "project-purpose",
+        "category": "Project",
+        "name": "Project Purpose",
+        "name_de": "Projektzweck",
+        "description": "The purpose of the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-5).",
+        "description_de": "Der Zweck des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-5).",
+        "values": [
+            {
+                "id": "research",
+                "en": "Research",
+                "de": "Forschung"
+            },
+            {
+                "id": "teaching",
+                "en": "Teaching",
+                "de": "Lehre"
+            },
+            {
+                "id": "promotion",
+                "en": "Promotion of young scientists",
+                "de": "Förderung des wissenschaftlichen Nachwuchs"
+            },
+            {
+                "id": "transfer",
+                "en": "Transfer",
+                "de": "Transfer"
+            },
+            {
+                "id": "others",
+                "en": "Other purpose",
+                "de": "Sonstiger Zweck"
+            }
+        ]
+    }
+]

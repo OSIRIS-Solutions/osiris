@@ -438,7 +438,6 @@ Route::post('/crud/projects/update/([A-Za-z0-9]*)', function ($id) {
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->projects;
 
-
     // $user_project = in_array($user, array_column(DB::doc2Arr($project['persons']), 'user'));
     // $edit_perm = ($Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
 
