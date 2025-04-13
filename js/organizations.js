@@ -4,10 +4,10 @@ let SELECTED;
 let COMMENT;
 
 $(document).ready(function () {
-SUGGEST = $('#organization-suggest')
-INPUT = $('#organization-search')
-SELECTED = $('#collaborators')
-COMMENT = $('#search-comment')
+    SUGGEST = $('#organization-suggest')
+    INPUT = $('#organization-search')
+    SELECTED = $('#collaborators')
+    COMMENT = $('#search-comment')
 })
 
 function getOrganization(name, ror = false) {
@@ -72,7 +72,7 @@ function getOrganization(name, ror = false) {
 
 function suggestOrganization(data, create = false) {
     console.info('suggestOrganization')
-    
+
     if (data.length === 0) {
         COMMENT.html(lang('No results found', 'Keine Ergebnisse gefunden'))
     } else {
@@ -113,7 +113,35 @@ function cleanID(id) {
     return id
 }
 
-function selectOrganization(org, create = false) {
+function createOrganizationTR(org) {
+    console.info('createOrganizationTR')
+    var id = cleanID(org.id)
+    var row = $('<tr>')
+    var td = $('<td>')
+    td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
+    td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
+    row.append(td)
+    row.append($('<td>').append(`<div class="custom-radio">
+                                        <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
+                                        <label for="coordinator-${id}" class="empty"></label>
+                                    </div>`))
+
+    td = $('<td>')
+    var deletebtn = $('<button type="button" class="btn danger" title="remove">')
+    deletebtn.html('<i class="ph ph-trash"></i>')
+    deletebtn.on('click', function () {
+        $(this).closest('tr').remove()
+    })
+    td.append(deletebtn)
+    row.append(td)
+
+    SELECTED.append(row)
+}
+
+function selectOrganization(org, create = false, callback = null) {
+    if (callback === null) {
+        callback = createOrganizationTR
+    }
     console.log(org);
     console.info('selectOrganization')
     if (create) {
@@ -133,28 +161,7 @@ function selectOrganization(org, create = false) {
                     return;
                 } else {
                     // random id
-                    var id = cleanID(response.id)
-                    var row = $('<tr>')
-                    var td = $('<td>')
-                    td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
-                    td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
-                    row.append(td)
-                    row.append($('<td>').append(`<div class="custom-radio">
-                            <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
-                            <label for="coordinator-${id}" class="empty"></label>
-                        </div>`))
-
-                    td = $('<td>')
-                    var deletebtn = $('<button type="button" class="btn danger" title="remove">')
-                    deletebtn.html('<i class="ph ph-trash"></i>')
-                    deletebtn.on('click', function () {
-                        $(this).closest('tr').remove()
-                    })
-                    td.append(deletebtn)
-                    row.append(td)
-
-                    SELECTED.append(row)
-
+                    callback(org)
                     toastSuccess(lang('Organization added', 'Organisation angelegt'))
                 }
                 SUGGEST.empty()
@@ -166,28 +173,7 @@ function selectOrganization(org, create = false) {
             }
         })
     } else {
-        // random id
-        var id = cleanID(org.id)
-        var row = $('<tr>')
-        var td = $('<td>')
-        td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
-        td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
-        row.append(td)
-        row.append($('<td>').append(`<div class="custom-radio">
-                                        <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
-                                        <label for="coordinator-${id}" class="empty"></label>
-                                    </div>`))
-
-        td = $('<td>')
-        var deletebtn = $('<button type="button" class="btn danger" title="remove">')
-        deletebtn.html('<i class="ph ph-trash"></i>')
-        deletebtn.on('click', function () {
-            $(this).closest('tr').remove()
-        })
-        td.append(deletebtn)
-        row.append(td)
-
-        SELECTED.append(row)
+        callback(org)
         toastSuccess(lang('Organization connected', 'Organisation verknüpft'))
 
         SUGGEST.empty()

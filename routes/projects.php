@@ -14,6 +14,31 @@
  * @license     MIT
  */
 
+
+ Route::get('/proposals', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang("Project proposals", "Projektanträge")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/projects/proposals.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/proposals/new', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
+        ['name' => lang("New", "Neu")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/projects/proposal-edit.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/projects', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];

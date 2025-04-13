@@ -684,13 +684,18 @@ Route::get('/api/teaching', function () {
 });
 
 
-Route::get('/api/projects', function () {
+Route::get('/api/(projects|proposals)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
+    }
+    if ($type == 'projects') {
+        $collection = $osiris->projects;
+    } else {
+        $collection = $osiris->proposals;
     }
 
     $filter = [];
@@ -709,7 +714,7 @@ Route::get('/api/projects', function () {
             ['id' => $_GET['search']]
         ]];
     }
-    $result = $osiris->projects->find($filter)->toArray();
+    $result = $collection->find($filter)->toArray();
 
     if (isset($_GET['formatted'])) {
         $data = [];

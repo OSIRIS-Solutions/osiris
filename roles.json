@@ -144,6 +144,21 @@
         "en": "Projects",
         "fields": [
             {
+                "id": "proposals.add",
+                "de": "Anträge anlegen",
+                "en": "Add new proposals"
+            },
+            {
+                "id": "proposals.view",
+                "de": "Alle existierende Anträge sehen",
+                "en": "See all existing proposals"
+            },
+            {
+                "id": "proposals.delete",
+                "de": "Anträge löschen",
+                "en": "Delete proposals"
+            },
+            {
                 "id": "projects.add",
                 "de": "Projekte anlegen",
                 "en": "Add new projects"
