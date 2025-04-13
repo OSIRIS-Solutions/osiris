@@ -70,7 +70,7 @@ function val($index, $default = '')
 <div class="modal" id="add-event" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close">
+            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="title"><?= lang('Add event', 'Event hinzufügen') ?></h5>

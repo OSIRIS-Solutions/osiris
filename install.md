@@ -36,3 +36,31 @@ composer require --ignore-platform-reqs phpoffice/phpword
 mongorestore  dump/
 
 composer update --ignore-platform-reqs
+
+### Using Docker the docker environment for debugging with xdebug
+#### Start dev environment
+`docker compose -f docker-compose.dev.yml up -d --build`
+Open web browser and go to **localhost:8080**
+
+#### Configure Your IDE (e.g., PhpStorm)
+To use XDebug for step debugging, configure your IDE accordingly:
+1. **Set Debugging Port**:
+    - Ensure your IDE uses `9003` as the XDebug port.
+    - In PhpStorm: Go to `Settings > Languages & Frameworks > PHP > Debug` and set the Debug port to `9003`.
+
+2. **Map Path in IDE**:
+    - Configure `Path Mapping` to map the folder inside the container (`/var/www/html`) to your local project folder.
+
+3. **Set Interpreter**:
+    - Add your Docker container as a PHP interpreter in PhpStorm.
+
+#### Special Instructions for Linux Hosts
+On Linux, `host.docker.internal` is unavailable. To connect XDebug to your IDE:
+- Replace `host.docker.internal` in the Dockerfile with the IP address of your host machine.
+- Alternatively, add your host IP manually in the `xdebug.client_host`.
+
+To find the host's IP:
+``` bash
+ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'
+```
+Update this IP in the `xdebug.client_host` configuration.

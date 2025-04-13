@@ -710,46 +710,48 @@ $Vocabulary = new Vocabulary();
                                 <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
                             </b>
 
-                            <div class="author-widget" id="nagoya-country-widget">
-                                <div class="author-list p-10" id="nagoya-country-list">
-                                    <?php foreach ($countries as $iso) { ?>
-                                        <div class='author'>
-                                            <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
-                                            <?= Country::get($iso) ?>
-                                            <a onclick="$(this).closest('.author').remove()">&times;</a>
-                                        </div>
-                                    <?php } ?>
+                        <div class="author-widget" id="author-widget">
+                            <div class="author-list p-10" id="author-list">
+                                <?php 
+                                $lang = lang('name', 'name_de');
+                                foreach ($countries as $iso) { ?>
+                                    <div class='author'>
+                                        <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
+                                        <?= $DB->getCountry($iso, $lang) ?>
+                                        <a onclick="$(this).closest('.author').remove()">&times;</a>
+                                    </div>
+                                <?php } ?>
 
-                                </div>
-                                <div class="footer">
-                                    <div class="input-group small d-inline-flex w-auto">
-                                        <select id="add-nagoya-country" class="form-control">
-                                            <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                            <?php foreach (Country::COUNTRIES as $iso => $name) { ?>
-                                                <option value="<?= $iso ?>"><?= $name ?></option>
-                                            <?php } ?>
-                                        </select>
-                                        <div class="input-group-append">
-                                            <button class="btn secondary" type="button" onclick="addNagoyaCountry(event);">
-                                                <i class="ph ph-plus"></i>
-                                            </button>
-                                        </div>
+                            </div>
+                            <div class="footer">
+                                <div class="input-group sm d-inline-flex w-auto">
+                                    <select id="add-country">
+                                        <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                            <option value="<?= $iso ?>"><?= $name ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
+                                            <i class="ph ph-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <script>
-                                    function addNagoyaCountry(event) {
-                                        var el = $('#add-nagoya-country')
-                                        var data = el.val()
-                                        if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
-                                            event.preventDefault();
-                                            if (data) {
-                                                $('#nagoya-country-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
-                                            }
-                                            $(el).val('')
-                                            return false;
+                            </div>
+                            <script>
+                                function addCountry(event) {
+                                    var el = $('#add-country')
+                                    var data = el.val()
+                                    if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                                        event.preventDefault();
+                                        if (data) {
+                                            $('#author-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
                                         }
+                                        $(el).val('')
+                                        return false;
                                     }
-                                </script>
+                                }
+                            </script>
 
                             </div>
                         </div>

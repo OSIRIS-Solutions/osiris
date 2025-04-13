@@ -13,7 +13,7 @@ if (!defined('USER_MANAGEMENT'))
 
 if (!defined('LIVE'))
     define('LIVE', true);
-    
+
 // define LDAP connection
 if (USER_MANAGEMENT == 'LDAP') {
     if (!defined('LDAP_IP'))
@@ -31,6 +31,13 @@ if (USER_MANAGEMENT == 'LDAP') {
     if (!defined('LDAP_FILTER'))
         // z.B. for filtering by group: (&(memberOf=CN=GroupName,OU=Groups,DC=example,DC=com)(objectClass=user))
         define('LDAP_FILTER', null);
+
+    if (!defined('OPEN_LDAP'))
+        define('OPEN_LDAP', false);
+    if (!defined('LDAP_USE_SSL'))
+        define('LDAP_USE_SSL', false);
+    if (!defined('LDAP_USE_TLS'))
+        define('LDAP_USE_TLS', false);
 }
 
 // define DB connection
@@ -51,6 +58,6 @@ if (!defined('ORCID_APP_ID'))
     define("ORCID_APP_ID", null);
 if (!defined('ORCID_SECRET_KEY'))
     define("ORCID_SECRET_KEY", null);
-    
+
 if (!defined('PORTALPATH'))
     define('PORTALPATH', $_GET['path']??(ROOTPATH.'/preview'));

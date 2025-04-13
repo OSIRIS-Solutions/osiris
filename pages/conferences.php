@@ -164,6 +164,9 @@ $conferences = $osiris->conferences->find(
                     data: 'url',
                     searchable: true,
                     render: function(data, type, row) {
+                        if (!data) {
+                            return '';
+                        }
                         return `<a href="${data}" target="_blank"><i class="ph ph-link"></i></a>`;
                     }
                 },

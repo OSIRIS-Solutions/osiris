@@ -403,7 +403,7 @@ Route::post('/synchronize-users', function () {
                 continue;
             }
             $osiris->persons->insertOne($new_user);
-            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: $new_user[displayname] ($new_user[username])</p>";
+            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='".ROOTPATH."/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
         }
     }
     if (isset($_POST['blacklist'])) {
@@ -743,18 +743,24 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
             // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
         }
     } else if (isset($_POST['delete'])) {
-        // $filename = "$user.jpg";
-        $osiris->userImages->deleteOne(['user' => $user]);
-        // if (file_exists($target_dir . $filename)) {
-        //     // Use unlink() function to delete a file
-        //     if (!unlink($target_dir . $filename)) {
-        //         printMsg("$filename cannot be deleted due to an error.", "error");
-        //     } else {
-        header("Location: " . ROOTPATH . "/profile/$user?msg=deleted");
+        $filename = "$user.jpg";
+        if ($Settings->featureEnabled('db_pictures')) {
+            $osiris->userImages->deleteOne(['user' => $user]);
+            $_SESSION['msg'] = lang("Profile picture deleted.", "Profilbild gelöscht.");
+        } else {
+            $target_dir = BASEPATH . "/img/users/";
+            if (!is_writable($target_dir)) {
+                 $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
+            } else if (!unlink($target_dir . $filename)) {
+                // get error message
+                $error = error_get_last();
+                $_SESSION['msg'] = lang("Error deleting file.", "Fehler beim Löschen der Datei.") . " " . $error['message'];
+            } else {
+                $_SESSION['msg'] = lang("Profile picture deleted.", "Profilbild gelöscht.");
+            }
+        }
+        header("Location: " . ROOTPATH . "/profile/$user");
         die;
-        //     }
-        // }
-        // printMsg("File has been deleted from the database.", "success");
     }
 });
 
@@ -885,6 +891,4 @@ Route::post('/claim/?(.*)', function ($user) {
 
     $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
     header("Location: " . ROOTPATH . "/profile/$user");
-
-
 }, 'login');

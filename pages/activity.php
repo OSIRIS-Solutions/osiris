@@ -163,10 +163,17 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                 <?= lang("Project", "Projekt") ?>
             </a>
         <?php } ?>
-        <a href="#connect" class="btn text-primary border-primary">
+        <!-- <a href="#connect" class="btn text-primary border-primary">
             <i class="ph ph-plus-circle"></i>
             <?= lang("Tags", "Schlagwörter") ?>
-        </a>
+        </a> -->
+        <?php if ($Settings->featureEnabled('infrastructures')) { ?>
+            <a href="#infrastructures" class="btn text-primary border-primary">
+                <i class="ph ph-plus-circle"></i>
+                <?= lang("Infrastructure", "Infrastruktur") ?>
+            </a>
+        <?php } ?>
+        
     </div>
 
 
@@ -490,6 +497,25 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <?php endif; ?>
     <?php } ?>
 
+    <?php if ($Settings->featureEnabled('infrastructures')) { ?>
+        <?php
+        $count_infrastructures = count($doc['infrastructures'] ?? []);
+        if ($count_infrastructures) :
+        ?>
+            <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
+                <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                <span class="index"><?= $count_infrastructures ?></span>
+            </a>
+
+        <?php else : ?>
+            <a href="#infrastructures" class="btn">
+                <i class="ph ph-plus-circle"></i>
+                <?= lang('Add infrastructures', 'Infrastrukturen') ?>
+            </a>
+        <?php endif; ?>
+    <?php } ?>
+
     <?php
     $count_files = count($doc['files'] ?? []);
     if ($count_files) :
@@ -504,23 +530,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <a href="#upload-files" class="btn">
             <i class="ph ph-plus-circle"></i>
             <?= lang('Upload files', 'Datei hochladen') ?>
-        </a>
-    <?php endif; ?>
-
-    <?php
-    $count_data = count($doc['connections'] ?? []);
-    if ($count_data) :
-    ?>
-        <a onclick="navigate('tags')" id="btn-tags" class="btn">
-            <i class="ph ph-circles-three-plus" aria-hidden="true"></i>
-            <?= lang('Tags', 'Schlagwörter') ?>
-            <span class="index"><?= $count_data ?></span>
-        </a>
-
-    <?php else : ?>
-        <a href="#connect" class="btn">
-            <i class="ph ph-plus-circle"></i>
-            <?= lang('Add research data', 'Schlagwörter') ?>
         </a>
     <?php endif; ?>
 
@@ -619,7 +628,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
                 foreach ($selected as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-                    if (in_array($module, ["semester-select"])) continue;
+                    if (in_array($module, ["semester-select", "event-select"])) continue;
                 ?>
                     <?php if ($module == 'teaching-course' && isset($doc['module_id'])) :
                         $module = $DB->getConnected('teaching', $doc['module_id']);
@@ -734,16 +743,9 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                     <p class="mt-0">
                         <?= lang(
                             'This activity has been locked because it was already used by reporters in a report. Due to the documentation and verification obligation, activities may not be easily changed or deleted after the report. However, if a change is necessary, please contact the responsible persons.',
-                            'Diese Aktivität wurde gesperrt, da sie bereits von den Berichterstattenden in einem Report verwendet wurde. Wegen der Dokumentations- und Nachweispflicht dürfen Aktivitäten nach dem Report nicht mehr so einfach verändert oder gelöscht werden. Sollte dennoch eine Änderung notwenig sein, meldet euch bitte bei den Verantwortlichen.'
+                            'Diese Aktivität wurde gesperrt, da sie bereits von den Berichterstattenden in einem Report verwendet wurde. Wegen der Dokumentations- und Nachweispflicht dürfen Aktivitäten nach dem Report nicht mehr so einfach verändert oder gelöscht werden. Sollte dennoch eine Änderung notwendig sein, meldet euch bitte bei den Verantwortlichen.'
                         ) ?>
                     </p>
-                    <?php
-                    // $body = $USER['displayname'] . " möchte folgenden OSIRIS-Eintrag bearbeiten/löschen: $name%0D%0A%0D%0ABegründung/Reason:%0D%0A%0D%0Ahttp://osiris.int.dsmz.de/activities/view/$id";
-                    ?>
-                    <!-- <a class="btn danger" href="mailto:someone&subject=[OSIRIS] Antrag auf Änderung&body=<?= $body ?>">
-                    <i class="ph ph-envelope" aria-hidden="true"></i>
-                    <?= lang('Contact editors', 'Editoren kontaktieren') ?>
-                </a> -->
                 <?php
                 elseif ($Settings->hasPermission('activities.delete')) :
                 ?>
@@ -870,7 +872,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                         ?>
                             <tr>
                                 <td class="<?= (($author['aoi'] ?? 0) == '1' ? 'font-weight-bold' : '') ?>">
-                                    <?php if (isset($author['user'])) { ?>
+                                    <?php if (isset($author['user']) && !empty($author['user'])) { ?>
                                         <a href="<?= ROOTPATH ?>/profile/<?= $author['user'] ?>">
                                             <?= $author['last'] ?? '' ?>
                                         </a>
@@ -1061,6 +1063,79 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
 
 
+
+<?php if ($Settings->featureEnabled('infrastructures')) { ?>
+    <div class="modal" id="infrastructures" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+                <h5 class="title">
+                    <?= lang('Connect infrastructures', 'Infrastrukturen verknüpfen') ?>
+                </h5>
+                <div>
+                    <?php
+                    include BASEPATH . "/components/connect-infrastructures.php";
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="infrastructures" style="display: none;">
+        <div class="btn-toolbar float-sm-right">
+            <a href="#infrastructures" class="btn secondary mr-5">
+                <i class="ph ph-tree-structure"></i>
+                <?= lang("Connect", "Verknüpfen") ?>
+            </a>
+        </div>
+
+        <h2 class="title">
+            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+        </h2>
+
+        <?php if (!empty($doc['infrastructures'] ?? '') ) {
+        ?>
+        <table class="table">
+            <tbody>
+                <?php foreach ($doc['infrastructures'] as $infra_id) {
+                $infra = $osiris->infrastructures->findOne(['name' => $infra_id]);
+                if (empty($infra)) continue;
+                 ?>
+                    <tr>
+                        <td>
+                            <h6 class="m-0">
+                                <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                    <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                </a>
+                                <br>
+                            </h6>
+        
+                            <div class="text-muted mb-5">
+                                <?php if (!empty($infra['subtitle'])) { ?>
+                                    <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                <?php } else { ?>
+                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                <?php } ?>
+                            </div>
+                            <div>
+                                <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php } ?>
+        </table>
+
+        <?php } else { ?>
+            <?= lang('No infrastructures connected.', 'Noch keine Infrastrukturen verknüpft.') ?>
+        <?php } ?>
+
+    </section>
+<?php } ?>
+
+
+
 <div class="modal" id="upload-files" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1109,7 +1184,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 </section>
 
 
-
+<!-- 
 <div class="modal" id="connect" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1127,7 +1202,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <section id="tags" style="display: none;">
 

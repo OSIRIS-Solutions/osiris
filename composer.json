@@ -1,5 +1,5 @@
 {
-    "name": "juk20/osiris",
+    "name": "osiris/osiris",
     "description": "Open, simple and integrated research information system",
     "type": "project",
     "require": {
@@ -18,7 +18,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Juk20\\Osiris\\": "src/"
+            "Osiris\\Osiris\\": "src/"
         }
     },
     "authors": [

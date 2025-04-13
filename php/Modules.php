@@ -1,7 +1,6 @@
 <?php
 include_once "_config.php";
 include_once "init.php";
-include_once "Country.php";
 
 $defaultauthors = [
     [
@@ -546,6 +545,13 @@ class Modules
             "description" => "A field for the volume of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für den Band einer Publikation, z.B. für eine Zeitschrift."
         ],
+        "political_consultation" => [
+            "fields" => ["political_consultation" => 'Gutachten'],
+            "name" => "Contribution to political and social consulting",
+            "name_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
+            "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
+            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung."
+        ],
     );
 
     private $DB;
@@ -733,14 +739,16 @@ class Modules
             case 'list':
                 $multiple = $field['multiple'] ?? false;
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
-                echo '<select class="form-control" name="'.$name.'" id="' . $module . '" ' . $required . ' '.($multiple ? 'multiple': '').'>';
+                echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $required . ' ' . ($multiple ? 'multiple' : '') . '>';
                 $val = $this->val($module, $field['default'] ?? '');
                 if (!$req) {
                     '<option value="" ' . (empty($val) ? 'selected' : '') . '>-</option>';
                 }
                 foreach ($field['values'] as $opt) {
                     // if is type MongoDB\Model\BSONArray, convert to array
-                    if ($opt instanceof MongoDB\Model\BSONArray) { $opt = DB::doc2Arr($opt); }
+                    if ($opt instanceof MongoDB\Model\BSONArray) {
+                        $opt = DB::doc2Arr($opt);
+                    }
                     if (is_array($opt)) {
                         $opt = lang(...$opt);
                     }
@@ -751,9 +759,13 @@ class Modules
             case 'date':
                 echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . valueFromDateArray($this->val($module, $field['default'] ?? '')) . '" placeholder="custom-field">';
                 break;
-            case 'bool':
+            case 'url':
+                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
-
+            case 'bool':
+                echo '<input type="hidden" name="values[' . $module . ']" value="false">';
+                echo '<input type="checkbox" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
+                break;
             default:
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
                 break;
@@ -801,7 +813,7 @@ class Modules
                 <div class="data-module floating-form col-sm-6" data-module="country">
                     <select name="values[country]" id="country" class="form-control" <?= $required ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
-                        <?php foreach (Country::COUNTRIES as $code => $country) { ?>
+                        <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
                             <option value="<?= $code ?>" <?= $val == $code ? 'selected' : '' ?>><?= $country ?></option>
                         <?php } ?>
                     </select>
@@ -1031,7 +1043,7 @@ class Modules
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliert') ?></th>
                                     <th>Username</th>
-                                    <th><?= lang('SWS', 'Anteil in SWS') ?></th>
+                                    <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
                                     </th>
@@ -1057,7 +1069,7 @@ class Modules
                                         </td>
 
                                         <td>
-                                            <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? 0 ?>">
+                                            <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
                                             <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
@@ -1093,7 +1105,7 @@ class Modules
                             tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
                             tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list"></td>')
-                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="0"></td>')
+                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
                             var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
@@ -1170,15 +1182,15 @@ class Modules
 
                     <div id="event-select-container w-full">
                         <div class="btn-group d-flex" id="event-select-btns">
+                            <a class="btn" href="#add-event">
+                                <i class="ph ph-plus"></i>
+                            </a>
                             <?php foreach ($events as $event) { ?>
                                 <button class="btn primary" type="button" onclick="selectEvent('<?= $event['_id'] ?>', '<?= addslashes($event['title']) ?>', '<?= $event['start'] ?>', '<?= $event['end'] ?>', '<?= $event['location'] ?>')">
                                     <?= $event['title'] ?>
                                     <small><?= fromToDate($event['start'], $event['end']) ?></small>
                                 </button>
                             <?php } ?>
-                            <a class="btn" href="#add-event">
-                                <i class="ph ph-plus"></i>
-                            </a>
                         </div>
                     </div>
                     <style>
@@ -1355,6 +1367,11 @@ class Modules
                     <label for="status" class="<?= $required ?> floating-title">Status</label>
                     <div id="end-question">
                         <div class="custom-radio d-inline-block">
+                            <input type="radio" name="values[status]" id="status-preparation" value="preparation" checked="checked" value="1">
+                            <label for="status-preparation"><?= lang('In preparation', 'In Vorbereitung') ?></label>
+                        </div>
+
+                        <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-in-progress" value="in progress" checked="checked" value="1">
                             <label for="status-in-progress"><?= lang('In progress', 'In Progress') ?></label>
                         </div>
@@ -1488,7 +1505,7 @@ class Modules
                 </div>
             <?php
                 break;
-                // case "date-range-ongoing-simple"
+            // case "date-range-ongoing-simple"
 
             case "software-venue":
             ?>
@@ -1881,6 +1898,7 @@ class Modules
                     <select class="form-control" id="oa_status" name="values[oa_status]" <?= $required ?> autocomplete="off">
                         <option value="closed" <?= $status == 'closed' ? 'selected' : '' ?>>Closed Access</option>
                         <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('unknown status', 'Unbekannter Status') ?>)</option>
+                        <option value="diamond" <?= $status == 'diamond' ? 'selected' : '' ?>>Open Access (Diamond)</option>
                         <option value="gold" <?= $status == 'gold' ? 'selected' : '' ?>>Open Access (Gold)</option>
                         <option value="green" <?= $status == 'green' ? 'selected' : '' ?>>Open Access (Green)</option>
                         <option value="hybrid" <?= $status == 'hybrid' ? 'selected' : '' ?>>Open Access (Hybrid)</option>
@@ -1993,6 +2011,27 @@ class Modules
                     <input type="text" class="form-control" <?= $required ?> name="values[editor_type]" id="editor_type" value="<?= $this->val('editor_type') ?>" placeholder="Guest Editor for Research Topic 'XY'" placeholder="editor_type">
                     <label for="editor_type" class="element-cat <?= $required ?>">
                         <?= lang('Details', 'Details') ?>
+                    </label>
+                </div>
+            <?php
+                break;
+
+            case "political_consultation":
+            ?>
+                <div class="data-module floating-form col-sm-6" data-module="political_consultation">
+                    <select type="text" class="form-control" <?= $required ?> name="values[political_consultation]" id="political_consultation">
+                        <!-- Gutachten,Positionspapier,Studie,Sonstiges -->
+                        <?php if (!$required) { ?>
+                            <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('No political consultation', 'Keine politische Beratung') ?></option>
+                        <?php } ?>
+                        <option value="Gutachten" <?= $this->val('political_consultation') == 'Gutachten' ? 'selected' : '' ?>><?= lang('Review', 'Gutachten') ?></option>
+                        <option value="Positionspapier" <?= $this->val('political_consultation') == 'Positionspapier' ? 'selected' : '' ?>><?= lang('Position paper', 'Positionspapier') ?></option>
+                        <option value="Studie" <?= $this->val('political_consultation') == 'Studie' ? 'selected' : '' ?>><?= lang('Study', 'Studie') ?></option>
+                        <option value="Sonstiges" <?= $this->val('political_consultation') == 'Sonstiges' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                    </select>
+
+                    <label for="political_consultation" class="<?= $required ?>">
+                        <?= lang('Contribution to political and social consulting', 'Beitrag zur Politik- und Gesellschaftsberatung') ?>
                     </label>
                 </div>
             <?php

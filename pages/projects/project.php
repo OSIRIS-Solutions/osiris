@@ -37,6 +37,13 @@ $N = $osiris->activities->count(['projects' => $project['name']]);
 
 $institute = $Settings->get('affiliation_details');
 
+if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) {
+    $institute = [
+        'lat' => 52,
+        'lng' => 10
+    ];
+}
+
 ?>
 <?php if (isset($_GET['msg']) && $_GET['msg'] === 'success') { ?>
 
@@ -433,8 +440,9 @@ $institute = $Settings->get('affiliation_details');
                                                 <div class="alert signal">
                                                     <h6 class="title"><?= lang('Countries', 'Länder:') ?></h6>
                                                     <ul class="list signal mb-0">
-                                                        <?php foreach ($project['nagoya_countries'] ?? [] as $c) { ?>
-                                                            <li><?= Country::get($c) ?></li>
+                                                        <?php $lang = lang('name', 'name_de');
+                                                        foreach ($project['nagoya_countries'] ?? [] as $c) { ?>
+                                                            <li><?= $DB->getCountry($c, $lang) ?></li>
                                                         <?php } ?>
                                                     </ul>
                                                 </div>
@@ -444,7 +452,8 @@ $institute = $Settings->get('affiliation_details');
                                         case 'countries': ?>
                                             <span class="key"><?= lang('Countries', 'Länder') ?></span>
                                             <ul class="list signal mb-0">
-                                                <?php foreach ($project['countries'] ?? [] as $c) {
+                                                <?php $lang = lang('name', 'name_de');
+                                                foreach ($project['countries'] ?? [] as $c) {
                                                     $iso = $c;
                                                     $role = '';
                                                     if (isset($c['country'])) {
@@ -454,7 +463,7 @@ $institute = $Settings->get('affiliation_details');
                                                         $role = ' (' . $c['role'] . ')';
                                                     }
                                                 ?>
-                                                    <li><?= Country::get($iso) . $role ?></li>
+                                                    <li><?= $DB->getCountry($c, $lang) . $role ?></li>
                                                 <?php } ?>
                                             </ul>
                                         <?php break;

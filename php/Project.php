@@ -349,28 +349,28 @@ class Project extends Vocabulary
     {
         $type = $this->project['type'] ?? 'Drittmittel';
         if ($type == 'Drittmittel') { ?>
-            <span class="badge text-danger no-wrap">
+            <span class="badge text-danger no-wrap <?=$cls?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Third-party funded', 'Drittmittel') ?>
             </span>
 
         <?php } elseif ($type == 'Stipendium') { ?>
-            <span class="badge text-success no-wrap">
+            <span class="badge text-success no-wrap <?=$cls?>">
                 <i class="ph ph-tip-jar"></i>
                 <?= lang('Stipendiate', 'Stipendium') ?>
             </span>
         <?php } else if ($type == 'Eigenfinanziert') { ?>
-            <span class="badge text-signal no-wrap">
+            <span class="badge text-signal no-wrap <?=$cls?>">
                 <i class="ph ph-piggy-bank"></i>
                 <?= lang('Self-funded', 'Eigenfinanziert') ?>
             </span>
         <?php } else if ($type == 'Teilprojekt') { ?>
-            <span class="badge text-danger no-wrap">
+            <span class="badge text-danger no-wrap <?=$cls?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Subproject', 'Teilprojekt') ?>
             </span>
         <?php } else { ?>
-            <span class="badge text-muted no-wrap">
+            <span class="badge text-muted no-wrap <?=$cls?>">
                 <i class="ph ph-coin"></i>
                 <?= lang('Other', 'Sonstiges') ?>
             </span>
@@ -626,12 +626,12 @@ class Project extends Vocabulary
 
         $scope = 'national';
         $countries = array_unique($countries);
-        if (count($countries) == 1) return ['scope' => $scope, 'region' => Country::get($countries[0])];
+        if (count($countries) == 1) return ['scope' => $scope, 'region' => $this->getCountry($countries[0], 'name')];
 
         $scope = 'continental';
         $continents = [];
         foreach ($countries as $code) {
-            $continents[] = Country::countryToContinent($code);
+            $continents[] = $this->getCountry($code, 'continent');
         }
         $continents = array_unique($continents);
         if (count($continents) == 1) return ['scope' => $scope, 'region' => $continents[0]];
@@ -647,7 +647,7 @@ class Project extends Vocabulary
         $countries = array_unique($countries);
         $continents = [];
         foreach ($countries as $code) {
-            $continents[] = Country::countryToContinent($code);
+            $continents[] = $this->getCountry($code, 'continent');
         }
         $continents = array_unique($continents);
         return $continents;

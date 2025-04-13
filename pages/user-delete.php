@@ -45,7 +45,7 @@ use function PHPSTORM_META\type;
                     "first",
                     "last",
                     "name",
-                    "depts",
+                    "units",
                     "username"
                 ])) {
                     $delete = false;
@@ -54,12 +54,20 @@ use function PHPSTORM_META\type;
                 <tr>
                     <th><?= $key ?></th>
                     <td>
-                        <?php if ($value instanceof MongoDB\Model\BSONArray) {
+                        <?php 
+                        if ($key == 'units') {
+                            $value = array_column(DB::doc2Arr($value), 'unit');
+                        }
+                        if (empty($value)) {
+                            echo '-';
+                        } else if ($value instanceof MongoDB\Model\BSONArray && count($value) > 0 && is_string($value[0])) {
                             echo implode(', ', DB::doc2Arr($value));
-                        } elseif (is_array($value)) {
+                        } else if (is_array($value) && count($value) > 0 && is_string($value[0])) {
                             echo implode(', ', $value);
-                        } else {
+                        } else if (is_string($value)) {
                             echo $value;
+                        } else {
+                            echo json_encode($value, JSON_UNESCAPED_SLASHES);
                         } ?>
                     </td>
                     <td class="text-danger">

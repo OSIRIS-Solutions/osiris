@@ -128,7 +128,6 @@ Route::get('/user/oauth-callback', function () {
 
 Route::post('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
-    $page = "userlogin";
     $msg = "?msg=welcome";
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         header("Location: " . ROOTPATH . "/profile/$_SESSION[username]");
@@ -136,33 +135,30 @@ Route::post('/user/login', function () {
     }
 
     if (defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'AUTH') {
-        require_once 'addons/auth/_login.php';
+        require_once BASEPATH . '/addons/auth/_login.php';
     } else {
         include BASEPATH . "/php/_login.php";
     }
 
     if (isset($_POST['username']) && isset($_POST['password'])) {
-        if ($_SERVER['SERVER_NAME'] == 'testserver' && false) {
-            // on the test server: log in
+
+        // check if user is allowed to login
+        $auth = login($_POST['username'], $_POST['password']);
+        if (isset($auth["success"]) && $auth["success"] == false) {
+            $msg = "?msg=" . $auth["msg"];
+        } else if (isset($auth["success"]) && $auth["success"] == true) {
             // check if user exists in our database
-            $_SESSION['username'] = $_POST['username'];
-            $useracc = $DB->getPerson($_SESSION['username']);
-            $_SESSION['name'] = $useracc['displayname'];
+            $USER = $DB->getPerson($_SESSION['username']);
 
-            $_SESSION['loggedin'] = true;
+            //get uniqueid from LDAP
+            $uniqueid = $auth['uniqueid'] ?? null;
 
-            if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-                header("Location: " . $_POST['redirect'] . $msg);
-                die();
-            }
-            header("Location: " . ROOTPATH . "/" . $msg);
-            die();
-        } else {
-            $auth = login($_POST['username'], $_POST['password']);
-            if (isset($auth["status"]) && $auth["status"] == true) {
-
-                // check if user exists in our database
-                $USER = $DB->getPerson($_SESSION['username']);
+            if (empty($USER)) {
+                // user does not exist in our database
+                // if possible, check for the uniqueid
+                if (!empty($uniqueid)) {
+                    $USER = $DB->getPersonByUniqueID($uniqueid);
+                }
                 if (empty($USER)) {
                     // create user from LDAP
                     $new_user = newUser($_SESSION['username']);
@@ -186,22 +182,28 @@ Route::post('/user/login', function () {
                     $n = $updateResult->getModifiedCount();
                     $msg .= "&new=$n";
                 }
-
-                $_SESSION['username'] = $USER['username'];
-                $_SESSION['name'] = $USER['displayname'];
-
-                $updateResult = $osiris->persons->updateOne(
-                    ['username' => $_POST['username']],
-                    ['$set' => ["lastlogin" => date('d.m.Y')]]
-                );
-
-                if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-                    header("Location: " . $_POST['redirect'] . $msg);
-                    die();
+            } else {
+                // user exists in our database
+                $set = ["lastlogin" => date('Y-m-d')];
+                if (!empty($uniqueid)) {
+                    $set['uniqueid'] = $uniqueid;
                 }
-                header("Location: " . ROOTPATH . "/" . $msg);
+                $updateResult = $osiris->persons->updateOne(
+                    ['username' => $USER['username']],
+                    ['$set' => $set]
+                );
+            }
+
+
+            $_SESSION['username'] = $USER['username'];
+            $_SESSION['name'] = $USER['displayname'];
+
+            if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+                header("Location: " . $_POST['redirect'] . $msg);
                 die();
             }
+            header("Location: " . ROOTPATH . "/" . $msg);
+            die();
         }
     }
     $breadcrumb = [
@@ -210,7 +212,7 @@ Route::post('/user/login', function () {
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/userlogin.php";
     if (isset($auth)) {
-        printMsg($auth["msg"], "error", "");
+        printMsg($auth["msg"] ?? 'Something went wrong', "error", "");
     }
     if (empty($_POST['username'])) {
         printMsg("Username is required!", "error", "");
@@ -231,23 +233,23 @@ Route::get('/user/logout', function () {
 }, 'login');
 
 
-Route::get('/user/test', function () {
-    include BASEPATH . "/php/init.php";
-    include BASEPATH . "/php/_login.php";
-    $arr = getUsers();
-    dump($arr, true);
-});
+// Route::get('/user/test', function () {
+//     include BASEPATH . "/php/init.php";
+//     include BASEPATH . "/php/_login.php";
+//     $arr = getUsers();
+//     dump($arr, true);
+// });
 
-Route::get('/user/test/(.*)', function ($id) {
-    include BASEPATH . "/php/init.php";
-    // $accountExpires = 133748892000000000;
-    // $isExpired = ($accountExpires != 0 && $accountExpires <= time() * 10000000 + 116444736000000000);
+// Route::get('/user/test/(.*)', function ($id) {
+//     include BASEPATH . "/php/init.php";
+//     // $accountExpires = 133748892000000000;
+//     // $isExpired = ($accountExpires != 0 && $accountExpires <= time() * 10000000 + 116444736000000000);
 
-    // dump($isExpired);
-    include BASEPATH . "/php/_login.php";
-    $arr = getUser($id);
-    dump($arr, true);
-});
+//     // dump($isExpired);
+//     include BASEPATH . "/php/_login.php";
+//     $arr = getUser($id);
+//     dump($arr, true);
+// });
 
 
 

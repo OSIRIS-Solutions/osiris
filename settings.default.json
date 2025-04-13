@@ -40,7 +40,7 @@
                         "pages",
                         "doi",
                         "pubmed",
-                        "openaccess",
+                        "openaccess-status",
                         "online-ahead-of-print",
                         "correction"
                     ],
@@ -90,7 +90,7 @@
                         "doi",
                         "pubmed",
                         "isbn",
-                        "openaccess"
+                        "openaccess-status"
                     ],
                     "template": {
                         "print": "{authors} ({year}) <i>{title}</i> {book-series}. {publisher}. {doi}",
@@ -118,7 +118,7 @@
                         "doi",
                         "pubmed",
                         "isbn",
-                        "openaccess"
+                        "openaccess-status"
                     ],
                     "template": {
                         "print": "{authors} ({year}) {title}. In: {editor} (eds). <i>{book-title}</i> ({edition}th ed., pp. {pages}) {city}: {publisher}. {doi}",
@@ -163,7 +163,7 @@
                         "doi",
                         "pubmed",
                         "isbn",
-                        "openaccess"
+                        "openaccess-status"
                     ],
                     "template": {
                         "print": "{authors} ({year}) {title} ({thesis}) {university}, {city}. {doi}",

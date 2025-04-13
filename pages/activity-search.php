@@ -531,14 +531,14 @@ $filters = array_map(function ($f) {
                 console.log(array_columns);
 
                 // add dynamic column heads
-                first_row.forEach(field => {
+                selected_columns.forEach(field => {
                     const th = document.createElement('th');
                     th.textContent = field.charAt(0).toUpperCase() + field.slice(1); // Optional: Titel formatieren
                     headerRow.appendChild(th);
                 });
                 thead.appendChild(headerRow);
                 // Konfiguriere die Spalten für Datatables
-                columns = first_row.map(function(field) {
+                columns = selected_columns.map(function(field) {
                     // remove from selected columns
                     selected_columns = selected_columns.filter(column => column !== field);
                     // get name from `fields`

@@ -1,107 +1,38 @@
+
 <?php
-include_once BASEPATH . "/php/Project.php";
-$Project = new Project;
-// Drittmittel
-$osiris->adminProjects->deleteOne(['id' => 'third-party']);
-$osiris->adminProjects->insertOne([
-    'id' => 'third-party',
-    'icon' => 'hand-coins',
-    'color' => '#B61F29',
-    'name' => 'Third-party funding',
-    'name_de' => 'Drittmittel',
-    'modules' => [
-        'abstract',
-        'public',
-        'internal_number',
-        'website',
-        'grant_sum',
-        'funder',
-        'funding_number',
-        'grant_sum_proposed',
-        'personnel',
-        'ressources',
-        'contact',
-        'purpose',
-        'role',
-        'coordinator',
-        'nagoya',
-    ],
-    'topics' => true,
-    'disabled' => false,
-    'portfolio' => true,
-    'has_subprojects' => true,
-    'inherits' => [
-        'status',
-        'website',
-        'grant_sum',
-        'funder',
-        'grant_sum_proposed',
-        'purpose',
-        'role',
-        'coordinator',
-    ]
-]);
-$osiris->projects->updateMany(
-    ['type' => 'Drittmittel'],
-    ['$set' => ['type' => 'third-party']]
-);
+$projects = $osiris->projects->find(['collaborators' => ['$exists' => true]], ['projection' => ['collaborators' => 1]])->toArray();
 
-$osiris->adminProjects->deleteOne(['id' => 'stipendate']);
-$osiris->adminProjects->insertOne([
-    'id' => 'stipendate',
-    'icon' => 'tip-jar',
-    'color' => '#63a308',
-    'name' => 'Scholarship',
-    'name_de' => 'Stipendium',
-    'modules' => [
-        'abstract',
-        'public',
-        'internal_number',
-        'website',
-        'grant_sum',
-        'supervisor',
-        'scholar',
-        'scholarship',
-        'university',
-    ],
-    'topics' => false,
-    'disabled' => false,
-    'portfolio' => true
-]);
-$osiris->projects->updateMany(
-    ['type' => 'Stipendium'],
-    ['$set' => ['type' => 'stipendiate']]
-);
-
-$osiris->adminProjects->deleteOne(['id' => 'subproject']);
-$osiris->projects->updateMany(
-    ['type' => ['$in' => ['Teilprojekt', 'subproject']]],
-    ['$set' => ['type' => 'third-party', 'subproject' => true]]
-);
-
-$osiris->adminProjects->deleteOne(['id' => 'self-funded']);
-$osiris->adminProjects->insertOne([
-    'id' => 'self-funded',
-    'icon' => 'piggy-bank',
-    'color' => '#ECAF00',
-    'name' => 'Self-funded',
-    'name_de' => 'Eigenfinanziert',
-    'modules' => [
-        'abstract',
-        'public',
-        'internal_number',
-        'website',
-        'personnel',
-        'ressources',
-        'contact',
-    ],
-    'topics' => false,
-    'disabled' => false,
-    'portfolio' => false
-]);
-$osiris->projects->updateMany(
-    ['type' => 'Eigenfinanziert'],
-    ['$set' => ['type' => 'self-funded']]
-);
-
-echo "<p>Updated project types.</p>";
+foreach ($projects as $project) {
+    $collaborators = $project['collaborators'];
+    if (empty($collaborators)) continue;
+    foreach ($collaborators as $i => $p) {
+        if (isset($p['organization'])) continue;
+        // check if organisation already exists
+        $coll_id = $osiris->organizations->findOne(['$or' => [
+            ['name' => $p['name'], 'country' => $p['country']],
+            ['ror' => $p['ror']]
+        ]]);
+        if (!empty($coll_id)) {
+            $coll_id = $coll_id['_id'];
+        } else {
+            $new_org = $osiris->organizations->insertOne([
+                'name' => $p['name'],
+                'type' => $p['type'] ?? 'other',
+                'location' => $p['location'] ?? null,
+                'country' => $p['country'],
+                'ror' => $p['ror'],
+                'lat' => $p['lat'] ?? null,
+                'lng' => $p['lng'] ?? null,
+                'created_by' => $_SESSION['username'] ?? 'system',
+                'created' => date('Y-m-d')
+            ]);
+            $coll_id = $new_org->getInsertedId();
+        }
+        $collaborators[$i]['organization'] = $coll_id;
+    }
+    $osiris->projects->updateOne(
+        ['_id' => $project['_id']],
+        ['$set' => ['collaborators' => $collaborators]]
+    );
+}
+?>

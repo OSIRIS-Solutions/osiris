@@ -78,6 +78,12 @@ if (!$Settings->hasPermission('projects.view')) {
         border-bottom: 5px solid transparent;
         border-right: 0px solid transparent;
     }
+
+    .dropdown-menu .item.active {
+        background-color: var(--primary-color-20);
+        color: var(--primary-color);
+        font-weight: bold;
+    }
 </style>
 
 <div class="btn-toolbar float-right">
@@ -97,20 +103,47 @@ if (!$Settings->hasPermission('projects.view')) {
 </h1>
 
 
+<div class="btn-toolbar">
+
+    <a href="<?= ROOTPATH ?>/projects/statistics" class="btn">
+        <i class="ph ph-chart-line-up"></i>
+        <?= lang('Statistics', 'Statistiken') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/projects/search" class="btn">
+        <i class="ph ph-magnifying-glass-plus"></i>
+        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+    </a>
+    
 <?php if ($Settings->hasPermission('projects.add')) { ?>
-    <a href="<?= ROOTPATH ?>/projects/new" class="mb-10 d-inline-block">
+    <a href="<?= ROOTPATH ?>/projects/new" class="">
         <i class="ph ph-plus"></i>
         <?= lang('Add new project', 'Neues Projekt anlegen') ?>
     </a>
 <?php } ?>
+</div>
 
-<!-- TODO: advanced search? -->
+
 
 <button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
 
 
 <div class="row row-eq-spacing">
     <div class="col order-last order-sm-first">
+
+        <div class="dropdown float-right">
+            <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                <i class="ph ph-sort-ascending"></i>
+                <?= lang('Sort', 'Sortieren') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
+                <a class="item" onclick="sortTable(this, 3, 'asc')">Start date (ASC)</a>
+                <a class="item active" onclick="sortTable(this, 3, 'desc')">Start date (DESC)</a>
+                <a class="item" onclick="sortTable(this, 4, 'asc')">End date (ASC)</a>
+                <a class="item" onclick="sortTable(this, 4, 'desc')">End date (DESC)</a>
+                <a class="item" onclick="sortTable(this, 0, 'asc')">Name (ASC)</a>
+                <a class="item" onclick="sortTable(this, 0, 'desc')">Name (DESC)</a>
+            </div>
+        </div>
 
         <table class="table cards w-full" id="project-table">
             <thead>
@@ -194,7 +227,7 @@ if (!$Settings->hasPermission('projects.view')) {
                     <?php foreach ($Project::FUNDER as $funder) { ?>
                         <tr>
                             <td>
-                                <a data-type="<?= $funder ?>" onclick="filterProjects(this, '<?= $funder ?>', 2)" class="item" id="<?= $id ?>-btn" style="color:inherit;">
+                                <a data-type="<?= $funder ?>" onclick="filterProjects(this, '<?= $funder ?>', 2)" class="item" id="<?= $funder ?>-btn" style="color:inherit;">
                                     <span>
                                         <?= $funder ?>
                                     </span>
@@ -211,10 +244,10 @@ if (!$Settings->hasPermission('projects.view')) {
             </h6>
             <div class="filter">
                 <table id="filter-units" class="table small simple">
-                    <?php foreach ($Departments as $id => $dept) { ?>
-                        <tr <?= $Groups->cssVar($id) ?>>
+                    <?php foreach ($Departments as $dept_id => $dept) { ?>
+                        <tr <?= $Groups->cssVar($dept_id) ?>>
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 8)" class="item d-block colorless" id="<?= $id ?>-btn">
+                                <a data-type="<?= $dept_id ?>" onclick="filterProjects(this, '<?= $dept_id ?>', 8)" class="item d-block colorless" id="<?= $dept_id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -250,11 +283,11 @@ if (!$Settings->hasPermission('projects.view')) {
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
                         <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                            $id = $a['id'];
+                            $topic_id = $a['id'];
                         ?>
                             <tr style="--highlight-color:  <?= $a['color'] ?>;">
                                 <td>
-                                    <a data-type="<?= $id ?>" onclick="filterProjects(this, '<?= $id ?>', 9)" class="item" id="<?= $id ?>-btn">
+                                    <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">
                                             <?= lang($a['name'], $a['name_en'] ?? null) ?>
                                         </span>
@@ -487,7 +520,6 @@ if (!$Settings->hasPermission('projects.view')) {
                     },
                     text: '<i class="ph ph-file-xls"></i> Export'
                 },
-                // custom link button
             ],
             dom: 'fBrtip',
             columnDefs: [{
@@ -621,7 +653,7 @@ if (!$Settings->hasPermission('projects.view')) {
                 }
             ],
             order: [
-                [12, 'desc']
+                [3, 'desc']
             ],
             paging: true,
             autoWidth: true,
@@ -704,5 +736,13 @@ if (!$Settings->hasPermission('projects.view')) {
         }
         writeHash(hash)
 
+    }
+
+    function sortTable(el, column, direction = 'asc') {
+        $(el).closest('.dropdown-menu').find('.active').removeClass('active');
+        $(el).addClass('active');
+
+        dataTable.order([column, direction]).draw();
+        return false;
     }
 </script>

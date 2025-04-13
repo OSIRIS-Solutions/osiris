@@ -51,6 +51,19 @@ Route::get('/projects/search', function () {
 }, 'login');
 
 
+Route::get('/projects/statistics', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => lang("Statistics", "Statistik")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/projects/statistics.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/projects/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
@@ -230,6 +243,7 @@ function getTemplatePlaceholders($templatePath)
 
         // Alle Platzhalter zurückgeben
         return $matches[1]; // Gibt eine Liste von Platzhaltern zurück
+
     } else {
         return [];
     }
@@ -311,7 +325,7 @@ Route::post('/projects/download/(.*)', function ($id) {
 
     $templateProcessor->setValues($projectValues);
     // die;
-    $tempFilePath = 'output.docx';
+    $tempFilePath = BASEPATH . '/uploads/output.docx';
     $templateProcessor->saveAs($tempFilePath);
 
     header("Content-Description: File Transfer");
@@ -400,6 +414,7 @@ Route::post('/crud/projects/create', function () {
         }
     }
 
+    include_once BASEPATH . "/php/Render.php";
     $values = renderAuthorUnits($values, [], 'persons');
 
     $insertOneResult  = $collection->insertOne($values);
@@ -549,6 +564,28 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
         foreach ($values as $i => $val) {
             $collaborators[$i][$key] = $val;
         }
+    }
+    foreach ($collaborators as $i => $p) {
+        // check if organisation already exists
+        $coll_id = $osiris->organizations->findOne(['$or' => [
+            ['name' => $p['name'], 'country' => $p['country']],
+            ['ror' => $p['ror']]
+        ]]);
+        if (empty($coll_id)) {
+            $new_org = $osiris->organizations->insertOne([
+                'name' => $p['name'],
+                'type' => $p['type'] ?? 'other',
+                'location' => $p['location'] ?? null,
+                'country' => $p['country'],
+                'ror' => $p['ror'],
+                'lat' => $p['lat'] ?? null,
+                'lng' => $p['lng'] ?? null,
+                'created_by' => $_SESSION['username'],
+                'created' => date('Y-m-d')
+            ]);
+            $coll_id = $new_org->getInsertedId();
+        }
+        $collaborators[$i]['organization'] = $coll_id;
     }
 
     $osiris->projects->updateOne(

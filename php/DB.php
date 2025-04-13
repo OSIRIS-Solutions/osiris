@@ -198,7 +198,7 @@ class DB
             $user = $this->db->persons->findOne([
                 '$or' => [
                     // if user has not set alternative names yet, 'names'=>['$exist'=>false]
-                    ['last' => $last, 'first' => $first, 'names'=>['$exist'=>false]],
+                    ['last' => $last, 'first' => $first, 'names' => ['$exist' => false]],
                     // otherwise, we respect the names that have been set
                     ['names' => "$last, $first"],
                     ['names' => "$last, $abbr"],
@@ -227,6 +227,22 @@ class DB
     {
         if ($user === null) $user = $_SESSION['username'];
         $person = $this->db->persons->findOne(['username' => $user]);
+        if (empty($person)) return array();
+        $person['name'] = $person['first'] . " " . $person['last'];
+        $person['first_abbr'] = $this->abbreviateName($person['first']);
+        return $this->doc2Arr($person);
+    }
+
+    /**
+     * Get all personal information from username
+     *
+     * @param string $user Username.
+     * @return array Person array.
+     */
+    public function getPersonByUniqueID($uniqueid = null)
+    {
+        if ($uniqueid === null) return array();
+        $person = $this->db->persons->findOne(['uniqueid' => $uniqueid]);
         if (empty($person)) return array();
         $person['name'] = $person['first'] . " " . $person['last'];
         $person['first_abbr'] = $this->abbreviateName($person['first']);
@@ -630,6 +646,7 @@ class DB
         if ($user === null) $user = $_SESSION['username'];
         $issues = array();
         $now = new DateTime();
+        $today = date('Y-m-d');
 
         // check if new activity was added for user
         $docs = $this->db->activities->distinct(
@@ -638,11 +655,21 @@ class DB
         );
         if (!empty($docs)) $issues['approval'] = array_map('strval', $docs);
 
-        // CHECK student status issue
-        $docs = $this->db->activities->find(['authors.user' => $user, 'status' => 'in progress', 'end.year' => ['$lte' => CURRENTYEAR]], ['projection' => ['end' => 1]]);
+        // CHECK status issue
+        $docs = $this->db->activities->find(
+            [
+                'authors.user' => $user,
+                '$or' => [
+                    ['status' => 'in progress', '$or' => [['end_date' => null], ['end_date' => ['$lt' => $today]]]],
+                    ['status' => 'preparation', 'start_date' => ['$lt' => $today]],
+                ]
+            ],
+            [
+                'projection' => ['status'=>1]
+            ]
+        );
         foreach ($docs as $doc) {
-            if ($now < getDateTime($doc['end'])) continue;
-            $issues['students'][] = strval($doc['_id']);
+            $issues['status'][] = strval($doc['_id']);
         }
 
         // check EPUB issue
@@ -690,6 +717,21 @@ class DB
         foreach ($projects as $project) {
             if ($now < getDateTime($project['end'])) continue;
             $issues['project-end'][] = strval($project['_id']);
+        }
+
+        $y = CURRENTYEAR - 1;
+        $infrastructures = $this->db->infrastructures->find([
+            'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
+            'start_date' => ['$lte' => $y . '-12-31'],
+            '$or' => [
+                ['end_date' => null],
+                ['end_date' => ['$gte' => $y . '-01-01']]
+            ],
+            'statistics.year' => ['$ne' => $y]
+        ], ['projection' => ['id' => ['$toString' => '$_id']]]);
+
+        foreach ($infrastructures as $infra) {
+            $issues['infrastructure'][] = $infra['id'];
         }
 
         return $issues;
@@ -784,5 +826,24 @@ class DB
         $new_doc['history'] = $old_doc['history'] ?? [];
         $new_doc['history'][] = $hist;
         return $new_doc;
+    }
+
+    function getCountry($iso, $key = null){
+        if (empty($iso)) return null;
+        $country = $this->db->countries->findOne(['iso' => $iso]);
+        if (empty($country)) return null;
+        if ($key !== null) {
+            if (isset($country[$key])) return $country[$key];
+            return null;
+        }
+        return $this->doc2Arr($country);
+    }
+    function getCountries($key='name'){
+        $countries = $this->db->countries->find();
+        $result = [];
+        foreach ($countries as $country) {
+            $result[$country['iso']] = $country[$key];
+        }
+        return $result;
     }
 }

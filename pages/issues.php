@@ -125,28 +125,30 @@ $issues = $DB->getUserIssues($user);
     </div>
 </div>
 
-<div class="modal" id="why-students" tabindex="-1" role="dialog">
+<div class="modal" id="why-status" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <a href="#close-modal" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('Why do I have to review theses?', 'Warum muss ich Abschlussarbeiten überprüfen?') ?></h5>
+            <h5 class="title"><?= lang('Why do I have to review these activities?', 'Warum muss ich diese Aktivitäten überprüfen?') ?></h5>
             <p>
                 <?= lang('
-                    In order to ensure that the correct status and completion date is always indicated for theses, OSIRIS will issue a warning 
-                    if this work is still "in progress" although the completion date is in the past.
+                    In order to ensure that the correct status and completion date is always indicated for activities with a status, OSIRIS will issue a warning 
+                    if this work is still "in preparation" although the start date is in the past or "in progress" although the completion date is in the past.
                     <b>Please check if the work has already been completed.</b> 
-                    If so, please enter whether the work has been successfully completed or not and provide the correct completion date.
-                    If the thesis is still "in progress", please extend the period by entering a new expected completion date.
+                    If so, please enter if the work has been successfully completed or not and provide the correct completion date.
+                    If the work is still "in preparation", please extend the period by entering a new expected completion date.
+                    If the work is still "in progress", please extend the period by entering a new expected completion date.
                     OSIRIS will then ask you again in due course if the thesis has been successfully completed.
                     ', '
-                    Um sicherzustellen, dass bei Abschlussarbeiten immer der korrekte Status und das korrekte Abschlussdatum angegeben ist, gibt 
-                    OSIRIS eine Warnung aus, sollten sich diese Arbeiten noch immer "in Progress" befinden, obwohl das Abschlussdatum in der Vergangenheit befindet.
-                    <b>Bitte überprüft, ob die Arbeit bereits abgeschlossen wurde.</b> 
-                    In diesem Fall tragt bitte ein, ob die Arbeit erfolgreich beendet wurde oder nicht und gebt das korrekte Abschlussdatum an.
-                    Sollte sich die Abschlussarbeit noch immer "in Progress" befinden, verlängert bitte den Zeitraum, indem ihr ein neues voraussichtliches Abschlussdatum angebt.
-                    OSIRIS wird euch dann zu gegebener Zeit erneut fragen, ob die Arbeit erfolgreich abgeschlossen wurde.
+                   Um sicherzustellen, dass bei Aktivitäten mit einem Status immer der richtige Status und das richtige Fertigstellungsdatum angegeben wird, gibt OSIRIS eine Warnung aus
+                    wenn diese Arbeit noch "in Vorbereitung" ist, obwohl das Startdatum in der Vergangenheit liegt oder "in Arbeit", obwohl das Fertigstellungsdatum in der Vergangenheit liegt.
+                    <b>Bitte prüfen Sie, ob die Arbeit bereits abgeschlossen ist.</b>
+                    Wenn ja, geben Sie bitte an, ob die Arbeiten erfolgreich abgeschlossen wurden oder nicht, und geben Sie das korrekte Abschlussdatum an.
+                    Wenn die Arbeiten noch "in Vorbereitung" sind, verlängern Sie bitte die Frist, indem Sie ein neues voraussichtliches Fertigstellungsdatum angeben.
+                    Wenn die Arbeit noch "in Arbeit" ist, verlängern Sie bitte die Frist, indem Sie ein neues voraussichtliches Fertigstellungsdatum eingeben.
+                    OSIRIS wird Sie dann zu gegebener Zeit erneut fragen, ob die Arbeit erfolgreich abgeschlossen wurde.
                 ') ?>
             </p>
             <div class="text-right mt-20">
@@ -180,12 +182,12 @@ if (array_sum($a) === 0) {
 
 
 <?php if (!empty($issues['approval'])) { ?>
-    <h2 class="mb-0">
+    <h4 class="mb-0">
         <?= lang(
             'Please review the following authorships:',
             'Bitte überprüfe die folgenden Autorenschaften:'
         ) ?>
-    </h2>
+    </h4>
     <p class="mt-0">
         <a href="<?= ROOTPATH ?>/docs/warnings#Überprüfung-der-autorenschaft-nötig"><?= lang('What does it mean?', 'Was bedeutet das?') ?></a>
     </p>
@@ -354,12 +356,12 @@ if (array_sum($a) === 0) {
 <?php } ?>
 
 <?php if (!empty($issues['epub'])) { ?>
-    <h2 class="mb-0">
+    <h4 class="mb-0">
         <?= lang(
             'Please review the following <q>Online ahead of print</q> articles:',
             'Bitte überprüfe die folgenden <q>Online ahead of print</q>-Artikel:'
         ) ?>
-    </h2>
+    </h4>
     <p class="mt-0">
         <a href="<?= ROOTPATH ?>/docs/warnings#online-ahead-of-print"><?= lang('What does it mean?', 'Was bedeutet das?') ?></a>
     </p>
@@ -402,34 +404,44 @@ if (array_sum($a) === 0) {
     </table>
 <?php } ?>
 
-<?php if (!empty($issues['students'])) { ?>
-    <h2 class="mb-0">
+<?php if (!empty($issues['status'])) { ?>
+    <h4 class="mb-0">
         <?= lang(
-            'Please review the following theses:',
-            'Bitte überprüfe die folgenden Abschlussarbeiten:'
+            'Please review the status of the following activities:',
+            'Bitte überprüfe den Status der folgenden Aktivitäten:'
         ) ?>
-    </h2>
+    </h4>
     <p class="mt-0">
-        <a href="<?= ROOTPATH ?>/docs/warnings#studenten-abschluss"><?= lang('What does it mean?', 'Was bedeutet das?') ?></a>
+        <a href="<?= ROOTPATH ?>/docs/warnings#why-status"><?= lang('What does it mean?', 'Was bedeutet das?') ?></a>
     </p>
 
     <table class="table">
         <?php
-        foreach ($issues['students'] as $doc) {
+        foreach ($issues['status'] as $doc) {
             $doc = $DB->getActivity($doc);
 
             $id = $doc['_id'];
-            $type = $doc['type'];
+            $status = $doc['status'];
+
+            
         ?>
             <tr id="tr-<?= $id ?>">
                 <td class="w-50"><?= $doc['rendered']['icon'] ?></td>
                 <td>
                     <?= $doc['rendered']['web'] ?>
                     <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+
+                    <?php if ($doc['status'] == 'in progress') { ?>
                         <?= lang(
-                            "The Thesis of $doc[name] has ended. Please confirm if the work has been successfully completed or not or extend the time frame.",
-                            "Die Abschlussarbeit von $doc[name] ist zu Ende. Bitte bestätige den Erfolg/Misserfolg der Arbeit oder verlängere den Zeitraum."
+                            "The activity has ended, but the status is still <b>in progress</b>. Please confirm if the work has been successfully completed or not or extend the time frame.",
+                            "Die Aktivität ist beendet, aber der Status ist noch <b>in Arbeit</b>. Bitte bestätige, ob die Arbeit erfolgreich abgeschlossen wurde oder nicht, oder verlängere den Zeitraum."
                         )  ?>
+                    <?php } else { ?>
+                        <?= lang(
+                            "The activity has officially started, but the status is still <b>in preparation</b>. Please change the status or move the time frame.",
+                            "Die Aktivität hat offiziell begonnen, aber der Status ist noch <b>in Vorbereitung</b>. Bitte ändere den Status oder verschiebe den Zeitraum."
+                        )  ?>
+                    <?php } ?>
                         <br>
                         <form action="<?= ROOTPATH ?>/crud/activities/update/<?= $id ?>" method="post" class="form-inline mt-5">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
@@ -437,18 +449,24 @@ if (array_sum($a) === 0) {
                             <label class="required" for="end"><?= lang('Ended at / Extend until', 'Geendet am / Verlängern bis') ?>:</label>
                             <input type="date" class="form-control w-200" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? '') ?>" required>
                             <div>
+
+                                <div class="custom-radio d-inline-block">
+                                    <input type="radio" name="values[status]" id="status-preparation" value="preparation" checked="checked" value="preparation" <?= $status == 'preparation' ? 'checked' : '' ?>>
+                                    <label for="status-preparation"><?= lang('In preparation', 'In Vorbereitung') ?></label>
+                                </div>
+
                                 <div class="custom-radio d-inline">
-                                    <input type="radio" name="values[status]" id="status-in-progress-<?= $id ?>" value="in progress" checked="checked">
+                                    <input type="radio" name="values[status]" id="status-in-progress-<?= $id ?>" value="in progress" <?= $status == 'in progress' ? 'checked' : '' ?>>
                                     <label for="status-in-progress-<?= $id ?>"><?= lang('In progress', 'In Arbeit') ?></label>
                                 </div>
 
                                 <div class="custom-radio d-inline">
-                                    <input type="radio" name="values[status]" id="status-completed-<?= $id ?>" value="completed">
+                                    <input type="radio" name="values[status]" id="status-completed-<?= $id ?>" value="completed" <?= $status == 'completed' ? 'checked' : '' ?>>
                                     <label for="status-completed-<?= $id ?>"><?= lang('Completed', 'Abgeschlossen') ?></label>
                                 </div>
 
                                 <div class="custom-radio mr-10 d-inline">
-                                    <input type="radio" name="values[status]" id="status-aborted-<?= $id ?>" value="aborted">
+                                    <input type="radio" name="values[status]" id="status-aborted-<?= $id ?>" value="aborted" <?= $status == 'aborted' ? 'checked' : '' ?>>
                                     <label for="status-aborted-<?= $id ?>"><?= lang('Aborted', 'Abgebrochen') ?></label>
                                 </div>
                             </div>
@@ -464,12 +482,12 @@ if (array_sum($a) === 0) {
 
 
 <?php if (!empty($issues['openend'])) { ?>
-    <h2 class="mb-0">
+    <h4 class="mb-0">
         <?= lang(
             'Do you still work on the following activities?',
             'Arbeitest du noch immer an den folgenden Aktivitäten?'
         ) ?>
-    </h2>
+    </h4>
     <p class="mt-0">
         <a href="<?= ROOTPATH ?>/docs/warnings#open-end"><?= lang('What does it mean?', 'Was bedeutet das?') ?></a>
     </p>
@@ -480,7 +498,6 @@ if (array_sum($a) === 0) {
             $doc = $DB->getActivity($doc);
 
             $id = $doc['_id'];
-            $type = $doc['type'];
         ?>
             <tr id="tr-<?= $id ?>">
                 <td class="w-50"><?= $doc['rendered']['icon'] ?></td>
@@ -514,12 +531,12 @@ if (array_sum($a) === 0) {
     <?php if (!empty($issues['project-open']) || !empty($issues['project-end'])) {
         $projects = array_merge($issues['project-open'] ?? [], $issues['project-end'] ?? [])
     ?>
-        <h2 class="mb-0">
+        <h4 class="">
             <?= lang(
                 'Please have a look at the following projects:',
                 'Bitte schau dir die folgenden Projekte an:'
             ) ?>
-        </h2>
+        </h4>
 
         <table class="table">
             <?php
@@ -587,6 +604,42 @@ if (array_sum($a) === 0) {
                 </tr>
             <?php } ?>
         </table>
+
     <?php } ?>
 
+
+
+    <?php
+    if (isset($issues['infrastructure'])) { ?>
+
+        <h4 class="">
+            <?= lang(
+                'Please have a look at the following infrastructures:',
+                'Bitte schau dir die folgenden Infrastrukturen an:'
+            ) ?>
+        </h4>
+
+        <table class="table">
+            <?php
+
+            foreach ($issues['infrastructure'] as $id) {
+                $doc = $osiris->infrastructures->findOne(['_id' => DB::to_ObjectID($id)]);
+            ?>
+                <tr id="tr-<?= $id ?>">
+                    <td>
+                        <?= lang('Please update the statistics of ', 'Bitte aktualisiere die Statistiken von ') ?>
+                        <b><?= $doc['name'] ?></b>
+                        <?= lang('from ', 'von ') ?>
+                        <b><?= CURRENTYEAR - 1 ?></b>
+                        <br>
+                        <a href="<?= ROOTPATH ?>/infrastructures/year/<?= $id ?>?year=<?= CURRENTYEAR - 1 ?>" target="_blank" rel="noopener noreferrer" class="btn small primary">
+                            <i class="ph ph-calendar-plus"></i>
+                            <?= lang('Update now', 'Jetzt aktualisieren') ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+
+    <?php } ?>
 <?php } ?>

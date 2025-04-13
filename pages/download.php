@@ -39,14 +39,9 @@
             <label for="filter-type"><?= lang('Filter by type', 'Filter nach Art der Aktivität') ?></label>
             <select name="filter[type]" id="filter-type" class="form-control">
                 <option value=""><?= lang('All type of activities', 'Alle Arten von Aktivitäten') ?></option>
-                <option value="publication"><?= lang('Publications', 'Publikationen') ?></option>
-                <option value="poster"><?= lang('Poster') ?></option>
-                <option value="lecture"><?= lang('Lectures', 'Vorträge') ?></option>
-                <option value="review"><?= lang('Reviews & Editorial boards') ?></option>
-                <option value="teaching"><?= lang('Teaching', 'Lehre') ?></option>
-                <option value="students"><?= lang('Students & Guests', 'Studierende & Gäste') ?></option>
-                <option value="software"><?= lang('Software & Data', 'Software & Daten') ?></option>
-                <option value="misc"><?= lang('Other activities', 'Sonstige Aktivitäten') ?></option>
+                <?php foreach ($Settings->getActivities() as $a) { ?>
+                    <option value="<?= $a['id'] ?>"><?= lang($a['name'], $a['name_de'] ?? null) ?></option>
+                <?php } ?>
             </select>
         </div>
 

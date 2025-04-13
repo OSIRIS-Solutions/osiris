@@ -42,7 +42,18 @@ $user = $user ?? $_SESSION['username'];
         <?= lang('Show only my own activities', "Zeige nur meine eigenen Aktivitäten") ?>
     </a> -->
 
-    <a class="mt-10" href="<?= ROOTPATH ?>/add-activity"><i class="ph ph-plus"></i> <?= lang('Add activity', 'Aktivität hinzufügen') ?></a>
+    <div class="btn-toolbar">
+
+        <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
+            <i class="ph ph-chart-line-up"></i>
+            <?= lang('Statistics', 'Statistiken') ?>
+        </a>
+        <a href="<?= ROOTPATH ?>/add-activity">
+            <i class="ph ph-plus"></i> 
+            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+        </a>
+
+    </div>
 
 <?php
 } elseif ($page == 'my-activities') { ?>
@@ -88,6 +99,7 @@ $user = $user ?? $_SESSION['username'];
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('Year', 'Jahr') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
+                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -178,6 +190,35 @@ $user = $user ?? $_SESSION['username'];
                     <?php } ?>
                 </table>
 
+            </div>
+
+            <h6>
+                <?= lang('By affiliation', 'Nach Zugehörigkeit') ?>
+                <a class="float-right" onclick="filterActivities('#filter-affiliated .active', null, 15)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-affiliated" class="table small simple">
+                    <tr style="--highlight-color: var(--success-color);">
+                        <td>
+                            <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
+                                <span class="text-success">
+                                    <span class="mr-5"><i class="ph ph-push-pin"></i></span>
+                                    <?= lang('Affiliated', 'Affiliert') ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr style="--highlight-color: var(--danger-color);">
+                        <td>
+                            <a data-type="no" onclick="filterActivities(this, 'no', 15)" class="item" id="no-affiliated-btn">
+                                <span class="text-danger">
+                                    <span class="mr-5"><i class="ph ph-push-pin-slash"></i></span>
+                                    <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <h6>
@@ -321,6 +362,10 @@ $user = $user ?? $_SESSION['username'];
         {
             title: lang('Research topics', 'Forschungsbereiche'),
             'key': 'topics'
+        },
+        {
+            title: lang('Affiliated', 'Affiliert'),
+            'key': 'affiliated'
         }
     ]
 
@@ -392,7 +437,7 @@ $user = $user ?? $_SESSION['username'];
                     },
                     text: '<i class="ph ph-file-csv"></i> <?= lang('CSV', 'CSV') ?>',
                 },
-                
+
             ],
             dom: 'fBrtip',
             // dom: '<"dtsp-dataTable"frtip>',
@@ -527,6 +572,14 @@ $user = $user ?? $_SESSION['username'];
                         return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
                     }
 
+                },
+                {
+                    targets: 15,
+                    data: 'affiliated',
+                    visible: false,
+                    render: function(data, type, row) {
+                        return data ? 'yes' : 'no'
+                    }
                 }
             ],
             "order": [
@@ -580,6 +633,9 @@ $user = $user ?? $_SESSION['username'];
             }
             if (hash.unit !== undefined) {
                 filterActivities(document.getElementById(hash.unit + '-btn'), hash.unit, 7)
+            }
+            if (hash.affiliated !== undefined) {
+                filterActivities(document.getElementById(hash.affiliated + '-affiliated-btn'), hash.affiliated, 15)
             }
 
             if (hash.start !== undefined) {

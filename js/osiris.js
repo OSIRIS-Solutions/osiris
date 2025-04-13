@@ -406,7 +406,7 @@ function osirisJSOnDOMContentLoaded() {
                     if (parentModal.classList.contains("show")) {
                         parentModal.classList.remove("show");
                     } else {
-                        window.location.hash = "#";
+                        window.location.hash = "#close-modal";
                     }
                 }
             }

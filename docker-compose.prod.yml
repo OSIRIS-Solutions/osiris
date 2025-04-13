@@ -1,0 +1,37 @@
+name: osiris-prod
+services:
+  nginx:
+    build: ./nginx/
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/html/
+      - ./img:/var/www/html/img:rw
+
+  app:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+    container_name: osiris
+    depends_on:
+      - mongo
+    expose:
+      - 9000
+    volumes:
+      - .:/var/www/html/
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - OSIRIS_DB_HOST=mongo
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./dump:/dump
+    command: mongod --bind_ip_all
+
+volumes:
+  mongo-data:

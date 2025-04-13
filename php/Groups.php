@@ -127,6 +127,15 @@ class Groups
         return $group;
     }
 
+    public function findGroup($name)
+    {
+        if (empty($name)) return null;
+        if (isset($this->groups[$name])) return $this->groups[$name];
+        foreach ($this->groups as $g) {
+            if ($g['name'] == $name || ($g['name_de'] ?? false) == $name) return $g;
+        }
+        return null;
+    }
 
     public function getName($id)
     {
@@ -256,7 +265,7 @@ class Groups
             if ($datas[$i]['parent'] == $parent) {
                 $tree .= '<li>';
                 $tree .= "<a class='colorless' href='" . ROOTPATH . "/groups/view/" . $datas[$i]['id'] . "' >";
-                $tree .= $datas[$i]['name'];
+                $tree .= lang($datas[$i]['name'], $datas[$i]['name_de'] ?? null);
                 $tree .= "</a>";
                 $tree .= Groups::hierarchyList($datas, $datas[$i]['id'], $depth + 1);
                 $tree .= '</li>';

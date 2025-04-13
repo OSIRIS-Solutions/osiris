@@ -192,6 +192,53 @@
         ]
     },
     {
+        "de": "Infrastrukturen",
+        "en": "Infrastructures",
+        "fields": [
+            {
+                "id": "infrastructures.add",
+                "de": "Infrastrukturen hinzufügen",
+                "en": "Add new infrastructures"
+            },
+            {
+                "id": "infrastructures.view",
+                "de": "Alle existierenden Infrastrukturen sehen",
+                "en": "See all existing infrastructures"
+            },
+            {
+                "id": "infrastructures.edit",
+                "de": "Alle Infrastrukturen bearbeiten",
+                "en": "Edit all infrastructures"
+            },
+            {
+                "id": "infrastructures.statistics",
+                "de": "Infrastrukturstatistiken ergänzen",
+                "en": "Add infrastructure statistics"
+            },
+            {
+                "id": "infrastructures.delete",
+                "de": "Infrastrukturen löschen",
+                "en": "Delete infrastructures"
+            }
+        ]
+    },
+    {
+        "de": "Organisationen",
+        "en": "Organizations",
+        "fields": [
+            {
+                "id": "organizations.edit",
+                "de": "Organisationen hinzufügen und bearbeiten",
+                "en": "Add and edit organizations"
+            },
+            {
+                "id": "organizations.delete",
+                "de": "Organisationen löschen",
+                "en": "Delete organizations"
+            }
+        ]
+    },
+    {
         "de": "Organisationseinheiten",
         "en": "Organisational Units",
         "fields": [

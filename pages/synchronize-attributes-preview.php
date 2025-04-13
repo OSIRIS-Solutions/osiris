@@ -1,4 +1,5 @@
 <?php
+include_once BASEPATH . '/php/LDAPInterface.php';
 
 $fields = $_POST['field'] ?? [];
 
@@ -18,10 +19,12 @@ foreach ($ldap_fields as $field) {
 }
 $filter .= ")";
 
-$connect = LDAPconnect(LDAP_USER, LDAP_PASSWORD);
-$search = ldap_search($connect, LDAP_BASEDN, $filter);
-$result = ldap_get_entries($connect, $search);
-ldap_close($connect);
+$LDAP = new LDAPInterface();
+$result = $LDAP->fetchUsers('cn=*,ou=people,dc=stark,dc=com', array_values($ldap_fields));
+if (is_string($result)) {
+    echo $result;
+    exit;
+}
 ?>
 
 <div class="alert success">

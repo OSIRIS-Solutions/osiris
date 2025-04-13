@@ -15,6 +15,16 @@
  */
 
 
+ Route::get('/migrate/countries', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Country.php";
+    
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+    include_once BASEPATH . "/routes/migration/v1.4.2.php";
+    include BASEPATH . "/footer.php";
+});
+
 Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Groups.php";
@@ -447,6 +457,10 @@ Route::get('/migrate', function () {
 
     if (version_compare($DBversion, '1.4.1', '<')) {
         include BASEPATH . "/routes/migration/v1.4.1.php";
+    }
+    
+    if (version_compare($DBversion, '1.4.2', '<')) {
+        include BASEPATH . "/routes/migration/v1.4.2.php";
     }
 
     echo "<p>Rerender activities</p>";

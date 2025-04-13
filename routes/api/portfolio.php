@@ -822,7 +822,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     ];
 
     if (isset($result['public_image']) && !empty($result['public_image']))
-        $project['img'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['public_image'];
+        $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['public_image'];
 
     $project['activities'] = $osiris->activities->count(['projects' => $id, 'hide' => ['$ne' => true]]);
 
@@ -1334,7 +1334,7 @@ Route::get('/portfolio/person-images', function () {
             if (!file_exists(BASEPATH . "/img/users/$user.jpg")) {
                 continue;
             } else {
-                $img = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/img/users/$user.jpg";
+                $img = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/img/users/$user.jpg";
             }
         }
 
@@ -1356,7 +1356,7 @@ Route::get('/portfolio/person-images', function () {
 //         if (!file_exists(BASEPATH . "/img/users/$user.jpg")) {
 //             return null;
 //         } else {
-//             $img = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/img/users/$user.jpg";
+//             $img = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/img/users/$user.jpg";
 //         }
 //     }
 //     return $img;

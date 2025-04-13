@@ -35,6 +35,11 @@ $users = array_column($persons, 'username');
 $show_general = (isset($group['description']) || isset($group['description_de']) || (isset($group['research']) && !empty($group['research'])));
 
 $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($id));
+
+$count_activities = 0;
+$count_projects = 0;
+$count_publications = 0;
+$count_wordcloud = 0;
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">

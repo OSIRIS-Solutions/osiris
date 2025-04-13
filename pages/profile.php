@@ -177,7 +177,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                 <?php if (true) { ?>
                     <hr>
-                    <form action="<?= ROOTPATH ?>/crud/users/update-profile/<?= $user ?>" method="post">
+                    <form action="<?= ROOTPATH ?>/crud/users/profile-picture/<?= $user ?>" method="post">
                         <input type="hidden" name="delete" value="true">
                         <button class="btn danger">
                             <i class="ph ph-trash"></i>
@@ -225,7 +225,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </span>
         <?php } ?>
 
-        <!-- <span class="badge">Last login: <?= $scientist['lastlogin'] ?></span> -->
+        <!-- <span class="badge">Last login: <?= $scientist['lastlogin'] ?? 'Never' ?></span> -->
         <?php
         // show current guest state
         if ($Settings->featureEnabled('guests')) {
@@ -572,6 +572,19 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <?php } ?>
     <?php } ?>
 
+    <?php if ($Settings->featureEnabled('infrastructures')) { ?>
+        <?php
+        $infrastructure_filter = ['persons.user' => $user];
+        $count_infrastructures = $osiris->infrastructures->count($infrastructure_filter);
+        if ($count_infrastructures > 0) { ?>
+            <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
+                <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+                <?= lang('Infrastructures', 'Infrastrukturen')  ?>
+                <span class="index"><?= $count_infrastructures ?></span>
+            </a>
+        <?php } ?>
+    <?php } ?>
+
 
     <!-- Teaching activities -->
     <?php
@@ -754,10 +767,11 @@ if ($currentuser) { ?>
                             $approvalDict = [
                                 'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
                                 'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
-                                'students' => lang('Expired theses', 'Abgelaufene Abschlussarbeiten'),
+                                'status' => lang('Expired status', 'Abgelaufener Status'),
                                 'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
                                 'project-open' => lang('Open project applications', 'Offene Projektanträge'),
                                 'project-end' => lang('Expired publications', 'Abgelaufene Projekte'),
+                                'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
                             ];
                         ?>
                             <a class="alert danger mt-10 d-block colorless" href='<?= ROOTPATH ?>/issues'>
@@ -1623,6 +1637,64 @@ if ($currentuser) { ?>
 
         <?php } ?>
 
+
+
+    </section>
+<?php } ?>
+
+
+<?php if ($Settings->featureEnabled('infrastructures')) { ?>
+    <section id="infrastructures" style="display:none">
+
+        <h2 class="title">
+            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+        </h2>
+
+        <?php if ($count_infrastructures > 0) {
+            include_once BASEPATH . "/php/Infrastructure.php";
+            $Infra = new Infrastructure();
+            $infrastructures = $osiris->infrastructures->find($infrastructure_filter, ['sort' => ["start_date" => -1, "end_date" => -1]]);
+        ?>
+            <table class="table">
+                <tbody>
+                    <?php foreach ($infrastructures as $infra) {
+                        if (empty($infra)) continue;
+                        $person_role = array_filter(DB::doc2Arr($infra['persons'] ?? []), function ($v) use ($user) {
+                            return $v['user'] == $user;
+                        });
+                        if (empty($person_role)) continue;
+                        $person_role = array_values($person_role)[0];
+                    ?>
+                        <tr>
+                            <td>
+                                <h6 class="m-0">
+                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                        <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                    </a>
+                                    <br>
+                                </h6>
+
+                                <div class="text-muted mb-5">
+                                    <?php if (!empty($infra['subtitle'])) { ?>
+                                        <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                    <?php } else { ?>
+                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                    <?php } ?>
+                                </div>
+                                <div>
+                                    <?= lang('Active as', 'Aktiv als') ?>
+                                    <b class="text-primary"><?= $Infra->getRole($person_role['role']) ?></b>
+                                    <?= lang('from', 'von') ?>
+                                    <?= fromToYear($person_role['start'], $person_role['end'] ?? null, true) ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+            </table>
+
+        <?php } else { ?>
+            <?= lang('No infrastructures connected.', 'Noch keine Infrastrukturen verknüpft.') ?>
+        <?php } ?>
 
 
     </section>

@@ -60,6 +60,7 @@ if (!empty($form) && isset($form['id'])) {
                         <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>>List</option>
                         <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>>Date</option>
                         <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>>Boolean</option>
+                        <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
                         <!-- <option value="user">User</option> -->
                     </select>
                 </div>

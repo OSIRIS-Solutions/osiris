@@ -53,6 +53,18 @@ Route::get('/activities/search', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/activities/statistics', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Statistics", "Statistiken")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/activities/statistics.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/add-activity', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -144,9 +156,9 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         $Format->setDocument($doc);
 
         $name = $activity['title'] ?? $id;
-        if (strlen($name) > 20)
-            $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
-        $name = ucfirst($activity['type']) . ": " . $name;
+        // if (strlen($name) > 20)
+        //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
+        // $name = ucfirst($activity['type']) . ": " . $name;
         $breadcrumb = [
             ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
             ['name' => $name]
@@ -312,9 +324,10 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors)', function ($id, $
         header("Location: " . ROOTPATH . "/activities/view/$id?msg=locked");
     }
 
+    $name = $form['title'] ?? $id;
     $breadcrumb = [
         ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-        ['name' => lang("Edit", "Bearbeiten"), 'path' => "/activities/edit/$id"]
+        ['name' => $name, 'path' => "/activities/view/$id"]
     ];
     if ($role == "authors") {
         $breadcrumb[] = ['name' => lang("Authors", "Autoren")];
@@ -631,11 +644,31 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
         );
     } else {
         $values = $_POST['projects'];
-        $values = validateValues($values, $DB);
+        $values = array_values($values);
 
         $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$set' => ["projects" => $values]]
+        );
+    }
+    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+});
+
+
+Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['infrastructures'])) {
+        $osiris->activities->updateOne(
+            ['_id' => $DB::to_ObjectID($id)],
+            ['$unset' => ["infrastructures" => '']]
+        );
+    } else {
+        $values = $_POST['infrastructures'];
+        $values = array_values($values);
+
+        $osiris->activities->updateOne(
+            ['_id' => $DB::to_ObjectID($id)],
+            ['$set' => ["infrastructures" => $values]]
         );
     }
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
@@ -770,10 +803,10 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
         $filter,
         [
             '$set' => [
-                "$role.$index.user" => $_SESSION['username'], 
+                "$role.$index.user" => $_SESSION['username'],
                 "$role.$index.approved" => true,
                 "$role.$index.aoi" => true,
-                ]
+            ]
         ]
     );
 

@@ -127,7 +127,7 @@
         },
         {
             title: lang('Units', 'Einheiten'),
-            'key': 'unit'
+            'key': 'dept'
         },
         {
             title: lang('Active', 'Aktiv'),

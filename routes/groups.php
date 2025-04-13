@@ -174,21 +174,30 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
 
+    // dump($values);
+    // die;
+    $id_changed = false;
     if (isset($values['hide'])) $values['hide'] = boolval($values['hide']);
     // check if ID has changes
     if (isset($values['id']) && $group['id'] != $values['id']) {
-        // change IDs of Members
         $osiris->persons->updateMany(
-            ['units' => $group['id']],
-            // ['$set' => ['units.$[elem]' => $values['id']]],
-            ['$set' => ['units.$[elem].unit' => $values['id']]],
-            ['arrayFilters' => [['elem' => ['$eq' => $group['id']]]], 'multi' => true]
+            ["units.unit" => $group['id']],
+            ['$set' => ["units.$.unit" => $values['id']]]
         );
         // change ID of child elements
         $osiris->groups->updateMany(
             ['parent' => $group['id']],
             ['$set' => ['parent' => $values['id']]]
         );
+        $id_changed = true;
+        // change ID of activities
+        // $osiris->activities->updateMany(
+        //     ['units' => $group['id']],
+        //     ['$set' => ['units.$' => $values['id']]]
+        // );
+        // $osiris->activities->updateMany(
+        //     ['authors.units' => $group['id']],
+        // );
     }
 
     if (isset($values['id'])) {
@@ -243,6 +252,11 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
         ['$set' => $values]
     );
 
+    if ($id_changed) {
+        include_once BASEPATH . "/php/Render.php";
+        renderAuthorUnitsMany(['authors.units' => $group['id']]);
+    }
+
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
         die();
@@ -293,14 +307,14 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
 
     if (!isset($_POST['username'])) die("no username given");
     $user = $_POST['username'];
-    
+
     $mode = $_POST['change-or-add'] ?? 'add';
     if ($mode == 'change' && isset($_POST['start'])) {
         // set end date of all other units with null date to one day before start date
         $osiris->persons->updateMany(
             ['username' => $user, 'units.end' => null],
             [
-            '$set' => ['units.$[elem].end' => date('Y-m-d', strtotime($_POST['start'] . ' -1 day'))]
+                '$set' => ['units.$[elem].end' => date('Y-m-d', strtotime($_POST['start'] . ' -1 day'))]
             ],
             ['arrayFilters' => [['elem.end' => null]]]
         );

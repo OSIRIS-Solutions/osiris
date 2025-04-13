@@ -1,10 +1,6 @@
 <?php
 
-
-
 $color = $color ?? '#000000';
-
-
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id'])) {
     $id = $form['id'];
@@ -12,6 +8,7 @@ if (!empty($form) && isset($form['_id'])) {
     $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
     $url = ROOTPATH . "/admin/types/" . $form['id'];
     $title = $name;
+    $new = false;
 
     // render example
     include_once BASEPATH . "/php/Modules.php";
@@ -40,11 +37,27 @@ if (!empty($form) && isset($form['_id'])) {
     );
     $member = $osiris->activities->count(['subtype' => $id]);
 } else {
+    $new = true;
     $formaction .= "/crud/types/create";
     $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
     $url = ROOTPATH . "/admin/types/*";
     $title = lang('New category', 'Neue Kategorie');
     $member = 0;
+
+    // check if type is the first in the category
+    if (isset($_GET['parent'])) {
+        $p = $type['parent'];
+        $first = $osiris->adminTypes->count(['parent' => $p]) == 0;
+
+        if ($first) {
+            $parent = $osiris->adminCategories->findOne(['id' => $p]);
+            $type['icon'] = $parent['icon'];
+            $type['name'] = $parent['name'];
+            $type['name_de'] = $parent['name_de'];
+            $type['id'] = $parent['id'];
+        }
+    }
+    
 }
 
 ?>
@@ -337,7 +350,7 @@ if (!empty($form) && isset($form['_id'])) {
 </form>
 
 
-<?php if (!empty($form)) { ?>
+<?php if (!$new) { ?>
 
 
     <?php if ($member == 0) { ?>

@@ -909,7 +909,7 @@ function getPubmed(id) {
 
 
 function getDOI(doi) {
-    url = "https://api.crossref.org/works/" + doi + '?mailto=juk20@dsmz.de'
+    url = "https://api.crossref.org/works/v1/" + doi + '?mailto=juk20@dsmz.de'
     $.ajax({
         type: "GET",
         // data: data,
@@ -927,16 +927,19 @@ function getDOI(doi) {
 
 
             var date = getPublishingDate(pub)
-            if (pub['journal-issue'] !== undefined) {
-                if (
-                    (pub['journal-issue']['published-online'] !== undefined && pub['journal-issue']['published-online']['date-parts'] !== undefined)
-                    ||
-                    (pub['journal-issue']['published-print'] !== undefined && pub['journal-issue']['published-print']['date-parts'] !== undefined)
-                ) {
-                    var date = getPublishingDate(pub['journal-issue'])
-                    // console.log(date);
-                }
-            }
+            // if (pub['journal-issue'] !== undefined) {
+            //     if (
+            //         (pub['journal-issue']['published-online'] !== undefined && pub['journal-issue']['published-online']['date-parts'] !== undefined)
+            //         ||
+            //         (pub['journal-issue']['published-print'] !== undefined && pub['journal-issue']['published-print']['date-parts'] !== undefined)
+            //     ) {
+            //         var date = getPublishingDate(pub['journal-issue'])
+            //         // console.log(date);
+            //     }
+            // }
+            // if (pub['issued'] !== undefined && pub['issued']['date-parts'] !== undefined) {
+            //     date = getPublishingDate(pub['issued'])
+            // }
             var authors = [];
             // var editors = [];
             var first = 1
@@ -980,7 +983,7 @@ function getDOI(doi) {
             // console.log(funder);
 
             var pages = pub.page
-            if (pub.page === undefined || pub.page !== null) {
+            if (pub.page === undefined || pub.page === null) {
                 pages = pub['article-number'] ?? null;
             }
 
@@ -1443,12 +1446,17 @@ function getPubData(event, form) {
 
 function getPublishingDate(pub) {
     var date = ["", "", ""];
+    // if (pub['issued']){
+    //     date = getDate(pub['issued'])
+    // } else 
     if (pub['published-print']) {
         date = getDate(pub['published-print'])
     } else if (pub['published']) {
         date = getDate(pub['published'])
     } else if (pub['published-online']) {
         date = getDate(pub['published-online'])
+    } else if (pub['issued']){
+        date = getDate(pub['issued'])
     }
     return date
 }

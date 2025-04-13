@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Country class
+ * 
+ * @deprecated 1.4.2
+ */
 
 class Country
 {

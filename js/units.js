@@ -22,7 +22,7 @@ function navigate(key) {
             initActivities('#publication-table', {
                 page: 'my-activities',
                 display_activities: 'web',
-                'authors.units': DEPT,
+                'units': DEPT,
                 type: 'publication'
             })
             // impactfactors('chart-impact', 'chart-impact-canvas', { user: {'$in': USERS} })
@@ -35,7 +35,7 @@ function navigate(key) {
             initActivities('#activities-table', {
                 page: 'my-activities',
                 display_activities: 'web',
-                'authors.units': DEPT,
+                'units': DEPT,
                 type: { '$ne': 'publication' }
             })
             // activitiesChart('chart-activities', 'chart-activities-canvas', { user: {'$in': USERS} })

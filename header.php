@@ -96,9 +96,9 @@ $pageactive = function ($p) use ($page) {
         const AFFILIATION = "<?= $Settings->get('affiliation') ?>";
     </script>
 
-    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.responsive.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.responsive.min.js?v=<?= CSS_JS_VERSION ?>"></script>
     <script>
         $.extend($.fn.DataTable.ext.classes, {
             sPaging: "pagination mt-10 ",
@@ -155,10 +155,9 @@ $pageactive = function ($p) use ($page) {
         <div class="navbar navbar-top">
             <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
                 <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
-                <?php if (!LIVE) { ?>
+                <?php if (defined('LIVE') && LIVE === false) { ?>
                     <span class=" position-absolute bottom-0 left-0 secondary" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
                 <?php } ?>
-
             </a>
 
             <a href="<?= $Settings->get('affiliation_details')['link'] ?? '#' ?>" class="navbar-brand ml-auto" target="_blank">
@@ -169,7 +168,7 @@ $pageactive = function ($p) use ($page) {
             <!-- Button to toggle sidebar -->
             <button class="btn btn-action active" type="button" onclick="osirisJS.toggleSidebar(this);" aria-label="Toggle sidebar"></button>
             <ul class="navbar-nav">
-                <?php if (false) { ?>
+                <?php if (defined('MAINTENANCE') && MAINTENANCE) { ?>
                     <!-- set to true during maintenance -->
                     <div class="alert danger">
                         <b><?= lang('System maintenance', 'Wartungsarbeiten') ?>.</b>
@@ -183,10 +182,11 @@ $pageactive = function ($p) use ($page) {
                             if (!empty($breadcrumb)) {
                                 echo '<li class=""><a href="' . ROOTPATH . '/"><i class="ph ph-house" aria-label="Home"></i></a></li>';
                                 foreach ($breadcrumb as $crumb) {
+                                    $displayName = shortenName($crumb['name'] ?? '');
                                     if (!isset($crumb['path'])) {
-                                        echo '<li class="active" aria-current="page"><a href="#">' . $crumb['name'] . '</a></li>';
+                                        echo '<li class="active" aria-current="page"><a href="#">' . $displayName . '</a></li>';
                                     } else {
-                                        echo '<li class=""><a href="' . ROOTPATH . $crumb['path'] . '">' . $crumb['name'] . '</a></li>';
+                                        echo '<li class=""><a href="' . ROOTPATH . $crumb['path'] . '">' . $displayName . '</a></li>';
                                     }
                                 }
                             }
@@ -258,7 +258,7 @@ $pageactive = function ($p) use ($page) {
                 </a>
                 <?php } else {
                 $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
-                $maintain = $osiris->persons->find(['maintenance' => $realusername], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
+                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists'=>true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
                     <form action="" class="nav-search" id="navbar-search">
                         <div class="input-group">
@@ -420,7 +420,7 @@ $pageactive = function ($p) use ($page) {
                             }
                         </style>
 
-                        <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?=lang('Advanced Search', 'Erweiterte Suche')?>">
+                        <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                             <i class="ph ph-magnifying-glass-plus"></i>
                         </a>
                         <a href="<?= ROOTPATH ?>/activities" class="with-icon <?= $pageactive('activities') ?>">
@@ -430,7 +430,7 @@ $pageactive = function ($p) use ($page) {
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
 
-                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?=lang('Advanced Search', 'Erweiterte Suche')?>">
+                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                                 <i class="ph ph-magnifying-glass-plus"></i>
                             </a>
                             <a href="<?= ROOTPATH ?>/projects" class="with-icon <?= $pageactive('projects') ?>">
@@ -470,6 +470,13 @@ $pageactive = function ($p) use ($page) {
                             </a>
                         <?php } ?>
 
+                        <?php if ($Settings->featureEnabled('infrastructures')) { ?>
+                            <a href="<?= ROOTPATH ?>/infrastructures" class="with-icon <?= $pageactive('infrastructures') ?>">
+                                <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+                                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                            </a>
+                        <?php } ?>
+
                         <!-- <a href="<?= ROOTPATH ?>/tags" class="with-icon <?= $pageactive('tags') ?>">
                             <i class="ph ph-circles-three-plus" aria-hidden="true"></i>
                             <?= lang('Tags', 'Schlagwörter') ?>
@@ -504,6 +511,11 @@ $pageactive = function ($p) use ($page) {
                         <a href="<?= ROOTPATH ?>/groups" class="with-icon <?= $pageactive('groups') ?>">
                             <i class="ph ph-users-three" aria-hidden="true"></i>
                             <?= lang('Organisational Units', 'Einheiten') ?>
+                        </a>
+                        
+                        <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
+                            <i class="ph ph-building-office" aria-hidden="true"></i>
+                            <?= lang('Organizations', 'Organisationen') ?>
                         </a>
 
                         <!-- <a href="<?= ROOTPATH ?>/expertise" class="with-icon <?= $pageactive('expertise') ?>">

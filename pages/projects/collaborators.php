@@ -139,7 +139,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
             </tr>
         </thead>
         <tbody id="collaborators">
-            <tr id="collab-<?= $i ?>">
+            <tr id="collab-institute">
                 <td>
                     <span data-toggle="tooltip" data-title="<?= lang('This is your institute.', 'Dies ist dein Institut.') ?>"><i class="ph ph-info text-muted"></i></span>
                     <?= $institute['name'] ?? '' ?>

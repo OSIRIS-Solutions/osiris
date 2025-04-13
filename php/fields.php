@@ -677,7 +677,7 @@ $FIELDS = [
         'type' => 'string'
     ],
     [
-        'id' => 'openaccess',
+        'id' => 'open_access',
         'module_of' => $typeModules['openaccess'] ?? [],
         'usage' => [
             'filter',
@@ -687,7 +687,7 @@ $FIELDS = [
         'type' => 'boolean',
     ],
     [
-        'id' => 'openaccess-status',
+        'id' => 'oa_status',
         'module_of' => $typeModules['openaccess-status'] ?? [],
         'usage' => [
             'filter',
@@ -695,12 +695,12 @@ $FIELDS = [
         ],
         'label' => lang('Open Access Status'),
         'type' => 'string',
-        'values' => ['gold', 'green', 'bronze', 'hybrid', 'open', 'closed'],
+        'values' => ['gold', 'diamond', 'green', 'bronze', 'hybrid', 'open', 'closed'],
         'input' => 'select'
     ],
     [
-        'id' => 'online-ahead-of-print',
-        'module_of' => $typeModules['online-ahead-of-print'] ?? [],
+        'id' => 'epub',
+        'module_of' => $typeModules['epub'] ?? [],
         'usage' => [
             'filter',
             'columns'
@@ -717,6 +717,18 @@ $FIELDS = [
         ],
         'label' => lang('Correction'),
         'type' => 'boolean',
+    ],
+    [
+        'id' => 'political_consultation',
+        'module_of' => $typeModules['political_consultation'] ?? [],
+        'usage' => [
+            'filter',
+            'columns'
+        ],
+        'label' => lang('Contribution to political and social consulting', 'Beitrag zur Politik- und Gesellschaftsberatung'),
+        'type' => 'string',
+        'values' => ['Gutachten', 'Positionspapier', 'Studie', 'Sonstiges', ''],
+        'input' => 'select'
     ],
     [
         'id' => 'lecture-invited',
@@ -809,6 +821,9 @@ foreach ($osiris->adminFields->find() as $field) {
     if ($field['format'] == 'list') {
         $f['values'] =  DB::doc2Arr($field['values']);
         $f['input'] = 'select';
+    }
+    if ($field['format'] == 'url') {
+        $f['type'] = 'string';
     }
 
     $FIELDS[] = $f;

@@ -40,7 +40,7 @@ Route::get('/admin/users', function () {
         ['name' => lang("Users", "Nutzer:innen")]
     ];
     include BASEPATH . "/header.php";
-    if (USER_MANAGEMENT == 'LDAP') {
+    if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
         include BASEPATH . "/pages/synchronize-users.php";
     } else {
         include BASEPATH . "/pages/admin/users.php";

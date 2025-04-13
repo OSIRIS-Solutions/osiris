@@ -26,6 +26,10 @@ $role_groups = json_decode($json, true, 512, JSON_NUMERIC_CHECK);
 $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
 $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
 
+// sort admin last
+$roles = array_diff($roles, ['admin']);
+$roles = array_merge($roles, ['admin']);
+
 $rights = [];
 
 foreach ($osiris->adminRights->find([]) as $row) {
