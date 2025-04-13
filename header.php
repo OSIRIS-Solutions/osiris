@@ -258,7 +258,7 @@ $pageactive = function ($p) use ($page) {
                 </a>
                 <?php } else {
                 $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
-                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists'=>true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
+                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
                     <form action="" class="nav-search" id="navbar-search">
                         <div class="input-group">
@@ -314,16 +314,41 @@ $pageactive = function ($p) use ($page) {
 
                 <?php } else { ?>
 
-
                     <!-- search bar -->
                     <div class="content" style="margin-top:-4rem">
                         <input type="text" class="form-control small border-primary" autocomplete="off" placeholder="<?= lang('Search', 'Suche') ?>" oninput="searchNavBar(this.value)">
                     </div>
 
-                    <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
-                        <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
-                        <?= lang('Add activity', 'Aktivität hinzuf.') ?>
-                    </a>
+                    <nav id="sidebar-add">
+                        <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
+                            <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
+                            <?= lang('Add activity', 'Aktivität hinzuf.') ?>
+                        </a>
+
+                        <div id="sidebar-add-navigation">
+
+                            <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
+                                <a href="<?= ROOTPATH ?>/projects/new" class="">
+                                    <i class="ph ph-tree-structure"></i>
+                                    <?= lang('Add new project', 'Projekt anlegen') ?>
+                                </a>
+                            <?php } ?>
+                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
+                                <a href="<?= ROOTPATH ?>/conferences#add-conference">
+                                    <i class="ph ph-calendar-plus"></i>
+                                    <?= lang('Add event', 'Event hinzufügen') ?>
+                                </a>
+                            <?php } ?>
+                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) { ?>
+                                <a href="<?= ROOTPATH ?>/infrastructures/new">
+                                    <i class="ph ph-cube-transparent"></i>
+                                    <?= lang('Add infrastructure', 'Infrastruktur anlegen') ?>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </nav>
+
+
 
                     <script>
                         function searchNavBar(value) {
@@ -454,7 +479,7 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <a href="<?= ROOTPATH ?>/conferences" class="with-icon <?= $pageactive('conferences') ?>">
-                            <i class="ph ph-presentation-chart" aria-hidden="true"></i>
+                            <i class="ph ph-calendar-dots" aria-hidden="true"></i>
                             <?= lang('Events') ?>
                         </a>
 
@@ -512,7 +537,7 @@ $pageactive = function ($p) use ($page) {
                             <i class="ph ph-users-three" aria-hidden="true"></i>
                             <?= lang('Organisational Units', 'Einheiten') ?>
                         </a>
-                        
+
                         <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
                             <i class="ph ph-building-office" aria-hidden="true"></i>
                             <?= lang('Organizations', 'Organisationen') ?>
@@ -646,7 +671,7 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-treasure-chest" aria-hidden="true"></i>
                                 <?= lang('Contents', 'Inhalte') ?>
                             </a>
-                           
+
                             <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
                                 <i class="ph ph-wrench" aria-hidden="true"></i>
                                 <?= lang('Features', 'Funktionen') ?>
