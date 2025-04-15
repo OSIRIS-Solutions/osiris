@@ -4827,6 +4827,9 @@ input[type=number] {
   padding-top: 1.625rem;
   padding-bottom: 0.2rem;
 }
+.floating-form > .form-control.large {
+  height: calc(4rem + 1px + 0.8rem + 1px);
+}
 .floating-form > .form-select {
   padding-top: 1.625rem;
   padding-bottom: 0.2rem;

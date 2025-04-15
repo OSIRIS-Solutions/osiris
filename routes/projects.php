@@ -39,6 +39,34 @@ Route::get('/proposals/new', function () {
 }, 'login');
 
 
+Route::get('/proposals/view/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+
+    if (DB::is_ObjectID($id)) {
+        $mongo_id = $DB->to_ObjectID($id);
+        $proposal = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    } else {
+        $proposal = $osiris->proposals->findOne(['name' => $id]);
+        $id = strval($proposal['_id'] ?? '');
+    }
+    if (empty($proposal)) {
+        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
+        ['name' => $proposal['name']]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/projects/proposal.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+// projects
+
 Route::get('/projects', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
@@ -368,6 +396,61 @@ Route::post('/projects/download/(.*)', function ($id) {
 /**
  * CRUD routes
  */
+
+ 
+Route::post('/crud/proposals/create', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!isset($_POST['values'])) die("no values given");
+    $collection = $osiris->proposals;
+
+    $values = validateValues($_POST['values'], $DB);
+    if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
+        $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
+    }
+
+    // add information on creating process
+    $values['end-delay'] = endOfCurrentQuarter(true);
+    $values['created'] = date('Y-m-d');
+    $values['created_by'] = $_SESSION['username'];
+
+    $values['status'] = 'proposed';
+
+    // add false checkbox values
+    $values['public'] = boolval($values['public'] ?? false);
+
+    // add persons
+    $persons = [];
+    foreach ($values['applicants'] ?? array() as $user) {
+        if (empty($user)) continue;
+        $persons[] = [
+            'user' => $user,
+            'role' => 'applicant',
+            'name' => $DB->getNameFromId($user)
+        ];
+    }
+    if (!empty($persons)) {
+        $values['persons'] = $persons;
+    }
+
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderAuthorUnits($values, [], 'persons');
+
+    $insertOneResult  = $collection->insertOne($values);
+    $id = $insertOneResult->getInsertedId();
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $red = str_replace("*", $id, $_POST['redirect']);
+        header("Location: " . $red . "?msg=success");
+        die();
+    }
+
+    echo json_encode([
+        'inserted' => $insertOneResult->getInsertedCount(),
+        'id' => $id,
+    ]);
+});
+
 
 Route::post('/crud/projects/create', function () {
     include_once BASEPATH . "/php/init.php";

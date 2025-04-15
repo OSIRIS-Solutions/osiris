@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Overview file for managable content
  * 
@@ -17,25 +18,45 @@
     <?= lang('Manage content', 'Inhalte verwalten') ?>
 </h1>
 
-<div class="link-list">
-    <a href="<?= ROOTPATH ?>/admin/fields" class="">
-        <i class="ph ph-textbox text-secondary" aria-hidden="true"></i>
-        <?= lang('Custom fields') ?>
-    </a>
-    <a href="<?= ROOTPATH ?>/admin/vocabulary" class="">
-        <i class="ph ph-book-bookmark text-secondary" aria-hidden="true"></i>
-        <?= lang('Vocabularies', 'Vokabular') ?>
-    </a>
+<style>
+    .link-list a::after {
+        display: flex;
+        align-items: center;
+        font-size: x-large;
+        font-weight: bolder;
+    }
+</style>
+
+<div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/categories" class="">
         <i class="ph ph-bookmarks text-secondary" aria-hidden="true"></i>
         <?= lang('Activities', 'Aktivitäten') ?>
+        <br>
+        <small class="text-muted"><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></small>
     </a>
     <a href="<?= ROOTPATH ?>/admin/projects" class="">
         <i class="ph ph-tree-structure text-secondary" aria-hidden="true"></i>
         <?= lang('Projects', 'Projekte') ?>
+        <br>
+        <small class="text-muted"><?= lang('Manage projects and proposals', 'Verwalte Projekte und Anträge') ?></small>
     </a>
     <a href="<?= ROOTPATH ?>/admin/persons" class="">
         <i class="ph ph-user text-secondary" aria-hidden="true"></i>
         <?= lang('People', 'Personen') ?>
+        <br>
+        <small class="text-muted"><?= lang('Manage data of people and login', 'Verwalte Personendaten und Login-Informationen') ?></small>
+    </a>
+    <hr>
+    <a href="<?= ROOTPATH ?>/admin/fields" class="">
+        <i class="ph ph-textbox text-secondary" aria-hidden="true"></i>
+        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?> 
+        <br>
+        <small class="text-muted"><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></small>
+    </a>
+    <a href="<?= ROOTPATH ?>/admin/vocabulary" class="">
+        <i class="ph ph-book-bookmark text-secondary" aria-hidden="true"></i>
+        <?= lang('Vocabularies', 'Vokabular') ?>
+        <br>
+        <small class="text-muted"><?= lang('Modify existing vocabularies for activities and projects', 'Bearbeite existierendes Vokabular für Aktivitäten und Projekte') ?></small>
     </a>
 </div>

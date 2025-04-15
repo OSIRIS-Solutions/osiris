@@ -173,7 +173,7 @@ $filter = [];
                         <td> <a onclick="filterProjects(this, 'finished', 7)" class="item text-success"><?= lang('finished', 'abgeschlossen') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
-                        <td> <a onclick="filterProjects(this, 'applied', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
+                        <td> <a onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td> <a onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
@@ -422,7 +422,8 @@ $filter = [];
             case 'finished':
                 return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
             case 'applied':
-                return `<span class='badge signal'>${lang('applied', 'beantragt')}</span>`;
+            case 'proposed':
+                return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
             case 'rejected':
                 return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
             case 'expired':
@@ -521,7 +522,7 @@ $filter = [];
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/projects/view/${row._id['$oid']}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/proposals/view/${row._id['$oid']}">${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">
@@ -534,7 +535,7 @@ $filter = [];
                         
                         <div class="d-flex justify-content-between">
                             ${renderType(row.type)}
-                            ${renderStatus(row.status)}
+                            ${renderStatus(row.status ?? 'proposed')}
                         </div>
                     </div>
                         `
@@ -593,7 +594,8 @@ $filter = [];
                     data: 'status',
                     searchable: true,
                     visible: false,
-                    header: lang('Status', 'Status')
+                    header: lang('Status', 'Status'),
+                    defaultContent: 'proposed'
                 },
                 {
                     target: 8,
