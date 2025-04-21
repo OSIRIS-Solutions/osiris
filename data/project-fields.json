@@ -1,0 +1,351 @@
+[
+    {
+        "id": "type",
+        "en": "Type",
+        "de": "Typ",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true
+        }
+    },
+    {
+        "id": "applicants",
+        "en": "Applicants",
+        "de": "Antragstellende Personen",
+        "kdsf": "KDSF-B-2-15",
+        "scope": {
+            "proposed": true
+        }
+    },
+    {
+        "id": "abstract",
+        "en": "Abstract",
+        "de": "Zusammenfassung",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false
+        }
+    },
+    {
+        "id": "coordinator",
+        "en": "Coordinator facility",
+        "de": "Koordinator-Einrichtung",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false
+        }
+    },
+    {
+        "id": "countries",
+        "en": "Countries of research",
+        "de": "Forschungsländer",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "funder",
+        "en": "Funder (Category)",
+        "de": "Förderer (Kategorie)",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true
+        }
+    },
+    {
+        "id": "funding_number",
+        "en": "Funding reference number",
+        "de": "Förderkennzeichen",
+        "kdsf": "KDSF-B-3-2",
+        "scope": {
+            "project": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "funding_organization",
+        "en": "Funding organization",
+        "de": "Zuwendungsgeber",
+        "kdsf": "KDSF-B-3-6",
+        "scope": {
+            "project": false,
+            "proposed": false
+        }
+    },
+    {
+        "id": "comment",
+        "en": "Comment",
+        "de": "Kommentar",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false,
+            "rejected": false
+        }
+    },
+    {
+        "id": "rejection_date",
+        "en": "Rejection date",
+        "de": "Ablehnungsdatum",
+        "kdsf": null,
+        "scope": {
+            "rejected": true
+        }
+    },
+    {
+        "id": "approval_date",
+        "en": "Approval date",
+        "de": "Bewilligungsdatum",
+        "kdsf": null,
+        "scope": {
+            "approved": true
+        }
+    },
+    {
+        "id": "submission_date",
+        "en": "Submission date",
+        "de": "Einreichungsdatum",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        }
+    },
+    {
+        "id": "start",
+        "en": "Project start",
+        "de": "Projektbeginn",
+        "kdsf": "KDSF-B-2-3",
+        "scope": {
+            "project": true,
+            "approved": true
+        }
+    },
+    {
+        "id": "end",
+        "en": "Project end",
+        "de": "Projektende",
+        "kdsf": "KDSF-B-2-4",
+        "scope": {
+            "project": true,
+            "approved": true
+        }
+    },
+    {
+        "id": "start_proposed",
+        "en": "Proposed project start",
+        "de": "Beantragter Projektbeginn",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        }
+    },
+    {
+        "id": "end_proposed",
+        "en": "Proposed project end",
+        "de": "Beantragtes Projektende",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        }
+    },
+    {
+        "id": "grant_subproject_proposed",
+        "en": "Proposed grant sum (Subproject)",
+        "de": "Beantragte Fördersumme (Teilprojekt)",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        }
+    },
+    {
+        "id": "grant_subproject",
+        "en": "Grant sum (Subproject)",
+        "de": "Fördersumme (Teilprojekt)",
+        "kdsf": null,
+        "scope": {
+            "approved": false
+        }
+    },
+    {
+        "id": "grant_sum_proposed",
+        "en": "Proposed grant sum",
+        "de": "Beantragte Fördersumme ",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        }
+    },
+    {
+        "id": "grant_sum",
+        "en": "Grant sum",
+        "de": "Fördersumme",
+        "kdsf": "KDSF-B-3-4",
+        "scope": {
+            "approved": false
+        }
+    },
+    {
+        "id": "internal_number",
+        "en": "Internal ID",
+        "de": "Interne ID",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "approved": false,
+            "proposed": false
+        }
+    },
+    {
+        "id": "nagoya",
+        "en": "Nagoya Protocol Compliance",
+        "de": "Nagoya Protocol Compliance",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "kdsf-ffk",
+        "en": "Research fields (KDSF)",
+        "de": "Forschungsfelder (KDSF)",
+        "kdsf": "KDSF-B-2-6",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "name",
+        "en": "Short title",
+        "de": "Kurztitel",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true,
+            "approved": false
+        }
+    },
+    {
+        "id": "public",
+        "en": "Public presentation consent",
+        "de": "Zustimmung zur öffentlichen Präsentation",
+        "kdsf": null,
+        "scope": {
+            "project": false
+        }
+    },
+    {
+        "id": "purpose",
+        "en": "Purpose",
+        "de": "Zweck",
+        "kdsf": "KDSF-B-2-5",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "personnel",
+        "en": "Personnel measures planned",
+        "de": "Geplante Personalmaßnahmen",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        }
+    },
+    {
+        "id": "in-kind",
+        "en": "In-kind personnel",
+        "de": "Umfang des geplanten eigenen Personaleinsatzes",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        }
+    },
+    {
+        "id": "ressources",
+        "en": "Additional resources",
+        "de": "Zusätzliche Ressourcen",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        }
+    },
+    {
+        "id": "role",
+        "en": "Role of the institute",
+        "de": "Rolle des Instituts",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "status",
+        "en": "Status",
+        "de": "Status",
+        "kdsf": null,
+        "scope": {
+            "proposed": true,
+            "approved": true,
+            "rejected": true
+        }
+    },
+    {
+        "id": "title",
+        "en": "Full title",
+        "de": "Voller Titel",
+        "kdsf": "KDSF-B-2-2",
+        "scope": {
+            "project": true,
+            "proposed": true,
+            "approved": false
+        }
+    },
+    {
+        "id": "website",
+        "en": "Website",
+        "de": "Webseite",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "funding_type",
+        "en": "Funding type",
+        "de": "Förderart",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    },
+    {
+        "id": "project_type",
+        "en": "Project type",
+        "de": "Art des Projekts",
+        "kdsf": "KDSF-B-2-16 (GWK)",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        }
+    }
+]

@@ -2531,6 +2531,10 @@ a.colorless {
   background-color: var(--secondary-color);
   border-top-right-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  font-size: x-large;
+  font-weight: bolder;
 }
 .link-list-sm a {
   padding: 1rem 5.5rem 1rem 2.2rem;

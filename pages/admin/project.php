@@ -15,7 +15,9 @@
  */
 
 if (empty($project)) {
-    $route = ROOTPATH . '/admin/project/create';
+    $route = ROOTPATH . '/crud/admin/projects/create';
+} else {
+    $route = ROOTPATH . '/crud/admin/projects/update/' . $project['_id'];
 }
 
 $finished_stages = 0;
@@ -29,22 +31,80 @@ if (!isset($stage)) {
     $stage = '1';
 }
 $redirect = ROOTPATH . '/admin/projects/' . $stage . '/' . $type;
-if ($stage == '3') {
+if ($stage == '2') {
     $redirect = ROOTPATH . '/admin/projects';
 }
 
-$phases = $project['phases'] ?? [];
+$process = $project['process'] ?? '';
+$phases = [
+    [
+        'id' => 'proposed',
+        'name' => 'Proposed',
+        'name_de' => 'Beantragt',
+        'color' => 'signal',
+        'description' => 'If a new project proposal is entered, it is created in this phase.',
+        'description_de' => 'Wird ein neues Projekt beantragt, so wird es in dieser Phase angelegt.',
+
+    ],
+    [
+        'id' => 'approved',
+        'name' => 'Approved',
+        'name_de' => 'Bewilligt',
+        'color' => 'success',
+        'description' => 'If a project proposal is approved, it is moved to this phase.',
+        'description_de' => 'Wird ein Projektantrag bewilligt, so wird es in diese Phase verschoben.',
+    ],
+    [
+        'id' => 'rejected',
+        'name' => 'Rejected',
+        'name_de' => 'Abgelehnt',
+        'color' => 'danger',
+        'description' => 'If a project proposal is rejected, it is moved to this phase.',
+        'description_de' => 'Wird ein Projektantrag abgelehnt, so wird es in diese Phase verschoben.',
+
+    ]
+];
+if ($process == 'project') {
+    // only projects
+    $phases = [
+        [
+            'id' => 'project',
+            'name' => 'Project',
+            'name_de' => 'Projekt',
+            'color' => 'primary',
+            'description' => 'Here you can add data fields for projects of this type. Projects can be created directly.',
+            'description_de' => 'Hier kannst du die Datenfelder für dein Projekt anlegen. Projekte können direkt angelegt werden.',
+        ]
+    ];
+} elseif ($process == 'proposal') {
+    // only proposals
+    $phases[] = [
+        'id' => 'project',
+        'name' => 'Project',
+        'name_de' => 'Projekt',
+        'color' => 'primary',
+        'description' => 'Once the proposal has been approved, a project can be created from the proposal. It is linked to the application and takes over data fields that have already been filled out in the proposal. You can define all data fields for this project here.',
+        'description_de' => 'Nachdem der Antrag bewilligt wurde, kann aus dem Antrag heraus ein Projekt erstellt werden. Es ist mit dem Antrag verknüpft und übernimmt Datenfelder, die bereits im Antrag ausgefüllt wurden. Hier kannst du alle Datenfelder für dieses Projekt definieren.',
+    ];
+}
 
 ?>
 
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js?v=1"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js" integrity="sha512-tBzZQxySO5q5lqwLWfu8Q+o4VkTcRGOeQGVQ0ueJga4A1RKuzmAu5HXDOXLEjpbKyV7ow9ympVoa6wZLEzRzDg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.18.0/flowchart.min.js" integrity="sha512-FX1RpRt8RDEtTiFbDxg4u62QUJXhVE+cVE1mBD0iSOpj/ZZ/VNyZKlwhBT39QMcP5KEYS3yU8wh6Qpa57qVnbg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-
 
 <style>
+    .required-badge {
+        margin-bottom: 0.5rem;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 0.25rem 0.5rem;
+        background-color: var(--danger-color-20);
+        display: inline-block;
+    }
+
     .checkbox-badge.custom-checkbox label:after {
         content: "\E182";
         position: absolute;
@@ -132,7 +192,7 @@ $phases = $project['phases'] ?? [];
     </span>
 </h1>
 
-<form action="<?= ROOTPATH ?>/crud/admin/projects/update/<?= $project['_id'] ?>" method="post" id="project-form">
+<form action="<?= $route ?>" method="post" id="project-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>">
     <input type="hidden" class="hidden" name="stage" value="<?= $stage ?>">
 
@@ -200,155 +260,52 @@ $phases = $project['phases'] ?? [];
                 <hr>
 
                 <h5>
-                    <?= lang('Phases', 'Phasen') ?>
+                    <?= lang('Proposals', 'Anträge') ?>
                 </h5>
 
                 <p class="text-muted">
-                    <?= lang('A project can be divided into several phases, e.g. proposed or accepted. Each phase can have different data fields. Here you can set the number of phases that can be further defined in the next step.', 'Ein Projekt kann in mehrere Phasen unterteilt werden, z. B. beantragt oder angenommen. Jede Phase kann unterschiedliche Datenfelder haben. Hier kannst du die Anzahl der Phasen festlegen, die im nächsten Schritt weiter definiert werden können.') ?>
+                    <?= lang(
+                        'A project can either be created directly or go through an submission phase first. Depending on the type of project, it makes sense to only include new projects as proposals or to omit the proposal phase completely.',
+                        'Ein Projekt kann entweder direkt angelegt werden oder durchläuft zuerst eine Antragsphase. Je nach Art des Projekts ist es sinnvoll, neue Projekte nur als Antrag aufzunehmen oder die Anträge komplett wegzulassen.'
+                    ) ?>
                 </p>
 
-                <p>
-                    <b><?= lang('Reuse existing phases', 'Phasen wiederverwenden') ?></b>:
 
-                    <b class="text-danger">TODO</b>
-                </p>
+                <div class="form-group">
+                    <div class="custom-radio">
+                        <input type="radio" name="values[process]" id="proposal" value="proposal" required <?= $process == 'proposal' ? 'checked' : '' ?>>
+                        <label for="proposal">
+                            <?= lang('All projects of this type must first be created as proposal', 'Alle Projekte dieser Art müssen zuerst als Antrag angelegt werden') ?>
+                        </label>
+                    </div>
+                </div>
 
-                <table class="table simple small">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>Name (english)</th>
-                            <th>Name (deutsch)</th>
-                            <th><?= lang('Color', 'Farbe') ?></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="possible-values">
-                        <?php if (!empty($phases)) { ?>
-                            <?php foreach ($project['phases'] as $ph) {
-                                // check first if this phase is already in use
-                                $n_phase = $osiris->projects->count(['type' => $type, 'status' => $ph['id']]);
-                                $row_id = $ph['id'];
-                            ?>
-                                <tr>
-                                    <td class="w-50">
-                                        <i class="ph ph-dots-six-vertical text-muted handle"></i>
-                                    </td>
-                                    <td>
-                                        <code class="code phase-id">
-                                            <?= $ph['id'] ?>
-                                        </code>
-                                        <input type="hidden" name="phasedef[<?= $row_id ?>][id]" value="<?= $ph['id'] ?>">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="phasedef[<?= $row_id ?>][en]" value="<?= $ph['name'] ?? '' ?>">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="phasedef[<?= $row_id ?>][de]" value="<?= $ph['name_de'] ?? '' ?>">
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $color = $ph['color'] ?? 'muted';
-                                        ?>
+                <!-- <div class="form-group">
+                    <div class="custom-radio">
+                        <input type="radio" name="values[process]" id="both" value="both" required <?= $process == 'proposal' ? 'checked' : '' ?>>
+                        <label for="both">
+                            <?= lang('All projects of this type can be created directly or as proposal', 'Alle Projekte dieser Art können entweder direkt oder als Antrag angelegt werden') ?>
+                        </label>
+                    </div>
+                </div> -->
 
-                                        <div class="input-group">
-                                            <select name="phasedef[<?= $row_id ?>][color]" class="form-control color-select color" onchange="colorSelect(this)">
-                                                <option value="muted" <?= $color == 'muted' ? 'selected' : '' ?>>muted</option>
-                                                <option value="signal" <?= $color == 'signal' ? 'selected' : '' ?>>signal</option>
-                                                <option value="success" <?= $color == 'success' ? 'selected' : '' ?>>success</option>
-                                                <option value="danger" <?= $color == 'danger' ? 'selected' : '' ?>>danger</option>
-                                                <option value="primary" <?= $color == 'primary' ? 'selected' : '' ?>>primary</option>
-                                                <option value="secondary" <?= $color == 'secondary' ? 'selected' : '' ?>>secondary</option>
-                                            </select>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="ph ph-fill ph-circle text-<?= $color ?>" id="test-icon"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <?php if ($n_phase == 0) { ?>
-                                            <a onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
-                                        <?php } else { ?>
-                                            <span class="text-danger"><?= lang('Used in', 'Verwendet in') ?> <?= $n_phase ?> <?= lang('activities', 'Aktivitäten') ?></span>
-                                        <?php } ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-
-                        <?php } ?>
-
-                    </tbody>
-                </table>
-                <button class="btn" type="button" onclick="addValuesRow()">
-                    <i class="ph ph-plus-circle"></i>
-                    <?= lang('Add phase', 'Phase hinzufügen') ?>
-                </button>
-
-
-                <script>
-                    function addValuesRow() {
-                        var row_id = Math.random().toString(36).substring(7);
-                        $('#possible-values').append(`
-                            <tr>
-                                <td class="w-50">
-                                    <i class="ph ph-dots-six-vertical text-muted handle"></i>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="phasedef[${row_id}][id]" value="" required oninput="sanitizeID(this, '.phase-id')">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="phasedef[${row_id}][en]" value="" required>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="phasedef[${row_id}][de]" value="" required>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <select name="phasedef[${row_id}][color]" class="form-control color-select color" onchange="colorSelect(this)">
-                                            <option value="muted">muted</option>
-                                            <option value="signal">signal</option>
-                                            <option value="success">success</option>
-                                            <option value="danger">danger</option>
-                                            <option value="primary">primary</option>
-                                            <option value="secondary">secondary</option>
-                                        </select>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">
-                                                <i class="ph ph-fill ph-circle text-muted" id="test-icon"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
-                                </td>
-                            </tr>
-                        `);
-                    }
-                    $('#possible-values').sortable({
-                        handle: ".handle",
-                        // change: function( event, ui ) {}
-                    });
-
-                    function colorSelect(el) {
-                        let val = el.value;
-                        $(el).next().find('i').removeClass().addClass('ph ph-fill ph-circle text-' + val);
-                    }
-                </script>
+                <div class="form-group">
+                    <div class="custom-radio">
+                        <input type="radio" name="values[process]" id="project" value="project" required <?= $process == 'project' ? 'checked' : '' ?>>
+                        <label for="project">
+                            <?= lang('All projects of this type can be created directly, no proposals possible', 'Alle Projekte dieser Art werden direkt angelegt, keine Anträge möglich') ?>
+                        </label>
+                    </div>
+                </div>
 
             </div>
 
         </div>
 
-        <button type="button" class="btn success" onclick="phasesNotEmpty()">
+        <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
-
-        <button type="submit" class="hidden" id="submit-stage-1"></button>
 
         <?php if ($stage <= $finished_stages) { ?>
             <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
@@ -356,427 +313,122 @@ $phases = $project['phases'] ?? [];
             </a>
         <?php } ?>
 
-        <script>
-            function phasesNotEmpty() {
-                if ($('#possible-values tr').length == 0) {
-                    toastError('<?= lang('Please add at least one phase.', 'Bitte füge mindestens eine Phase hinzu.') ?>');
-                } else {
-                    // click submit button and validate form
-                    $('#submit-stage-1').click();
-                }
-            }
-        </script>
-
-
-    <?php } else if ($stage == '3') {
-        /**
-         * Second stage of this form: phase order
-         */
-    ?>
-
-        <!-- one phase can lead to x others -->
-        <!-- only one phase can be the first phase -->
-        <div class="row row-eq-spacing">
-            <div class="col-md-6">
-                <div class="box padded mt-0">
-
-                    <div id="phase-list" class="phase-list">
-                        <?php
-                        foreach ($phases as $phase) {
-                            $phase_id = $phase['id'];
-                            $prev = $phase['previous'] ?? '';
-                        ?>
-                            <div class="phase-item form-group">
-                                <label for="previous-<?= $phase_id ?>" class="font-weight-bold"><?= lang($phase['name'], $phase['name_de']) ?></label>
-                                <select class="previous-select form-control" data-id="<?= $phase_id ?>" name="previous[<?= $phase_id ?>]" id="previous-<?= $phase_id ?>">
-                                    <option value=""><?= lang('None (First Phase)', 'Keine (Erste Phase)') ?></option>
-                                    <?php foreach ($phases as $p) {
-                                        if ($p['id'] == $phase_id) continue;
-                                    ?>
-                                        <option value="<?= $p['id'] ?>" <?= ($p['id'] == $prev) ? 'selected' : '' ?>><?= lang($p['name'], $p['name_de']) ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        <?php } ?>
-                    </div>
-                    <a href="#/" class="btn" onclick="save(false)">
-                        <i class="ph ph-question"></i>
-                        <?= lang('Check', 'Überprüfen') ?>
-                    </a>
-                </div>
-
-
-                <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage - 1 ?>/<?= $id ?>" class="btn">
-                    <?= lang('Back', 'Zurück') ?>
-                </a>
-
-                <button type="button" class="btn success" onclick="save(true)">
-                    <?= lang('Next', 'Weiter') ?>
-                    <i class="ph ph-arrow-fat-line-right"></i>
-                </button>
-
-                <?php if ($stage <= $finished_stages) { ?>
-                    <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
-                        <?= lang('Skip', 'Überspringen') ?>
-                    </a>
-                <?php } ?>
-
-            </div>
-            <div class="col-md-6">
-
-                <style>
-                    svg#graph {
-                        width: 100%;
-                        height: 400px;
-                        border: 1px solid var(--border-color);
-                        background-color: white;
-                        border-radius: var(--border-radius);
-                    }
-                </style>
-                <svg id="graph"></svg>
-            </div>
-        </div>
-
-        <script>
-            const PHASES = <?= json_encode($phases) ?>;
-
-            function validatePhaseGraph(phases) {
-                let graph = new Map();
-                let reverseGraph = new Map();
-                let startNodes = new Set();
-                let allNodes = new Set();
-
-                // check if only one phase is empty
-                var firsts = $('.previous-select').filter(function() {
-                    return $(this).val() == '';
-                });
-                if (firsts.length != 1) {
-                    toastError('<?= lang('Exactly one phase must be the first phase, indicated by the lack of a previous phase.', 'Nur eine Phase kann die erste Phase sein, was durch "Keine" vorherige Phase gekennzeichnet ist.') ?>');
-                    return false;
-                }
-
-                // Graphen erstellen (normal & umgekehrt)
-                phases.forEach(phase => {
-                    let id = phase.id;
-                    let pred = phase.previous;
-
-                    allNodes.add(id);
-                    if (!graph.has(id)) graph.set(id, []);
-                    if (!reverseGraph.has(id)) reverseGraph.set(id, []);
-
-                    if (pred == null) {
-                        startNodes.add(id);
-                    }
-
-                    // previous.forEach(pred => {
-                    if (!graph.has(pred)) graph.set(pred, []);
-                    graph.get(pred).push(id);
-
-                    if (!reverseGraph.has(id)) reverseGraph.set(id, []);
-                    reverseGraph.get(id).push(pred);
-                    // });
-                });
-
-                console.log(graph);
-                // 1. **Überprüfung auf unerreichbare Knoten**
-                function findReachableNodes(startNodes, graph) {
-                    let visited = new Set();
-                    let stack = [...startNodes];
-
-                    while (stack.length > 0) {
-                        let node = stack.pop();
-                        if (!visited.has(node)) {
-                            visited.add(node);
-                            if (graph.has(node)) {
-                                stack.push(...graph.get(node));
-                            }
-                        }
-                    }
-                    return visited;
-                }
-
-                let reachableNodes = findReachableNodes(startNodes, graph);
-                let unreachableNodes = [...allNodes].filter(n => !reachableNodes.has(n));
-                console.log(unreachableNodes);
-                if (unreachableNodes.length > 0) {
-                    toastError("Fehler: Folgende Phasen sind unerreichbar: " + unreachableNodes.join(", "));
-                    return false;
-                }
-
-                // 2. **Überprüfung auf Zyklen**
-                function hasCycle(graph) {
-                    let visited = new Set();
-                    let stack = new Set();
-
-                    function visit(node) {
-                        if (stack.has(node)) return true; // Zyklus gefunden
-                        if (visited.has(node)) return false;
-
-                        visited.add(node);
-                        stack.add(node);
-                        for (let neighbor of (graph.get(node) || [])) {
-                            if (visit(neighbor)) return true;
-                        }
-                        stack.delete(node);
-                        return false;
-                    }
-
-                    for (let node of allNodes) {
-                        if (visit(node)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-
-                if (hasCycle(graph)) {
-                    toastError("Fehler: Der Phasen-Graph enthält einen Zyklus!");
-                    return false;
-                }
-
-                return true;
-            }
-
-            function save(submit = false) {
-                let phases = [];
-                $("#phase-list .phase-item .previous-select").each(function(index) {
-                    let phaseId = $(this).data('id');
-                    let dependencies = $(this).val() || null;
-                    phases.push({
-                        id: phaseId,
-                        position: index,
-                        previous: dependencies
-                    });
-                });
-
-                drawGraph(phases);
-
-                if (validatePhaseGraph(phases)) {
-
-
-                    if (submit) {
-                        $('#project-form').submit();
-                    } else {
-                        toastSuccess("Validierung erfolgreich!");
-                    }
-                }
-
-            };
-
-            function drawGraph(phases) {
-                const svg = d3.select("#graph")
-                    .attr("width", 600)
-                    .attr("height", 400);
-
-                svg.selectAll("*").remove(); // Vorherige Inhalte löschen
-
-                // Knoten (Phasen) und Links (Verbindungen) aus den gespeicherten Daten extrahieren
-                const nodes = PHASES.map(phase => ({
-                    id: phase.id,
-                    name: phase.name,
-                    color: phase.color,
-                    x: Math.random() * 600,
-                }));
-                const links = phases
-                    .filter(phase => phase.previous) // Nur Phasen mit Vorgänger
-                    .map(phase => ({
-                        source: phase.previous,
-                        target: phase.id
-                    }));
-
-                // which node is the first one?
-                const startNodes = phases.filter(phase => !phase.previous).map(phase => phase.id);
-                nodes.forEach(node => {
-                    if (startNodes.includes(node.id)) {
-                        node.startnode = true;
-                    }
-                });
-
-                // Erstelle eine D3-Simulation für die Knoten und Kanten
-                const simulation = d3.forceSimulation(nodes)
-                    .force("link", d3.forceLink(links).id(d => d.id).distance(100))
-                    .force("charge", d3.forceManyBody().strength(-100))
-                    .force("center", d3.forceCenter(300, 200));
-
-                // Pfeile (Links) hinzufügen
-                const link = svg.selectAll("line")
-                    .data(links)
-                    .enter().append("line")
-                    .attr("stroke", "#999")
-                    .attr("stroke-width", 2)
-                    .attr("marker-end", "url(#arrow)");
-
-                // Pfeilspitzen definieren
-                svg.append("defs").append("marker")
-                    .attr("id", "arrow")
-                    .attr("viewBox", "0 -5 10 10")
-                    .attr("refX", 20)
-                    .attr("refY", 0)
-                    .attr("markerWidth", 6)
-                    .attr("markerHeight", 6)
-                    .attr("orient", "auto")
-                    .append("path")
-                    .attr("d", "M0,-5L10,0L0,5")
-                    .attr("fill", "#999");
-
-                // Knoten hinzufügen
-                const node = svg.selectAll("circle")
-                    .data(nodes)
-                    .enter().append("circle")
-                    .attr("r", 15)
-                    .attr("fill", d => `var(--${d.color}-color)`)
-                    .call(d3.drag()
-                        .on("start", (event, d) => {
-                            if (!event.active) simulation.alphaTarget(0.3).restart();
-                            d.fx = d.x;
-                            d.fy = d.y;
-                        })
-                        .on("drag", (event, d) => {
-                            d.fx = event.x;
-                            d.fy = event.y;
-                        })
-                        .on("end", (event, d) => {
-                            if (!event.active) simulation.alphaTarget(0);
-                            d.fx = null;
-                            d.fy = null;
-                        })
-                    );
-
-                // Labels für Knoten hinzufügen
-                const labels = svg.selectAll("text")
-                    .data(nodes)
-                    .enter().append("text")
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "12px")
-                    .style("font-weight", "bold")
-                    .attr("dy", 28)
-                    .text(d => d.name);
-
-                // Simulations-Update
-                simulation.on("tick", () => {
-                    link.attr("x1", d => d.source.x)
-                        .attr("y1", d => d.source.y)
-                        .attr("x2", d => d.target.x)
-                        .attr("y2", d => d.target.y);
-
-                    node.attr("cx", d => d.x).attr("cy", d => d.y);
-                    labels.attr("x", d => d.x).attr("y", d => d.y);
-                });
-            }
-
-
-            $(document).ready(function() {
-                drawGraph(phases);
-            });
-        </script>
-
 
     <?php } else if ($stage == '2') {
         /**
          * Second stage of this form: phase data fields
+         * 
+         * If process is "project", skip this step
          */
     ?>
 
         <?php
         foreach ($phases as $phase) {
             $phase_id = $phase['id'];
+            if (isset($project['phases']))
+                foreach ($project['phases'] as $p) {
+                    if ($p['id'] == $phase_id) {
+                        $phase['modules'] = $p['modules'] ?? [];
+                    }
+                }
         ?>
-
             <div class="box phase" id="phase-<?= $phase_id ?>" data-id="<?= $phase_id ?>">
                 <div class="content">
-                    <b>Phase</b>
+                    <!-- <b><?= lang('Data fields for', 'Datenfelder für') ?></b> -->
                     <code class="code float-right text-<?= $phase['color'] ?? 'muted' ?>"><?= $phase_id ?></code>
                     <h2 class="title">
                         <div class="badge <?= $phase['color'] ?? 'muted' ?>"><?= lang($phase['name'], $phase['name_de']) ?></div>
                     </h2>
-                    <!-- disabled -->
-                    <!-- <div class="custom-checkbox mb-10 danger">
-                        <input type="checkbox" id="disable-<?= $phase_id ?>" value="true" name="phase[<?= $phase_id ?>][disabled]" <?= ($phase['disabled'] ?? false) ? 'checked' : '' ?>>
-                        <label for="disable-<?= $phase_id ?>"><?= lang('Deactivate', 'Deaktivieren') ?></label>
-                    </div>
-                    <span class="text-muted">
-                        <?= lang('Deactivated phases are retained for past activities, but no new ones can be added.', 'Deaktivierte Phasen bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
-                    </span> -->
+
+                    <p>
+                        <?= lang($phase['description'], $phase['description_de']) ?>
+                    </p>
+
+                    <p>
+                        <b>
+                            <?= lang('Required fields', 'Pflichtfelder') ?>
+                        </b>
+                        <br>
+                        <span class="text-muted"><?= lang('These fields are always required and cannot be deactivated.', 'Diese Felder sind immer erforderlich und können nicht deaktiviert werden.') ?></span>
+                    </p>
+
+                    <div>
+
+                        <?php
+
+                        // get required fields
+                        $fields = $Project->FIELDS;
+                        $fields = array_filter(array_values($fields), function ($field) use ($phase_id) {
+                            return array_key_exists($phase_id, $field['scope']);
+                        });
+                        $required_fields = array_filter($fields, function ($field) use ($phase_id) {
+                            return $field['scope'][$phase_id] ?? false;
+                        });
+                        $optional_fields = array_filter($fields, function ($field) use ($phase_id) {
+                            return !($field['scope'][$phase_id] ?? false);
+                        });
 
 
-                    <?php if ($Settings->featureEnabled('portal')) { ?>
-                        <div class="my-20">
-                            <input type="hidden" name="phase[<?= $phase_id ?>][portfolio]" value="">
-                            <div class="custom-checkbox">
-                                <input type="checkbox" id="portfolio-question" value="1" name="phase[<?= $phase_id ?>][portfolio]" <?= ($phase['portfolio'] ?? false) ? 'checked' : '' ?>>
-                                <label for="portfolio-question">
-                                    <?= lang('This phase of a project should be visible in OSIRIS Portfolio.', 'Diese Phase eines Projekts sollte in OSIRIS Portfolio sichtbar sein.') ?>
-                                </label>
+                        foreach ($required_fields as $field) {
+                            if (empty($field)) $field = ['en' => $m, 'de' => null];
+                        ?>
+                            <div class="required-badge">
+                                <i class="ph ph-asterisk text-danger"></i>
+                                <?= lang($field['en'], $field['de']) ?>
                             </div>
-                        </div>
-                    <?php } ?>
-                </div>
+                        <?php } ?>
 
-                <hr>
+                    </div>
 
-                <div class="content">
-                    <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?> *</label>
-                    <br>
+                    <p>
+                        <b>
+                            <?= lang('Optional fields', 'Optionale Felder') ?>
+                        </b>
+                        <br>
+                        <span class="text-muted">
+                            <?= lang('You can mark a field as active by clicking on it and mark it as required by clicking again. Required fields are then marked in red with an asterisk (*).', 'Du kannst ein Feld als aktiv markieren, indem du darauf klickst, und es als erforderlich markieren, indem du erneut darauf klickst. Erforderliche Felder sind dann mit einem Sternchen (*) in rot gekennzeichnet.') ?>
+                        </span>
+                    </p>
+
                     <?php
-                        $modules = DB::doc2Arr($phase['modules'] ?? []);
-                        $modules = array_column($modules, 'required', 'module');
-                    foreach ($Project->FIELDS as $m) {
-                        if ($m['required'] ?? false) continue;
-                        $active = array_key_exists($m['id'], $modules);
-                        $required = $active && $modules[$m['id']] ;
-                        $value = $m['id'] . ($required ? '*' : '');
+                    $modules = DB::doc2Arr($phase['modules'] ?? []);
+                    $modules = array_column($modules, 'required', 'module');
+                    $custom = false;
+                    foreach ($optional_fields as $field) {
+                        $m = $field['id'];
+                        // if ($m['required'] ?? false) continue;
+                        $active = array_key_exists($m, $modules);
+                        $required = $active && $modules[$m];
+                        $value = $m . ($required ? '*' : '');
+                        // $field = $Project->FIELDS[$m] ?? null;
+                        if (empty($field)) $field = ['en' => $m, 'de' => null];
+                        if ($field['custom'] ?? false) {
+                            echo "<p>
+                            <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
+                            <br>
+                            <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
+                            </p>";
+                            $custom = true;
+                        }
                     ?>
                         <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
-                            <input type="checkbox" 
-                                id="module-<?= $phase_id ?>-<?= $m['id'] ?>"
-                                data-attribute="<?= $m['id'] ?>"
+                            <input type="checkbox"
+                                id="module-<?= $phase_id ?>-<?= $m ?>"
+                                data-attribute="<?= $m ?>"
                                 value="<?= $value ?>"
                                 name="phase[<?= $phase_id ?>][modules][]"
                                 <?= $active ? 'checked' : '' ?>
                                 onclick="toggleCheckboxStates(this)">
-                            <label for="module-<?= $phase_id ?>-<?= $m['id'] ?>">
-                                <?= lang($m['en'], $m['de']) ?>
+                            <label for="module-<?= $phase_id ?>-<?= $m ?>">
+                                <?= lang($field['en'], $field['de']) ?>
                             </label>
                         </div>
                     <?php } ?>
 
-                    <p>
-                        <i class="ph ph-info text-signal"></i>
-                        <?= lang('You can mark a field as active by clicking on it and mark it as required by clicking again. Required fields are marked with an asterisk (*).', 'Du kannst ein Feld als aktiv markieren, indem du darauf klickst, und es als erforderlich markieren, indem du erneut darauf klickst. Erforderliche Felder sind mit einem Sternchen (*) gekennzeichnet.') ?>
-                    </p>
+
                 </div>
-
             </div>
-
-            <script>
-                function toggleCheckboxStates(el) {
-                    // if is checked but not .required-state, check still and set required state
-                    // else just uncheck and remove required state
-                    let parent = el.closest('.checkbox-badge');
-                    let val = el.getAttribute('data-attribute');
-                    console.log(el.checked);
-                    if (!el.checked && !parent.classList.contains('required-state')) {
-                        parent.classList.add('required-state');
-                        el.checked = true;
-                        el.value = val + '*';
-                    } else if (el.checked) {
-                        // parent.classList.add('required-state');
-                        el.checked = true;
-                        el.value = val;
-                    } else {
-                        parent.classList.remove('required-state');
-                        el.checked = false;
-                        el.value = val;
-                    }
-                }
-            </script>
-
-
         <?php } ?>
-
-        <p>
-            * <?= lang('Name, title, status, time and applicant are always a required part of the form and cannot be deactivated.', 'Name, Titel, Status, Zeitrahmen und Antragsteller:in des Projektes sind immer Teil des Formulars sowie Pflichfelder und können hier deshalb nicht ausgeschaltet werden.') ?>
-        </p>
 
         <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
             <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
@@ -795,111 +447,54 @@ $phases = $project['phases'] ?? [];
         <?php } ?>
 
 
-    <?php } else if ($stage == '4') {
-        /**
-         * Third stage of this form: subprojects
-         */
-
-        $subprojects = $project['has_subprojects'] ?? false;
-    ?>
-
-
-        <div class="box">
-            <div class="content">
-                <h2 class="title">
-                    <?= lang('Subprojects', 'Teilprojekte') ?>
-                </h2>
-                <div class="custom-checkbox">
-                    <input type="checkbox" id="subprojects" value="true" name="values[has_subprojects]" <?= ($project['has_subprojects'] ?? false) ? 'checked' : '' ?>>
-                    <label for="subprojects">
-                        <?= lang('This type of project can have subprojects.', 'Diese Art von Projekt kann Teilprojekte haben.') ?>
-                    </label>
-                </div>
-                <span class="text-muted">
-                    <?= lang('Subprojects are projects that are linked to a main project and are displayed in the project overview.', 'Teilprojekte sind Projekte, die mit einem Hauptprojekt verknüpft sind und in der Projektübersicht angezeigt werden.') ?>
-                </span>
-
-                <h5>
-                    <?=lang('Phase', 'Phase')?>
-                </h5>
-
-                <p>
-                    <?= lang('In which phase should the subprojects be created?', 'In welcher Phase sollen die Teilprojekte erstellt werden?') ?>
-                </p>
-
-                <select name="values[subproject_phase]" class="form-control w-auto">
-                    <?php foreach ($phases as $phase) { ?>
-                        <option value="<?= $phase['id'] ?>" <?= ($project['subproject_phase'] ?? '') == $phase['id'] ? 'selected' : '' ?>>
-                            <?= lang($phase['name'], $phase['name_de']) ?>
-                        </option>
-                    <?php } ?>
-                </select>
-
-                <h5>
-                    <?= lang('Inherited data fields from main project', 'Datenfelder, die vom Hauptprojekt übernommen werden') ?>
-                </h5>
-                <p>
-                    <?= lang('These data fields cannot be edited in the project itself but are always copied from the parent project.', 'Diese Datenfelder können nicht im Teilprojekt selbst bearbeitet werden, sondern werden immer aus dem übergeordneten Projekt übernommen.') ?>
-                </p>
-
-                <div class="">
-                    <?php
-                    $modules = [];
-                    foreach ($phases as $phase) {
-                        $ms = DB::doc2Arr($phase['modules'] ?? []);
-                        $modules = array_merge($modules, array_column($ms, 'module'));
-                    }
-                    $modules = array_unique($modules);
-                    $modules[] = 'title';
-                    $modules[] = 'date';
-                    $modules[] = 'status';
-                    foreach ($Project->FIELDS as $m) {
-                        // if ($m['required'] ?? false) continue;
-                        $inherits = DB::doc2Arr($project['inherits'] ?? []);
-                        if (!in_array($m['id'], $modules) ) continue;
-                    ?>
-                        <div class="custom-checkbox checkbox-badge">
-                            <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
-                            <label for="subprojects-<?= $m['id'] ?>">
-                                <?= lang($m['en'], $m['de']) ?>
-                            </label>
-                        </div>
-                    <?php } ?>
-                </div>
-
-            </div>
-        </div>
-
-
-
-        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/3/<?= $type ?>">
-            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
-            <i class="ph ph-arrow-fat-line-left"></i>
-        </a>
-
-        <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
-
+        <script>
+            function toggleCheckboxStates(el) {
+                // if is checked but not .required-state, check still and set required state
+                // else just uncheck and remove required state
+                let parent = el.closest('.checkbox-badge');
+                let val = el.getAttribute('data-attribute');
+                console.log(el.checked);
+                if (!el.checked && !parent.classList.contains('required-state')) {
+                    parent.classList.add('required-state');
+                    el.checked = true;
+                    el.value = val + '*';
+                } else if (el.checked) {
+                    // parent.classList.add('required-state');
+                    el.checked = true;
+                    el.value = val;
+                } else {
+                    parent.classList.remove('required-state');
+                    el.checked = false;
+                    el.value = val;
+                }
+            }
+        </script>
     <?php } ?>
 </form>
 
 
 <?php if ($stage == '1' && !empty($project)) {
     $member = $osiris->projects->count(['type' => $type]);
+    $member += $osiris->proposals->count(['type' => $type]);
     if ($member == 0) { ?>
         <div class="alert danger mt-20">
-            <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $type ?>" method="post">
+            <form action="<?= ROOTPATH ?>/crud/admin/projects/delete/<?= $project['_id'] ?>" method="post">
                 <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>
     <?php } else { ?>
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete type: $member activities associated.", "Kann Typ nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
-            <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $type ?>"}]}' target="_blank" class="text-danger">
+            <?= lang("Can\'t delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
+            <a href='<?= ROOTPATH ?>/projects/search#{"$and":[{"type":"<?= $type ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
-                <?= lang('View activities', 'Aktivitäten zeigen') ?>
+                <?= lang('View projects', 'Projekte zeigen') ?>
             </a>
         </div>
     <?php } ?>
 
 <?php } ?>
+
+<?php if (isset($_GET['verbose'])) {
+    dump($project);
+} ?>

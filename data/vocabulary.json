@@ -143,5 +143,60 @@
                 "de": "Sonstiger Zweck"
             }
         ]
+    },
+    {
+        "id": "funding-type",
+        "category": "Project",
+        "name": "Funding Type",
+        "name_de": "Art der Förderung",
+        "description": "The type of funding for the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-3-3).",
+        "description_de": "Die Art der Förderung des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-3-3).",
+        "values": [
+            {
+                "id": "basic-funding",
+                "en": "Basic / Institutional funding",
+                "de": "Grundmittel / Institutionelle Mittel"
+            },
+            {
+                "id": "third-party-funding",
+                "en": "Third-party funding",
+                "de": "Drittmittel"
+            },
+            {
+                "id": "special-funding",
+                "en": "Special funding",
+                "de": "Sondermittel"
+            },
+            {
+                "id": "other-funding",
+                "en": "Other funding",
+                "de": "Sonstige Mittel"
+            }
+        ]
+    },
+    {
+        "id": "project-type",
+        "category": "Project",
+        "name": "Project Type",
+        "name_de": "Art des Projekts",
+        "description": "The type of project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-16, GWK).",
+        "description_de": "Die Art des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-16, GWK).",
+        "values": [
+            {
+                "id": "funding-project",
+                "en": "Funding project",
+                "de": "Zuwendungsprojekt"
+            },
+            {
+                "id": "contract-project",
+                "en": "Contract project",
+                "de": "Auftragsprojekt"
+            },
+            {
+                "id": "other-project",
+                "en": "Other project",
+                "de": "Sonstiges"
+            }
+        ]
     }
 ]

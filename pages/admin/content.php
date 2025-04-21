@@ -18,15 +18,6 @@
     <?= lang('Manage content', 'Inhalte verwalten') ?>
 </h1>
 
-<style>
-    .link-list a::after {
-        display: flex;
-        align-items: center;
-        font-size: x-large;
-        font-weight: bolder;
-    }
-</style>
-
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/categories" class="">
         <i class="ph ph-bookmarks text-secondary" aria-hidden="true"></i>

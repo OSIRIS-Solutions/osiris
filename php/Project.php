@@ -116,47 +116,46 @@ class Project extends Vocabulary
         ]
     ];
 
-    public $FIELDS = [
-        ['id' => 'abstract', 'en' => 'Abstract', 'de' => 'Zusammenfassung', 'required' => false, 'kdsf' => null],
-        ['id' => 'contact', 'en' => 'Applicant', 'de' => 'Antragstellende Person', 'required' => true, 'kdsf' => null],
-        ['id' => 'coordinator', 'en' => 'Coordinator facility', 'de' => 'Koordinator-Einrichtung', 'required' => false, 'kdsf' => null],
-        ['id' => 'countries', 'en' => 'Countries', 'de' => 'Länder', 'required' => false, 'kdsf' => true],
-        ['id' => 'funder', 'en' => 'Funder (Category)', 'de' => 'Förderer (Kategorie)', 'required' => false, 'kdsf' => null],
-        ['id' => 'funding_number', 'en' => 'Funding reference number', 'de' => 'Förderkennzeichen', 'required' => false, 'kdsf' => 'KDSF-B-3-2'],
-        ['id' => 'funding_organization', 'en' => 'Funding organization', 'de' => 'Zuwendungsgeber', 'required' => false, 'kdsf' => 'KDSF-B-3-6'],
-        // ['id'=>'grant_income_proposed', 'en'=>'Proposed grant sum ()', 'de'=> 'Beantragte Fördersumme ()', 'required'=>false, 'kdsf'=>null],
-        // ['id'=>'grant_income', 'en'=>'', 'de'=> '', 'required'=>false, 'kdsf'=>null],
-        ['id' => 'grant_subproject_proposed', 'en' => 'Proposed grant sum (Subproject)', 'de' => 'Beantragte Fördersumme (Teilprojekt)', 'required' => false, 'kdsf' => null],
-        ['id' => 'grant_subproject', 'en' => 'Grant sum (Subproject)', 'de' => 'Fördersumme (Teilprojekt)', 'required' => false, 'kdsf' => null],
-        ['id' => 'grant_sum_proposed', 'en' => 'Proposed grant sum', 'de' => 'Beantragte Fördersumme ', 'required' => false, 'kdsf' => null],
-        ['id' => 'grant_sum', 'en' => 'Grant sum', 'de' => 'Fördersumme', 'required' => false, 'kdsf' => 'KDSF-B-3-4'],
-        ['id' => 'internal_number', 'en' => 'Internal ID', 'de' => 'Interne ID', 'required' => false, 'kdsf' => null],
-        ['id' => 'nagoya', 'en' => 'Nagoya Protocol', 'de' => 'Nagoya Protocol', 'required' => false, 'kdsf' => null],
-        ['id' => 'kdsf-ffk', 'en' => 'Research fields (KDSF)', 'de' => 'Forschungsfelder (KDSF)', 'required' => false, 'kdsf' => 'KDSF-B-2-6'],
-        ['id' => 'name', 'en' => 'Short title', 'de' => 'Kurztitel', 'required' => true, 'kdsf' => null],
-        ['id' => 'public', 'en' => 'Public presentation consent', 'de' => 'Zustimmung zur öffentlichen Präsentation', 'required' => false, 'kdsf' => null],
-        ['id' => 'purpose', 'en' => 'Purpose', 'de' => 'Zweck', 'required' => false, 'kdsf' => 'KDSF-B-2-5'],
-        ['id' => 'personnel', 'en' => 'Personnel measures planned', 'de' => 'Geplante Personalmaßnahmen', 'required' => false, 'kdsf' => null],
-        ['id' => 'in-kind', 'en' => 'In-kind personnel', 'de' => 'Umfang des geplanten eigenen Personaleinsatzes', 'required' => false, 'kdsf' => null],
-        ['id' => 'ressources', 'en' => 'Additional resources', 'de' => 'Zusätzliche Ressourcen', 'required' => false, 'kdsf' => null],
-        ['id' => 'role', 'en' => 'Role of the institute', 'de' => 'Rolle des Instituts', 'required' => false, 'kdsf' => null],
-        ['id' => 'scholar', 'en' => 'Scholar', 'de' => 'Stipendiat:in', 'required' => false, 'kdsf' => null],
-        ['id' => 'scholarship', 'en' => 'Scholarship institution', 'de' => 'Stipendiengeber', 'required' => false, 'kdsf' => null],
-        ['id' => 'status', 'en' => 'Status', 'de' => 'Status', 'required' => true, 'kdsf' => null],
-        ['id' => 'supervisor', 'en' => 'Supervisor', 'de' => 'Betreuende Person', 'required' => false, 'kdsf' => null],
-        ['id' => 'time', 'en' => 'Time period', 'de' => 'Zeitraum', 'required' => true, 'kdsf' => 'KDSF-B-2-3, KDSF-B-2-4'],
-        ['id' => 'title', 'en' => 'Full title', 'de' => 'Voller Titel', 'required' => true, 'kdsf' => 'KDSF-B-2-2'],
-        ['id' => 'university', 'en' => 'Partner University', 'de' => 'Partner-Universität', 'required' => false, 'kdsf' => null],
-        ['id' => 'website', 'en' => 'Website', 'de' => 'Webseite', 'required' => false, 'kdsf' => null],
+    public $FIELDS = [];
+
+    public const PHASES = [
+        [
+            'id' => 'proposed',
+            'name' => 'Proposed',
+            'name_de' => 'Beantragt',
+            'color' => 'signal',
+            'type' => 'proposal'
+        ],
+        [
+            'id' => 'approved',
+            'name' => 'Approved',
+            'name_de' => 'Bewilligt',
+            'color' => 'success',
+            'type' => 'proposal'
+        ],
+        [
+            'id' => 'rejected',
+            'name' => 'Rejected',
+            'name_de' => 'Abgelehnt',
+            'color' => 'danger',
+            'type' => 'proposal'
+
+        ],
+        [
+            'id' => 'project',
+            'name' => 'Project',
+            'name_de' => 'Projekt',
+            'color' => 'primary',
+            'type' => 'project'
+        ]
     ];
 
-
-    public const STATUS = [
-        'applied' => 'beantragt',
-        'approved' => 'bewilligt',
-        'rejected' => 'abgelehnt',
-        'finished' => 'abgeschlossen',
-    ];
+    // public const STATUS = [
+    //     'applied' => 'beantragt',
+    //     'approved' => 'bewilligt',
+    //     'rejected' => 'abgelehnt',
+    //     'finished' => 'abgeschlossen',
+    // ];
 
     // public const PURPOSE = [
     //     'research' => 'Forschung',
@@ -174,12 +173,6 @@ class Project extends Vocabulary
         'other' => 'Sonstiges',
     ];
 
-    // public const ROLE = [
-    //     'coordinator' => 'Koordinator',
-    //     'partner' => 'Partner',
-    //     'associated' => 'Beteiligt',
-    // ];
-
     public const FUNDING = [
         'funding' => 'Förderung',
         'scholarship' => 'Stipendium',
@@ -187,16 +180,6 @@ class Project extends Vocabulary
         'subproject' => 'Teilprojekt',
         'other' => 'Sonstiges',
     ];
-    // public const FUNDER = [
-    //     'DFG',
-    //     'Bund',
-    //     'Bundesländer',
-    //     'Wirtschaft',
-    //     'EU',
-    //     'Stiftungen',
-    //     'Leibniz Wettbewerb',
-    //     'Sonstige Drittmittelgeber',
-    // ];
 
     public const PERSON_ROLE = [
         'PI' => 'Projektleitung',
@@ -254,15 +237,30 @@ class Project extends Vocabulary
 
     public function initFields()
     {
+        // get all fields from file data/project-fields.json
+        $fields = json_decode(file_get_contents(BASEPATH . '/data/project-fields.json'), true);
+        if (empty($fields)) return;
+        $this->FIELDS = [];
+        foreach ($fields as $field) {
+            $this->FIELDS[$field['id']] = [
+                'id' => $field['id'],
+                'en' => $field['en'],
+                'de' => $field['de'],
+                'kdsf' => $field['kdsf'] ?? null,
+                'custom' => false,
+                "scope" => $field['scope'] ?? []
+            ];
+        }
+
         $custom_fields = $this->db->adminFields->find();
         foreach ($custom_fields as $field) {
-            $this->FIELDS[] = [
+            $this->FIELDS[$field['id']] = [
                 'id' => $field['id'],
                 'en' => $field['name'],
                 'de' => $field['name_de'],
-                'required' => false,
                 'kdsf' => null,
                 'custom' => true,
+                'scope' => ["project" => false, "proposed" => false, "approved" => false]
             ];
         }
 
@@ -272,12 +270,13 @@ class Project extends Vocabulary
             $label = $this->db->adminGeneral->findOne(['key' => 'topics_label']);
             if (empty($label) || empty($label['value'])) $label = ['en' => 'Research topics', 'de' => 'Forschungsbereiche'];
             else $label = $label['value'];
-            $this->FIELDS[] = [
+            $this->FIELDS['topics'] = [
                 'id' => 'topics',
                 'en' => $label['en'],
                 'de' => $label['de'],
                 'required' => false,
                 'kdsf' => null,
+                'scope' => ["project" => false, "proposed" => false, "approved" => false]
             ];
         }
     }
@@ -349,28 +348,28 @@ class Project extends Vocabulary
     {
         $type = $this->project['type'] ?? 'Drittmittel';
         if ($type == 'Drittmittel') { ?>
-            <span class="badge text-danger no-wrap <?=$cls?>">
+            <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Third-party funded', 'Drittmittel') ?>
             </span>
 
         <?php } elseif ($type == 'Stipendium') { ?>
-            <span class="badge text-success no-wrap <?=$cls?>">
+            <span class="badge text-success no-wrap <?= $cls ?>">
                 <i class="ph ph-tip-jar"></i>
                 <?= lang('Stipendiate', 'Stipendium') ?>
             </span>
         <?php } else if ($type == 'Eigenfinanziert') { ?>
-            <span class="badge text-signal no-wrap <?=$cls?>">
+            <span class="badge text-signal no-wrap <?= $cls ?>">
                 <i class="ph ph-piggy-bank"></i>
                 <?= lang('Self-funded', 'Eigenfinanziert') ?>
             </span>
         <?php } else if ($type == 'Teilprojekt') { ?>
-            <span class="badge text-danger no-wrap <?=$cls?>">
+            <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Subproject', 'Teilprojekt') ?>
             </span>
         <?php } else { ?>
-            <span class="badge text-muted no-wrap <?=$cls?>">
+            <span class="badge text-muted no-wrap <?= $cls ?>">
                 <i class="ph ph-coin"></i>
                 <?= lang('Other', 'Sonstiges') ?>
             </span>

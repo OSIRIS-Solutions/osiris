@@ -281,7 +281,7 @@ $Vocabulary = new Vocabulary();
             <?php } ?>
 
 
-            <?php if (array_intersect(['funder', 'funding_organization', 'funding_number', 'role', 'coordinator'], $field_keys)) { ?>
+            <?php if (array_intersect(['funder', 'funding_organization', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
                     <?= lang('Funding', 'Förderung') ?>
@@ -408,6 +408,22 @@ $Vocabulary = new Vocabulary();
                         </div>
                     <?php } ?>
                 </div>
+
+                <?php if (array_key_exists('funding_type', $fields)) { ?>
+                    <div class="floating-form">
+                        <select class="form-control" name="values[funding_type]" id="role" <?= $req('role') ?>>
+                            <?php
+                            $vocab = $Vocabulary->getValues('funding-type');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>" <?= sel('funding_type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="role" class="<?= $req('role') ?>">
+                            <?= lang('Funding type', 'Art des Funding') ?> <?= $Settings->get('affiliation') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+
             <?php } ?>
 
 

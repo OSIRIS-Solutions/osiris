@@ -21,7 +21,7 @@
 
 
 <div class="btn-toolbar">
-    <a class="btn" href="<?= ROOTPATH ?>/admin/project/new">
+    <a class="btn" href="<?= ROOTPATH ?>/admin/projects/new">
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
     </a>
@@ -33,29 +33,22 @@
 </div>
 
 
-<?php
-$types = $osiris->adminProjects->find();
-foreach ($types as $type) { ?>
-    <div class="box px-20 py-10 mb-10">
-        <h3 class="title" style="color: <?= $type['color'] ?? 'inherit' ?>">
-            <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
-            <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
-        </h3>
-
-        <p>
-            <b>
-                <?= lang('Phases', 'Phasen') ?>:
+<div class="link-list">
+    <?php
+    $types = $osiris->adminProjects->find();
+    foreach ($types as $type) { ?>
+        <a class="" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type['id'] ?>" style="--secondary-color: <?= $type['color'] ?? '#000' ?>">
+            <b style="color: <?= $type['color'] ?? 'inherit' ?>">
+                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
             </b>
 
-            <?php foreach ($type['phases'] ?? [] as $phase) { ?>
-                <span class="badge <?= $phase['color'] ?>">
-                    <?= lang($phase['name'], $phase['name_de'] ?? $phase['name']) ?>
-                </span>
+            <?php if (isset($type['disabled']) && $type['disabled']) { ?>
+                <small class="badge danger ml-20">
+                    <i class="ph ph-x-circle" aria-hidden="true"></i>
+                    <?= lang('Deactivated', 'Deaktiviert') ?>
+                </small>
             <?php } ?>
-        </p>
-
-        <a href="<?= ROOTPATH ?>/admin/projects/1/<?= $type['id'] ?>" class="link">
-            <?= lang('Edit', 'Bearbeiten') ?>
         </a>
-    </div>
-<?php } ?>
+    <?php } ?>
+</div>
