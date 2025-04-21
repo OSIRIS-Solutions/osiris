@@ -35,19 +35,6 @@ function val($index, $default = '')
 }
 
 $filter = [];
-// if (!$Settings->hasPermission('proposals.view')) {
-//     $filter = [
-//         '$or' => [
-//             ['persons.user' => $_SESSION['username']],
-//             ['created_by' => $_SESSION['username']],
-//             ['contact' => $_SESSION['username']],
-//             ['supervisor' => $_SESSION['username']],
-//             ['status' => ['$nin' => ['applied', 'rejected', 'expired']]]
-//         ]
-//     ];
-//     $pagetitle = lang('My projects', 'Meine Projekte');
-// }
-
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css">
@@ -104,14 +91,13 @@ $filter = [];
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
      -->
-    <?php if ($Settings->hasPermission('proposals.add')) { ?>
+
+    <?php if ($Settings->hasPermission('proposals.add') && $Project->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>
         </a>
     <?php } ?>
-
-
 </div>
 
 

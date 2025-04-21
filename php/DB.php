@@ -846,4 +846,19 @@ class DB
         }
         return $result;
     }
+
+    
+    public function canProjectsBeCreated()
+    {
+        $ability = $this->db->adminProjects->count(['disabled' => false, 'process'=> 'project']);
+        if ($ability > 0) return true;
+        return false;
+    }
+
+    public function canProposalsBeCreated()
+    {
+        $ability = $this->db->adminProjects->count(['disabled' => false, 'process'=> 'proposal']);
+        if ($ability > 0) return true;
+        return false;
+    }
 }

@@ -114,7 +114,7 @@ if (!$Settings->hasPermission('projects.view')) {
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
     
-<?php if ($Settings->hasPermission('projects.add')) { ?>
+<?php if ($Settings->hasPermission('projects.add') && $Project->canProjectsBeCreated()) { ?>
     <a href="<?= ROOTPATH ?>/projects/new" class="">
         <i class="ph ph-plus"></i>
         <?= lang('Add new project', 'Neues Projekt anlegen') ?>

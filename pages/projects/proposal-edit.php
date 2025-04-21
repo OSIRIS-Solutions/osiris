@@ -71,7 +71,10 @@ $Vocabulary = new Vocabulary();
 
     <div class="select-btns">
         <?php foreach ($Project->getProjectTypes() as $pt) {
+            if ($pt['process'] == 'project') continue;
             $key = $pt['id'];
+            // select first type if none is selected
+            if ($type === null) $type = $key;
         ?>
             <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
                 <i class="ph ph-<?= $pt['icon'] ?>"></i>

@@ -344,7 +344,7 @@ class Project extends Vocabulary
         }
     }
 
-    public function getType()
+    public function getType($cls)
     {
         $type = $this->project['type'] ?? 'Drittmittel';
         if ($type == 'Drittmittel') { ?>

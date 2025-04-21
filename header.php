@@ -328,10 +328,20 @@ $pageactive = function ($p) use ($page) {
                         <div id="sidebar-add-navigation">
 
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
-                                <a href="<?= ROOTPATH ?>/proposals/new" class="">
-                                    <i class="ph ph-tree-structure"></i>
-                                    <?= lang('Add project proposal', 'Projektantrag hinzuf.') ?>
-                                </a>
+                                <?php if ($DB->canProposalsBeCreated()) { ?>
+                                    <a href="<?= ROOTPATH ?>/proposals/new" class="">
+                                        <i class="ph ph-tree-structure"></i>
+                                        <?= lang('Add project proposal', 'Projektantrag hinzuf.') ?>
+                                    </a>
+                                <?php } ?>
+
+                                <?php if ($DB->canProjectsBeCreated()) { ?>
+                                    <a href="<?= ROOTPATH ?>/projects/new" class="">
+                                        <i class="ph ph-tree-structure"></i>
+                                        <?= lang('Add project', 'Projekt hinzuf.') ?>
+                                    </a>
+                                <?php } ?>
+
                             <?php } ?>
                             <?php if ($Settings->hasPermission('conferences.edit')) { ?>
                                 <a href="<?= ROOTPATH ?>/conferences#add-conference">
@@ -454,6 +464,13 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
+                            <?php if ($DB->canProposalsBeCreated()) { ?>
+                                <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
+                                    <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                                    <?= lang('Proposals', 'Anträge') ?>
+                                </a>
+                            <?php } ?>
+
 
                             <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                                 <i class="ph ph-magnifying-glass-plus"></i>

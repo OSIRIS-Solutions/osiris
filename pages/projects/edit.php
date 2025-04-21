@@ -72,12 +72,14 @@ $Vocabulary = new Vocabulary();
     <?php } ?>
 
 
-    <?php if (is_null($subproject)) { ?>
+    <?php if (is_null($subproject) && empty($form)) { ?>
         <!-- subprojects cannot change their project type -->
 
         <div class="select-btns">
             <?php foreach ($Project->getProjectTypes() as $pt) {
+                if ($pt['process'] == 'proposal') continue;
                 $key = $pt['id'];
+                if ($type === null) $type = $key;
             ?>
                 <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
                     <i class="ph ph-<?= $pt['icon'] ?>"></i>
@@ -97,55 +99,8 @@ $Vocabulary = new Vocabulary();
         // type has been selected
         $project_type = $Project->getProjectType($type);
 
-        // try to get a phase
-        $phase_id = null;
-        $phase = [];
-        if ($new_project){
-            // get first phase from this project type
-            foreach ($project_type['phases'] ?? [] as $i => $ph) {
-                if (is_null($ph['previous'])){
-                    $phase_id = $ph['id'];
-                    $phase = $ph;
-                    break;
-                }
-            }
 
-        } else if (isset($_GET['phase'])) {
-            $phase_id = $_GET['phase'];
-        } else if (isset($form['phase'])) {
-            $phase_id = $form['phase'];
-        }
-
-        if (is_null($phase_id)){
-            echo "<div class='alert signal mt-10'>".lang('No phase selected. Maybe your project type is misconfigured?', 'Keine Projektphase ausgewählt. Vielleicht ist dieser Projekttyp falsch konfiguriert?')."</div>";
-            die;
-        }
-
-        if (empty($phase)){
-            foreach ($project_type['phases'] ?? [] as $i => $ph) {
-                if ($ph['id'] == $phase_id){
-                    $phase = $ph;
-                    break;
-                }
-            }
-        }
-
-        if (empty($phase)){
-            echo "<div class='alert signal mt-10'>".lang('Phase `'.$phase.'` not found. Maybe your project type is misconfigured?', 'Projektphase `'.$phase.'` nicht gefunden. Vielleicht ist dieser Projekttyp falsch konfiguriert?')."</div>";
-            die;
-        }
-
-        // check if the phase has changed
-        $phase_changed = false;
-        $previous_phase = null;
-        if ($new_project || $form['phase'] != $phase_id){
-            // update phase
-            $phase_changed = true;
-            $previous_phase = $form['phase'] ?? 'None';
-        }
-
-
-        $fields = $Project->getFields($type, $phase_id);;
+        $fields = $Project->getFields($type, 'project');;
         $fields = array_column($fields, null, 'module');
         $field_keys = array_keys($fields);
 
@@ -165,10 +120,6 @@ $Vocabulary = new Vocabulary();
 
 
     ?>
-
-
- Current project phase: <?= $phase['name'] ?? 'unknown' ?> <br>
-
 
         <form action="<?= $formaction ?>" method="post" id="project-form">
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
@@ -710,48 +661,48 @@ $Vocabulary = new Vocabulary();
                                 <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
                             </b>
 
-                        <div class="author-widget" id="author-widget">
-                            <div class="author-list p-10" id="author-list">
-                                <?php 
-                                $lang = lang('name', 'name_de');
-                                foreach ($countries as $iso) { ?>
-                                    <div class='author'>
-                                        <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
-                                        <?= $DB->getCountry($iso, $lang) ?>
-                                        <a onclick="$(this).closest('.author').remove()">&times;</a>
-                                    </div>
-                                <?php } ?>
+                            <div class="author-widget" id="author-widget">
+                                <div class="author-list p-10" id="author-list">
+                                    <?php
+                                    $lang = lang('name', 'name_de');
+                                    foreach ($countries as $iso) { ?>
+                                        <div class='author'>
+                                            <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
+                                            <?= $DB->getCountry($iso, $lang) ?>
+                                            <a onclick="$(this).closest('.author').remove()">&times;</a>
+                                        </div>
+                                    <?php } ?>
 
-                            </div>
-                            <div class="footer">
-                                <div class="input-group sm d-inline-flex w-auto">
-                                    <select id="add-country">
-                                        <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
-                                            <option value="<?= $iso ?>"><?= $name ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
-                                            <i class="ph ph-plus"></i>
-                                        </button>
+                                </div>
+                                <div class="footer">
+                                    <div class="input-group sm d-inline-flex w-auto">
+                                        <select id="add-country">
+                                            <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                                <option value="<?= $iso ?>"><?= $name ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
+                                                <i class="ph ph-plus"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <script>
-                                function addCountry(event) {
-                                    var el = $('#add-country')
-                                    var data = el.val()
-                                    if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
-                                        event.preventDefault();
-                                        if (data) {
-                                            $('#author-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
+                                <script>
+                                    function addCountry(event) {
+                                        var el = $('#add-country')
+                                        var data = el.val()
+                                        if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                                            event.preventDefault();
+                                            if (data) {
+                                                $('#author-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
+                                            }
+                                            $(el).val('')
+                                            return false;
                                         }
-                                        $(el).val('')
-                                        return false;
                                     }
-                                }
-                            </script>
+                                </script>
 
                             </div>
                         </div>
