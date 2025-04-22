@@ -57,24 +57,16 @@ $Vocabulary = new Vocabulary();
 
 <div class="container w-600">
 
-    <?php if ($new_project) { ?>
-        <h3 class="title">
-            <?= lang('New project proposal', 'Neuer Projektantrag') ?>
-        </h3>
-    <?php } else { ?>
-        <h3 class="title">
-            <?= lang('Edit project proposal', 'Projektantrag bearbeiten') ?>:
-            <?= $form['name'] ?? $form['title'] ?? '' ?>
-        </h3>
-    <?php } ?>
-
 
     <div class="select-btns">
-        <?php foreach ($Project->getProjectTypes() as $pt) {
-            if ($pt['process'] == 'project') continue;
+        <?php
+        $selected = [];
+        foreach ($Project->getProjectTypes() as $pt) {
+            // if ($pt['process'] == 'project') continue;
             $key = $pt['id'];
             // select first type if none is selected
             if ($type === null) $type = $key;
+            if ($type == $key) $selected = $pt;
         ?>
             <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
                 <i class="ph ph-<?= $pt['icon'] ?>"></i>
@@ -83,7 +75,8 @@ $Vocabulary = new Vocabulary();
         <?php } ?>
     </div>
 
-    <?php if (is_null($type)) { ?>
+
+    <?php if (is_null($type) || empty($selected)) { ?>
         <div class="alert signal mt-10">
             <?= lang('Please select a project type to continue.', 'Bitte wähle einen Projektyp aus, um fortzufahren.') ?>
         </div>
@@ -93,96 +86,174 @@ $Vocabulary = new Vocabulary();
         // type has been selected
         $project_type = $Project->getProjectType($type);
 
-        $fields = $Project->getFields($type, 'proposed');
+        $subtitle = '';
+        $phase = 'proposed';
+        if ($new_project && $selected['process'] == 'proposal') {
+            $formaction = ROOTPATH . "/crud/proposals/create";
+            $url = ROOTPATH . "/proposals/view/*";
+            $title = lang('New project proposal', 'Neuer Projektantrag');
+            $subtitle = lang('This type of project must first be created as a project proposal and converted into a project once accepted.', 'Dieser Projekttyp muss zuerst als Projektantrag erstellt und kann nach Bewilligung in ein Projekt umgewandelt werden.');
+        } elseif ($new_project && $selected['process'] == 'project') {
+            $formaction = ROOTPATH . "/crud/projects/create";
+            $url = ROOTPATH . "/projects/view/*";
+            $title = lang('New project', 'Neues Projekt');
+            $subtitle = lang('This type of project is created directly as a project.', 'Dieser Projekttyp wird direkt als Projekt angelegt.');
+            $phase = 'project';
+        } elseif ($selected['process'] == 'project' || $form['status'] == 'project') {
+            $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
+            $url = ROOTPATH . "/projects/view/" . $form['_id'];
+            $title = lang('Edit project', 'Projekt bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
+            $phase = 'project';
+        } else {
+            $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
+            $url = ROOTPATH . "/proposals/view/" . $form['_id'];
+            $title = lang('Edit project proposal', 'Projektantrag bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
+            $phase = $_GET['phase'] ?? $form['status'] ?? 'proposed';
+        }
+
+        $fields = $Project->getFields($type, $phase);
         $fields = array_column($fields, null, 'module');
         $field_keys = array_keys($fields);
 
 
-        if ($new_project) {
-            $formaction = ROOTPATH . "/crud/proposals/create";
-            $url = ROOTPATH . "/proposals/view/*";
-        } else {
-            $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
-            $url = ROOTPATH . "/proposals/view/" . $form['_id'];
-        }
-
-        $req = function ($field) use ($fields) {
-            if (!isset($fields[$field])) return '';
-            return $fields[$field]['required'] ? 'required' : '';
-        };
-
         $required_fields = array_filter($fields, function ($field) {
             return $field['required'] ?? false;
         });
+        $required_fields = array_column($required_fields, 'module');
+
+        $f = $Project->FIELDS;
+        foreach ($f as $key => $value) {
+            $scope = $value['scope'] ?? [];
+            if (array_key_exists($phase, $scope) && $scope[$phase] === true) {
+                $required_fields[] = $key;
+                $fields[$key] = $value;
+            }
+        }
+        dump($required_fields);
+
+        $req = function ($field) use ($required_fields) {
+            return in_array($field, $required_fields) ? 'required' : '';
+        };
     ?>
+
+        <h3 class="title">
+            <?= $title ?>
+        </h3>
+        <p class="text-muted mt-0">
+            <?= $subtitle ?>
+        </p>
 
 
         <form action="<?= $formaction ?>" method="post" id="proposal-form" class="box padded">
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
 
-            <h5 class="mt-0">
-                <?= lang('Submission', 'Einreichung') ?>
-            </h5>
+            <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
 
-            <div class="form-group floating-form">
-                <input type="date" class="form-control large" name="values[submission_date]" id="submission_date" value="<?= val('submission_date', date('Y-m-d')) ?>" required>
-                <label for="submission_date" class="required">
-                    <?= lang('Date of submission', 'Datum der Einreichung') ?>
-                </label>
-            </div>
+            <?php if (array_key_exists('submission_date', $fields)) { ?>
+                <h5 class="mt-0">
+                    <?= lang('Submission', 'Einreichung') ?>
+                </h5>
+
+                <div class="form-group floating-form">
+                    <input type="date" class="form-control large" name="values[submission_date]" id="submission_date" value="<?= val('submission_date', date('Y-m-d')) ?>" required>
+                    <label for="submission_date" class="required">
+                        <?= lang('Date of submission', 'Datum der Einreichung') ?>
+                    </label>
+                </div>
+            <?php } ?>
+
+            <?php if (array_key_exists('approval_date', $fields)) { ?>
+                <h5 class="mt-0">
+                    <?= lang('Approval', 'Bewilligung') ?>
+                </h5>
+
+                <div class="form-group floating-form">
+                    <input type="date" class="form-control large" name="values[approval_date]" id="approval_date" value="<?= val('approval_date', date('Y-m-d')) ?>" required>
+                    <label for="approval_date" class="required">
+                        <?= lang('Date of approval', 'Datum der Bewilligung') ?>
+                    </label>
+                </div>
+            <?php } ?>
+
+            
+            <?php if (array_key_exists('rejection_date', $fields)) { ?>
+                <h5 class="mt-0">
+                    <?= lang('Rejection', 'Ablehnung') ?>
+                </h5>
+
+                <div class="form-group floating-form">
+                    <input type="date" class="form-control large" name="values[rejection_date]" id="rejection_date" value="<?= val('rejection_date', date('Y-m-d')) ?>" required>
+                    <label for="rejection_date" class="required">
+                        <?= lang('Date of rejection', 'Datum der Ablehnung') ?>
+                    </label>
+                </div>
+            <?php } ?>
 
 
-            <div class="data-module col-12" data-module="authors">
-                <label for="applicant" class="floating-title required">
-                    <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
-                </label>
-                <div class="author-widget" id="author-widget">
-                    <div class="author-list p-10" id="author-list">
-                        <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
-                            <div class='author'>
-                                <?= $DB->getNameFromId($a) ?>
-                                <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
-                                <a onclick='$(this).closest(".author").remove()'>&times;</a>
-                            </div>
-                        <?php } ?>
+            <?php if (array_key_exists('comment', $fields)) { ?>
+                <div class="form-group floating-form">
+                    <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment"><?= val('comment') ?></textarea>
+                    <label for="comment">
+                        <?= lang('Comment', 'Kommentar') ?>
+                    </label>
+                </div>
+            <?php } ?>
 
-                    </div>
-                    <div class="footer">
-                        <div class="input-group small d-inline-flex w-auto">
-                            <select class="form-control" id="add-author" autocomplete="off">
-                                <?php
-                                $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
-                                foreach ($userlist as $j) { ?>
-                                    <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
-                                <?php } ?>
-                            </select>
-                            <div class="input-group-append">
-                                <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
-                                    <i class="ph ph-plus"></i>
-                                </button>
+
+            <?php if (array_key_exists('applicants', $fields)) { ?>
+                <div class="data-module col-12" data-module="authors">
+                    <label for="applicant" class="floating-title required">
+                        <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
+                    </label>
+                    <div class="author-widget" id="author-widget">
+                        <div class="author-list p-10" id="author-list">
+                            <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
+                                <div class='author'>
+                                    <?= $DB->getNameFromId($a) ?>
+                                    <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
+                                    <a onclick='$(this).closest(".author").remove()'>&times;</a>
+                                </div>
+                            <?php } ?>
+
+                        </div>
+                        <div class="footer">
+                            <div class="input-group small d-inline-flex w-auto">
+                                <select class="form-control" id="add-author" autocomplete="off">
+                                    <?php
+                                    $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                                    foreach ($userlist as $j) { ?>
+                                        <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                                    <?php } ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
+                                        <i class="ph ph-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <small class="text-muted">
-                    <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
-                </small>
-            </div>
-            <script>
-                function addAuthorDiv(event) {
-                    var input = $('#add-author')
-                    var username = input.val()
-                    var name = input.find('option:selected').text()
-                    var el = $('#author-list')
-                    var author = $('<div class="author">')
-                        .html(name);
-                    author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
-                    author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
-                    author.appendTo(el)
-                }
-            </script>
+                    <small class="text-muted">
+                        <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
+                    </small>
+                </div>
+                <script>
+                    function addAuthorDiv(event) {
+                        var input = $('#add-author')
+                        var username = input.val()
+                        var name = input.find('option:selected').text()
+                        var el = $('#author-list')
+                        var author = $('<div class="author">')
+                            .html(name);
+                        author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
+                        author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
+                        author.appendTo(el)
+                    }
+                </script>
+            <?php } ?>
+
 
             <h5>
                 <?= lang('General information', 'Allgemeine Informationen') ?>
@@ -211,12 +282,64 @@ $Vocabulary = new Vocabulary();
             </div>
 
 
+            <?php if (array_key_exists('start_proposed', $fields)) { ?>
+
+                <div class="row row-eq-spacing mt-0 align-items-end ">
+                    <div class="col-sm-4 floating-form">
+                        <input type="date" class="form-control" name="values[start_proposed]" value="<?= valueFromDateArray(val('start_proposed')) ?>" id="start_proposed" required>
+
+                        <label for="start_proposed" class="required">
+                            Geplanter Projektbeginn
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="floating-title">
+                            <?= lang('Shortcut Length', 'Schnell-Auswahl Laufzeit') ?>
+                        </span>
+                        <div class="btn-group w-full">
+                            <div class="btn small" onclick="timeframeProposed(36)"><?= lang('3 yr', '3 J') ?></div>
+                            <div class="btn small" onclick="timeframeProposed(12)"><?= lang('1 yr', '1 J') ?></div>
+                            <div class="btn small" onclick="timeframeProposed(6)"><?= lang('6 mo', '6 Mo') ?></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 floating-form">
+                        <input type="date" class="form-control" name="values[end_proposed]" value="<?= valueFromDateArray(val('end_proposed')) ?>" id="end_proposed" required>
+
+                        <label for="end_proposed" class="required">
+                            Geplantes Projektende
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <script>
+                    function timeframeProposed(month) {
+                        let startField = document.querySelector('#start_proposed');
+                        let start = startField.valueAsDate;
+                        if (start == '' || start === null) {
+                            toastError(lang('Please select a start date first.', 'Bitte wähle zuerst ein Startdatum.'))
+                            return;
+                        }
+
+                        let end = new Date(start.setMonth(start.getMonth() + month));
+                        end.setDate(end.getDate() - 1);
+                        let endField = document.querySelector('#end_proposed');
+                        endField.valueAsDate = end;
+                    }
+                </script>
+
+            <?php } ?>
+
+
+
+            <?php if (array_key_exists('start', $fields)) { ?>
             <div class="row row-eq-spacing mt-0 align-items-end ">
                 <div class="col-sm-4 floating-form">
                     <input type="date" class="form-control" name="values[start]" value="<?= valueFromDateArray(val('start')) ?>" id="start" required>
 
                     <label for="start" class="required">
-                        Geplanter Projektbeginn
+                        Projektbeginn
                     </label>
                 </div>
                 <div class="col-sm-4">
@@ -233,12 +356,10 @@ $Vocabulary = new Vocabulary();
                     <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end" required>
 
                     <label for="end" class="required">
-                        Geplantes Projektende
+                        Projektende
                     </label>
                 </div>
             </div>
-
-
 
             <script>
                 function timeframe(month) {
@@ -255,6 +376,7 @@ $Vocabulary = new Vocabulary();
                     endField.valueAsDate = end;
                 }
             </script>
+            <?php } ?>
 
 
             <?php if (array_key_exists('purpose', $fields)) { ?>
@@ -263,7 +385,7 @@ $Vocabulary = new Vocabulary();
                         <?php
                         $vocab = $Vocabulary->getValues('project-purpose');
                         foreach ($vocab as $v) { ?>
-                            <option value="<?= $v['id'] ?>" <?= sel('funder', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <option value="<?= $v['id'] ?>" <?= sel('purpose', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                         <?php } ?>
                     </select>
                     <label for="purpose">
@@ -841,11 +963,8 @@ $Vocabulary = new Vocabulary();
             </button>
 
             <script>
-                let required = <?= json_encode($required_fields) ?>;
-                console.log(required);
-                let required_keys = Object.keys(required)
-                required_keys.push('name')
-                required_keys.push('title')
+                let required_keys = <?= json_encode($required_fields) ?>;
+                console.log(required_keys);
 
                 let form = $('#proposal-form')
                 $('#submit-btn').on('click', function(e) {

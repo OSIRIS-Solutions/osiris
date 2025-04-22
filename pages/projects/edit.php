@@ -72,12 +72,24 @@ $Vocabulary = new Vocabulary();
     <?php } ?>
 
 
-    <?php if (is_null($subproject) && empty($form)) { ?>
+    <?php
+    $wrong_process_list = [];
+    if (is_null($subproject) && empty($form)) { ?>
         <!-- subprojects cannot change their project type -->
 
         <div class="select-btns">
-            <?php foreach ($Project->getProjectTypes() as $pt) {
-                if ($pt['process'] == 'proposal') continue;
+            <?php 
+            $project_types = $Project->getProjectTypes();
+            $project_types = array_filter($project_types, function ($pt) {
+                return !isset($pt['disabled']) || !$pt['disabled'];
+            });
+            // sort by process = project first
+            usort($project_types, function ($a, $b) {
+                return ($a['process'] == 'project' ? 0 : 1) - ($b['process'] == 'project' ? 0 : 1);
+            });
+
+            foreach ($project_types as $pt) {
+                if (isset($pt['disabled']) && $pt['disabled']) continue;
                 $key = $pt['id'];
                 if ($type === null) $type = $key;
             ?>
@@ -86,8 +98,10 @@ $Vocabulary = new Vocabulary();
                     <?= lang($pt['name'], $pt['name_de']) ?>
                 </a>
             <?php } ?>
+
         </div>
     <?php } ?>
+
 
     <?php if (is_null($type)) { ?>
         <div class="alert signal mt-10">
@@ -189,14 +203,12 @@ $Vocabulary = new Vocabulary();
                             </span>
                             <div class="btn-group w-full">
                                 <div class="btn" onclick="timeframe(36)"><?= lang('3 yr', '3 J') ?></div>
-                                <!-- <div class="btn"><?= lang('2 yr', '2 J') ?></div> -->
                                 <div class="btn" onclick="timeframe(12)"><?= lang('1 yr', '1 J') ?></div>
                                 <div class="btn" onclick="timeframe(6)"><?= lang('6 mo', '6 Mo') ?></div>
                             </div>
                         </div>
                         <div class="col-sm-4 floating-form">
                             <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end">
-
                             <label for="end">
                                 Projektende
                             </label>

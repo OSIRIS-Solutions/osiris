@@ -22,8 +22,8 @@ $status = $proposal['status'] ?? 'proposed';
                     <i class="ph ph-edit mr-0 ml-10" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
-                    <a href="#" class="item font-size-18 badge success mb-5"><?= lang('Approved', 'Angenommen') ?></a>
-                    <a href="#" class="item font-size-18 badge danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                    <a href="<?= ROOTPATH ?>/proposals/edit/<?=$id?>?phase=approved" class="item font-size-18 badge success mb-5"><?= lang('Approved', 'Angenommen') ?></a>
+                    <a href="<?= ROOTPATH ?>/proposals/edit/<?=$id?>?phase=rejected" class="item font-size-18 badge danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
                 </div>
             </div>
         <?php } else if ($status == 'accepted') { ?>

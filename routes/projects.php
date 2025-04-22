@@ -15,74 +15,73 @@
  */
 
 
- Route::get('/proposals', function () {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => lang("Project proposals", "Projektanträge")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/proposals.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
+//  Route::get('/proposals', function () {
+//     include_once BASEPATH . "/php/init.php";
+//     $user = $_SESSION['username'];
+//     $breadcrumb = [
+//         ['name' => lang("Project proposals", "Projektanträge")]
+//     ];
+//     include BASEPATH . "/header.php";
+//     include BASEPATH . "/pages/projects/proposals.php";
+//     include BASEPATH . "/footer.php";
+// }, 'login');
 
-Route::get('/proposals/new', function () {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
-        ['name' => lang("New", "Neu")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/proposal-edit.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
+// Route::get('/proposals/new', function () {
+//     include_once BASEPATH . "/php/init.php";
+//     $user = $_SESSION['username'];
+//     $breadcrumb = [
+//         ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
+//         ['name' => lang("New", "Neu")]
+//     ];
+//     include BASEPATH . "/header.php";
+//     include BASEPATH . "/pages/projects/proposal-edit.php";
+//     include BASEPATH . "/footer.php";
+// }, 'login');
 
 
-Route::get('/proposals/view/(.*)', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
+// Route::get('/proposals/view/(.*)', function ($id) {
+//     include_once BASEPATH . "/php/init.php";
+//     $user = $_SESSION['username'];
 
-    if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $proposal = $osiris->proposals->findOne(['_id' => $mongo_id]);
-    } else {
-        $proposal = $osiris->proposals->findOne(['name' => $id]);
-        $id = strval($proposal['_id'] ?? '');
-    }
-    if (empty($proposal)) {
-        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
-        die;
-    }
-    $breadcrumb = [
-        ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
-        ['name' => $proposal['name']]
-    ];
+//     if (DB::is_ObjectID($id)) {
+//         $mongo_id = $DB->to_ObjectID($id);
+//         $proposal = $osiris->proposals->findOne(['_id' => $mongo_id]);
+//     } else {
+//         $proposal = $osiris->proposals->findOne(['name' => $id]);
+//         $id = strval($proposal['_id'] ?? '');
+//     }
+//     if (empty($proposal)) {
+//         header("Location: " . ROOTPATH . "/proposals?msg=not-found");
+//         die;
+//     }
+//     $breadcrumb = [
+//         ['name' => lang("Project proposals", "Projektanträge"), 'path' => "/proposals"],
+//         ['name' => $proposal['name']]
+//     ];
 
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/proposal.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
+//     include BASEPATH . "/header.php";
+//     include BASEPATH . "/pages/projects/proposal.php";
+//     include BASEPATH . "/footer.php";
+// }, 'login');
 
 
 // projects
-
-Route::get('/projects', function () {
+Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Projects", "Projekte")]
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/projects/projects.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/projects/new', function () {
+Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang(''), 'path' => "/$collection"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -91,11 +90,11 @@ Route::get('/projects/new', function () {
 }, 'login');
 
 
-Route::get('/projects/search', function () {
+Route::get('/(projects|proposals)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang(''), 'path' => "/$collection"],
         ['name' => lang("Search", "Suche")]
     ];
     include BASEPATH . "/header.php";
@@ -104,11 +103,11 @@ Route::get('/projects/search', function () {
 }, 'login');
 
 
-Route::get('/projects/statistics', function () {
+Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang(''), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -117,7 +116,7 @@ Route::get('/projects/statistics', function () {
 }, 'login');
 
 
-Route::get('/projects/view/(.*)', function ($id) {
+Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
@@ -133,12 +132,65 @@ Route::get('/projects/view/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang(''), 'path' => "/$collection"],
         ['name' => $project['name']]
     ];
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/projects/project.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+
+Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+
+    $mongo_id = $DB->to_ObjectID($id);
+    $project = $osiris->projects->findOne(['_id' => $mongo_id]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
+
+    switch ($page) {
+        case 'collaborators':
+            $name = lang("Collaborators", "Kooperationspartner");
+            break;
+        case 'finance':
+            $name = lang("Finance", "Finanzen");
+            break;
+        case 'public':
+            $name = lang("Public representation", "Öffentliche Darstellung");
+            break;
+        default:
+            $name = lang("Edit", "Bearbeiten");
+    }
+
+    $breadcrumb = [
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang(''), 'path' => "/$collection"],
+        ['name' =>  $project['name'], 'path' => "/projects/view/$id"],
+        ['name' => $name]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($project);
+
+    include BASEPATH . "/header.php";
+    switch ($page) {
+        case 'collaborators':
+            include BASEPATH . "/pages/projects/collaborators.php";
+            break;
+        case 'finance':
+            include BASEPATH . "/pages/projects/finance.php";
+            break;
+        case 'public':
+            include BASEPATH . "/pages/projects/public.php";
+            break;
+        default:
+            include BASEPATH . "/pages/projects/edit.php";
+    }
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -165,59 +217,6 @@ Route::get('/nagoya', function () {
     include BASEPATH . "/pages/nagoya.php";
     include BASEPATH . "/footer.php";
 }, 'login');
-
-
-Route::get('/projects/(edit|collaborators|finance|public)/([a-zA-Z0-9]*)', function ($page, $id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-
-    $mongo_id = $DB->to_ObjectID($id);
-    $project = $osiris->projects->findOne(['_id' => $mongo_id]);
-    if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
-        die;
-    }
-
-    switch ($page) {
-        case 'collaborators':
-            $name = lang("Collaborators", "Kooperationspartner");
-            break;
-        case 'finance':
-            $name = lang("Finance", "Finanzen");
-            break;
-        case 'public':
-            $name = lang("Public representation", "Öffentliche Darstellung");
-            break;
-        default:
-            $name = lang("Edit", "Bearbeiten");
-    }
-
-    $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' =>  $project['name'], 'path' => "/projects/view/$id"],
-        ['name' => $name]
-    ];
-
-    global $form;
-    $form = DB::doc2Arr($project);
-
-    include BASEPATH . "/header.php";
-    switch ($page) {
-        case 'collaborators':
-            include BASEPATH . "/pages/projects/collaborators.php";
-            break;
-        case 'finance':
-            include BASEPATH . "/pages/projects/finance.php";
-            break;
-        case 'public':
-            include BASEPATH . "/pages/projects/public.php";
-            break;
-        default:
-            include BASEPATH . "/pages/projects/edit.php";
-    }
-    include BASEPATH . "/footer.php";
-}, 'login');
-
 
 
 Route::get('/projects/subproject/(.*)', function ($id) {

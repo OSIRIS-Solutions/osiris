@@ -891,78 +891,9 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         // header("Location: " . ROOTPATH . "/admin/projects/3/$id");
         die;
     }
-    // else if ($stage == 3) {
-    //     if (!isset($_POST['previous'])) {
-    //         $_SESSION['msg'] = lang("No phases given.", "Keine Phasen angegeben.");
-    //         header("Location: " . ROOTPATH . "/admin/projects/3/$id");
-    //         die;
-    //     }
-    //     $values['phases'] = [];
-    //     foreach ($_POST['previous'] as $phase_id => $prev) {
-    //         if ($prev == '') $prev = null;
-    //         $og_phase = array_filter($original_phases, function ($p) use ($phase_id) {
-    //             return $p['id'] == $phase_id;
-    //         });
-    //         $og_phase = array_shift($og_phase);
-    //         $og_phase['previous'] = $prev;
-
-    //         $values['phases'][] = $og_phase;
-    //     }
-    //     // $values['phases'] = array_values($values['phases']);
-
-
-    //     $updateResult = $collection->updateOne(
-    //         ['_id' => $mongo_id],
-    //         ['$set' => $values]
-    //     );
-
-    //     header("Location: " . ROOTPATH . "/admin/projects/4/$id");
-    //     die;
-    // } else if ($stage == 4) {
-    //     $values['has_subprojects'] = boolval($values['has_subprojects'] ?? false);
-    //     $values['inherits'] = $values['inherits'] ?? [];
-
-
-    //     $updateResult = $collection->updateOne(
-    //         ['_id' => $mongo_id],
-    //         ['$set' => $values]
-    //     );
-
-    //     $name = lang($original['name'] ?? $original['id'], $original['name_de'] ?? null);
-    //     $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
-    //     header("Location: " . ROOTPATH . "/admin/projects");
-    //     die;
-    // }
-
-
-
     dump($values, true);
     die;
 
-    // check if ID has changed
-
-    // checkbox default
-    // $values['disabled'] = $values['disabled'] ?? false;
-
-    // // add information on updating process
-    // $values['updated'] = date('Y-m-d');
-    // $values['updated_by'] = $_SESSION['username'];
-
-    // $mongo_id = $DB->to_ObjectID($id);
-    // $updateResult = $collection->updateOne(
-    //     ['_id' => $mongo_id],
-    //     ['$set' => $values]
-    // );
-
-    // if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-    //     header("Location: " . $_POST['redirect'] . "?msg=update-success");
-    //     die();
-    // }
-
-    // echo json_encode([
-    //     'inserted' => $updateResult->getModifiedCount(),
-    //     'id' => $id,
-    // ]);
 });
 
 
