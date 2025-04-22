@@ -1,5 +1,5 @@
 <?php
-$status = $proposal['status'] ?? 'proposed';
+$status = $project['status'] ?? 'proposed';
 ?>
 
 
@@ -8,14 +8,13 @@ $status = $proposal['status'] ?? 'proposed';
 
         <h1>
             <?= lang('Project proposal', 'Projektantrag') ?>
-            <q><?= $proposal['name'] ?></q>
+            <q><?= $project['name'] ?></q>
         </h1>
 
     </div>
 
     <div class="col-md-4">
         <?php if ($status == 'proposed') { ?>
-
             <div class="dropdown">
                 <button class="btn large signal" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                     <?= lang('Proposed', 'Beantragt') ?>
@@ -33,7 +32,7 @@ $status = $proposal['status'] ?? 'proposed';
             </span>
             <br>
 
-            <a href="<?= ROOTPATH ?>/projects/<?= $proposal['_id'] ?>" class="btn mt-10">
+            <a href="<?= ROOTPATH ?>/projects/<?= $project['_id'] ?>" class="btn mt-10">
                 <?= lang('View project', 'Projekt anzeigen') ?>
             </a>
         <?php } else { ?>
@@ -48,5 +47,5 @@ $status = $proposal['status'] ?? 'proposed';
 </div>
 
 <?php
-dump($proposal);
+dump($project);
 ?>

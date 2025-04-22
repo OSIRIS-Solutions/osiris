@@ -48,6 +48,11 @@ function sel($index, $value)
 // load defined vocabularies
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+
+$selected = [];
+if ($type) {
+    $selected = $Project->getProjectType($type);
+}
 ?>
 
 
@@ -56,38 +61,39 @@ $Vocabulary = new Vocabulary();
 
 
 <div class="container w-600">
-
-
-    <div class="select-btns">
-        <?php
-        $selected = [];
-        foreach ($Project->getProjectTypes() as $pt) {
-            // if ($pt['process'] == 'project') continue;
-            $key = $pt['id'];
-            // select first type if none is selected
-            if ($type === null) $type = $key;
-            if ($type == $key) $selected = $pt;
-        ?>
-            <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
-                <i class="ph ph-<?= $pt['icon'] ?>"></i>
-                <?= lang($pt['name'], $pt['name_de']) ?>
-            </a>
-        <?php } ?>
-    </div>
-
-
-    <?php if (is_null($type) || empty($selected)) { ?>
-        <div class="alert signal mt-10">
-            <?= lang('Please select a project type to continue.', 'Bitte wähle einen Projektyp aus, um fortzufahren.') ?>
+    <?php if ($new_project) { ?>
+        <div class="select-btns">
+            <?php
+            foreach ($Project->getProjectTypes() as $pt) {
+                // if ($pt['process'] == 'project') continue;
+                $key = $pt['id'];
+                // select first type if none is selected
+                if ($type === null) {
+                    $type = $key;
+                    $selected = $pt;
+                }
+            ?>
+                <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
+                    <i class="ph ph-<?= $pt['icon'] ?>"></i>
+                    <?= lang($pt['name'], $pt['name_de']) ?>
+                </a>
+            <?php } ?>
         </div>
+        <?php
 
-    <?php } else {
+        if (is_null($type) || empty($selected)) { ?>
+            <div class="alert signal mt-10">
+                <?= lang('Please select a project type to continue.', 'Bitte wähle einen Projektyp aus, um fortzufahren.') ?>
+            </div>
+        <?php }
+    } else {
 
         // type has been selected
         $project_type = $Project->getProjectType($type);
 
         $subtitle = '';
         $phase = 'proposed';
+        $status = $form['status'] ?? 'proposed';
         if ($new_project && $selected['process'] == 'proposal') {
             $formaction = ROOTPATH . "/crud/proposals/create";
             $url = ROOTPATH . "/proposals/view/*";
@@ -99,7 +105,7 @@ $Vocabulary = new Vocabulary();
             $title = lang('New project', 'Neues Projekt');
             $subtitle = lang('This type of project is created directly as a project.', 'Dieser Projekttyp wird direkt als Projekt angelegt.');
             $phase = 'project';
-        } elseif ($selected['process'] == 'project' || $form['status'] == 'project') {
+        } elseif ($selected['process'] == 'project' || $status == 'project') {
             $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
             $title = lang('Edit project', 'Projekt bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
@@ -108,7 +114,7 @@ $Vocabulary = new Vocabulary();
             $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
             $url = ROOTPATH . "/proposals/view/" . $form['_id'];
             $title = lang('Edit project proposal', 'Projektantrag bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
-            $phase = $_GET['phase'] ?? $form['status'] ?? 'proposed';
+            $phase = $_GET['phase'] ?? $status;
         }
 
         $fields = $Project->getFields($type, $phase);
@@ -134,7 +140,7 @@ $Vocabulary = new Vocabulary();
         $req = function ($field) use ($required_fields) {
             return in_array($field, $required_fields) ? 'required' : '';
         };
-    ?>
+        ?>
 
         <h3 class="title">
             <?= $title ?>
@@ -142,6 +148,17 @@ $Vocabulary = new Vocabulary();
         <p class="text-muted mt-0">
             <?= $subtitle ?>
         </p>
+
+        <?php if ($status == 'proposed' && $phase == 'approved') { ?>
+            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <i class="ph ph-arrow-right"></i>
+            <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
+        <?php } else if ($status == 'proposed' && $phase == 'rejected') { ?>
+            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <i class="ph ph-arrow-right"></i>
+            <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
+        <?php } ?>
+
 
 
         <form action="<?= $formaction ?>" method="post" id="proposal-form" class="box padded">
@@ -176,7 +193,7 @@ $Vocabulary = new Vocabulary();
                 </div>
             <?php } ?>
 
-            
+
             <?php if (array_key_exists('rejection_date', $fields)) { ?>
                 <h5 class="mt-0">
                     <?= lang('Rejection', 'Ablehnung') ?>
@@ -255,154 +272,163 @@ $Vocabulary = new Vocabulary();
             <?php } ?>
 
 
-            <h5>
-                <?= lang('General information', 'Allgemeine Informationen') ?>
-            </h5>
 
-            <div class="form-group floating-form">
-                <input type="text" class="form-control" name="values[name]" id="name" value="<?= val('name') ?>" maxlength="30" placeholder="Short title" required>
-                <label for="name" class="required">
-                    <?= lang('Short title', 'Kurztitel') ?>
-                </label>
-            </div>
+            <?php if (array_intersect(['name', 'title', 'start_proposed', 'start', 'purpose', 'internal_number'], $field_keys)) { ?>
 
-            <div class="form-group">
-                <div class=" lang-<?= lang('en', 'de') ?>">
-                    <label for="title" class="required floating-title">
-                        <?= lang('Full title of the project', 'Voller Titel des Projekts') ?>
-                    </label>
+                <h5>
+                    <?= lang('General information', 'Allgemeine Informationen') ?>
+                </h5>
 
-                    <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
-                    <input type="text" class="form-control hidden" name="values[title]" id="title" value="<?= val('title') ?>">
-                </div>
-
-                <script>
-                    initQuill(document.getElementById('title-editor'));
-                </script>
-            </div>
-
-
-            <?php if (array_key_exists('start_proposed', $fields)) { ?>
-
-                <div class="row row-eq-spacing mt-0 align-items-end ">
-                    <div class="col-sm-4 floating-form">
-                        <input type="date" class="form-control" name="values[start_proposed]" value="<?= valueFromDateArray(val('start_proposed')) ?>" id="start_proposed" required>
-
-                        <label for="start_proposed" class="required">
-                            Geplanter Projektbeginn
+                <?php if (array_key_exists('name', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <input type="text" class="form-control" name="values[name]" id="name" value="<?= val('name') ?>" maxlength="30" placeholder="Short title" required>
+                        <label for="name" class="required">
+                            <?= lang('Short title', 'Kurztitel') ?>
                         </label>
                     </div>
-                    <div class="col-sm-4">
-                        <span class="floating-title">
-                            <?= lang('Shortcut Length', 'Schnell-Auswahl Laufzeit') ?>
-                        </span>
-                        <div class="btn-group w-full">
-                            <div class="btn small" onclick="timeframeProposed(36)"><?= lang('3 yr', '3 J') ?></div>
-                            <div class="btn small" onclick="timeframeProposed(12)"><?= lang('1 yr', '1 J') ?></div>
-                            <div class="btn small" onclick="timeframeProposed(6)"><?= lang('6 mo', '6 Mo') ?></div>
+                <?php } ?>
+
+                <?php if (array_key_exists('title', $fields)) { ?>
+                    <div class="form-group">
+                        <div class=" lang-<?= lang('en', 'de') ?>">
+                            <label for="title" class="required floating-title">
+                                <?= lang('Full title of the project', 'Voller Titel des Projekts') ?>
+                            </label>
+
+                            <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
+                            <input type="text" class="form-control hidden" name="values[title]" id="title" value="<?= val('title') ?>">
+                        </div>
+
+                        <script>
+                            initQuill(document.getElementById('title-editor'));
+                        </script>
+                    </div>
+                <?php } ?>
+
+
+                <?php if (array_key_exists('start_proposed', $fields)) { ?>
+
+                    <div class="row row-eq-spacing mt-0 align-items-end ">
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[start_proposed]" value="<?= valueFromDateArray(val('start_proposed')) ?>" id="start_proposed" required>
+
+                            <label for="start_proposed" class="required">
+                                Geplanter Projektbeginn
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="floating-title">
+                                <?= lang('Shortcut Length', 'Schnell-Auswahl Laufzeit') ?>
+                            </span>
+                            <div class="btn-group w-full">
+                                <div class="btn small" onclick="timeframeProposed(36)"><?= lang('3 yr', '3 J') ?></div>
+                                <div class="btn small" onclick="timeframeProposed(12)"><?= lang('1 yr', '1 J') ?></div>
+                                <div class="btn small" onclick="timeframeProposed(6)"><?= lang('6 mo', '6 Mo') ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[end_proposed]" value="<?= valueFromDateArray(val('end_proposed')) ?>" id="end_proposed" required>
+
+                            <label for="end_proposed" class="required">
+                                Geplantes Projektende
+                            </label>
                         </div>
                     </div>
-                    <div class="col-sm-4 floating-form">
-                        <input type="date" class="form-control" name="values[end_proposed]" value="<?= valueFromDateArray(val('end_proposed')) ?>" id="end_proposed" required>
 
-                        <label for="end_proposed" class="required">
-                            Geplantes Projektende
+
+
+                    <script>
+                        function timeframeProposed(month) {
+                            let startField = document.querySelector('#start_proposed');
+                            let start = startField.valueAsDate;
+                            if (start == '' || start === null) {
+                                toastError(lang('Please select a start date first.', 'Bitte wähle zuerst ein Startdatum.'))
+                                return;
+                            }
+
+                            let end = new Date(start.setMonth(start.getMonth() + month));
+                            end.setDate(end.getDate() - 1);
+                            let endField = document.querySelector('#end_proposed');
+                            endField.valueAsDate = end;
+                        }
+                    </script>
+
+                <?php } ?>
+
+
+
+                <?php if (array_key_exists('start', $fields)) { ?>
+                    <div class="row row-eq-spacing mt-0 align-items-end ">
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[start]" value="<?= valueFromDateArray(val('start')) ?>" id="start" required>
+
+                            <label for="start" class="required">
+                                Projektbeginn
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="floating-title">
+                                <?= lang('Shortcut Length', 'Schnell-Auswahl Laufzeit') ?>
+                            </span>
+                            <div class="btn-group w-full">
+                                <div class="btn small" onclick="timeframe(36)"><?= lang('3 yr', '3 J') ?></div>
+                                <div class="btn small" onclick="timeframe(12)"><?= lang('1 yr', '1 J') ?></div>
+                                <div class="btn small" onclick="timeframe(6)"><?= lang('6 mo', '6 Mo') ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end" required>
+
+                            <label for="end" class="required">
+                                Projektende
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function timeframe(month) {
+                            let startField = document.querySelector('#start');
+                            let start = startField.valueAsDate;
+                            if (start == '' || start === null) {
+                                toastError(lang('Please select a start date first.', 'Bitte wähle zuerst ein Startdatum.'))
+                                return;
+                            }
+
+                            let end = new Date(start.setMonth(start.getMonth() + month));
+                            end.setDate(end.getDate() - 1);
+                            let endField = document.querySelector('#end');
+                            endField.valueAsDate = end;
+                        }
+                    </script>
+                <?php } ?>
+
+
+                <?php if (array_key_exists('purpose', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <select class="form-control" name="values[purpose]" id="purpose">
+                            <?php
+                            $vocab = $Vocabulary->getValues('project-purpose');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>" <?= sel('purpose', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="purpose">
+                            <?= lang('Purpose of the project', 'Zweck des Projekts') ?>
                         </label>
                     </div>
-                </div>
+                <?php } ?>
 
 
+                <?php if (array_key_exists('internal_number', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234">
 
-                <script>
-                    function timeframeProposed(month) {
-                        let startField = document.querySelector('#start_proposed');
-                        let start = startField.valueAsDate;
-                        if (start == '' || start === null) {
-                            toastError(lang('Please select a start date first.', 'Bitte wähle zuerst ein Startdatum.'))
-                            return;
-                        }
-
-                        let end = new Date(start.setMonth(start.getMonth() + month));
-                        end.setDate(end.getDate() - 1);
-                        let endField = document.querySelector('#end_proposed');
-                        endField.valueAsDate = end;
-                    }
-                </script>
-
-            <?php } ?>
-
-
-
-            <?php if (array_key_exists('start', $fields)) { ?>
-            <div class="row row-eq-spacing mt-0 align-items-end ">
-                <div class="col-sm-4 floating-form">
-                    <input type="date" class="form-control" name="values[start]" value="<?= valueFromDateArray(val('start')) ?>" id="start" required>
-
-                    <label for="start" class="required">
-                        Projektbeginn
-                    </label>
-                </div>
-                <div class="col-sm-4">
-                    <span class="floating-title">
-                        <?= lang('Shortcut Length', 'Schnell-Auswahl Laufzeit') ?>
-                    </span>
-                    <div class="btn-group w-full">
-                        <div class="btn small" onclick="timeframe(36)"><?= lang('3 yr', '3 J') ?></div>
-                        <div class="btn small" onclick="timeframe(12)"><?= lang('1 yr', '1 J') ?></div>
-                        <div class="btn small" onclick="timeframe(6)"><?= lang('6 mo', '6 Mo') ?></div>
+                        <label for="internal_number">
+                            <?= lang('Internal ID', 'Interne ID') ?>
+                        </label>
                     </div>
-                </div>
-                <div class="col-sm-4 floating-form">
-                    <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end" required>
+                <?php } ?>
 
-                    <label for="end" class="required">
-                        Projektende
-                    </label>
-                </div>
-            </div>
-
-            <script>
-                function timeframe(month) {
-                    let startField = document.querySelector('#start');
-                    let start = startField.valueAsDate;
-                    if (start == '' || start === null) {
-                        toastError(lang('Please select a start date first.', 'Bitte wähle zuerst ein Startdatum.'))
-                        return;
-                    }
-
-                    let end = new Date(start.setMonth(start.getMonth() + month));
-                    end.setDate(end.getDate() - 1);
-                    let endField = document.querySelector('#end');
-                    endField.valueAsDate = end;
-                }
-            </script>
-            <?php } ?>
-
-
-            <?php if (array_key_exists('purpose', $fields)) { ?>
-                <div class="form-group floating-form">
-                    <select class="form-control" name="values[purpose]" id="purpose">
-                        <?php
-                        $vocab = $Vocabulary->getValues('project-purpose');
-                        foreach ($vocab as $v) { ?>
-                            <option value="<?= $v['id'] ?>" <?= sel('purpose', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                        <?php } ?>
-                    </select>
-                    <label for="purpose">
-                        <?= lang('Purpose of the project', 'Zweck des Projekts') ?>
-                    </label>
-                </div>
-            <?php } ?>
-
-
-            <?php if (array_key_exists('internal_number', $fields)) { ?>
-                <div class="form-group floating-form">
-                    <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234">
-
-                    <label for="internal_number">
-                        <?= lang('Internal ID', 'Interne ID') ?>
-                    </label>
-                </div>
             <?php } ?>
 
 
