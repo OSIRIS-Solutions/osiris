@@ -812,6 +812,8 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
             );
         }
 
+        $values['disabled'] = $values['disabled'] ?? false;
+
         $updateResult = $collection->updateOne(
             ['_id' => $mongo_id],
             ['$set' => $values]

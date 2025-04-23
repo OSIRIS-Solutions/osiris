@@ -30,42 +30,89 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
 </h2>
 
 <div class="btn-toolbar">
-    <?php if ($status == 'proposed') { ?>
-        <div class="dropdown">
-            <button class="btn large signal" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                <?= lang('Proposed', 'Beantragt') ?>
-                <i class="ph ph-edit mr-0 ml-10" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
-                <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item font-size-18 badge success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item font-size-18 badge danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+    <?php if ($edit_perm) { ?>
+        <?php if ($status == 'proposed') { ?>
+            <div class="dropdown">
+                <button class="btn signal font-weight-bold text-uppercase" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                <i class="ph ph-edit" aria-hidden="true"></i>
+                    <?= lang('Proposed', 'Beantragt') ?>
+                </button>
+                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdown-1">
+                    <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item font-size-14 badge success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
+                    <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item font-size-14 badge danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                    <div class="content">
+                        <i class="ph ph-warning text-signal"></i>
+                        <?= lang('You can no longer change the details of the application once you change the status.', 'Du kannst die Details des Antrages nicht mehr ändern, sobald du den Status änderst.') ?>
+                    </div>
+                </div>
             </div>
-        </div>
-    <?php } else if ($status == 'approved') { ?>
-        <span class="badge success border-success font-size-18">
-            <i class="ph ph-check-circle" aria-hidden="true"></i>
-            <?= lang('Approved', 'Bewilligt') ?>
-        </span>
+        <?php } else if ($status == 'approved') { ?>
+            <span class="badge success border-success font-size-18">
+                <i class="ph ph-check-circle" aria-hidden="true"></i>
+                <?= lang('Approved', 'Bewilligt') ?>
+            </span>
 
-       <?php
-        // check if project is available already
-        if (!isset($project['project_id']) || empty($project['project_id'])) { ?>
-            <a href="<?= ROOTPATH ?>/projects/create-from-proposal/<?= $id ?>" class="btn primary">
-                <i class="ph ph-plus"></i>
-                <?= lang('Create project', 'Projekt erstellen') ?>
-            </a>
-        <?php } else { ?>
-            <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn primary">
+            <?php
+            // check if project is available already
+            if (!isset($project['project_id']) || empty($project['project_id'])) { ?>
+                <a href="<?= ROOTPATH ?>/projects/create-from-proposal/<?= $id ?>" class="btn primary">
+                    <i class="ph ph-plus"></i>
+                    <?= lang('Create project', 'Projekt erstellen') ?>
+                </a>
+            <?php } else { ?>
+                <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn primary">
                     <i class="ph ph-link m-0"></i>
                     <?= lang('Project', 'Projekt') ?>
                 </a>
+            <?php } ?>
+        <?php } else { ?>
+            <span class="badge danger border-danger font-size-18">
+                <i class="ph ph-x-circle" aria-hidden="true"></i>
+                <?= lang('Rejected', 'Abgelehnt') ?>
+            </span>
         <?php } ?>
-    <?php } else { ?>
-        <span class="badge danger border-danger font-size-18">
-            <i class="ph ph-x-circle" aria-hidden="true"></i>
-            <?= lang('Rejected', 'Abgelehnt') ?>
-        </span>
-    <?php } ?>
+
+
+        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>" class="btn primary">
+            <i class="ph ph-edit"></i>
+            <?= lang('Edit current state', 'Aktuellen Status bearbeiten') ?>
+        </a>
+        <!-- dropdown -->
+        <div class="dropdown">
+            <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
+                <i class="ph ph-download"></i>
+                <?= lang('Download', 'Herunterladen') ?>
+                <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu p-10" aria-labelledby="dropdown-download">
+                <form action="<?= ROOTPATH ?>/proposals/download/<?= $id ?>" method="post">
+                    <select name="format" id="download-format" class="form-control mb-10">
+                        <option value="docx">Word</option>
+                        <option value="json">JSON</option>
+                        <!-- <option value="csv">CSV</option> -->
+                    </select>
+                    <button class="btn primary" type="submit">
+                        <i class="ph ph-download"></i>
+                        <?= lang('Download', 'Herunterladen') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+    <?php } else {
+        switch ($status) {
+            case 'proposed':
+                echo "<span class='badge signal'>" . lang('Proposed', 'Beantragt') . "</span>";
+                break;
+            case 'approved':
+                echo "<span class='badge success'>" . lang('Approved', 'Bewilligt') . "</span>";
+                break;
+            case 'rejected':
+                echo "<span class='badge danger'>" . lang('Rejected', 'Abgelehnt') . "</span>";
+                break;
+            default:
+                break;
+        }
+    } ?>
 </div>
 
 
@@ -77,34 +124,6 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
             </h2>
 
             <div class="btn-toolbar mb-10">
-
-                <?php if ($edit_perm) { ?>
-                    <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>" class="btn primary">
-                        <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
-                    </a>
-                    <!-- dropdown -->
-                    <div class="dropdown">
-                        <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
-                            <i class="ph ph-download"></i>
-                            <?= lang('Download', 'Herunterladen') ?>
-                            <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
-                        </button>
-                        <div class="dropdown-menu p-10" aria-labelledby="dropdown-download">
-                            <form action="<?= ROOTPATH ?>/proposals/download/<?= $id ?>" method="post">
-                                <select name="format" id="download-format" class="form-control mb-10">
-                                    <option value="docx">Word</option>
-                                    <option value="json">JSON</option>
-                                    <!-- <option value="csv">CSV</option> -->
-                                </select>
-                                <button class="btn primary" type="submit">
-                                    <i class="ph ph-download"></i>
-                                    <?= lang('Download', 'Herunterladen') ?>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                <?php } ?>
 
                 <?php if ($Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)) { ?>
 

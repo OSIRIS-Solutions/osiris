@@ -154,6 +154,16 @@
                 "en": "See all existing proposals"
             },
             {
+                "id": "proposals.edit",
+                "de": "Alle Anträge bearbeiten",
+                "en": "Edit all proposals"
+            },
+            {
+                "id": "proposals.edit-own",
+                "de": "Eigene Anträge editieren",
+                "en": "Edit own proposals"
+            },
+            {
                 "id": "proposals.delete",
                 "de": "Anträge löschen",
                 "en": "Delete proposals"

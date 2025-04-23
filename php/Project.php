@@ -292,6 +292,9 @@ class Project extends Vocabulary
             case 'funding_type':
                 return $this->getFundingType();
             case 'contact':
+            case 'stipendiate':
+            case 'scholar':
+            case 'supervisor':
                 return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
             case 'applicants':
                 $applicants = DB::doc2Arr($value);
@@ -334,6 +337,8 @@ class Project extends Vocabulary
                 }
                 return $return . '</ul>';
             case 'funding_organization':
+            case 'scholarship':
+            case 'university':
                 $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
                 if (empty($org)) return '-';
                 return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
@@ -358,9 +363,9 @@ class Project extends Vocabulary
         $this->project = $this->db->projects->findOne(['_id' => DB::to_ObjectID($project_id)]);
     }
 
-    public function getStatus()
+    public function getStatus($status = '')
     {
-        switch ($this->project['status'] ?? '') {
+        switch ($this->project['status'] ?? $status) {
             case 'applied':
             case 'proposed':
                 return "<span class='badge signal'>" . lang('proposed', 'beantragt') . "</span>";

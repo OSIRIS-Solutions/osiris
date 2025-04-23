@@ -2642,7 +2642,7 @@ Buttons
   border-top-color: transparent;
 }
 .btn.secondary {
-  color: var(--secondary-color);
+  color: var(--secondary-color-dark);
   background-color: var(--secondary-color-20);
   border-color: var(--secondary-color);
 }
@@ -2658,7 +2658,7 @@ Buttons
   background-color: var(--secondary-color-dark);
 }
 .btn.primary {
-  color: var(--primary-color);
+  color: var(--primary-color-dark);
   background-color: var(--primary-color-20);
   border-color: var(--primary-color);
 }
@@ -2674,7 +2674,7 @@ Buttons
   background-color: var(--primary-color-dark);
 }
 .btn.success {
-  color: var(--success-color);
+  color: var(--success-color-dark);
   background-color: var(--success-color-20);
   border-color: var(--success-color);
 }
@@ -2690,7 +2690,7 @@ Buttons
   background-color: var(--success-color-dark);
 }
 .btn.danger {
-  color: var(--danger-color);
+  color: var(--danger-color-dark);
   background-color: var(--danger-color-20);
   border-color: var(--danger-color);
 }
@@ -2706,7 +2706,7 @@ Buttons
   background-color: var(--danger-color-dark);
 }
 .btn.signal {
-  color: var(--signal-color);
+  color: var(--signal-color-dark);
   background-color: var(--signal-color-20);
   border-color: var(--signal-color);
 }
@@ -2722,7 +2722,7 @@ Buttons
   background-color: var(--signal-color-dark);
 }
 .btn.muted {
-  color: var(--muted-color);
+  color: var(--muted-color-dark);
   background-color: var(--muted-color-20);
   border-color: var(--muted-color);
 }

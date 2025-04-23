@@ -45,15 +45,6 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 }
 
 ?>
-<?php if (isset($_GET['msg']) && $_GET['msg'] === 'success') { ?>
-
-    <!-- add another one -->
-    <div class="alert success">
-        <?= lang('The project has been updated successfully.', 'Das Projekt wurde erfolgreich aktualisiert.') ?>
-        <a href="<?= ROOTPATH ?>/projects/new">+ <?= lang('Add another one', 'Füge noch eines hinzu') ?></a>
-    </div>
-
-<?php } ?>
 
 
 <script>
@@ -101,7 +92,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 <?php } ?>
 
 <div class="title mb-20">
-    
+
     <b class="badge text-uppercase primary"><?= lang('Project', 'Projekt') ?></b>
     <h1 class="mt-0">
         <?= $project['name'] ?>
@@ -122,20 +113,20 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             <br />
             <?= $Project->getType() ?>
         </div>
-        
+
         <div class="mr-10 badge bg-white">
             <small><?= lang('Proposal', 'Antrag') ?>: </small>
             <br />
-            <?php if (!isset($project['proposal_id'])) { 
+            <?php if (!isset($project['proposal_id'])) {
                 echo '-';
-             } else if ($Settings->hasPermission('projects.view') || ($edit_perm && $Settings->hasPermission('projects.edit-own'))) { ?>
+            } else if ($Settings->hasPermission('projects.view') || ($edit_perm && $Settings->hasPermission('projects.edit-own'))) { ?>
                 <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="badge primary">
                     <i class="ph ph-link m-0"></i>
                 </a>
             <?php } else { ?>
-                <?=lang('exists', 'vorhanden')?>
+                <?= lang('exists', 'vorhanden') ?>
             <?php } ?>
-            
+
         </div>
 
         <div class="mr-10 badge bg-white">
@@ -148,6 +139,21 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             <small><?= lang('Duration', 'Dauer') ?>: </small>
             <br />
             <b><?= $Project->getDuration() ?> <?= lang('Month', 'Monate') ?></b>
+        </div>
+
+        <div class="mr-10 badge bg-white">
+            <small><?= lang('Scope', 'Reichweite') ?>: </small>
+            <br />
+           <b>
+           <?php
+           if (!empty(($project['collaborators'] ?? []))) {
+            $scope = $Project->getScope();
+            echo  $scope['scope'] . ' (' . $scope['region'] . ')';
+           } else {
+            echo lang('No collaborators', 'Keine Partner');
+              }
+            ?>
+           </b>
         </div>
 
         <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -298,39 +304,39 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 </div>
 
                 <table class="table">
-                <tbody>
-                    <?php
-                    foreach ($project as $key => $value) {
-                        if (!array_key_exists($key, $Project->FIELDS)) {
-                            continue;
-                        }
-                        if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
-                            continue;
-                        }
-                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($project as $key => $value) {
+                            if (!array_key_exists($key, $Project->FIELDS)) {
+                                continue;
+                            }
+                            if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
+                                continue;
+                            }
+                        ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                    echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
+                                    echo $Project->printField($key, $project[$key] ?? null);
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td>
-                                <?php
-                                echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                echo $Project->printField($key, $project[$key] ?? null);
+                                <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
+                                <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
+                                    echo 'System';
+                                } else {
+                                    echo $DB->getNameFromId($project['created_by']);
+                                }
+                                echo " (" . $project['created'] . ")";
                                 ?>
                             </td>
                         </tr>
-                    <?php } ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
-                            <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
-                                echo 'System';
-                            } else {
-                                echo $DB->getNameFromId($project['created_by']);
-                            }
-                            echo " (" . $project['created'] . ")";
-                            ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
             </div>
 
@@ -542,6 +548,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 <table class="table">
                     <tbody>
                         <?php
+                        include_once BASEPATH . '/php/Organization.php';
                         if (empty($project['collaborators'] ?? array())) {
                         ?>
                             <tr>
@@ -555,16 +562,14 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-
                                         <span data-toggle="tooltip" data-title="<?= $collab['type'] ?>" class="badge mr-10">
-                                            <?= Project::getCollaboratorIcon($collab['type'], 'ph-fw ph-2x m-0') ?>
+                                            <?= Organization::getIcon($collab['type'], 'ph-fw ph-2x m-0') ?>
                                         </span>
                                         <div class="">
-                                            <h5 class="my-0">
+                                            <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization'] ?>">
                                                 <?= $collab['name'] ?>
-                                            </h5>
+                                            </a>
                                             <?= $collab['location'] ?>
-                                            <a href="<?= $collab['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
                                         </div>
                                     </div>
                                 </td>
@@ -586,7 +591,6 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                     </h5>
                     <?php
                     $scope = $Project->getScope();
-
                     echo  $scope['scope'] . ' (' . $scope['region'] . ')';
                     ?>
                 </div>

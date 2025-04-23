@@ -34,7 +34,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/$collection/edit.php";
+    include BASEPATH . "/pages/proposals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -162,7 +162,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
             include BASEPATH . "/pages/projects/public.php";
             break;
         default:
-            include BASEPATH . "/pages/$collection/edit.php";
+            include BASEPATH . "/pages/proposals/edit.php";
     }
     include BASEPATH . "/footer.php";
 }, 'login');
@@ -250,7 +250,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     $type = 'Teilprojekt';
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/edit.php";
+    include BASEPATH . "/pages/proposals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -432,16 +432,6 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/Render.php";
     $values = renderAuthorUnits($values, [], 'persons');
 
-    if (isset($values['funding_number'])) {
-        $values['funding_number'] = explode(',', $values['funding_number']);
-        $values['funding_number'] = array_map('trim', $values['funding_number']);
-
-        // check if there are already activities with this funding number
-        $osiris->activities->updateMany(
-            ['funding' => ['$in' => $values['funding_number']]],
-            ['$push' => ['projects' => $values['name']]]
-        );
-    }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
@@ -469,9 +459,19 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     //     }
     // }
 
-
     $insertOneResult  = $osiris->$collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
+    
+    if (isset($values['funding_number'])) {
+        $values['funding_number'] = explode(',', $values['funding_number']);
+        $values['funding_number'] = array_map('trim', $values['funding_number']);
+
+        // check if there are already activities with this funding number
+        $osiris->activities->updateMany(
+            ['funding' => ['$in' => $values['funding_number']]],
+            ['$push' => ['projects' => $id]]
+        );
+    }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);

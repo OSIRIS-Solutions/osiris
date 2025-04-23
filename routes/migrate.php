@@ -33,6 +33,18 @@ Route::get('/migrate/test', function () {
 
     include_once BASEPATH . "/php/Project.php";
     $Project = new Project;
+
+
+    // first check if there are stipendiates. If yes, we need to migrate them into a new project type
+    $stipendiates = $osiris->projects->find(['type' => 'Stipendium'])->toArray();
+    if (count($stipendiates) > 0) {
+        echo "<p>There are ".count($stipendiates)." stipendiate projects. Please migrate them to the new activity type.</p>";
+        foreach ($stipendiates as $doc) {
+            dump($doc['status']);
+        }
+        die;
+    }
+
     // Drittmittel
     $osiris->adminProjects->deleteOne(['id' => 'third-party']);
     $osiris->adminProjects->insertOne([
@@ -116,32 +128,32 @@ Route::get('/migrate/test', function () {
         ['$set' => ['type' => 'third-party']]
     );
 
-    $osiris->adminProjects->deleteOne(['id' => 'stipendate']);
-    $osiris->adminProjects->insertOne([
-        'id' => 'stipendate',
-        'icon' => 'tip-jar',
-        'color' => '#63a308',
-        'name' => 'Scholarship',
-        'name_de' => 'Stipendium',
-        'modules' => [
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'supervisor',
-            'scholar',
-            'scholarship',
-            'university',
-        ],
-        'topics' => false,
-        'disabled' => false,
-        'portfolio' => true
-    ]);
-    $osiris->projects->updateMany(
-        ['type' => 'Stipendium'],
-        ['$set' => ['type' => 'stipendiate']]
-    );
+    // $osiris->adminProjects->deleteOne(['id' => 'stipendate']);
+    // $osiris->adminProjects->insertOne([
+    //     'id' => 'stipendate',
+    //     'icon' => 'tip-jar',
+    //     'color' => '#63a308',
+    //     'name' => 'Scholarship',
+    //     'name_de' => 'Stipendium',
+    //     'modules' => [
+    //         'abstract',
+    //         'public',
+    //         'internal_number',
+    //         'website',
+    //         'grant_sum',
+    //         'supervisor',
+    //         'scholar',
+    //         'scholarship',
+    //         'university',
+    //     ],
+    //     'topics' => false,
+    //     'disabled' => false,
+    //     'portfolio' => true
+    // ]);
+    // $osiris->projects->updateMany(
+    //     ['type' => 'Stipendium'],
+    //     ['$set' => ['type' => 'stipendiate']]
+    // );
 
     $osiris->adminProjects->deleteOne(['id' => 'subproject']);
     $osiris->projects->updateMany(

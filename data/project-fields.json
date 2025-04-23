@@ -382,5 +382,54 @@
             "approved": false
         },
         "order": 21
+    },
+    {
+        "id": "scholar",
+        "en": "Scholar",
+        "de": "Forschende Person",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 10
+    },
+    {
+        "id": "supervisor",
+        "en": "Supervisor",
+        "de": "Betreuende Person",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 11
+    },
+    {
+        "id": "university",
+        "en": "University",
+        "de": "Universität",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 12
+    },
+    {
+        "id": "scholarship",
+        "en": "Funding organization (Scholarship)",
+        "de": "Förderorganisation (Stipendium)",
+        "kdsf": "KDSF-B-3-6",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 13
     }
+
 ]

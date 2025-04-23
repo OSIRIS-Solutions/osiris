@@ -106,7 +106,14 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
         </thead>
         <tbody>
             <?php
-            $projects = $osiris->projects->find(['collaborators.organization' => $organization['_id']])->toArray();
+            $projects = $osiris->projects->find([
+                '$or' => [
+                  ['collaborators.organization' => $organization['_id']],
+                  ['funding_organization' => $organization['_id']],
+                  ['university' => $organization['_id']],
+
+                ]
+            ])->toArray();
             foreach ($projects as $project) {
                 $Project->setProject($project);
             ?>

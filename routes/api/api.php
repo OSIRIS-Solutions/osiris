@@ -709,11 +709,16 @@ Route::get('/api/(projects|proposals)', function ($type) {
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['$or' =>  [
-            ['title' => ['$regex' => $j]],
-            ['id' => $_GET['search']]
-        ]];
+        $filter = ['title' => ['$regex' => $j]];
     }
+
+    if (!$Settings->hasPermission($collection.'.view')) {
+        $filter['$or'] = [
+            ['persons.user' => $_SESSION['username']],
+            ['created_by' => $_SESSION['username']]
+        ];
+    }
+
     $result = $collection->find($filter)->toArray();
 
     if (isset($_GET['formatted'])) {

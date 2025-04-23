@@ -17,7 +17,7 @@
  */
 
 require_once BASEPATH . "/php/Project.php";
-$Project = new Project();
+$Project = new Project($form ?? array());
 
 $type = $type ?? $_GET['type'] ?? $form['type'] ?? null;
 
@@ -50,8 +50,18 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $selected = [];
+$project_types = $Project->getProjectTypes();
+$collection = $collection ?? $selected['process'] ?? 'proposal';
 if ($type) {
     $selected = $Project->getProjectType($type);
+} else {
+    foreach ($project_types as $pt) {
+        if ($pt['process'] . 's' == $collection) {
+            $selected = $pt;
+            $type = $pt['id'];
+            break;
+        }
+    }
 }
 ?>
 
@@ -64,14 +74,8 @@ if ($type) {
     <?php if ($new_project) { ?>
         <div class="select-btns">
             <?php
-            foreach ($Project->getProjectTypes() as $pt) {
-                // if ($pt['process'] == 'project') continue;
+            foreach ($project_types as $pt) {
                 $key = $pt['id'];
-                // select first type if none is selected
-                if ($type === null) {
-                    $type = $key;
-                    $selected = $pt;
-                }
             ?>
                 <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">
                     <i class="ph ph-<?= $pt['icon'] ?>"></i>
@@ -96,7 +100,7 @@ if ($type) {
         $subtitle = '';
         $phase = 'proposed';
         $status = $form['status'] ?? 'proposed';
-        if (isset($from_proposal) && $from_proposal){
+        if (isset($from_proposal) && $from_proposal) {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
             $title = lang('Create new project from proposal', 'Neues Projekt aus Antrag anlegen') . ': ' . ($form['name'] ?? $form['title'] ?? '');
@@ -120,7 +124,7 @@ if ($type) {
         } else {
             $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
             $url = ROOTPATH . "/proposals/view/" . $form['_id'];
-            $title = lang('Edit project proposal', 'Projektantrag bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
+            $title = lang('Edit project proposal', 'Projektantrag bearbeiten') . ': <q>' . ($form['name'] ?? $form['title'] ?? '') . '</q>';
             $phase = $_GET['phase'] ?? $status;
         }
 
@@ -146,14 +150,27 @@ if ($type) {
         </p>
 
         <?php if ($status == 'proposed' && $phase == 'approved') { ?>
+            <?=lang('Status change', 'Statusänderung')?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
             <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
+            <p class="text-danger">
+                <i class="ph ph-warning"></i>
+                <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
+            </p>
         <?php } else if ($status == 'proposed' && $phase == 'rejected') { ?>
+            <?=lang('Status change', 'Statusänderung')?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
             <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
-        <?php } ?>
+            <p class="text-danger">
+                <i class="ph ph-warning"></i>
+                <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
+            </p>
+        <?php } else if (!$new_project && $status == $phase) {
+            echo lang('You edit the following status', 'Du bearbeitest den folgenden Status') . ': ';
+            echo $Project->getStatus($status);
+        } ?>
 
 
 
@@ -165,7 +182,7 @@ if ($type) {
             <?php if (isset($from_proposal) && $from_proposal) { ?>
                 <input type="hidden" class="hidden" name="values[proposal_id]" value="<?= $form['_id'] ?>">
             <?php } ?>
-            
+
 
             <?php if (array_key_exists('submission_date', $fields)) { ?>
                 <h5 class="mt-0">
@@ -218,59 +235,113 @@ if ($type) {
             <?php } ?>
 
 
-            <?php if (array_key_exists('applicants', $fields)) { ?>
-                <div class="data-module col-12" data-module="authors">
-                    <label for="applicant" class="floating-title required">
-                        <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
-                    </label>
-                    <div class="author-widget" id="author-widget">
-                        <div class="author-list p-10" id="author-list">
-                            <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
-                                <div class='author'>
-                                    <?= $DB->getNameFromId($a) ?>
-                                    <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
-                                    <a onclick='$(this).closest(".author").remove()'>&times;</a>
-                                </div>
-                            <?php } ?>
 
-                        </div>
-                        <div class="footer">
-                            <div class="input-group small d-inline-flex w-auto">
-                                <select class="form-control" id="add-author" autocomplete="off">
-                                    <?php
-                                    $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
-                                    foreach ($userlist as $j) { ?>
-                                        <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
-                                    <?php } ?>
-                                </select>
-                                <div class="input-group-append">
-                                    <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
-                                        <i class="ph ph-plus"></i>
-                                    </button>
+
+            <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
+                <h6>
+                    <?= lang('Persons', 'Personen') ?>
+                </h6>
+
+                <?php if (array_key_exists('applicants', $fields)) { ?>
+                    <div class="data-module col-12" data-module="authors">
+                        <label for="applicant" class="floating-title required">
+                            <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
+                        </label>
+                        <div class="author-widget" id="author-widget">
+                            <div class="author-list p-10" id="author-list">
+                                <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
+                                    <div class='author'>
+                                        <?= $DB->getNameFromId($a) ?>
+                                        <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
+                                        <a onclick='$(this).closest(".author").remove()'>&times;</a>
+                                    </div>
+                                <?php } ?>
+
+                            </div>
+                            <div class="footer">
+                                <div class="input-group small d-inline-flex w-auto">
+                                    <select class="form-control" id="add-author" autocomplete="off">
+                                        <?php
+                                        $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                                        foreach ($userlist as $j) { ?>
+                                            <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
+                                            <i class="ph ph-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <small class="text-muted">
+                            <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
+                        </small>
                     </div>
+                    <script>
+                        function addAuthorDiv(event) {
+                            var input = $('#add-author')
+                            var username = input.val()
+                            var name = input.find('option:selected').text()
+                            var el = $('#author-list')
+                            var author = $('<div class="author">')
+                                .html(name);
+                            author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
+                            author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
+                            author.appendTo(el)
+                        }
+                    </script>
+                <?php } ?>
 
-                    <small class="text-muted">
-                        <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
-                    </small>
-                </div>
-                <script>
-                    function addAuthorDiv(event) {
-                        var input = $('#add-author')
-                        var username = input.val()
-                        var name = input.find('option:selected').text()
-                        var el = $('#author-list')
-                        var author = $('<div class="author">')
-                            .html(name);
-                        author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
-                        author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
-                        author.appendTo(el)
+
+                <?php if (array_key_exists('scholar', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off">
+                            <?php
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            foreach ($userlist as $j) { ?>
+                                <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['scholar'] ?? $user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="scholar">
+                            <?= lang('Scholar', 'Stipendiat:in') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+
+
+                <?php if (array_key_exists('supervisor', $fields)) {
+                    $selected = '';
+                    if ($new_project) {
+                        include_once BASEPATH . "/php/Groups.php";
+                        // default: head of group
+                        $dept = $USER['depts'] ?? [];
+                        if (!empty($dept)) {
+                            $Groups = new Groups();
+                            $heads = $Groups->getGroup($dept[0])['head'] ?? array();
+                            $selected = $heads[0] ?? '';
+                        }
+                    } else {
+                        $selected = $form['supervisor'] ?? '';
                     }
-                </script>
-            <?php } ?>
 
+                ?>
+                    <div class="form-group floating-form">
+                        <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off">
+                            <?php
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            foreach ($userlist as $j) { ?>
+                                <option value="<?= $j['username'] ?>" <?= $j['username'] == $selected ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="supervisor">
+                            <?= lang('Supervisor', 'Betreuende Person') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+            <?php } ?>
 
 
             <?php if (array_intersect(['name', 'title', 'start_proposed', 'start', 'purpose', 'internal_number'], $field_keys)) { ?>
@@ -432,6 +503,115 @@ if ($type) {
             <?php } ?>
 
 
+            <?php if (array_intersect(['scholarship', 'university'], $field_keys)) { ?>
+                <h6>
+                    <?= lang('Scholarship', 'Stipendium') ?>
+                </h6>
+
+                <?php if (array_key_exists('scholarship', $fields)) {
+                    // scholarship is a synonym for funding_organization
+                    $org_id = $form['funding_organization'] ?? ''; ?>
+
+                    <a id="scholarship" class="box py-5 px-10 mt-0 d-block colorless" href="#scholarship-org-modal">
+                        <label for="funding_organization" class="floating-title <?= $req('scholarship') ?>">
+                            <?= lang('Scholarship institution', 'Stipendiengeber') ?>
+                        </label>
+                        <i class="ph ph-edit float-right"></i>
+                        <input hidden readonly name="values[funding_organization]" value="<?= $org_id ?>" <?= $req('funding_organization') ?> readonly />
+
+                        <div id="scholarship-org-value">
+                            <?php if (empty($org_id)) { ?>
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php } else {
+                                $collab = $osiris->organizations->findOne(['_id' => $org_id]);
+                                if (!empty($collab)) { ?>
+                                    <b><?= $collab['name'] ?></b>
+                                    <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                <?php } else { ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                            <?php }
+                            } ?>
+                        </div>
+                    </a>
+
+
+                    <div class="modal" id="scholarship-org-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                                <label for="scholarship-search"><?= lang('Search scholarship institutions', 'Suche nach Stipediengeber') ?></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="scholarship-search" onkeydown="selectOrgEvent(event, 'scholarship')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button" onclick="selectOrgEvent(null, 'scholarship')"><i class="ph ph-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                                <p id="scholarship-search-comment"></p>
+                                <table class="table simple">
+                                    <tbody id="scholarship-org-suggest">
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if (array_key_exists('university', $fields)) {
+                    $org_id = $form['university'] ?? ''; ?>
+                    <a id="university" class="box py-5 px-10 mt-0 d-block colorless" href="#university-org-modal">
+                        <label for="university" class="floating-title <?= $req('university') ?>">
+                            <?= lang('Partner University', 'Partner-Universität') ?>
+                        </label>
+                        <i class="ph ph-edit float-right"></i>
+                        <input hidden readonly name="values[university]" value="<?= $org_id ?>" <?= $req('university') ?> readonly />
+
+                        <div id="university-org-value">
+                            <?php if (empty($org_id)) { ?>
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php } else {
+                                $collab = $osiris->organizations->findOne(['_id' => $org_id]);
+                                if (!empty($collab)) { ?>
+                                    <b><?= $collab['name'] ?></b>
+                                    <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                <?php } else { ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                            <?php }
+                            } ?>
+                        </div>
+                    </a>
+
+
+                    <div class="modal" id="university-org-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                                <label for="university-search"><?= lang('Search for Partner University', 'Suche nach Partner-Universität') ?></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="university-search" onkeydown="selectOrgEvent(event, 'university')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button" onclick="selectOrgEvent(null, 'university')"><i class="ph ph-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                                <p id="university-search-comment"></p>
+                                <table class="table simple">
+                                    <tbody id="university-org-suggest">
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            <?php } ?>
+
+
+
             <?php if (array_intersect(['funder', 'funding_organization', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
@@ -455,8 +635,7 @@ if ($type) {
                 <?php if (array_key_exists('funding_organization', $fields)) {
                     $org_id = $form['funding_organization'] ?? '';
                 ?>
-                    <a id="funding_organization" class="box py-5 px-10 mt-0 d-block colorless" href="#organisation-modal">
-
+                    <a id="funding" class="box py-5 px-10 mt-0 d-block colorless" href="#funding-org-modal">
                         <label for="funding_organization" class="floating-title <?= $req('funding_organization') ?>">
                             <?= lang('Funding organization', 'Förderorganisation') ?>
                         </label>
@@ -479,43 +658,25 @@ if ($type) {
                     </a>
 
 
-                    <div class="modal" id="organisation-modal" tabindex="-1" role="dialog">
+                    <div class="modal" id="funding-org-modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </a>
-                                <label for="organization-search"><?= lang('Add Cooperation Partner', 'Ko-Betreiber:innen hinzufügen') ?></label>
+                                <label for="funding-search"><?= lang('Search funding organization', 'Suche nach Förderorganisation') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="funding-search" onkeydown="selectOrgEvent(event, 'funding')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
                                     <div class="input-group-append">
-                                        <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                                        <button class="btn" type="button" onclick="selectOrgEvent(null, 'funding')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
                                 </div>
-                                <p id="search-comment"></p>
+                                <p id="funding-search-comment"></p>
                                 <table class="table simple">
-                                    <tbody id="organization-suggest">
+                                    <tbody id="funding-org-suggest">
                                     </tbody>
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-                                <script>
-                                    function createOrganizationTR(org) {
-                                        // overwrite organisation function
-                                        let id = cleanID(org.id)
-                                        $('#funding-org-value').html(
-                                            `<b>${org.name}</b> <br><small class="text-muted">${org.location}</small>`
-                                        );
-                                        $('#funding_organization input').val(id);
-                                        location.href = '#funding';
-                                    }
-
-                                    function handleKeyDown(event) {
-                                        if (event.key === 'Enter') {
-                                            event.preventDefault();
-                                            getOrganization($('#organization-search').val());
-                                        }
-                                    }
-                                </script>
                             </div>
                         </div>
                     </div>
@@ -1048,3 +1209,31 @@ if ($type) {
 
     <?php } ?>
 </div>
+
+
+<script>
+    function selectOrgEvent(event = null, type = 'scholarship') {
+        console.log(type);
+        if (event === null || event.key === 'Enter') {
+            if (event) event.preventDefault();
+
+            SUGGEST = $('#' + type + '-org-suggest')
+            INPUT = $('#' + type + '-search')
+            SELECTED = $('#' + type + '-org-value')
+            COMMENT = $('#' + type + '-search-comment')
+            console.log(SUGGEST);
+            window.createOrganizationTR = function(org) {
+                // overwrite organisation function
+                let id = cleanID(org.id)
+                $('#' + type + '-org-value').html(
+                    `<b>${org.name}</b> <br><small class="text-muted">${org.location}</small>`
+                );
+                $('#' + type + ' input').val(id);
+                location.href = '#' + type;
+            }
+
+            getOrganization($('#' + type + '-search').val());
+            return false;
+        }
+    }
+</script>

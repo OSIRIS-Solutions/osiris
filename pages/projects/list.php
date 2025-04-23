@@ -122,7 +122,7 @@ $Vocabulary = new Vocabulary();
             <?= lang('Add new project', 'Neues Projekt anlegen') ?>
         </a>
     <?php } ?>
-    
+
 </div>
 
 
@@ -198,6 +198,29 @@ $Vocabulary = new Vocabulary();
                 </table>
             </div> -->
 
+            <h6>
+                <?=lang('By type', 'Nach Projekttyp')?>
+                <a class="float-right" onclick="filterProjects('#filter-type .active', null, 1)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-type" class="table small simple">
+                    <?php
+                    $vocab = $Project->getProjectTypes();
+                    foreach ($vocab as $v) { ?>
+                        <tr  style="--highlight-color: <?= $v['color'] ?>;">
+                            <td>
+                                <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn" style="color:var(--highlight-color);">
+                                    <span>
+                                        <i class="ph ph-<?= $v['icon'] ?>"></i>&nbsp;
+                                        <?= lang($v['name'], $v['name_de'] ?? null) ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+
 
             <h6>
                 <?= lang('By funder', 'Nach Zuwendungsgeber') ?>
@@ -210,7 +233,8 @@ $Vocabulary = new Vocabulary();
                     foreach ($vocab as $v) { ?>
                         <tr>
                             <td>
-                                <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn" style="color:inherit;">
+                                <!-- Note: the $ sign is important, since otherwise, "Bund" will also match "Bundesländer" -->
+                                <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>$', 2)" class="item" id="<?= $v['id'] ?>-btn" style="color:inherit;">
                                     <span>
                                         <?= lang($v['en'], $v['de'] ?? null) ?>
                                     </span>
@@ -350,6 +374,16 @@ $Vocabulary = new Vocabulary();
     ]
 
     function renderType(data) {
+        <?php 
+        $vocab = $Project->getProjectTypes(); 
+        foreach ($vocab as $v) { ?>
+            if (data == '<?= $v['id'] ?>' || data == '<?= $v['id'] ?>') {
+                return `<span class="badge" style="color: <?= $v['color'] ?>">
+                            <i class="ph ph-<?= $v['icon'] ?>"></i>&nbsp;<?= lang($v['name'], $v['name_de'] ?? null) ?>
+                        </span>`
+            }
+        <?php } ?>
+        // Legacy types
         if (data == 'Eigenfinanziert' || data == 'self-funded') {
             return `<span class="badge text-signal">
                         <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
@@ -369,9 +403,8 @@ $Vocabulary = new Vocabulary();
             return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
                         </span>`
-        } else {
-            return data;
-        }
+        } 
+        return data;
     }
 
     function renderFunder(row) {
@@ -689,7 +722,10 @@ $Vocabulary = new Vocabulary();
 
             table.find('.active').removeClass('active')
             tr.addClass('active')
-            dataTable.columns(column).search(activity, true, false, true).draw();
+            dataTable.column(column).search(activity, true, false, true).draw();
+            // dataTable.column(column).data().filter(function (value, index) {
+            //     return value == activity;
+            // });
             // indicator
             const filterBtn = $('<span class="badge" id="filter-' + column + '">')
             filterBtn.html(`<b>${field.title}:</b> <span>${activity}</span>`)

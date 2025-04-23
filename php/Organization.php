@@ -21,14 +21,14 @@ class Organization
 
     function __construct() {}
 
-    public static function getIcon($ico, $cls=null)
+    public static function getIcon($ico, $cls = null)
     {
         $icons = [
             'Education' => 'graduation-cap',
             'Healthcare' => 'heartbeat',
             'Company' => 'buildings',
             'Archive' => 'archive',
-            'Nonprofit' => 'hand-coins',
+            'Nonprofit' => 'hand-heart',
             'Government' => 'bank',
             'Facility' => 'warehouse',
             'Other' => 'house',

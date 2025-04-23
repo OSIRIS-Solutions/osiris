@@ -331,11 +331,9 @@ $pageactive = function ($p) use ($page) {
                                 <?php if ($DB->canProposalsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/proposals/new" class="">
                                         <i class="ph ph-tree-structure"></i>
-                                        <?= lang('Add project proposal', 'Projektantrag hinzuf.') ?>
+                                        <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
-                                <?php } ?>
-
-                                <?php if ($DB->canProjectsBeCreated()) { ?>
+                                <?php } else if ($DB->canProjectsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/new" class="">
                                         <i class="ph ph-tree-structure"></i>
                                         <?= lang('Add project', 'Projekt hinzuf.') ?>

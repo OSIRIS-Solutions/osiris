@@ -97,6 +97,11 @@ $filter = [];
             <i class="ph ph-plus"></i>
             <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>
         </a>
+    <?php } else { ?>
+        <a href="#" class="btn link disabled p-0" onclick="toastError('<?= lang('You are not authorized to add new proposals.', 'Du hast keine Berechtigung, neue Anträge zu erstellen.') ?>')">
+            <i class="ph ph-plus"></i>
+            <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>
+        </a>
     <?php } ?>
 </div>
 
@@ -127,12 +132,16 @@ $filter = [];
                 <tr>
                     <td class="text-center">
                         <i class="ph ph-spinner-third text-muted"></i>
-                        <?= lang('Loading projects', 'Lade Projekte') ?>
+                        <?= lang('Loading proposals', 'Lade Projektanträge') ?>
                     </td>
                 </tr>
             </tbody>
         </table>
-
+        <?php if (!$Settings->hasPermission('proposals.view')) { ?>
+            <p class="text-muted">
+                <?= lang('Only your own proposals are shown, since you are not authorized to view all proposals.', 'Es werden nur deine eigenen Anträge angezeigt, da du nicht berechtigt bist, alle Anträge zu sehen.') ?>
+            </p>
+        <?php } ?>
     </div>
 
     <div class="col-3 filter-wrapper">
@@ -145,6 +154,29 @@ $filter = [];
 
             <div id="active-filters"></div>
 
+            <h6>
+                <?= lang('By type', 'Nach Projekttyp') ?>
+                <a class="float-right" onclick="filterProjects('#filter-type .active', null, 1)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-type" class="table small simple">
+                    <?php
+                    $vocab = $Project->getProjectTypes();
+                    foreach ($vocab as $v) { ?>
+                        <tr style="--highlight-color: <?= $v['color'] ?>;">
+                            <td>
+                                <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn" style="color:var(--highlight-color);">
+                                    <span>
+                                        <i class="ph ph-<?= $v['icon'] ?>"></i>&nbsp;
+                                        <?= lang($v['name'], $v['name_de'] ?? null) ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+
 
             <h6>
                 <?= lang('By status', 'Nach Status') ?>
@@ -155,38 +187,11 @@ $filter = [];
                     <tr style="--highlight-color: var(--success-color)">
                         <td> <a onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a></td>
                     </tr>
-                    <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'finished', 7)" class="item text-success"><?= lang('finished', 'abgeschlossen') ?></a></td>
-                    </tr>
                     <tr style="--highlight-color: var(--signal-color)">
                         <td> <a onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td> <a onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
-                    </tr>
-                </table>
-            </div>
-
-            <h6>
-                <?= lang('By role', 'Nach Rolle') ?>
-                <a class="float-right" onclick="filterProjects('#filter-role .active', null, 5)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-role" class="table small simple">
-                    <tr style="--highlight-color: var(--signal-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'Coordinator', 5)" class="item colorless"><i class="ph ph-crown text-signal"></i> <?= lang('Coordinator', 'Koordinator') ?></a>
-                        </td>
-                    </tr>
-                    <tr style="--highlight-color: var(--muted-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'Partner', 5)" class="item colorless"><i class="ph ph-handshake text-muted"></i> <?= lang('Partner') ?></a>
-                        </td>
-                    </tr>
-                    <tr style="--highlight-color: var(--muted-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'associated', 5)" class="item colorless"><i class="ph ph-address-book text-muted"></i> <?= lang('Accociate', 'Beteiligt') ?></a>
-                        </td>
                     </tr>
                 </table>
             </div>
@@ -203,7 +208,7 @@ $filter = [];
                             <td>
                                 <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn" style="color:inherit;">
                                     <span>
-                                    <?= lang($v['en'], $v['de'] ?? null) ?>
+                                        <?= lang($v['en'], $v['de'] ?? null) ?>
                                     </span>
                                 </a>
                             </td>
@@ -344,7 +349,18 @@ $filter = [];
         },
     ]
 
+
     function renderType(data) {
+        <?php
+        $vocab = $Project->getProjectTypes();
+        foreach ($vocab as $v) { ?>
+            if (data == '<?= $v['id'] ?>' || data == '<?= $v['id'] ?>') {
+                return `<span class="badge" style="color: <?= $v['color'] ?>">
+                            <i class="ph ph-<?= $v['icon'] ?>"></i>&nbsp;<?= lang($v['name'], $v['name_de'] ?? null) ?>
+                        </span>`
+            }
+        <?php } ?>
+        // Legacy types
         if (data == 'Eigenfinanziert' || data == 'self-funded') {
             return `<span class="badge text-signal">
                         <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
@@ -364,9 +380,8 @@ $filter = [];
             return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
                         </span>`
-        } else {
-            return data;
         }
+        return data;
     }
 
     function renderFunder(row) {
