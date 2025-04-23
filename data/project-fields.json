@@ -7,7 +7,8 @@
         "scope": {
             "project": true,
             "proposed": true
-        }
+        },
+        "order": 1
     },
     {
         "id": "applicants",
@@ -16,7 +17,8 @@
         "kdsf": "KDSF-B-2-15",
         "scope": {
             "proposed": true
-        }
+        }, 
+        "order": 99
     },
     {
         "id": "abstract",
@@ -26,7 +28,8 @@
         "scope": {
             "project": false,
             "proposed": false
-        }
+        },
+        "order": 20
     },
     {
         "id": "coordinator",
@@ -36,7 +39,8 @@
         "scope": {
             "project": false,
             "proposed": false
-        }
+        },
+        "order": 81
     },
     {
         "id": "countries",
@@ -47,7 +51,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "funder",
@@ -57,7 +62,8 @@
         "scope": {
             "project": true,
             "proposed": true
-        }
+        },
+        "order": 17
     },
     {
         "id": "funding_number",
@@ -67,7 +73,8 @@
         "scope": {
             "project": false,
             "approved": false
-        }
+        },
+        "order": 19
     },
     {
         "id": "funding_organization",
@@ -77,7 +84,8 @@
         "scope": {
             "project": false,
             "proposed": false
-        }
+        },
+        "order": 18
     },
     {
         "id": "comment",
@@ -89,7 +97,8 @@
             "proposed": false,
             "approved": false,
             "rejected": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "rejection_date",
@@ -98,7 +107,8 @@
         "kdsf": null,
         "scope": {
             "rejected": true
-        }
+        },
+        "order": 10
     },
     {
         "id": "approval_date",
@@ -107,7 +117,8 @@
         "kdsf": null,
         "scope": {
             "approved": true
-        }
+        },
+        "order": 9
     },
     {
         "id": "submission_date",
@@ -116,7 +127,8 @@
         "kdsf": null,
         "scope": {
             "proposed": true
-        }
+        },
+        "order": 8
     },
     {
         "id": "start",
@@ -126,7 +138,8 @@
         "scope": {
             "project": true,
             "approved": true
-        }
+        },
+        "order": 11
     },
     {
         "id": "end",
@@ -136,7 +149,8 @@
         "scope": {
             "project": true,
             "approved": true
-        }
+        },
+        "order": 12
     },
     {
         "id": "start_proposed",
@@ -145,7 +159,8 @@
         "kdsf": null,
         "scope": {
             "proposed": true
-        }
+        },
+        "order": 13
     },
     {
         "id": "end_proposed",
@@ -154,7 +169,8 @@
         "kdsf": null,
         "scope": {
             "proposed": true
-        }
+        },
+        "order": 14
     },
     {
         "id": "grant_subproject_proposed",
@@ -163,7 +179,8 @@
         "kdsf": null,
         "scope": {
             "proposed": false
-        }
+        },
+        "order": 30
     },
     {
         "id": "grant_subproject",
@@ -172,7 +189,8 @@
         "kdsf": null,
         "scope": {
             "approved": false
-        }
+        },
+        "order": 29
     },
     {
         "id": "grant_sum_proposed",
@@ -181,7 +199,8 @@
         "kdsf": null,
         "scope": {
             "proposed": false
-        }
+        },
+        "order": 27
     },
     {
         "id": "grant_sum",
@@ -190,7 +209,8 @@
         "kdsf": "KDSF-B-3-4",
         "scope": {
             "approved": false
-        }
+        },
+        "order": 26
     },
     {
         "id": "internal_number",
@@ -201,7 +221,8 @@
             "project": false,
             "approved": false,
             "proposed": false
-        }
+        },
+        "order": 33
     },
     {
         "id": "nagoya",
@@ -212,7 +233,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "kdsf-ffk",
@@ -223,7 +245,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "name",
@@ -234,7 +257,8 @@
             "project": true,
             "proposed": true,
             "approved": false
-        }
+        },
+        "order": 3
     },
     {
         "id": "public",
@@ -243,7 +267,8 @@
         "kdsf": null,
         "scope": {
             "project": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "purpose",
@@ -254,7 +279,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "personnel",
@@ -263,7 +289,8 @@
         "kdsf": null,
         "scope": {
             "proposed": false
-        }
+        },
+        "order": 100
     },
     {
         "id": "in-kind",
@@ -272,7 +299,8 @@
         "kdsf": null,
         "scope": {
             "proposed": false
-        }
+        },
+        "order": 100
     },
     {
         "id": "ressources",
@@ -281,7 +309,8 @@
         "kdsf": null,
         "scope": {
             "proposed": false
-        }
+        },
+        "order": 100
     },
     {
         "id": "role",
@@ -292,7 +321,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 80
     },
     {
         "id": "status",
@@ -303,7 +333,8 @@
             "proposed": true,
             "approved": true,
             "rejected": true
-        }
+        },
+        "order": 5
     },
     {
         "id": "title",
@@ -314,7 +345,8 @@
             "project": true,
             "proposed": true,
             "approved": false
-        }
+        },
+        "order": 4
     },
     {
         "id": "website",
@@ -324,7 +356,8 @@
         "scope": {
             "project": false,
             "approved": false
-        }
+        },
+        "order": 99
     },
     {
         "id": "funding_type",
@@ -335,7 +368,8 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 20
     },
     {
         "id": "project_type",
@@ -346,6 +380,7 @@
             "project": false,
             "proposed": false,
             "approved": false
-        }
+        },
+        "order": 21
     }
 ]

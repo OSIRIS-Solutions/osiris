@@ -77,6 +77,10 @@ class DB
      */
     public static function to_ObjectID($id)
     {
+        if (empty($id)) return null;
+        if ($id instanceof ObjectId) {
+            return $id;
+        }
         if (DB::is_ObjectID($id)) {
             return new ObjectId($id);
         }

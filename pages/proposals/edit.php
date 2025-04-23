@@ -86,7 +86,9 @@ if ($type) {
                 <?= lang('Please select a project type to continue.', 'Bitte wähle einen Projektyp aus, um fortzufahren.') ?>
             </div>
         <?php }
-    } else {
+    }
+
+    if ($type && !empty($selected)) {
 
         // type has been selected
         $project_type = $Project->getProjectType($type);
@@ -94,7 +96,12 @@ if ($type) {
         $subtitle = '';
         $phase = 'proposed';
         $status = $form['status'] ?? 'proposed';
-        if ($new_project && $selected['process'] == 'proposal') {
+        if (isset($from_proposal) && $from_proposal){
+            $formaction = ROOTPATH . "/crud/projects/create";
+            $url = ROOTPATH . "/projects/view/" . $form['_id'];
+            $title = lang('Create new project from proposal', 'Neues Projekt aus Antrag anlegen') . ': ' . ($form['name'] ?? $form['title'] ?? '');
+            $phase = 'project';
+        } else if ($new_project && $selected['process'] == 'proposal') {
             $formaction = ROOTPATH . "/crud/proposals/create";
             $url = ROOTPATH . "/proposals/view/*";
             $title = lang('New project proposal', 'Neuer Projektantrag');
@@ -121,21 +128,10 @@ if ($type) {
         $fields = array_column($fields, null, 'module');
         $field_keys = array_keys($fields);
 
-
         $required_fields = array_filter($fields, function ($field) {
             return $field['required'] ?? false;
         });
         $required_fields = array_column($required_fields, 'module');
-
-        $f = $Project->FIELDS;
-        foreach ($f as $key => $value) {
-            $scope = $value['scope'] ?? [];
-            if (array_key_exists($phase, $scope) && $scope[$phase] === true) {
-                $required_fields[] = $key;
-                $fields[$key] = $value;
-            }
-        }
-        dump($required_fields);
 
         $req = function ($field) use ($required_fields) {
             return in_array($field, $required_fields) ? 'required' : '';
@@ -164,8 +160,12 @@ if ($type) {
         <form action="<?= $formaction ?>" method="post" id="proposal-form" class="box padded">
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
-
             <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
+
+            <?php if (isset($from_proposal) && $from_proposal) { ?>
+                <input type="hidden" class="hidden" name="values[proposal_id]" value="<?= $form['_id'] ?>">
+            <?php } ?>
+            
 
             <?php if (array_key_exists('submission_date', $fields)) { ?>
                 <h5 class="mt-0">
@@ -562,15 +562,15 @@ if ($type) {
 
                 <?php if (array_key_exists('funding_type', $fields)) { ?>
                     <div class="floating-form">
-                        <select class="form-control" name="values[funding_type]" id="role" <?= $req('role') ?>>
+                        <select class="form-control" name="values[funding_type]" id="funding_type" <?= $req('funding_type') ?>>
                             <?php
                             $vocab = $Vocabulary->getValues('funding-type');
                             foreach ($vocab as $v) { ?>
                                 <option value="<?= $v['id'] ?>" <?= sel('funding_type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="role" class="<?= $req('role') ?>">
-                            <?= lang('Funding type', 'Art des Funding') ?> <?= $Settings->get('affiliation') ?>
+                        <label for="funding_type" class="<?= $req('funding_type') ?>">
+                            <?= lang('Funding type', 'Art des Funding') ?>
                         </label>
                     </div>
                 <?php } ?>
@@ -643,6 +643,7 @@ if ($type) {
 
                 <?php if (array_key_exists('public', $fields)) { ?>
                     <div class="form-group ">
+                        <input type="hidden" name="values[public]" value="0">
                         <div class="custom-checkbox">
                             <input type="checkbox" id="public-check" <?= val('public', false) ? 'checked' : '' ?> name="values[public]">
                             <label for="public-check">
@@ -669,7 +670,7 @@ if ($type) {
                             <?= lang('Project website', 'Webseite des Projekts') ?>
                         </label>
                         <small class="text-muted">
-                            <?= lang('Please enter full ULR (incl. http...)', 'Bitte vollständige URL angeben (inkl. http...)') ?>
+                            <?= lang('Please enter full URL (incl. http...)', 'Bitte vollständige URL angeben (inkl. http...)') ?>
                         </small>
                     </div>
                 <?php } ?>
@@ -685,7 +686,7 @@ if ($type) {
 
             <?php if (array_key_exists('countries', $fields)) {
                 $countries = $form['countries'] ?? [];
-                include_once BASEPATH . "/php/Country.php";
+                // include_once BASEPATH . "/php/Country.php";
             ?>
 
                 <b>
@@ -984,6 +985,25 @@ if ($type) {
                 <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
             <?php } ?>
 
+            <?php
+            $custom_fields = [];
+            foreach ($osiris->adminFields->distinct('id') as $key) {
+                if (array_key_exists($key, $fields)) {
+                    $custom_fields[] = $key;
+                }
+            }
+            if (!empty($custom_fields)) {
+                require_once BASEPATH . "/php/Modules.php";
+                $Modules = new Modules($form);
+
+                echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+                foreach ($custom_fields as $key) {
+                    $Modules->custom_field($key);
+                }
+            }
+            ?>
+
+            <br>
             <button class="btn secondary" type="button" id="submit-btn">
                 <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
             </button>

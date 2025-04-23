@@ -19,7 +19,7 @@
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
 
-$type = $project['type'] ?? 'Drittmittel';
+$type = $project['type'] ?? 'third-party';
 
 $user_project = false;
 $user_role = null;
@@ -93,7 +93,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 </style>
 
 
-<?php if ($Settings->featureEnabled('portal') && $project['public']) { ?>
+<?php if ($Settings->featureEnabled('portal') && ($project['public'] ?? true)) { ?>
     <a class="btn float-right" href="<?= ROOTPATH ?>/preview/project/<?= $id ?>">
         <i class="ph ph-eye ph-fw"></i>
         <?= lang('Preview', 'Vorschau') ?>
@@ -101,15 +101,16 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 <?php } ?>
 
 <div class="title mb-20">
-    <h1>
-
+    
+    <b class="badge text-uppercase primary"><?= lang('Project', 'Projekt') ?></b>
+    <h1 class="mt-0">
         <?= $project['name'] ?>
     </h1>
 
     <h2 class="subtitle">
         <?= $project['title'] ?>
     </h2>
-
+    <br>
 
     <!-- show research topics -->
     <?= $Settings->printTopics($project['topics'] ?? [], 'mb-20', true) ?>
@@ -121,10 +122,20 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             <br />
             <?= $Project->getType() ?>
         </div>
+        
         <div class="mr-10 badge bg-white">
-            <small><?= lang('Current Status', 'Aktueller Status') ?>: </small>
+            <small><?= lang('Proposal', 'Antrag') ?>: </small>
             <br />
-            <?= $Project->getStatus() ?>
+            <?php if (!isset($project['proposal_id'])) { 
+                echo '-';
+             } else if ($Settings->hasPermission('projects.view') || ($edit_perm && $Settings->hasPermission('projects.edit-own'))) { ?>
+                <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="badge primary">
+                    <i class="ph ph-link m-0"></i>
+                </a>
+            <?php } else { ?>
+                <?=lang('exists', 'vorhanden')?>
+            <?php } ?>
+            
         </div>
 
         <div class="mr-10 badge bg-white">
@@ -140,7 +151,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
         </div>
 
         <?php if ($Settings->featureEnabled('portal')) { ?>
-            <?php if ($project['public']) { ?>
+            <?php if ($project['public'] ?? true) { ?>
                 <div class="mr-10 badge success" data-toggle="tooltip" data-title="<?= lang('The approved project is shown in OSIRIS Portfolio.', 'Das bewilligte Projekt wird in OSIRIS Portfolio gezeigt.') ?>">
                     <small><?= lang('Visibility', 'Sichtbarkeit') ?>: </small>
                     <br />
@@ -167,6 +178,11 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
         </a>
 
 
+        <!-- Public representation -->
+        <a onclick="navigate('public')" id="btn-public" class="btn">
+            <i class="ph ph-globe" aria-hidden="true"></i>
+            <?= lang('Public representation', 'Öffentliche Darstellung') ?>
+        </a>
         <?php if ($type == 'Teilprojekt') {
             // collaborators are inherited from parent project
         } elseif (count($project['collaborators'] ?? []) > 0) { ?>
@@ -200,20 +216,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             </a>
         <?php } ?>
 
-        <!-- Public representation -->
-        <a onclick="navigate('public')" id="btn-public" class="btn">
-            <i class="ph ph-globe" aria-hidden="true"></i>
-            <?= lang('Public representation', 'Öffentliche Darstellung') ?>
-        </a>
 
-
-        <?php if ($Settings->hasPermission('project.finance.see') || in_array($user_role, ['PI', 'applicant'])) { ?>
-            <!-- PI and applicant can see -->
-            <a onclick="navigate('finance')" id="btn-finance" class="btn">
-                <i class="ph ph-money" aria-hidden="true"></i>
-                <?= lang('Ressources', 'Ressourcen')  ?>
-            </a>
-        <?php } ?>
 
         <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
             <a onclick="navigate('raw')" id="btn-raw" class="btn">
@@ -295,213 +298,39 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 </div>
 
                 <table class="table">
-
+                <tbody>
                     <?php
-                    $fields = $Project->getFieldsLegacy($project['type'] ?? 'Drittmittel');
-                    // dump($fields);
-                    $inherited = [];
-
-                    if ($type == 'Teilprojekt') { #
-                        $inherited = Project::INHERITANCE;
-                        $fields = array_merge($fields, $inherited);
-                    }
+                    foreach ($project as $key => $value) {
+                        if (!array_key_exists($key, $Project->FIELDS)) {
+                            continue;
+                        }
+                        if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
+                            continue;
+                        }
                     ?>
-
-                    <tbody>
-                        <?php if (!empty($project['parent'])) {
-                            $Parentproject = new Project();
-                        ?>
-                            <tr>
-                                <td>
-                                    <span class="key"><?= lang('Parent project', 'Übergeordnetes Projekt') ?></span>
-                                    <?php
-
-                                    $parent = $osiris->projects->findOne(['name' => $project['parent']]);
-                                    $Parentproject->setProject($parent);
-                                    echo $Parentproject->widgetLarge();
-                                    ?>
-
-                                </td>
-                            </tr>
-                        <?php } ?>
-
-                        <!-- Subprojects -->
-                        <?php if (!isset($project['parent']) && $type == 'Drittmittel') { ?>
-                            <tr>
-                                <td>
-                                    <span class="key">
-                                        <?= lang('Subprojects', 'Teilprojekte') ?>
-                                    </span>
-                                    <?php if (count($project['subprojects'] ?? []) > 0) {
-                                        $Subproject = new Project();
-                                        foreach ($project['subprojects'] as $sub) {
-                                            $sub = $osiris->projects->findOne(['name' => $sub]);
-                                            $Subproject->setProject($sub);
-                                            echo $Subproject->widgetSubproject();
-                                        }
-                                    } ?>
-                                    <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
-                                        <i class="ph ph-plus-circle" aria-hidden="true"></i>
-                                        <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-
-                        <?php foreach ($fields as $key) {
-                            if (!in_array($key, ['name', 'title', 'type', 'internal_number', 'contact', 'status', 'funder', 'funding_organization', 'funding_number', 'scholarship', 'university', 'purpose', 'role', 'coordinator', 'start', 'end', 'website', 'abstract', 'nagoya', 'countries'])) {
-                                continue;
-                            }
-                            if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
-                                continue;
-                            }
-                        ?>
-                            <tr>
-                                <td>
-                                    <?php if (in_array($key, $inherited)) { ?>
-                                        <small class="badge muted float-right">Inherited</small>
-                                    <?php } ?>
-
-                                    <?php
-                                    switch ($key) {
-                                        case 'name': ?>
-                                            <span class="key"><?= lang('Short title', 'Kurztitel') ?></span>
-                                            <?= $project['name'] ?? '-' ?>
-                                        <?php break;
-                                        case 'title': ?>
-                                            <span class="key"><?= lang('Full title of the project', 'Voller Titel des Projekts') ?></span>
-                                            <?= $project['title'] ?? '-' ?>
-                                        <?php break;
-                                        case 'type': ?>
-                                            <span class="key"><?= lang('Type of the project', 'Projekt-Typ') ?></span>
-                                            <?= $project['type'] ?? '-' ?>
-                                        <?php break;
-                                        case 'internal_number': ?>
-                                            <span class="key"><?= lang('Kostenträger') ?></span>
-                                            <?= $project['internal_number'] ?? '-' ?>
-                                        <?php break;
-                                        case 'contact': ?>
-                                            <span class="key"><?= lang('Applicant', 'Antragsteller:in') ?></span>
-                                            <a href="<?= ROOTPATH ?>/profile/<?= $project['contact'] ?? '' ?>"><?= $DB->getNameFromId($project['contact'] ?? '') ?></a>
-                                        <?php break;
-                                        case 'status': ?>
-                                            <span class="key"><?= lang('Status', 'Status') ?></span>
-                                            <?= $Project->getStatus() ?>
-                                        <?php break;
-                                        case 'funder': ?>
-                                            <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
-                                            <?= $Project->getFunder() ?>
-                                        <?php break;
-                                        case 'funding_organization': ?>
-                                            <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>
-                                            <?= $project['funding_organization'] ?? '-' ?>
-                                        <?php break;
-                                        case 'funding_number': ?>
-                                            <span class="key"><?= lang('Funding reference number(s)', 'Förderkennzeichen') ?></span>
-                                            <?= $Project->getFundingNumbers('<br>') ?>
-                                        <?php break;
-                                        case 'scholarship': ?>
-                                            <span class="key"><?= lang('Scholarship institution', 'Stipendiengeber') ?></span>
-                                            <?= $project['scholarship'] ?? '-' ?>
-                                        <?php break;
-                                        case 'university': ?>
-                                            <span class="key"><?= lang('Partner University', 'Partner-Universität') ?></span>
-                                            <?= $project['university'] ?? '-' ?>
-                                        <?php break;
-                                        case 'purpose': ?>
-                                            <span class="key"><?= lang('Purpose of the project', 'Zwecks des Projekts') ?></span>
-                                            <?= $Project->getPurpose() ?>
-                                        <?php break;
-                                        case 'role': ?>
-                                            <span class="key"><?= lang('Role of', 'Rolle von') ?> <?= $Settings->get('affiliation') ?></span>
-                                            <?= $Project->getRole() ?>
-                                        <?php break;
-                                        case 'coordinator': ?>
-                                            <span class="key"><?= lang('Coordinator facility', 'Koordinator-Einrichtung') ?></span>
-                                            <?= $project['coordinator'] ?? '-' ?>
-                                        <?php break;
-                                        case 'start': ?>
-                                            <span class="key">Projektbeginn</span>
-                                            <?= Document::format_date($project['start'] ?? null) ?>
-                                        <?php break;
-                                        case 'end': ?>
-                                            <span class="key">Projektende</span>
-                                            <?= Document::format_date($project['end'] ?? null) ?>
-                                        <?php break;
-                                        case 'nagoya':
-                                            $n = $project['nagoya'] ?? 'no';
-                                        ?>
-                                            <span class="key"><?= lang('Nagoya Protocol Compliance') ?></span>
-                                            <?php if ($n == 'no') { ?>
-                                                <span class="badge"><?= lang('Not relevant', 'Nicht relevant') ?></span>
-                                            <?php } else { ?>
-                                                <!-- <span class="badge danger"><?= lang('Relevant') ?></span>
-                                                <br> -->
-                                                <div class="alert signal">
-                                                    <h6 class="title"><?= lang('Countries', 'Länder:') ?></h6>
-                                                    <ul class="list signal mb-0">
-                                                        <?php $lang = lang('name', 'name_de');
-                                                        foreach ($project['nagoya_countries'] ?? [] as $c) { ?>
-                                                            <li><?= $DB->getCountry($c, $lang) ?></li>
-                                                        <?php } ?>
-                                                    </ul>
-                                                </div>
-                                            <?php } ?>
-
-                                        <?php break;
-                                        case 'countries': ?>
-                                            <span class="key"><?= lang('Countries', 'Länder') ?></span>
-                                            <ul class="list signal mb-0">
-                                                <?php $lang = lang('name', 'name_de');
-                                                foreach ($project['countries'] ?? [] as $c) {
-                                                    $iso = $c;
-                                                    $role = '';
-                                                    if (isset($c['country'])) {
-                                                        $iso = $c['country'];
-                                                    }
-                                                    if (isset($c['role'])) {
-                                                        $role = ' (' . $c['role'] . ')';
-                                                    }
-                                                ?>
-                                                    <li><?= $DB->getCountry($c, $lang) . $role ?></li>
-                                                <?php } ?>
-                                            </ul>
-                                        <?php break;
-                                        case 'website': ?>
-                                            <span class="key"><?= lang('Project website', 'Webseite des Projekts') ?></span>
-                                            <a href="<?= $project['website'] ?? '' ?>" target="_blank" rel="noopener noreferrer"> <?= $project['website'] ?? '-' ?></a>
-                                        <?php break;
-                                        case 'abstract': ?>
-                                            <span class="key"><?= lang('Abstract', 'Kurzbeschreibung') ?></span>
-                                            <?= $project['abstract'] ?? '-' ?>
-                                    <?php break;
-                                    }
-                                    ?>
-
-                                </td>
-                            </tr>
-                        <?php } ?>
                         <tr>
                             <td>
-                                <span class="key">Zustimmung zur Internetpräsentation des bewilligten Vorhaben</span>
-                                <?= bool_icon($project['public'] ?? false) ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
-                                <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
-                                    echo 'System';
-                                } else {
-                                    echo $DB->getNameFromId($project['created_by']);
-                                }
-                                echo " (" . $project['created'] . ")";
+                                <?php
+                                echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
+                                echo $Project->printField($key, $project[$key] ?? null);
                                 ?>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                    <?php } ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
+                            <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
+                                echo 'System';
+                            } else {
+                                echo $DB->getNameFromId($project['created_by']);
+                            }
+                            echo " (" . $project['created'] . ")";
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             </div>
 
@@ -540,7 +369,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                                                         ['user' => '', 'role' => '']
                                                     ];
                                                 }
-                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]]);
+                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
                                                 foreach ($persons as $i => $con) { ?>
                                                     <tr>
                                                         <td class="">
@@ -867,7 +696,6 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 </thead>
                 <tbody>
                 </tbody>
-
             </table>
         </div>
 
@@ -893,7 +721,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             <tbody>
                 <tr>
                     <td>
-                        <?php if ($project['public']) { ?>
+                        <?php if ($project['public'] ?? true) { ?>
                             <a class="badge success" href="<?= PORTALPATH ?>/project/<?= $project['_id'] ?>">
                                 <?= lang('Publicly shown', 'Öffentlich gezeigt') ?>
                             </a>
@@ -954,130 +782,6 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
     </section>
 
 
-
-    <?php if ($Settings->hasPermission('project.finance.see') || in_array($user_role, ['PI', 'applicant'])) { ?>
-        <section id="finance" style="display: none;">
-
-            <h2 class="title">
-                <?= lang('Finance data', 'Finanzen') ?>
-            </h2>
-
-            <div class="btn-toolbar mb-10">
-                <?php if ($Settings->hasPermission('project.finance.edit')) { ?>
-                    <a href="<?= ROOTPATH ?>/projects/finance/<?= $id ?>" class="btn primary">
-                        <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
-                    </a>
-                <?php } ?>
-            </div>
-
-            <table class="table">
-                <!-- "grant_sum_proposed": 1000000, -->
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Kostenträger') ?></span>
-                        <?= $project['internal_number'] ?? '-' ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key">grant_sum_proposed</span>
-                        <?= $project['grant_sum_proposed'] ?? '-' ?>
-                    </td>
-                </tr>
-
-                <!-- "grant_income_proposed": 360000, -->
-                <tr>
-                    <td>
-                        <span class="key">grant_income_proposed</span>
-                        <?= $project['grant_income_proposed'] ?? '-' ?>
-                    </td>
-                </tr>
-
-                <!-- "grant_sum": 1000000, -->
-                <tr>
-                    <td>
-                        <span class="key">grant_sum</span>
-                        <?= $project['grant_sum'] ?? '-' ?>
-                    </td>
-                </tr>
-
-                <!-- "grant_income": 360000, -->
-                <tr>
-                    <td>
-                        <span class="key">grant_income</span>
-                        <?= $project['grant_income'] ?? '-' ?>
-                    </td>
-                </tr>
-
-            </table>
-
-            <!-- "ressources" -->
-            <h3 class="title">
-                <?= lang('Ressources', 'Ressourcen') ?>
-            </h3>
-            <table class="table">
-                <tbody>
-                    <?php
-                    $res = $project['ressources'];
-                    foreach (
-                        [
-                            'material' => lang('Material', 'Material'),
-                            'personnel' => lang('Personnel', 'Personal'),
-                            'room' => lang('Room', 'Raum'),
-                            'other' => lang('Other', 'Sonstiges')
-                        ] as $r => $h
-                    ) { ?>
-                        <tr>
-                            <td>
-                                <span class="key"><?= $h ?></span>
-                                <?php if (($res[$r] ?? 'no') == 'yes') { ?>
-                                    <span class="badge success">
-                                        <?= lang('Yes', 'Ja') ?>
-                                    </span>
-                                    <br>
-                                    <?= $res[$r . '_details'] ?>
-                                <?php } else { ?>
-                                    <span class="badge danger"><?= lang('No', 'Nein') ?></span>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-
-                </tbody>
-            </table>
-
-
-            <!-- applied personnel and in-kind -->
-            <h3 class="title">
-                <?= lang('Applied personnel and in-kind', 'Angewandtes Personal und Sachmittel') ?>
-            </h3>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td>
-                            <span class="key">
-                                <?= lang('Personnel measures planned', 'Geplante Personalmaßnahmen') ?>
-                            </span>
-                            <?= $project['personnel'] ?? '-' ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="key">
-                                <?= lang('In-kind personnel', 'Umfang des geplanten eigenen Personaleinsatzes') ?>
-                            </span>
-                            <?= $project['in-kind'] ?? '-' ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-        </section>
-    <?php } ?>
-
-
-
     <section id="raw" style="display:none">
 
         <h2 class="title">
@@ -1095,11 +799,8 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
     </section>
 
 
-
-    <!-- Modal for cennecting activities -->
-
-
     <?php if ($edit_perm) { ?>
+        <!-- Modal for connecting activities -->
         <div class="modal" id="add-activity" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

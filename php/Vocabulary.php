@@ -20,7 +20,8 @@ class Vocabulary extends DB
     /**
      * @var array $vocabularies
      */
-    private $vocabularies = [];
+    public $vocabularies = [];
+    public $kdsf_ffk = [];
 
     // init
     public function __construct()
@@ -50,6 +51,9 @@ class Vocabulary extends DB
         foreach ($vocabularies_db as $v) {
             $this->vocabularies[$v['id']]['values'] = $v['values'];
         }
+
+        // php/kdsf-ffk.phpkdsf-ffk
+        $this->kdsf_ffk = include_once BASEPATH . "/php/kdsf-fkk.php";
     }
 
     /**
@@ -79,7 +83,7 @@ class Vocabulary extends DB
      * @param string $id
      * @return array
      */
-    public function getValues($id, $all=false)
+    public function getValues($id, $all = false)
     {
         $vocab = $this->getVocabulary($id);
         $values = DB::doc2Arr($vocab['values'] ?? []);
@@ -101,7 +105,7 @@ class Vocabulary extends DB
      * @param string $lang
      * @return string
      */
-    public function getValue($id, $key, $default='')
+    public function getValue($id, $key, $default = '')
     {
         $lang = lang('en', 'de');
         $values = $this->getValues($id, true);
@@ -111,4 +115,14 @@ class Vocabulary extends DB
         return $value;
     }
 
+    public function getKDSF($id, $key, $default = '') {
+        $value = $this->kdsf_ffk[$id] ?? null;
+        if (is_null($value)) {
+            return $default;
+        }
+        if (isset($value[$key])) {
+            return $value[$key];
+        }
+        return $value;
+    }
 }

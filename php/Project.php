@@ -23,99 +23,6 @@ class Project extends Vocabulary
 {
     public $project = array();
 
-    public $fields = [
-        'Drittmittel' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'grant_income',
-            'funder',
-            'funding_organization',
-            'funding_number',
-            'grant_sum_proposed',
-            'grant_income_proposed',
-            'personnel',
-            'ressources',
-            'contact',
-            'purpose',
-            'role',
-            'coordinator',
-            'nagoya',
-            'countries',
-            'kdsf-ffk',
-        ],
-        'Stipendium' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'grant_income',
-            'supervisor',
-            'scholar',
-            'scholarship',
-            'university',
-        ],
-        'Eigenfinanziert' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'personnel',
-            'ressources',
-            'contact',
-        ],
-        'Teilprojekt' => [
-            'name',
-            'title',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'grant_subproject',
-            'funding_number',
-            'grant_subproject_proposed',
-            'personnel',
-            'ressources',
-            'contact',
-            // 'status',
-            // 'website',
-            // 'grant_sum',
-            // 'grant_income',
-            // 'funder',
-            // 'funding_organization',
-            // 'grant_sum_proposed',
-            // 'grant_income_proposed',
-            // 'purpose',
-            // 'role',
-            // 'coordinator',
-        ],
-        'default' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-        ]
-    ];
-
     public $FIELDS = [];
 
     public const PHASES = [
@@ -149,21 +56,6 @@ class Project extends Vocabulary
             'type' => 'project'
         ]
     ];
-
-    // public const STATUS = [
-    //     'applied' => 'beantragt',
-    //     'approved' => 'bewilligt',
-    //     'rejected' => 'abgelehnt',
-    //     'finished' => 'abgeschlossen',
-    // ];
-
-    // public const PURPOSE = [
-    //     'research' => 'Forschung',
-    //     'teaching' => 'Lehre',
-    //     'promotion' => 'Förderung des wissenschaftlichen Nachwuchs',
-    //     'transfer' => 'Transfer',
-    //     'others' => 'Sonstiger Zweck',
-    // ];
 
     public const TYPE = [
         'Drittmittel' => 'Drittmittel',
@@ -248,7 +140,8 @@ class Project extends Vocabulary
                 'de' => $field['de'],
                 'kdsf' => $field['kdsf'] ?? null,
                 'custom' => false,
-                "scope" => $field['scope'] ?? []
+                "scope" => $field['scope'] ?? [],
+                'order' => $field['order'] ?? 99,
             ];
         }
 
@@ -260,7 +153,8 @@ class Project extends Vocabulary
                 'de' => $field['name_de'],
                 'kdsf' => null,
                 'custom' => true,
-                'scope' => ["project" => false, "proposed" => false, "approved" => false]
+                'scope' => ["project" => false, "proposed" => false, "approved" => false],
+                'order' => $field['order'] ?? 99,
             ];
         }
 
@@ -276,7 +170,8 @@ class Project extends Vocabulary
                 'de' => $label['de'],
                 'required' => false,
                 'kdsf' => null,
-                'scope' => ["project" => false, "proposed" => false, "approved" => false]
+                'scope' => ["project" => false, "proposed" => false, "approved" => false],
+                'order' => $field['order'] ?? 99,
             ];
         }
     }
@@ -310,12 +205,149 @@ class Project extends Vocabulary
                 break;
             }
         }
-        return DB::doc2Arr($fields);
+        $fields = DB::doc2Arr($fields);
+        foreach ($this->FIELDS as $key => $value) {
+            $scope = $value['scope'] ?? [];
+            if (array_key_exists($phase, $scope) && $scope[$phase] === true) {
+                $fields[] = [
+                    'module' => $key,
+                    'required' => true
+                ];
+            }
+        }
+        // sort by 'order' in $this->FIELDS
+        usort($fields, function ($a, $b) {
+            $a_order = $this->FIELDS[$a['module']]['order'] ?? 0;
+            $b_order = $this->FIELDS[$b['module']]['order'] ?? 0;
+            return $a_order <=> $b_order;
+        });
+        return $fields;
+    }
+
+    public function printLabel($key)
+    {
+        $field = $this->FIELDS[$key] ?? null;
+        if (empty($field)) return $key;
+        return lang($field['en'], $field['de'] ?? null);
+    }
+
+    public function printField($field, $value)
+    {
+        if (empty($value)) return '-';
+        switch ($field) {
+            case 'type':
+                return $this->getType('');
+            case 'website':
+                $url = str_replace('https://', '', $value);
+                $url = str_replace('http://', '', $url);
+                $url = str_replace('www.', '', $url);
+                return '<a href="' . $value . '" target="_blank" class="link">' . $url . '</a>';
+            case 'start':
+            case 'end':
+            case 'start_proposed':
+            case 'end_proposed':
+            case 'submission_date':
+            case 'approval_date':
+            case 'rejection_date':
+                return Document::format_date($value);
+            case 'nagoya':
+                if ($value == 'no') {
+                    return lang('Not relevant', 'Nicht relevant');
+                }
+                $lang = lang('name', 'name_de');
+                $countriesList = '';
+                foreach ($value ?? [] as $c) {
+                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . '</li>';
+                }
+                return '<div class="alert signal">'
+                    . '<h6 class="title">' . lang('Countries', 'Länder:') . '</h6>'
+                    . '<ul class="list signal mb-0">' . $countriesList . '</ul>'
+                    . '</div>';
+
+            case 'countries':
+                $lang = lang('name', 'name_de');
+                $countriesList = '';
+                foreach ($value ?? [] as $c) {
+                    $iso = $c;
+                    $role = '';
+                    if (isset($c['country'])) {
+                        $iso = $c['country'];
+                    }
+                    if (isset($c['role'])) {
+                        $role = ' (' . $c['role'] . ')';
+                    }
+                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . $role . '</li>';
+                }
+                return '<ul class="list signal mb-0">' . $countriesList . '</ul>';
+            case 'purpose':
+                return $this->getPurpose();
+            case 'role':
+                return $this->getRole();
+            case 'status':
+                return $this->getStatus();
+            case 'funder':
+                return $this->getFunder();
+            case 'funding_number':
+                return $this->getFundingNumbers('<br>');
+            case 'funding_type':
+                return $this->getFundingType();
+            case 'contact':
+                return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
+            case 'applicants':
+                $applicants = DB::doc2Arr($value);
+                $applicantsList = '';
+                foreach ($applicants as $a) {
+                    $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                }
+                return '<ul class="list mb-0">' . $applicantsList . '</ul>';
+            case 'grant_sum_proposed':
+            case 'grant_income_proposed':
+            case 'grant_sum':
+            case 'grant_income':
+                return number_format($value, 2, ',', '.') . ' €';
+            case 'kdsf-ffk':
+                $return = '<ul class="list mb-0">';
+                foreach ($value as $k) {
+                    $kdsf = $this->getKDSF($k, 'labels');
+                    if (empty($kdsf)) continue;
+                    $return .= '<li>' . lang($kdsf['en'], $kdsf['de'] ?? null) . '</li>';
+                }
+                return $return . '</ul>';
+            case 'ressources':
+                # { "material": "no", "material_details": null, "personnel": "no", "personnel_details": null, "room": "yes", "room_details": "1 Schreibtischarbeitsplatz", "other": "no", "other_details": null }
+                $return = '<ul class="list mb-0">';
+                foreach (
+                    [
+                        'material' => lang('Additional material resources', 'Zusätzliche Sachmittel'),
+                        'personnel' => lang('Additional personnel resources', 'Zusätzliche Personalmittel'),
+                        'room' => lang('Additional room capacities', 'Zusätzliche Raumkapazitäten'),
+                        'other' => lang('Other resources', 'Sonstige Ressourcen')
+                    ] as $res => $label
+                ) {
+                    if (isset($value[$res]) && $value[$res] == 'yes') {
+                        $details = $value[$res . '_details'] ?? null;
+                        if (!empty($details)) {
+                            $details = '<br><small>' . $details . '</small>';
+                        }
+                        $return .= '<li>' . $label . $details . '</li>';
+                    }
+                }
+                return $return . '</ul>';
+            case 'funding_organization':
+                $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return '-';
+                return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+            default:
+                if (is_string($value)) {
+                    return $value;
+                }
+                return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        }
     }
 
     public function getFieldsLegacy($type)
     {
-        return $this->fields[$type] ?? $this->fields['default'];
+        return 'NO LONGER SUPPORTED';
     }
     public function setProject($project)
     {
@@ -330,8 +362,10 @@ class Project extends Vocabulary
     {
         switch ($this->project['status'] ?? '') {
             case 'applied':
-                return "<span class='badge signal'>" . lang('applied', 'beantragt') . "</span>";
+            case 'proposed':
+                return "<span class='badge signal'>" . lang('proposed', 'beantragt') . "</span>";
             case 'approved':
+            case 'accepted':
                 if ($this->inPast())
                     return "<span class='badge dark'>" . lang('expired', 'abgelaufen') . "</span>";
                 return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
@@ -339,14 +373,30 @@ class Project extends Vocabulary
                 return "<span class='badge danger'>" . lang('rejected', 'abgelehnt') . "</span>";
             case 'finished':
                 return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
+            case 'project':
+                if ($this->inPast())
+                    return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
+                return "<span class='badge primary'>" . lang('ongoing', 'laufend') . "</span>";
             default:
-                return "<span class='badge'>-</span>";
+                return "<span class='badge'>" . lang('unknown', 'unbekannt') . "</span>";
         }
     }
 
-    public function getType($cls)
+    public function getType($cls = '')
     {
-        $type = $this->project['type'] ?? 'Drittmittel';
+        $type = $this->project['type'] ?? 'third-party';
+        $project_type = $this->getProjectType($type);
+        if (!empty($project_type)) {
+            $style = "style='background-color: " . $project_type['color'] . "33; color: " . $project_type['color'] . "'";
+            $return = "<span class='badge no-wrap $cls' $style>";
+            if (isset($project_type['icon'])) {
+                $return .= '<i class="ph ph-' . $project_type['icon'] . '"></i> ';
+            }
+            $return .= lang($project_type['name'], $project_type['name_de'] ?? null) . "</span>";
+            return $return;
+        }
+
+        // LEGACY SUPPORT
         if ($type == 'Drittmittel') { ?>
             <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
@@ -422,6 +472,11 @@ class Project extends Vocabulary
     {
         $funder = $this->project['funder'] ?? 'others';
         return $this->getValue('funder', $funder);
+    }
+    public function getFundingType()
+    {
+        $funder = $this->project['funding_type'] ?? 'others';
+        return $this->getValue('funding-type', $funder);
     }
 
     public function getPurpose()
