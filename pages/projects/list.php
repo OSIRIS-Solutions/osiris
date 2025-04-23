@@ -48,10 +48,12 @@ if (!$Settings->hasPermission('projects.view')) {
     ];
     $pagetitle = lang('My projects', 'Meine Projekte');
 }
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css?v=<?= CSS_JS_VERSION ?>">
 
 <style>
     .index {
@@ -113,13 +115,14 @@ if (!$Settings->hasPermission('projects.view')) {
         <i class="ph ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
+
+    <?php if ($Settings->hasPermission('projects.add') && $Project->canProjectsBeCreated()) { ?>
+        <a href="<?= ROOTPATH ?>/projects/new" class="">
+            <i class="ph ph-plus"></i>
+            <?= lang('Add new project', 'Neues Projekt anlegen') ?>
+        </a>
+    <?php } ?>
     
-<?php if ($Settings->hasPermission('projects.add') && $Project->canProjectsBeCreated()) { ?>
-    <a href="<?= ROOTPATH ?>/projects/new" class="">
-        <i class="ph ph-plus"></i>
-        <?= lang('Add new project', 'Neues Projekt anlegen') ?>
-    </a>
-<?php } ?>
 </div>
 
 
@@ -170,29 +173,7 @@ if (!$Settings->hasPermission('projects.view')) {
             <!-- <div id="searchpanes"></div> -->
 
             <div id="active-filters"></div>
-
-
-            <h6>
-                <?= lang('By status', 'Nach Status') ?>
-                <a class="float-right" onclick="filterProjects('#filter-status .active', null, 7)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-status" class="table small simple">
-                    <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a></td>
-                    </tr>
-                    <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'finished', 7)" class="item text-success"><?= lang('finished', 'abgeschlossen') ?></a></td>
-                    </tr>
-                    <tr style="--highlight-color: var(--signal-color)">
-                        <td> <a onclick="filterProjects(this, 'applied', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
-                    </tr>
-                    <tr style="--highlight-color: var(--danger-color)">
-                        <td> <a onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
-                    </tr>
-                </table>
-            </div>
-
+            <!-- 
             <h6>
                 <?= lang('By role', 'Nach Rolle') ?>
                 <a class="float-right" onclick="filterProjects('#filter-role .active', null, 5)"><i class="ph ph-x"></i></a>
@@ -215,7 +196,7 @@ if (!$Settings->hasPermission('projects.view')) {
                         </td>
                     </tr>
                 </table>
-            </div>
+            </div> -->
 
 
             <h6>
@@ -224,12 +205,14 @@ if (!$Settings->hasPermission('projects.view')) {
             </h6>
             <div class="filter">
                 <table id="filter-funder" class="table small simple">
-                    <?php foreach ($Project::FUNDER as $funder) { ?>
+                    <?php
+                    $vocab = $Vocabulary->getValues('funder');
+                    foreach ($vocab as $v) { ?>
                         <tr>
                             <td>
-                                <a data-type="<?= $funder ?>" onclick="filterProjects(this, '<?= $funder ?>', 2)" class="item" id="<?= $funder ?>-btn" style="color:inherit;">
+                                <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn" style="color:inherit;">
                                     <span>
-                                        <?= $funder ?>
+                                        <?= lang($v['en'], $v['de'] ?? null) ?>
                                     </span>
                                 </a>
                             </td>
@@ -255,8 +238,8 @@ if (!$Settings->hasPermission('projects.view')) {
                     <?php } ?>
                 </table>
             </div>
-
-            <!-- <h6>
+<!-- 
+            <h6>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
@@ -345,10 +328,6 @@ if (!$Settings->hasPermission('projects.view')) {
             key: 'applicant'
         },
         {
-            title: lang('Status', 'Status'),
-            key: 'status'
-        },
-        {
             title: lang('Units', 'Einheiten'),
             key: 'units'
         },
@@ -425,21 +404,6 @@ if (!$Settings->hasPermission('projects.view')) {
         if (!row.contact)
             return row.applicant;
         return `<a href="<?= ROOTPATH ?>/profile/${row.contact}">${row.applicant}</a>`
-    }
-
-    function renderStatus(data) {
-        switch (data) {
-            case 'approved':
-                return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
-            case 'finished':
-                return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
-            case 'applied':
-                return `<span class='badge signal'>${lang('applied', 'beantragt')}</span>`;
-            case 'rejected':
-                return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
-            case 'expired':
-                return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
-        }
     }
 
     function renderTopic(data) {
@@ -545,7 +509,9 @@ if (!$Settings->hasPermission('projects.view')) {
                         
                         <div class="d-flex justify-content-between">
                             ${renderType(row.type)}
-                            ${renderStatus(row.status)}
+                            <span class="badge">
+                            ${renderFunder(row)}
+                            </span>
                         </div>
                     </div>
                         `
@@ -601,10 +567,11 @@ if (!$Settings->hasPermission('projects.view')) {
                 },
                 {
                     target: 7,
-                    data: 'status',
+                    data: 'proposal_id',
                     searchable: true,
                     visible: false,
-                    header: lang('Status', 'Status')
+                    header: lang('Proposal-ID', 'Antrags-ID'),
+                    defaultContent: '-',
                 },
                 {
                     target: 8,
