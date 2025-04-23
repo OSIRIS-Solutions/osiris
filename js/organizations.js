@@ -151,7 +151,7 @@ function selectOrganization(org, create = false, callback = null) {
                 values: org
             },
             dataType: "json",
-            url: ROOTPATH + '/crud/organization/create',
+            url: ROOTPATH + '/crud/organizations/create',
             success: function (response) {
                 // $('.loader').removeClass('show')
                 // console.log(response);

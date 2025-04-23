@@ -111,7 +111,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
  * CRUD routes
  */
 
-Route::post('/crud/organization/create', function () {
+Route::post('/crud/organizations/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!isset($_POST['values'])) die("no values given");
