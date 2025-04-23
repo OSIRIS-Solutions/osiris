@@ -194,8 +194,8 @@
     },
     {
         "id": "grant_sum_proposed",
-        "en": "Proposed grant sum",
-        "de": "Beantragte Fördersumme ",
+        "en": "Proposed grant sum (total)",
+        "de": "Beantragte Fördersumme (gesamt)",
         "kdsf": null,
         "scope": {
             "proposed": false
@@ -204,13 +204,33 @@
     },
     {
         "id": "grant_sum",
-        "en": "Grant sum",
-        "de": "Fördersumme",
+        "en": "Grant sum (total)",
+        "de": "Fördersumme (gesamt)",
         "kdsf": "KDSF-B-3-4",
         "scope": {
             "approved": false
         },
         "order": 26
+    },
+    {
+        "id": "grant_income_proposed",
+        "en": "Proposed grant sum (Institute)",
+        "de": "Beantragte Fördersumme (Institut)",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 25
+    },
+    {
+        "id": "grant_income",
+        "en": "Grant sum (Institute)",
+        "de": "Fördersumme (Institut)",
+        "kdsf": null,
+        "scope": {
+            "approved": false
+        },
+        "order": 24
     },
     {
         "id": "internal_number",

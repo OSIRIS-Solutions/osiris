@@ -645,6 +645,10 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
     } else {
         $values = $_POST['projects'];
         $values = array_values($values);
+        // convert values to ObjectID
+        $values = array_map(function ($v) use ($DB) {
+            return $DB->to_ObjectID($v);
+        }, $values);
 
         $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],

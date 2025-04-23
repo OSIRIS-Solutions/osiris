@@ -15,6 +15,13 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$full_permission = $Settings->hasPermission('projects.edit');
+$filter = [];
+if (!$full_permission) {
+    $filter = ['persons.user' => $_SESSION['username']];
+}
+$project_list = $osiris->projects->find($filter, ['projection'=> ['_id' => 1, 'name' => 1]])->toArray();
 ?>
 
 <form action="<?= ROOTPATH ?>/crud/activities/update-project-data/<?= $id ?>" method="post">
@@ -37,8 +44,8 @@
                         <select name="projects[<?= $i ?>]" id="projects-<?= $i ?>" class="form-control" required>
                             <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?> --</option>
                             <?php
-                            foreach ($osiris->projects->distinct('name', ['status' => ['$in'=> ['approved', 'finished']]]) as $s) { ?>
-                                <option <?= $con == $s ? 'selected' : '' ?>><?= $s ?></option>
+                            foreach ($project_list as $s) { ?>
+                                <option <?= $con == $s['_id'] ? 'selected' : '' ?> value="<?=$s['_id']?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
                     </td>
@@ -59,10 +66,15 @@
 
     </table>
 
-    <p>
-        <?= lang('Note: only approved projects are shown here.', 'Bemerkung: nur bewilligte Projekte werden hier gezeigt.') ?>
-        <a href="<?= ROOTPATH ?>/projects" class="link"><?= lang('See all', 'Zeige alle') ?></a>
-    </p>
+    <?php if ($full_permission) { ?>
+        <p>
+            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+        </p>
+    <?php } else { ?>
+        <p>
+            <?= lang('Note: only your own projects are shown here. You cannot connect proposals.', 'Bemerkung: nur deine eigenen Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+        </p>
+    <?php } ?>
     <button class="btn secondary">
         <i class="ph ph-check"></i>
         <?= lang('Submit', 'Bestätigen') ?>

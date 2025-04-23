@@ -150,7 +150,7 @@ if ($type) {
         </p>
 
         <?php if ($status == 'proposed' && $phase == 'approved') { ?>
-            <?=lang('Status change', 'Statusänderung')?>:
+            <?= lang('Status change', 'Statusänderung') ?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
             <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
@@ -159,7 +159,7 @@ if ($type) {
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
             </p>
         <?php } else if ($status == 'proposed' && $phase == 'rejected') { ?>
-            <?=lang('Status change', 'Statusänderung')?>:
+            <?= lang('Status change', 'Statusänderung') ?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
             <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
@@ -238,9 +238,9 @@ if ($type) {
 
 
             <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
-                <h6>
+                <h5>
                     <?= lang('Persons', 'Personen') ?>
-                </h6>
+                </h5>
 
                 <?php if (array_key_exists('applicants', $fields)) { ?>
                     <div class="data-module col-12" data-module="authors">
@@ -504,9 +504,9 @@ if ($type) {
 
 
             <?php if (array_intersect(['scholarship', 'university'], $field_keys)) { ?>
-                <h6>
+                <h5>
                     <?= lang('Scholarship', 'Stipendium') ?>
-                </h6>
+                </h5>
 
                 <?php if (array_key_exists('scholarship', $fields)) {
                     // scholarship is a synonym for funding_organization
@@ -740,18 +740,22 @@ if ($type) {
 
 
 
-            <?php if (array_intersect(['grant_sum_proposed', 'grant_income_proposed'], $field_keys)) { ?>
+            <?php if (array_intersect(['grant_sum_proposed', 'grant_income_proposed', 'grant_sum', 'grant_income'], $field_keys)) { ?>
 
                 <h5>
-                    <?= lang('Proposed grant sum', 'Beantragte Fördersumme') ?> in EURO
+                    <?= lang('Grant sum', 'Fördermittel') ?> in Euro
                 </h5>
+
+                <!-- <b>
+                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?>
+                </b> -->
                 <div class="row row-eq-spacing mt-0">
 
                     <?php if (array_key_exists('grant_sum_proposed', $fields)) { ?>
                         <div class="col floating-form">
                             <input type="number" step="1" class="form-control" <?= $req('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= val('grant_sum_proposed') ?>" placeholder="112345">
                             <label for="grant_sum_proposed" class="<?= $req('grant_sum_proposed') ?>">
-                                <?= lang('Total', 'Insgesamt') ?>
+                                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -760,27 +764,27 @@ if ($type) {
                             <input type="number" step="1" class="form-control" <?= $req('grant_income_proposed') ?> name="values[grant_income_proposed]" id="grant_income_proposed" value="<?= val('grant_income_proposed') ?>" placeholder="112345">
 
                             <label for="grant_income_proposed" class="<?= $req('grant_income_proposed') ?>">
-                                <?= lang('For the Institute', 'Für das Institut') ?>
+                                <?= lang('Proposed grant (institute)', 'Beantragte Fördersumme (Institut)') ?>
+                            </label>
+                        </div>
+                    <?php } ?>
+                    <?php if (array_key_exists('grant_subproject_proposed', $fields)) { ?>
+                        <div class="col floating-form">
+                            <input type="number" step="1" class="form-control" <?= $req('grant_subproject_proposed') ?> name="values[grant_subproject_proposed]" id="grant_subproject_proposed" value="<?= val('grant_subproject_proposed') ?>" placeholder="112345">
+
+                            <label for="grant_subproject_proposed" class="<?= $req('grant_subproject_proposed') ?>">
+                                <?= lang('Proposed grant (subproject)', 'Beantragte Fördersumme (Teilprojekt)') ?>
                             </label>
                         </div>
                     <?php } ?>
                 </div>
-            <?php } ?>
 
-
-
-            <?php if (array_intersect(['grant_sum', 'grant_income'], $field_keys)) { ?>
-
-                <h5>
-                    <?= lang('Grant sum', 'Bewilligungssumme') ?> in EURO
-                </h5>
                 <div class="row row-eq-spacing mt-0">
-
                     <?php if (array_key_exists('grant_sum', $fields)) { ?>
                         <div class="col floating-form">
                             <input type="number" step="1" class="form-control" <?= $req('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= val('grant_sum') ?>" placeholder="1234">
                             <label for="grant_sum" class="<?= $req('grant_sum') ?>">
-                                <?= lang('Total', 'Insgesamt') ?>
+                                <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -788,7 +792,15 @@ if ($type) {
                         <div class="col floating-form">
                             <input type="number" step="1" class="form-control" <?= $req('grant_income') ?> name="values[grant_income]" id="grant_income" value="<?= val('grant_income') ?>" placeholder="1234">
                             <label for="grant_income" class="<?= $req('grant_income') ?>">
-                                <?= lang('Institute', 'Institut') ?>
+                                <?= lang('Grant sum (institute)', 'Fördersumme (Institut)') ?>
+                            </label>
+                        </div>
+                    <?php } ?>
+                    <?php if (array_key_exists('grant_subproject', $fields)) { ?>
+                        <div class="col floating-form">
+                            <input type="number" step="1" class="form-control" <?= $req('grant_subproject') ?> name="values[grant_subproject]" id="grant_subproject" value="<?= val('grant_subproject') ?>" placeholder="1234">
+                            <label for="grant_subproject" class="<?= $req('grant_subproject') ?>">
+                                <?= lang('Grant sum (subproject)', 'Fördersumme (Teilprojekt)') ?>
                             </label>
                         </div>
                     <?php } ?>
