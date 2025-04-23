@@ -385,7 +385,7 @@ Route::get('/api/dashboard/project-timeline', function () {
         die;
     }
 
-    $filter = ['status' => ['$in' => ['approved', 'finished']]];
+    $filter = [];
     if (isset($_GET['user'])) {
         $filter['persons.user'] = $_GET['user'];
     }

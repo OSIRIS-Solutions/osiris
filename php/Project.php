@@ -661,7 +661,9 @@ class Project extends Vocabulary
             }
             $widget .= '<span class="float-right badge">' . $this->personRole($userrole) . '</span> ';
         }
+        if ($this->project['status'] != 'project') {
         $widget .= '<span class="mr-10">' . $this->getStatus() . '</span> ';
+        }
         if (isset($this->project['funder']))
             $widget .= '<span class="text-muted">' . $this->project['funder'] . '</span>';
         $widget .= '</a>';

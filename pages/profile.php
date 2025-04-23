@@ -556,11 +556,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 ['contact' => $user],
                 ['persons.user' => $user]
             ),
-            "status" => ['$in' => ["approved", 'finished']]
+            // "status" => ['$in' => ["approved", 'finished']]
         ];
-        if ($currentuser) {
-            $project_filter['status']['$in'][] = 'applied';
-        }
+        // if ($currentuser) {
+        //     $project_filter['status']['$in'][] = 'applied';
+        // }
 
         $count_projects = $osiris->projects->count($project_filter);
         if ($count_projects > 0) { ?>
@@ -1562,7 +1562,12 @@ if ($currentuser) { ?>
 
 
 
-<?php if ($Settings->featureEnabled('projects')) { ?>
+<?php if ($Settings->featureEnabled('projects')) {
+
+    require_once BASEPATH . "/php/Project.php";
+    $Project = new Project();
+
+?>
     <section id="projects" style="display:none">
         <h3 class="title">
             <?= lang('Timeline of all approved projects', 'Zeitstrahl aller bewilligten Projekte') ?>
@@ -1572,21 +1577,18 @@ if ($currentuser) { ?>
                 <div id="project-timeline"></div>
             </div>
         </div>
+
+
         <?php
         if ($count_projects > 0) {
             $projects = $osiris->projects->find($project_filter, ['sort' => ["start" => -1, "end" => -1]]);
 
-            $applied = [];
             $ongoing = [];
             $past = [];
 
-            require_once BASEPATH . "/php/Project.php";
-            $Project = new Project();
             foreach ($projects as $project) {
                 $Project->setProject($project);
-                if ($project['status'] == 'applied') {
-                    $applied[] = $Project->widgetLarge($user);
-                } elseif ($Project->inPast()) {
+                if ($Project->inPast()) {
                     $past[] = $Project->widgetLarge($user);
                 } else {
                     $ongoing[] = $Project->widgetLarge($user);
@@ -1606,21 +1608,31 @@ if ($currentuser) { ?>
                 </div>
             <?php } ?>
 
-            <?php if ($currentuser && !empty($applied)) { ?>
-                <h2><?= lang('Proposed projects', 'Beantragte Projekte') ?></h2>
 
-                <div class="row row-eq-spacing my-0">
-                    <?php foreach ($applied as $html) { ?>
-                        <div class="col-md-6">
-                            <?= $html ?>
-                        </div>
-                    <?php } ?>
-                </div>
+            <?php if ($currentuser) {
+                $proposals = $osiris->proposals->find(['persons.user' => $user, 'status' => 'proposed'], ['sort' => ["start" => -1, "end" => -1]])->toArray();
+                if (!empty($proposals)) {
+            ?>
 
-                <p class="text-muted font-size-12">
-                    <?= lang('Others can not see projects you applied for on your profile page.', 'Andere Nutzende können beantragte Projekte nicht auf deiner Profilseite sehen.') ?>
-                </p>
+                    <h2><?= lang('Proposed projects', 'Beantragte Projekte') ?></h2>
+
+                    <div class="row row-eq-spacing my-0">
+                        <?php foreach ($proposals as $proposal) {
+                            $Project->setProject($proposal);
+                        ?>
+                            <div class="col-md-6">
+                                <?= $Project->widgetLarge($user) ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <p class="text-muted font-size-12">
+                        <?= lang('Others can not see your proposals on your profile page.', 'Andere Nutzende können Projektanträge nicht auf deiner Profilseite sehen.') ?>
+                        <a href="<?= ROOTPATH ?>/proposals" class="link"><?= lang('See all proposals', 'Zeige alle Anträge') ?></a>
+                    </p>
+                <?php } ?>
             <?php } ?>
+
 
             <?php if (!empty($past)) { ?>
                 <h2><?= lang('Past projects', 'Vergangene Projekte') ?></h2>
@@ -1633,12 +1645,7 @@ if ($currentuser) { ?>
                     <?php } ?>
                 </div>
             <?php } ?>
-
-
         <?php } ?>
-
-
-
     </section>
 <?php } ?>
 
