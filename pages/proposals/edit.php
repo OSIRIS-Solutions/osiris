@@ -63,6 +63,10 @@ if ($type) {
         }
     }
 }
+if (empty($selected)) {
+    $selected = [];
+    $type = null;
+}
 ?>
 
 
@@ -71,7 +75,7 @@ if ($type) {
 
 
 <div class="container w-600">
-    <?php if ($new_project) { ?>
+    <?php if ($new_project || $type === null) { ?>
         <div class="select-btns">
             <?php
             foreach ($project_types as $pt) {
@@ -939,7 +943,28 @@ if ($type) {
                 </script>
             <?php } ?>
 
+            <!-- if topics are registered, you can choose them here -->
+            <?php if (array_key_exists('topics', $fields)) { ?>
+                <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
+            <?php } ?>
 
+            <?php
+            $custom_fields = [];
+            foreach ($osiris->adminFields->distinct('id') as $key) {
+                if (array_key_exists($key, $fields)) {
+                    $custom_fields[] = $key;
+                }
+            }
+            if (!empty($custom_fields)) {
+                require_once BASEPATH . "/php/Modules.php";
+                $Modules = new Modules($form);
+
+                echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+                foreach ($custom_fields as $key) {
+                    $Modules->custom_field($key, in_array($key, $required_fields));
+                }
+            }
+            ?>
 
             <?php if (array_key_exists('nagoya', $fields) && $Settings->featureEnabled('nagoya')) {
                 $countries = $form['nagoya_countries'] ?? [];
@@ -1152,29 +1177,6 @@ if ($type) {
                     </div>
                 <?php } ?>
             <?php } ?>
-
-            <!-- if topics are registered, you can choose them here -->
-            <?php if (array_key_exists('topics', $fields)) { ?>
-                <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
-            <?php } ?>
-
-            <?php
-            $custom_fields = [];
-            foreach ($osiris->adminFields->distinct('id') as $key) {
-                if (array_key_exists($key, $fields)) {
-                    $custom_fields[] = $key;
-                }
-            }
-            if (!empty($custom_fields)) {
-                require_once BASEPATH . "/php/Modules.php";
-                $Modules = new Modules($form);
-
-                echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
-                foreach ($custom_fields as $key) {
-                    $Modules->custom_field($key);
-                }
-            }
-            ?>
 
             <br>
             <button class="btn secondary" type="button" id="submit-btn">

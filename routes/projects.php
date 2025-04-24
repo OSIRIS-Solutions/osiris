@@ -139,6 +139,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
             break;
         default:
             $name = lang("Edit", "Bearbeiten");
+            break;
     }
 
     $breadcrumb = [

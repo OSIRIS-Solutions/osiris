@@ -49,8 +49,9 @@ function sel($index, $value)
 // load defined vocabularies
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
-?>
 
+
+?>
 
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 
@@ -73,7 +74,6 @@ $Vocabulary = new Vocabulary();
 
 
     <?php
-    $wrong_process_list = [];
     if (is_null($subproject) && empty($form)) { ?>
         <!-- subprojects cannot change their project type -->
 
@@ -131,7 +131,6 @@ $Vocabulary = new Vocabulary();
             if (!isset($fields[$field])) return '';
             return $fields[$field]['required'] ? 'required' : '';
         };
-
 
     ?>
 
