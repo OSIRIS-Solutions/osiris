@@ -197,15 +197,35 @@ $pageactive = function ($p) use ($page) {
 
             </ul>
 
+            <div class="dropdown">
+                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
+                    <i class="ph ph-translate"></i>
+                    <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
+                    <h6 class="header text-primary"><?= lang('Change language', 'Sprache ändern') ?></h6>
+
+                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
+                        <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
+                        <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
+                        <button type="submit" class="btn primary block ">
+                            <i class="ph ph-translate" aria-hidden="true"></i>
+                            <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                            <?= lang('Deutsch', 'English') ?>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Accessibility menu -->
             <div class="dropdown d-none d-md-block">
-                <button class="btn text-primary border-primary square mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
+                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-person-arms-spread ph-person-simple-circle"></i>
                     <span class="sr-only"><?= lang('Accessibility Options', 'Accessibility-Optionen') ?></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center w-300" aria-labelledby="accessibility-menu">
                     <h6 class="header text-primary">Accessibility</h6>
-                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content">
+                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                         <input type="hidden" name="accessibility[check]">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
 
@@ -241,18 +261,9 @@ $pageactive = function ($p) use ($page) {
                 </div>
             </div>
 
-            <form action="<?= ROOTPATH ?>/set-preferences" method="get">
-                <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
-                <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
-                <button type="submit" class="btn text-primary border-primary mr-5">
-                    <i class="ph ph-translate" aria-hidden="true"></i>
-                    <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
-                    <?= lang('DE', 'EN') ?>
-                </button>
-            </form>
 
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
-                <a href="<?= ROOTPATH ?>/" class="btn text-primary border-primary mr-5">
+                <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
                     <?= lang('Log in', 'Anmelden') ?>
                 </a>
@@ -260,34 +271,44 @@ $pageactive = function ($p) use ($page) {
                 $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
                 $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
-                    <form action="" class="nav-search" id="navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
-                            </div>
+                    <div class="dropdown">
+                        <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
+                            <i class="ph ph-user-switch"></i>
+                            <span class="sr-only"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
+                            <h6 class="header text-primary"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></h6>
 
-                            <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
-                                <option value="" disabled>
-                                    <?= lang('Switch user', 'Benutzer wechseln') ?>
-                                </option>
-                                <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
-                                <?php
-                                foreach ($maintain as $d) { ?>
-                                    <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
-                                <?php } ?>
-                            </select>
+                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="content pt-0" id="navbar-search">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
+                                    </div>
+
+                                    <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
+                                        <option value="" disabled>
+                                            <?= lang('Switch user', 'Benutzer wechseln') ?>
+                                        </option>
+                                        <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
+                                        <?php
+                                        foreach ($maintain as $d) { ?>
+                                            <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                <?php } else { ?>
-                    <form id="navbar-search" action="<?= ROOTPATH ?>/activities" method="get" class="nav-search">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control border-primary" autocomplete="off" placeholder="<?= lang('Search in activities', 'Suche in Aktivitäten') ?>">
-                            <div class="input-group-append">
-                                <button class="btn primary filled"><i class="ph ph-magnifying-glass"></i></button>
-                            </div>
+                    </div>
+                <?php }  ?>
+                <form id="navbar-search" action="<?= ROOTPATH ?>/activities" method="get" class="nav-search d-none d-md-block">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control border-primary" autocomplete="off" placeholder="<?= lang('Search in activities', 'Suche in Aktivitäten') ?>">
+                        <div class="input-group-append">
+                            <button class="btn primary filled"><i class="ph ph-magnifying-glass"></i></button>
                         </div>
-                    </form>
-            <?php }
+                    </div>
+                </form>
+            <?php
             } ?>
 
 
@@ -499,10 +520,10 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <?php if ($Settings->featureEnabled('teaching-modules', true)) { ?>
-                        <a href="<?= ROOTPATH ?>/teaching" class="with-icon <?= $pageactive('teaching') ?>">
-                            <i class="ph ph-chalkboard-simple" aria-hidden="true"></i>
-                            <?= lang('Teaching modules', 'Lehrmodule') ?>
-                        </a>
+                            <a href="<?= ROOTPATH ?>/teaching" class="with-icon <?= $pageactive('teaching') ?>">
+                                <i class="ph ph-chalkboard-simple" aria-hidden="true"></i>
+                                <?= lang('Teaching modules', 'Lehrmodule') ?>
+                            </a>
                         <?php } ?>
 
                         <?php if ($Settings->featureEnabled('topics')) { ?>

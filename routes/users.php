@@ -411,7 +411,7 @@ Route::post('/synchronize-users', function () {
                 continue;
             }
             $osiris->persons->insertOne($new_user);
-            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='".ROOTPATH."/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
+            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='" . ROOTPATH . "/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
         }
     }
     if (isset($_POST['blacklist'])) {
@@ -446,6 +446,31 @@ Route::post('/synchronize-attributes', function () {
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/synchronize-attributes-preview.php";
     include BASEPATH . "/footer.php";
+});
+
+
+Route::post('/switch-user', function () {
+
+    if (isset($_POST['OSIRIS-SELECT-MAINTENANCE-USER'])) {
+        // someone tries to switch users
+        include_once BASEPATH . "/php/init.php";
+        $realusername = ($_SESSION['realuser'] ?? $_SESSION['username']);
+        $username = ($_POST['OSIRIS-SELECT-MAINTENANCE-USER']);
+
+        // check if the user is allowed to do that
+        $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
+        // change username if user is allowed
+        if ($allowed == 1 || $realusername == $username) {
+            $msg = "User switched!";
+            $_SESSION['realuser'] = $realusername;
+            $_SESSION['username'] = $username;
+            header("Location: " . ROOTPATH . "/profile/$username");
+            die;
+        }
+
+        // do nothing if user is not allowed
+        header("Location: " . ROOTPATH . "/profile/" . $_SESSION['username'] . "?msg=not-allowed");
+    }
 });
 
 /** 
@@ -758,7 +783,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
         } else {
             $target_dir = BASEPATH . "/img/users/";
             if (!is_writable($target_dir)) {
-                 $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
+                $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
             } else if (!unlink($target_dir . $filename)) {
                 // get error message
                 $error = error_get_last();

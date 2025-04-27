@@ -38,25 +38,6 @@ define('CURRENTQUARTER', intval($quarter));
 define('CURRENTMONTH', intval($month));
 define('CURRENTYEAR', intval($year));
 
-if (isset($_GET['OSIRIS-SELECT-MAINTENANCE-USER'])) {
-    // someone tries to switch users
-    include_once BASEPATH . "/php/init.php";
-    $realusername = ($_SESSION['realuser'] ?? $_SESSION['username']);
-    $username = ($_GET['OSIRIS-SELECT-MAINTENANCE-USER']);
-
-    // check if the user is allowed to do that
-    $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
-    // change username if user is allowed
-    if ($allowed == 1 || $realusername == $username) {
-        $msg = "User switched!";
-        $_SESSION['realuser'] = $realusername;
-        $_SESSION['username'] = $username;
-        header("Location: " . ROOTPATH . "/profile/$username");
-    }
-
-    // do nothing if user is not allowed
-}
-
 function lang($en, $de = null)
 {
     if ($de === null) return $en;
