@@ -2,30 +2,47 @@
     {
         "id": "gender",
         "default": true,
+        "searchable": true,
         "en": "Gender",
-        "de": "Geschlecht"
+        "de": "Geschlecht",
+        "type": "string",
+        "input": "select",
+        "values": {
+            "m": "male / männlich",
+            "f": "female / weiblich",
+            "d": "non-binary / divers",
+            "n": "not specified / nicht angegeben"
+        }
     },
     {
         "id": "telephone",
         "default": true,
+        "searchable": true,
+        "type": "string",
         "en": "Phone",
         "de": "Telefon"
     },
     {
         "id": "mobile",
         "default": false,
+        "searchable": true,
+        "type": "string",
         "en": "Mobile",
         "de": "Mobiltelefon"
     },
     {
         "id": "internal_id",
         "default": false,
+        "searchable": true,
+        "type": "string",
         "en": "Internal ID",
         "de": "Interne ID"
     },
     {
         "id": "position",
         "default": true,
+        "searchable": true,
+        "type": "string",
         "en": "Position",
         "de": "Position",
         "description": {
@@ -36,12 +53,16 @@
     {
         "id": "room",
         "default": true,
+        "searchable": true,
+        "type": "string",
         "en": "Room",
         "de": "Raum"
     },
     {
         "id": "hide",
         "default": true,
+        "searchable": false,
+        "type": "string",
         "en": "Hide in Portfolio",
         "de": "Profil im Portfolio ausblenden",
         "description": {
@@ -52,6 +73,8 @@
     {
         "id": "public_image",
         "default": true,
+        "searchable": false,
+        "type": "string",
         "en": "Public image",
         "de": "Öffentliches Bild",
         "description": {
@@ -62,6 +85,8 @@
     {
         "id": "socials",
         "default": true,
+        "searchable": false,
+        "type": "string",
         "en": "Socials",
         "de": "Soziale Netzwerke",
         "description": {
@@ -72,6 +97,8 @@
     {
         "id": "topics",
         "default": true,
+        "searchable": false,
+        "type": "string",
         "en": "Research Topics",
         "de": "Forschungsbereiche",
         "description": {
@@ -82,6 +109,8 @@
     {
         "id": "research",
         "default": true,
+        "searchable": true,
+        "type": "string",
         "en": "Research interests",
         "de": "Forschungsinteressen",
         "description": {
@@ -92,6 +121,8 @@
     {
         "id": "research_profile",
         "default": false,
+        "searchable": false,
+        "type": "string",
         "en": "Research profile",
         "de": "Forschungsprofil",
         "description": {
@@ -102,6 +133,8 @@
     {
         "id": "cv",
         "default": true,
+        "searchable": false,
+        "type": "string",
         "en": "CV",
         "de": "Lebenslauf",
         "description": {
@@ -112,6 +145,8 @@
     {
         "id": "biography",
         "default": false,
+        "searchable": false,
+        "type": "string",
         "en": "Biography",
         "de": "Biografie",
         "description": {
@@ -122,6 +157,8 @@
     {
         "id": "education",
         "default": false,
+        "searchable": false,
+        "type": "string",
         "en": "Education",
         "de": "Ausbildung",
         "description": {
@@ -132,6 +169,8 @@
     {
         "id": "expertise",
         "default": true,
+        "searchable": true,
+        "type": "string",
         "en": "Expertise",
         "de": "Expertise",
         "description": {
@@ -142,6 +181,8 @@
     {
         "id": "keywords",
         "default": false,
+        "searchable": true,
+        "type": "string",
         "en": "Keywords",
         "de": "Schlagworte",
         "description": {
