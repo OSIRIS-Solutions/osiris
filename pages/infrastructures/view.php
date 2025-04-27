@@ -29,6 +29,8 @@ foreach ($persons as $p) {
 }
 $edit_perm = ($infrastructure['created_by'] == $_SESSION['username'] || $Settings->hasPermission('infrastructures.edit') || $reporter);
 
+include_once BASEPATH . '/php/Vocabulary.php';
+$Vocabulary = new Vocabulary();
 ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 
@@ -83,17 +85,17 @@ $edit_perm = ($infrastructure['created_by'] == $_SESSION['username'] || $Setting
         <div class="mr-10 badge bg-white">
             <small><?= lang('Type', 'Typ') ?>: </small>
             <br />
-            <span class="badge"><?= $infrastructure['type'] ?? '-' ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ??'-') ?></span>
         </div>
         <div class="mr-10 badge bg-white">
             <small><?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>: </small>
             <br />
-            <span class="badge"><?= $infrastructure['infrastructure_type'] ?? '-' ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ??'-') ?></span>
         </div>
         <div class="mr-10 badge bg-white">
             <small><?= lang('User Access', 'Art des Zugangs') ?>: </small>
             <br />
-            <span class="badge"><?= $infrastructure['access'] ?? '-' ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ??'-') ?></span>
         </div>
         <?php if ($Settings->hasPermission('infrastructures.edit')) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn h-full">

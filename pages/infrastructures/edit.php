@@ -44,6 +44,8 @@ if (empty($form) || !isset($form['_id'])) {
     $url = ROOTPATH . "/infrastructures/view/" . $form['_id'];
 }
 
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 ?>
 
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
@@ -146,27 +148,30 @@ if (empty($form) || !isset($form['_id'])) {
 
     <div class="row row-eq-spacing">
         <div class="col-md-6">
-            <label for="type">
-                <?= lang('Type', 'Typ') ?>
+            <label for="type" class="required">
+                <?= lang('Category', 'Kategorie') ?>
                 <span class="badge kdsf">KDSF-B-13-5</span>
             </label>
-            <select name="values[type]" id="type" class="form-control">
-                <option value="Großgeräte und Instrumente" <?= sel('type', 'Großgeräte und Instrumente') ?>><?= lang('Equipment and Instruments', 'Großgeräte und Instrumente') ?></option>
-                <option value="Wissensressourcen" <?= sel('type', 'Wissensressourcen') ?>><?= lang('Knowledge Resources', 'Wissensressourcen') ?></option>
-                <option value="Informations- und Kommunikationsinfrastrukturen" <?= sel('type', 'Informations- und Kommunikationsinfrastrukturen') ?>><?= lang('Information and Communication Infrastructures', 'Informations- und Kommunikationsinfrastrukturen') ?></option>
-                <option value="Sonstiges" <?= sel('type', 'Sonstiges') ?>><?= lang('Other', 'Sonstiges') ?></option>
+            <select name="values[type]" id="type" class="form-control" required>
+                <?php
+                $vocab = $Vocabulary->getValues('infrastructure-category');
+                foreach ($vocab as $v) { ?>
+                    <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                <?php } ?>
             </select>
         </div>
 
         <div class="col-md-6">
-            <label for="infrastructure_type">
+            <label for="infrastructure_type" class="required">
                 <?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>
                 <span class="badge kdsf">KDSF-B-13-6</span>
             </label>
-            <select name="values[infrastructure_type]" id="infrastructure_type" class="form-control">
-                <option value="Lokal" <?= sel('infrastructure_type', 'Lokal') ?>><?= lang('Local', 'Lokal') ?></option>
-                <option value="Verteilt" <?= sel('infrastructure_type', 'Verteilt') ?>><?= lang('Distributed', 'Verteilt') ?></option>
-                <option value="Virtuell" <?= sel('infrastructure_type', 'Virtuell') ?>><?= lang('Virtual', 'Virtuell') ?></option>
+            <select name="values[infrastructure_type]" id="infrastructure_type" class="form-control" required>
+                <?php
+                $vocab = $Vocabulary->getValues('infrastructure-type');
+                foreach ($vocab as $v) { ?>
+                    <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                <?php } ?>
             </select>
         </div>
     </div>
@@ -174,15 +179,16 @@ if (empty($form) || !isset($form['_id'])) {
 
     <div class="row row-eq-spacing">
         <div class="col-md-6">
-            <label for="access">
+            <label for="access" class="required">
                 <?= lang('User Access', 'Art des Zugangs') ?>
                 <span class="badge kdsf">KDSF-B-13-7</span>
             </label>
-            <select name="values[access]" id="access" class="form-control">
-                <option value="User Access" <?= sel('access', 'User Access') ?>><?= lang('User Access', 'User Access') ?></option>
-                <option value="Shared Access" <?= sel('access', 'Shared Access') ?>><?= lang('Shared Access', 'Shared Access') ?></option>
-                <option value="Open Access" <?= sel('access', 'Open Access') ?>><?= lang('Open Access', 'Open Access') ?></option>
-                <option value="Sonstiges" <?= sel('access', 'Sonstiges') ?>><?= lang('Other', 'Sonstiges') ?></option>
+            <select name="values[access]" id="access" class="form-control" required>
+            <?php
+                $vocab = $Vocabulary->getValues('infrastructure-access');
+                foreach ($vocab as $v) { ?>
+                    <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                <?php } ?>
             </select>
         </div>
     </div>

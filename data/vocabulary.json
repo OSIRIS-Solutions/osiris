@@ -198,5 +198,90 @@
                 "de": "Sonstiges"
             }
         ]
+    },
+    {
+        "id": "infrastructure-category",
+        "category": "Infrastructure",
+        "name": "Category of an Infrastructure",
+        "name_de": "Kategorie der Infrastruktur",
+        "description": "The category of an infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-5).",
+        "description_de": "Die Kategorie der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-5).",
+        "values": [
+            {
+                "id": "Großgeräte und Instrumente",
+                "en": "Large appliances and instruments",
+                "de": "Großgeräte und Instrumente"
+            },
+            {
+                "id": "Wissensressourcen",
+                "en": "Knowledge resources",
+                "de": "Wissensressourcen"
+            },
+            {
+                "id": "Informations- und Kommunikationsinfrastrukturen",
+                "en": "Information and communication infrastructures",
+                "de": "Informations- und Kommunikationsinfrastrukturen"
+            },
+            {
+                "id": "Sonstiges",
+                "en": "Others",
+                "de": "Sonstiges"
+            }
+        ]
+    },
+    {
+        "id": "infrastructure-type",
+        "category": "Infrastructure",
+        "name": "Type of Infrastructure",
+        "name_de": "Art der Infrastruktur",
+        "description": "The type of infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-6).",
+        "description_de": "Die Art der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-6).",
+        "values": [
+            {
+                "id": "Lokal",
+                "en": "Local",
+                "de": "Lokal"
+            },
+            {
+                "id": "Verteilt",
+                "en": "Distributed",
+                "de": "Verteilt"
+            },
+            {
+                "id": "Virtuell",
+                "en": "Virtual",
+                "de": "Virtuell"
+            }
+        ]
+    },
+    {
+        "id": "infrastructure-access",
+        "category": "Infrastructure",
+        "name": "Infrastructure Access",
+        "name_de": "Zugang zur Infrastruktur",
+        "description": "The access to the infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-7).",
+        "description_de": "Der Zugang zur Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-7).",
+        "values": [
+            {
+                "id": "User Access",
+                "en": "User access",
+                "de": "User Access"
+            },
+            {
+                "id": "Shared Access",
+                "en": "Shared access",
+                "de": "Shared Access"
+            },
+            {
+                "id": "Open Access",
+                "en": "Open access",
+                "de": "Open Access"
+            },
+            {
+                "id": "Sonstiges",
+                "en": "Other",
+                "de": "Sonstiges"
+            }
+        ]
     }
 ]
