@@ -1,5 +1,29 @@
 # Neuigkeiten
 
+
+
+
+<span class="badge float-right">XX.2025</span>
+<a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
+
+## Version 1.5.0 
+
+In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibler gestaltet. Datenfelder können nun sowohl bei Projekten als auch bei Personen komplett definiert werden. Auch Custom Fields sind nun bei Projekten und Personen möglich.
+
+- Es gibt eine neue Seite im Admin-Bereich "Inhalte", in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Aktivitätskategorien, die Projektkategorien, die Custom Fields. 
+
+#### <i class="ph ph-users-three"></i> Personen-Einstellungen
+
+- Die Personeneinstellungen sind jetzt ebenfalls in der neuen Seite "Inhalte" zu finden. Hier können die Datenfelder für Personen bearbeitet werden. Außerdem können hier Positionen verwaltet werden, das Vokabular für die Expertise festgelegt werden.
+- Man kann jetzt bei der Nutzung des Auth-Addons festlegen, ob Nutzende sich selbst einen Account erstellen können oder ob dies nur über den Admin-Bereich möglich ist.
+
+#### <i class="ph ph-tree-structure"></i> Projekte
+
+
+
+
+
+
 <span class="badge float-right">13.04.2025</span>
 <a class="anchor" href="#version-1.4.3" id="version-1.4.3"></a>
 
