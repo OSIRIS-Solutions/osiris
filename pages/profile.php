@@ -770,7 +770,7 @@ if ($currentuser) { ?>
                                 'status' => lang('Expired status', 'Abgelaufener Status'),
                                 'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
                                 'project-open' => lang('Open project applications', 'Offene Projektanträge'),
-                                'project-end' => lang('Expired publications', 'Abgelaufene Projekte'),
+                                'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
                                 'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
                             ];
                         ?>

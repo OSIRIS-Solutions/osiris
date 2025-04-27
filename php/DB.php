@@ -705,23 +705,23 @@ class DB
         }
 
         // find all projects that need attention
-        $projects = $this->db->projects->find([
-            'persons.user' => $user,
-            'status' => 'applied'
-        ]);
-        foreach ($projects as $project) {
-            if (isset($project['end-delay']) && $now < new DateTime($project['end-delay'])) continue;
-            $issues['project-open'][] = strval($project['_id']);
-        }
-        $projects = $this->db->projects->find([
-            'persons.user' => $user,
-            'status' => 'approved',
-            'end.year' => ['$lte' => CURRENTYEAR]
-        ]);
-        foreach ($projects as $project) {
-            if ($now < getDateTime($project['end'])) continue;
-            $issues['project-end'][] = strval($project['_id']);
-        }
+        // $projects = $this->db->projects->find([
+        //     'persons.user' => $user,
+        //     'status' => 'proposed'
+        // ]);
+        // foreach ($projects as $project) {
+        //     if (isset($project['end-delay']) && $now < new DateTime($project['end-delay'])) continue;
+        //     $issues['project-open'][] = strval($project['_id']);
+        // }
+        // $projects = $this->db->projects->find([
+        //     'persons.user' => $user,
+        //     'status' => 'approved',
+        //     'end.year' => ['$lte' => CURRENTYEAR]
+        // ]);
+        // foreach ($projects as $project) {
+        //     if ($now < getDateTime($project['end'])) continue;
+        //     $issues['project-end'][] = strval($project['_id']);
+        // }
 
         $y = CURRENTYEAR - 1;
         $infrastructures = $this->db->infrastructures->find([
