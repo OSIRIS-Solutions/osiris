@@ -362,6 +362,8 @@
 $fields = file_get_contents(BASEPATH . '/data/person-fields.json');
 $fields = json_decode($fields, true);
 
+$custom_fields = $osiris->adminFields->find();
+
 $data = $Settings->get('person-data');
 if (!is_null($data)) {
     $data = DB::doc2Arr($data);
@@ -417,6 +419,31 @@ if (!is_null($data)) {
                             </td>
 
                         </tr>
+                    <?php } ?>
+                    <?php if (!empty($custom_fields)) { ?>
+                        <tr>
+                            <td colspan="2">
+                                <h5>
+                                    <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+                                </h5>
+                            </td>
+                        </tr>
+                        <?php foreach ($custom_fields as $field) { ?>
+                            <tr>
+                                <td>
+                                    <!-- checkbox -->
+                                    <div class="custom-checkbox">
+                                        <input type="checkbox" name="general[person-data][]" id="field-<?= $field['id'] ?>" value="<?= $field['id'] ?>" <?= in_array($field['id'], $data) ? 'checked' : '' ?>>
+                                        <label for="field-<?= $field['id'] ?>"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <b><?= htmlspecialchars($field['name']) ?></b>
+                                </td>
+
+                            </tr>
+                    <?php } ?>
+                    
                     <?php } ?>
                 </tbody>
             </table>

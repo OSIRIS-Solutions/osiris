@@ -250,6 +250,26 @@ $active = function ($field) use ($data_fields) {
             </div>
         <?php } ?>
 
+
+        <!-- check if there are active custom fields -->
+        <?php
+        $custom_fields = $osiris->adminFields->find()->toArray();
+        if (!empty($custom_fields)) {
+            require_once BASEPATH . "/php/Modules.php";
+            $Modules = new Modules($data);
+
+            // echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+            foreach ($custom_fields as $field) {
+                $key = $field['id'] ?? null;
+                if ($active($key)) {
+                    $Modules->custom_field($key);
+                }
+            }
+        } ?>
+
+
+
+
         <!-- room -->
         <?php if ($active('room')) { ?>
             <div class="form-group">
