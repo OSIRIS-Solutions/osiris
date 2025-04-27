@@ -266,7 +266,7 @@ if (empty($selected)) {
                                 <div class="input-group small d-inline-flex w-auto">
                                     <select class="form-control" id="add-author" autocomplete="off">
                                         <?php
-                                        $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                                        $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                                         foreach ($userlist as $j) { ?>
                                             <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                                         <?php } ?>
@@ -304,7 +304,7 @@ if (empty($selected)) {
                     <div class="form-group floating-form">
                         <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off">
                             <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['scholar'] ?? $user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>
@@ -335,7 +335,7 @@ if (empty($selected)) {
                     <div class="form-group floating-form">
                         <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off">
                             <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == $selected ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>

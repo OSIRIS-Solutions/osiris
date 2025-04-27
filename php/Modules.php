@@ -597,7 +597,7 @@ class Modules
             $this->editors .= $this->authorForm($a, true);
         }
 
-        $this->userlist = $this->DB->db->persons->find([], ['sort' => ["last" => 1]])->toArray();
+        $this->userlist = $this->DB->db->persons->find([], ['sort' => ['is_active' => -1, 'last' => 1]])->toArray();
 
         if (!empty($conference)) {
             $conf = $this->DB->db->conferences->findOne(['_id' => DB::to_ObjectID($conference)]);

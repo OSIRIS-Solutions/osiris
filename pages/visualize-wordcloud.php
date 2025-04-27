@@ -17,7 +17,7 @@
  */
 
 
-$users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+$users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
 
 $scientist = $_GET['scientist'] ?? $_SESSION['username'];
 $selectedUser = $osiris->persons->findone(['username' => $scientist]);

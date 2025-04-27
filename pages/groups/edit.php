@@ -398,7 +398,7 @@ function sel($index, $value)
                         <select class="head-input form-control">
                             <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
                             <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) {
                                 if (in_array($j['username'], $heads) || empty($j['last'])) continue;
                             ?>
