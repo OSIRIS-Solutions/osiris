@@ -25,6 +25,8 @@ $Project = new Project();
 // $Format = new Document(true);
 $form = $form ?? array();
 
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+
 function val($index, $default = '')
 {
     $val = $GLOBALS['form'][$index] ?? $default;
@@ -281,7 +283,7 @@ $Vocabulary = new Vocabulary();
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div> -->
 
-            <?php if ($Settings->featureEnabled('topics')) { ?>
+            <?php if ($topicsEnabled) { ?>
                 <h6>
                     <?= $Settings->topicLabel() ?>
                     <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
@@ -317,6 +319,8 @@ $Vocabulary = new Vocabulary();
 <script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
+    const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
+
     var dataTable;
 
     const minEl = document.querySelector('#filter-from');
@@ -441,7 +445,7 @@ $Vocabulary = new Vocabulary();
 
     function renderTopic(data) {
         let topics = '';
-        if (data && data.length > 0) {
+        if (topicsEnabled && data && data.length > 0) {
             topics = '<span class="float-right topic-icons">'
             data.forEach(function(topic) {
                 topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
@@ -622,7 +626,7 @@ $Vocabulary = new Vocabulary();
                     defaultContent: '',
                     header: lang('Topics', 'Forschungsbereiche'),
                     render: (data, type, row) => {
-                        if (Array.isArray(data)) {
+                        if (topicsEnabled && Array.isArray(data)) {
                             return data.join(', ')
                         }
                     }
@@ -677,7 +681,7 @@ $Vocabulary = new Vocabulary();
             if (hash.role !== undefined) {
                 filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 5)
             }
-            if (hash.topics !== undefined) {
+            if (topicsEnabled && hash.topics !== undefined) {
                 filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
             }
 
