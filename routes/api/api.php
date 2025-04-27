@@ -550,7 +550,8 @@ Route::get('/api/users', function () {
             'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
-            'topics' => $user['topics'] ?? array()
+            'topics' => $user['topics'] ?? array(),
+            'keywords' => $user['keywords'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));

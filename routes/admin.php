@@ -384,6 +384,10 @@ Route::post('/crud/admin/general', function () {
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
             if ($key == 'auth-self-registration') $value = boolval($value);
+            if (str_contains($key, 'keywords')) {
+                $value = array_map('trim', explode(PHP_EOL, $value));
+                $value = array_filter($value);
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,

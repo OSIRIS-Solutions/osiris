@@ -498,10 +498,12 @@ $pageactive = function ($p) use ($page) {
                             <?= lang('Events') ?>
                         </a>
 
+                        <?php if ($Settings->featureEnabled('teaching-modules', true)) { ?>
                         <a href="<?= ROOTPATH ?>/teaching" class="with-icon <?= $pageactive('teaching') ?>">
                             <i class="ph ph-chalkboard-simple" aria-hidden="true"></i>
                             <?= lang('Teaching modules', 'Lehrmodule') ?>
                         </a>
+                        <?php } ?>
 
                         <?php if ($Settings->featureEnabled('topics')) { ?>
                             <a href="<?= ROOTPATH ?>/topics" class="with-icon <?= $pageactive('topics') ?>">

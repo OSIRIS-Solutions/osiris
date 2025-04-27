@@ -15,6 +15,23 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$data_fields = $Settings->get('person-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/person-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
+
+$active = function ($field) use ($data_fields) {
+    return in_array($field, $data_fields);
+};
 ?>
 
 
@@ -239,7 +256,9 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         }
         ?>
 
-        <?= $Settings->printTopics($scientist['topics'] ?? [], 'mt-10') ?>
+        <?php if ($active('topics')) {
+            echo $Settings->printTopics($scientist['topics'] ?? [], 'mt-10');
+        } ?>
 
 
     </div>
@@ -664,68 +683,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 </nav>
 
 
-<?php
-$expertise = $scientist['expertise'] ?? array();
-
-if ($currentuser) { ?>
-    <div class="modal modal-lg" id="expertise" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content w-600 mw-full">
-                <a href="#close-modal" class="btn float-right" role="button" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </a>
-                <h4 class="title mt-0">
-                    <?= lang('Expertise') ?>
-                </h4>
-
-                <form action="<?= ROOTPATH ?>/crud/users/update-expertise/<?= $user ?>" method="post" id="expertise-form">
-                    <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-
-                    <?php foreach ($expertise as $n) { ?>
-                        <div class="input-group d-inline-flex w-auto mr-5 mb-10">
-                            <input type="text" name="values[expertise][]" value="<?= $n ?>" list="expertise-list" required class="form-control">
-                            <div class="input-group-append">
-                                <a class="btn" onclick="$(this).closest('.input-group').remove();">&times;</a>
-                            </div>
-                        </div>
-                    <?php } ?>
-
-                    <button class="btn mb-10" type="button" onclick="addName(event, this);">
-                        <i class="ph ph-plus"></i>
-                    </button>
-                    <br>
-                    <button class="btn secondary small" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <datalist id="expertise-list">
-        <?php
-        foreach ($osiris->persons->distinct('expertise') as $d) { ?>
-            <option><?= $d ?></option>
-        <?php } ?>
-    </datalist>
-
-    <script>
-        function addName(evt, el) {
-            var group = $('<div class="input-group d-inline-flex w-auto mr-5 mb-10"> ')
-            group.append('<input type="text" name="values[expertise][]" value="" list="expertise-list" required class="form-control">')
-            // var input = $()
-            var btn = $('<a class="btn">')
-            btn.on('click', function() {
-                $(this).closest('.input-group').remove();
-            })
-            btn.html('&times;')
-
-            group.append($('<div class="input-group-append">').append(btn))
-            // $(el).prepend(group);
-            $(group).insertBefore(el);
-        }
-    </script>
-
-<?php } ?>
-
 <?php if ($currentuser) { ?>
     <section id="news">
         <div class="row row-eq-spacing my-0">
@@ -1058,7 +1015,7 @@ if ($currentuser) { ?>
                                 <?= $user ?>
                             </td>
                         </tr>
-                        <?php if (isset($scientist['internal_id'])) { ?>
+                        <?php if ($active('internal_id') && isset($scientist['internal_id'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
@@ -1106,7 +1063,7 @@ if ($currentuser) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if (isset($scientist['telephone'])) { ?>
+                        <?php if ($active('telephone') && isset($scientist['telephone'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Telephone', 'Telefon') ?></span>
@@ -1114,7 +1071,7 @@ if ($currentuser) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if (isset($scientist['room'])) { ?>
+                        <?php if ($active('room') && isset($scientist['room'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Room', 'Raum') ?></span>
@@ -1123,7 +1080,7 @@ if ($currentuser) { ?>
                             </tr>
                         <?php } ?>
 
-                        <?php if (isset($scientist['mobile'])) { ?>
+                        <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Mobile', 'Mobil') ?></span>
@@ -1131,7 +1088,6 @@ if ($currentuser) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-
 
                         <?php if (!empty($scientist['orcid'] ?? null)) { ?>
                             <tr>
@@ -1154,7 +1110,7 @@ if ($currentuser) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if (isset($scientist['socials'])) { ?>
+                        <?php if ($active('socials') && isset($scientist['socials'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Social media') ?></span>
@@ -1165,15 +1121,27 @@ if ($currentuser) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if ($currentuser || !empty($scientist['expertise'] ?? array())) { ?>
+                        <?php if ($active('expertise') && ($currentuser || !empty($scientist['expertise'] ?? array()))) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Expertise') ?></span>
                                     <?php foreach ($scientist['expertise'] ?? array() as $key) { ?><a href="<?= ROOTPATH ?>/expertise?search=<?= $key ?>" class="badge primary mr-5 mb-5"><?= $key ?></a><?php } ?>
-                                    <?php if ($currentuser) { ?> <a href="#expertise" class=""><i class="ph ph-edit"></i></a> <?php } ?>
+                                    <?php if ($currentuser) { ?> <a href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research" class=""><i class="ph ph-edit"></i></a> <?php } ?>
                                 </td>
                             </tr>
+                        <?php } ?>
 
+                        <?php if ($active('keywords') && !empty($scientist['keywords'] ?? array())) {
+                            $kw_name = $Settings->get('staff-keyword-name', 'Keywords');
+                            $selected_kw = DB::doc2Arr($scientist['keywords'] ?? []);
+                        ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= $kw_name ?></span>
+                                    <?php foreach ($selected_kw as $key) { ?><a href="<?= ROOTPATH ?>/keywords?search=<?= $key ?>" class="badge primary mr-5 mb-5"><?= $key ?></a><?php } ?>
+                                    <?php if ($currentuser) { ?> <a href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research" class=""><i class="ph ph-edit"></i></a> <?php } ?>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -1185,84 +1153,94 @@ if ($currentuser) { ?>
             <div class="box h-full">
                 <div class="content">
 
-                    <h4 class="title">
-                        <?= lang('Research interest', 'Forschungsinteressen') ?>
-                        <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
-                            <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research">
-                                <i class="ph ph-note-pencil ph-lg"></i>
-                            </a>
-                        <?php } ?>
-                    </h4>
+                    <?php if ($active('research')) { ?>
 
-                    <?php if (isset($scientist['research']) && !empty($scientist['research'])) {
-                        $scientist['research_de'] = array_map(
-                            fn($val1, $val2) => empty($val1) ? $val2 : $val1,
-                            DB::doc2Arr($scientist['research_de'] ?? $scientist['research']),
-                            DB::doc2Arr($scientist['research'])
-                        );
-                        $research = lang($scientist['research'], $scientist['research_de'] ?? null);
-                    ?>
-                        <ul class="list">
-                            <?php foreach ($research as $key) { ?>
-                                <li><?= $key ?></li>
+                        <h4 class="title">
+                            <?= lang('Research interest', 'Forschungsinteressen') ?>
+                            <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                                <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research">
+                                    <i class="ph ph-note-pencil ph-lg"></i>
+                                </a>
                             <?php } ?>
-                        </ul>
-                    <?php } else { ?>
-                        <p><?= lang('No research interests stated.', 'Keine Forschungsinteressen angegeben.') ?></p>
-                    <?php } ?>
+                        </h4>
 
-                    <?php if (isset($scientist['research_profile'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Research profile', 'Forschungsprofil') ?>
-                        </h6>
-                        <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
-                    <?php } ?>
+                        <?php if (isset($scientist['research']) && !empty($scientist['research'])) {
+                            $scientist['research_de'] = array_map(
+                                fn($val1, $val2) => empty($val1) ? $val2 : $val1,
+                                DB::doc2Arr($scientist['research_de'] ?? $scientist['research']),
+                                DB::doc2Arr($scientist['research'])
+                            );
+                            $research = lang($scientist['research'], $scientist['research_de'] ?? null);
+                        ?>
+                            <ul class="list">
+                                <?php foreach ($research as $key) { ?>
+                                    <li><?= $key ?></li>
+                                <?php } ?>
+                            </ul>
+                        <?php } else { ?>
+                            <p><?= lang('No research interests stated.', 'Keine Forschungsinteressen angegeben.') ?></p>
+                        <?php } ?>
+
+                        <?php if (isset($scientist['research_profile'])) { ?>
+                            <h6 class="title">
+                                <?= lang('Research profile', 'Forschungsprofil') ?>
+                            </h6>
+                            <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
+                        <?php } ?>
 
                 </div>
                 <hr>
-                <div class="content">
+            <?php } ?>
 
-                    <h4 class="title">
-                        <?= lang('Curriculum Vitae') ?>
-                        <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
-                            <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
-                                <i class="ph ph-note-pencil ph-lg"></i>
-                            </a>
+            <div class="content">
+
+                    <?php if ($active('cv')) { ?>
+                <h4 class="title">
+                    <?= lang('Curriculum Vitae') ?>
+                    <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                        <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
+                            <i class="ph ph-note-pencil ph-lg"></i>
+                        </a>
+                    <?php } ?>
+                </h4>
+
+                <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
+                    $cv = DB::doc2Arr($scientist['cv']);
+                ?>
+                    <div class="biography">
+                        <?php foreach ($cv as $entry) { ?>
+                            <div class="cv">
+                                <span class="time"><?= $entry['time'] ?></span>
+                                <h5 class="title"><?= $entry['position'] ?></h5>
+                                <span class="affiliation"><?= $entry['affiliation'] ?></span>
+                            </div>
                         <?php } ?>
-                    </h4>
-
-                    <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
-                        $cv = DB::doc2Arr($scientist['cv']);
-                    ?>
-                        <div class="biography">
-                            <?php foreach ($cv as $entry) { ?>
-                                <div class="cv">
-                                    <span class="time"><?= $entry['time'] ?></span>
-                                    <h5 class="title"><?= $entry['position'] ?></h5>
-                                    <span class="affiliation"><?= $entry['affiliation'] ?></span>
-                                </div>
-                            <?php } ?>
-                        </div>
-                    <?php } else { ?>
-                        <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
-                    <?php } ?>
+                    </div>
+                <?php } else { ?>
+                    <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                <?php } ?>
+            <?php } ?>
 
 
-                    <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Biography', 'Biografie') ?>
-                        </h6>
-                        <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
-                    <?php } ?>
+                    <?php if ($active('biography')) { ?>
+                <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
+                    <h6 class="title">
+                        <?= lang('Biography', 'Biografie') ?>
+                    </h6>
+                    <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                <?php } ?>
+            <?php } ?>
 
-                    <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Education', 'Ausbildung') ?>
-                        </h6>
-                        <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
-                    <?php } ?>
+                    <?php if ($active('education')) { ?>
+                <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                    <h6 class="title">
+                        <?= lang('Education', 'Ausbildung') ?>
+                    </h6>
+                    <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                <?php } ?>
+            <?php } ?>
 
-                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -1385,7 +1363,6 @@ if ($currentuser) { ?>
             </thead>
             <tbody>
             </tbody>
-
         </table>
     </div>
 

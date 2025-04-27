@@ -176,13 +176,9 @@ class Settings
      * @param string $feature
      * @return boolean
      */
-    function featureEnabled($feature)
+    function featureEnabled($feature, $default=false)
     {
-        return $this->features[$feature] ?? false;
-        // $active = $this->osiris->adminFeatures->findOne([
-        //     'feature'=>$feature
-        // ]);
-        // return boolval($active['enabled'] ?? false);
+        return $this->features[$feature] ?? $default;
     }
 
     /**

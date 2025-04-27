@@ -39,122 +39,6 @@
 
     <div class="box px-20">
         <h3>
-            <?= lang('General settings', 'Allgemeine Einstellungen') ?>
-        </h3>
-        <div class="form-group">
-            <label for="">
-                <?= lang('Coins', 'Coins') ?>
-            </label>
-            <?php
-            $coins = $Settings->featureEnabled('coins');
-            ?>
-            <div class=" custom-radio">
-                <input type="radio" id="coins-true" value="1" name="values[coins]" <?= $coins ? 'checked' : '' ?>>
-                <label for="coins-true"><?= lang('enabled', 'aktiviert') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="coins-false" value="0" name="values[coins]" <?= $coins ? '' : 'checked' ?>>
-                <label for="coins-false"><?= lang('disabled', 'deaktiviert') ?></label>
-            </div>
-
-            <small> Coins werden nirgendwo gespeichert, sondern on-demand berechnet. Wenn ihr Coins global ausschaltet, werden sie also gar nicht erst berechnet und nirgendwo gezeigt.</small>
-
-        </div>
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('Achievements', 'Errungenschaften') ?>
-            </label>
-            <?php
-            $achievements = $Settings->featureEnabled('achievements');
-            ?>
-
-            <div class="custom-radio">
-                <input type="radio" id="achievements-true" value="1" name="values[achievements]" <?= $achievements ? 'checked' : '' ?>>
-                <label for="achievements-true"><?= lang('enabled', 'aktiviert') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="achievements-false" value="0" name="values[achievements]" <?= $achievements ? '' : 'checked' ?>>
-                <label for="achievements-false"><?= lang('disabled', 'deaktiviert') ?></label>
-            </div>
-
-        </div>
-
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('User profile metrics', 'Metriken im Nutzerprofil') ?>
-            </label>
-            <?php
-            $user_metrics = $Settings->featureEnabled('user-metrics');
-            ?>
-
-            <div class=" custom-radio">
-                <input type="radio" id="user-metrics-true" value="1" name="values[user-metrics]" <?= $user_metrics ? 'checked' : '' ?>>
-                <label for="user-metrics-true"><?= lang('enabled', 'aktiviert') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="user-metrics-false" value="0" name="values[user-metrics]" <?= $user_metrics ? '' : 'checked' ?>>
-                <label for="user-metrics-false"><?= lang('disabled', 'deaktiviert') ?></label>
-            </div>
-
-            <small> Wenn diese Funktion ausgeschaltet wird, sind Nutzermetriken (Graphen) nur noch auf der eigenen Profilseite sichtbar.</small>
-
-        </div>
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('Profile images', 'Profilbilder der Nutzenden') ?>
-            </label>
-            <?php
-            $db_pictures = $Settings->featureEnabled('db_pictures');
-            ?>
-            <div class=" custom-radio">
-                <input type="radio" id="db_pictures-true" value="1" name="values[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
-                <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="db_pictures-false" value="0" name="values[db_pictures]" <?= $db_pictures ? '' : 'checked' ?>>
-                <label for="db_pictures-false"><?= lang('Save in file system', 'Im Dateisystem speichern') ?></label>
-            </div>
-
-            <small>
-                <?= lang(
-                    'Saving the profile pictures in the database is recommended if the pictures are maintained exclusively via OSIRIS. If the images are saved in the file system, they can be uploaded more easily (into the folder <code>/img/users</code>) and, for example, updated automatically. However, they must then have the user name as the name and be in JPEG format!',
-                    'Die Profilbilder in der Datenbank zu speichern wird empfohlen, wenn die Bilder ausschließlich über OSIRIS gepflegt werden. Wenn die Bilder im Dateisystem gespeichert werden, kann man sie leichter anders hochladen (in den Ordner <code>/img/users</code>) und z.B. automatisch aktualisieren. Sie müssen dann aber den Username als Namen haben und im JPEG-Format sein!'
-                ) ?>
-            </small>
-        </div>
-
-
-        <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
-            <div class="form-group">
-                <label for="">
-                    <?= lang('LDAP user synchronization', 'LDAP-Nutzersynchronisierung') ?>
-                </label>
-                <?php
-                $sync = $Settings->featureEnabled('ldap-sync');
-                ?>
-
-                <div class="form-">
-                    <label for="ldap-sync-blacklist"><?= lang('Username Blacklist (separated by comma)', 'Username-Blacklist (Komma-getrennt)') ?></label>
-                    <textarea class="form-control small" name="general[ldap-sync-blacklist]" id="ldap-sync-blacklist"><?= $Settings->get('ldap-sync-blacklist') ?></textarea>
-                </div>
-                <div class="form-">
-                    <label for="ldap-sync-whitelist"><?= lang('Username whitelist (separated by comma)', 'Username-Whitelist (Komma-getrennt)') ?></label>
-                    <textarea class="form-control small" name="general[ldap-sync-whitelist]" id="ldap-sync-whitelist"><?= $Settings->get('ldap-sync-whitelist') ?></textarea>
-                </div>
-
-            </div>
-        <?php } ?>
-    </div>
-
-    <div class="box px-20">
-        <h3>
             <?=lang('Journals', 'Journale')?>
         </h3>
         <div class="form-group">
@@ -345,6 +229,33 @@
             <div class="custom-radio">
                 <input type="radio" id="projects-false" value="0" name="values[projects]" <?= $projects ? '' : 'checked' ?>>
                 <label for="projects-false"><?= lang('disabled', 'deaktiviert') ?></label>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+    <div class="box px-20">
+        <h3>
+            <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
+        </h3>
+        <div class="form-group">
+            <label for="">
+                <?= lang('Show Teaching modules in Sidebar', 'Zeige Lehrveranstaltungen in der Seitennavigation') ?>
+            </label>
+            <?php
+            $teachingModules = $Settings->featureEnabled('teaching-modules', true);
+            ?>
+
+            <div class="custom-radio">
+                <input type="radio" id="teaching-modules-true" value="1" name="values[teaching-modules]" <?= $teachingModules ? 'checked' : '' ?>>
+                <label for="teaching-modules-true"><?= lang('enabled', 'aktiviert') ?></label>
+            </div>
+
+            <div class="custom-radio">
+                <input type="radio" id="teaching-modules-false" value="0" name="values[teaching-modules]" <?= $teachingModules ? '' : 'checked' ?>>
+                <label for="teaching-modules-false"><?= lang('disabled', 'deaktiviert') ?></label>
             </div>
 
         </div>

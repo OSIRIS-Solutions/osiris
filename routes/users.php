@@ -260,11 +260,19 @@ Route::get('/issues', function () {
 });
 
 
-Route::get('/expertise', function () {
+Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Expertise search', 'Experten-Suche')]
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"]
     ];
+    if ($collection == 'keywords') {
+        $breadcrumb[] = ['name' => lang('Keywords', 'Schlagwörter')];
+    } else if ($collection == 'expertise') {
+        $breadcrumb[] = ['name' => lang('Expertise search', 'Experten-Suche')];
+    } else {
+        header("Location: " . ROOTPATH . "/user/browse?msg=invalid-collection");
+        die;
+    }
     // include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/expertise.php";
@@ -765,26 +773,26 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
 });
 
 
-Route::post('/crud/users/update-expertise/(.*)', function ($user) {
-    include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+// Route::post('/crud/users/update-expertise/(.*)', function ($user) {
+//     include_once BASEPATH . "/php/init.php";
+//     if (!isset($_POST['values'])) die("no values given");
 
-    $values = $_POST['values'];
-    $values = validateValues($values, $DB);
+//     $values = $_POST['values'];
+//     $values = validateValues($values, $DB);
 
-    $updateResult = $osiris->persons->updateOne(
-        ['username' => $user],
-        ['$set' => $values]
-    );
+//     $updateResult = $osiris->persons->updateOne(
+//         ['username' => $user],
+//         ['$set' => $values]
+//     );
 
-    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
-        die();
-    }
-    echo json_encode([
-        'updated' => $updateResult->getModifiedCount()
-    ]);
-});
+//     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+//         header("Location: " . $_POST['redirect'] . "?msg=update-success");
+//         die();
+//     }
+//     echo json_encode([
+//         'updated' => $updateResult->getModifiedCount()
+//     ]);
+// });
 
 
 Route::post('/crud/users/approve', function () {
