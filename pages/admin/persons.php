@@ -161,21 +161,28 @@ switch (strtoupper(USER_MANAGEMENT)) {
 
     case 'AUTH': ?>
 
-        <!-- <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
-                <div class="box primary padded">
+        <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+            <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/persons">
+            <div class="box primary padded">
 
-                    <h2 class="title">
-                        <?= lang('AUTH settings', 'AUTH-Einstellungen') ?>
-                    </h2>
+                <h2 class="title">
+                    <?= lang('AUTH settings', 'AUTH-Einstellungen') ?>
+                </h2>
 
-                    <input type="hidden" name="general[auth-self-registration]" value="0">
-                    <div class="custom-checkbox">
-                        <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration') ? 'checked' : '' ?>>
-                        <label for="auth-self-registration-1"><?= lang('Allow users to create their own account', 'Erlaube Benutzern, ein eigenes Konto zu erstellen') ?></label>
-                    </div>
-
+                <input type="hidden" name="general[auth-self-registration]" value="0">
+                <div class="custom-checkbox">
+                    <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration', true) ? 'checked' : '' ?>>
+                    <label for="auth-self-registration-1"><?= lang('Allow users to create their own account', 'Erlaube Benutzern, ein eigenes Konto zu erstellen') ?></label>
                 </div>
-            </form> -->
+                <br>
+
+                <button class="btn signal">
+                    <i class="ph ph-floppy-disk"></i>
+                    <?= lang('Save', 'Speichern') ?>
+                </button>
+            </div>
+
+        </form>
     <?php
         break;
 

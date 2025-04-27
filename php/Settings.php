@@ -43,7 +43,7 @@ class Settings
         }
     }
 
-    function get($key)
+    function get($key, $default = null)
     {
         switch ($key) {
             case 'affiliation':
@@ -67,7 +67,7 @@ class Settings
             default:
                 $req = $this->osiris->adminGeneral->findOne(['key' => $key]);
                 if (!empty($req)) return $req['value'];
-                return '';
+                return $default;
                 break;
         }
     }

@@ -304,7 +304,7 @@ $pageactive = function ($p) use ($page) {
                         <?= lang('Log in', 'Anmelden') ?>
                     </a>
 
-                    <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH') { ?>
+                    <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && $Settings->get('auth-self-registration', true)) { ?>
                         <a href="<?= ROOTPATH ?>/auth/new-user" class="with-icon <?= $pageactive('auth/new-user') ?>">
                             <i class="ph ph-user-plus" aria-hidden="true"></i>
                             <?= lang('Register', 'Registrieren') ?>
