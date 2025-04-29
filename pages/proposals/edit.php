@@ -73,6 +73,11 @@ if (empty($selected)) {
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
 
+<style>
+    .flag {
+        margin-right: 1rem !important;
+    }
+</style>
 
 <div class="container w-600">
     <?php if ($new_project || $type === null) { ?>
@@ -239,143 +244,69 @@ if (empty($selected)) {
             <?php } ?>
 
 
-
-
-            <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
-                <h5>
-                    <?= lang('Persons', 'Personen') ?>
-                </h5>
-
-                <?php if (array_key_exists('applicants', $fields)) { ?>
-                    <div class="data-module col-12" data-module="authors">
-                        <label for="applicant" class="floating-title required">
-                            <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
-                        </label>
-                        <div class="author-widget" id="author-widget">
-                            <div class="author-list p-10" id="author-list">
-                                <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
-                                    <div class='author'>
-                                        <?= $DB->getNameFromId($a) ?>
-                                        <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
-                                        <a onclick='$(this).closest(".author").remove()'>&times;</a>
-                                    </div>
-                                <?php } ?>
-
-                            </div>
-                            <div class="footer">
-                                <div class="input-group small d-inline-flex w-auto">
-                                    <select class="form-control" id="add-author" autocomplete="off">
-                                        <?php
-                                        $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
-                                        foreach ($userlist as $j) { ?>
-                                            <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
-                                            <i class="ph ph-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <small class="text-muted">
-                            <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
-                        </small>
-                    </div>
-                    <script>
-                        function addAuthorDiv(event) {
-                            var input = $('#add-author')
-                            var username = input.val()
-                            var name = input.find('option:selected').text()
-                            var el = $('#author-list')
-                            var author = $('<div class="author">')
-                                .html(name);
-                            author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
-                            author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
-                            author.appendTo(el)
-                        }
-                    </script>
-                <?php } ?>
-
-
-                <?php if (array_key_exists('scholar', $fields)) { ?>
-                    <div class="form-group floating-form">
-                        <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off">
-                            <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
-                            foreach ($userlist as $j) { ?>
-                                <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['scholar'] ?? $user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
-                            <?php } ?>
-                        </select>
-                        <label for="scholar">
-                            <?= lang('Scholar', 'Stipendiat:in') ?>
-                        </label>
-                    </div>
-                <?php } ?>
-
-
-                <?php if (array_key_exists('supervisor', $fields)) {
-                    $selected = '';
-                    if ($new_project) {
-                        include_once BASEPATH . "/php/Groups.php";
-                        // default: head of group
-                        $dept = $USER['depts'] ?? [];
-                        if (!empty($dept)) {
-                            $Groups = new Groups();
-                            $heads = $Groups->getGroup($dept[0])['head'] ?? array();
-                            $selected = $heads[0] ?? '';
-                        }
-                    } else {
-                        $selected = $form['supervisor'] ?? '';
-                    }
-
-                ?>
-                    <div class="form-group floating-form">
-                        <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off">
-                            <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
-                            foreach ($userlist as $j) { ?>
-                                <option value="<?= $j['username'] ?>" <?= $j['username'] == $selected ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
-                            <?php } ?>
-                        </select>
-                        <label for="supervisor">
-                            <?= lang('Supervisor', 'Betreuende Person') ?>
-                        </label>
-                    </div>
-                <?php } ?>
-            <?php } ?>
-
-
-            <?php if (array_intersect(['name', 'title', 'start_proposed', 'start', 'purpose', 'internal_number'], $field_keys)) { ?>
+            <?php if (array_intersect(['name', 'name_de', 'title', 'title_de', 'start_proposed', 'start', 'purpose', 'internal_number'], $field_keys)) { ?>
 
                 <h5>
                     <?= lang('General information', 'Allgemeine Informationen') ?>
                 </h5>
 
                 <?php if (array_key_exists('name', $fields)) { ?>
-                    <div class="form-group floating-form">
+                    <div class="form-group floating-form with-icon">
                         <input type="text" class="form-control" name="values[name]" id="name" value="<?= val('name') ?>" maxlength="30" placeholder="Short title" required>
                         <label for="name" class="required">
                             <?= lang('Short title', 'Kurztitel') ?>
                         </label>
+                        <?php if (array_key_exists('name_de', $fields)) { ?>
+                            <img src="<?= ROOTPATH ?>/img/GB.svg" alt="" class="flag form-icon">
+                        <?php } ?>
                     </div>
                 <?php } ?>
 
+                <?php if (array_key_exists('name_de', $fields)) { ?>
+                    <div class="form-group floating-form position-relative with-icon">
+                        <input type="text" class="form-control" name="values[name_de]" id="name_de" value="<?= val('name_de') ?>" maxlength="30" placeholder="Kurztitel">
+                        <label for="project">
+                            <?= lang('Short title (German)', 'Kurztitel (Deutsch)') ?>
+                        </label>
+                        <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon">
+                    </div>
+                <?php } ?>
+
+
                 <?php if (array_key_exists('title', $fields)) { ?>
-                    <div class="form-group">
+                    <div class="form-group with-icon">
                         <div class=" lang-<?= lang('en', 'de') ?>">
                             <label for="title" class="required floating-title">
                                 <?= lang('Full title of the project', 'Voller Titel des Projekts') ?>
                             </label>
 
-                            <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
+                            <div class="form-group title-editor" id="title-quill"><?= $form['title'] ?? '' ?></div>
                             <input type="text" class="form-control hidden" name="values[title]" id="title" value="<?= val('title') ?>">
                         </div>
 
+                        <?php if (array_key_exists('title_de', $fields)) { ?>
+                            <img src="<?= ROOTPATH ?>/img/GB.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
+                        <?php } ?>
+
                         <script>
-                            initQuill(document.getElementById('title-editor'));
+                            quillEditor('title');
+                        </script>
+                    </div>
+                <?php } ?>
+                <?php if (array_key_exists('title_de', $fields)) { ?>
+                    <div class="form-group with-icon">
+                        <div class=" lang-<?= lang('en', 'de') ?>">
+                            <label for="title_de" class="floating-title">
+                                <?= lang('Full title of the project (German)', 'Voller Titel des Projekts (Deutsch)') ?>
+                            </label>
+
+                            <div class="form-group title-editor" id="title_de-quill"><?= $form['title_de'] ?? '' ?></div>
+                            <input type="text" class="form-control hidden" name="values[title_de]" id="title_de" value="<?= val('title_de') ?>">
+                        </div>
+                        <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
+
+                        <script>
+                            quillEditor('title_de');
                         </script>
                     </div>
                 <?php } ?>
@@ -507,6 +438,116 @@ if (empty($selected)) {
             <?php } ?>
 
 
+
+
+            <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
+                <h5>
+                    <?= lang('Persons', 'Personen') ?>
+                </h5>
+
+                <?php if (array_key_exists('applicants', $fields)) { ?>
+                    <div class="data-module col-12" data-module="authors">
+                        <label for="applicant" class="floating-title required">
+                            <?= lang('Applicant(s)', 'Antragstellende Person(en)') ?>
+                        </label>
+                        <div class="author-widget" id="author-widget">
+                            <div class="author-list p-10" id="author-list">
+                                <?php foreach ($form['applicants'] ?? array($_SESSION['username']) as $a) { ?>
+                                    <div class='author'>
+                                        <?= $DB->getNameFromId($a) ?>
+                                        <input type='hidden' name='values[applicants][]' value='<?= $a ?>'>
+                                        <a onclick='$(this).closest(".author").remove()'>&times;</a>
+                                    </div>
+                                <?php } ?>
+
+                            </div>
+                            <div class="footer">
+                                <div class="input-group small d-inline-flex w-auto">
+                                    <select class="form-control" id="add-author" autocomplete="off">
+                                        <?php
+                                        $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
+                                        foreach ($userlist as $j) { ?>
+                                            <option value="<?= $j['username'] ?>" <?= $j['username'] == ($user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn secondary h-full" type="button" onclick="addAuthorDiv(event);">
+                                            <i class="ph ph-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <small class="text-muted">
+                            <?= lang('More persons may be added later', 'Weitere Personen können später hinzugefügt werden') ?>
+                        </small>
+                    </div>
+                    <script>
+                        function addAuthorDiv(event) {
+                            var input = $('#add-author')
+                            var username = input.val()
+                            var name = input.find('option:selected').text()
+                            var el = $('#author-list')
+                            var author = $('<div class="author">')
+                                .html(name);
+                            author.append('<input type="hidden" name="values[applicants][]" value="' + username + '">')
+                            author.append('<a onclick="$(this).closest(\'.author\').remove()">&times;</a>')
+                            author.appendTo(el)
+                        }
+                    </script>
+                <?php } ?>
+
+
+                <?php if (array_key_exists('scholar', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off">
+                            <?php
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
+                            foreach ($userlist as $j) { ?>
+                                <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['scholar'] ?? $user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="scholar">
+                            <?= lang('Scholar', 'Stipendiat:in') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+
+
+                <?php if (array_key_exists('supervisor', $fields)) {
+                    $selected = '';
+                    if ($new_project) {
+                        include_once BASEPATH . "/php/Groups.php";
+                        // default: head of group
+                        $dept = $USER['depts'] ?? [];
+                        if (!empty($dept)) {
+                            $Groups = new Groups();
+                            $heads = $Groups->getGroup($dept[0])['head'] ?? array();
+                            $selected = $heads[0] ?? '';
+                        }
+                    } else {
+                        $selected = $form['supervisor'] ?? '';
+                    }
+
+                ?>
+                    <div class="form-group floating-form">
+                        <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off">
+                            <?php
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
+                            foreach ($userlist as $j) { ?>
+                                <option value="<?= $j['username'] ?>" <?= $j['username'] == $selected ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="supervisor">
+                            <?= lang('Supervisor', 'Betreuende Person') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+            <?php } ?>
+
+
+
             <?php if (array_intersect(['scholarship', 'university'], $field_keys)) { ?>
                 <h5>
                     <?= lang('Scholarship', 'Stipendium') ?>
@@ -618,7 +659,7 @@ if (empty($selected)) {
 
 
 
-            <?php if (array_intersect(['funder', 'funding_organization','funding_program', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
+            <?php if (array_intersect(['funder', 'funding_organization', 'funding_program', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
                     <?= lang('Funding', 'Förderung') ?>
@@ -825,9 +866,9 @@ if (empty($selected)) {
 
 
 
-            <?php if (array_intersect(['public', 'abstract', 'website'], $field_keys)) { ?>
+            <?php if (array_intersect(['public', 'abstract', 'abstract_de', 'website'], $field_keys)) { ?>
                 <h5>
-                    <?= lang('Outreach') ?>
+                    <?= lang('Project description', 'Projektbeschreibung') ?>
                 </h5>
 
                 <?php if (array_key_exists('public', $fields)) { ?>
@@ -843,11 +884,40 @@ if (empty($selected)) {
                 <?php } ?>
 
                 <?php if (array_key_exists('abstract', $fields)) { ?>
-                    <div class="form-group floating-form">
-                        <textarea name="values[abstract]" id="abstract" <?= $req('abstract') ?> cols="30" rows="5" class="form-control" placeholder="Abstract"><?= val('abstract') ?></textarea>
-                        <label for="abstract" class="<?= $req('abstract') ?>">
-                            <?= lang('Abstract', 'Kurzbeschreibung') ?>
-                        </label>
+                    <div class="form-group with-icon">
+                        <div class=" lang-<?= lang('en', 'de') ?>">
+                            <label for="abstract" class="required floating-title">
+                                <?= lang('Abstract', 'Kurzbeschreibung') ?>
+                            </label>
+
+                            <div class="form-group title-editor" id="abstract-quill"><?= $form['abstract'] ?? '' ?></div>
+                            <input type="text" class="form-control hidden" name="values[abstract]" id="abstract" value="<?= val('abstract') ?>">
+                        </div>
+
+                        <?php if (array_key_exists('abstract_de', $fields)) { ?>
+                            <img src="<?= ROOTPATH ?>/img/GB.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
+                        <?php } ?>
+
+                        <script>
+                            quillEditor('abstract');
+                        </script>
+                    </div>
+                <?php } ?>
+                <?php if (array_key_exists('abstract_de', $fields)) { ?>
+                    <div class="form-group with-icon">
+                        <div class=" lang-<?= lang('en', 'de') ?>">
+                            <label for="abstract_de" class="floating-title">
+                                <?= lang('Abstract (German)', 'Kurzbeschreibung (Deutsch)') ?>
+                            </label>
+
+                            <div class="form-group title-editor" id="abstract_de-quill"><?= $form['abstract_de'] ?? '' ?></div>
+                            <input type="text" class="form-control hidden" name="values[abstract_de]" id="abstract_de" value="<?= val('abstract_de') ?>">
+                        </div>
+                        <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
+
+                        <script>
+                            quillEditor('abstract_de');
+                        </script>
                     </div>
                 <?php } ?>
 

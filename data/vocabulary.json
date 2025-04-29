@@ -58,31 +58,61 @@
         "description_de": "Die Rolle der Person im Projekt.",
         "values": [
             {
-                "id": "Projektleitung",
-                "en": "Project management",
-                "de": "Projektleitung"
+              "id": "applicant",
+              "en": "Applicant",
+              "de": "Antragstellende"
             },
             {
-                "id": "Wissenschaftliche Mitarbeit",
-                "en": "Scientific staff",
-                "de": "Wissenschaftliche Mitarbeit"
+              "id": "PI",
+              "en": "Project management",
+              "de": "Projektleitung"
             },
             {
-                "id": "Technische Mitarbeit",
-                "en": "Technical staff",
-                "de": "Technische Mitarbeit"
+              "id": "co-PI",
+              "en": "Deputy project management",
+              "de": "Stellvertretende Projektleitung"
             },
             {
-                "id": "Studentische Mitarbeit",
-                "en": "Student staff",
-                "de": "Studentische Mitarbeit"
+              "id": "worker",
+              "en": "Scientific staff",
+              "de": "Wissenschaftliche Mitarbeitende"
             },
             {
-                "id": "Sonstige Mitarbeit",
-                "en": "Other staff",
-                "de": "Sonstige Mitarbeit"
+              "id": "coordinator",
+              "en": "Project coordinator",
+              "de": "Projektkoordination"
+            },
+            {
+              "id": "technical-staff",
+              "en": "Technical staff",
+              "de": "Technische Mitarbeitende"
+            },
+            {
+              "id": "student-staff",
+              "en": "Student staff",
+              "de": "Studentische Mitarbeitende"
+            },
+            {
+              "id": "associate",
+              "en": "Associate",
+              "de": "Beteiligte"
+            },
+            {
+              "id": "supervisor",
+              "en": "Supervisor",
+              "de": "Betreuung"
+            },
+            {
+              "id": "scholar",
+              "en": "Scholar",
+              "de": "Stipendiat:in"
+            },
+            {
+              "id": "other",
+              "en": "Other",
+              "de": "Sonstiges"
             }
-        ]
+          ]
     },
     {
         "id": "project-institute-role",

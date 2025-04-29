@@ -73,16 +73,6 @@ class Project extends Vocabulary
         'other' => 'Sonstiges',
     ];
 
-    public const PERSON_ROLE = [
-        'PI' => 'Projektleitung',
-        'applicant' => 'Antragsteller:in',
-        'worker' => 'Projektmitarbeiter:in',
-        'scholar' => 'Stipediat:in',
-        'supervisor' => 'Betreuer:in',
-        'associate' => 'Beteiligte Person',
-        'coordinator' => 'Wiss. Koordinator:in'
-    ];
-
     public const COLLABORATOR = [
         'Education' => 'Bildung',
         'Healthcare' => 'Gesundheit',
@@ -174,6 +164,11 @@ class Project extends Vocabulary
                 'order' => $field['order'] ?? 99,
             ];
         }
+
+        // order by 'order'
+        uasort($this->FIELDS, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
     }
 
     public function getProjectType($id)
@@ -268,7 +263,6 @@ class Project extends Vocabulary
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
                 foreach ($value ?? [] as $c) {
-                    $iso = $c;
                     $role = '';
                     if (isset($c['country'])) {
                         $iso = $c['country'];
@@ -308,6 +302,15 @@ class Project extends Vocabulary
             case 'grant_sum':
             case 'grant_income':
                 return number_format($value, 2, ',', '.') . ' €';
+            case 'abstract':
+            case 'abstract_de':
+                // shorten 
+                $abstract = $value;
+                if (strlen($abstract) > 200) {
+                    $abstract = '<div class="preview-text">' . $value . '</div>';
+                    $abstract .= '<a class="text-muted font-size-12" onclick="$(this).prev().removeClass(\'preview-text\'); $(this).toggle()">' . lang('Show more', 'Mehr anzeigen') . '...</a>';
+                }
+                return $abstract;
             case 'kdsf-ffk':
                 $return = '<ul class="list mb-0">';
                 foreach ($value as $k) {
@@ -316,7 +319,7 @@ class Project extends Vocabulary
                     $return .= '<li>' . lang($kdsf['en'], $kdsf['de'] ?? null) . '</li>';
                 }
                 return $return . '</ul>';
-            case 'public': 
+            case 'public':
                 if ($value) {
                     return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('yes', 'ja') . '</span>';
                 } else {
@@ -584,30 +587,14 @@ class Project extends Vocabulary
         return round($progress);
     }
 
-    public static function personRoleRaw($role)
+    public function personRoleRaw($role)
     {
-        switch ($role) {
-            case 'PI':
-                return ['en' => 'Project lead', 'de' => 'Projektleitung'];
-            case 'applicant':
-                return ['en' => 'Applicant', 'de' => 'Antragsteller:in'];
-            case 'worker':
-                return ['en' => 'Project member', 'de' => 'Projektmitarbeiter:in'];
-            case 'scholar':
-                return ['en' => 'Scholar', 'de' => 'Stipediat:in'];
-            case 'supervisor':
-                return ['en' => 'Supervisor', 'de' => 'Betreuer:in'];
-            case 'coordinator':
-                return ['en' => 'Scientific Coordinator', 'de' => 'Wiss. Koordinator:in'];
-            default:
-                return ['en' => 'Associate', 'de' => 'Beteiligte Person'];
-        }
+        return $this->getValues('project-person-role', $role);
     }
 
-    public static function personRole($role, $gender = 'n')
+    public function personRole($role)
     {
-        $role = self::personRoleRaw($role);
-        return lang($role['en'], $role['de']);
+        return $this->getValue('project-person-role', $role);
     }
 
     public function widgetSmall()
@@ -672,7 +659,7 @@ class Project extends Vocabulary
             $widget .= '<span class="float-right badge">' . $this->personRole($userrole) . '</span> ';
         }
         if ($this->project['status'] != 'project') {
-        $widget .= '<span class="mr-10">' . $this->getStatus() . '</span> ';
+            $widget .= '<span class="mr-10">' . $this->getStatus() . '</span> ';
         }
         if (isset($this->project['funder']))
             $widget .= '<span class="text-muted">' . $this->project['funder'] . '</span>';

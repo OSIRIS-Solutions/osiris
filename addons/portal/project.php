@@ -231,7 +231,7 @@ $Project = new Project($project);
                                                 <!-- dept -->
 
                                             </h5>
-                                            <?= Project::personRole($person['role']) ?>
+                                            <?= $Project->personRole($person['role']) ?>
                                             <?php
                                             $scientist = $DB->getPerson($username);
                                             if (!empty($scientist['units'])) {

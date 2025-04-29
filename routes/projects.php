@@ -116,8 +116,10 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 
 
 
-Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
+Route::get('/(projects|proposals)/(edit|collaborators|finance|public|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
     include_once BASEPATH . "/php/init.php";
+    require_once BASEPATH . "/php/Project.php";
+
     $user = $_SESSION['username'];
 
     $mongo_id = $DB->to_ObjectID($id);
@@ -126,6 +128,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
         header("Location: " . ROOTPATH . "/projects?msg=not-found");
         die;
     }
+    $Project = new Project($project);
 
     $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
     $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
@@ -143,6 +146,9 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
             break;
         case 'public':
             $name = lang("Public representation", "Öffentliche Darstellung");
+            break;
+        case 'persons':
+            $name = lang("Persons", "Personen");
             break;
         default:
             $name = lang("Edit", "Bearbeiten");
@@ -168,6 +174,9 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
             break;
         case 'public':
             include BASEPATH . "/pages/projects/public.php";
+            break;
+        case 'persons':
+            include BASEPATH . "/pages/projects/persons.php";
             break;
         default:
             include BASEPATH . "/pages/proposals/edit.php";
@@ -444,6 +453,9 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
     }
+    if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
+        $values['university'] = $DB->to_ObjectID($values['university']);
+    }
 
     // check if type is Teilprojekt
     // if (isset($values['parent_id'])) {
@@ -524,6 +536,13 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     if (isset($values['funding_number'])) {
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
+    }
+
+    if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
+        $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
+    }
+    if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
+        $values['university'] = $DB->to_ObjectID($values['university']);
     }
 
     // update all children
@@ -649,6 +668,8 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
                 'created' => date('Y-m-d')
             ]);
             $coll_id = $new_org->getInsertedId();
+        } else {
+            $coll_id = $coll_id['_id'];
         }
         $collaborators[$i]['organization'] = $coll_id;
     }

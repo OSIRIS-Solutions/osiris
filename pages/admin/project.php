@@ -323,7 +323,7 @@ if ($process == 'project') {
     ?>
 
         <?php
-        foreach ($phases as $phase) {
+            foreach ($phases as $phase) {
             $phase_id = $phase['id'];
             if (isset($project['phases']))
                 foreach ($project['phases'] as $p) {
@@ -355,7 +355,6 @@ if ($process == 'project') {
                     <div>
 
                         <?php
-
                         // get required fields
                         $fields = $Project->FIELDS;
                         $fields = array_filter(array_values($fields), function ($field) use ($phase_id) {

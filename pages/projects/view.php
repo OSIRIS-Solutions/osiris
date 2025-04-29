@@ -47,6 +47,13 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 ?>
 
+<style>
+    .pills {
+        position: sticky;
+        top: 8rem;
+        z-index: 10;
+    }
+</style>
 
 <script>
     const PROJECT = '<?= $project['name'] ?>';
@@ -115,7 +122,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
             <?= $Project->getType() ?>
         </div>
 
-        <?php if ($project_type['process'] == 'proposal') { ?>
+        <?php if (($project_type['process'] ?? 'project') == 'proposal') { ?>
             <div class="mr-10 badge bg-white">
                 <small><?= lang('Proposal', 'Antrag') ?>: </small>
                 <br />
@@ -181,15 +188,8 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
     <nav class="pills mt-20 mb-0">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
-            <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('General', 'Allgemein') ?>
-        </a>
-
-
-        <!-- Public representation -->
-        <a onclick="navigate('public')" id="btn-public" class="btn">
-            <i class="ph ph-globe" aria-hidden="true"></i>
-            <?= lang('Public representation', 'Öffentliche Darstellung') ?>
+            <i class="ph ph-tree-structure" aria-hidden="true"></i>
+            <?= lang('Project details', 'Projektdetails') ?>
         </a>
         <?php if ($type == 'Teilprojekt') {
             // collaborators are inherited from parent project
@@ -254,16 +254,10 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                 <div class="btn-toolbar mb-10">
 
                     <?php if ($edit_perm) { ?>
-                        <div class="btn-group">
-                            <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
-                                <i class="ph ph-edit"></i>
-                                <?= lang('Details', 'Details') ?>
-                            </a>
-                            <a href="<?= ROOTPATH ?>/projects/public/<?= $id ?>" class="btn primary">
+                        <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                                <?= lang('Public', 'Öffentlich') ?>
-                            </a>
-                        </div>
+                            <?= lang('Edit', 'Bearbeiten') ?>
+                        </a>
                     <?php } ?>
 
                     <?php if ($Settings->hasPermission('projects.delete') || ($Settings->hasPermission('projects.delete-own') && $edit_perm)) { ?>
@@ -339,114 +333,18 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
             <div class="col-md-6">
 
                 <h2>
-                    <?= lang('Project members', 'Projektmitarbeiter') ?> @
-                    <?= $Settings->get('affiliation') ?>
+                    <?= lang('Project staff', 'Projektmitarbeitende') ?>
                 </h2>
 
+
                 <?php if ($edit_perm) { ?>
-                    <div class="modal" id="persons" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                                    <span aria-hidden="true">&times;</span>
-                                </a>
-                                <h5 class="modal-title">
-                                    <?= lang('Connect persons', 'Personen verknüpfen') ?>
-                                </h5>
-                                <div>
-                                    <form action="<?= ROOTPATH ?>/crud/projects/update-persons/<?= $id ?>" method="post">
-
-                                        <table class="table simple">
-                                            <thead>
-                                                <tr>
-                                                    <th><?= lang('Project-ID', 'Projekt-ID') ?></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="project-list">
-                                                <?php
-                                                $persons = $project['persons'] ?? array();
-                                                if (empty($persons)) {
-                                                    $persons = [
-                                                        ['user' => '', 'role' => '']
-                                                    ];
-                                                }
-                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
-                                                foreach ($persons as $i => $con) { ?>
-                                                    <tr>
-                                                        <td class="">
-                                                            <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
-                                                                <?php
-                                                                foreach ($all_users as $s) { ?>
-                                                                    <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
-                                                                        <?= "$s[last], $s[first] ($s[username])" ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control">
-                                                                <?php if ($project['type'] == 'Stipendium') { ?>
-                                                                    <option value="scholar" <?= $con['role'] == 'scholar' ? 'selected' : '' ?>><?= Project::personRole('scholar') ?></option>
-                                                                    <option value="supervisor" <?= $con['role'] == 'supervisor' ? 'selected' : '' ?>><?= Project::personRole('supervisor') ?></option>
-                                                                <?php } else { ?>
-                                                                    <option value="applicant" <?= $con['role'] == 'applicant' ? 'selected' : '' ?>><?= Project::personRole('applicant') ?></option>
-                                                                    <option value="PI" <?= $con['role'] == 'PI' ? 'selected' : '' ?>><?= Project::personRole('PI') ?></option>
-                                                                    <option value="worker" <?= $con['role'] == 'worker' ? 'selected' : '' ?>><?= Project::personRole('worker') ?></option>
-                                                                    <option value="coordinator" <?= $con['role'] == 'coordinator' ? 'selected' : '' ?>><?= Project::personRole('coordinator') ?></option>
-                                                                <?php } ?>
-                                                                <option value="associate" <?= $con['role'] == 'associate' ? 'selected' : '' ?>><?= Project::personRole('associate') ?></option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr id="last-row">
-                                                    <td colspan="2">
-                                                        <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-
-                                        </table>
-
-                                        <button class="btn primary mt-20">
-                                            <i class="ph ph-check"></i>
-                                            <?= lang('Submit', 'Bestätigen') ?>
-                                        </button>
-                                    </form>
-
-                                    <script>
-                                        var counter = <?= $i ?? 0 ?>;
-                                        const tr = $('#project-list tr').first()
-
-                                        function addProjectRow() {
-                                            counter++;
-                                            const row = tr.clone()
-                                            row.find('select').first().attr('name', 'persons[' + counter + '][user]');
-                                            row.find('select').last().attr('name', 'persons[' + counter + '][role]');
-                                            $('#project-list').append(row)
-                                        }
-                                    </script>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
-
-                <div class="btn-toolbar mb-10">
-                    <?php if ($edit_perm) { ?>
-                        <a href="#persons" class="btn primary">
+                    <div class="btn-toolbar mb-10">
+                        <a href="<?= ROOTPATH ?>/projects/persons/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
                             <?= lang('Edit', 'Bearbeiten') ?>
                         </a>
-                    <?php } ?>
-                </div>
+                    </div>
+                <?php } ?>
 
                 <table class="table">
                     <tbody>
@@ -468,14 +366,17 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                                     <div class="d-flex align-items-center">
 
                                         <?= $Settings->printProfilePicture($username, 'profile-img small mr-20') ?>
-                                        <div class="">
+                                        <div>
                                             <h5 class="my-0">
-                                                <a href="<?= ROOTPATH ?>/profile/<?= $username ?>" class="colorless">
-                                                    <?= $person['name'] ?>
+                                                <a href="<?= ROOTPATH ?>/profile/<?= $username ?>" class="">
+                                                    <?= $person['name'] ?? $username ?>
                                                 </a>
                                             </h5>
-                                            <?= Project::personRole($person['role']) ?>
+                                            <?= $Project->personRole($person['role']) ?>
+                                            <br>
+                                            <?= fromToYear($person['start'] ?? $project['start'], $person['end'] ?? $project['end']) ?>
                                         </div>
+
                                     </div>
                                 </td>
                             </tr>
@@ -717,6 +618,47 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
             <?php } ?>
         </div>
 
+        
+        <?php if ($project['public'] ?? true) { ?>
+            <a class="badge success" href="<?= PORTALPATH ?>/project/<?= $project['_id'] ?>">
+                <i class="ph ph-globe"></i>
+                <?= lang('Publicly shown', 'Öffentlich gezeigt') ?>
+            </a>
+        <?php } else { ?>
+            <span class="badge danger">
+                <i class="ph ph-globe-x"></i>
+                <?= lang('Not publicly shown', 'Nicht öffentlich gezeigt') ?>
+            </span>
+        <?php } ?>
+
+
+        
+        <p>
+            <?= lang('This is how the project is shown in OSIRIS Portfolio.', 'So wird das Projekt in OSIRIS Portfolio gezeigt.') ?>
+        </p>
+
+        <div class="box">
+            <div class="content">
+                <h3>
+                <?= lang($project['public_title'] ?? $project['name'] ?? '-', $project['public_title_de'] ?? null) ?>
+                </h3>
+                <h4 class="subtitle">
+                    <?= lang($project['public_subtitle'] ?? $project['title'] ?? '-', $project['public_subtitle_de'] ?? null) ?>
+                </h4>
+                <div class="abstract">
+                    <?php if (lang('en', 'de') == 'de' && isset($project['public_abstract_de'])) { ?>
+                        <?= $project['public_abstract_de'] ?>
+                    <?php } else if (isset($project['public_abstract'])) { ?>
+                        <?= $project['public_abstract'] ?>
+                    <?php } else { ?>
+                        <?= $project['abstract'] ?? '-' ?>
+                    <?php } ?>
+                </div>
+                <?php if (isset($project['website']) && !empty($project['website'])) { ?>
+                    <a href="<?= $project['website'] ?>" target="_blank" rel="noopener noreferrer"> <?= $project['website'] ?></a>
+                <?php } ?>
+            </div>
+        </div>
         <table class="table">
             <tbody>
                 <tr>
@@ -736,7 +678,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                 <tr>
                     <td>
                         <span class="key"><?= lang('Public title', 'Öffentlicher Titel') ?></span>
-                        <?= lang($project['public_title'] ?? $project['name'] ?? '-', $project['public_title_de'] ?? null) ?>
+                        
                     </td>
                 </tr>
                 <tr>

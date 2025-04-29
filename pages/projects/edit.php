@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 
 /**
  * Page to add new projects
@@ -75,7 +75,6 @@ $Vocabulary = new Vocabulary();
 
     <?php
     if (is_null($subproject) && empty($form)) { ?>
-        <!-- subprojects cannot change their project type -->
 
         <div class="select-btns">
             <?php 
@@ -140,7 +139,6 @@ $Vocabulary = new Vocabulary();
 
             <div class="box padded" id="">
                 <?php if ($subproject !== null) { ?>
-                    <!-- add parent project info -->
                     <input type="hidden" class="hidden" name="values[parent]" value="<?= $form['parent'] ?>">
                     <input type="hidden" class="hidden" name="values[parent_id]" value="<?= $form['parent_id'] ?>">
 
@@ -364,7 +362,6 @@ $Vocabulary = new Vocabulary();
 
                             <label for="funding_organization">
                                 <?= lang('Funding organization', 'Förderorganisation') ?>
-                                <!-- Förderorganisation laut KDSF -->
                             </label>
                         </div>
                     <?php } ?>
@@ -511,9 +508,9 @@ $Vocabulary = new Vocabulary();
 
 
 
-                <?php if (array_intersect(['public', 'abstract', 'website'], $field_keys)) { ?>
+                <?php if (array_intersect(['public', 'abstract', 'abstract_de', 'website'], $field_keys)) { ?>
                     <h6>
-                        <?= lang('Outreach') ?>
+                        <?= lang('Outreach', 'Öffentliche Darstellung') ?>
                     </h6>
 
                     <?php if (array_key_exists('public', $fields)) { ?>
@@ -532,6 +529,14 @@ $Vocabulary = new Vocabulary();
                             <textarea name="values[abstract]" id="abstract" cols="30" rows="5" class="form-control" placeholder="Abstract"><?= val('abstract') ?></textarea>
                             <label for="abstract" class="">
                                 <?= lang('Abstract', 'Kurzbeschreibung') ?>
+                            </label>
+                        </div>
+                    <?php } ?>
+                    <?php if (array_key_exists('abstract_de', $fields)) { ?>
+                        <div class="form-group floating-form">
+                            <textarea name="values[abstract_de]" id="abstract_de" cols="30" rows="5" class="form-control" placeholder="Abstract"><?= val('abstract_de') ?></textarea>
+                            <label for="abstract_de" class="">
+                                <?= lang('Abstract (German)', 'Kurzbeschreibung (Deutsch)') ?>
                             </label>
                         </div>
                     <?php } ?>
@@ -763,7 +768,6 @@ $Vocabulary = new Vocabulary();
                     <?php if (array_key_exists('ressources', $fields)) {
                         $res = $form['ressources'] ?? [];
                     ?>
-                        <!-- each: Sachmittel, Personalmittel, Raumkapitäten, sonstige Ressourcen -->
                         <div class="ressources">
                             <div class="form-group">
                                 <label for="ressource1">
@@ -855,7 +859,6 @@ $Vocabulary = new Vocabulary();
                     <?php } ?>
                 <?php } ?>
 
-                <!-- if topics are registered, you can choose them here -->
                 <?php $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? [])) ?>
 
                 <button class="btn secondary" type="submit" id="submit-btn">
@@ -865,4 +868,4 @@ $Vocabulary = new Vocabulary();
         </form>
 
     <?php } ?>
-</div>
+</div> -->

@@ -12629,6 +12629,14 @@ progress::-webkit-progress-value {
   border-radius: 0.5rem;
 }
 
+.preview-text {
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3; /* Max 3 Zeilen */
+  -webkit-box-orient: vertical;
+}
+
 /*!
  * Quill Editor v1.3.6
  * https://quilljs.com/

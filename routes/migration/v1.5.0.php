@@ -173,10 +173,6 @@ if ($count > 0) {
                         "required" => false
                     ],
                     [
-                        "module" => "funding_organization",
-                        "required" => false
-                    ],
-                    [
                         "module" => "internal_number",
                         "required" => false
                     ],
@@ -276,7 +272,10 @@ $osiris->adminProjects->insertOne([
             "name_de" => "Projekt",
             "color" => "primary",
             "modules" => [
+                ["module" => "name_de", "required" => false],
+                ["module" => "title_de", "required" => false],
                 ["module" => "abstract", "required" => false],
+                ["module" => "abstract_de", "required" => false],
                 ["module" => "coordinator", "required" => false],
                 ["module" => "countries", "required" => false],
                 ["module" => "funding_number", "required" => false],
@@ -309,12 +308,12 @@ $fields_proposals = array_column($fields_proposals, 'id');
 $fields_projects = array_column($fields_projects, 'id');
 $fields_projects = array_merge($fields_projects, [
     "collaborators",
-    "public_title",
-    "public_title_de",
-    "public_subtitle",
-    "public_subtitle_de",
-    "public_abstract",
-    "public_abstract_de",
+    // "public_title",
+    // "public_title_de",
+    // "public_subtitle",
+    // "public_subtitle_de",
+    // "public_abstract",
+    // "public_abstract_de",
     "public_image",
     "subprojects",
     "teaser_de",
@@ -398,8 +397,22 @@ foreach ($projects as $project) {
             $new_project[$field] = $project[$field];
         }
     }
+    $replace = [
+        "public_title" => "name",
+        "public_title_de" => "name_de",
+        "public_subtitle" => "title",
+        "public_subtitle_de" => "title_de",
+        "public_abstract" => "abstract",
+        "public_abstract_de" => "abstract_de",
+    ];
+    // replace the old fields with the new ones, overwrite the new ones if they exist
+    foreach ($replace as $old => $new) {
+        if (isset($project[$old]) && !empty($project[$old])) {
+            $new_project[$new] = $project[$old];
+        }
+    }
     // check if the project is already running
-    if ($project['status'] == 'approved') {
+    if ($project['status'] == 'approved' || $project['status'] == 'finished') {
         // insert the new project
         $osiris->projects->insertOne($new_project);
         // add the project key to the proposal
