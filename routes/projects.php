@@ -127,6 +127,13 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public)/([a-zA-Z0-
         die;
     }
 
+    $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
+    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+    if (!$edit_perm) {
+        header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
+        die;
+    }
+
     switch ($page) {
         case 'collaborators':
             $name = lang("Collaborators", "Kooperationspartner");
@@ -462,7 +469,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
     $insertOneResult  = $osiris->$collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
-    
+
     if (isset($values['funding_number'])) {
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);

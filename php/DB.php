@@ -801,7 +801,6 @@ class DB
      */
     public function updateHistory($new_doc, $id)
     {
-        $Format = new Document();
         $old_doc = $this->getActivity($id);
         $hist = [
             'date' => date('Y-m-d'),

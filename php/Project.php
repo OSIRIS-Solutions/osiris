@@ -316,6 +316,16 @@ class Project extends Vocabulary
                     $return .= '<li>' . lang($kdsf['en'], $kdsf['de'] ?? null) . '</li>';
                 }
                 return $return . '</ul>';
+            case 'public': 
+                if ($value) {
+                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('yes', 'ja') . '</span>';
+                } else {
+                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('no', 'nein') . '</span>';
+                }
+            case 'topics':
+                $topics = DB::doc2Arr($value);
+                $Settings = new Settings();
+                return $Settings->printTopics($topics);
             case 'ressources':
                 # { "material": "no", "material_details": null, "personnel": "no", "personnel_details": null, "room": "yes", "room_details": "1 Schreibtischarbeitsplatz", "other": "no", "other_details": null }
                 $return = '<ul class="list mb-0">';
@@ -340,7 +350,7 @@ class Project extends Vocabulary
             case 'scholarship':
             case 'university':
                 $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
-                if (empty($org)) return '-';
+                if (empty($org)) return $value;
                 return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
             default:
                 if (is_string($value)) {

@@ -44,6 +44,7 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
     ];
 }
 
+$project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 ?>
 
 
@@ -114,20 +115,21 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
             <?= $Project->getType() ?>
         </div>
 
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('Proposal', 'Antrag') ?>: </small>
-            <br />
-            <?php if (!isset($project['proposal_id'])) {
-                echo '-';
-            } else if ($Settings->hasPermission('projects.view') || ($edit_perm && $Settings->hasPermission('projects.edit-own'))) { ?>
-                <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="badge primary">
-                    <i class="ph ph-link m-0"></i>
-                </a>
-            <?php } else { ?>
-                <?= lang('exists', 'vorhanden') ?>
-            <?php } ?>
-
-        </div>
+        <?php if ($project_type['process'] == 'proposal') { ?>
+            <div class="mr-10 badge bg-white">
+                <small><?= lang('Proposal', 'Antrag') ?>: </small>
+                <br />
+                <?php if (!isset($project['proposal_id'])) {
+                    echo '-';
+                } else if ($Settings->hasPermission('projects.view') || ($edit_perm && $Settings->hasPermission('projects.edit-own'))) { ?>
+                    <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="badge primary">
+                        <i class="ph ph-link m-0"></i>
+                    </a>
+                <?php } else { ?>
+                    <?= lang('exists', 'vorhanden') ?>
+                <?php } ?>
+            </div>
+        <?php } ?>
 
         <div class="mr-10 badge bg-white">
             <small><?= lang('Time frame', 'Zeitraum') ?>: </small>
@@ -144,16 +146,16 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
         <div class="mr-10 badge bg-white">
             <small><?= lang('Scope', 'Reichweite') ?>: </small>
             <br />
-           <b>
-           <?php
-           if (!empty(($project['collaborators'] ?? []))) {
-            $scope = $Project->getScope();
-            echo  $scope['scope'] . ' (' . $scope['region'] . ')';
-           } else {
-            echo lang('No collaborators', 'Keine Partner');
-              }
-            ?>
-           </b>
+            <b>
+                <?php
+                if (!empty(($project['collaborators'] ?? []))) {
+                    $scope = $Project->getScope();
+                    echo  $scope['scope'] . ' (' . $scope['region'] . ')';
+                } else {
+                    echo lang('No collaborators', 'Keine Partner');
+                }
+                ?>
+            </b>
         </div>
 
         <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -197,12 +199,19 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 <?= lang('Collaborators', 'Kooperationspartner') ?>
                 <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
             </a>
-        <?php } else { ?>
+        <?php } elseif ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" id="btn-collabs" class="btn">
                 <i class="ph ph-plus-circle" aria-hidden="true"></i>
                 <?= lang('Collaborators', 'Kooperationspartner') ?>
             </a>
+        <?php } else { ?>
+            <a id="btn-collabs" class="btn disabled">
+                <i class="ph ph-handshake" aria-hidden="true"></i>
+                <?= lang('Collaborators', 'Kooperationspartner') ?>
+                <span class="index">0</span>
+            </a>
         <?php } ?>
+
         <?php if ($N > 0) { ?>
             <a onclick="navigate('activities')" id="btn-activities" class="btn">
                 <i class="ph ph-suitcase" aria-hidden="true"></i>
@@ -245,34 +254,15 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 <div class="btn-toolbar mb-10">
 
                     <?php if ($edit_perm) { ?>
-                        <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
+                        <div class="btn-group">
+                            <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
+                                <i class="ph ph-edit"></i>
+                                <?= lang('Details', 'Details') ?>
+                            </a>
+                            <a href="<?= ROOTPATH ?>/projects/public/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                            <?= lang('Edit', 'Bearbeiten') ?>
-                        </a>
-                        <a href="<?= ROOTPATH ?>/projects/public/<?= $id ?>" class="btn primary">
-                            <i class="ph ph-edit"></i>
-                            <?= lang('Public', 'Öffentlich') ?>
-                        </a>
-                        <!-- dropdown -->
-                        <div class="dropdown">
-                            <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
-                                <i class="ph ph-download"></i>
-                                <?= lang('Download', 'Herunterladen') ?>
-                                <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu p-10" aria-labelledby="dropdown-download">
-                                <form action="<?= ROOTPATH ?>/projects/download/<?= $id ?>" method="post">
-                                    <select name="format" id="download-format" class="form-control mb-10">
-                                        <option value="docx">Word</option>
-                                        <option value="json">JSON</option>
-                                        <!-- <option value="csv">CSV</option> -->
-                                    </select>
-                                    <button class="btn primary" type="submit">
-                                        <i class="ph ph-download"></i>
-                                        <?= lang('Download', 'Herunterladen') ?>
-                                    </button>
-                                </form>
-                            </div>
+                                <?= lang('Public', 'Öffentlich') ?>
+                            </a>
                         </div>
                     <?php } ?>
 
@@ -281,8 +271,8 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                         <div class="dropdown">
                             <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-trash"></i>
-                                <?= lang('Delete', 'Löschen') ?>
-                                <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                                <span class="sr-only"><?= lang('Delete', 'Löschen') ?></span>
+                                <i class="ph ph-caret-down" aria-hidden="true"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                                 <div class="content">
@@ -306,11 +296,17 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
                 <table class="table">
                     <tbody>
                         <?php
-                        foreach ($project as $key => $value) {
+                        $fields = $Project->getFields($type, 'project');
+                        foreach ($fields as $module) {
+                            $key = $module['module'];
+                            $value = $project[$key] ?? null;
                             if (!array_key_exists($key, $Project->FIELDS)) {
                                 continue;
                             }
                             if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
+                                continue;
+                            }
+                            if ($key == 'topics' && !$Settings->featureEnabled('topics')) {
                                 continue;
                             }
                         ?>

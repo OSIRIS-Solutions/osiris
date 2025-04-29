@@ -713,7 +713,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
         $filter = ['title' => ['$regex' => $j]];
     }
 
-    if (!$Settings->hasPermission($collection.'.view')) {
+    if (!$Settings->hasPermission($type.'.view')) {
         $filter['$or'] = [
             ['persons.user' => $_SESSION['username']],
             ['created_by' => $_SESSION['username']]

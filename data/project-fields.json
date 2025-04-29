@@ -17,8 +17,8 @@
         "kdsf": "KDSF-B-2-15",
         "scope": {
             "proposed": true
-        }, 
-        "order": 99
+        },
+        "order": 6
     },
     {
         "id": "abstract",
@@ -29,7 +29,7 @@
             "project": false,
             "proposed": false
         },
-        "order": 20
+        "order": 27
     },
     {
         "id": "coordinator",
@@ -72,6 +72,18 @@
         "kdsf": "KDSF-B-3-2",
         "scope": {
             "project": false,
+            "approved": false
+        },
+        "order": 20
+    },
+    {
+        "id": "funding_program",
+        "en": "Funding program",
+        "de": "Förderprogramm",
+        "kdsf": "KDSF-B-3-1",
+        "scope": {
+            "project": false,
+            "proposed": false,
             "approved": false
         },
         "order": 19
@@ -278,7 +290,7 @@
             "proposed": true,
             "approved": false
         },
-        "order": 3
+        "order": 2
     },
     {
         "id": "public",
@@ -389,7 +401,7 @@
             "proposed": false,
             "approved": false
         },
-        "order": 20
+        "order": 21
     },
     {
         "id": "project_type",
@@ -401,7 +413,7 @@
             "proposed": false,
             "approved": false
         },
-        "order": 21
+        "order": 22
     },
     {
         "id": "scholar",
@@ -451,5 +463,4 @@
         },
         "order": 13
     }
-
 ]

@@ -532,7 +532,8 @@ if (empty($selected)) {
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?= lang('No organization selected:', 'Keine Organisation ausgewählt:') ?>
+                                    <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
                         </div>
@@ -582,7 +583,8 @@ if (empty($selected)) {
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
                         </div>
@@ -616,7 +618,7 @@ if (empty($selected)) {
 
 
 
-            <?php if (array_intersect(['funder', 'funding_organization', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
+            <?php if (array_intersect(['funder', 'funding_organization','funding_program', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
                     <?= lang('Funding', 'Förderung') ?>
@@ -655,7 +657,8 @@ if (empty($selected)) {
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
                         </div>
@@ -686,6 +689,15 @@ if (empty($selected)) {
                     </div>
 
 
+                <?php } ?>
+
+                <?php if (array_key_exists('funding_program', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <input type="text" class="form-control" name="values[funding_program]" value="<?= val('funding_program') ?>" id="funding_program" placeholder="Funding program">
+                        <label for="funding_program" class="<?= $req('funding_program') ?>">
+                            <?= lang('Funding program', 'Förderprogramm') ?>
+                        </label>
+                    </div>
                 <?php } ?>
 
                 <?php if (array_key_exists('funding_number', $fields)) { ?>

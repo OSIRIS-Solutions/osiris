@@ -406,7 +406,7 @@ class Settings
         $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
         $html = '<div class="topics ' . $class . '">';
         if ($header) {
-            $html .= '<h5 class="m-0">' . lang('Research Topics', 'Forschungsbereiche') . '</h5>';
+            $html .= '<h5 class="m-0">' . $this->topicLabel() . '</h5>';
         }
         foreach ($topics as $topic) {
             $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";

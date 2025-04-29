@@ -16,8 +16,7 @@ foreach ($persons as $p) {
         break;
     }
 }
-$edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
-
+$edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
 ?>
 
 
@@ -33,9 +32,11 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
     .badge.status.success {
         border: 1px solid var(--success-color);
     }
+
     .badge.status.signal {
         border: 1px solid var(--signal-color);
     }
+
     .badge.status.danger {
         border: 1px solid var(--danger-color);
     }
@@ -104,8 +105,8 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
 
 
 
-<?php if ($edit_perm) { ?>
-    <div class="btn-toolbar">
+<div class="btn-toolbar">
+    <?php if ($edit_perm) { ?>
         <?php
         if ($status == 'approved' && (!isset($project['project_id']) || empty($project['project_id']))) {
             // if project is not connected yet
@@ -170,51 +171,137 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
             </div>
         </div>
     <?php } ?>
-    </div>
+</div>
 
 
-    <section id="general">
-        <?php
-        $mentioned_fields = [];
-        $phases = ['proposed'];
-        ?>
+<section id="general">
+    <?php
+    $mentioned_fields = [];
+    $phases = ['proposed'];
+    ?>
 
 
-        <div class="row row-eq-spacing mt-0">
-            <div class="col-md-8">
-                <div class="pills my-20" id="status-tabs">
-                    <button class="btn font-weight-bold active" style="--primary-color: var(--signal-color);--primary-color-20: var(--signal-color-20);" onclick="selectTab('proposal')" id="proposal-btn">
-                        <?= lang('Proposal details', 'Antragsdetails') ?>
+    <div class="row row-eq-spacing mt-0">
+        <div class="col-md-8">
+            <div class="pills my-20" id="status-tabs">
+                <button class="btn font-weight-bold active" style="--primary-color: var(--signal-color);--primary-color-20: var(--signal-color-20);" onclick="selectTab('proposal')" id="proposal-btn">
+                    <i class="ph ph-file-text"></i>
+                    <?= lang('Proposal', 'Antrag') ?>
+                </button>
+                <?php if ($status == 'approved') { ?>
+                    <button class="btn font-weight-bold" style="--primary-color: var(--success-color);--primary-color-20: var(--success-color-20);" onclick="selectTab('approval')" id="approval-btn">
+                        <i class="ph ph-check-circle"></i>
+                        <?= lang('Approval', 'Bewilligung') ?>
                     </button>
-                    <?php if ($status == 'approved') { ?>
-                        <button class="btn font-weight-bold" style="--primary-color: var(--success-color);--primary-color-20: var(--success-color-20);" onclick="selectTab('approval')" id="approval-btn">
-                            <?= lang('Approval details', 'Bewilligungsdetails') ?>
-                        </button>
-                    <?php } ?>
-                    <?php if ($status == 'rejected') { ?>
-                        <button class="btn font-weight-bold" style="--primary-color: var(--danger-color);--primary-color-20: var(--danger-color-20);" onclick="selectTab('rejection')" id="rejection-btn">
-                            <?= lang('Rejection details', 'Ablehnungsdetails') ?>
-                        </button>
-                    <?php } ?>
-                    <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
-                        <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
-                            <?= lang('Project', 'Projekt') ?>
-                            <i class="ph ph-link m-0"></i>
-                        </a>
-                    <?php } ?>
+                <?php } ?>
+                <?php if ($status == 'rejected') { ?>
+                    <button class="btn font-weight-bold" style="--primary-color: var(--danger-color);--primary-color-20: var(--danger-color-20);" onclick="selectTab('rejection')" id="rejection-btn">
+                        <i class="ph ph-x-circle"></i>
+                        <?= lang('Rejection', 'Ablehnungs') ?>
+                    </button>
+                <?php } ?>
+                <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
+                    <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
+                    <i class="ph ph-link m-0"></i>
+                        <?= lang('Project', 'Projekt') ?>
+                    </a>
+                <?php } ?>
+                <?php if ($Settings->hasPermission('raw-data')) { ?>
+                    <button class="btn" style="--primary-color: var(--muted-color);--primary-color-20: var(--muted-color-20);" onclick="selectTab('raw-data')" id="raw-data-btn">
+                        <i class="ph ph-code"></i>
+                        <?= lang('Raw data', 'Rohdaten') ?>
+                    </button>
+                <?php } ?>
 
-                </div>
 
-                <table class="table" id="proposal-details">
+            </div>
+
+            <table class="table" id="proposal-details">
+                <tbody>
+                    <?php
+                    $fields = $Project->getFields($type, 'proposed');
+                    foreach ($fields as $f) {
+                        $key = $f['module'];
+                        if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
+                            continue;
+                        }
+                        if ($key == 'status') continue;
+                        $mentioned_fields[] = $key;
+                    ?>
+                        <tr>
+                            <td>
+                                <?php
+                                echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
+                                echo $Project->printField($key, $project[$key] ?? null);
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
+                            <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
+                                echo 'System';
+                            } else {
+                                echo $DB->getNameFromId($project['created_by']);
+                            }
+                            if (isset($project['created'])){
+                                $date = strtotime($project['created']);
+                                echo " (" . date('d.m.Y', $date) . ")";
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <?php if ($status == 'approved') { ?>
+                <table class="table" id="approval-details" style="display:none;">
                     <tbody>
                         <?php
-                        $fields = $Project->getFields($type, 'proposed');
+                        $fields = $Project->getFields($type, 'approved');
                         foreach ($fields as $f) {
                             $key = $f['module'];
                             if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
                                 continue;
                             }
-                            $mentioned_fields[] = $key;
+                        ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                    echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
+                                    echo $Project->printField($key, $project[$key] ?? null);
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php } ?> <tr>
+                            <td>
+                                <span class="key"><?= lang('Updated by', 'Aktualisiert von') ?></span>
+                                <?php if (!isset($project['updated_by']) || $project['updated_by'] == 'system') {
+                                    echo 'System';
+                                } else {
+                                    echo $DB->getNameFromId($project['updated_by']);
+                                }
+                                if (isset($project['updated'])){
+                                    $date = strtotime($project['updated']);
+                                    echo " (" . date('d.m.Y', $date) . ")";
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php } ?>
+            <?php if ($status == 'rejected') { ?>
+                <table class="table" id="rejection-details" style="display:none;">
+                    <tbody>
+                        <?php
+                        $fields = $Project->getFields($type, 'rejected');
+                        foreach ($fields as $f) {
+                            $key = $f['module'];
+                            if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
+                                continue;
+                            }
                         ?>
                             <tr>
                                 <td>
@@ -225,268 +312,202 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                                 </td>
                             </tr>
                         <?php } ?>
-                        <tr>
-                            <td>
-                                <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
-                                <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
-                                    echo 'System';
-                                } else {
-                                    echo $DB->getNameFromId($project['created_by']);
-                                }
-                                echo " (" . $project['created'] . ")";
-                                ?>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
+            <?php } ?>
 
-                <?php if ($status == 'approved') { ?>
-                    <table class="table" id="approval-details" style="display:none;">
-                        <tbody>
-                            <?php
-                            $fields = $Project->getFields($type, 'approved');
-                            foreach ($fields as $f) {
-                                $key = $f['module'];
-                                if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
-                                    continue;
-                                }
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                        echo $Project->printField($key, $project[$key] ?? null);
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php } ?> <tr>
-                                <td>
-                                    <span class="key"><?= lang('Updated by', 'Aktualisiert von') ?></span>
-                                    <?php if (!isset($project['updated_by']) || $project['updated_by'] == 'system') {
-                                        echo 'System';
-                                    } else {
-                                        echo $DB->getNameFromId($project['updated_by']);
-                                    }
-                                    echo " (" . $project['updated'] . ")";
-                                    ?>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <?php } ?>
-                <?php if ($status == 'rejected') { ?>
-                    <table class="table" id="rejection-details" style="display:none;">
-                        <tbody>
-                            <?php
-                            $fields = $Project->getFields($type, 'rejected');
-                            foreach ($fields as $f) {
-                                $key = $f['module'];
-                                if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
-                                    continue;
-                                }
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                        echo $Project->printField($key, $project[$key] ?? null);
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                <?php } ?>
-
-                <script>
-                    // select tab function
-                    function selectTab(tab) {
-                        $('#proposal-details').hide();
-                        $('#approval-details').hide();
-                        $('#rejection-details').hide();
-                        $('#' + tab + '-details').show();
-
-                        $('#status-tabs .btn').removeClass('active');
-                        $('#' + tab + '-btn').addClass('active');
-                    }
-                </script>
-
+            <div id="raw-data-details" style="display:none;">
+                <div class="box overflow-x-auto mt-0">
+                <?php
+                dump($project);
+                ?>
+                </div>
             </div>
 
-            <div class="col-md-4">
-                <br>
-                <h3>
-                    <?= lang('Proposal members', 'Beteiligte Personen') ?>
+            <script>
+                // select tab function
+                function selectTab(tab) {
+                    $('#proposal-details').hide();
+                    $('#approval-details').hide();
+                    $('#rejection-details').hide();
+                    $('#raw-data-details').hide();
+                    $('#' + tab + '-details').show();
 
-                    <?php if ($edit_perm) { ?>
-                        <a href="#persons" data-toggle="tooltip" data-title="<?= lang('Edit persons', 'Personen bearbeiten') ?>">
-                            <i class="ph ph-edit"></i>
-                        </a>
-                    <?php } ?>
-                </h3>
+                    $('#status-tabs .btn').removeClass('active');
+                    $('#' + tab + '-btn').addClass('active');
+                }
+            </script>
+
+        </div>
+
+        <div class="col-md-4">
+            <br>
+            <h3>
+                <?= lang('Proposal members', 'Beteiligte Personen') ?>
 
                 <?php if ($edit_perm) { ?>
-                    <div class="modal" id="persons" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                                    <span aria-hidden="true">&times;</span>
-                                </a>
-                                <h5 class="modal-title">
-                                    <?= lang('Connect persons', 'Personen verknüpfen') ?>
-                                </h5>
-                                <div>
-                                    <form action="<?= ROOTPATH ?>/crud/proposals/update-persons/<?= $id ?>" method="post">
+                    <a href="#persons" data-toggle="tooltip" data-title="<?= lang('Edit persons', 'Personen bearbeiten') ?>">
+                        <i class="ph ph-edit"></i>
+                    </a>
+                <?php } ?>
+            </h3>
 
-                                        <table class="table simple">
-                                            <thead>
+            <?php if ($edit_perm) { ?>
+                <div class="modal" id="persons" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                                <span aria-hidden="true">&times;</span>
+                            </a>
+                            <h5 class="modal-title">
+                                <?= lang('Connect persons', 'Personen verknüpfen') ?>
+                            </h5>
+                            <div>
+                                <form action="<?= ROOTPATH ?>/crud/proposals/update-persons/<?= $id ?>" method="post">
+
+                                    <table class="table simple">
+                                        <thead>
+                                            <tr>
+                                                <th><?= lang('Project-ID', 'Projekt-ID') ?></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="project-list">
+                                            <?php
+                                            $persons = $project['persons'] ?? array();
+                                            if (empty($persons)) {
+                                                $persons = [
+                                                    ['user' => '', 'role' => '']
+                                                ];
+                                            }
+                                            $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
+                                            foreach ($persons as $i => $con) { ?>
                                                 <tr>
-                                                    <th><?= lang('Project-ID', 'Projekt-ID') ?></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="project-list">
-                                                <?php
-                                                $persons = $project['persons'] ?? array();
-                                                if (empty($persons)) {
-                                                    $persons = [
-                                                        ['user' => '', 'role' => '']
-                                                    ];
-                                                }
-                                                $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
-                                                foreach ($persons as $i => $con) { ?>
-                                                    <tr>
-                                                        <td class="">
-                                                            <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
-                                                                <?php
-                                                                foreach ($all_users as $s) { ?>
-                                                                    <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
-                                                                        <?= "$s[last], $s[first] ($s[username])" ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control">
-                                                                <option value="applicant" <?= $con['role'] == 'applicant' ? 'selected' : '' ?>><?= Project::personRole('applicant') ?></option>
-                                                                <option value="PI" <?= $con['role'] == 'PI' ? 'selected' : '' ?>><?= Project::personRole('PI') ?></option>
-                                                                <option value="worker" <?= $con['role'] == 'worker' ? 'selected' : '' ?>><?= Project::personRole('worker') ?></option>
-                                                                <option value="coordinator" <?= $con['role'] == 'coordinator' ? 'selected' : '' ?>><?= Project::personRole('coordinator') ?></option>
-                                                                <option value="associate" <?= $con['role'] == 'associate' ? 'selected' : '' ?>><?= Project::personRole('associate') ?></option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr id="last-row">
-                                                    <td colspan="2">
-                                                        <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
+                                                    <td class="">
+                                                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
+                                                            <?php
+                                                            foreach ($all_users as $s) { ?>
+                                                                <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
+                                                                    <?= "$s[last], $s[first] ($s[username])" ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control">
+                                                            <option value="applicant" <?= $con['role'] == 'applicant' ? 'selected' : '' ?>><?= Project::personRole('applicant') ?></option>
+                                                            <option value="PI" <?= $con['role'] == 'PI' ? 'selected' : '' ?>><?= Project::personRole('PI') ?></option>
+                                                            <option value="worker" <?= $con['role'] == 'worker' ? 'selected' : '' ?>><?= Project::personRole('worker') ?></option>
+                                                            <option value="coordinator" <?= $con['role'] == 'coordinator' ? 'selected' : '' ?>><?= Project::personRole('coordinator') ?></option>
+                                                            <option value="associate" <?= $con['role'] == 'associate' ? 'selected' : '' ?>><?= Project::personRole('associate') ?></option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
                                                     </td>
                                                 </tr>
-                                            </tfoot>
+                                            <?php } ?>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr id="last-row">
+                                                <td colspan="2">
+                                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
 
-                                        </table>
+                                    </table>
 
-                                        <button class="btn primary mt-20">
-                                            <i class="ph ph-check"></i>
-                                            <?= lang('Submit', 'Bestätigen') ?>
-                                        </button>
-                                    </form>
+                                    <button class="btn primary mt-20">
+                                        <i class="ph ph-check"></i>
+                                        <?= lang('Submit', 'Bestätigen') ?>
+                                    </button>
+                                </form>
 
-                                    <script>
-                                        var counter = <?= $i ?? 0 ?>;
-                                        const tr = $('#project-list tr').first()
+                                <script>
+                                    var counter = <?= $i ?? 0 ?>;
+                                    const tr = $('#project-list tr').first()
 
-                                        function addProjectRow() {
-                                            counter++;
-                                            const row = tr.clone()
-                                            row.find('select').first().attr('name', 'persons[' + counter + '][user]');
-                                            row.find('select').last().attr('name', 'persons[' + counter + '][role]');
-                                            $('#project-list').append(row)
-                                        }
-                                    </script>
+                                    function addProjectRow() {
+                                        counter++;
+                                        const row = tr.clone()
+                                        row.find('select').first().attr('name', 'persons[' + counter + '][user]');
+                                        row.find('select').last().attr('name', 'persons[' + counter + '][role]');
+                                        $('#project-list').append(row)
+                                    }
+                                </script>
 
-                                </div>
                             </div>
                         </div>
                     </div>
-                <?php } ?>
+                </div>
+            <?php } ?>
 
-                <table class="table">
-                    <tbody>
-                        <?php
-                        if (empty($project['persons'] ?? array())) {
-                        ?>
-                            <tr>
-                                <td>
-                                    <?= lang('No persons connected.', 'Keine Personen verknüpft.') ?>
-                                </td>
-                            </tr>
-                        <?php
-                        } else foreach ($project['persons'] as $person) {
-                            $username = strval($person['user']);
+            <table class="table">
+                <tbody>
+                    <?php
+                    if (empty($project['persons'] ?? array())) {
+                    ?>
+                        <tr>
+                            <td>
+                                <?= lang('No persons connected.', 'Keine Personen verknüpft.') ?>
+                            </td>
+                        </tr>
+                    <?php
+                    } else foreach ($project['persons'] as $person) {
+                        $username = strval($person['user']);
 
-                        ?>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
+                    ?>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
 
-                                        <?= $Settings->printProfilePicture($username, 'profile-img small mr-20') ?>
-                                        <div class="">
-                                            <h5 class="my-0">
-                                                <a href="<?= ROOTPATH ?>/profile/<?= $username ?>" class="colorless">
-                                                    <?= $person['name'] ?>
-                                                </a>
-                                            </h5>
-                                            <?= Project::personRole($person['role']) ?>
-                                        </div>
+                                    <?= $Settings->printProfilePicture($username, 'profile-img small mr-20') ?>
+                                    <div class="">
+                                        <h5 class="my-0">
+                                            <a href="<?= ROOTPATH ?>/profile/<?= $username ?>" class="colorless">
+                                                <?= $person['name'] ?>
+                                            </a>
+                                        </h5>
+                                        <?= Project::personRole($person['role']) ?>
                                     </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php
+                    } ?>
+
+                </tbody>
+            </table>
+
+            <h5>
+                <?= lang('Associated units', 'Zugehörige Einheiten') ?>
+            </h5>
+            <table class="table">
+                <tbody>
+                    <?php
+                    $units = $project['units'] ?? [];
+                    // $tree =  $Groups->getPersonHierarchyTree($units);
+                    if (!empty($units)) {
+                        $hierarchy = $Groups->getPersonHierarchyTree($units);
+                        $tree = $Groups->readableHierarchy($hierarchy);
+
+                        foreach ($tree as $row) { ?>
+                            <tr>
+                                <td style="padding-left: <?= ($row['indent'] * 2 + 2) . 'rem' ?>;">
+                                    <a href="<?= ROOTPATH ?>/groups/view/<?= $row['id'] ?>">
+                                        <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
+                                    </a>
                                 </td>
                             </tr>
-                        <?php
-                        } ?>
-
-                    </tbody>
-                </table>
-
-                <h5>
-                    <?= lang('Associated units', 'Zugehörige Einheiten') ?>
-                </h5>
-                <table class="table">
-                    <tbody>
-                        <?php
-                        $units = $project['units'] ?? [];
-                        // $tree =  $Groups->getPersonHierarchyTree($units);
-                        if (!empty($units)) {
-                            $hierarchy = $Groups->getPersonHierarchyTree($units);
-                            $tree = $Groups->readableHierarchy($hierarchy);
-
-                            foreach ($tree as $row) { ?>
-                                <tr>
-                                    <td style="padding-left: <?= ($row['indent'] * 2 + 2) . 'rem' ?>;">
-                                        <a href="<?= ROOTPATH ?>/groups/view/<?= $row['id'] ?>">
-                                            <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
-                                        </a>
-                                    </td>
-                                </tr>
-                        <?php }
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                    <?php }
+                    }
+                    ?>
+                </tbody>
+            </table>
 
 
-            </div>
         </div>
+    </div>
 
-    </section>
-
-    <?php
-    if (isset($_GET['verbose'])) {
-        dump($project);
-    }
-    ?>
+</section>
