@@ -260,6 +260,10 @@ $Vocabulary = new Vocabulary();
                             <tr data-row="<?= $org_id ?>">
                                 <td>
                                     <?= $collab['name'] ?>
+                                    <br>
+                                    <small class="text-muted">
+                                        <?= $collab['location'] ?? null ?>
+                                    </small>
                                     <input type="hidden" name="values[collaborators][]" value="<?= $org_id ?>" class="form-control">
                                 </td>
                                 <td>

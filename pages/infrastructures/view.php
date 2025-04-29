@@ -313,7 +313,7 @@ if (!empty($statistics)) {
 
 <?php if (empty($statistics)) { ?>
     <div class="alert secondary my-20 w-md-half">
-        <?= lang('No persons connected.', 'Keine Personen verknüpft.') ?>
+        <?= lang('No statistics found.', 'Keine Statistiken vorhanden.') ?>
     </div>
 <?php } else { ?>
     <div class="box padded mb-0">
