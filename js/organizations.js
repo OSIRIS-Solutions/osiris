@@ -157,11 +157,11 @@ function selectOrganization(org, create = false, callback = null) {
                 // console.log(response);
                 if (response.msg) {
                     toastWarning(response.msg)
-                    selectOrganization(response, false)
+                    selectOrganization(response, false, callback)
                     return;
                 } else {
                     // random id
-                    callback(org)
+                    callback(response)
                     toastSuccess(lang('Organization added', 'Organisation angelegt'))
                 }
                 SUGGEST.empty()
@@ -199,7 +199,20 @@ function getRORid(ror, msg = true) {
                 toastError(', '.join(response.errors))
                 return
             }
-            selectOrganization(response, true)
+            let o = response
+            let address = o.addresses[0] ?? {}
+            selectOrganization({
+                name: o.name,
+                location: `${address.city}, ${o.country.country_name}`,
+                ror_id: o.id,
+                country: o.country.country_code,
+                types: o.types,
+                type: o.types[0],
+                lat: address.lat ?? null,
+                lng: address.lng ?? null,
+                url: o.links[0] ?? null,
+                chosen: true,
+            }, true)
             $('#organizations-ror-id').val('')
             if (msg)
                 toastSuccess(lang('Organization added', 'Organisation hinzugefügt'))

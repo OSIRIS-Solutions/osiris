@@ -219,5 +219,3 @@ if (empty($form) || !isset($form['_id'])) {
         <button type="submit" class="btn secondary" id="submit"><?= lang('Save', 'Speichern') ?></button>
     </form>
 </div>
-
-<script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?= CSS_JS_VERSION ?>"></script>
