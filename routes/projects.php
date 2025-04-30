@@ -116,7 +116,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 
 
 
-Route::get('/(projects|proposals)/(edit|collaborators|finance|public|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
+Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
     include_once BASEPATH . "/php/init.php";
     require_once BASEPATH . "/php/Project.php";
 
@@ -144,9 +144,9 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public|persons)/([
         case 'finance':
             $name = lang("Finance", "Finanzen");
             break;
-        case 'public':
-            $name = lang("Public representation", "Öffentliche Darstellung");
-            break;
+        // case 'public':
+        //     $name = lang("Public representation", "Öffentliche Darstellung");
+        //     break;
         case 'persons':
             $name = lang("Persons", "Personen");
             break;
@@ -172,9 +172,9 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|public|persons)/([
         case 'finance':
             include BASEPATH . "/pages/projects/finance.php";
             break;
-        case 'public':
-            include BASEPATH . "/pages/projects/public.php";
-            break;
+        // case 'public':
+        //     include BASEPATH . "/pages/projects/public.php";
+        //     break;
         case 'persons':
             include BASEPATH . "/pages/projects/persons.php";
             break;
@@ -770,8 +770,6 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
     header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
     die;
 });
-
-
 
 
 Route::post('/crud/projects/connect-activities', function () {

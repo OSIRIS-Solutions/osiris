@@ -469,7 +469,7 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                                                 <?= $person['name'] ?>
                                             </a>
                                         </h5>
-                                        <?= Project::personRole($person['role']) ?>
+                                        <?= $Project->personRole($person['role']) ?>
                                     </div>
                                 </div>
                             </td>

@@ -597,9 +597,18 @@ class Project extends Vocabulary
         return $this->getValue('project-person-role', $role);
     }
 
+    public function getProjectStatus(){
+        if ($this->inPast()){
+            return '<i class="ph ph-check-circle text-success"></i> '. lang('ended', 'abgeschlossen');
+        } else {
+            return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
+        }
+    }
+
     public function widgetSmall()
     {
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
         if (isset($this->project['funder']))
@@ -612,7 +621,7 @@ class Project extends Vocabulary
     public function widgetSubproject()
     {
         $contacts = array_column(DB::doc2Arr($this->project['persons']), 'name');
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
         // contact
@@ -628,6 +637,7 @@ class Project extends Vocabulary
     public function widgetPortal($cls = "module")
     {
         $widget = '<a class="' . $cls . '" href="' . PORTALPATH . '/project/' . $this->project['_id'] . '">';
+        $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<p class="d-block text-muted">' . $this->project['title'] . '</p>';
         if (isset($this->project['funder']))
@@ -640,8 +650,7 @@ class Project extends Vocabulary
 
     public function widgetLarge($user = null, $external = false)
     {
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
-
+        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
         $widget .= '<span class="float-right">' . $this->getDateRange() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';

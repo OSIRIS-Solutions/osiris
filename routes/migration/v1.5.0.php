@@ -133,7 +133,7 @@ if ($count > 0) {
         <?= lang('We have found ' . $count . ' projects with the type "Stipendium". They will be migrated to the new project type "stipendate".', 'Wir haben ' . $count . ' Projekte mit dem Typ "Stipendium" gefunden. Sie werden in den neuen Projekttyp "Stipendium" migriert..') ?>
     </p>
 
-<?php
+    <?php
     flush();
     ob_flush();
 
@@ -333,94 +333,145 @@ $general_fields = [
 // migrate all projects with the type "Drittmittel" to the new project type
 $projects = $osiris->projects->find(['type' => 'Drittmittel'])->toArray();
 $count = count($projects);
-?>
 
-<h4>
-    <?= lang('Third-party funding', 'Drittmittel') ?>
-</h4>
-<p>
-    <?= lang('We have found ' . $count . ' projects with the type "Drittmittel".
+if ($count > 0) {
+    ?>
+
+    <h4>
+        <?= lang('Third-party funding', 'Drittmittel') ?>
+    </h4>
+    <p>
+        <?= lang('We have found ' . $count . ' projects with the type "Drittmittel".
     They will be moved to the new area "Proposals". For projects that are already running, we will create new projects and link them to the proposals.', 'Wir haben gefunden ' . $count . ' Projekte mit dem Typ "Drittmittel" gefunden.
     Sie werden in den neuen Bereich "Projektanträge" verschoben. Für bereits laufende Projekte werden wir neue Projekte anlegen und mit den Anträgen verknüpfen.') ?>
-</p>
+    </p>
+    <?php
+    flush();
+    ob_flush();
+    // now we need to migrate the old project types to the new ones
+    foreach ($projects as $project) {
+        // delete the old project
+        $osiris->projects->deleteOne(['_id' => $project['_id']]);
+
+        $status = $project['status'] ?? 'proposed';
+        if ($status == 'applied') {
+            $status = 'proposed';
+        }
+        // set up the base fields for the new project
+        $new_proposal = [
+            '_id' => $project['_id'],
+            'type' => 'third-party',
+            'status' => $project['status'],
+            'submission_date' => $project['created'] ?? date('Y-m-d'),
+            'start_proposed' => $project['start_date'] ?? null,
+            'end_proposed' => $project['end_date'] ?? null,
+        ];
+        if ($status == 'approved') {
+            $new_proposal['approval_date'] = $project['updated'] ?? $project['created'] ?? date('Y-m-d');
+        } else if ($status == 'rejected') {
+            $new_proposal['rejection_date'] = $project['updated'] ?? $project['created'] ?? date('Y-m-d');
+        }
+        $new_project = [
+            '_id' => $project['_id'],
+            'type' => 'third-party',
+            'status' => 'project',
+            'proposal_id' => $project['_id'],
+            "funding_program" => $project['funding_organization'] ?? null,
+        ];
+
+        // add the general fields to the proposal and project
+        foreach ($general_fields as $field) {
+            if (isset($project[$field]) && !array_key_exists($field, $new_proposal)) {
+                $new_proposal[$field] = $project[$field];
+                $new_project[$field] = $project[$field];
+            }
+        }
+
+        // add the new fields to the proposal
+        foreach ($fields_proposals as $field) {
+            if (isset($project[$field]) && !array_key_exists($field, $new_proposal)) {
+                $new_proposal[$field] = $project[$field];
+            }
+        }
+        // add the new fields to the project
+        foreach ($fields_projects as $field) {
+            if (isset($project[$field]) && !array_key_exists($field, $new_project)) {
+                $new_project[$field] = $project[$field];
+            }
+        }
+        $replace = [
+            "public_title" => "name",
+            "public_title_de" => "name_de",
+            "public_subtitle" => "title",
+            "public_subtitle_de" => "title_de",
+            "public_abstract" => "abstract",
+            "public_abstract_de" => "abstract_de",
+        ];
+        // replace the old fields with the new ones, overwrite the new ones if they exist
+        foreach ($replace as $old => $new) {
+            if (isset($project[$old]) && !empty($project[$old])) {
+                $new_project[$new] = $project[$old];
+            }
+        }
+        // check if the project is already running
+        if ($project['status'] == 'approved' || $project['status'] == 'finished') {
+            // insert the new project
+            $osiris->projects->insertOne($new_project);
+            // add the project key to the proposal
+            $new_proposal['project_id'] = $new_project['_id'];
+        }
+        // remove the old project from the proposals collection in case it exists
+        $osiris->proposals->deleteOne(['_id' => $project['_id']]);
+        $osiris->proposals->insertOne($new_proposal);
+    }
+}
+
+// next migrate activities to use the ObjectId instead of the name string
+$activities = $osiris->activities->find(['projects' => ['$exists' => true, '$ne' => null]])->toArray();
+$count = count($activities);
+if ($count > 0) {
+    ?>
+    <h4>
+        <?= lang('Activities', 'Aktivitäten') ?>
+    </h4>
+    <p>
+        <?= lang('We have found ' . $count . ' activities with projects. We will now migrate the projects to use the ObjectId instead of the name string.', 'Wir haben ' . $count . ' Aktivitäten mit Projekten gefunden. Wir werden jetzt die Projekte migrieren, um die ObjectId anstelle des Namensstrings zu verwenden.') ?>
+    </p>
+    <?php
+    flush();
+    ob_flush();
+    foreach ($activities as $activity) {
+        $projects = DB::doc2Arr($activity['projects'] ?? []);
+        if (!empty($projects)) {
+            $new_projects = [];
+            foreach ($projects as $project) {
+                if (empty($project)) {
+                    continue;
+                } else if (is_string($project)) {
+                    $p = $osiris->projects->findOne(['name' => $project]);
+                    if ($p) {
+                        $new_projects[] = $p['_id'];
+                    } else {
+                        continue;
+                    }
+                } else {
+                    $new_projects[] = $project;
+                }
+            }
+            // update the activity
+            $osiris->activities->updateOne(
+                ['_id' => $activity['_id']],
+                ['$set' => ['projects' => array_values(array_unique($new_projects))]]
+            );
+        }
+    }
+    ?>
+    <p>
+        <?= lang('Migration of the activities was successful. You can now use the new project types and the new proposals collection.', 'Die Migration der Aktivitäten war erfolgreich. Sie können jetzt die neuen Projekttypen und die neue Antragsammlung verwenden.') ?>
+    </p>
 <?php
-flush();
-ob_flush();
-// now we need to migrate the old project types to the new ones
-foreach ($projects as $project) {
-    // delete the old project
-    $osiris->projects->deleteOne(['_id' => $project['_id']]);
-
-    $status = $project['status'] ?? 'proposed';
-    if ($status == 'applied') {
-        $status = 'proposed';
-    }
-    // set up the base fields for the new project
-    $new_proposal = [
-        '_id' => $project['_id'],
-        'type' => 'third-party',
-        'status' => $project['status'],
-        'submission_date' => $project['created'] ?? date('Y-m-d'),
-        'start_proposed' => $project['start_date'] ?? null,
-        'end_proposed' => $project['end_date'] ?? null,
-    ];
-    if ($status == 'approved') {
-        $new_proposal['approval_date'] = $project['updated'] ?? $project['created'] ?? date('Y-m-d');
-    } else if ($status == 'rejected') {
-        $new_proposal['rejection_date'] = $project['updated'] ?? $project['created'] ?? date('Y-m-d');
-    }
-    $new_project = [
-        '_id' => $project['_id'],
-        'type' => 'third-party',
-        'status' => 'project',
-        'proposal_id' => $project['_id'],
-        "funding_program" => $project['funding_organization'] ?? null,
-    ];
-
-    // add the general fields to the proposal and project
-    foreach ($general_fields as $field) {
-        if (isset($project[$field]) && !array_key_exists($field, $new_proposal)) {
-            $new_proposal[$field] = $project[$field];
-            $new_project[$field] = $project[$field];
-        }
-    }
-
-    // add the new fields to the proposal
-    foreach ($fields_proposals as $field) {
-        if (isset($project[$field]) && !array_key_exists($field, $new_proposal)) {
-            $new_proposal[$field] = $project[$field];
-        }
-    }
-    // add the new fields to the project
-    foreach ($fields_projects as $field) {
-        if (isset($project[$field]) && !array_key_exists($field, $new_project)) {
-            $new_project[$field] = $project[$field];
-        }
-    }
-    $replace = [
-        "public_title" => "name",
-        "public_title_de" => "name_de",
-        "public_subtitle" => "title",
-        "public_subtitle_de" => "title_de",
-        "public_abstract" => "abstract",
-        "public_abstract_de" => "abstract_de",
-    ];
-    // replace the old fields with the new ones, overwrite the new ones if they exist
-    foreach ($replace as $old => $new) {
-        if (isset($project[$old]) && !empty($project[$old])) {
-            $new_project[$new] = $project[$old];
-        }
-    }
-    // check if the project is already running
-    if ($project['status'] == 'approved' || $project['status'] == 'finished') {
-        // insert the new project
-        $osiris->projects->insertOne($new_project);
-        // add the project key to the proposal
-        $new_proposal['project_id'] = $new_project['_id'];
-    }
-    // remove the old project from the proposals collection in case it exists
-    $osiris->proposals->deleteOne(['_id' => $project['_id']]);
-    $osiris->proposals->insertOne($new_proposal);
+    flush();
+    ob_flush();
 }
 
 // finish message

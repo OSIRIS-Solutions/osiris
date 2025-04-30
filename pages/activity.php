@@ -33,6 +33,14 @@ foreach ($M as $m) {
     if ($m == 'supervisor') $sws = true;
 }
 
+$projects = [];
+if (isset($activity['projects']) && count($activity['projects']) > 0) {
+    $projects = $osiris->projects->find(
+        ['_id' => ['$in' => $activity['projects']]],
+        ['projection' => ['_id' => 1, 'name' => 1, 'start'=>1, 'end'=>1, 'title'=>1, 'funder'=>1]]
+    )->toArray();
+}
+
 $guests_involved = boolval($typeArr['guests'] ?? false);
 $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
@@ -156,25 +164,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <i class="ph ph-upload"></i>
         <?= lang('Upload file', 'Datei hochladen') ?>
     </a>
-    <div class="btn-group">
-        <?php if ($Settings->featureEnabled('projects')) { ?>
-            <a href="#projects" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Project", "Projekt") ?>
-            </a>
-        <?php } ?>
-        <!-- <a href="#connect" class="btn text-primary border-primary">
-            <i class="ph ph-plus-circle"></i>
-            <?= lang("Tags", "Schlagwörter") ?>
-        </a> -->
-        <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-            <a href="#infrastructures" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Infrastructure", "Infrastruktur") ?>
-            </a>
-        <?php } ?>
-        
-    </div>
 
 
     <div class="btn-group">
@@ -354,12 +343,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         </div>
     <?php } ?>
 
-    <?php if (isset($doc['projects']) && count($doc['projects']) > 0) { ?>
+    <?php if (!empty($projects)) { ?>
         <div class="mr-10 badge bg-white">
             <small><?= lang('Projects', 'Projekte') ?>: </small>
             <br />
-            <?php foreach ($doc['projects'] as $p) { ?>
-                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p ?>"><?= $p ?></a>
+            <?php foreach ($projects as $p) { ?>
+                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['name'] ?></a>
             <?php } ?>
         </div>
     <?php } ?>
@@ -1041,14 +1030,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             <?= lang('Projects', 'Projekte') ?>
         </h2>
 
-        <?php if (!empty($doc['projects'] ?? '') && !empty($doc['projects'][0])) {
+        <?php if (!empty($projects)) {
 
             require_once BASEPATH . "/php/Project.php";
             $Project = new Project();
 
-            foreach ($doc['projects'] as $project_id) {
-                $project = $osiris->projects->findOne(['name' => $project_id]);
-                if (empty($project)) continue;
+            foreach ($projects as $project) {
                 $Project->setProject($project);
         ?>
                 <?= $Project->widgetSmall(true) ?>
