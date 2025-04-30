@@ -363,7 +363,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                 <div class="custom-switch">
                     <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                     <label for="hide" id="hide-label">
-                        <?= $doc['hide'] ? lang('Visible', 'Sichtbar') : lang('Hidden', 'Versteckt') ?>
+                        <?= $doc['hide'] ? lang('Hidden', 'Versteckt') :  lang('Visible', 'Sichtbar')  ?>
                     </label>
                 </div>
 
