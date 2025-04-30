@@ -50,7 +50,7 @@ $Vocabulary = new Vocabulary();
     }
 </style>
 
-<div class="infrastructure">
+<div class="infrastructure container">
 
     <h1 class="title">
         <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
@@ -115,11 +115,11 @@ $Vocabulary = new Vocabulary();
 
     </div>
 
-</div>
 
 <hr>
 
 <h2>
+    <i class="ph ph-users text-primary"></i>
     <?= lang('Operating personnel', 'Betriebspersonal') ?>
     <?php if ($edit_perm) { ?>
         <a href="<?= ROOTPATH ?>/infrastructures/persons/<?= $id ?>" class="font-size-16">
@@ -182,6 +182,7 @@ $Vocabulary = new Vocabulary();
 <hr>
 
 <h2>
+    <i class="ph ph-book-bookmark text-primary"></i>
     <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
 </h2>
 
@@ -255,6 +256,7 @@ $Vocabulary = new Vocabulary();
 <hr>
 
 <h2>
+    <i class="ph ph-chart-line-up text-primary"></i>
     <?= lang('Statistics', 'Statistiken') ?>
 </h2>
 
@@ -483,9 +485,11 @@ if (!empty($statistics)) {
 ?>
 
 
+<?php if ($infrastructure['collaborative'] ?? false) { ?>
+    <hr>
 <div id="collaborative">
     <h2>
-        <i class="ph ph-handshake"></i>
+        <i class="ph ph-handshake text-primary"></i>
         <?= lang('Collaborative research infrastructure', 'Verbundforschungsinfrastruktur') ?>
     </h2>
 
@@ -606,6 +610,7 @@ if (!empty($statistics)) {
         </tbody>
     </table>
 </div>
+<?php } ?>
 <br>
 
 
@@ -636,3 +641,4 @@ if (!empty($statistics)) {
 <?php if (isset($_GET['verbose'])) {
     dump($infrastructure, true);
 } ?>
+</div>
