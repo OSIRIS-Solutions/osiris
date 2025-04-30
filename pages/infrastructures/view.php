@@ -14,6 +14,8 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+include_once BASEPATH . "/php/Organization.php";
+
 
 $user_infrastructure = false;
 $user_role = null;
@@ -85,18 +87,25 @@ $Vocabulary = new Vocabulary();
         <div class="mr-10 badge bg-white">
             <small><?= lang('Type', 'Typ') ?>: </small>
             <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ??'-') ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?></span>
         </div>
         <div class="mr-10 badge bg-white">
             <small><?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>: </small>
             <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ??'-') ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?></span>
         </div>
         <div class="mr-10 badge bg-white">
             <small><?= lang('User Access', 'Art des Zugangs') ?>: </small>
             <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ??'-') ?></span>
+            <span class="badge"><?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?></span>
         </div>
+        <?php if ($infrastructure['collaborative'] ?? false) { ?>
+            <a class="mr-10 badge bg-white" href="#collaborative">
+                <small><?= lang('Collaborative', 'Verbundforschungsinfrastruktur') ?>: </small>
+                <br />
+                <span class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></span>
+            </a>
+        <?php } ?>
         <?php if ($Settings->hasPermission('infrastructures.edit')) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn h-full">
                 <i class="ph ph-edit"></i>
@@ -106,42 +115,6 @@ $Vocabulary = new Vocabulary();
 
     </div>
 
-    <?php if ($infrastructure['collaborative'] ?? false) { ?>
-        <div class="p-10 rounded" style="background-color: var(--success-color-20); border: 1px solid var(--success-color);">
-            <h5 class="m-0 text-success">
-                <i class="ph ph-handshake"></i>
-                <?= lang('Collaborative research infrastructure', 'Verbundforschungsinfrastruktur') ?>
-            </h5>
-
-            <p>
-                <b><?= lang('Coordinator', 'Koordinator-Einrichtung') ?>:</b><br>
-                <?php if ($infrastructure['coordinator_institute']) { ?>
-                    <b class="badge success filled"><?= $Settings->get('affiliation') ?></b>
-                <?php } else {
-                    $org = $osiris->organizations->findOne(['_id' => $infrastructure['coordinator_organization']]);
-                ?>
-                    <a class="badge success" href="<?= ROOTPATH ?>/organizations/view/<?= $org['_id'] ?>">
-                        <b><?= $org['name'] ?? '-' ?></b>
-                        (<?= $org['location'] ?>)
-                    </a>
-                <?php } ?>
-            </p>
-
-            <p class="mb-10">
-                <b><?= lang('Partner organizations', 'Partnerorganisationen') ?>:</b><br>
-                <?php if (!empty($infrastructure['collaborators'])) {
-                    foreach ($infrastructure['collaborators'] as $org) {
-                        $org = $osiris->organizations->findOne(['_id' => $org]);
-                        if ($org) {
-                            echo '<a class="badge mr-10" href="'.ROOTPATH.'/organizations/view/' . $org['_id'] . '"><b>' . $org['name'] . '</b> (' . $org['location'] . ')</a>';
-                        }
-                    }
-                } else { ?>
-                    <span class="badge secondary"><?= lang('No partner organizations', 'Keine Partnerorganisationen') ?></span>
-                <?php } ?>
-            </p>
-        </div>
-    <?php } ?>
 </div>
 
 <hr>
@@ -508,6 +481,132 @@ if (!empty($statistics)) {
 <?php
 }
 ?>
+
+
+<div id="collaborative">
+    <h2>
+        <i class="ph ph-handshake"></i>
+        <?= lang('Collaborative research infrastructure', 'Verbundforschungsinfrastruktur') ?>
+    </h2>
+
+    <h5>
+        <?= lang('Coordinator', 'Koordinator-Einrichtung') ?>
+    </h5>
+    <table class="table">
+
+        <tbody>
+            <tr>
+                <td>
+                    <?php if ($infrastructure['coordinator_institute']) {
+                        $org = $Settings->get('affiliation_details');
+                    ?>
+                        <div class="d-flex align-items-center">
+                            <span class="badge mr-10 success">
+                                <i class="ph ph-heart ph-fw ph-2x m-0"></i>
+                            </span>
+                            <div>
+                                <b><?= $org['name'] ?></b>
+                                <br>
+                                <?= $org['location'] ?? '' ?>
+                                <?php if (isset($org['ror'])) { ?>
+                                    <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                <?php } ?>
+                                <br>
+                                <small class="text-success"><?= lang('This is your own organization.', 'Dies ist deine eigene Organisation.') ?></small>
+                            </div>
+                        </div>
+
+                    <?php } else {
+                        $org = $osiris->organizations->findOne(['_id' => $infrastructure['coordinator_organization']]);
+                    ?>
+                        <div class="d-flex align-items-center">
+                            <span data-toggle="tooltip" data-title="<?= $org['type'] ?>" class="badge mr-10">
+                                <?= Organization::getIcon($org['type'], 'ph-fw ph-2x m-0') ?>
+                            </span>
+                            <div>
+                                <a href="<?= ROOTPATH ?>/organizations/view/<?= $org['_id'] ?>" class="link font-weight-bold colorless">
+                                    <?= $org['name'] ?>
+                                </a><br>
+                                <?= $org['location'] ?>
+                                <?php if (isset($org['ror'])) { ?>
+                                    <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                <?php } ?>
+
+                            </div>
+                        </div>
+                    <?php } ?>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <h5>
+        <?= lang('Partners', 'Partner') ?>
+    </h5>
+    <table class="table">
+
+        <tbody>
+            <?php if (!$infrastructure['coordinator_institute']) {
+                $org = $Settings->get('affiliation_details');
+            ?>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="badge mr-10 success">
+                                <i class="ph ph-heart ph-fw ph-2x m-0"></i>
+                            </span>
+                            <div>
+                                <b><?= $org['name'] ?></b>
+                                <br>
+                                <?= $org['location'] ?? '' ?>
+                                <?php if (isset($org['ror'])) { ?>
+                                    <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                <?php } ?>
+                                <br>
+                                <small class="text-success"><?= lang('This is your own organization.', 'Dies ist deine eigene Organisation.') ?></small>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            <?php }
+            ?>
+            <?php if (empty($infrastructure['collaborative'])) { ?>
+                <tr>
+                    <td colspan="2">
+                        <?= lang('No partners connected.', 'Keine Partner verknüpft.') ?>
+                    </td>
+                </tr>
+                <?php } else foreach ($infrastructure['collaborators'] as $org) {
+
+                $org = $osiris->organizations->findOne(['_id' => $org]);
+                if ($org) { ?>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span data-toggle="tooltip" data-title="<?= $org['type'] ?>" class="badge mr-10">
+                                    <?= Organization::getIcon($org['type'], 'ph-fw ph-2x m-0') ?>
+                                </span>
+                                <div class="">
+                                    <a href="<?= ROOTPATH ?>/organizations/view/<?= $org['_id'] ?>" class="link font-weight-bold colorless">
+                                        <?= $org['name'] ?>
+                                    </a><br>
+                                    <?= $org['location'] ?>
+                                    <?php if (isset($org['ror'])) { ?>
+                                        <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                    <?php } ?>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            <?php  }
+            }  ?>
+        </tbody>
+    </table>
+</div>
+<br>
 
 
 <?php if ($Settings->hasPermission('infrastructures.delete')) { ?>
