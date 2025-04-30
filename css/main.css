@@ -12172,7 +12172,7 @@ img.profile-img.small {
   padding: 0 1rem 0 2rem;
   background-color: var(--border-color);
   color: white;
-  content: "expired";
+  content: "finished";
   font-size: 12pt;
   border-bottom-right-radius: 0.5rem;
 }
@@ -12312,8 +12312,19 @@ a.concept:hover {
   color: inherit;
 }
 
-.filter tr:hover {
-  background-color: var(--gray-color-very-light);
+.filter {
+  /* overflow-auto box */
+  max-height: 14rem;
+  overflow-y: auto;
+  width: 100%;
+  /* margin: 20px 0; */
+  border: var(--border-width) solid var(--border-color);
+  -webkit-box-shadow: var(--box-shadow);
+  -moz-box-shadow: var(--box-shadow);
+  box-shadow: var(--box-shadow);
+  background-color: white;
+  padding: 0;
+  border-radius: var(--border-radius);
 }
 
 .filter tr.active {
@@ -12330,6 +12341,30 @@ a.concept:hover {
 .filter tr td a {
   padding: 0.5rem 1rem;
   display: block;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter tr td a em {
+  font-style: normal;
+  font-weight: 400;
+  display: inline-block;
+  font-size: 1rem;
+  padding: 0.1rem 0.6rem;
+  background: rgba(83, 83, 83, 0.1254901961);
+  border-radius: 1rem;
+  color: var(--muted-color-dark);
+  background-color: var(--gray-color-very-light);
+  text-align: end;
+  height: 1.6rem;
+}
+
+.filter tr:hover {
+  background-color: var(--gray-color-very-light);
+}
+.filter tr:hover em {
+  color: var(--primary-color) !important;
 }
 
 .filter tr.active td {
@@ -12340,21 +12375,6 @@ a.concept:hover {
 .dataTables_filter {
   display: inline-block !important;
   margin-right: 1rem;
-}
-
-.filter {
-  /* overflow-auto box */
-  max-height: 14rem;
-  overflow-y: auto;
-  width: 100%;
-  /* margin: 20px 0; */
-  border: var(--border-width) solid var(--border-color);
-  -webkit-box-shadow: var(--box-shadow);
-  -moz-box-shadow: var(--box-shadow);
-  box-shadow: var(--box-shadow);
-  background-color: white;
-  padding: 0;
-  border-radius: var(--border-radius);
 }
 
 #active-filters .badge {
@@ -12633,7 +12653,8 @@ progress::-webkit-progress-value {
   overflow: hidden;
   display: -webkit-box;
   line-clamp: 3;
-  -webkit-line-clamp: 3; /* Max 3 Zeilen */
+  -webkit-line-clamp: 3;
+  /* Max 3 Zeilen */
   -webkit-box-orient: vertical;
 }
 

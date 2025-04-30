@@ -37,12 +37,10 @@ $user = $user ?? $_SESSION['username'];
         <i class="ph ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
     </h1>
-    <!-- <a href="<?= ROOTPATH ?>/my-activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-student"></i>
-        <?= lang('Show only my own activities', "Zeige nur meine eigenen Aktivitäten") ?>
-    </a> -->
 
-    <div class="btn-toolbar">
+    <button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
+
+    <div class="btn-toolbar justify-between">
 
         <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
@@ -75,8 +73,6 @@ $user = $user ?? $_SESSION['username'];
         }
     }
 </style>
-
-<button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
 
 <div class="row row-eq-spacing">
     <div class="col order-last order-sm-first">
@@ -156,7 +152,7 @@ $user = $user ?? $_SESSION['username'];
                     ?>
                         <tr style="--highlight-color:  <?= $a['color'] ?>;">
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 1)" class="item" id="<?= $id ?>-btn">
+                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 9)" class="item" id="<?= $id ?>-btn">
                                     <span class="text-<?= $id ?>">
                                         <span class="mr-5"><?= $Settings->icon($id, null, false) ?> </span>
                                         <?= $Settings->title($id, null) ?>
@@ -230,7 +226,7 @@ $user = $user ?? $_SESSION['username'];
                     <?php foreach ($Departments as $id => $dept) { ?>
                         <tr <?= $Groups->cssVar($id) ?>>
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 7)" class="item d-block colorless" id="<?= $id ?>-btn">
+                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 7)" class="item colorless" id="<?= $id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -261,7 +257,7 @@ $user = $user ?? $_SESSION['username'];
                 <h6><?= $Settings->topicLabel() ?></h6>
 
                 <div class="filter">
-                    <table id="filter-type" class="table small simple">
+                    <table id="filter-topics" class="table small simple">
                         <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
                             $id = $a['id'];
                         ?>
@@ -569,7 +565,7 @@ $user = $user ?? $_SESSION['username'];
                     visible: false,
                     render: function(data, type, row) {
                         return data.join(', ')
-                        return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
+                        // return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
                     }
 
                 },
@@ -664,6 +660,40 @@ $user = $user ?? $_SESSION['username'];
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
             }
             initializing = false;
+
+            // count data for the filter and add it to the filter
+            let all_filters = {
+                9: '#filter-type',
+                7: '#filter-unit',
+                15: '#filter-affiliated',
+                14: '#filter-topics',
+            }
+
+            for (const key in all_filters) {
+                if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
+                    const element = all_filters[key];
+                    const filter = $(element).find('a')
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        // console.log(type);
+                        if (key == 15 && type == 'yes') {
+                            type = true
+                        } else if (key == 15 && type == 'no') {
+                            type = false
+                        }
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            if (key == 7 || key == 14) {
+                                return d.includes(type)
+                            }
+                            return d == type
+                        }).length
+                        // console.log(count);
+                        if (count > 0) {
+                            $(el).append(` <em>${count}</em>`)
+                        }
+                    })
+                }
+            }
         });
 
 

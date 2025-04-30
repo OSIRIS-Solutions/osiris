@@ -161,11 +161,6 @@ Route::get('/infrastructures/year/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
-    if (!$Settings->hasPermission('infrastructures.edit')) {
-        header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
-        die;
-    }
-
     global $form;
 
     if (DB::is_ObjectID($id)) {
@@ -179,6 +174,21 @@ Route::get('/infrastructures/year/(.*)', function ($id) {
         header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
         die;
     }
+    if (!$Settings->hasPermission('infrastructures.edit')) {
+        // check if person is part of the infrastructure and is set as reporter
+        $permission = false;
+        foreach ($form['persons'] ?? [] as $person) {
+            if ($person['user'] == $_SESSION['username'] && $person['reporter']) {
+                $permission = true;
+                break;
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
+    }
+
     $breadcrumb = [
         ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
