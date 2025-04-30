@@ -377,7 +377,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                             },
                             success: function(response) {
                                 var hide = $('#hide').prop('checked');
-                                $('#hide-label').text(hide ? '<?= lang('Visible', 'Sichtbar') ?>' : '<?= lang('Hidden', 'Versteckt') ?>');
+                                $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>': '<?= lang('Visible', 'Sichtbar') ?>');
                                 toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
                             },
                             error: function(response) {
