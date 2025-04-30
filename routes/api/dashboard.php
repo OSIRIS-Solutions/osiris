@@ -1074,7 +1074,7 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
 
     // exclude project id
     if (isset($_GET['exclude-project'])) {
-        $exclude = DB::doc2Arr($_GET['exclude-project']);
+        $exclude = DB::to_ObjectID($_GET['exclude-project']);
         $filter['projects'] = ['$ne' => $exclude];
     }
 

@@ -270,6 +270,10 @@ Route::get('/api/all-activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (isset($filter['projects'])){
+        $filter['projects'] = DB::to_ObjectID($filter['projects']);
+    }
+
     $result = [];
     if ($page == "my-activities") {
         // only own work

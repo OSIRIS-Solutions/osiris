@@ -33,7 +33,7 @@ foreach ($persons as $p) {
 }
 $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
 
-$N = $osiris->activities->count(['projects' => $project['name']]);
+$N = $osiris->activities->count(['projects' => $project['_id']]);
 
 $institute = $Settings->get('affiliation_details');
 
@@ -56,7 +56,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 </style>
 
 <script>
-    const PROJECT = '<?= $project['name'] ?>';
+    const PROJECT = '<?= $id ?>';
     const CURRENT_USER = '<?= $_SESSION['username'] ?>';
     const EDIT_PERM = <?= $edit_perm ? 'true' : 'false' ?>;
     var layout = {
@@ -602,144 +602,6 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
     </section>
 
-    <!-- Public representation -->
-    <section id="public" style="display:none">
-
-        <h2>
-            <?= lang('Public representation', 'Öffentliche Darstellung') ?>
-        </h2>
-
-        <div class="btn-toolbar mb-10">
-            <?php if ($edit_perm) { ?>
-                <a href="<?= ROOTPATH ?>/projects/public/<?= $id ?>" class="btn primary">
-                    <i class="ph ph-edit"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
-                </a>
-            <?php } ?>
-        </div>
-
-        
-        <?php if ($project['public'] ?? true) { ?>
-            <a class="badge success" href="<?= PORTALPATH ?>/project/<?= $project['_id'] ?>">
-                <i class="ph ph-globe"></i>
-                <?= lang('Publicly shown', 'Öffentlich gezeigt') ?>
-            </a>
-        <?php } else { ?>
-            <span class="badge danger">
-                <i class="ph ph-globe-x"></i>
-                <?= lang('Not publicly shown', 'Nicht öffentlich gezeigt') ?>
-            </span>
-        <?php } ?>
-
-
-        
-        <p>
-            <?= lang('This is how the project is shown in OSIRIS Portfolio.', 'So wird das Projekt in OSIRIS Portfolio gezeigt.') ?>
-        </p>
-
-        <div class="box">
-            <div class="content">
-                <h3>
-                <?= lang($project['public_title'] ?? $project['name'] ?? '-', $project['public_title_de'] ?? null) ?>
-                </h3>
-                <h4 class="subtitle">
-                    <?= lang($project['public_subtitle'] ?? $project['title'] ?? '-', $project['public_subtitle_de'] ?? null) ?>
-                </h4>
-                <div class="abstract">
-                    <?php if (lang('en', 'de') == 'de' && isset($project['public_abstract_de'])) { ?>
-                        <?= $project['public_abstract_de'] ?>
-                    <?php } else if (isset($project['public_abstract'])) { ?>
-                        <?= $project['public_abstract'] ?>
-                    <?php } else { ?>
-                        <?= $project['abstract'] ?? '-' ?>
-                    <?php } ?>
-                </div>
-                <?php if (isset($project['website']) && !empty($project['website'])) { ?>
-                    <a href="<?= $project['website'] ?>" target="_blank" rel="noopener noreferrer"> <?= $project['website'] ?></a>
-                <?php } ?>
-            </div>
-        </div>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td>
-                        <?php if ($project['public'] ?? true) { ?>
-                            <a class="badge success" href="<?= PORTALPATH ?>/project/<?= $project['_id'] ?>">
-                                <?= lang('Publicly shown', 'Öffentlich gezeigt') ?>
-                            </a>
-                        <?php } else { ?>
-                            <span class="badge danger">
-                                <?= lang('Not publicly shown', 'Nicht öffentlich gezeigt') ?>
-                            </span>
-                        <?php } ?>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Public title', 'Öffentlicher Titel') ?></span>
-                        
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Public subtitle', 'Öffentlicher Untertitel') ?></span>
-                        <?= lang($project['public_subtitle'] ?? $project['title'] ?? '-', $project['public_subtitle_de'] ?? null) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Public abstract', 'Öffentliche Kurzbeschreibung') ?></span>
-                        <div class="abstract">
-                            <?php if (lang('en', 'de') == 'de' && isset($project['public_abstract_de'])) { ?>
-                                <?= $project['public_abstract_de'] ?>
-                            <?php } else if (isset($project['public_abstract'])) { ?>
-                                <?= $project['public_abstract'] ?>
-                            <?php } else { ?>
-                                <?= $project['abstract'] ?? '-' ?>
-                            <?php } ?>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Public website', 'Öffentliche Webseite') ?></span>
-                        <a href="<?= $project['website'] ?? '' ?>" target="_blank" rel="noopener noreferrer"> <?= $project['website'] ?? '-' ?></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Public image', 'Öffentliches Bild') ?></span>
-
-                        <?php if (!empty($project['public_image']) ?? '') { ?>
-                            <img src="<?= ROOTPATH . '/uploads/' . $project['public_image'] ?>" alt="<?= $project['public_title'] ?>" class="img-fluid">
-                        <?php } else { ?>
-                            -
-                        <?php } ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-    </section>
-
-
-    <section id="raw" style="display:none">
-
-        <h2 class="title">
-            <?= lang('Raw data', 'Rohdaten') ?>
-        </h2>
-
-        <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
-
-        <div class="box overflow-x-scroll">
-            <?php
-            dump($project, true);
-            ?>
-        </div>
-
-    </section>
-
 
     <?php if ($edit_perm) { ?>
         <!-- Modal for connecting activities -->
@@ -756,7 +618,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                     <form action="<?= ROOTPATH ?>/crud/projects/connect-activities" method="post" class="">
 
                         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                        <input type="hidden" name="project" value="<?= $project['name'] ?>">
+                        <input type="hidden" name="project" value="<?= $id ?>">
 
                         <!-- input field with suggesting activities -->
                         <div class="form-group" id="activity-suggest">

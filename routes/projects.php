@@ -784,12 +784,12 @@ Route::post('/crud/projects/connect-activities', function () {
         die;
     }
 
-    $project = $_POST['project'];
-    $activity = $_POST['activity'];
+    $project = DB::to_ObjectID($_POST['project']);
+    $activity = DB::to_ObjectID($_POST['activity']);
 
     if (isset($_POST['delete'])) {
         $osiris->activities->updateOne(
-            ['_id' => $DB::to_ObjectID($activity)],
+            ['_id' => $activity],
             ['$pull' => ["projects" => $project]]
         );
         header("Location: " . $_POST['redirect'] . "?msg=disconnected-activity-from-project#add-activity");
