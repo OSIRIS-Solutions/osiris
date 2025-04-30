@@ -32,7 +32,7 @@ class Organization
             'Government' => 'bank',
             'Facility' => 'warehouse',
             'Other' => 'house',
-            'default' => 'hous>',
+            'default' => 'house',
             'Funder' => 'hand-coins',
         ];
         $icon = $icons[$ico] ?? $icons['default'];
