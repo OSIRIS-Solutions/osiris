@@ -101,7 +101,7 @@ $Vocabulary = new Vocabulary();
         </div>
         <?php if ($infrastructure['collaborative'] ?? false) { ?>
             <a class="mr-10 badge bg-white" href="#collaborative">
-                <small><?= lang('Collaborative', 'Verbundforschungsinfrastruktur') ?>: </small>
+                <small><?= lang('Collaborative infrastructure', 'Verbundinfrastruktur') ?>: </small>
                 <br />
                 <span class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></span>
             </a>
