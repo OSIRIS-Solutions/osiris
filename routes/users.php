@@ -836,6 +836,8 @@ Route::post('/crud/users/approve', function () {
         ['$push' => ["approved" => $q]]
     );
 
+    $_SESSION['last_notification_check'] = 0;
+
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=approved");
         die();

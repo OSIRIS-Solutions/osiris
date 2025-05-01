@@ -38,6 +38,7 @@
             ['username' => $_SESSION['username']],
             ['$set' => ['lastversion' => OSIRIS_VERSION]]
         );
+        $_SESSION['last_notification_check'] = 0;
     }
 } ?>
 

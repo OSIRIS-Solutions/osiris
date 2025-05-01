@@ -204,14 +204,14 @@ $pageactive = function ($p) use ($page) {
             ?>
                 <div class="dropdown modal-sm">
                     <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="messages" aria-haspopup="true" aria-expanded="false">
-                        <i class="ph ph-chat-circle-text"></i>
-                        <span class="sr-only"><?= lang('Messages', 'Nachrichten') ?></span>
+                        <i class="ph ph-bell"></i>
+                        <span class="sr-only"><?= lang('Notifications', 'Benachrichtigungen') ?></span>
                         <?php if ($n_notifications > 0) { ?>
                             <span class="notification"><?= $n_notifications ?></span>
                         <?php } ?>
                     </button>
                     <div class="dropdown-menu dropdown-menu-center notifications" aria-labelledby="messages">
-                        <h6 class="header text-primary"><?= lang('Messages', 'Nachrichten') ?></h6>
+                        <h6 class="header text-primary"><?= lang('Notifications', 'Benachrichtigungen') ?></h6>
                         <table class="table simple">
                             <?php
                             if ($n_notifications > 0) {
