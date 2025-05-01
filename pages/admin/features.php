@@ -39,6 +39,38 @@
 
     <div class="box px-20">
         <h3>
+            <?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?>
+        </h3>
+        <div class="form-group">
+
+            <p>
+                <?=lang('OSIRIS reminds users every 3 months to update their activities and submit them for reporting. They can check the data on the "My year" page and confirm the quarter. The controlling dashboard then provides an overview of all those who have not yet updated their data.', 'OSIRIS erinnert Nutzende alle 3 Monate daran, ihre Aktivitäten zu aktualisieren und für die Berichterstattung zu übermitteln. Dabei können sie auf der Seite "Mein Jahr" die Daten überprüfen und dann das Quartal bestätigen. Im Controlling-Dashbord gibt es dann eine Übersicht über alle Personen, die ihre Daten noch nicht aktualisiert haben.')?>
+                <br>
+                <?=lang('If you do not wish to use this function, you can deactivate it here. Reminders will then no longer be sent to users and there will no longer be an option to confirm the data on the "My year" page.', 'Wenn ihr diese Funktion nicht nutzen wollt, könnt ihr sie hier deaktivieren. Es wird dann keine Erinnerung mehr an die Nutzenden geschickt und in der Seite "Mein Jahr" gibt es keine Möglichkeit mehr, die Daten zu bestätigen.')?>
+            </p>
+
+            <?php
+            $quarterly = $Settings->featureEnabled('quarterly-reporting', true);
+            ?>
+
+            <div class="custom-radio">
+                <input type="radio" id="quarterly-reporting-true" value="1" name="values[quarterly-reporting]" <?= $quarterly ? 'checked' : '' ?>>
+                <label for="quarterly-reporting-true">
+                    <?= lang('Enabled', 'Aktiviert') ?>
+                </label>
+            </div>
+            <div class="custom-radio">
+                <input type="radio" id="quarterly-reporting-false" value="0" name="values[quarterly-reporting]" <?= $quarterly ? '' : 'checked' ?>>
+                <label for="quarterly-reporting-false">
+                    <?= lang('Disabled', 'Deaktiviert') ?>
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="box px-20">
+        <h3>
             <?= lang('Journals', 'Journale') ?>
         </h3>
         <div class="form-group">

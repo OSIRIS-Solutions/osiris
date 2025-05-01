@@ -480,17 +480,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
     </div>
 
-    <?php if (($Settings->hasPermission('report.dashboard')) && isset($scientist['approved'])) {
-        $approvedQ = DB::doc2Arr($scientist['approved']);
-        sort($approvedQ);
-        echo "<div class='mt-20'>";
-        echo "<b>" . lang('Quarters approved', 'Bestätigte Quartale') . ":</b>";
-        foreach ($approvedQ as $appr) {
-            $Q = explode('Q', $appr);
-            echo "<a href='" . ROOTPATH . "/my-year/$user?year=$Q[0]&quarter=$Q[1]' class='badge success ml-5'>$appr</a>";
-        }
-        echo "</div>";
-    } ?>
 <?php } ?>
 
 
@@ -736,7 +725,111 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 h-full">
+
+                <?php if ($currentuser && (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) || $Settings->hasPermission('report.generate'))) { ?>
+
+                    <div class="row row-eq-spacing">
+
+                        <?php if ($Settings->featureEnabled('quarterly-reporting', true) && $currentuser && $Settings->hasPermission('report.dashboard')) {
+
+                            $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);
+                            $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
+                        ?>
+                            <div class="col-6">
+                                <div class="box h-full">
+                                    <div class="chart content">
+                                        <h5 class="title text-center"><?= $lastquarter ?></h5>
+
+                                        <canvas id="approved-<?= $lastquarter ?>"></canvas>
+                                        <div class="text-right mt-5">
+                                            <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
+                                                <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
+                                            </button>
+                                        </div>
+
+                                        <script>
+                                            var ctx = document.getElementById('approved-<?= $lastquarter ?>')
+                                            var myChart = new Chart(ctx, {
+                                                type: 'doughnut',
+                                                data: {
+                                                    labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
+                                                    datasets: [{
+                                                        label: '# of Scientists',
+                                                        data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],
+                                                        backgroundColor: [
+                                                            '#00808395',
+                                                            '#f7810495',
+                                                        ],
+                                                        borderColor: '#464646', //'',
+                                                        borderWidth: 1,
+                                                    }]
+                                                },
+                                                plugins: [ChartDataLabels],
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        datalabels: {
+                                                            color: 'black',
+                                                            // anchor: 'end',
+                                                            // align: 'end',
+                                                            // offset: 10,
+                                                            font: {
+                                                                size: 20
+                                                            }
+                                                        },
+                                                        legend: {
+                                                            position: 'bottom',
+                                                            display: false,
+                                                        },
+                                                        title: {
+                                                            display: false,
+                                                            text: 'Scientists approvation'
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+
+                        <?php if ($currentuser && $Settings->hasPermission('report.generate')) { ?>
+                            <div class="col-6">
+                                <div class=" h-full">
+                                    <div class="py-10">
+                                        <div class="link-list">
+                                            <?php if ($Settings->hasPermission('report.dashboard')) { ?>
+                                                <a class="border" href="<?= ROOTPATH ?>/dashboard"><?= lang('Dashboard', 'Dashboard') ?></a>
+                                            <?php } ?>
+
+                                            <?php if ($Settings->hasPermission('report.queue')) { ?>
+                                                <a class="border" href="<?= ROOTPATH ?>/queue/editor"><?= lang('Queue', 'Warteschlange') ?></a>
+                                            <?php } ?>
+
+                                            <?php if ($Settings->hasPermission('report.generate')) { ?>
+                                                <a class="border" href="<?= ROOTPATH ?>/reports"><?= lang('Reports', 'Berichte') ?></a>
+                                            <?php } ?>
+
+                                            <?php if ($Settings->hasPermission('activities.lock')) { ?>
+                                                <a class="border" href="<?= ROOTPATH ?>/controlling"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
+                                            <?php } ?>
+
+                                            <?php if ($Settings->hasPermission('admin.see')) { ?>
+                                                <a class="border" href="<?= ROOTPATH ?>/admin/general"><?= lang('Admin-Panel') ?></a>
+                                            <?php } ?>
+                                        </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                    </div>
+                <?php } ?>
 
                 <div class="box h-full">
                     <div class="content">
@@ -929,6 +1022,18 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <?php } ?>
                             </td>
                         </tr>
+
+                        <?php if (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) && isset($scientist['approved'])) {
+                            $approvedQ = DB::doc2Arr($scientist['approved']);
+                            sort($approvedQ);
+                            echo "<tr><td>";
+                            echo "<span class='key'>" . lang('Quarters approved', 'Bestätigte Quartale') . ":</span>";
+                            foreach ($approvedQ as $appr) {
+                                $Q = explode('Q', $appr);
+                                echo "<a href='" . ROOTPATH . "/my-year/$user?year=$Q[0]&quarter=$Q[1]' class='badge success mr-5 mb-5'>$appr</a>";
+                            }
+                            echo "</td></tr>";
+                        } ?>
                         <?php
                         // check if user has custom fields
                         $custom_fields = $osiris->adminFields->find()->toArray();
@@ -1133,106 +1238,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
         </div>
     </div>
-
-    <div class="row row-eq-spacing">
-        <?php if ($currentuser && $Settings->hasPermission('report.dashboard')) {
-
-            $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);
-            $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
-        ?>
-            <div class="col-6 col-md-3 ">
-                <div class="box h-full">
-                    <div class="chart content">
-                        <h5 class="title text-center"><?= $lastquarter ?></h5>
-
-                        <canvas id="approved-<?= $lastquarter ?>"></canvas>
-                        <div class="text-right mt-5">
-                            <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
-                                <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
-                            </button>
-                        </div>
-
-                        <script>
-                            var ctx = document.getElementById('approved-<?= $lastquarter ?>')
-                            var myChart = new Chart(ctx, {
-                                type: 'doughnut',
-                                data: {
-                                    labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
-                                    datasets: [{
-                                        label: '# of Scientists',
-                                        data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],
-                                        backgroundColor: [
-                                            '#00808395',
-                                            '#f7810495',
-                                        ],
-                                        borderColor: '#464646', //'',
-                                        borderWidth: 1,
-                                    }]
-                                },
-                                plugins: [ChartDataLabels],
-                                options: {
-                                    responsive: true,
-                                    plugins: {
-                                        datalabels: {
-                                            color: 'black',
-                                            // anchor: 'end',
-                                            // align: 'end',
-                                            // offset: 10,
-                                            font: {
-                                                size: 20
-                                            }
-                                        },
-                                        legend: {
-                                            position: 'bottom',
-                                            display: false,
-                                        },
-                                        title: {
-                                            display: false,
-                                            text: 'Scientists approvation'
-                                        }
-                                    }
-                                }
-                            });
-                        </script>
-
-                    </div>
-                </div>
-            </div>
-
-
-            <?php if ($currentuser && $Settings->hasPermission('report.generate')) { ?>
-                <div class="col-6 col-md-3 ">
-                    <div class=" h-full">
-                        <div class="py-10">
-                            <div class="link-list">
-                                <?php if ($Settings->hasPermission('report.dashboard')) { ?>
-                                    <a class="border" href="<?= ROOTPATH ?>/dashboard"><?= lang('Dashboard', 'Dashboard') ?></a>
-                                <?php } ?>
-
-                                <?php if ($Settings->hasPermission('report.queue')) { ?>
-                                    <a class="border" href="<?= ROOTPATH ?>/queue/editor"><?= lang('Queue', 'Warteschlange') ?></a>
-                                <?php } ?>
-
-                                <?php if ($Settings->hasPermission('report.generate')) { ?>
-                                    <a class="border" href="<?= ROOTPATH ?>/reports"><?= lang('Reports', 'Berichte') ?></a>
-                                <?php } ?>
-
-                                <?php if ($Settings->hasPermission('activities.lock')) { ?>
-                                    <a class="border" href="<?= ROOTPATH ?>/controlling"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
-                                <?php } ?>
-
-                                <?php if ($Settings->hasPermission('admin.see')) { ?>
-                                    <a class="border" href="<?= ROOTPATH ?>/admin/general"><?= lang('Admin-Panel') ?></a>
-                                <?php } ?>
-                            </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
-
-    </div>
-<?php } ?>
 
 </section>
 
@@ -1520,7 +1525,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <section id="infrastructures" style="display:none">
 
         <h2 class="title">
-        <?= $Settings->infrastructureLabel() ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h2>
 
         <?php if ($count_infrastructures > 0) {

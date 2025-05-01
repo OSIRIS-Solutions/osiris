@@ -158,11 +158,11 @@ class DB
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
-                        'name' => lang('Activities', 'Aktivitäten'),
-                        'count' => 0,
-                        'key' => 'activity',
-                        'values' => []
-                    ];
+                    'name' => lang('Activities', 'Aktivitäten'),
+                    'count' => 0,
+                    'key' => 'activity',
+                    'values' => []
+                ];
                 foreach ($issues_raw as $key => $val) {
                     $val = count($val);
                     if ($val == 0) continue;
@@ -172,7 +172,6 @@ class DB
                         'key' => $key
                     ];
                     $issues['activity']['count'] += $val;
-                    
                 }
                 $hasNotification += $issues['activity']['count'];
             }
@@ -199,19 +198,22 @@ class DB
                 $hasNotification += 1;
             }
 
-            // check for approval of activities
-            $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
-            $roles = DB::doc2Arr($scientist['roles'] ?? []);
-            $lastquarter = $this->getLastQuarter();
-            if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
-                $issues['approval'] = [
-                    'name' => lang('Approval of the quarter', 'Freigabe des Quartals'),
-                    'count' => 1,
-                    'key' => $lastquarter,
-                ];
-                $hasNotification += 1;
+            $reportingEnabled = $this->db->adminFeatures->findOne(['feature'=>'quarterly-reporting']);
+            $reportingEnabled = $reportingEnabled['enabled'] ?? true;
+            if ($reportingEnabled) {
+                // check for approval of activities
+                $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
+                $roles = DB::doc2Arr($scientist['roles'] ?? []);
+                $lastquarter = $this->getLastQuarter();
+                if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
+                    $issues['approval'] = [
+                        'name' => lang('Approval of the quarter', 'Freigabe des Quartals'),
+                        'count' => 1,
+                        'key' => $lastquarter,
+                    ];
+                    $hasNotification += 1;
+                }
             }
-
             if ($hasNotification > 0) {
                 // save in DB
                 $this->db->notifications->updateOne(
@@ -240,7 +242,8 @@ class DB
         return $issues;
     }
 
-    function getLastQuarter(){
+    function getLastQuarter()
+    {
         $Q = CURRENTQUARTER - 1;
         $Y = CURRENTYEAR;
         if ($Q < 1) {
