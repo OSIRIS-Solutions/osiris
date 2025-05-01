@@ -628,6 +628,12 @@ Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
 
 Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
+    // get date from old project
+    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['start_date' => 1, 'end_date' => 1]]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
     $values = $_POST['persons'];
     foreach ($values as $i => $p) {
         $values[$i]['name'] =  $DB->getNameFromId($p['user']);
@@ -636,8 +642,14 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
     $values = array_values($values);
     $values = ["persons" => $values];
 
+
     include_once BASEPATH . "/php/Render.php";
+    // start and end date are needed for the persons
+    $values['start_date'] = $project['start_date'] ?? null;
+    $values['end_date'] = $project['end_date'] ?? null;
     $values = renderAuthorUnits($values, [], 'persons');
+    unset($values['start_date']);
+    unset($values['end_date']);
 
     $osiris->$collection->updateOne(
         ['_id' => $DB::to_ObjectID($id)],

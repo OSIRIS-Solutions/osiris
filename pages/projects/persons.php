@@ -47,6 +47,9 @@ $Vocabulary = new Vocabulary();
                         KDSF-B-2-15-D
                     </span>
                 </th>
+                <th>
+                    <?= lang('Units', 'Einheiten') ?>
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -79,6 +82,27 @@ $Vocabulary = new Vocabulary();
                     <td>
                         <input type="date" name="persons[<?= $i ?>][end]" id="persons-<?= $i ?>-end" class="form-control end" value="<?= $con['end'] ?? $end ?>">
                     </td>
+                   <td>
+                   <?php
+                    $selected = DB::doc2Arr($con['units'] ?? []);
+                    if (!is_array($selected)) $selected = [];
+                    $person_units = $osiris->persons->findOne(['username' => $con['user']], ['units' => 1]);
+                    $person_units = $person_units['units'] ?? [];
+                    if (empty($person_units)) {
+                        echo '<small class="text-danger">No units found</small>';
+                    } else {
+                        $person_units = array_column(DB::doc2Arr($person_units), 'unit');
+                    ?>
+                        <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
+                            <?php foreach ($person_units as $unit) { ?>
+                                <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
+                            <?php } ?>
+                        </select>
+                    <?php
+                    }
+                    ?>
+
+                   </td>
                     <td>
                         <button class="btn danger" type="button" onclick="removeRow(this)"><i class="ph ph-trash"></i></button>
                     </td>
