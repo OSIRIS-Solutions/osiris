@@ -162,7 +162,9 @@ $filter = [];
                 <table id="filter-type" class="table small simple">
                     <?php
                     $vocab = $Project->getProjectTypes();
-                    foreach ($vocab as $v) { ?>
+                    foreach ($vocab as $v) { 
+                        if ($v['process'] == 'project') continue;
+                        ?>
                         <tr style="--highlight-color: <?= $v['color'] ?>;">
                             <td>
                                 <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn" style="color:var(--highlight-color);">
