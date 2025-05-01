@@ -512,6 +512,9 @@ Route::post('/crud/admin/features', function () {
 
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
+            if (isset($value['en']) && $value['de'] == '') {
+                $value['de'] = $value['en'];
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,
@@ -519,8 +522,6 @@ Route::post('/crud/admin/features', function () {
             ]);
         }
     }
-
-
 
     $msg = 'settings-saved';
 
