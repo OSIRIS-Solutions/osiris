@@ -132,6 +132,124 @@ class DB
         return $doc;
     }
 
+    function notifications($force = false)
+    {
+        $notifications = [
+            'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
+            'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
+            'status' => lang('Expired status', 'Abgelaufener Status'),
+            'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
+            'project-open' => lang('Open project applications', 'Offene Projektanträge'),
+            'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
+            'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
+        ];
+        $now = time();
+        $user = $_SESSION['username'] ?? null;
+        $last = $_SESSION['last_notification_check'] ?? 0;
+        $hasNotification = $_SESSION['has_notifications'] ?? false;
+        $issues = array();
+        if (empty($user)) return $issues;
+
+        // check every minute if user has notifications
+        if ($now - $last > 60 || $force) {
+            // check if new issues were added for user
+            $hasNotification = 0;
+
+            $issues_raw = $this->getUserIssues($user);
+            if (!empty($issues_raw)) {
+                $issues['activity'] = [
+                        'name' => lang('Activities', 'Aktivitäten'),
+                        'count' => 0,
+                        'key' => 'activity',
+                        'values' => []
+                    ];
+                foreach ($issues_raw as $key => $val) {
+                    $val = count($val);
+                    if ($val == 0) continue;
+                    $issues['activity']['values'][] = [
+                        'name' => $notifications[$key] ?? $key,
+                        'count' => $val,
+                        'key' => $key
+                    ];
+                    $issues['activity']['count'] += $val;
+                    
+                }
+                $hasNotification += $issues['activity']['count'];
+            }
+
+            // check for queue
+            $queue = $this->db->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
+            if ($queue !== 0) {
+                $issues['queue'] = [
+                    'name' => lang('Queue', 'Warteschlange'),
+                    'count' => $queue,
+                    'key' => 'queue',
+                ];
+                $hasNotification += $queue;
+            }
+
+            // check for new version
+            $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
+            if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
+                $issues['version'] = [
+                    'name' => lang('New version available', 'Neue Version verfügbar'),
+                    'count' => 1,
+                    'key' => 'version',
+                ];
+                $hasNotification += 1;
+            }
+
+            // check for approval of activities
+            $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
+            $roles = DB::doc2Arr($scientist['roles'] ?? []);
+            $lastquarter = $this->getLastQuarter();
+            if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
+                $issues['approval'] = [
+                    'name' => lang('Approval of the quarter', 'Freigabe des Quartals'),
+                    'count' => 1,
+                    'key' => $lastquarter,
+                ];
+                $hasNotification += 1;
+            }
+
+            if ($hasNotification > 0) {
+                // save in DB
+                $this->db->notifications->updateOne(
+                    ['user' => $user],
+                    ['$set' => ['issues' => $issues]],
+                    ['upsert' => true]
+                );
+            } else {
+                $hasNotification = false;
+                // delete from DB
+                $this->db->notifications->deleteOne(['user' => $user]);
+            }
+            // Session aktualisieren
+            $_SESSION['last_notification_check'] = $now;
+            $_SESSION['has_notifications'] = $hasNotification;
+        } else {
+            // check if user has notifications in DB
+            $doc = $this->db->notifications->findOne(['user' => $user]);
+            if (!empty($doc)) {
+                $issues = DB::doc2Arr($doc['issues']);
+                // $hasNotification = array_sum(array_map("count", $issues));
+            } else {
+                // $hasNotification = false;
+            }
+        }
+        return $issues;
+    }
+
+    function getLastQuarter(){
+        $Q = CURRENTQUARTER - 1;
+        $Y = CURRENTYEAR;
+        if ($Q < 1) {
+            $Q = 4;
+            $Y -= 1;
+        }
+        return $Y . "Q" . $Q;
+    }
+
     function printProfilePicture($user, $class = "")
     {
         $img = $this->db->userImages->findOne(['user' => $user]);
@@ -669,7 +787,7 @@ class DB
                 ]
             ],
             [
-                'projection' => ['status'=>1]
+                'projection' => ['status' => 1]
             ]
         );
         foreach ($docs as $doc) {
@@ -831,7 +949,8 @@ class DB
         return $new_doc;
     }
 
-    function getCountry($iso, $key = null){
+    function getCountry($iso, $key = null)
+    {
         if (empty($iso)) return null;
         $country = $this->db->countries->findOne(['iso' => $iso]);
         if (empty($country)) return null;
@@ -841,7 +960,8 @@ class DB
         }
         return $this->doc2Arr($country);
     }
-    function getCountries($key='name'){
+    function getCountries($key = 'name')
+    {
         $countries = $this->db->countries->find();
         $result = [];
         foreach ($countries as $country) {
@@ -850,17 +970,17 @@ class DB
         return $result;
     }
 
-    
+
     public function canProjectsBeCreated()
     {
-        $ability = $this->db->adminProjects->count(['disabled' => false, 'process'=> 'project']);
+        $ability = $this->db->adminProjects->count(['disabled' => false, 'process' => 'project']);
         if ($ability > 0) return true;
         return false;
     }
 
     public function canProposalsBeCreated()
     {
-        $ability = $this->db->adminProjects->count(['disabled' => false, 'process'=> 'proposal']);
+        $ability = $this->db->adminProjects->count(['disabled' => false, 'process' => 'proposal']);
         if ($ability > 0) return true;
         return false;
     }

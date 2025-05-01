@@ -353,7 +353,19 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 </div>
 
 
-<?php if ($currentuser) { ?>
+<?php if ($currentuser) {
+
+    if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH') { ?>
+        <!-- print message to change password -->
+        <div class="alert danger mt-10">
+            <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account'>
+                <?= lang(
+                    "You have not yet set a password. Please change your password now.",
+                    "Du hast noch kein Passwort gesetzt. Bitte ändere jetzt dein Passwort."
+                ) ?>
+            </a>
+        </div>
+    <?php  } ?>
 
     <div class="btn-toolbar">
 
@@ -598,7 +610,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_infrastructures > 0) { ?>
             <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
                 <i class="ph ph-cube-transparent" aria-hidden="true"></i>
-                <?= lang('Infrastructures', 'Infrastrukturen')  ?>
+                <?= $Settings->infrastructureLabel() ?>
                 <span class="index"><?= $count_infrastructures ?></span>
             </a>
         <?php } ?>
@@ -688,144 +700,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div class="row row-eq-spacing my-0">
             <div class="col-md-6">
                 <div class="box h-full">
-                    <div class="content">
-                        <h4 class="title">
-                            <?= lang('Notifications', 'Benachrichtigungen') ?>
-                        </h4>
-                        <?php
-                        $notification = false;
-                        ?>
-
-                        <p class="text-muted">
-                            <?= lang('Here you can find the latest news about OSIRIS and your activities.', 'Hier findest du die neuesten Nachrichten über OSIRIS und deine Aktivitäten.') ?>
-                        </p>
-
-                        <?php
-                        if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH') { ?>
-                            <!-- print message to change password -->
-                            <div class="alert danger mt-10">
-                                <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account'>
-                                    <?= lang(
-                                        "You have not yet set a password. Please change your password now.",
-                                        "Du hast noch kein Passwort gesetzt. Bitte ändere jetzt dein Passwort."
-                                    ) ?>
-                                </a>
-                            </div>
-                        <?php  }
-                        ?>
-
-
-                        <?php
-                        $issues = $DB->getUserIssues($user);
-                        if (!empty($issues)) {
-                            $notification = true;
-                            // dump(array_merge(array_values($issues)), true;
-                            $n_issues = array_sum(array_map("count", $issues));
-                            $approvalDict = [
-                                'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
-                                'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
-                                'status' => lang('Expired status', 'Abgelaufener Status'),
-                                'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
-                                'project-open' => lang('Open project applications', 'Offene Projektanträge'),
-                                'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
-                                'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
-                            ];
-                        ?>
-                            <a class="alert danger mt-10 d-block colorless" href='<?= ROOTPATH ?>/issues'>
-                                <h5 class="title mb-10">
-                                    <?= lang(
-                                        "You have <b>$n_issues</b> " . ($n_issues == 1 ? 'message' : 'messages') . " for your activities.",
-                                        "Du hast <b>$n_issues</b> " . ($n_issues == 1 ? 'Benachrichtigung' : 'Benachrichtigungen') . " zu deinen Aktivitäten."
-                                    ) ?>
-                                </h5>
-                                <?= lang('Please review the following', 'Bitte überprüfe die folgenden Probleme') ?>:
-                                <ul class="list danger mb-0">
-                                    <?php foreach ($issues as $key => $val) {
-                                        $val = count($val);
-                                    ?>
-                                        <li>
-                                            <?= $approvalDict[$key] ?? lang('Issues', 'Probleme') ?>:
-                                            <b><?= $val ?></b>
-                                        </li>
-                                    <?php } ?>
-                                </ul>
-
-                            </a>
-                        <?php } ?>
-
-                        <?php
-                        $queue = $osiris->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
-                        if ($queue !== 0) {
-                            $notification = true;
-                        ?>
-                            <div class="alert success mt-10">
-                                <a class="link text-success" href='<?= ROOTPATH ?>/queue/user'>
-                                    <?= lang(
-                                        "We found $queue new " . ($queue == 1 ? 'activity' : 'activities') . " for you. Review them now.",
-                                        "Wir haben $queue " . ($queue == 1 ? 'Aktivität' : 'Aktivitäten') . " von dir gefunden. Überprüfe sie jetzt."
-                                    ) ?>
-                                </a>
-                            </div>
-                        <?php } ?>
-
-                        <?php
-                        if (lang('en', 'de') == 'de') {
-                            // no news in english
-                            if (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION) {
-                                $notification = true;
-                        ?>
-                                <div class="alert secondary mt-10">
-                                    <a class="link text-decoration-none" href='<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>'>
-                                        <?= lang(
-                                            "There has been an OSIRIS-Update since your last login. Have a look at the news.",
-                                            "Es gab ein OSIRIS-Update, seitdem du das letzte Mal hier warst. Schau in die News, um zu wissen, was neu ist."
-                                        ) ?>
-                                    </a>
-                                </div>
-                        <?php }
-                        } ?>
-
-                        <?php
-                        $approvedQ = array();
-                        if (isset($scientist['approved'])) {
-                            $approvedQ = DB::doc2Arr($scientist['approved']);
-                        }
-
-
-                        if ($Settings->hasPermission('scientist') && !in_array($lastquarter, $approvedQ)) {
-                            $notification = true;
-                        ?>
-                            <div class="alert success bg-light mt-10">
-
-                                <div class="title">
-                                    <?= lang("The past quarter ($lastquarter) has not been approved yet.", "Das vergangene Quartal ($lastquarter) wurde von dir noch nicht freigegeben.") ?>
-                                </div>
-
-                                <p>
-                                    <?= lang('
-                            For the quarterly controlling, you need to confirm that all activities from the previous quarter are stored in OSIRIS and saved correctly.
-                            To do this, go to your year and check your activities. Afterwards you can release the quarter via the green button.
-                            ', '
-                            Für das Quartalscontrolling musst du bestätigen, dass alle Aktivitäten aus dem vergangenen Quartal in OSIRIS hinterlegt und korrekt gespeichert sind.
-                            Gehe dazu in dein Jahr und überprüfe deine Aktivitäten. Danach kannst du über den grünen Button das Quartal freigeben.
-                            ') ?>
-                                </p>
-
-                                <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $user ?>?year=<?= $Y ?>&quarter=<?= $Q ?>">
-                                    <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
-                                </a>
-                            </div>
-                        <?php } ?>
-
-                        <?php if (!$notification) { ?>
-                            <p>
-                                <?= lang('There are no new notifications.', 'Es gibt keine neuen Benachrichtigungen.') ?>
-                            </p>
-                        <?php } ?>
-
-
-                    </div>
-                    <hr>
                     <div class="content">
                         <h4 class="title">
                             <?= lang('Newest publications', 'Neuste Publikationen') ?>
@@ -1056,20 +930,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             </td>
                         </tr>
                         <?php
-                            // check if user has custom fields
-                            $custom_fields = $osiris->adminFields->find()->toArray();
-                            if (!empty($custom_fields)) {
-                                foreach ($custom_fields as $field) {
-                                    if ($active($field['id']) && isset($scientist[$field['id']])) { ?>
-                                        <tr>
-                                            <td>
-                                                <span class="key"><?= lang($field['name'], $field['name_de']?? null) ?></span>
-                                                <?= $scientist[$field['id']] ?>
-                                            </td>
-                                        </tr>
-                                    <?php }
-                                }
-                            } ?>                        
+                        // check if user has custom fields
+                        $custom_fields = $osiris->adminFields->find()->toArray();
+                        if (!empty($custom_fields)) {
+                            foreach ($custom_fields as $field) {
+                                if ($active($field['id']) && isset($scientist[$field['id']])) { ?>
+                                    <tr>
+                                        <td>
+                                            <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
+                                            <?= $scientist[$field['id']] ?>
+                                        </td>
+                                    </tr>
+                        <?php }
+                            }
+                        } ?>
                         <?php if (isset($scientist['mail'])) { ?>
                             <tr>
                                 <td>
@@ -1209,51 +1083,51 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
             <div class="content">
 
-                    <?php if ($active('cv')) { ?>
-                <h4 class="title">
-                    <?= lang('Curriculum Vitae') ?>
-                    <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
-                        <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
-                            <i class="ph ph-note-pencil ph-lg"></i>
-                        </a>
-                    <?php } ?>
-                </h4>
-
-                <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
-                    $cv = DB::doc2Arr($scientist['cv']);
-                ?>
-                    <div class="biography">
-                        <?php foreach ($cv as $entry) { ?>
-                            <div class="cv">
-                                <span class="time"><?= $entry['time'] ?></span>
-                                <h5 class="title"><?= $entry['position'] ?></h5>
-                                <span class="affiliation"><?= $entry['affiliation'] ?></span>
-                            </div>
+                <?php if ($active('cv')) { ?>
+                    <h4 class="title">
+                        <?= lang('Curriculum Vitae') ?>
+                        <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                            <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
+                                <i class="ph ph-note-pencil ph-lg"></i>
+                            </a>
                         <?php } ?>
-                    </div>
-                <?php } else { ?>
-                    <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                    </h4>
+
+                    <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
+                        $cv = DB::doc2Arr($scientist['cv']);
+                    ?>
+                        <div class="biography">
+                            <?php foreach ($cv as $entry) { ?>
+                                <div class="cv">
+                                    <span class="time"><?= $entry['time'] ?></span>
+                                    <h5 class="title"><?= $entry['position'] ?></h5>
+                                    <span class="affiliation"><?= $entry['affiliation'] ?></span>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php } else { ?>
+                        <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                    <?php } ?>
                 <?php } ?>
-            <?php } ?>
 
 
-                    <?php if ($active('biography')) { ?>
-                <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
-                    <h6 class="title">
-                        <?= lang('Biography', 'Biografie') ?>
-                    </h6>
-                    <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                <?php if ($active('biography')) { ?>
+                    <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
+                        <h6 class="title">
+                            <?= lang('Biography', 'Biografie') ?>
+                        </h6>
+                        <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                    <?php } ?>
                 <?php } ?>
-            <?php } ?>
 
-                    <?php if ($active('education')) { ?>
-                <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
-                    <h6 class="title">
-                        <?= lang('Education', 'Ausbildung') ?>
-                    </h6>
-                    <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                <?php if ($active('education')) { ?>
+                    <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                        <h6 class="title">
+                            <?= lang('Education', 'Ausbildung') ?>
+                        </h6>
+                        <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                    <?php } ?>
                 <?php } ?>
-            <?php } ?>
 
             </div>
             </div>
@@ -1646,7 +1520,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <section id="infrastructures" style="display:none">
 
         <h2 class="title">
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+        <?= $Settings->infrastructureLabel() ?>
         </h2>
 
         <?php if ($count_infrastructures > 0) {

@@ -27,7 +27,7 @@ $infrastructures  = $osiris->infrastructures->find(
 
 <h1>
     <i class="ph ph-cube-transparent" aria-hidden="true"></i>
-    <?= lang('Infrastructures', 'Infrastrukturen') ?>
+    <?= $Settings->infrastructureLabel() ?>
 </h1>
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/infrastructures/statistics" class="btn">

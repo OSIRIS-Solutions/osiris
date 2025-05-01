@@ -492,8 +492,8 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         if ($count_infrastructures) :
         ?>
             <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
-                <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+                <?= $Settings->infrastructureLabel() ?>
                 <span class="index"><?= $count_infrastructures ?></span>
             </a>
 
@@ -1059,7 +1059,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('Connect infrastructures', 'Infrastrukturen verknüpfen') ?>
+                    <?= lang('Connect '.$Settings->infrastructureLabel(), $Settings->infrastructureLabel().' verknüpfen') ?>
                 </h5>
                 <div>
                     <?php
@@ -1073,13 +1073,13 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
     <section id="infrastructures" style="display: none;">
         <div class="btn-toolbar float-sm-right">
             <a href="#infrastructures" class="btn secondary mr-5">
-                <i class="ph ph-tree-structure"></i>
+                <i class="ph ph-cube-transparent"></i>
                 <?= lang("Connect", "Verknüpfen") ?>
             </a>
         </div>
 
         <h2 class="title">
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h2>
 
         <?php if (!empty($doc['infrastructures'] ?? '') ) {

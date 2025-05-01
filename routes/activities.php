@@ -761,6 +761,9 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     }
 
     $updateCount = $updateResult->getModifiedCount();
+    
+    // force update of user notifications
+    $DB->notifications(true);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
@@ -833,6 +836,9 @@ Route::post('/crud/activities/approve-all', function () {
         ['authors.user' => $user],
         ['$set' => ["authors.$.approved" => true]]
     );
+
+    // force update of user notifications
+    $DB->notifications(true);
 
     header("Location: " . ROOTPATH . "/issues?msg=update-success");
 });

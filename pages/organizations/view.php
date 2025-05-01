@@ -145,7 +145,7 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     <table class="table dataTable responsive" id="infrastructures-table">
         <thead>
             <tr>
-                <th><?= lang('Infrastructure', 'Infrastruktur') ?></th>
+                <th><?= $Settings->infrastructureLabel() ?></th>
             </tr>
         </thead>
         <tbody>

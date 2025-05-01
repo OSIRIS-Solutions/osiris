@@ -91,9 +91,9 @@ $all = $osiris->infrastructures->count();
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('Category', 'Kategorie') ?></th>
                 <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
-                <th><?= lang('Infrastructure Type', 'Art der Infrastruktur') ?></th>
+                <th><?= lang('Type', 'Art') ?></th>
                 <th><?= lang('Description', 'Beschreibung') ?></th>
             </tr>
         </thead>

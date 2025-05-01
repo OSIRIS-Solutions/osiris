@@ -6025,6 +6025,18 @@ Navbar content
     display: none;
   }
 }
+span.notification {
+  font-size: x-small;
+  vertical-align: super;
+  line-height: 0;
+  background-color: var(--danger-color);
+  color: white;
+  padding: 0.1rem 0.4rem;
+  border-radius: 1rem;
+  font-weight: bold;
+  margin-left: -1.2rem;
+}
+
 .page-footer {
   clear: both;
   min-height: 8rem;

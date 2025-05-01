@@ -362,6 +362,13 @@ class Settings
         return $return;
     }
 
+    function infrastructureLabel(){
+        if (!$this->featureEnabled('infrastructures')) return '';
+        $settings = $this->get('infrastructures_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Infrastructures', 'Infrastrukturen');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
+
     function topicLabel(){
         if (!$this->featureEnabled('topics')) return '';
         $settings = $this->get('topics_label');

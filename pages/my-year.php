@@ -21,6 +21,12 @@ $currentuser = $user == $_SESSION['username'];
 $YEAR = intval($_GET['year'] ?? CURRENTYEAR);
 $QUARTER = intval($_GET['quarter'] ?? CURRENTQUARTER);
 
+if (isset($_GET['quarter'])){
+    $temp = explode("Q", $_GET['quarter']);
+    $YEAR = intval($temp[0]);
+    $QUARTER = intval($temp[1]);
+}
+
 $q = $YEAR . "Q" . $QUARTER;
 
 

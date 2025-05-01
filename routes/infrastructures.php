@@ -19,7 +19,7 @@ Route::get('/infrastructures', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Infrastructures", "Infrastrukturen")]
+        ['name' => $Settings->infrastructureLabel()]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/list.php";
@@ -31,7 +31,7 @@ Route::get('/infrastructures/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => lang("Statistics", "Statistiken")]
     ];
     include BASEPATH . "/header.php";
@@ -48,7 +48,7 @@ Route::get('/infrastructures/new', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -75,7 +75,7 @@ Route::get('/infrastructures/view/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $infrastructure['name']]
     ];
 
@@ -110,7 +110,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
         ['name' => lang("Edit", "Bearbeiten")]
     ];
@@ -143,7 +143,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
         ['name' => lang("Persons", "Personen")]
     ];
@@ -190,7 +190,7 @@ Route::get('/infrastructures/year/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
         ['name' => lang("Year Statistics", "Jahresstatistik")]
     ];

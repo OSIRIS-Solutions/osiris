@@ -39,18 +39,18 @@
 
     <div class="box px-20">
         <h3>
-            <?=lang('Journals', 'Journale')?>
+            <?= lang('Journals', 'Journale') ?>
         </h3>
         <div class="form-group">
             <label for="">
-                <?=lang('Automatic retrieval of journal metrics', 'Automatischer Download von Journal-Metriken')?>
+                <?= lang('Automatic retrieval of journal metrics', 'Automatischer Download von Journal-Metriken') ?>
             </label>
             <?php
             $journals = $Settings->featureEnabled('no-journal-metrics');
             ?>
-            
+
             <p>
-                <?=lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.')?>
+                <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
             </p>
             <div class="custom-radio">
                 <input type="radio" id="no-journal-metrics-false" value="0" name="values[no-journal-metrics]" <?= $journals ? '' : 'checked' ?>>
@@ -235,7 +235,7 @@
 
     </div>
 
-    
+
     <div class="box px-20">
         <h3>
             <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
@@ -287,28 +287,28 @@
 
         </div>
 
-        
+
         <div class="form-group">
-                <label for="position">
-                    <h5><?= lang('Label', 'Bezeichnung') ?></h5>
-                </label>
+            <label for="position">
+                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+            </label>
 
-                <?php
-                    $label = $Settings->get('topics_label');
-                ?>
-                
+            <?php
+            $label = $Settings->get('topics_label');
+            ?>
 
-                <div class="row row-eq-spacing my-0">
-                    <div class="col-md-6">
-                        <label for="topics_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                        <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="topics_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                        <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
-                    </div>
+
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <label for="topics_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="topics_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
                 </div>
             </div>
+        </div>
 
         <?php
         $n_topics = $osiris->topics->count();
@@ -327,7 +327,7 @@
 
     <div class="box px-20">
         <h3>
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h3>
         <div class="form-group">
             <label for="">
@@ -347,6 +347,27 @@
                 <label for="infrastructures-false"><?= lang('disabled', 'deaktiviert') ?></label>
             </div>
 
+        </div>
+
+        <div class="form-group">
+            <label for="position">
+                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+            </label>
+
+            <?php
+            $label = $Settings->get('infrastructures_label');
+            ?>
+
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <label for="infrastructures_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Infrastructures') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="infrastructures_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Infrastrukturen') ?>">
+                </div>
+            </div>
         </div>
 
     </div>
@@ -496,18 +517,18 @@
 
                     <ul class="list">
                         <li>
-                            <?=lang('The selected custom field is used to create new research areas on this basis. Don\'t worry, you can still edit them later.', 'Das ausgewählte Custom Field wird genommen, um auf dieser Grundlage neue Forschungsbereiche anzulegen. Keine Sorge, du kannst sie später noch bearbeiten.')?>
+                            <?= lang('The selected custom field is used to create new research areas on this basis. Don\'t worry, you can still edit them later.', 'Das ausgewählte Custom Field wird genommen, um auf dieser Grundlage neue Forschungsbereiche anzulegen. Keine Sorge, du kannst sie später noch bearbeiten.') ?>
                         </li>
                         <li>
-                            <?=lang('All activities for which the custom field was completed are assigned to the respective research areas.', 'Alle Aktivitäten, bei denen das Custom Field ausgefüllt war, werden den jeweiligen Forschungsbereichen zugeordnet.')?>
+                            <?= lang('All activities for which the custom field was completed are assigned to the respective research areas.', 'Alle Aktivitäten, bei denen das Custom Field ausgefüllt war, werden den jeweiligen Forschungsbereichen zugeordnet.') ?>
                         </li>
                         <li>
-                            <?=lang('The custom field is then deleted, i.e. the field itself, the assignment to forms and the values set for the activities are removed.', 'Das Custom Field wird daraufhin gelöscht, d.h. das Feld selbst, die Zuordnung zu Formularen und die gesetzten Werte bei den Aktivitäten werden entfernt.')?>
+                            <?= lang('The custom field is then deleted, i.e. the field itself, the assignment to forms and the values set for the activities are removed.', 'Das Custom Field wird daraufhin gelöscht, d.h. das Feld selbst, die Zuordnung zu Formularen und die gesetzten Werte bei den Aktivitäten werden entfernt.') ?>
                         </li>
                     </ul>
 
                     <button class="btn primary">
-                        <?=lang('Migrate', 'Migrieren')?>
+                        <?= lang('Migrate', 'Migrieren') ?>
                     </button>
                 </form>
 
