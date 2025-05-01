@@ -202,7 +202,7 @@ $pageactive = function ($p) use ($page) {
                 $notifications = $DB->notifications();
                 $n_notifications = $_SESSION['has_notifications'] ?? false;
             ?>
-                <div class="dropdown d-none d-md-block">
+                <div class="dropdown modal-sm">
                     <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="messages" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-chat-circle-text"></i>
                         <span class="sr-only"><?= lang('Messages', 'Nachrichten') ?></span>
@@ -210,7 +210,7 @@ $pageactive = function ($p) use ($page) {
                             <span class="notification"><?= $n_notifications ?></span>
                         <?php } ?>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-center w-400" aria-labelledby="messages">
+                    <div class="dropdown-menu dropdown-menu-center notifications" aria-labelledby="messages">
                         <h6 class="header text-primary"><?= lang('Messages', 'Nachrichten') ?></h6>
                         <table class="table simple">
                             <?php
@@ -317,7 +317,7 @@ $pageactive = function ($p) use ($page) {
                 </div>
             <?php } ?>
 
-            <div class="dropdown">
+            <div class="dropdown modal-sm">
                 <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-translate"></i>
                     <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
@@ -338,7 +338,7 @@ $pageactive = function ($p) use ($page) {
             </div>
 
             <!-- Accessibility menu -->
-            <div class="dropdown d-none d-md-block">
+            <div class="dropdown modal-sm">
                 <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-person-arms-spread ph-person-simple-circle"></i>
                     <span class="sr-only"><?= lang('Accessibility Options', 'Accessibility-Optionen') ?></span>
@@ -391,7 +391,7 @@ $pageactive = function ($p) use ($page) {
                 $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
                 $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
-                    <div class="dropdown">
+                    <div class="dropdown modal-sm">
                         <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-user-switch"></i>
                             <span class="sr-only"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
@@ -568,31 +568,6 @@ $pageactive = function ($p) use ($page) {
                     </div>
 
                     <nav>
-
-                        <style>
-                            .sidebar-menu>a.inline-btn,
-                            .sidebar-menu nav>a.inline-btn {
-                                position: absolute;
-                                right: 2rem;
-                                margin: .5rem;
-                                background: white;
-                                padding: .5rem;
-                                width: 3rem;
-                                height: 3rem;
-                                font-size: 1.4rem;
-                                border-radius: var(--border-radius);
-                            }
-
-                            .sidebar-menu>a.inline-btn:not(.active),
-                            .sidebar-menu nav>a.inline-btn:not(.active) {
-                                display: none;
-                            }
-
-                            .sidebar-menu:hover>a.inline-btn:not(.active),
-                            .sidebar-menu:hover nav>a.inline-btn:not(.active) {
-                                display: block;
-                            }
-                        </style>
 
                         <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                             <i class="ph ph-magnifying-glass-plus"></i>

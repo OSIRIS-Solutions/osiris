@@ -5255,6 +5255,14 @@ select.form-control[multiple] option:hover {
   bottom: 0.8rem;
 }
 
+@media (max-width: 767px) {
+  .dropdown.modal-sm {
+    position: static;
+  }
+  .dropdown.modal-sm .dropdown-menu.show {
+    width: calc(100% - 2rem);
+  }
+}
 /*
 -------------------------------------------------------------------------------
 13. Modal [hm-13]
@@ -6025,6 +6033,13 @@ Navbar content
     display: none;
   }
 }
+.notifications {
+  max-height: 400px;
+  overflow-y: auto;
+  width: 40rem;
+  overscroll-behavior-y: contain;
+}
+
 span.notification {
   font-size: x-small;
   vertical-align: super;
@@ -6417,6 +6432,29 @@ Sidebar content
   background: var(--secondary-color-20);
 }
 #sidebar-add:hover #sidebar-add-navigation {
+  display: block;
+}
+
+.sidebar-menu > a.inline-btn,
+.sidebar-menu nav > a.inline-btn {
+  position: absolute;
+  right: 2rem;
+  margin: 0.5rem;
+  background: white;
+  padding: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.4rem;
+  border-radius: var(--border-radius);
+}
+
+.sidebar-menu > a.inline-btn:not(.active),
+.sidebar-menu nav > a.inline-btn:not(.active) {
+  display: none;
+}
+
+.sidebar-menu:hover > a.inline-btn:not(.active),
+.sidebar-menu:hover nav > a.inline-btn:not(.active) {
   display: block;
 }
 

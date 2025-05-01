@@ -461,7 +461,7 @@ Route::post('/switch-user', function () {
         $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
         // change username if user is allowed
         if ($allowed == 1 || $realusername == $username) {
-            $msg = "User switched!";
+            $_SESSION['msg'] = lang("You are now logged in as", "Du bist jetzt angemeldet als") . " $username";
             $_SESSION['realuser'] = $realusername;
             $_SESSION['username'] = $username;
             // reset notifications
