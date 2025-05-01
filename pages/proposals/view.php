@@ -17,6 +17,9 @@ foreach ($persons as $p) {
     }
 }
 $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
+
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 ?>
 
 
@@ -202,7 +205,7 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                 <?php } ?>
                 <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
                     <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
-                    <i class="ph ph-link m-0"></i>
+                        <i class="ph ph-link m-0"></i>
                         <?= lang('Project', 'Projekt') ?>
                     </a>
                 <?php } ?>
@@ -245,7 +248,7 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                             } else {
                                 echo $DB->getNameFromId($project['created_by']);
                             }
-                            if (isset($project['created'])){
+                            if (isset($project['created'])) {
                                 $date = strtotime($project['created']);
                                 echo " (" . date('d.m.Y', $date) . ")";
                             }
@@ -282,7 +285,7 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                                 } else {
                                     echo $DB->getNameFromId($project['updated_by']);
                                 }
-                                if (isset($project['updated'])){
+                                if (isset($project['updated'])) {
                                     $date = strtotime($project['updated']);
                                     echo " (" . date('d.m.Y', $date) . ")";
                                 }
@@ -318,9 +321,9 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
 
             <div id="raw-data-details" style="display:none;">
                 <div class="box overflow-x-auto mt-0">
-                <?php
-                dump($project);
-                ?>
+                    <?php
+                    dump($project);
+                    ?>
                 </div>
             </div>
 
@@ -395,11 +398,12 @@ $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasP
                                                     </td>
                                                     <td>
                                                         <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control">
-                                                            <option value="applicant" <?= $con['role'] == 'applicant' ? 'selected' : '' ?>><?= Project::personRole('applicant') ?></option>
-                                                            <option value="PI" <?= $con['role'] == 'PI' ? 'selected' : '' ?>><?= Project::personRole('PI') ?></option>
-                                                            <option value="worker" <?= $con['role'] == 'worker' ? 'selected' : '' ?>><?= Project::personRole('worker') ?></option>
-                                                            <option value="coordinator" <?= $con['role'] == 'coordinator' ? 'selected' : '' ?>><?= Project::personRole('coordinator') ?></option>
-                                                            <option value="associate" <?= $con['role'] == 'associate' ? 'selected' : '' ?>><?= Project::personRole('associate') ?></option>
+                                                            <?php
+                                                            $role = $con['role'] ?? '';
+                                                            $vocab = $Vocabulary->getValues('project-person-role');
+                                                            foreach ($vocab as $v) { ?>
+                                                                <option value="<?= $v['id'] ?>" <?= $role == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                                            <?php } ?>
                                                         </select>
                                                     </td>
                                                     <td>

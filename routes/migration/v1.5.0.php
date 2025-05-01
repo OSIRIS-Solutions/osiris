@@ -43,18 +43,22 @@ if (!empty($funding_organizations)) { ?>
     <h4>
         <?= lang('Funding organizations', 'Förderorganisationen') ?>
     </h4>
-    <p>
-        <?= lang('We have found the following funding organizations in the projects collection:', 'In der Projektsammlung haben wir die folgenden Förderorganisationen gefunden:') ?>
-    </p>
-    <ul class="list box padded">
-        <?php
-        foreach ($funding_organizations as $org) {
-            if (is_string($org)) {
-                echo "<li>" . $org . "</li>";
-            }
-        }
-        ?>
-    </ul>
+    <details class="collapse-panel">
+        <summary class="collapse-header">
+            <?= lang('We have found the following funding organizations in the projects collection:', 'In der Projektsammlung haben wir die folgenden Förderorganisationen gefunden:') ?>
+        </summary>
+        <div class="collapse-content">
+            <ul class="list">
+                <?php
+                foreach ($funding_organizations as $org) {
+                    if (is_string($org)) {
+                        echo "<li>" . $org . "</li>";
+                    }
+                }
+                ?>
+            </ul>
+        </div>
+    </details>
     <p>
         <?= lang('In the future, OSIRIS will no longer support free text fields for funding organizations, universities or scholarships. However, we will not be able to migrate the data you entered in the past automatically. The data will be shown correctly in the frontend, but when editing it, you will be forced to select an organization from the list.', 'OSIRIS wird in Zukunft keine Freitextfelder für Förderorganisationen, Universitäten oder Stipendien mehr unterstützen. Allerdings können wir die von Ihnen bisher eingegebenen Daten nicht automatisch migrieren. Die Daten werden im Frontend korrekt angezeigt, bei der Bearbeitung sind Sie jedoch gezwungen, eine Organisation aus der Liste auszuwählen.') ?>
     </p>
@@ -351,11 +355,14 @@ if ($count > 0) {
         if ($status == 'applied') {
             $status = 'proposed';
         }
+        if ($status == 'finished') {
+            $status = 'approved';
+        }
         // set up the base fields for the new project
         $new_proposal = [
             '_id' => $project['_id'],
             'type' => 'third-party',
-            'status' => $project['status'],
+            'status' => $status,
             'submission_date' => $project['created'] ?? date('Y-m-d'),
             'start_proposed' => $project['start_date'] ?? null,
             'end_proposed' => $project['end_date'] ?? null,
