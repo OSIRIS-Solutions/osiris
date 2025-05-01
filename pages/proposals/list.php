@@ -185,13 +185,19 @@ $filter = [];
             <div class="filter">
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
-                        <td> <a onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a></td>
+                        <td> 
+                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a>
+                        </td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
-                        <td> <a onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a></td>
+                        <td> 
+                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a>
+                        </td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
-                        <td> <a onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a></td>
+                        <td> 
+                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -226,7 +232,7 @@ $filter = [];
                     <?php foreach ($Departments as $dept_id => $dept) { ?>
                         <tr <?= $Groups->cssVar($dept_id) ?>>
                             <td>
-                                <a data-type="<?= $dept_id ?>" onclick="filterProjects(this, '<?= $dept_id ?>', 8)" class="item d-block colorless" id="<?= $dept_id ?>-btn">
+                                <a data-type="<?= $dept_id ?>" onclick="filterProjects(this, '<?= $dept_id ?>', 8)" class="item colorless" id="<?= $dept_id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -554,7 +560,7 @@ $filter = [];
                 },
                 {
                     target: 2,
-                    data: 'type',
+                    data: 'funder',
                     searchable: true,
                     visible: false,
                     header: lang('Funder', 'Drittmmittelgeber'),
@@ -621,7 +627,7 @@ $filter = [];
                 },
                 {
                     target: 10,
-                    data: 'funding_organization',
+                    data: 'funder',
                     searchable: true,
                     visible: false,
                     defaultContent: '',
@@ -680,6 +686,31 @@ $filter = [];
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
             }
             initializing = false;
+
+            // count data for the filter and add it to the filter
+            let all_filters = {
+                1: '#filter-type',
+                2: '#filter-funder',
+                7: '#filter-status',
+                8: '#filter-units',
+                9: '#filter-topics'
+            }
+            for (const key in all_filters) {
+                if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
+                    const element = all_filters[key];
+                    const filter = $(element).find('a')
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            if (key == 8 || key == 9) {
+                                return d.includes(type)
+                            }
+                            return d == type
+                        }).length
+                        $(el).append(` <em>${count}</em>`)
+                    })
+                }
+            }
         });
 
 

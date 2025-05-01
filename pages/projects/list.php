@@ -175,33 +175,9 @@ $Vocabulary = new Vocabulary();
             <!-- <div id="searchpanes"></div> -->
 
             <div id="active-filters"></div>
-            <!-- 
-            <h6>
-                <?= lang('By role', 'Nach Rolle') ?>
-                <a class="float-right" onclick="filterProjects('#filter-role .active', null, 5)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-role" class="table small simple">
-                    <tr style="--highlight-color: var(--signal-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'Coordinator', 5)" class="item colorless"><i class="ph ph-crown text-signal"></i> <?= lang('Coordinator', 'Koordinator') ?></a>
-                        </td>
-                    </tr>
-                    <tr style="--highlight-color: var(--muted-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'Partner', 5)" class="item colorless"><i class="ph ph-handshake text-muted"></i> <?= lang('Partner') ?></a>
-                        </td>
-                    </tr>
-                    <tr style="--highlight-color: var(--muted-color)">
-                        <td>
-                            <a onclick="filterProjects(this, 'associated', 5)" class="item colorless"><i class="ph ph-address-book text-muted"></i> <?= lang('Accociate', 'Beteiligt') ?></a>
-                        </td>
-                    </tr>
-                </table>
-            </div> -->
 
             <h6>
-                <?=lang('By type', 'Nach Projekttyp')?>
+                <?= lang('By type', 'Nach Projekttyp') ?>
                 <a class="float-right" onclick="filterProjects('#filter-type .active', null, 1)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -209,7 +185,7 @@ $Vocabulary = new Vocabulary();
                     <?php
                     $vocab = $Project->getProjectTypes();
                     foreach ($vocab as $v) { ?>
-                        <tr  style="--highlight-color: <?= $v['color'] ?>;">
+                        <tr style="--highlight-color: <?= $v['color'] ?>;">
                             <td>
                                 <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn" style="color:var(--highlight-color);">
                                     <span>
@@ -256,7 +232,7 @@ $Vocabulary = new Vocabulary();
                     <?php foreach ($Departments as $dept_id => $dept) { ?>
                         <tr <?= $Groups->cssVar($dept_id) ?>>
                             <td>
-                                <a data-type="<?= $dept_id ?>" onclick="filterProjects(this, '<?= $dept_id ?>', 8)" class="item d-block colorless" id="<?= $dept_id ?>-btn">
+                                <a data-type="<?= $dept_id ?>" onclick="filterProjects(this, '<?= $dept_id ?>', 8)" class="item colorless" id="<?= $dept_id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -264,7 +240,7 @@ $Vocabulary = new Vocabulary();
                     <?php } ?>
                 </table>
             </div>
-<!-- 
+            <!-- 
             <h6>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
@@ -378,8 +354,8 @@ $Vocabulary = new Vocabulary();
     ]
 
     function renderType(data) {
-        <?php 
-        $vocab = $Project->getProjectTypes(); 
+        <?php
+        $vocab = $Project->getProjectTypes();
         foreach ($vocab as $v) { ?>
             if (data == '<?= $v['id'] ?>' || data == '<?= $v['id'] ?>') {
                 return `<span class="badge" style="color: <?= $v['color'] ?>">
@@ -407,7 +383,7 @@ $Vocabulary = new Vocabulary();
             return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
                         </span>`
-        } 
+        }
         return data;
     }
 
@@ -566,7 +542,8 @@ $Vocabulary = new Vocabulary();
                 },
                 {
                     target: 2,
-                    data: 'type',
+                    data: 'funder',
+                    defaultContent: '',
                     searchable: true,
                     visible: false,
                     header: lang('Funder', 'Drittmmittelgeber'),
@@ -692,6 +669,30 @@ $Vocabulary = new Vocabulary();
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
             }
             initializing = false;
+
+            // count data for the filter and add it to the filter
+            let all_filters = {
+                1: '#filter-type',
+                2: '#filter-funder',
+                8: '#filter-units',
+                9: '#filter-topics'
+            }
+            for (const key in all_filters) {
+                if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
+                    const element = all_filters[key];
+                    const filter = $(element).find('a')
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            if (key == 8 || key == 9) {
+                                return d.includes(type)
+                            }
+                            return d == type
+                        }).length
+                        $(el).append(` <em>${count}</em>`)
+                    })
+                }
+            }
         });
 
 

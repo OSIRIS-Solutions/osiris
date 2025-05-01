@@ -234,19 +234,15 @@ $infrastructures  = $osiris->infrastructures->find(
             for (const key in all_filters) {
                 if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
                     const element = all_filters[key];
-                    dataTable.columns(key).data().each(function(data, index) {
-                        const result = data.reduce((acc, item) => {
-                            acc[item] = (acc[item] || 0) + 1;
-                            return acc;
-                        }, {});
-                        $.each(result, function(key, value) {
-                            // find button by content
-                            var btn = $(element + ' a[data-type="' + key + '"]')
-                            if (btn.length > 0) {
-                                btn.append(' <em>' + value + '</em>')
-                            }
-                        });
-                    });
+                    const filter = $(element).find('a')
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            return d == type
+                        }).length
+                        // console.log(count);
+                        $(el).append(` <em>${count}</em>`)
+                    })
                 }
             }
         });

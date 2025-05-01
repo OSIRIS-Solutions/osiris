@@ -47,7 +47,7 @@ $user = $user ?? $_SESSION['username'];
             <?= lang('Statistics', 'Statistiken') ?>
         </a>
         <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i> 
+            <i class="ph ph-plus"></i>
             <?= lang('Add activity', 'Aktivität hinzufügen') ?>
         </a>
 
@@ -688,9 +688,7 @@ $user = $user ?? $_SESSION['username'];
                             return d == type
                         }).length
                         // console.log(count);
-                        if (count > 0) {
-                            $(el).append(` <em>${count}</em>`)
-                        }
+                        $(el).append(` <em>${count}</em>`)
                     })
                 }
             }
