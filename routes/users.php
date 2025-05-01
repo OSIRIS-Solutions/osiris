@@ -464,6 +464,8 @@ Route::post('/switch-user', function () {
             $msg = "User switched!";
             $_SESSION['realuser'] = $realusername;
             $_SESSION['username'] = $username;
+            // reset notifications
+            $_SESSION['last_notification_check'] = 0;
             header("Location: " . ROOTPATH . "/profile/$username");
             die;
         }
