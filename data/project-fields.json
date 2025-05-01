@@ -59,6 +59,16 @@
         "order": 5
     },
     {
+        "id": "image",
+        "en": "Project image",
+        "de": "Projekt-Bild",
+        "kdsf": null,
+        "scope": {
+            "project": false
+        },
+        "order": 5
+    },
+    {
         "id": "status",
         "en": "Status",
         "de": "Status",

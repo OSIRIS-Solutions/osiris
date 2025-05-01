@@ -286,6 +286,7 @@ $osiris->adminProjects->insertOne([
                 ["module" => "website", "required" => false],
                 ["module" => "funding_type", "required" => false],
                 ["module" => "topics", "required" => false],
+                ["module" => "image", "required" => false]
             ],
         ],
     ],
@@ -308,13 +309,6 @@ $fields_proposals = array_column($fields_proposals, 'id');
 $fields_projects = array_column($fields_projects, 'id');
 $fields_projects = array_merge($fields_projects, [
     "collaborators",
-    // "public_title",
-    // "public_title_de",
-    // "public_subtitle",
-    // "public_subtitle_de",
-    // "public_abstract",
-    // "public_abstract_de",
-    "public_image",
     "subprojects",
     "teaser_de",
     "teaser_en",
@@ -406,6 +400,7 @@ if ($count > 0) {
             "public_subtitle_de" => "title_de",
             "public_abstract" => "abstract",
             "public_abstract_de" => "abstract_de",
+            "public_image" => "image"
         ];
         // replace the old fields with the new ones, overwrite the new ones if they exist
         foreach ($replace as $old => $new) {

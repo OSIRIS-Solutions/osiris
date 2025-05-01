@@ -325,6 +325,10 @@ class Project extends Vocabulary
                 } else {
                     return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('no', 'nein') . '</span>';
                 }
+            case 'image':
+                if (empty($value)) return '-';
+                $image = '<img src="' . ROOTPATH . '/uploads/' . $value . '" class="img-fluid" alt="' . lang('Project image', 'Projektbild') . '">';
+                return $image;
             case 'topics':
                 $topics = DB::doc2Arr($value);
                 $Settings = new Settings();

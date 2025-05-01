@@ -545,6 +545,14 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $values['university'] = $DB->to_ObjectID($values['university']);
     }
 
+    if (isset($values['abstract'])) {
+        $abstract_en = $values['abstract'];
+        $abstract_de = $values['abstract_de'] ?? $abstract_en;
+
+        $values['teaser_en'] = get_preview($abstract_en);
+        $values['teaser_de'] = get_preview($abstract_de);
+    }
+
     // update all children
     // if ($osiris->projects->count(['parent_id' => $id]) > 0) {
     //     include_once BASEPATH . "/php/Project.php";
@@ -683,29 +691,9 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
 });
 
 
-Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    $values = $_POST['values'];
-
-    $values['public'] = boolval($values['public'] ?? false);
-
-    foreach (['public_abstract', 'public_abstract_de', 'public_image', 'teaser_en', 'teaser_de', 'public_subtitle_de', 'public_title_de', 'public_subtitle', 'public_title'] as $key) {
-        if (!isset($values[$key]) || empty($values[$key])) {
-            $values[$key] = null;
-        }
-    }
-
-    if (isset($values['public_abstract']) && !empty($values['public_abstract'])) {
-        $abstract_en = $values['public_abstract'];
-        $abstract_de = $values['public_abstract_de'] ?? $abstract_en;
-
-        $values['teaser_en'] = get_preview($abstract_en);
-        $values['teaser_de'] = get_preview($abstract_de);
-    }
-
-    // dump($values, true);
-    // die;
-
+    
     $target_dir = BASEPATH . "/uploads/";
     if (!is_writable($target_dir)) {
         die("Upload directory $target_dir is unwritable. Please contact admin.");
@@ -720,7 +708,6 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
         $filename = $id . "." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
         // $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["file"]["size"];
-        $values['public_image'] = "projects/" . $filename;
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
@@ -733,19 +720,24 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
             };
-            printMsg($errorMsg, "error");
+            $_SESSION['msg'] = $errorMsg;
         } else if ($filesize > 16000000) {
-            printMsg(lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."), "error");
-        } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            printMsg(lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."), "success");
+            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+        } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
+            $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
+            // update project with new image
+            $osiris->projects->updateOne(
+                ['_id' => $DB::to_ObjectID($id)],
+                ['$set' => ["image" => "projects/" . $filename]]
+            );
         } else {
             $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
         }
     } else if (isset($_POST['delete'])) {
         $filename = $_POST['delete'];
-        if (file_exists($target_dir . $filename)) {
+        if (file_exists($target_dir . '/' . $filename)) {
             // Use unlink() function to delete a file
-            if (!unlink($target_dir . $filename)) {
+            if (!unlink($target_dir . '/' . $filename)) {
                 $_SESSION['msg'] = lang("$filename cannot be deleted due to an error.", "$filename kann nicht gelöscht werden, da ein Fehler aufgetreten ist.");
             } else {
                 $_SESSION['msg'] = lang("$filename has been deleted.", "$filename wurde gelöscht.");
@@ -754,20 +746,13 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
 
         $osiris->projects->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
-            ['$set' => ["public_image" => null]]
+            ['$set' => ["image" => null]]
         );
-        // printMsg("File has been deleted from the database.", "success");
-
-        header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
-        die();
+    } else {
+        $_SESSION['msg'] = lang("No file was uploaded.", "Es wurde keine Datei hochgeladen.");
     }
 
-    $osiris->projects->updateOne(
-        ['_id' => $DB::to_ObjectID($id)],
-        ['$set' => $values]
-    );
-
-    header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
+    header("Location: " . ROOTPATH . "/projects/view/$id");
     die;
 });
 

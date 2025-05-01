@@ -64,15 +64,14 @@ $Project = new Project($project);
                 </h2>
             <?php } ?>
 
-            <?php if (!empty($project['public_image'] ?? '') && file_exists(ROOTPATH . '/uploads/' . $project['public_image'])) { ?>
-                <img src="<?= ROOTPATH . '/uploads/' . $project['public_image'] ?>" alt="<?= $project['public_title'] ?>" class="img-fluid">
+            <?php if (!empty($project['image'] ?? '') && file_exists(ROOTPATH . '/uploads/' . $project['image'])) { ?>
+                <img src="<?= ROOTPATH . '/uploads/' . $project['image'] ?>" alt="<?= $project['name'] ?>" class="img-fluid">
             <?php } ?>
             <div id="abstract">
                 <?php
                 // markdown support
-                require_once BASEPATH . '/php/MyParsedown.php';
-                $Parsedown = new Parsedown();
-                echo $Parsedown->text($project['public_abstract'] ?? $project['abstract'] ?? '-');
+                
+                echo $project['abstract'] ?? '-';
                 ?>
             </div>
             <?php if (!empty($project['website'] ?? null)) { ?>

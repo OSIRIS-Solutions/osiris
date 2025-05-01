@@ -114,7 +114,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
     <!-- show research topics -->
     <?= $Settings->printTopics($project['topics'] ?? [], 'mb-20', true) ?>
 
-    <div class="d-flex">
+    <div class="d-flex" id="project-badges">
 
         <div class="mr-10 badge bg-white">
             <small><?= lang('Type of Projects', 'Art des Projekts') ?>: </small>
@@ -186,7 +186,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
     <!-- TAB AREA -->
 
-    <nav class="pills mt-20 mb-0">
+    <nav class="pills mt-20 mb-0" id="project-nav">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
             <?= lang('Project details', 'Projektdetails') ?>
@@ -309,6 +309,14 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                                     <?php
                                     echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
                                     echo $Project->printField($key, $project[$key] ?? null);
+
+                                    if ($key == 'image' && $edit_perm) { ?>
+                                        <br>
+                                        <a href="#edit-image" data-toggle="modal">
+                                            <i class="ph ph-image"></i>
+                                            <?= lang('Edit', 'Bearbeiten') ?>
+                                        </a>
+                                    <?php }
                                     ?>
                                 </td>
                             </tr>
@@ -604,6 +612,44 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
 
     <?php if ($edit_perm) { ?>
+        <!-- Modal for public image -->
+        <div class="modal" id="edit-image" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                    <h5 class="modal-title">
+                        <?= lang('Edit image', 'Bild bearbeiten') ?>
+                    </h5>
+
+                    <div class="form-group">
+                        <p>
+                            <?= lang('Upload an image (e.g.) Logo for the project. The image will be displayed in the metadata.', 'Lade ein Bild (z.B. ein Logo) für das Projekt hoch, das bei den Metadaten auf der Projektseite gezeigt wird.') ?>
+                        </p>
+                        <!-- show current image if any -->
+                        <?php if (!empty($project['image'])) : ?>
+                            <img src="<?= ROOTPATH . '/uploads/' . $project['image'] ?>" alt="<?= $project['name'] ?>" class="w-400">
+                        <?php endif; ?>
+
+                        <form action="<?= ROOTPATH ?>/crud/projects/image/<?= $project['_id'] ?>" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
+                            <input type="hidden" name="type" value="image">
+                            <div class="custom-file">
+                                <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
+                                <label for="image"><?= lang('Upload image', 'Bild hochladen') ?></label>
+                            </div>
+                            <button class="btn primary mt-20">
+                                <i class="ph ph-check"></i>
+                                <?= lang('Submit', 'Bestätigen') ?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Modal for connecting activities -->
         <div class="modal" id="add-activity" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

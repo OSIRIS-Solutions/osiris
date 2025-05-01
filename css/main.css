@@ -12707,6 +12707,13 @@ progress::-webkit-progress-value {
   /* Max 3 Zeilen */
   -webkit-box-orient: vertical;
 }
+.preview-text img {
+  display: none;
+}
+
+table img {
+  max-width: 100%;
+}
 
 /*!
  * Quill Editor v1.3.6

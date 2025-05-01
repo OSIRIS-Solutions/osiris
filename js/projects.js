@@ -36,11 +36,15 @@ function navigate(key) {
         default:
             break;
     }
+    // scroll to #project-nav 
+    $('html, body').animate({
+        scrollTop: $('#project-badges').offset().top
+    }, 200);
 
 }
 
-var collabChart = false    
-function initCollabs (){
+var collabChart = false
+function initCollabs() {
     collabChart = true
     $.ajax({
         type: "GET",
@@ -49,7 +53,7 @@ function initCollabs (){
             project: PROJECT
         },
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             console.log(response);
 
             var zoomlvl = 1;
@@ -78,7 +82,7 @@ function initCollabs (){
 
                 Plotly.newPlot('map', [data], layout);
         },
-        error: function(response) {
+        error: function (response) {
             console.log(response);
         }
     });
@@ -93,7 +97,7 @@ function initActivities() {
                 page: 'activities',
                 display_activities: 'web',
                 // user: CURRENT_USER,
-                filter: {'projects': PROJECT}
+                filter: { 'projects': PROJECT }
             },
             dataSrc: 'data'
         },

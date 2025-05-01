@@ -501,12 +501,12 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
         'sort' => ['year' => -1, 'month' => -1],
         'projection' => [
             'name' => 1,
+            'name_de' => 1,
             'title' => 1,
-            'public_title' => 1,
-            'public_title_de' => 1,
-            'public_subtitle' => 1,
-            'public_subtitle_de' => 1,
+            'title_de' => 1,
             'funder' => 1,
+            'abstract' => 1,
+            'abstract_de' => 1,
             'funding_organization' => 1,
             'funding_number' => 1,
             'role' => 1,
@@ -823,8 +823,8 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     ];
     $Project = new Project($project);
 
-    if (isset($result['public_image']) && !empty($result['public_image']))
-        $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['public_image'];
+    if (isset($result['image']) && !empty($result['image']))
+        $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['image'];
 
     $project['activities'] = $osiris->activities->count(['projects' => $id, 'hide' => ['$ne' => true]]);
 
@@ -1275,7 +1275,7 @@ Route::get('/portfolio/projects', function () {
             'type' => 1,
             'teaser_en' => 1,
             'teaser_de' => 1,
-            'public_image' => 1
+            'image' => 1
         ]
     ];
 
