@@ -729,7 +729,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                 <?php if ($currentuser && (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) || $Settings->hasPermission('report.generate'))) { ?>
 
-                    <div class="row row-eq-spacing">
+                    <div class="row row-eq-spacing mt-0">
 
                         <?php if ($Settings->featureEnabled('quarterly-reporting', true) && $currentuser && $Settings->hasPermission('report.dashboard')) {
 
