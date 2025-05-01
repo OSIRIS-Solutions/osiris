@@ -91,11 +91,10 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
-    if (!$Settings->hasPermission('infrastructures.edit')) {
+    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
         header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
         die;
     }
-
     global $form;
 
     if (DB::is_ObjectID($id)) {
@@ -108,6 +107,20 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     if (empty($form)) {
         header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
         die;
+    }
+    // check if user is allowed to edit the infrastructure
+    if (!$Settings->hasPermission('infrastructures.edit') && $Settings->hasPermission('infrastructures.edit-own')) {
+        $permission = false;
+        foreach ($form['persons'] ?? [] as $person) {
+            if ($person['user'] == $_SESSION['username']) {
+                $permission = true;
+                break;
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
@@ -125,7 +138,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
-    if (!$Settings->hasPermission('infrastructures.edit')) {
+    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
         header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
         die;
     }
@@ -141,6 +154,19 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     if (empty($form)) {
         header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
         die;
+    }
+    if (!$Settings->hasPermission('infrastructures.edit') && $Settings->hasPermission('infrastructures.edit-own')) {
+        $permission = false;
+        foreach ($form['persons'] ?? [] as $person) {
+            if ($person['user'] == $_SESSION['username']) {
+                $permission = true;
+                break;
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
@@ -174,11 +200,11 @@ Route::get('/infrastructures/year/(.*)', function ($id) {
         header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
         die;
     }
-    if (!$Settings->hasPermission('infrastructures.edit')) {
+    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
         // check if person is part of the infrastructure and is set as reporter
         $permission = false;
         foreach ($form['persons'] ?? [] as $person) {
-            if ($person['user'] == $_SESSION['username'] && $person['reporter']) {
+            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false )|| $Settings->hasPermission('infrastructures.edit-own'))) {
                 $permission = true;
                 break;
             }
@@ -266,75 +292,25 @@ Route::post('/crud/infrastructures/create', function () {
 });
 
 
-// Route::post('/crud/infrastructures/upload/([A-Za-z0-9]*)', function ($id) {
-//     include_once BASEPATH . "/php/init.php";
-
-//     if (!$Settings->hasPermission('infrastructures.edit')) {
-//         header("Location: " . ROOTPATH . "/infrastructures?msg=no-permission");
-//         die;
-//     }
-
-//     $target_dir = BASEPATH . "/uploads/";
-//     if (!is_writable($target_dir)) {
-//         die("Upload directory $target_dir is unwritable. Please contact admin.");
-//     }
-//     $target_dir .= "infrastructures/";
-
-//     if (isset($_FILES["file"]) && $_FILES["file"]["size"] > 0) {
-
-//         if (!file_exists($target_dir) || !is_dir($target_dir)) {
-//             mkdir($target_dir, 0777);
-//         }
-//         // random filename
-//         $filename = $id . "." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-//         // $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-//         $filesize = $_FILES["file"]["size"];
-//         $values['image'] = "infrastructures/" . $filename;
-
-//         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
-//             $errorMsg = match ($_FILES['file']['error']) {
-//                 1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-//                 2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-//                 3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-//                 4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-//                 6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-//                 7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-//                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-//                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
-//             };
-//             $_SESSION['msg'] = $errorMsg;
-//         } else if ($filesize > 2000000) {
-//             $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
-//         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-//             $osiris->infrastructures->updateOne(
-//                 ['_id' => $DB->to_ObjectID($id)],
-//                 ['$set' => $values]
-//             );
-//             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
-//         } else {
-//             $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
-//         }
-//     } else if (isset($_POST['delete'])) {
-//         $filename = $_POST['delete'];
-//         if (file_exists($target_dir . $filename)) {
-//             // Use unlink() function to delete a file
-//             if (!unlink($target_dir . $filename)) {
-//                 $_SESSION['msg'] = lang("$filename cannot be deleted due to an error.", "$filename kann nicht gelöscht werden, da ein Fehler aufgetreten ist.");
-//             } else {
-//                 $_SESSION['msg'] = lang("$filename has been deleted.", "$filename wurde gelöscht.");
-//             }
-//         }
-//     }
-//     header("Location: " . ROOTPATH . "/infrastructures/view/$id");
-// });
-
-
 Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('infrastructures.edit')) {
-        header("Location: " . ROOTPATH . "/infrastructures?msg=no-permission");
-        die;
+        $permission = false;
+        if ($Settings->hasPermission('infrastructures.edit-own')) {
+            // check if person is part of the infrastructure and is set as reporter
+            $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+            foreach (($infrastructure['persons'] ?? []) as $person) {
+                if ($person['user'] == $_SESSION['username']) {
+                    $permission = true;
+                    break;
+                }
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
     }
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->infrastructures;
@@ -353,7 +329,6 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
         }
         $values['collaborators'] = array_map('DB::to_ObjectID', $values['collaborators'] ?? []);
         unset($values['coordinator']);
-        
     }
 
     // add information on creating process
@@ -381,11 +356,21 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
-    if (!$Settings->hasPermission('infrastructures.edit')) {
-        header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
-        die;
+    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
+        // check if person is part of the infrastructure and is set as reporter
+        $permission = false;
+        $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+        foreach (($infrastructure['persons'] ?? []) as $person) {
+            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
+                $permission = true;
+                break;
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
     }
-
     if (!isset($_POST['values'])) die("no values given");
     $values = $_POST['values'];
     if (!isset($_POST['values']['year'])) die("no year given");
@@ -433,6 +418,24 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Infrastructure.php";
     $Infra = new Infrastructure();
+
+    if (!$Settings->hasPermission('infrastructures.edit')) {
+        $permission = false;
+        if ($Settings->hasPermission('infrastructures.edit-own')) {
+            // check if person is part of the infrastructure
+            $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+            foreach (($infrastructure['persons'] ?? []) as $person) {
+                if ($person['user'] == $_SESSION['username']) {
+                    $permission = true;
+                    break;
+                }
+            }
+        }
+        if (!$permission) {
+            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+            die;
+        }
+    }
 
     $values = $_POST['persons'];
     $users = [];

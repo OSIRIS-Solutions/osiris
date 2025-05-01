@@ -226,14 +226,14 @@
                 "en": "Add new infrastructures"
             },
             {
-                "id": "infrastructures.view",
-                "de": "Alle existierenden Infrastrukturen sehen",
-                "en": "See all existing infrastructures"
-            },
-            {
                 "id": "infrastructures.edit",
                 "de": "Alle Infrastrukturen bearbeiten",
                 "en": "Edit all infrastructures"
+            },
+            {
+                "id": "infrastructures.edit-own",
+                "de": "Eigene Infrastrukturen bearbeiten",
+                "en": "Edit own infrastructures"
             },
             {
                 "id": "infrastructures.statistics",
