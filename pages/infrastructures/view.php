@@ -34,9 +34,25 @@ foreach ($persons as $p) {
     }
 }
 
-
 include_once BASEPATH . '/php/Vocabulary.php';
 $Vocabulary = new Vocabulary();
+
+$data_fields = $Settings->get('infrastructure-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/infrastructure-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
+
+$active = function ($field) use ($data_fields) {
+    return in_array($field, $data_fields);
+};
 ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 
@@ -68,59 +84,86 @@ $Vocabulary = new Vocabulary();
         <?= get_preview($infrastructure['description'], 400) ?>
     </p>
 
-    <div class="d-flex mb-20 align-items-center">
-        <div class="mr-10 badge bg-white">
-            <small>ID: </small>
-            <br />
-            <span class="badge"><?= $infrastructure['id'] ?? '-' ?></span>
-        </div>
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('Start date', 'Anfangsdatum') ?>: </small>
-            <br />
-            <span class="badge"><?= format_date($infrastructure['start_date']) ?></span>
-        </div>
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('End date', 'Enddatum') ?>: </small>
-            <br />
-            <?php if (!empty($infrastructure['end_date'])) {
-                echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
-            } else {
-                echo '<span class="badge primary">' . lang('Open', 'Offen') . '</span>';
-            } ?>
-        </div>
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('Type', 'Typ') ?>: </small>
-            <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?></span>
-        </div>
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>: </small>
-            <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?></span>
-        </div>
-        <div class="mr-10 badge bg-white">
-            <small><?= lang('User Access', 'Art des Zugangs') ?>: </small>
-            <br />
-            <span class="badge"><?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?></span>
-        </div>
-        <?php if ($infrastructure['collaborative'] ?? false) { ?>
-            <a class="mr-10 badge bg-white" href="#collaborative">
-                <small><?= lang('Collaborative infrastructure', 'Verbundinfrastruktur') ?>: </small>
-                <br />
-                <span class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></span>
-            </a>
+    <?php if ($edit_perm) { ?>
+        <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="">
+            <i class="ph ph-edit"></i>
+            <span><?= lang('Edit', 'Bearbeiten') ?></span>
+        </a>
+    <?php } ?>
+    <table class="table mt-10 small">
+        <tr>
+            <td>
+                <span class="key">ID: </span>
+                <?= $infrastructure['id'] ?? '-' ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="key"><?= lang('Start date', 'Anfangsdatum') ?>: </span>
+                <?= format_date($infrastructure['start_date']) ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="key"><?= lang('End date', 'Enddatum') ?>: </span>
+                <?php if (!empty($infrastructure['end_date'])) {
+                    echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
+                } else {
+                    echo '<span class="badge primary">' . lang('Open', 'Offen') . '</span>';
+                } ?>
+            </td>
+        </tr>
+        <?php if ($active('type')) { ?>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('Type', 'Typ') ?>: </span>
+                    <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
+                </td>
+            </tr>
         <?php } ?>
-        <?php if ($edit_perm) { ?>
-            <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn h-full">
-                <i class="ph ph-edit"></i>
-                <span class="sr-only"><?= lang('Edit', 'Bearbeiten') ?></span>
-            </a>
+        <?php if ($active('infrastructure_type')) { ?>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>: </span>
+                    <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if ($active('access')) { ?>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('User Access', 'Art des Zugangs') ?>: </span>
+                    <?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?>
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('Collaborative infrastructure', 'Verbundinfrastruktur') ?>: </span>
+                    <a href="#collaborative" class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></a>
+                </td>
+            </tr>
         <?php } ?>
 
-    </div>
+        <?php
+        // check if user has custom fields
+        $custom_fields = $osiris->adminFields->find()->toArray();
+        if (!empty($custom_fields)) {
+            foreach ($custom_fields as $field) {
+                if ($active($field['id']) && isset($infrastructure[$field['id']])) { ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
+                            <?= $infrastructure[$field['id']] ?>
+                        </td>
+                    </tr>
+        <?php }
+            }
+        } ?>
+    </table>
 
 
-    <hr>
 
     <h2>
         <i class="ph ph-users text-primary"></i>
@@ -489,7 +532,7 @@ $Vocabulary = new Vocabulary();
     ?>
 
 
-    <?php if ($infrastructure['collaborative'] ?? false) { ?>
+    <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
         <hr>
         <div id="collaborative">
             <h2>

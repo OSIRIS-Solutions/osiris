@@ -23,6 +23,24 @@ $infrastructures  = $osiris->infrastructures->find(
     [],
     ['sort' => ['end_date' => -1, 'start_date' => 1]]
 )->toArray();
+
+
+$data_fields = $Settings->get('infrastructure-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/infrastructure-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
+
+$active = function ($field) use ($data_fields) {
+    return in_array($field, $data_fields);
+};
 ?>
 
 <h1>
@@ -97,71 +115,79 @@ $infrastructures  = $osiris->infrastructures->find(
             <div class="title">Filter</div>
 
             <div id="active-filters"></div>
-            <h6>
-                <?= lang('By category', 'Nach Kategorie') ?>
-                <a class="float-right" onclick="filterInfra('#filter-category .active', null, 1)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-category" class="table small simple">
-                    <?php
-                    $vocab = $vocab = $Vocabulary->getValues('infrastructure-category');
-                    foreach ($vocab as $v) { ?>
-                        <tr>
-                            <td>
-                                <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn">
-                                    <span>
-                                        <?= lang($v['en'], $v['de'] ?? null) ?>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </div>
 
-            <h6>
-                <?= lang('By type', 'Nach Typ') ?>
-                <a class="float-right" onclick="filterInfra('#filter-type .active', null, 2)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-type" class="table small simple">
-                    <?php
-                    $vocab = $Vocabulary->getValues('infrastructure-type');
-                    foreach ($vocab as $v) { ?>
-                        <tr>
-                            <td>
-                                <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn">
-                                    <span>
-                                        <?= lang($v['en'], $v['de'] ?? null) ?>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </div>
 
-            <h6>
-                <?= lang('By access', 'Nach Zugang') ?>
-                <a class="float-right" onclick="filterInfra('#filter-access .active', null, 3)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-access" class="table small simple">
-                    <?php
-                    $vocab = $Vocabulary->getValues('infrastructure-access');
-                    foreach ($vocab as $v) { ?>
-                        <tr>
-                            <td>
-                                <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 3)" class="item" id="<?= $v['id'] ?>-btn">
-                                    <span>
-                                        <?= lang($v['en'], $v['de'] ?? null) ?>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </div>
+            <?php if ($active('type')) { ?>
+                <h6>
+                    <?= lang('By category', 'Nach Kategorie') ?>
+                    <a class="float-right" onclick="filterInfra('#filter-category .active', null, 1)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter">
+                    <table id="filter-category" class="table small simple">
+                        <?php
+                        $vocab = $vocab = $Vocabulary->getValues('infrastructure-category');
+                        foreach ($vocab as $v) { ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn">
+                                        <span>
+                                            <?= lang($v['en'], $v['de'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
+
+            <?php if ($active('infrastructure_type')) { ?>
+                <h6>
+                    <?= lang('By type', 'Nach Typ') ?>
+                    <a class="float-right" onclick="filterInfra('#filter-type .active', null, 2)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter">
+                    <table id="filter-type" class="table small simple">
+                        <?php
+                        $vocab = $Vocabulary->getValues('infrastructure-type');
+                        foreach ($vocab as $v) { ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn">
+                                        <span>
+                                            <?= lang($v['en'], $v['de'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
+
+            <?php if ($active('access')) { ?>
+                <h6>
+                    <?= lang('By access', 'Nach Zugang') ?>
+                    <a class="float-right" onclick="filterInfra('#filter-access .active', null, 3)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter">
+                    <table id="filter-access" class="table small simple">
+                        <?php
+                        $vocab = $Vocabulary->getValues('infrastructure-access');
+                        foreach ($vocab as $v) { ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 3)" class="item" id="<?= $v['id'] ?>-btn">
+                                        <span>
+                                            <?= lang($v['en'], $v['de'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
 
         </div>
     </div>

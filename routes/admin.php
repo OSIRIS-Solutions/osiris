@@ -306,6 +306,19 @@ Route::get('/admin/persons', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/admin/infrastructures', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Infrastructures", "Infrastrukturen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/infrastructures.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/admin/projects', function () {
     include_once BASEPATH . "/php/init.php";
