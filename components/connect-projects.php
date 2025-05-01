@@ -19,9 +19,10 @@
 $full_permission = $Settings->hasPermission('projects.edit');
 $filter = [];
 if (!$full_permission) {
-    $filter = ['persons.user' => $_SESSION['username']];
+    // make sure to include currently selected projects
+    $filter = ['$or' => [['persons.user' => $_SESSION['username']], ['_id' => ['$in' => $activity['projects']]]]];
 }
-$project_list = $osiris->projects->find($filter, ['projection'=> ['_id' => 1, 'name' => 1]])->toArray();
+$project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, 'name' => 1]])->toArray();
 ?>
 
 <form action="<?= ROOTPATH ?>/crud/activities/update-project-data/<?= $id ?>" method="post">
@@ -38,14 +39,14 @@ $project_list = $osiris->projects->find($filter, ['projection'=> ['_id' => 1, 'n
             if (!isset($doc['projects']) || empty($doc['projects'])) {
                 $doc['projects'] = [''];
             }
-            foreach ($doc['projects'] as $i => $con) { ?>
+            foreach ($activity['projects'] as $i => $con) { ?>
                 <tr>
                     <td class="w-full">
                         <select name="projects[<?= $i ?>]" id="projects-<?= $i ?>" class="form-control" required>
                             <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?> --</option>
                             <?php
                             foreach ($project_list as $s) { ?>
-                                <option <?= $con == $s['_id'] ? 'selected' : '' ?> value="<?=$s['_id']?>"><?= $s['name'] ?></option>
+                                <option <?= $con == $s['_id'] ? 'selected' : '' ?> value="<?= $s['_id'] ?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
                     </td>
