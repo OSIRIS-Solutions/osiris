@@ -27,6 +27,27 @@ $new_project = empty($form) || !isset($form['_id']);
 // get current url without query string
 $current_url = strtok($_SERVER["REQUEST_URI"], '?');
 
+$edit_perm = false;
+$status_perm = false;
+if (!$new_project) {
+    // check edit permission
+    $user_project = false;
+    $user_role = null;
+    $persons = $form['persons'] ?? array();
+    foreach ($persons as $p) {
+        if (strval($p['user']) == $_SESSION['username']) {
+            $user_project = True;
+            $user_role = $p['role'];
+            break;
+        }
+    }
+    if ($user_project == false && $form['created_by'] == $_SESSION['username']) {
+        $user_project = True;
+    }
+    $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
+    $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
+}
+
 
 function val($index, $default = '')
 {
@@ -137,6 +158,7 @@ if (empty($selected)) {
             $phase = $_GET['phase'] ?? $status;
         }
 
+
         $fields = $Project->getFields($type, $phase);
         $fields = array_column($fields, null, 'module');
         $field_keys = array_keys($fields);
@@ -149,6 +171,8 @@ if (empty($selected)) {
         $req = function ($field) use ($required_fields) {
             return in_array($field, $required_fields) ? 'required' : '';
         };
+
+
         ?>
 
         <h3 class="title">
@@ -158,7 +182,13 @@ if (empty($selected)) {
             <?= $subtitle ?>
         </p>
 
-        <?php if ($status == 'proposed' && $phase == 'approved') { ?>
+        <?php if ($status == 'proposed' && $phase == 'approved') {
+            if (!$status_perm) {
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('You do not have permission to edit this project.', 'Du hast keine Berechtigung, dieses Projekt zu bearbeiten.') . '</p>';
+                echo '</div>';
+                return;
+            }
+        ?>
             <?= lang('Status change', 'Statusänderung') ?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
@@ -167,7 +197,13 @@ if (empty($selected)) {
                 <i class="ph ph-warning"></i>
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
             </p>
-        <?php } else if ($status == 'proposed' && $phase == 'rejected') { ?>
+        <?php } else if ($status == 'proposed' && $phase == 'rejected') {
+            if (!$status_perm) {
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('You do not have permission to edit this project.', 'Du hast keine Berechtigung, dieses Projekt zu bearbeiten.') . '</p>';
+                echo '</div>';
+                return;
+            }
+        ?>
             <?= lang('Status change', 'Statusänderung') ?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
@@ -177,6 +213,11 @@ if (empty($selected)) {
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
             </p>
         <?php } else if (!$new_project && $status == $phase) {
+            if (!$edit_perm) {
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('You do not have permission to edit this project.', 'Du hast keine Berechtigung, dieses Projekt zu bearbeiten.') . '</p>';
+                echo '</div>';
+                return;
+            }
             echo lang('You edit the following status', 'Du bearbeitest den folgenden Status') . ': ';
             echo $Project->getStatus($status);
         } ?>

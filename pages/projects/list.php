@@ -90,16 +90,6 @@ $Vocabulary = new Vocabulary();
     }
 </style>
 
-<div class="btn-toolbar float-right">
-    <a href="<?= ROOTPATH ?>/visualize/map" class="btn secondary">
-        <i class="ph ph-map-trifold"></i>
-        <?= lang('Show on map', 'Zeige auf Karte') ?>
-    </a>
-    <!-- <a href="#<?= ROOTPATH ?>/visualize/projects" class="btn secondary" onclick="todo()">
-        <i class="ph ph-chart-line-up"></i>
-        <?= lang('Show metrics', 'Zeige Metriken') ?>
-    </a> -->
-</div>
 
 <h1 class="mt-0">
     <i class="ph ph-tree-structure text-osiris"></i>
@@ -107,12 +97,21 @@ $Vocabulary = new Vocabulary();
 </h1>
 
 
+<button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
+
+
 <div class="btn-toolbar">
 
-    <a href="<?= ROOTPATH ?>/projects/statistics" class="btn">
-        <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
-    </a>
+    <div class="btn-group">
+        <a href="<?= ROOTPATH ?>/projects/statistics" class="btn">
+            <i class="ph ph-chart-line-up"></i>
+            <?= lang('Statistics', 'Statistiken') ?>
+        </a>
+        <a href="<?= ROOTPATH ?>/visualize/map" class="btn">
+            <i class="ph ph-map-pin-line"></i>
+            <?= lang('Show on map', 'Karte') ?>
+        </a>
+    </div>
     <a href="<?= ROOTPATH ?>/projects/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
@@ -127,9 +126,6 @@ $Vocabulary = new Vocabulary();
 
 </div>
 
-
-
-<button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
 
 
 <div class="row row-eq-spacing">
@@ -175,6 +171,21 @@ $Vocabulary = new Vocabulary();
             <!-- <div id="searchpanes"></div> -->
 
             <div id="active-filters"></div>
+            <div class="filter">
+                <table id="filter-own" class="table small simple">
+                    <tr>
+                        <td>
+                            <a data-type="<?= $USER['username'] ?>" onclick="filterProjects(this, '<?= $USER['username'] ?>', 13)" class="item" id="<?= $USER['username'] ?>-btn">
+                                <span>
+                                    <i class="ph ph-user"></i>&nbsp;
+                                    <?= $USER['displayname'] ??  $USER['username'] ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
 
             <h6>
                 <?= lang('By type', 'Nach Projekttyp') ?>
@@ -332,6 +343,10 @@ $Vocabulary = new Vocabulary();
             key: 'applicant'
         },
         {
+            title: lang('Proposal-ID', 'Antrags-ID'),
+            key: 'proposal_id'
+        },
+        {
             title: lang('Units', 'Einheiten'),
             key: 'units'
         },
@@ -351,6 +366,11 @@ $Vocabulary = new Vocabulary();
             title: lang('Title', 'Titel'),
             key: 'title'
         },
+        {
+            title: lang('Staff', 'Mitarbeitende'),
+            key: 'persons'
+        }
+
     ]
 
     function renderType(data) {
@@ -631,6 +651,20 @@ $Vocabulary = new Vocabulary();
                     visible: false,
                     defaultContent: '',
                     header: lang('Title', 'Titel')
+                },
+                {
+                    target: 13,
+                    data: 'persons',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Staff', 'Mitarbeitende'),
+                    render: (data, type, row) => {
+                        if (Array.isArray(data)) {
+                            return data.map(a => a.user).join(', ')
+                        }
+                        return data
+                    }
                 }
             ],
             order: [

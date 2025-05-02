@@ -16,7 +16,11 @@ foreach ($persons as $p) {
         break;
     }
 }
-$edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
+if ($user_project == false && $project['created_by'] == $_SESSION['username']) {
+    $user_project = True;
+}
+$edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
+$status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
@@ -59,7 +63,7 @@ $Vocabulary = new Vocabulary();
     </div>
     <div class="status">
 
-        <?php if ($edit_perm) { ?>
+        <?php if ($status_perm) { ?>
             <?php if ($status == 'proposed') { ?>
                 <div class="dropdown">
                     <button class="badge status signal text-uppercase cursor-pointer" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
@@ -69,10 +73,6 @@ $Vocabulary = new Vocabulary();
                     <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                         <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
                         <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
-                        <div class="content">
-                            <i class="ph ph-warning text-signal"></i>
-                            <?= lang('You can no longer change the details of the application once you change the status.', 'Du kannst die Details des Antrages nicht mehr ändern, sobald du den Status änderst.') ?>
-                        </div>
                     </div>
                 </div>
             <?php } else if ($status == 'approved') { ?>
@@ -88,7 +88,10 @@ $Vocabulary = new Vocabulary();
             <?php } ?>
 
 
-        <?php } else {
+        <?php } else { ?>
+            <div class="text-right">
+
+            <?php
             switch ($status) {
                 case 'proposed':
                     echo "<span class='badge status signal'>" . lang('Proposed', 'Beantragt') . "</span>";
@@ -101,8 +104,13 @@ $Vocabulary = new Vocabulary();
                     break;
                 default:
                     break;
-            }
-        } ?>
+            } ?>
+            <br>
+            <small class="text-muted">
+                <?=lang('You don\t have permission<br>to change the status', 'Du hast keine Berechtigung,<br>um den Status zu ändern')?> 
+            </small>
+            </div>
+      <?php  } ?>
     </div>
 </div>
 
