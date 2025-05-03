@@ -428,6 +428,65 @@ if ($count > 0) {
     }
 }
 
+
+// migrate all projects with the type "Teilprojekt" to the new project type
+$projects = $osiris->projects->find(['type' => 'Teilprojekt'])->toArray();
+$count = count($projects);
+if ($count > 0) {
+    ?>
+    <h4>
+        <?= lang('Subprojects', 'Teilprojekte') ?>
+    </h4>
+    <p>
+        <?= lang('We have found ' . $count . ' projects with the type "Teilprojekt". In the future they will be of the same type as their parents but be flaged as subprojects', 'Wir haben ' . $count . ' Projekte mit dem Typ "Teilprojekt" gefunden. In Zukunft werden sie vom gleichen Typ wie ihre Eltern sein, aber als Teilprojekte gekennzeichnet sein.') ?>
+    </p>
+    <?php
+    flush();
+    ob_flush();
+    // now we need to migrate the old project types to the new ones
+    foreach ($projects as $project) {
+        // delete the old project
+        // $osiris->projects->deleteOne(['_id' => $project['_id']]);
+        // set up the base fields for the new project
+        $new_project = [
+            '_id' => $project['_id'],
+            'type' => $project['parent_type'] ?? 'third-party',
+            'status' => $project['status'] ?? 'project',
+            'subproject' => true,
+            "funding_program" => $project['funding_organization'] ?? null,
+        ];
+        // add the general fields to the project
+        foreach ($general_fields as $field) {
+            if (isset($project[$field]) && !array_key_exists($field, $new_project)) {
+                $new_project[$field] = $project[$field];
+            }
+        }
+        // add the new fields to the project
+        foreach ($fields_projects as $field) {
+            if (isset($project[$field]) && !array_key_exists($field, $new_project)) {
+                $new_project[$field] = $project[$field];
+            }
+        }
+        $replace = [
+            "public_title" => "name",
+            "public_title_de" => "name_de",
+            "public_subtitle" => "title",
+            "public_subtitle_de" => "title_de",
+            "public_abstract" => "abstract",
+            "public_abstract_de" => "abstract_de",
+            "public_image" => "image"
+        ];
+        // replace the old fields with the new ones, overwrite the new ones if they exist
+        foreach ($replace as $old => $new) {
+            if (isset($project[$old]) && !empty($project[$old])) {
+                $new_project[$new] = $project[$old];
+            }
+        }
+        dump($new_project);
+    }
+}
+
+
 // next migrate activities to use the ObjectId instead of the name string
 $activities = $osiris->activities->find(['projects' => ['$exists' => true, '$ne' => null]])->toArray();
 $count = count($activities);

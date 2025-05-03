@@ -48,6 +48,7 @@ $Vocabulary = new Vocabulary();
         border: 1px solid var(--danger-color);
     }
 </style>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 <div class="d-flex align-items-center justify-content-between">
@@ -62,7 +63,6 @@ $Vocabulary = new Vocabulary();
         </h2>
     </div>
     <div class="status">
-
         <?php if ($status_perm) { ?>
             <?php if ($status == 'proposed') { ?>
                 <div class="dropdown">
@@ -91,26 +91,26 @@ $Vocabulary = new Vocabulary();
         <?php } else { ?>
             <div class="text-right">
 
-            <?php
-            switch ($status) {
-                case 'proposed':
-                    echo "<span class='badge status signal'>" . lang('Proposed', 'Beantragt') . "</span>";
-                    break;
-                case 'approved':
-                    echo "<span class='badge status success'>" . lang('Approved', 'Bewilligt') . "</span>";
-                    break;
-                case 'rejected':
-                    echo "<span class='badge status danger'>" . lang('Rejected', 'Abgelehnt') . "</span>";
-                    break;
-                default:
-                    break;
-            } ?>
-            <br>
-            <small class="text-muted">
-                <?=lang('You don\t have permission<br>to change the status', 'Du hast keine Berechtigung,<br>um den Status zu ändern')?> 
-            </small>
+                <?php
+                switch ($status) {
+                    case 'proposed':
+                        echo "<span class='badge status signal'>" . lang('Proposed', 'Beantragt') . "</span>";
+                        break;
+                    case 'approved':
+                        echo "<span class='badge status success'>" . lang('Approved', 'Bewilligt') . "</span>";
+                        break;
+                    case 'rejected':
+                        echo "<span class='badge status danger'>" . lang('Rejected', 'Abgelehnt') . "</span>";
+                        break;
+                    default:
+                        break;
+                } ?>
+                <br>
+                <small class="text-muted">
+                    <?= lang('You don\t have permission<br>to change the status', 'Du hast keine Berechtigung,<br>um den Status zu ändern') ?>
+                </small>
             </div>
-      <?php  } ?>
+        <?php  } ?>
     </div>
 </div>
 
@@ -157,7 +157,6 @@ $Vocabulary = new Vocabulary();
 
     <?php } ?>
 
-
     <?php if ($Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)) { ?>
 
         <div class="dropdown">
@@ -185,16 +184,75 @@ $Vocabulary = new Vocabulary();
 </div>
 
 
+
+<nav class="pills mt-20" id="nav-tabs">
+    <button class="btn font-weight-bold active" id="general-btn" onclick="navigate('general')">
+        <i class="ph ph-file-text"></i>
+        <?= lang('Proposaldetails', 'Antragsdetails') ?>
+    </button>
+    <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
+        <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
+            <i class="ph ph-link m-0"></i>
+            <?= lang('Project', 'Projekt') ?>
+        </a>
+    <?php } ?>
+
+    <?php
+    $count_history = count($project['history'] ?? []);
+    if ($count_history) :
+    ?>
+        <button onclick="navigate('history')" id="btn-history" class="btn">
+            <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+            <?= lang('History', 'Historie') ?>
+            <span class="index"><?= $count_history ?></span>
+        </button>
+    <?php endif; ?>
+    <?php if ($Settings->hasPermission('raw-data')) { ?>
+        <button class="btn" style="--primary-color: var(--muted-color);--primary-color-20: var(--muted-color-20);" onclick="navigate('raw-data')" id="raw-data-btn">
+            <i class="ph ph-code"></i>
+            <?= lang('Raw data', 'Rohdaten') ?>
+        </button>
+    <?php } ?>
+</nav>
+
+<style>
+    .tabs {
+        margin-bottom: -1px;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .tabs .btn {
+        /* padding-bottom: 1rem; */
+        height: 3.2rem;
+        margin-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border: 1px solid var(--border-color);
+        box-shadow: none !important;
+        color: var(--primary-color);
+    }
+
+    .tabs .btn.active {
+        border: 1px solid var(--primary-color);
+        background-color: var(--primary-color-20);
+        color: var(--primary-color);
+    }
+</style>
+
 <section id="general">
+
     <?php
     $mentioned_fields = [];
     $phases = ['proposed'];
     ?>
-
-
     <div class="row row-eq-spacing mt-0">
         <div class="col-md-8">
-            <div class="pills my-20" id="status-tabs">
+            <h2>
+                <?= lang('Proposal details', 'Antragsdetails') ?>
+            </h2>
+
+            <div class="tabs" id="status-tabs">
                 <button class="btn font-weight-bold active" style="--primary-color: var(--signal-color);--primary-color-20: var(--signal-color-20);" onclick="selectTab('proposal')" id="proposal-btn">
                     <i class="ph ph-file-text"></i>
                     <?= lang('Proposal', 'Antrag') ?>
@@ -211,22 +269,7 @@ $Vocabulary = new Vocabulary();
                         <?= lang('Rejection', 'Ablehnungs') ?>
                     </button>
                 <?php } ?>
-                <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
-                    <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
-                        <i class="ph ph-link m-0"></i>
-                        <?= lang('Project', 'Projekt') ?>
-                    </a>
-                <?php } ?>
-                <?php if ($Settings->hasPermission('raw-data')) { ?>
-                    <button class="btn" style="--primary-color: var(--muted-color);--primary-color-20: var(--muted-color-20);" onclick="selectTab('raw-data')" id="raw-data-btn">
-                        <i class="ph ph-code"></i>
-                        <?= lang('Raw data', 'Rohdaten') ?>
-                    </button>
-                <?php } ?>
-
-
             </div>
-
             <table class="table" id="proposal-details">
                 <tbody>
                     <?php
@@ -327,14 +370,6 @@ $Vocabulary = new Vocabulary();
                 </table>
             <?php } ?>
 
-            <div id="raw-data-details" style="display:none;">
-                <div class="box overflow-x-auto mt-0">
-                    <?php
-                    dump($project);
-                    ?>
-                </div>
-            </div>
-
             <script>
                 // select tab function
                 function selectTab(tab) {
@@ -352,18 +387,15 @@ $Vocabulary = new Vocabulary();
         </div>
 
         <div class="col-md-4">
-            <br>
-            <h3>
+            <h2>
                 <?= lang('Proposal members', 'Beteiligte Personen') ?>
-
-                <?php if ($edit_perm) { ?>
-                    <a href="#persons" data-toggle="tooltip" data-title="<?= lang('Edit persons', 'Personen bearbeiten') ?>">
-                        <i class="ph ph-edit"></i>
-                    </a>
-                <?php } ?>
-            </h3>
+            </h2>
 
             <?php if ($edit_perm) { ?>
+                <a href="#persons" class="btn small primary mb-5">
+                    <i class="ph ph-edit"></i>
+                    <?= lang('Edit persons', 'Personen bearbeiten') ?>
+                </a>
                 <div class="modal" id="persons" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -402,8 +434,8 @@ $Vocabulary = new Vocabulary();
                                             $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
                                             foreach ($persons as $i => $con) { ?>
                                                 <tr>
-                                                    <td class="">
-                                                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control">
+                                                    <td>
+                                                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control" required>
                                                             <?php
                                                             foreach ($all_users as $s) { ?>
                                                                 <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
@@ -413,7 +445,7 @@ $Vocabulary = new Vocabulary();
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control">
+                                                        <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control" required>
                                                             <?php
                                                             $role = $con['role'] ?? '';
                                                             $vocab = $Vocabulary->getValues('project-person-role');
@@ -422,24 +454,24 @@ $Vocabulary = new Vocabulary();
                                                             <?php } ?>
                                                         </select>
                                                     </td>
-                                                  <td>
-                                                  <?php
-                                                    $selected = DB::doc2Arr($con['units'] ?? []);
-                                                    if (!is_array($selected)) $selected = [];
-                                                    $person_units = $osiris->persons->findOne(['username' => $con['user']], ['units' => 1]);
-                                                    $person_units = $person_units['units'] ?? [];
-                                                    if (empty($person_units)) {
-                                                        echo '<small class="text-danger">No units found</small>';
-                                                    } else {
-                                                        $person_units = array_column(DB::doc2Arr($person_units), 'unit');
-                                                    ?>
-                                                        <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
-                                                            <?php foreach ($person_units as $unit) { ?>
-                                                                <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    <?php } ?>
-                                                  </td>
+                                                    <td>
+                                                        <?php
+                                                        $selected = DB::doc2Arr($con['units'] ?? []);
+                                                        if (!is_array($selected)) $selected = [];
+                                                        $person_units = $osiris->persons->findOne(['username' => $con['user']], ['units' => 1]);
+                                                        $person_units = $person_units['units'] ?? [];
+                                                        if (empty($person_units)) {
+                                                            echo '<small class="text-danger">No units found</small>';
+                                                        } else {
+                                                            $person_units = array_column(DB::doc2Arr($person_units), 'unit');
+                                                        ?>
+                                                            <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem" class="person-units">
+                                                                <?php foreach ($person_units as $unit) { ?>
+                                                                    <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        <?php } ?>
+                                                    </td>
                                                     <td>
                                                         <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
                                                     </td>
@@ -448,7 +480,7 @@ $Vocabulary = new Vocabulary();
                                         </tbody>
                                         <tfoot>
                                             <tr id="last-row">
-                                                <td colspan="2">
+                                                <td colspan="4">
                                                     <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
                                                 </td>
                                             </tr>
@@ -469,8 +501,16 @@ $Vocabulary = new Vocabulary();
                                     function addProjectRow() {
                                         counter++;
                                         const row = tr.clone()
-                                        row.find('select').first().attr('name', 'persons[' + counter + '][user]');
-                                        row.find('select').last().attr('name', 'persons[' + counter + '][role]');
+                                        row.find('select').each(function() {
+                                            const name = $(this).attr('name')
+                                            const new_name = name.replace(/\d+/, counter)
+                                            $(this).attr('name', new_name)
+                                            $(this).val('')
+                                        })
+
+                                            //remove units 
+                                        row.find('select[id^="units"]').remove()
+
                                         $('#project-list').append(row)
                                     }
                                 </script>
@@ -518,10 +558,10 @@ $Vocabulary = new Vocabulary();
                 </tbody>
             </table>
 
-            <h5>
-                <?= lang('Associated units', 'Zugehörige Einheiten') ?>
-            </h5>
-            <table class="table">
+            <h2>
+                <?= lang('Units', 'Einheiten') ?>
+            </h2>
+            <table class="table unit-table w-full">
                 <tbody>
                     <?php
                     $units = $project['units'] ?? [];
@@ -532,7 +572,7 @@ $Vocabulary = new Vocabulary();
 
                         foreach ($tree as $row) { ?>
                             <tr>
-                                <td style="padding-left: <?= ($row['indent'] * 2 + 2) . 'rem' ?>;">
+                                <td class="indent-<?= ($row['indent']) ?>">
                                     <a href="<?= ROOTPATH ?>/groups/view/<?= $row['id'] ?>">
                                         <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                     </a>
@@ -548,4 +588,106 @@ $Vocabulary = new Vocabulary();
         </div>
     </div>
 
+</section>
+
+<!-- raw data -->
+<section id="raw-data" style="display: none;">
+    <h2 class="title">
+        <?= lang('Raw data', 'Rohdaten') ?>
+    </h2>
+    <p>
+        <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
+    </p>
+    <div class="box overflow-x-auto mt-0">
+        <?php
+        dump($project);
+        ?>
+    </div>
+
+</section>
+
+
+<!-- new section with history -->
+<section id="history" style="display: none;">
+    <h2 class="title">
+        <?= lang('History', 'Historie') ?>
+    </h2>
+    <p>
+        <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
+    </p>
+
+    <?php
+    if (empty($project['history'] ?? [])) {
+        echo lang('No history available.', 'Keine Historie verfügbar.');
+    } else {
+    ?>
+        <div class="history-list">
+            <?php foreach (($project['history']) as $h) {
+                if (!isset($h['type'])) continue;
+            ?>
+                <div class="box p-20">
+                    <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
+                    <h5 class="m-0">
+                        <?php if ($h['type'] == 'created') {
+                            echo lang('Created by ', 'Erstellt von ');
+                        } else if ($h['type'] == 'edited') {
+                            echo lang('Edited by ', 'Bearbeitet von ');
+                        } else if ($h['type'] == 'imported') {
+                            echo lang('Imported by ', 'Importiert von ');
+                        } else {
+                            echo $h['type'] . lang(' by ', ' von ');
+                        }
+                        if (isset($h['user']) && !empty($h['user'])) {
+                            echo '<a href="' . ROOTPATH . '/profile/' . $h['user'] . '">' . $DB->getNameFromId($h['user']) . '</a>';
+                        } else {
+                            echo "System";
+                        }
+                        ?>
+                    </h5>
+
+                    <?php
+                    if (isset($h['changes']) && !empty($h['changes'])) {
+                        echo '<div class="font-weight-bold mt-10">' .
+                            lang('Changes to the project:', 'Änderungen am Projekt:') .
+                            '</div>';
+                        echo '<table class="table simple w-auto small border px-10">';
+                        foreach ($h['changes'] as $key => $change) {
+                            $before = $change['before'] ?? '<em>empty</em>';
+                            $after = $change['after'] ?? '<em>empty</em>';
+                            if ($before == $after) continue;
+                            if (empty($before)) $before = '<em>empty</em>';
+                            if (empty($after)) $after = '<em>empty</em>';
+                            echo '<tr>
+                                <td class="pl-0">
+                                    <span class="key">' . $Project->printLabel($key) . '</span> 
+                                    <span class="del">' . $before . '</span>
+                                    <i class="ph ph-arrow-right mx-10"></i>
+                                    <span class="ins">' . $after . '</span>
+                                </td>
+                            </tr>';
+                        }
+                        echo '</table>';
+                    } else  if (isset($h['data']) && !empty($h['data'])) {
+                        echo '<div class="font-weight-bold mt-10">' .
+                            lang('Status at this time point:', 'Status zu diesem Zeitpunkt:') .
+                            '</div>';
+
+                        echo '<table class="table simple w-auto small border px-10">';
+                        foreach ($h['data'] as $key => $datum) {
+                            echo '<tr>
+                                <td class="pl-0">
+                                    <span class="key">' . $Modules->get_name($key) . '</span> 
+                                    ' . $datum . ' 
+                                </td>
+                            </tr>';
+                        }
+                        echo '</table>';
+                    } else if ($h['type'] == 'edited') {
+                        echo lang('No changes tracked.', 'Es wurden keine Änderungen verfolgt.');
+                    }
+                    ?>
+                </div>
+            <?php } ?>
+        </div>
+    <?php } ?>
 </section>

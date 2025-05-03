@@ -129,7 +129,8 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
 }
 
 
-function renderAuthorUnitsMany($filter = []){
+function renderAuthorUnitsMany($filter = [])
+{
     $DB = new DB;
     $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'units' => 1, 'start_date' => 1]]);
     foreach ($cursor as $doc) {
@@ -140,14 +141,80 @@ function renderAuthorUnitsMany($filter = []){
         );
     }
 }
-function renderAuthorUnitsProjects($filter = []){
+function renderAuthorUnitsProjects($filter = [])
+{
     $DB = new DB;
     $cursor = $DB->db->projects->find($filter, ['projection' => ['persons' => 1, 'units' => 1, 'start_date' => 1]]);
     foreach ($cursor as $doc) {
         $doc = renderAuthorUnits($doc, [], 'persons');
         $DB->db->projects->updateOne(
             ['_id' => $doc['_id']],
-            ['$set' => $doc]
+            ['$set' => ['units' => $doc['units'] ?? []]]
         );
     }
+}
+
+function renderProject($doc, $col = 'projects', $id = null)
+{
+    global $Groups;
+    $project = [];
+    if (isset($id)) {
+        $DB = new DB;
+        $project = $DB->db->$col->findOne(
+            ['_id' => $id],
+            ['projection' => ['start' => 1, 'end' => 1, 'start_date' => 1, 'end_date' => 1, 'start_proposed' => 1, 'end_proposed' => 1]]
+        );
+    }
+    if (isset($doc['start'])) {
+        $doc['start_date'] = valueFromDateArray($doc['start']);
+    } elseif (isset($doc['start_proposed'])) {
+        $doc['start_date'] = $doc['start_proposed'];
+    } elseif (isset($project['start'])) {
+        $doc['start_date'] = valueFromDateArray($project['start']);
+    } elseif (isset($project['start_proposed'])) {
+        $doc['start_date'] = $project['start_proposed'];
+    }
+    if (isset($doc['end'])) {
+        $doc['end_date'] = valueFromDateArray($doc['end']);
+    } elseif (isset($doc['end_proposed'])) {
+        $doc['end_date'] = $doc['end_proposed'];
+    } elseif (isset($project['end'])) {
+        $doc['end_date'] = valueFromDateArray($project['end']);
+    } elseif (isset($project['end_proposed'])) {
+        $doc['end_date'] = $project['end_proposed'];
+    }
+    if (isset($doc['persons'])) {
+        if (isset($doc['start_date']) && $id == null) {
+            $units = [];
+            $startdate = strtotime($doc['start_date']);
+            // initialize units
+            foreach ($doc['persons'] as $i => $author) {
+                $user = $author['user'];
+                $person = $DB->getPerson($user);
+                if (isset($person['units']) && !empty($person['units'])) {
+                    $u = DB::doc2Arr($person['units']);
+                    // filter units that have been active at the time of activity
+                    $u = array_filter($u, function ($unit) use ($startdate) {
+                        if (!$unit['scientific']) return false; // we are only interested in scientific units
+                        if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
+                        return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
+                    });
+                    $u = array_column($u, 'unit');
+                    $doc['persons'][$i]['units'] = $u;
+                    $units = array_merge($units, $u);
+                }
+            }
+            
+        } else {
+            $units = flatten(array_column($doc['persons'], 'units'));
+        }
+        $units = array_unique($units);
+            foreach ($units as $unit) {
+                $units = array_merge($units, $Groups->getParents($unit, true));
+            }
+            $units = array_unique($units);
+            $doc['units'] = array_values($units);
+        // $doc = renderAuthorUnits($doc, [], 'persons');
+    }
+    return $doc;
 }

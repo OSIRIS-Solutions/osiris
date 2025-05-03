@@ -1298,37 +1298,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
     </p>
 
-    <style>
-        .history-list {
-            /* reverse order */
-            display: flex;
-            flex-direction: column-reverse;
-        }
-
-        .history-list .box {
-            margin-top: 0;
-        }
-
-        .del {
-            color: var(--danger-color);
-        }
-
-        .ins {
-            color: var(--success-color);
-        }
-
-        blockquote.signal {
-            border-left: 5px solid var(--signal-color);
-            padding-left: 1rem;
-            margin-top: 1rem;
-            margin-left: 0;
-        }
-
-        blockquote.signal .title {
-            font-weight: bold;
-            color: var(--signal-color);
-        }
-    </style>
     <?php
     if (empty($doc['history'] ?? [])) {
         echo lang('No history available.', 'Keine Historie verfügbar.');

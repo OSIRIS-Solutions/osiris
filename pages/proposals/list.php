@@ -526,6 +526,11 @@ $filter = [];
                     data: 'name',
                     render: function(data, type, row) {
                         console.log(row);
+                        let persons = '';
+                        if (row.persons && row.persons.length > 0) {
+                            persons = row.persons.map(a => a.name).join(', ')
+                        }
+
                         // row.persons.map(a => a.name).join(', ')
                         return `
                         ${renderTopic(row.topics)}
@@ -537,7 +542,7 @@ $filter = [];
                         <div class="flex-grow-1">
                          <p class="text-muted mt-0">${renderDate(row)}</p>
                         
-                        ${row.persons.map(a => a.name).join(', ')}
+                        ${persons}
 
                         </div>
                         <hr />
@@ -573,6 +578,7 @@ $filter = [];
                     data: 'start_date',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     header: lang('Start date', 'Startdatum')
                 },
                 {
@@ -580,6 +586,7 @@ $filter = [];
                     data: 'end_date',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     header: lang('End date', 'Enddatum')
                 },
                 {

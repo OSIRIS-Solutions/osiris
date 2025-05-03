@@ -393,14 +393,22 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
 
-    $values = validateValues($_POST['values'], $DB);
 
-    // check if project name already exists:
-    $project_exist = $osiris->$collection->findOne(['name' => $values['name']]);
-    if (!empty($project_exist)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=project ID does already exist.");
+    $values = validateValues($_POST['values'], $DB);
+    if (!isset($values['type']) || !isset($values['name'])) {
+        header("Location: " . ROOTPATH . "/$collection/new?msg=missing-parameters");
         die();
     }
+
+    // check if project name already exists:
+    // $project_exist = $osiris->$collection->findOne(['name' => $values['name']]);
+    // if (!empty($project_exist)) {
+    //     header("Location: " . ROOTPATH . "/$collection?msg=project ID does already exist.");
+    //     die();
+    // }
+    // get project type
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
 
     // add information on creating process
     $values['created'] = date('Y-m-d');
@@ -435,7 +443,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
     // add persons
     $persons = [];
-    foreach (['contact', 'scholar', 'supervisor', 'applicant'] as $key) {
+    foreach (['contact', 'scholar', 'supervisor', 'applicants'] as $key) {
         if (!isset($values[$key]) || empty($values[$key])) continue;
         $persons[] = [
             'user' => $values[$key],
@@ -446,8 +454,6 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (!empty($persons)) {
         $values['persons'] = $persons;
     }
-    include_once BASEPATH . "/php/Render.php";
-    $values = renderAuthorUnits($values, [], 'persons');
 
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
@@ -478,6 +484,8 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     //         );
     //     }
     // }
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderProject($values);
 
     $insertOneResult  = $osiris->$collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
@@ -490,6 +498,19 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $osiris->activities->updateMany(
             ['funding' => ['$in' => $values['funding_number']]],
             ['$push' => ['projects' => $id]]
+        );
+    }
+
+    // check for notifications on create
+    if (!empty($type['notification_created'] ?? null)) {
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        $tag = $collection == 'projects' ? 'project' : 'proposal';
+        $DB->addMessages(
+            $type['notification_created'],
+            'New project has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            $tag,
+            "/$collection/view/" . $id,
         );
     }
 
@@ -508,15 +529,14 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
 Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
 
-    // $user_project = in_array($user, array_column(DB::doc2Arr($project['persons']), 'user'));
-    // $edit_perm = ($Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
-
-    // if (!$edit_perm) {
-    //     header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
-    //     die;
-    // }
+    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
 
     $values = validateValues($_POST['values'], $DB);
     // add information on creating process
@@ -529,8 +549,6 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     if (isset($values['persons']) && !empty($values['persons'])) {
         $values['persons'] = array_values($values['persons']);
-        include_once BASEPATH . "/php/Render.php";
-        $values = renderAuthorUnits($values, [], 'persons');
     }
 
     if (isset($values['funding_number'])) {
@@ -568,12 +586,34 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     //     );
     // }
 
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
+    
+    // get history of project
+    $values = $Project->updateHistory($values, $id, $collection);
+
+    // check for notifications on create
+    if (!empty($type['notification_changed'] ?? null)) {
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        $tag = $collection == 'projects' ? 'project' : 'proposal';
+        $DB->addMessages(
+            $type['notification_changed'],
+            'Project has been changed by ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Projekt wurde geändert von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            $tag,
+            "/$collection/view/" . $id . '#section-history',
+        );
+    }
+
+
     $id = $DB->to_ObjectID($id);
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderProject($values, $id);
+
     $updateResult = $osiris->$collection->updateOne(
         ['_id' => $id],
         ['$set' => $values]
     );
-
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
@@ -628,28 +668,38 @@ Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
 
 Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
-    // get date from old project
-    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['start_date' => 1, 'end_date' => 1]]);
-    if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
-        die;
-    }
+    include_once BASEPATH . "/php/Project.php";
     $values = $_POST['persons'];
     foreach ($values as $i => $p) {
         $values[$i]['name'] =  $DB->getNameFromId($p['user']);
     }
     // avoid object transformation
     $values = array_values($values);
-    $values = ["persons" => $values];
+    $values = ['persons' => $values];
 
-
+    $id = $DB->to_ObjectID($id);
     include_once BASEPATH . "/php/Render.php";
-    // start and end date are needed for the persons
-    $values['start_date'] = $project['start_date'] ?? null;
-    $values['end_date'] = $project['end_date'] ?? null;
-    $values = renderAuthorUnits($values, [], 'persons');
-    unset($values['start_date']);
-    unset($values['end_date']);
+    $values = renderProject($values, $collection, $id);
+
+    
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
+    
+    // get history of project
+    $values = $Project->updateHistory($values, $id, $collection);
+
+    // check for notifications on create
+    if (!empty($type['notification_changed'] ?? null)) {
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        $tag = $collection == 'projects' ? 'project' : 'proposal';
+        $DB->addMessages(
+            $type['notification_changed'],
+            'Persons of a project have been changed by ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            $tag,
+            "/$collection/view/" . $id . '#section-history',
+        );
+    }
 
     $osiris->$collection->updateOne(
         ['_id' => $DB::to_ObjectID($id)],
@@ -705,7 +755,7 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
 
 Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    
+
     $target_dir = BASEPATH . "/uploads/";
     if (!is_writable($target_dir)) {
         die("Upload directory $target_dir is unwritable. Please contact admin.");

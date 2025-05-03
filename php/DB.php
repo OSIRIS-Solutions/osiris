@@ -131,7 +131,6 @@ class DB
         }
         return $doc;
     }
-
     function notifications($force = false)
     {
         $notifications = [
@@ -143,18 +142,27 @@ class DB
             'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
         ];
+
         $now = time();
         $user = $_SESSION['username'] ?? null;
         $last = $_SESSION['last_notification_check'] ?? 0;
-        $hasNotification = $_SESSION['has_notifications'] ?? false;
-        $issues = array();
+        $issues = [];
+
         if (empty($user)) return $issues;
 
-        // check every minute if user has notifications
-        if ($now - $last > 60 || $force) {
-            // check if new issues were added for user
-            $hasNotification = 0;
+        // Immer: aktuelles Notifications-Dokument laden (falls vorhanden)
+        $existing = $this->db->notifications->findOne(['user' => $user]);
+        $messages = $existing['messages'] ?? []; // bestehende Nachrichten beibehalten
+        $messages = DB::doc2Arr($messages);
+        $messages = array_filter($messages, function ($msg) {
+            return !($msg['read'] ?? false);
+        });
 
+        if ($now - $last > 60 || $force) {
+            // ➤ Nur bei Bedarf: aufwendige Checks durchführen
+            $hasNotification = count($messages);
+
+            // Prüfe auf Probleme ("Issues")
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
@@ -176,7 +184,7 @@ class DB
                 $hasNotification += $issues['activity']['count'];
             }
 
-            // check for queue
+            // Prüfe auf Warteschlange
             $queue = $this->db->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
             if ($queue !== 0) {
                 $issues['queue'] = [
@@ -187,7 +195,7 @@ class DB
                 $hasNotification += $queue;
             }
 
-            // check for new version
+            // Prüfe auf neue OSIRIS-Version
             $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
             if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
                 $issues['version'] = [
@@ -198,10 +206,10 @@ class DB
                 $hasNotification += 1;
             }
 
-            $reportingEnabled = $this->db->adminFeatures->findOne(['feature'=>'quarterly-reporting']);
+            // Prüfe auf Quartalsfreigabe
+            $reportingEnabled = $this->db->adminFeatures->findOne(['feature' => 'quarterly-reporting']);
             $reportingEnabled = $reportingEnabled['enabled'] ?? true;
             if ($reportingEnabled) {
-                // check for approval of activities
                 $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
                 $roles = DB::doc2Arr($scientist['roles'] ?? []);
                 $lastquarter = $this->getLastQuarter();
@@ -214,32 +222,109 @@ class DB
                     $hasNotification += 1;
                 }
             }
+
+            // ➤ Jetzt: Speichern in der Datenbank
             if ($hasNotification > 0) {
-                // save in DB
                 $this->db->notifications->updateOne(
                     ['user' => $user],
-                    ['$set' => ['issues' => $issues]],
+                    ['$set' => [
+                        'issues' => $issues,
+                        'last_update' => time()
+                    ]],
                     ['upsert' => true]
                 );
             } else {
-                $hasNotification = false;
-                // delete from DB
-                $this->db->notifications->deleteOne(['user' => $user]);
+                // keine aktuellen Issues → nur Issues leeren, Nachrichten bleiben erhalten
+                $this->db->notifications->updateOne(
+                    ['user' => $user],
+                    ['$set' => [
+                        'issues' => [],
+                        'last_update' => time()
+                    ]],
+                    ['upsert' => true]
+                );
             }
+
             // Session aktualisieren
             $_SESSION['last_notification_check'] = $now;
             $_SESSION['has_notifications'] = $hasNotification;
         } else {
+            // ➤ kein Check notwendig: aktuelle Issues aus DB holen
             // check if user has notifications in DB
             $doc = $this->db->notifications->findOne(['user' => $user]);
             if (!empty($doc)) {
-                $issues = DB::doc2Arr($doc['issues']);
+                $issues = DB::doc2Arr($doc['issues'] ?? []);
+                $messages = DB::doc2Arr($doc['messages'] ?? []);
+                $messages = array_filter($messages, function ($msg) {
+                    return !($msg['read'] ?? false);
+                });
                 // $hasNotification = array_sum(array_map("count", $issues));
             } else {
                 // $hasNotification = false;
             }
         }
+        if (!empty($messages)) {
+            $issues['messages'] = $messages;
+        }
+
         return $issues;
+    }
+
+    function addMessage($user, $en, $de = null, $type = 'general', $link = null)
+    {
+        if (empty($user) || empty($en)) return false;
+
+        $message = [
+            'id' => uniqid(),
+            'en' => $en,
+            'de' => $de ?? $en,
+            'created_at' => time(),
+            'read' => false,
+            'type' => $type,
+            'link' => $link
+        ];
+
+        $this->db->notifications->updateOne(
+            ['user' => $user],
+            ['$push' => ['messages' => $message]],
+            ['upsert' => true]
+        );
+
+        return true;
+    }
+
+    function addMessages($group, $en, $de = null, $type = 'general', $link = null)
+    {
+        if (empty($group) || empty($en)) return false;
+
+        $users = [];
+        if (str_starts_with($group, 'role:')) {
+            $role = substr($group, 5);
+            $users = $this->db->persons->find(
+                ['roles' => $role, 'is_active' => ['$ne' => false]],
+                ['projection' => ['username' => 1, '_id' => 0]]
+            )->toArray();
+            $users = array_column($users, 'username');
+        } else if (str_starts_with($group, 'user:')) {
+            $users = [substr($group, 5)];
+        }
+        if (empty($users)) return false;
+        foreach ($users as $user) {
+            $this->addMessage($user, $en, $de, $type, $link);
+        }
+
+        return true;
+    }
+
+    function getMessages($user = null, $type = null)
+    {
+        if ($user === null) $user = $_SESSION['username'];
+        if (empty($user)) return array();
+        $filter = ['user' => $user];
+        if (!empty($type)) $filter['type'] = $type;
+        $doc = $this->db->notifications->findOne($filter, ['projection' => ['messages' => 1], 'sort' => ['created_at' => -1]]);
+        if (empty($doc)) return array();
+        return DB::doc2Arr($doc['messages']);
     }
 
     function getLastQuarter()
@@ -895,7 +980,7 @@ class DB
     public static function convert4humans($doc)
     {
 
-        $omit_fields = ['_id', 'history', 'rendered', 'comment', 'editor-comment', 'journal_id', 'impact'];
+        $omit_fields = ['_id', 'history', 'rendered', 'comment', 'editor-comment', 'journal_id', 'impact', 'cooperative', 'files', 'affiliated_positions', 'affiliated', 'projects'];
 
         $result = [];
 
@@ -909,7 +994,13 @@ class DB
             if ($val instanceof BSONArray || $val instanceof BSONDocument) {
                 $val = DB::doc2Arr($val);
             }
-            if (is_array($val)) $val = json_encode($val);
+            if (is_array($val)) {
+                if (is_string($val[0])) {
+                    $val = implode(', ', $val);
+                } else {
+                    $val = json_encode($val);
+                }
+            }
             $val = strip_tags($val);
             $result[$key] = $val;
         }

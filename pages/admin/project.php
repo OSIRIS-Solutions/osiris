@@ -257,7 +257,9 @@ if ($process == 'project') {
                     <?= lang('Deactivated projects are retained for past activities, but no new ones can be added.', 'Deaktivierte Projektkategorien bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
                 </span>
 
-                <hr>
+            </div>
+            <hr>
+            <div class="content">
 
                 <h5>
                     <?= lang('Proposals', 'Anträge') ?>
@@ -265,8 +267,8 @@ if ($process == 'project') {
 
                 <p class="text-muted">
                     <?= lang(
-                        'A project can either be created directly or go through an submission phase first. Depending on the type of project, it makes sense to only include new projects as proposals or to omit the proposal phase completely.',
-                        'Ein Projekt kann entweder direkt angelegt werden oder durchläuft zuerst eine Antragsphase. Je nach Art des Projekts ist es sinnvoll, neue Projekte nur als Antrag aufzunehmen oder die Anträge komplett wegzulassen.'
+                        'A project can either be created directly or go through an submission phase first. Depending on the type of project, it makes sense to only include new projects as proposals or to omit the proposal phase completely. Financial data is not available for projects.',
+                        'Ein Projekt kann entweder direkt angelegt werden oder durchläuft zuerst eine Antragsphase. Je nach Art des Projekts ist es sinnvoll, neue Projekte nur als Antrag aufzunehmen oder die Anträge komplett wegzulassen. Finanzdaten sind allerdings für Projekte nicht verfügbar.'
                     ) ?>
                 </p>
 
@@ -298,6 +300,64 @@ if ($process == 'project') {
                     </div>
                 </div>
 
+
+            </div>
+            <hr>
+            <div class="content">
+                <h5>
+                    <?= lang('Notifications', 'Benachrichtigungen') ?>
+                </h5>
+
+                <?= lang('Select role or user that should be notified when new proposals/projects of this type are <b>created</b>.', 'Wähle die Rolle oder den Benutzer, der benachrichtigt werden soll, wenn neue Anträge/Projekte dieses Typs <b>erstellt</b> werden.') ?>
+                <div class="form-group">
+                    <?php
+                    $notification = $project['notification_created'] ?? '';
+                    ?>
+
+                    <select name="values[notification_created]" id="notification" class="form-control">
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="" disabled>--- <?= lang('Roles', 'Rollen') ?> ---</option>
+                        <?php
+                        foreach ($Settings->get('roles') as $role) { ?>
+                            <option value="role:<?= $role ?>" <?= $notification  == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
+                        <?php } ?>
+                        <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
+                        <?php foreach ($osiris->users->find([], ['sort' => ['last' => 1]]) as $u) { ?>
+                            <option value="user:<?= $u['username'] ?>" <?= $notification  == ('user:' .$u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
+                        <?php } ?>
+                    </select>
+                    <div class="custom-checkbox mt-10">
+                        <input type="hidden" name="values[notification_created_email]" value="0">
+                        <input type="checkbox" id="notification_created_email" value="1" name="values[notification_created_email]" <?= ($project['notification_created_email'] ?? false) ? 'checked' : '' ?>>
+                        <label for="notification_created_email"><?= lang('Per Mail', 'Via Email') ?></label>
+                    </div>
+                </div>
+                <hr>
+
+                <?= lang('Select role or user that should be notified when proposals/projects of this type are <b>changed</b>.', 'Wähle die Rolle oder den Benutzer, der benachrichtigt werden soll, wenn Anträge/Projekte dieses Typs <b>bearbeitet</b> werden.') ?>
+                <div class="form-group">
+                    <?php
+                    $notification = $project['notification_changed'] ?? '';
+                    ?>
+
+                    <select name="values[notification_changed]" id="notification" class="form-control">
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <?php
+                        foreach ($Settings->get('roles') as $role) { ?>
+                            <option value="role:<?= $role ?>" <?= $notification == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
+                        <?php } ?>
+                        <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
+                        <?php foreach ($osiris->users->find([], ['sort' => ['last' => 1]]) as $u) { ?>
+                            <option value="user:<?= $u['username'] ?>" <?= $notification == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
+                        <?php } ?>
+                    </select>
+                    <div class="custom-checkbox mt-10">
+                        <input type="hidden" name="values[notification_changed_email]" value="0">
+                        <input type="checkbox" id="notification_changed_email" value="1" name="values[notification_changed_email]" <?= ($project['notification_changed_email'] ?? false) ? 'checked' : '' ?>>
+                        <label for="notification_changed_email"><?= lang('Per Mail', 'Via Email') ?></label>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -323,7 +383,7 @@ if ($process == 'project') {
     ?>
 
         <?php
-            foreach ($phases as $phase) {
+        foreach ($phases as $phase) {
             $phase_id = $phase['id'];
             if (isset($project['phases']))
                 foreach ($project['phases'] as $p) {
@@ -423,8 +483,6 @@ if ($process == 'project') {
                             </label>
                         </div>
                     <?php } ?>
-
-
                 </div>
             </div>
         <?php } ?>
@@ -493,6 +551,15 @@ if ($process == 'project') {
     <?php } ?>
 
 <?php } ?>
+
+
+<?php
+// create time stamp
+// $timestamp = time();
+// dump($timestamp);
+// $date = date('Y-m-d H:i:s', $timestamp);
+// dump($date);
+?>
 
 <?php if (isset($_GET['verbose'])) {
     dump($project);

@@ -836,7 +836,9 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
             );
         }
 
-        $values['disabled'] = $values['disabled'] ?? false;
+        $values['disabled'] = boolval($values['disabled'] ?? false);
+        $values['notification_changed_email'] = boolval($values['notification_changed_email'] ?? false);
+        $values['notification_created_email'] = boolval($values['notification_created_email'] ?? false);
 
         $updateResult = $collection->updateOne(
             ['_id' => $mongo_id],

@@ -290,6 +290,10 @@ class Project extends Vocabulary
             case 'scholar':
             case 'supervisor':
                 return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
+            case 'persons':
+                $value = DB::doc2Arr($value);
+                $value = array_column($value, 'user');
+                // continue with applicants
             case 'applicants':
                 $applicants = DB::doc2Arr($value);
                 $applicantsList = '';
@@ -745,4 +749,69 @@ class Project extends Vocabulary
         if (!$depts_only) return $units;
         return $Groups->deptHierarchies($units);
     }
+
+    
+    /**
+     * Function to convert array into human readable Module fields
+     */
+    private function convertProject4humans($doc)
+    {
+
+        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date'];
+
+        $result = [];
+
+        foreach ($doc as $key => $val) {
+            if (in_array($key, $omit_fields)) continue;
+            $val = $this->printField($key, $val);
+            if ($val instanceof BSONArray || $val instanceof BSONDocument) {
+                $val = DB::doc2Arr($val);
+            }
+            if (is_array($val)) {
+                if (is_string($val[0])) {
+                    $val = implode(', ', $val);
+                } else {
+                    $val = json_encode($val);
+                }
+            }
+            $val = strip_tags($val);
+            $result[$key] = $val;
+        }
+        return $result;
+    }
+
+    /**
+     * function to add update history in a document
+     */
+    public function updateHistory($new_doc, $id, $collection = 'projects')
+    {
+        if (DB::is_ObjectID($id)) {
+            $id = $this->to_ObjectID($id);
+        }
+        $old_doc = $this->db->$collection->findOne(['_id' => $id]);
+        $hist = [
+            'date' => date('Y-m-d'),
+            'user' => $_SESSION['username'] ?? 'system',
+            'type' => 'edited',
+            // 'current' => 'unchanged'
+            'changes' => []
+        ];
+        $new_ = $this->convertProject4humans($new_doc);
+        $old_ = $this->convertProject4humans($old_doc);
+        $diff = array_diff_assoc($new_, $old_);
+
+        if (!empty($diff)) {
+            $changes = [];
+            foreach ($diff as $key => $val) {
+                $changes[$key] = ['before' => $old_[$key] ?? null, 'after' => $val];
+            }
+            $hist['changes'] = $changes;
+        }
+        // dump($hist, true);
+        // die;
+        $new_doc['history'] = $old_doc['history'] ?? [];
+        $new_doc['history'][] = $hist;
+        return $new_doc;
+    }
 }
+

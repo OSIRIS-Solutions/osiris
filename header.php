@@ -215,8 +215,8 @@ $pageactive = function ($p) use ($page) {
                         <table class="table simple">
                             <?php
                             if ($n_notifications > 0) {
-
                                 if (isset($notifications['activity'])) {
+                                    
                                     $issues = $notifications['activity']['values'];
                                     $n_issues = $notifications['activity']['count'];
                             ?>
@@ -307,7 +307,23 @@ $pageactive = function ($p) use ($page) {
                                     </tr>
                                 <?php } ?>
 
-
+                                <?php if (isset($notifications['messages'])) {
+                                    $n_messages = count($notifications['messages']);
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <p class="mt-0">
+                                                <?= lang(
+                                                    "You have <b class='text-primary'>$n_messages</b> unread " . ($n_messages == 1 ? 'message' : 'messages') . ".",
+                                                    "Du hast <b class='text-primary'>$n_messages</b> ungelesene " . ($n_messages == 1 ? 'Nachricht' : 'Nachrichten') . "."
+                                                ) ?>
+                                            </p>
+                                            <a class="btn primary filled" href="<?= ROOTPATH ?>/messages">
+                                                <?= lang('View all', 'Alle anzeigen') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
 
                             <?php } else {
                                 echo lang('No new messages', 'Keine neuen Nachrichten');

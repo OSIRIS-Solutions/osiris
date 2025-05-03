@@ -259,6 +259,18 @@ Route::get('/issues', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/messages', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+
+    $breadcrumb = [
+        ['name' => lang('Messages', 'Benachrichtigungen')]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/messages.php";
+    include BASEPATH . "/footer.php";
+});
 
 Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
@@ -928,4 +940,81 @@ Route::post('/claim/?(.*)', function ($user) {
 
     $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
     header("Location: " . ROOTPATH . "/profile/$user");
+}, 'login');
+
+
+
+Route::post('/crud/messages/mark-as-read/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages.$[elem].read' => true]],
+        ['arrayFilters' => [['elem.id' => $id]]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+
+Route::post('/crud/messages/mark-all-as-read', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages.$[].read' => true]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+
+Route::post('/crud/messages/delete/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$pull' => ['messages' => ['id' => $id]]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+Route::post('/crud/messages/delete-all', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages' => []]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
 }, 'login');

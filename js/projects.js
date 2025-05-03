@@ -41,7 +41,17 @@ function navigate(key) {
         scrollTop: $('#project-badges').offset().top
     }, 200);
 
+    // save as hash
+    window.location.hash = 'section-'+key
 }
+
+$(document).ready(function () {
+    // get hash
+    var hash = window.location.hash
+    if (hash && hash.includes('#section-')) {
+        navigate(hash.replace('#section-', ''))
+    }
+});
 
 var collabChart = false
 function initCollabs() {
