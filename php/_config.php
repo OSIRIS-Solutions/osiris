@@ -127,6 +127,10 @@ function validateValues($values, $DB)
             $values[$key] = boolval($value);
         } else if ($key == 'oa_status') {
             $values['open_access'] = $value != 'closed';
+        } else if ($key == 'title' || $key == 'title_de'){
+            // strip <p> tags
+            $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
+            $values[$key] = trim($values[$key]);
         } else if (in_array($key, ['aoi', 'epub', 'correction'])) {
             $values[$key] = true;
         } else if ($value === '') {
