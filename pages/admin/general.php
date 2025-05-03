@@ -553,6 +553,9 @@ $affiliation = $Settings->get('affiliation_details');
 
 
 <section id="email" style="display: none;">
+<?php
+    $mail = $Settings->get('mail');
+?>
 
     <!-- Email settings -->
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
@@ -563,19 +566,18 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="form-group">
                     <label for="email"><?= lang('Email address', 'E-Mail-Adresse') ?></label>
-                    <input type="email" class="form-control" name="mail[email]" value="<?= $Settings->get('email') ?>">
+                    <input type="email" class="form-control" name="mail[email]" value="<?= $mail['email'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
-                            'This email address is used for sending notifications and as the default sender address.',
-                            'Diese E-Mail-Adresse wird für Benachrichtigungen und als Standard-Absenderadresse verwendet.'
+                            'This email address is used for sending notifications and as the default sender address. Defaults to no-reply@osiris-app.de',
+                            'Diese E-Mail-Adresse wird für Benachrichtigungen und als Standard-Absenderadresse verwendet. Standardeinstellung ist no-reply@osiris-app.de'
                         ) ?>
-
                     </span>
                 </div>
 
                 <div class="form-group">
                     <label for="email"><?= lang('SMTP Server', 'SMTP-Server') ?></label>
-                    <input type="text" class="form-control" name="mail[smtp_server]" value="<?= $Settings->get('smtp_server') ?>">
+                    <input type="text" class="form-control" name="mail[smtp_server]" value="<?= $mail['smtp_server'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
                             'The SMTP server is used to send emails. If you do not provide a server, the default PHP mail function will be used.',
@@ -586,18 +588,12 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="form-group">
                     <label for="email"><?= lang('SMTP Port', 'SMTP-Port') ?></label>
-                    <input type="number" class="form-control" name="mail[smtp_port]" value="<?= $Settings->get('smtp_port') ?>">
-                    <span class="text-muted">
-                        <?= lang(
-                            'The SMTP port is used to send emails. If you do not provide a port, the default PHP mail function will be used.',
-                            'Der SMTP-Port wird verwendet, um E-Mails zu senden. Falls kein Port angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
-                        ) ?>
-                    </span>
+                    <input type="number" class="form-control" name="mail[smtp_port]" value="<?= $mail['smtp_port'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email"><?= lang('SMTP User', 'SMTP-Benutzer') ?></label>
-                    <input type="text" class="form-control" name="mail[smtp_user]" value="<?= $Settings->get('smtp_user') ?>">
+                    <input type="text" class="form-control" name="mail[smtp_user]" value="<?= $mail['smtp_user'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
                             'The SMTP user is used to authenticate the SMTP server. If you do not provide a user, the default PHP mail function will be used.',
@@ -608,7 +604,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="form-group">
                     <label for="email"><?= lang('SMTP Password', 'SMTP-Passwort') ?></label>
-                    <input type="password" class="form-control" name="mail[smtp_password]" value="<?= $Settings->get('smtp_password') ?>">
+                    <input type="password" class="form-control" name="mail[smtp_password]" value="<?= $mail['smtp_password'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
                             'The SMTP password is used to authenticate the SMTP server. If you do not provide a password, the default PHP mail function will be used.',
@@ -619,15 +615,15 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="form-group">
                     <label for="email"><?= lang('SMTP Security', 'SMTP-Sicherheit') ?></label>
-                    <select class="form-control" name="general[smtp_security]">
-                        <option value="none" <?= $Settings->get('smtp_security') == 'none' ? 'selected' : '' ?>>None</option>
-                        <option value="ssl" <?= $Settings->get('smtp_security') == 'ssl' ? 'selected' : '' ?>>SSL</option>
-                        <option value="tls" <?= $Settings->get('smtp_security') == 'tls' ? 'selected' : '' ?>>TLS</option>
+                    <select class="form-control" name="mail[smtp_security]">
+                        <option value="none" <?= ($mail['smtp_security'] ?? '') == 'none' ? 'selected' : '' ?>>None</option>
+                        <option value="ssl" <?= ($mail['smtp_security'] ?? '') == 'ssl' ? 'selected' : '' ?>>SSL</option>
+                        <option value="tls" <?= ($mail['smtp_security'] ?? '') == 'tls' ? 'selected' : '' ?>>TLS</option>
                     </select>
                     <span class="text-muted">
                         <?= lang(
-                            'The SMTP security is used to encrypt the connection to the SMTP server. If you do not provide a security, the default PHP mail function will be used.',
-                            'Die SMTP-Sicherheit wird verwendet, um die Verbindung zum SMTP-Server zu verschlüsseln. Falls keine Sicherheit angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
+                            'The SMTP security is used to encrypt the connection to the SMTP server.',
+                            'Die SMTP-Sicherheit wird verwendet, um die Verbindung zum SMTP-Server zu verschlüsseln.'
                         ) ?>
                     </span>
                 </div>

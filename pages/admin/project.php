@@ -341,7 +341,7 @@ if ($process == 'project') {
                     <div class="custom-checkbox mt-10">
                         <input type="hidden" name="values[notification_created_email]" value="0">
                         <input type="checkbox" id="notification_created_email" value="1" name="values[notification_created_email]" <?= ($project['notification_created_email'] ?? false) ? 'checked' : '' ?>>
-                        <label for="notification_created_email"><?= lang('Per Mail', 'Via Email') ?></label>
+                        <label for="notification_created_email"><?= lang('Per Mail', 'Via Email') ?>*</label>
                     </div>
                 </div>
                 <hr>
@@ -366,13 +366,17 @@ if ($process == 'project') {
                     <div class="custom-checkbox mt-10">
                         <input type="hidden" name="values[notification_changed_email]" value="0">
                         <input type="checkbox" id="notification_changed_email" value="1" name="values[notification_changed_email]" <?= ($project['notification_changed_email'] ?? false) ? 'checked' : '' ?>>
-                        <label for="notification_changed_email"><?= lang('Per Mail', 'Via Email') ?></label>
+                        <label for="notification_changed_email"><?= lang('Per Mail', 'Via Email') ?>*</label>
                     </div>
                 </div>
 
+                <p>
+                    * <?= lang('Before enabling emails here, please make sure that email settings are correctly set up and working in the general settings. If not, it may lead to problems.', 'Bevor du hier E-Mails aktivierst, stelle bitte sicher, dass die E-Mail-Einstellungen in den allgemeinen Einstellungen korrekt eingerichtet und funktionsfähig sind. Andernfalls kann es zu Problemen kommen.') ?>
+                </p>
             </div>
 
         </div>
+
 
         <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>

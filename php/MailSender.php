@@ -9,7 +9,8 @@ function sendMail(
     global $osiris;
     // get mail settings:
     $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
-    $mail = DB::doc2Arr($mail);
+    $mail = DB::doc2Arr($mail['value'] ?? []);
+    dump($mail);
 
     $msg = 'mail-sent';
 
@@ -17,7 +18,7 @@ function sendMail(
 
     $Mailer->isSMTP();
     $Mailer->Host = $mail['smtp_server'] ?? 'localhost';
-    if (isset($mail['user']) && isset($mail['smtp_password'])) {
+    if (isset($mail['smtp_user']) && isset($mail['smtp_password'])) {
         $Mailer->SMTPAuth = true;
         $Mailer->Username = $mail['smtp_user'];
         $Mailer->Password = $mail['smtp_password'];
@@ -31,6 +32,9 @@ function sendMail(
 
     $Mailer->Port = $mail['smtp_port'] ?? 25;
 
+    // $Mailer->SMTPDebug = 2; // oder 3
+    // $Mailer->Debugoutput = 'html';
+
     $Mailer->setFrom($mail['email'] ?? 'no-reply@osiris-app.de', 'OSIRIS');
     $Mailer->addAddress($to);
     $Mailer->isHTML(true);
@@ -43,4 +47,5 @@ function sendMail(
     } catch (PHPMailer\PHPMailer\Exception $e) {
         $msg = "mail-error: " . $Mailer->ErrorInfo;
     }
+    $_SESSION['msg'] = $msg;
 }

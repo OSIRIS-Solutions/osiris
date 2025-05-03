@@ -408,6 +408,14 @@ Route::post('/crud/admin/general', function () {
             ]);
         }
     }
+    if (isset($_POST['mail'])) {
+
+        $osiris->adminGeneral->deleteOne(['key' => 'mail']);
+        $osiris->adminGeneral->insertOne([
+            'key' => 'mail',
+            'value' => $_POST['mail']
+        ]);
+    }
 
     if (isset($_POST['staff'])) {
         $staff = [];
