@@ -646,7 +646,7 @@ $Vocabulary = new Vocabulary();
                     </h5>
 
                     <?php
-                    if (isset($h['changes']) && !empty($h['changes'])) {
+                    if (isset($h['changes']) && count($h['changes']) > 0) {
                         echo '<div class="font-weight-bold mt-10">' .
                             lang('Changes to the project:', 'Änderungen am Projekt:') .
                             '</div>';

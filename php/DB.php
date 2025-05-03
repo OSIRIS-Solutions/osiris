@@ -308,6 +308,10 @@ class DB
         } else if (str_starts_with($group, 'user:')) {
             $users = [substr($group, 5)];
         }
+        // do not send messages if user is current user
+        $users = array_filter($users, function ($user) {
+            return $user != $_SESSION['username'];
+        });
         if (empty($users)) return false;
         foreach ($users as $user) {
             $this->addMessage($user, $en, $de, $type, $link);

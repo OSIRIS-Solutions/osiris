@@ -292,8 +292,11 @@ class Project extends Vocabulary
                 return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
             case 'persons':
                 $value = DB::doc2Arr($value);
-                $value = array_column($value, 'user');
-                // continue with applicants
+                $value = array_column($value, 'name');
+                return implode(', ', $value);
+            case 'units':
+                $value = DB::doc2Arr($value);
+                return implode(', ', $value);
             case 'applicants':
                 $applicants = DB::doc2Arr($value);
                 $applicantsList = '';
