@@ -131,9 +131,9 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $Project = new Project($project);
 
     $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
-    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection.'.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
     if (!$edit_perm) {
-        header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
+        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
         die;
     }
 
@@ -199,9 +199,15 @@ Route::get('/nagoya', function () {
         ['name' => 'Nagoya Protocol']
     ];
 
-    $nagoya = $osiris->projects->find(
+    $nagoya_proposals = $osiris->proposals->find(
         ['nagoya' => 'yes']
     )->toArray();
+    
+    $nagoya_projects = $osiris->proposals->find(
+        ['nagoya' => 'yes']
+    )->toArray();
+
+    $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/nagoya.php";

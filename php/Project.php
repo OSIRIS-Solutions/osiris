@@ -251,7 +251,7 @@ class Project extends Vocabulary
                 }
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
-                foreach ($value ?? [] as $c) {
+                foreach ($this->project['nagoya_countries'] ?? [] as $c) {
                     $countriesList .= '<li>' . $this->getCountry($c, $lang) . '</li>';
                 }
                 return '<div class="alert signal">'

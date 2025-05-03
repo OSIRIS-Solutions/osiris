@@ -22,10 +22,11 @@ $Project = new Project();
                 </a>
             </h5>
             <small class="d-block text-muted mb-5"><?= $project['title'] ?></small>
-            <?php if ($project['contact']) { 
-                $contact = $DB->getPerson($project['contact']);
-                echo "<p class='mb-0'><strong>" . lang('Contact', 'Kontakt') . ":</strong> " . $contact['name'] . "</p>";
-             } ?>
+            <div>
+            <?php 
+            echo $Project->printField('persons', $project['persons']);
+            ?>
+            </div>
             
 
             <span class="text-muted"><?= $Project->getDateRange() ?></span>

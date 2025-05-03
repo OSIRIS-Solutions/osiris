@@ -326,7 +326,9 @@ $general_fields = [
     'persons',
     'units',
     "start_date",
-    "end_date"
+    "end_date",
+    'nagoya',
+    'nagoya_countries'
 ];
 
 // migrate all projects with the type "Drittmittel" to the new project type
