@@ -183,8 +183,6 @@ if ($process == 'project') {
         <?php } else if ($stage == '2') { ?>
             <?= lang('Phases', 'Phasen') ?>
         <?php } else if ($stage == '3') { ?>
-            <?= lang('Data fields', 'Datenfelder') ?>
-        <?php } else if ($stage == '4') { ?>
             <?= lang('Subprojects', 'Teilprojekte') ?>
         <?php } else { ?>
             <?= lang('New', 'Neu') ?>
@@ -260,6 +258,22 @@ if ($process == 'project') {
             </div>
             <hr>
             <div class="content">
+                <h5>
+                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                </h5>
+                <div class="custom-checkbox my-10">
+                    <input type="hidden" name="values[subprojects]" value="false">
+                    <input type="checkbox" id="subprojects" value="true" name="values[subprojects]" <?= ($project['subprojects'] ?? false) ? 'checked' : '' ?>>
+                    <label for="subprojects">
+                        <?= lang('This type of project can have subprojects.', 'Diese Art von Projekt kann Teilprojekte haben.') ?>
+                    </label>
+                </div>
+                <span class="text-muted">
+                    <?= lang('Subprojects are projects that are linked to a main project and are displayed in the project overview.', 'Teilprojekte sind Projekte, die mit einem Hauptprojekt verknüpft sind und in der Projektübersicht angezeigt werden.') ?>
+                </span>
+            </div>
+            <hr>
+            <div class="content">
 
                 <h5>
                     <?= lang('Proposals', 'Anträge') ?>
@@ -299,8 +313,6 @@ if ($process == 'project') {
                         </label>
                     </div>
                 </div>
-
-
             </div>
             <hr>
             <div class="content">
@@ -323,7 +335,7 @@ if ($process == 'project') {
                         <?php } ?>
                         <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
                         <?php foreach ($osiris->users->find([], ['sort' => ['last' => 1]]) as $u) { ?>
-                            <option value="user:<?= $u['username'] ?>" <?= $notification  == ('user:' .$u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
+                            <option value="user:<?= $u['username'] ?>" <?= $notification  == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
                         <?php } ?>
                     </select>
                     <div class="custom-checkbox mt-10">
@@ -526,7 +538,73 @@ if ($process == 'project') {
                 }
             }
         </script>
+
+
+    <?php } else if ($stage == '3') {
+        /**
+         * Third stage of this form: subprojects
+         */
+
+        $subprojects = $project['subprojects'] ?? false;
+
+        // get all active modules from project phase
+        $fields = $Project->getFields($type, 'project');
+        $fields = array_column($fields, 'module');
+    ?>
+
+
+        <div class="box">
+            <div class="content">
+                <h2 class="title">
+                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                </h2>
+                <div class="custom-checkbox">
+                    <input type="checkbox" id="subprojects" value="true" name="values[subprojects]" <?= ($project['subprojects'] ?? false) ? 'checked' : '' ?>>
+                    <label for="subprojects">
+                        <?= lang('This type of project can have subprojects.', 'Diese Art von Projekt kann Teilprojekte haben.') ?>
+                    </label>
+                </div>
+                <span class="text-muted">
+                    <?= lang('Subprojects are projects that are linked to a main project and are displayed in the project overview.', 'Teilprojekte sind Projekte, die mit einem Hauptprojekt verknüpft sind und in der Projektübersicht angezeigt werden.') ?>
+                </span>
+
+
+                <h5>
+                    <?= lang('Inherited data fields from main project', 'Datenfelder, die vom Hauptprojekt übernommen werden') ?>
+                </h5>
+                <p>
+                    <?= lang('These data fields cannot be edited in the project itself but are always copied from the parent project.', 'Diese Datenfelder können nicht im Teilprojekt selbst bearbeitet werden, sondern werden immer aus dem übergeordneten Projekt übernommen.') ?>
+                </p>
+
+                <div class="">
+                    <?php
+                    foreach ($Project->FIELDS as $m) {
+                        // if ($m['required'] ?? false) continue;
+                        $inherits = DB::doc2Arr($project['inherits'] ?? []);
+                        if (!in_array($m['id'], $fields)) continue;
+                    ?>
+                        <div class="custom-checkbox checkbox-badge">
+                            <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
+                            <label for="subprojects-<?= $m['id'] ?>">
+                                <?= lang($m['en'], $m['de']) ?>
+                            </label>
+                        </div>
+                    <?php } ?>
+                </div>
+
+            </div>
+        </div>
+
+
+        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/2/<?= $type ?>">
+            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
+            <i class="ph ph-arrow-fat-line-left"></i>
+        </a>
+
+        <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+
     <?php } ?>
+
 </form>
 
 

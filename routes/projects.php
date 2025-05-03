@@ -253,18 +253,26 @@ Route::get('/projects/subproject/(.*)', function ($id) {
         $form['name'] = $form['name'] . "-" . uniqid();
     }
     // delete stuff that should not be inherited
-    unset($form['title']);
-    unset($form['ressources']);
-    unset($form['personnel']);
-    unset($form['in-kind']);
-    unset($form['_id']);
+    $delete = [
+        'title',
+        'title_de',
+        'ressources',
+        'personnel',
+        'in-kind',
+        'created',
+        'created_by',
+        'updated',
+        'updated_by',
+        '_id'
+    ];
+    foreach ($delete as $key) {
+        unset($form[$key]);
+    }
 
     // add parent project
     $form['parent'] = $project['name'];
     $form['parent_id'] = strval($project['_id']);
-
-    // set type to subproject
-    $type = 'Teilprojekt';
+    $form['type'] = $project['type'];
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/proposals/edit.php";
@@ -415,7 +423,22 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $values['end-delay'] = endOfCurrentQuarter(true);
     $values['created_by'] = $_SESSION['username'];
 
-    if ($collection == 'proposals') {
+    if (isset($values['parent_id'])) {
+        $values['parent_id'] = $DB->to_ObjectID($values['parent_id']);
+        $values['subproject'] = true;
+        $parent = $osiris->projects->findOne(['_id' => $values['parent_id']]);
+        if (!empty($parent)) {
+            $values['parent'] = $parent['name'];
+            // inherit persons
+            $values['persons'] = $parent['persons'];
+        } else {
+            unset($values['parent_id']);
+        }
+        if (isset($values['proposal_id'])) {
+            // shared proposal
+            $values['proposal_id'] = $DB->to_ObjectID($values['proposal_id']);
+        }
+    } else if ($collection == 'proposals') {
         $values['status'] = 'proposed';
     } else {
         $values['status'] = 'project';
@@ -455,7 +478,6 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['persons'] = $persons;
     }
 
-
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
     }
@@ -463,27 +485,6 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['university'] = $DB->to_ObjectID($values['university']);
     }
 
-    // check if type is Teilprojekt
-    // if (isset($values['parent_id'])) {
-    //     // get parent project
-    //     $parent = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($values['parent_id'])]);
-
-    //     // take over parent projects parameters
-    //     if (!empty($parent)) {
-    //         $values['type'] = 'Teilprojekt';
-    //         $values['parent'] = $parent['name'];
-    //         foreach (Project::INHERITANCE as $key) {
-    //             if (isset($parent[$key])) {
-    //                 $values[$key] = $parent[$key];
-    //             }
-    //         }
-    //         // add project to parent project
-    //         $osiris->projects->updateOne(
-    //             ['_id' => $DB->to_ObjectID($values['parent_id'])],
-    //             ['$push' => ['subprojects' => $values['name']]]
-    //         );
-    //     }
-    // }
     include_once BASEPATH . "/php/Render.php";
     $values = renderProject($values);
 
@@ -511,6 +512,14 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
             $tag,
             "/$collection/view/" . $id,
+        );
+    }
+
+    // update parent project if subproject
+    if (isset($values['parent_id'])) {
+        $osiris->projects->updateOne(
+            ['_id' => $values['parent_id']],
+            ['$push' => ['subprojects' => $id]]
         );
     }
 
@@ -571,24 +580,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $values['teaser_de'] = get_preview($abstract_de);
     }
 
-    // update all children
-    // if ($osiris->projects->count(['parent_id' => $id]) > 0) {
-    //     include_once BASEPATH . "/php/Project.php";
-    //     $sub = [];
-    //     foreach ($values as $key => $value) {
-    //         if (in_array($key, Project::INHERITANCE)) {
-    //             $sub[$key] = $value;
-    //         }
-    //     }
-    //     $osiris->collection->updateMany(
-    //         ['parent_id' => $id],
-    //         ['$set' => $sub]
-    //     );
-    // }
-
     $Project = new Project();
     $type = $Project->getProjectType($values['type']);
-    
+
     // get history of project
     $values = $Project->updateHistory($values, $id, $collection);
 
@@ -681,10 +675,10 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
     include_once BASEPATH . "/php/Render.php";
     $values = renderProject($values, $collection, $id);
 
-    
+
     $Project = new Project();
     $type = $Project->getProjectType($values['type']);
-    
+
     // get history of project
     $values = $Project->updateHistory($values, $id, $collection);
 

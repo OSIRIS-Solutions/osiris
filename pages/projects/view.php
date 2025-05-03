@@ -45,6 +45,11 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 }
 
 $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
+$parent = [];
+if (isset($project['parent_id'])) {
+    $parent = $osiris->projects->findOne(['_id' => $project['parent_id']]);
+    $project['collaborators'] = $parent['collaborators'] ?? [];
+}
 ?>
 
 <style>
@@ -101,7 +106,13 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
 <div class="title mb-20">
 
-    <b class="badge text-uppercase primary"><?= lang('Project', 'Projekt') ?></b>
+    <b class="badge text-uppercase primary">
+        <?php if ($project['subproject'] ?? false) { ?>
+            <?= lang('Subproject', 'Teilprojekt') ?>
+        <?php } else { ?>
+            <?= lang('Project', 'Projekt') ?>
+        <?php } ?>
+    </b>
     <h1 class="mt-0">
         <?= $project['name'] ?>
     </h1>
@@ -175,8 +186,15 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
         <?= lang('Project details', 'Projektdetails') ?>
     </a>
-    <?php if ($type == 'Teilprojekt') {
+    <?php if ($project['subproject'] ?? false) {
         // collaborators are inherited from parent project
+        if (count($parent['collaborators'] ?? []) > 0) { ?>
+            <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
+                <i class="ph ph-handshake" aria-hidden="true"></i>
+                <?= lang('Collaborators', 'Kooperationspartner') ?>
+                <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
+            </a>
+        <?php  }
     } elseif (count($project['collaborators'] ?? []) > 0) { ?>
         <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
             <i class="ph ph-handshake" aria-hidden="true"></i>
@@ -242,7 +260,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 
 
     <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
-        <a onclick="navigate('raw')" id="btn-raw" class="btn">
+        <a onclick="navigate('raw-data')" id="btn-raw" class="btn">
             <i class="ph ph-code" aria-hidden="true"></i>
             <?= lang('Raw data', 'Rohdaten')  ?>
         </a>
@@ -292,11 +310,50 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
                         </div>
                     </div>
                 <?php } ?>
-
             </div>
 
             <table class="table">
                 <tbody>
+                    <?php if (!empty($project['parent_id'])) {
+                        $Parentproject = new Project();
+                    ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= lang('Parent project', 'Übergeordnetes Projekt') ?></span>
+                                <?php
+                                if (empty($parent)) {
+                                    echo lang('No parent project', 'Kein übergeordnetes Projekt');
+                                } else {
+                                    $Parentproject->setProject($parent);
+                                    echo $Parentproject->widgetLarge();
+                                }
+                                ?>
+
+                            </td>
+                        </tr>
+                    <?php } ?>
+                    <?php if (($project_type['subprojects'] ?? false) && !($project['subproject'] ?? false)) { ?>
+                        <tr>
+                            <td>
+                                <span class="key">
+                                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                                </span>
+                                <?php if (count($project['subprojects'] ?? []) > 0) {
+                                    $Subproject = new Project();
+                                    foreach ($project['subprojects'] as $sub) {
+                                        $sub = $osiris->projects->findOne(['_id' => $sub]);
+                                        if (empty($sub)) continue;
+                                        $Subproject->setProject($sub);
+                                        echo $Subproject->widgetSubproject();
+                                    }
+                                } ?>
+                                <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
+                                    <i class="ph ph-plus-circle" aria-hidden="true"></i>
+                                    <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
                     <?php
                     $fields = $Project->getFields($type, 'project');
                     foreach ($fields as $module) {
@@ -440,20 +497,22 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
         <?= lang('Collaborators', 'Kooperationspartner') ?>
     </h2>
 
-    <?php if ($edit_perm) { ?>
+    <?php if ($edit_perm && !($project['subproject'])) { ?>
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
                 <?= lang('Edit', 'Bearbeiten') ?>
             </a>
-            <?php if (empty($project['collaborators'] ?? array())) { ?>
-                <script>
-                    collabChart = true;
-                </script>
-            <?php } ?>
-
         </div>
     <?php } ?>
+
+    <?php if ($project['subproject'] ?? false) { ?>
+        <p class="text-primary">
+            <i class="ph ph-info"></i>
+        <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
+        </p>
+    <?php } ?>
+    
 
     <div class="row row-eq-spacing">
         <div class="col-lg-4">
@@ -525,6 +584,10 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
     <script>
         const id = '<?= $_GET['project'] ?? null ?>';
         console.log(id);
+        const collaborator_id = '<?= ($project['subproject'] ?? false) ? strval($project['parent_id']) : $id ?>';
+        <?php if (empty($project['collaborators'] ?? array())) { ?>
+            collabChart = true;
+        <?php } ?>
     </script>
 
 
@@ -772,7 +835,7 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
     <p>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
     </p>
-    
+
     <?php
     if (empty($project['history'] ?? [])) {
         echo lang('No history available.', 'Keine Historie verfügbar.');
@@ -847,4 +910,20 @@ $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
             <?php } ?>
         </div>
     <?php } ?>
+</section>
+
+<!-- raw data -->
+<section id="raw-data" style="display: none;">
+    <h2 class="title">
+        <?= lang('Raw data', 'Rohdaten') ?>
+    </h2>
+    <p>
+        <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
+    </p>
+    <div class="box overflow-x-auto mt-0">
+        <?php
+        dump($project);
+        ?>
+    </div>
+
 </section>

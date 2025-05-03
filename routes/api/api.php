@@ -270,7 +270,7 @@ Route::get('/api/all-activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
-    if (isset($filter['projects'])){
+    if (isset($filter['projects'])) {
         $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
 
@@ -717,7 +717,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
         $filter = ['title' => ['$regex' => $j]];
     }
 
-    if (!$Settings->hasPermission($type.'.view')) {
+    if (!$Settings->hasPermission($type . '.view')) {
         $filter['$or'] = [
             ['persons.user' => $_SESSION['username']],
             ['created_by' => $_SESSION['username']]
@@ -748,7 +748,8 @@ Route::get('/api/(projects|proposals)', function ($type) {
                 'role' => $project['role'] ?? '',
                 'topics' => $project['topics'] ?? array(),
                 'units' => $Project->getUnits(true),
-                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name')
+                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name'),
+                'subproject' => $doc['subproject'] ?? false,
             ];
         }
         $result = $data;

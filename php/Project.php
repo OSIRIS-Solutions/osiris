@@ -84,28 +84,28 @@ class Project extends Vocabulary
         'Other' => 'Sonstiges',
     ];
 
-    public const INHERITANCE = [
-        'status',
-        'website',
-        'grant_sum',
-        'grant_income',
-        'funder',
-        'funding_organization',
-        'grant_sum_proposed',
-        'grant_income_proposed',
-        'purpose',
-        'role',
-        'coordinator',
-    ];
-    public const INHERITANCE_PUBLIC = [
-        'website',
-        'funder',
-        'funding_organization',
-        'purpose',
-        'role',
-        'coordinator',
-        'collaborators'
-    ];
+    // public const INHERITANCE = [
+    //     'status',
+    //     'website',
+    //     'grant_sum',
+    //     'grant_income',
+    //     'funder',
+    //     'funding_organization',
+    //     'grant_sum_proposed',
+    //     'grant_income_proposed',
+    //     'purpose',
+    //     'role',
+    //     'coordinator',
+    // ];
+    // public const INHERITANCE_PUBLIC = [
+    //     'website',
+    //     'funder',
+    //     'funding_organization',
+    //     'purpose',
+    //     'role',
+    //     'coordinator',
+    //     'collaborators'
+    // ];
 
     function __construct($project = null)
     {

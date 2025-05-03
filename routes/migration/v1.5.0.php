@@ -228,6 +228,7 @@ $osiris->adminProjects->insertOne([
     "color" => "#b61f29",
     "name" => "Third-party funding",
     "name_de" => "Drittmittel",
+    "subprojects" => true,
     "phases" => [
         [
             "id" => "proposed",
@@ -445,8 +446,6 @@ if ($count > 0) {
     ob_flush();
     // now we need to migrate the old project types to the new ones
     foreach ($projects as $project) {
-        // delete the old project
-        // $osiris->projects->deleteOne(['_id' => $project['_id']]);
         // set up the base fields for the new project
         $new_project = [
             '_id' => $project['_id'],
@@ -454,7 +453,12 @@ if ($count > 0) {
             'status' => $project['status'] ?? 'project',
             'subproject' => true,
             "funding_program" => $project['funding_organization'] ?? null,
+            "parent" => $project['parent'],
+            "parent_id" => $project['parent_id'],
         ];
+        if (isset($project['parent_id']) && DB::is_ObjectID($project['parent_id'])) {
+            $new_project['parent_id'] = DB::to_ObjectID($project['parent_id']);
+        }
         // add the general fields to the project
         foreach ($general_fields as $field) {
             if (isset($project[$field]) && !array_key_exists($field, $new_project)) {
@@ -482,16 +486,61 @@ if ($count > 0) {
                 $new_project[$new] = $project[$old];
             }
         }
-        dump($new_project);
-    }
-}
 
+        // find parent project
+        $parent = $osiris->projects->findOne(['_id' => $project['parent_id'] ?? null]);
+        if (!empty($project)) {
+            // add inherited fields
+            $inherited = [
+                'website',
+                'funder',
+                'funding_organization',
+                'purpose',
+                'role',
+                'coordinator',
+            ];
+            foreach ($inherited as $key) {
+                if (isset($parent[$key])) {
+                    $new_project[$key] = $parent[$key];
+                }
+            }
+        }
+        $osiris->projects->deleteOne(['_id' => $project['_id']]);
+        $osiris->projects->insertOne($new_project);
+    }
+    ?>
+    <p>
+        <?= lang('Successfully migrated all subprojects!', 'Alle Teilprojekte wurden erfolgreich migriert.') ?>
+    </p>
+
+<?php
+}
+// migrate all "subprojects" from parents
+$projects = $osiris->projects->find(['subprojects' => ['$exists' => true, '$ne' => null]])->toArray();
+
+foreach ($projects as $p) {
+    $subprojects = [];
+    foreach ($p['subprojects'] as $key) {
+        $sub = $osiris->projects->findOne(['name' => $key]);
+        if (!empty($sub)) {
+            $subprojects[] = $sub['_id'];
+        }
+    }
+    if (empty($subprojects)) continue;
+
+    $osiris->projects->updateOne(
+        ['_id' => $p['_id']],
+        [
+            '$set' => ['subprojects' => $subprojects]
+        ]
+    );
+}
 
 // next migrate activities to use the ObjectId instead of the name string
 $activities = $osiris->activities->find(['projects' => ['$exists' => true, '$ne' => null]])->toArray();
 $count = count($activities);
 if ($count > 0) {
-    ?>
+?>
     <h4>
         <?= lang('Activities', 'Aktivitäten') ?>
     </h4>

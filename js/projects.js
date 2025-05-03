@@ -56,11 +56,12 @@ $(document).ready(function () {
 var collabChart = false
 function initCollabs() {
     collabChart = true
+    key = collaborator_id ?? PROJECT
     $.ajax({
         type: "GET",
         url: ROOTPATH + "/api/dashboard/collaborators",
         data: {
-            project: PROJECT
+            project: key
         },
         dataType: "json",
         success: function (response) {

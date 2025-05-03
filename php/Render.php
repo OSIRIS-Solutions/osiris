@@ -157,9 +157,9 @@ function renderAuthorUnitsProjects($filter = [])
 function renderProject($doc, $col = 'projects', $id = null)
 {
     global $Groups;
+    $DB = new DB;
     $project = [];
     if (isset($id)) {
-        $DB = new DB;
         $project = $DB->db->$col->findOne(
             ['_id' => $id],
             ['projection' => ['start' => 1, 'end' => 1, 'start_date' => 1, 'end_date' => 1, 'start_proposed' => 1, 'end_proposed' => 1]]

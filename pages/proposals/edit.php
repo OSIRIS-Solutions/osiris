@@ -88,6 +88,12 @@ if (empty($selected)) {
     $selected = [];
     $type = null;
 }
+
+$is_subproject = isset($form['parent_id']);
+$parent = null;
+if ($is_subproject) {
+    $parent = $Project->getProject($form['parent_id']);
+}
 ?>
 
 
@@ -101,7 +107,10 @@ if (empty($selected)) {
 </style>
 
 <div class="container w-600">
-    <?php if ($new_project || $type === null) { ?>
+    <?php
+    if ($is_subproject) {
+        // type cannot be changed for subprojects        
+    } else if ($new_project || $type === null) { ?>
         <div class="select-btns">
             <?php
             foreach ($project_types as $pt) {
@@ -123,14 +132,19 @@ if (empty($selected)) {
     }
 
     if ($type && !empty($selected)) {
-
         // type has been selected
         $project_type = $Project->getProjectType($type);
 
         $subtitle = '';
         $phase = 'proposed';
         $status = $form['status'] ?? 'proposed';
-        if (isset($from_proposal) && $from_proposal) {
+        if ($is_subproject) {
+            $formaction = ROOTPATH . "/crud/projects/create";
+            $url = ROOTPATH . "/projects/view/*";
+            $title = lang('Create new subproject', 'Neues Unterprojekt anlegen') . ': ' . ($parent['name'] ?? $parent['title'] ?? '');
+            $subtitle = lang('This project is a subproject of another project. That means you cannot change the project type and some parts of the form are prefilled with data from the parent.', 'Dieses Projekt ist ein Unterprojekt eines anderen Projekts. Das bedeutet, dass du den Projekttyp nicht ändern kannst und einige Teile des Formulars mit Daten des übergeordneten Projekts vorausgefüllt sind.');
+            $phase = 'project';
+        } else if (isset($from_proposal) && $from_proposal) {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
             $title = lang('Create new project from proposal', 'Neues Projekt aus Antrag anlegen') . ': ' . ($form['name'] ?? $form['title'] ?? '');
@@ -228,6 +242,14 @@ if (empty($selected)) {
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
             <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
+
+            <?php if ($is_subproject) { ?>
+                <input type="hidden" class="hidden" name="values[parent_id]" value="<?= $form['parent_id'] ?>">
+                <?php if (isset($parent['proposal_id'])) { ?>
+                    <!-- shared proposal -->
+                    <input type="hidden" class="hidden" name="values[proposal_id]" value="<?= $parent['proposal_id'] ?>">
+                <?php } ?>
+            <?php } ?>
 
             <?php if (isset($from_proposal) && $from_proposal) { ?>
                 <input type="hidden" class="hidden" name="values[proposal_id]" value="<?= $form['_id'] ?>">

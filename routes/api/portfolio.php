@@ -875,12 +875,12 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
                 'title' => $parent['title'] ?? ''
             ];
 
-            // add inherited fields
-            foreach (Project::INHERITANCE_PUBLIC as $key) {
-                if (isset($parent[$key]) && empty($project[$key])) {
-                    $project[$key] = $parent[$key];
-                }
-            }
+            // // add inherited fields
+            // foreach (Project::INHERITANCE_PUBLIC as $key) {
+            //     if (isset($parent[$key]) && empty($project[$key])) {
+            //         $project[$key] = $parent[$key];
+            //     }
+            // }
         }
     }
 
