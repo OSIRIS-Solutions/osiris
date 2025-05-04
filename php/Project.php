@@ -411,9 +411,9 @@ class Project extends Vocabulary
         }
     }
 
-    public function getType($cls = '')
+    public function getType($cls = '', $default='third-party')
     {
-        $type = $this->project['type'] ?? 'third-party';
+        $type = $this->project['type'] ?? $default;
         $project_type = $this->getProjectType($type);
         if (!empty($project_type)) {
             $style = "style='background-color: " . $project_type['color'] . "33; color: " . $project_type['color'] . "'";

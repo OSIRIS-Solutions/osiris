@@ -14,6 +14,9 @@
  * @license     MIT
  */
 
+include_once BASEPATH . '/php/Project.php';
+$Project = new Project();
+
 $phrase = lang('in the reporting year', 'im Reportjahr');
 $time_frame = '';
 
@@ -43,10 +46,11 @@ if (isset($_GET['reportdate']) && !empty($_GET['reportdate'])) {
 $filter = [
     'start_date' => ['$lte' => $reportend],
     'end_date' => ['$gte' => $reportstart],
-    'status' => ['$nin' => ['rejected', 'applied']],
+    // 'status' => ['$nin' => ['rejected', 'applied']],
 ];
 
 $projects  = $osiris->projects->find($filter)->toArray();
+// $proposals = $osiris->proposals->find($filter)->toArray();
 
 $all = $osiris->projects->count();
 ?>
@@ -124,7 +128,7 @@ $all = $osiris->projects->count();
     </p>
 
     <h2>
-        <?= lang('Number of approved or finished projects', 'Anzahl der akzeptierten oder abgeschlossenen Projekte') ?> <?= $phrase ?>:
+        <?= lang('Number of projects', 'Anzahl der Projekte') ?> <?= $phrase ?>:
     </h2>
 
     <?php
@@ -144,36 +148,7 @@ $all = $osiris->projects->count();
             ]
         ]
     ])->toArray();
-    ?>
 
-    <table class="table w-auto">
-        <thead>
-            <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Count', 'Anzahl') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($projects_by_type as $project): ?>
-                <tr class="text-<?= $project['_id'] ?>">
-                    <td><?= $project['_id']; ?></td>
-                    <th><?= $project['count'] ?></th>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
-                <th><?= count($projects) ?></th>
-            </tr>
-        </tfoot>
-    </table>
-
-    <h2>
-        <?= lang('Number of projects created', 'Anzahl der erstellten Projekte') ?> <?= $phrase ?>:
-    </h2>
-
-    <?php
     $projects_created = $osiris->projects->aggregate([
         [
             '$match' => [
@@ -186,104 +161,127 @@ $all = $osiris->projects->count();
         [
             '$group' => [
                 '_id' => '$type',
-                'count' => ['$sum' => 1],
-                'applied' => [
-                    '$sum' => [
-                        '$cond' => [
-                            ['$eq' => ['$status', 'applied']],
-                            1,
-                            0
-                        ]
-                    ]
-                ],
-                'rejected' => [
-                    '$sum' => [
-                        '$cond' => [
-                            ['$eq' => ['$status', 'rejected']],
-                            1,
-                            0
-                        ]
-                    ]
-                ],
-                'approved' => [
-                    '$sum' => [
-                        '$cond' => [
-                            ['$eq' => ['$status', 'approved']],
-                            1,
-                            0
-                        ]
-                    ]
-                ],
-                'finished' => [
-                    '$sum' => [
-                        '$cond' => [
-                            ['$eq' => ['$status', 'finished']],
-                            1,
-                            0
-                        ]
-                    ]
-                ],
+                'count' => ['$sum' => 1]
             ]
         ],
     ])->toArray();
-
+    $projects_created = array_column($projects_created, 'count', '_id');
     ?>
+
     <table class="table w-auto">
         <thead>
             <tr>
-                <th><?= lang('Year', 'Jahr') ?></th>
+                <th><?= lang('Type', 'Typ') ?></th>
                 <th><?= lang('Count', 'Anzahl') ?></th>
-                <th>Status<br>
-                    <?= lang('approved', 'Akzeptiert') ?>
-                </th>
-                <th>Status<br>
-                    <?= lang('rejected', 'Abgelehnt') ?>
-                </th>
-                <th>Status<br>
-                    <?= lang('applied', 'Eingereicht') ?>
-                </th>
-                <th>Status<br>
-                    <?= lang('finished', 'Abgeschlossen') ?>
-                </th>
+                <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
             </tr>
         </thead>
         <tbody>
-            <?php
-            $counts = [
-                'count' => 0,
-                'approved' => 0,
-                'rejected' => 0,
-                'applied' => 0,
-                'finished' => 0
-            ];
-            foreach ($projects_created as $project):
-                $counts['count'] += $project['count'];
-                $counts['approved'] += $project['approved'];
-                $counts['rejected'] += $project['rejected'];
-                $counts['applied'] += $project['applied'];
-                $counts['finished'] += $project['finished'];
-            ?>
+            <?php foreach ($projects_by_type as $project): ?>
                 <tr class="text-<?= $project['_id'] ?>">
-                    <td><?= $project['_id']; ?></td>
+                    <td><?= $Project->getType('', $project['_id']); ?></td>
                     <th><?= $project['count'] ?></th>
-                    <td><?= $project['approved'] ?></td>
-                    <td><?= $project['rejected'] ?></td>
-                    <td><?= $project['applied'] ?></td>
-                    <td><?= $project['finished'] ?></td>
+                    <th>
+                        <?= $projects_created[$project['_id']] ?? 0 ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
                 <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
-                <th><?= $counts['count'] ?></th>
-                <th><?= $counts['approved'] ?></th>
-                <th><?= $counts['rejected'] ?></th>
-                <th><?= $counts['applied'] ?></th>
-                <th><?= $counts['finished'] ?></th>
+                <th><?= count($projects) ?></th>
+                <th><?= array_sum($projects_created) ?></th>
             </tr>
         </tfoot>
     </table>
+
+    <br>
+    <hr>
+
+
+    <h2>
+        <?= lang('Number of proposals', 'Anzahl der Anträge') ?> <?= $phrase ?>:
+    </h2>
+
+    <?php
+    $filterDates = [
+        'submission_date' => ['$gte' => $reportstart, '$lte' => $reportend],
+        'approval_date'   => ['$gte' => $reportstart, '$lte' => $reportend],
+        'rejection_date'  => ['$gte' => $reportstart, '$lte' => $reportend],
+    ];
+
+    $pipeline = [
+        ['$match' => [
+            '$or' => [
+                ['submission_date' => $filterDates['submission_date']],
+                ['approval_date'   => $filterDates['approval_date']],
+                ['rejection_date'  => $filterDates['rejection_date']],
+            ]
+        ]],
+        ['$facet' => [
+            'submitted' => [
+                ['$match' => ['submission_date' => $filterDates['submission_date']]],
+                ['$group' => ['_id' => '$type', 'count' => ['$sum' => 1]]],
+            ],
+            'approved' => [
+                ['$match' => ['approval_date' => $filterDates['approval_date']]],
+                ['$group' => ['_id' => '$type', 'count' => ['$sum' => 1]]],
+            ],
+            'rejected' => [
+                ['$match' => ['rejection_date' => $filterDates['rejection_date']]],
+                ['$group' => ['_id' => '$type', 'count' => ['$sum' => 1]]],
+            ],
+        ]]
+    ];
+
+    $result = $osiris->proposals->aggregate($pipeline)->toArray();
+    $proposals_created = $result[0];
+
+    $table = [];
+
+    foreach (['submitted', 'approved', 'rejected'] as $status) {
+        foreach ($proposals_created[$status] as $entry) {
+            $type = $entry['_id'];
+            $count = $entry['count'];
+            if (!isset($table[$type])) {
+                $table[$type] = ['submitted' => 0, 'approved' => 0, 'rejected' => 0];
+            }
+            $table[$type][$status] = $count;
+        }
+    }
+    ?>
+    <table class="table w-auto">
+        <thead>
+            <tr>
+                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('Submitted', 'Eingereicht') ?></th>
+                <th><?= lang('Approved', 'Genehmigt') ?></th>
+                <th><?= lang('Rejected', 'Abgelehnt') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($table as $type => $counts): ?>
+                <tr class="text-<?= $type ?>">
+                    <td><?= $Project->getType('', $type); ?></td>
+                    <th><?= $counts['submitted'] ?></th>
+                    <th><?= $counts['approved'] ?></th>
+                    <th><?= $counts['rejected'] ?></th>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
+                <th><?= array_sum(array_column($table, 'submitted')) ?></th>
+                <th><?= array_sum(array_column($table, 'approved')) ?></th>
+                <th><?= array_sum(array_column($table, 'rejected')) ?></th>
+            </tr>
+    </table>
+
+    <p class="text-muted">
+        <i class="ph ph-info"></i>
+        <?= lang('The list shows the applications that had the respective status timestamp in the report period. For example, "Submitted" includes all applications that were submitted during the reporting period, regardless of whether they have already been approved or rejected. If they were approved or rejected in the period, they are also listed in the respective column.', 'In der Aufstellung sind jeweils die Anträge zu sehen, die den jeweiligen Status-Zeitstempel im Reportzeitraum hatten. Beispielsweise sind "Eingereicht" alle Anträge, die im Reportzeitraum eingereicht wurden, unabhängig davon, ob sie bereits genehmigt oder abgelehnt wurden. Wenn sie im Zeitraum genehmigt oder abgelehnt wurden, sind sie in der jeweiligen Spalte ebenfalls aufgeführt.') ?>
+    </p>
 
     <br>
     <hr>
@@ -356,17 +354,6 @@ $all = $osiris->projects->count();
             <?php } ?>
         </tbody>
     </table>
-
-    <script>
-        $(document).ready(function() {
-            $('#collaborative-partners').DataTable({
-                "order": [
-                    [3, "desc"]
-                ],
-            });
-        });
-    </script>
-
 
     <h3>
         <?= lang('Cooperation partners by type', 'Kooperationspartner nach Typ') ?>
@@ -557,54 +544,67 @@ $all = $osiris->projects->count();
 
 
 
-    <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-    <script>
-        function unpack(rows, key) {
-            return rows.map(function(row) {
-                return row[key];
-            });
-        }
-        $(document).ready(function() {
-            var rows = <?= json_encode($collaborations_by_country) ?>;
-            console.log(rows);
-            var data = [{
-                type: 'choropleth',
-                locationmode: 'ISO-3',
-                locations: unpack(rows, 'iso3'),
-                z: unpack(rows, 'count'),
-                text: unpack(rows, 'country'),
-                autocolorscale: true
-            }];
-
-            var layout = {
-                title: {
-                    text: lang('Cooperation partners by country', 'Kooperationspartner nach Land'),
-                },
-                geo: {
-                    projection: {
-                        type: 'robinson'
-                    }
-                },
-                margin: {
-                    t: 50,
-                    b: 10,
-                    l: 10,
-                    r: 10
-                },
-                height: 500,
-                width: '100%',
-            };
-
-            Plotly.newPlot("map", data, layout, {
-                showLink: false
-            });
-        });
-    </script>
 
 </div>
 
-
+<script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 <script>
+    function unpack(rows, key) {
+        return rows.map(function(row) {
+            return row[key];
+        });
+    }
+    $(document).ready(function() {
+        $('#collaborative-partners').DataTable({
+            "order": [
+                [3, "desc"]
+            ],
+        });
+        $('#collaborative-partners-by-country').DataTable({
+            "order": [
+                [1, "desc"]
+            ],
+        });
+
+        var rows = <?= json_encode($collaborations_by_country) ?>;
+        console.log(rows);
+        var data = [{
+            type: 'choropleth',
+            locationmode: 'ISO-3',
+            locations: unpack(rows, 'iso3'),
+            z: unpack(rows, 'count'),
+            text: unpack(rows, 'country'),
+            autocolorscale: false,
+            colorscale: [
+                ['0.0', 'rgb(253.4, 229.8, 204.8)'],
+                ['1.0', '#008084']
+            ],
+        }];
+
+        var layout = {
+            title: {
+                text: lang('Cooperation partners by country', 'Kooperationspartner nach Land'),
+            },
+            geo: {
+                projection: {
+                    type: 'robinson'
+                }
+            },
+            margin: {
+                t: 50,
+                b: 10,
+                l: 10,
+                r: 10
+            },
+            height: 500,
+            width: '100%',
+        };
+
+        Plotly.newPlot("map", data, layout, {
+            showLink: false
+        });
+    });
+
     function filterByYear(year, table) {
         var rows = document.querySelectorAll(table + ' tbody tr');
         if (year == '') {
