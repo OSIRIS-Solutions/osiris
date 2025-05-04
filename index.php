@@ -28,7 +28,7 @@ define('CSS_JS_VERSION', '1.0.5');
 session_start();
 
 define('BASEPATH', $_SERVER['DOCUMENT_ROOT'] . ROOTPATH);
-define('OSIRIS_VERSION', '1.4.3');
+define('OSIRIS_VERSION', '1.5.0');
 
 // set time constants
 $year = date("Y");
