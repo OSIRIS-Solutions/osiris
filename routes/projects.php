@@ -131,7 +131,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $Project = new Project($project);
 
     $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
-    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection.'.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
     if (!$edit_perm) {
         header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
         die;
@@ -144,9 +144,6 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
         case 'finance':
             $name = lang("Finance", "Finanzen");
             break;
-        // case 'public':
-        //     $name = lang("Public representation", "Öffentliche Darstellung");
-        //     break;
         case 'persons':
             $name = lang("Persons", "Personen");
             break;
@@ -170,11 +167,8 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
             include BASEPATH . "/pages/projects/collaborators.php";
             break;
         case 'finance':
-            include BASEPATH . "/pages/projects/finance.php";
+            include BASEPATH . "/pages/proposal/finance.php";
             break;
-        // case 'public':
-        //     include BASEPATH . "/pages/projects/public.php";
-        //     break;
         case 'persons':
             include BASEPATH . "/pages/projects/persons.php";
             break;
@@ -202,7 +196,7 @@ Route::get('/nagoya', function () {
     $nagoya_proposals = $osiris->proposals->find(
         ['nagoya' => 'yes']
     )->toArray();
-    
+
     $nagoya_projects = $osiris->proposals->find(
         ['nagoya' => 'yes']
     )->toArray();
@@ -472,12 +466,19 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
     // add persons
     $persons = [];
-    foreach (['contact', 'scholar', 'supervisor', 'applicants'] as $key) {
+    foreach (['contact', 'scholar', 'supervisor'] as $key) {
         if (!isset($values[$key]) || empty($values[$key])) continue;
         $persons[] = [
             'user' => $values[$key],
             'role' => ($key == 'contact' ? 'applicant' : $key),
             'name' => $DB->getNameFromId($values[$key])
+        ];
+    }
+    if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
+        $persons[] = [
+            'user' => $user,
+            'role' => ($key == 'contact' ? 'applicant' : $key),
+            'name' => $DB->getNameFromId($user)
         ];
     }
     if (!empty($persons)) {
@@ -504,21 +505,61 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         // check if there are already activities with this funding number
         $osiris->activities->updateMany(
             ['funding' => ['$in' => $values['funding_number']]],
-            ['$push' => ['projects' => $id]]
+            ['$addToSet' => ['projects' => $id]]
         );
     }
 
     // check for notifications on create
     if (!empty($type['notification_created'] ?? null)) {
         $creator = ($USER['first'] ?? '') . " " . $USER['last'];
-        $tag = $collection == 'projects' ? 'project' : 'proposal';
-        $DB->addMessages(
-            $type['notification_created'],
-            'New project has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
-            'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
-            $tag,
-            "/$collection/view/" . $id,
-        );
+        if ($collection == 'projects') {
+            $DB->addMessages(
+                $type['notification_created'],
+                'New project has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'project',
+                "/$collection/view/" . $id,
+            );
+        } else {
+            $DB->addMessages(
+                $type['notification_created'],
+                'New project proposal has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'Ein neuer Projektantrag wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'proposal',
+                "/$collection/view/" . $id,
+            );
+        }
+
+        if (!empty($type['notification_created_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_created'], 'mail');
+            if (!empty($mails)) foreach ($mails as $mail) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Neues Projekt erstellt';
+                    $title = 'Neues Projekt erstellt';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Neuer Projektantrag erstellt';
+                    $title = 'Neuer Projektantrag erstellt';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id;
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $values['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $values['title'] . '</li>
+                    <li><b>Erstellt von:</b> ' . $creator . '</li>
+                    <li><b>Erstellt am:</b> ' . date('d.m.Y') . '</li>
+                </ul>
+                ';
+                sendMail(
+                    $mail,
+                    $subject,
+                    buildNotificationMail($title, $html, $linkText, $linkUrl)
+                );
+            }
+        }
     }
 
     // update parent project if subproject
@@ -603,6 +644,38 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
             $tag,
             "/$collection/view/" . $id . '#section-history',
         );
+
+        if (!empty($type['notification_changed_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_changed'], 'mail');
+            if (!empty($mails)) foreach ($mails as $mail) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Projekt bearbeitet';
+                    $title = 'Projekt bearbeitet';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Projektantrag bearbeitet';
+                    $title = 'Projektantrag bearbeitet';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id . '#section-history';
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $values['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $values['title'] . '</li>
+                    <li><b>Bearbeitet von:</b> ' . $creator . '</li>
+                    <li><b>Bearbeitet am:</b> ' . date('d.m.Y') . '</li>
+                    <li><b>Status:</b> ' . ($values['status'] ?? 'proposed') . '</li>
+                </ul>
+                ';
+                sendMail(
+                    $mail,
+                    $subject,
+                    buildNotificationMail($title, $html, $linkText, $linkUrl)
+                );
+            }
+        }
     }
 
 
@@ -690,15 +763,50 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 
     // check for notifications on create
     if (!empty($type['notification_changed'] ?? null)) {
+        $project = $osiris->$collection->findOne(['_id' => $id]);
         $creator = ($USER['first'] ?? '') . " " . $USER['last'];
         $tag = $collection == 'projects' ? 'project' : 'proposal';
         $DB->addMessages(
             $type['notification_changed'],
-            'Persons of a project have been changed by ' . $creator . ': <b>' . $values['name'] . '</b>',
-            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Persons of a project have been changed by ' . $creator . ': <b>' . $project['name'] . '</b>',
+            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . $project['name'] . '</b>',
             $tag,
             "/$collection/view/" . $id . '#section-history',
         );
+
+
+        if (!empty($type['notification_changed_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_changed'], 'mail');
+            if (!empty($mails)) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Projekt bearbeitet';
+                    $title = 'Personen des Projekts bearbeitet';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Projektantrag bearbeitet';
+                    $title = 'Personen des Projektantrags bearbeitet';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id . '#section-history';
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $project['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $project['title'] . '</li>
+                    <li><b>Bearbeitet von:</b> ' . $creator . '</li>
+                    <li><b>Bearbeitet am:</b> ' . date('d.m.Y') . '</li>
+                </ul>
+                ';
+                foreach ($mails as $mail) {
+                    sendMail(
+                        $mail,
+                        $subject,
+                        buildNotificationMail($title, $html, $linkText, $linkUrl)
+                    );
+                }
+            }
+        }
     }
 
     $osiris->$collection->updateOne(

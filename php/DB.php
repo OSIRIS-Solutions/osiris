@@ -297,17 +297,7 @@ class DB
     {
         if (empty($group) || empty($en)) return false;
 
-        $users = [];
-        if (str_starts_with($group, 'role:')) {
-            $role = substr($group, 5);
-            $users = $this->db->persons->find(
-                ['roles' => $role, 'is_active' => ['$ne' => false]],
-                ['projection' => ['username' => 1, '_id' => 0]]
-            )->toArray();
-            $users = array_column($users, 'username');
-        } else if (str_starts_with($group, 'user:')) {
-            $users = [substr($group, 5)];
-        }
+        $users = $this->getMessageGroup($group);
         // do not send messages if user is current user
         $users = array_filter($users, function ($user) {
             return $user != $_SESSION['username'];
@@ -316,8 +306,31 @@ class DB
         foreach ($users as $user) {
             $this->addMessage($user, $en, $de, $type, $link);
         }
-
         return true;
+    }
+
+    function getMessageGroup($group, $key = 'username')
+    {
+        $users = [];
+        if (str_starts_with($group, 'role:')) {
+            $role = substr($group, 5);
+            $users = $this->db->persons->find(
+                ['roles' => $role, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
+        } else if (str_starts_with($group, 'user:')) {
+            $user = substr($group, 5);
+            $users = $this->db->persons->find(
+                ['username' => $user, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
+        }
+        $users = array_column($users, $key);
+        // do not send messages if user is current user
+        // $users = array_filter($users, function ($user) {
+        //     return $user != $_SESSION['username'];
+        // });
+        return $users;
     }
 
     function getMessages($user = null, $type = null)

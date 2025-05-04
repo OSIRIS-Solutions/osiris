@@ -138,7 +138,12 @@ if ($is_subproject) {
         $subtitle = '';
         $phase = 'proposed';
         $status = $form['status'] ?? 'proposed';
-        if ($is_subproject) {
+        if ($is_subproject && !empty($form['_id'] ?? null)){
+            $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
+            $url = ROOTPATH . "/projects/view/" . $form['_id'];
+            $title = lang('Edit subproject', 'Unterprojekt bearbeiten') . ': ' . ($form['name'] ?? $form['title'] ?? '');
+            $phase = 'project';
+        } else if ($is_subproject) {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/*";
             $title = lang('Create new subproject', 'Neues Unterprojekt anlegen') . ': ' . ($parent['name'] ?? $parent['title'] ?? '');
@@ -243,7 +248,7 @@ if ($is_subproject) {
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
             <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
 
-            <?php if ($is_subproject) { ?>
+            <?php if ($is_subproject && empty($form['_id'] ?? null)) { ?>
                 <input type="hidden" class="hidden" name="values[parent_id]" value="<?= $form['parent_id'] ?>">
                 <?php if (isset($parent['proposal_id'])) { ?>
                     <!-- shared proposal -->

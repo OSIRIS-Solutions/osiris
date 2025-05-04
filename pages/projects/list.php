@@ -561,7 +561,10 @@ $Vocabulary = new Vocabulary();
                         data: 'name',
                         render: function(data, type, row) {
                             console.log(row);
-                            // row.persons.map(a => a.name).join(', ')
+                            let persons = '';
+                            if (Array.isArray(row.persons)) {
+                                persons = row.persons.map(a => a.name).join(', ')
+                            }
                             return `
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
@@ -572,7 +575,7 @@ $Vocabulary = new Vocabulary();
                         <div class="flex-grow-1">
                          <p class="text-muted mt-0">${renderDate(row)}</p>
                         
-                        ${row.persons.map(a => a.name).join(', ')}
+                        ${persons}
 
                         </div>
                         <hr />

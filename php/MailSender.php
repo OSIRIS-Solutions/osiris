@@ -10,7 +10,6 @@ function sendMail(
     // get mail settings:
     $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
     $mail = DB::doc2Arr($mail['value'] ?? []);
-    dump($mail);
 
     $msg = 'mail-sent';
 
@@ -45,7 +44,26 @@ function sendMail(
     try {
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
-        $msg = "mail-error: " . $Mailer->ErrorInfo;
+        $msg = $Mailer->ErrorInfo;
+        $_SESSION['msg'] = $msg;
     }
-    $_SESSION['msg'] = $msg;
+    return $msg;
+}
+
+
+function buildNotificationMail($title, $html, $linkText, $linkUrl)
+{
+    $linkUrl = $_SERVER['HTTP_HOST'] . ROOTPATH . $linkUrl;
+    return '
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #008083;">' . htmlspecialchars($title) . '</h2>
+            ' . $html . '
+            <p style="margin-top:20px;">
+                <a href="' . htmlspecialchars($linkUrl) . '" style="background-color: #f78104; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                    ' . htmlspecialchars($linkText) . '
+                </a>
+            </p>
+            <p style="font-size: 12px; color: #777; margin-top:40px;">Dies ist eine automatische Nachricht von OSIRIS. Bitte antworte nicht darauf.</p>
+        </div>
+    ';
 }

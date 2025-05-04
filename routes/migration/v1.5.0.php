@@ -457,6 +457,7 @@ if ($count > 0) {
             "funding_program" => $project['funding_organization'] ?? null,
             "parent" => $project['parent'],
             "parent_id" => $project['parent_id'],
+            "proposal_id" => $project['parent_id'],
         ];
         if (isset($project['parent_id']) && DB::is_ObjectID($project['parent_id'])) {
             $new_project['parent_id'] = DB::to_ObjectID($project['parent_id']);

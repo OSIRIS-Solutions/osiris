@@ -177,6 +177,12 @@ $active_fields = array_values($active_fields);
             'label' => lang('Updated at', 'Geändert am'),
             'type' => 'datetime',
             'input' => 'date',
+        ],
+        [
+            'id' => 'roles',
+            'label' => lang('Roles', 'Rollen'),
+            'type' => 'string',
+            'input' => 'text',
         ]
     ];
     foreach ($active_fields as $field) {
