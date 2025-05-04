@@ -550,10 +550,19 @@ class Project extends Vocabulary
 
     public function getStartDate()
     {
+        if (!isset($this->project['start']) && isset($this->project['start_proposed'])){
+            // start proposed is in ISO
+            return Document::format_date($this->project['start_proposed']);
+        }
+
         return sprintf('%02d', $this->project['start']['month']) . "/" . $this->project['start']['year'];
     }
     public function getEndDate()
     {
+        if (!isset($this->project['end']) && isset($this->project['end_proposed'])){
+            // end proposed is in ISO
+            return Document::format_date($this->project['end_proposed']);
+        }
         return sprintf('%02d', $this->project['end']['month']) . "/" . $this->project['end']['year'];
     }
     public function getDuration()
@@ -659,9 +668,9 @@ class Project extends Vocabulary
     }
 
 
-    public function widgetLarge($user = null, $external = false)
+    public function widgetLarge($user = null, $external = false, $collection = 'projects')
     {
-        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
+        $widget = '<a class="module" href="' . ROOTPATH . '/'.$collection.'/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
         $widget .= '<span class="float-right">' . $this->getDateRange() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';

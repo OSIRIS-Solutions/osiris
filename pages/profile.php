@@ -1492,7 +1492,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             $Project->setProject($proposal);
                         ?>
                             <div class="col-md-6">
-                                <?= $Project->widgetLarge($user) ?>
+                                <?= $Project->widgetLarge($user, false, 'proposals') ?>
                             </div>
                         <?php } ?>
                     </div>
