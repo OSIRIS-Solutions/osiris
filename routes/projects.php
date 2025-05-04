@@ -483,6 +483,15 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     }
     if (!empty($persons)) {
         $values['persons'] = $persons;
+    } else {
+        // add current user as applicant
+        $values['persons'] = [
+            [
+                'user' => $_SESSION['username'],
+                'role' => 'applicant',
+                'name' => $DB->getNameFromId($_SESSION['username'])
+            ]
+        ];
     }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {

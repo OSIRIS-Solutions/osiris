@@ -183,7 +183,7 @@ class Project extends Vocabulary
     public function getProjectTypes($include_hidden = false)
     {
         $filter = [];
-        if (!$include_hidden) $filter = ['disabled' => false];
+        if (!$include_hidden) $filter = ['disabled' => ['$ne' => true]];
         return $this->db->adminProjects->find($filter)->toArray();
     }
 

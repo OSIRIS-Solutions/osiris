@@ -507,11 +507,14 @@ if ($process == 'project') {
             <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
             <i class="ph ph-arrow-fat-line-left"></i>
         </a>
-
+<!-- 
         <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
+         -->
+
+         <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 
         <?php if ($stage <= $finished_stages) { ?>
             <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">

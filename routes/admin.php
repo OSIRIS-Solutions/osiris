@@ -355,7 +355,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
-        ['name' => $type . ' - ' . $stage . '/3']
+        ['name' => $type . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/project.php";
@@ -375,7 +375,7 @@ Route::get('/admin/projects/new', function () {
     $breadcrumb = [
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
-        ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/3']
+        ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/project.php";
