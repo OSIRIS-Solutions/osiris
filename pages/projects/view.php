@@ -50,6 +50,8 @@ if (isset($project['parent_id'])) {
     $parent = $osiris->projects->findOne(['_id' => $project['parent_id']]);
     $project['collaborators'] = $parent['collaborators'] ?? [];
 }
+
+$subproject = $project['subproject'] ?? false;
 ?>
 
 <style>
@@ -107,7 +109,7 @@ if (isset($project['parent_id'])) {
 <div class="title mb-20">
 
     <b class="badge text-uppercase primary">
-        <?php if ($project['subproject'] ?? false) { ?>
+        <?php if ($subproject) { ?>
             <?= lang('Subproject', 'Teilprojekt') ?>
         <?php } else { ?>
             <?= lang('Project', 'Projekt') ?>
@@ -186,7 +188,7 @@ if (isset($project['parent_id'])) {
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
         <?= lang('Project details', 'Projektdetails') ?>
     </a>
-    <?php if ($project['subproject'] ?? false) {
+    <?php if ($subproject) {
         // collaborators are inherited from parent project
         if (count($parent['collaborators'] ?? []) > 0) { ?>
             <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
@@ -332,7 +334,7 @@ if (isset($project['parent_id'])) {
                             </td>
                         </tr>
                     <?php } ?>
-                    <?php if (($project_type['subprojects'] ?? false) && !($project['subproject'] ?? false)) { ?>
+                    <?php if (($project_type['subprojects'] ?? false) && !($subproject)) { ?>
                         <tr>
                             <td>
                                 <span class="key">
@@ -497,7 +499,7 @@ if (isset($project['parent_id'])) {
         <?= lang('Collaborators', 'Kooperationspartner') ?>
     </h2>
 
-    <?php if ($edit_perm && !($project['subproject'])) { ?>
+    <?php if ($edit_perm && !$subproject) { ?>
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
@@ -506,7 +508,7 @@ if (isset($project['parent_id'])) {
         </div>
     <?php } ?>
 
-    <?php if ($project['subproject'] ?? false) { ?>
+    <?php if ($subproject) { ?>
         <p class="text-primary">
             <i class="ph ph-info"></i>
         <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
@@ -584,7 +586,7 @@ if (isset($project['parent_id'])) {
     <script>
         const id = '<?= $_GET['project'] ?? null ?>';
         console.log(id);
-        const collaborator_id = '<?= ($project['subproject'] ?? false) ? strval($project['parent_id']) : $id ?>';
+        const collaborator_id = '<?= ($subproject) ? strval($project['parent_id']) : $id ?>';
         <?php if (empty($project['collaborators'] ?? array())) { ?>
             collabChart = true;
         <?php } ?>
