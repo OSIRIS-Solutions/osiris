@@ -477,7 +477,7 @@ if ($process == 'project') {
                         $value = $m . ($required ? '*' : '');
                         // $field = $Project->FIELDS[$m] ?? null;
                         if (empty($field)) $field = ['en' => $m, 'de' => null];
-                        if ($field['custom'] ?? false && !$custom) {
+                        if (($field['custom'] ?? false) && !$custom) {
                             echo "<p>
                             <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
                             <br>
