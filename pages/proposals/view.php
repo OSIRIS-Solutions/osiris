@@ -262,6 +262,11 @@ $Vocabulary = new Vocabulary();
                         <i class="ph ph-check-circle"></i>
                         <?= lang('Approval', 'Bewilligung') ?>
                     </button>
+                    <!-- finance -->
+                    <button class="btn font-weight-bold" onclick="selectTab('finance')" id="finance-btn">
+                        <i class="ph ph-money"></i>
+                        <?= lang('Finance', 'Finanzen') ?>
+                    </button>
                 <?php } ?>
                 <?php if ($status == 'rejected') { ?>
                     <button class="btn font-weight-bold" style="--primary-color: var(--danger-color);--primary-color-20: var(--danger-color-20);" onclick="selectTab('rejection')" id="rejection-btn">
@@ -345,6 +350,59 @@ $Vocabulary = new Vocabulary();
                         </tr>
                     </tbody>
                 </table>
+
+                <div id="finance-details" style="display:none;">
+                    <table class="table">
+                        <tbody>
+                            <?php
+                            $fields = [
+                                'grant_income_proposed',
+                                'grant_income',
+                                'grant_sum_proposed',
+                                'grant_sum',
+                            ];
+                            foreach ($fields as $key) {
+                            ?>
+                                <tr>
+                                    <td>
+                                        <?php
+                                        echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
+                                        echo $Project->printField($key, $project[$key] ?? null);
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mb-0">
+                        <?= lang('Third-party funding per year', 'Drittmitteleinnahmen pro Jahr') ?>
+
+                        <a href="<?= ROOTPATH ?>/proposals/finance/<?= $id ?>">
+                            <i class="ph ph-edit"></i>
+                        </a>
+                    </h5>
+
+                    <table class="table">
+                        <tbody>
+                            <?php
+                            $years = $project['grant_years'] ?? [];
+                            foreach ($years as $year => $amount) {
+                                if (empty($amount)) continue;
+                            ?>
+                                <tr>
+                                    <td class="w-50 font-weight-bold"><?= $year ?></td>
+                                    <td>
+                                        <?= $Project->printField('grant_sum', $amount); ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
             <?php } ?>
             <?php if ($status == 'rejected') { ?>
                 <table class="table" id="rejection-details" style="display:none;">
@@ -376,7 +434,7 @@ $Vocabulary = new Vocabulary();
                     $('#proposal-details').hide();
                     $('#approval-details').hide();
                     $('#rejection-details').hide();
-                    $('#raw-data-details').hide();
+                    $('#finance-details').hide();
                     $('#' + tab + '-details').show();
 
                     $('#status-tabs .btn').removeClass('active');
@@ -508,7 +566,7 @@ $Vocabulary = new Vocabulary();
                                             $(this).val('')
                                         })
 
-                                            //remove units 
+                                        //remove units 
                                         row.find('select[id^="units"]').remove()
 
                                         $('#project-list').append(row)

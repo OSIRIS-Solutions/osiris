@@ -167,7 +167,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
             include BASEPATH . "/pages/projects/collaborators.php";
             break;
         case 'finance':
-            include BASEPATH . "/pages/proposal/finance.php";
+            include BASEPATH . "/pages/proposals/finance.php";
             break;
         case 'persons':
             include BASEPATH . "/pages/projects/persons.php";
@@ -582,6 +582,43 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     ]);
 });
 
+
+Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!isset($_POST['values'])) die("no values given");
+
+    /**
+     * Combine values[grant_years] && values[grant_amounts] to associative array
+     */
+    $grant_years = $_POST['values']['grant_years'] ?? [];
+    $grant_amounts = $_POST['values']['grant_amounts'] ?? [];
+
+    $grant_years = array_map('intval', $grant_years);
+    $grant_amounts = array_map('floatval', $grant_amounts);
+
+    $grants = array_combine($grant_years, $grant_amounts);
+    // sort by year (key)
+    ksort($grants);
+
+    $id = $DB->to_ObjectID($id);
+    $updateResult = $osiris->$collection->updateOne(
+        ['_id' => $id],
+        ['$set' => [
+            'grant_years' => $grants
+        ]]
+    );
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        die();
+    }
+    echo json_encode([
+        'inserted' => $updateResult->getModifiedCount(),
+        'id' => $id,
+    ]);
+    die;
+});
 
 Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
