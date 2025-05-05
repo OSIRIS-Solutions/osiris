@@ -18,6 +18,7 @@
  */
 
 $user = $user ?? $_SESSION['username'];
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 ?>
 
 
@@ -137,17 +138,10 @@ $user = $user ?? $_SESSION['username'];
                     font-weight: bold;
                 }
 
-                /* .filter tr td .submenu a.active::before {
-                    content: '●';
-                    color: var(--highlight-color);
-                    font-size: small;
-                    position: absolute;
-                    left: 2rem;
-                } */
             </style>
             <div class="filter" style="max-height: 22rem;">
                 <table id="filter-type" class="table small simple">
-                    <?php foreach ($Settings->getActivities() as $a) {
+                    <?php foreach ($Categories->categories as $a) {
                         $id = $a['id'];
                     ?>
                         <tr style="--highlight-color:  <?= $a['color'] ?>;">
@@ -159,7 +153,7 @@ $user = $user ?? $_SESSION['username'];
                                     </span>
                                 </a>
                                 <?php
-                                $subtypes = $osiris->adminTypes->find(['parent' => $id])->toArray();
+                                $subtypes = $a['children'] ?? [];
                                 if (count($subtypes) > 1) {
                                 ?>
 
@@ -253,7 +247,7 @@ $user = $user ?? $_SESSION['username'];
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div>
 
-            <?php if ($Settings->featureEnabled('topics')) { ?>
+            <?php if ($topicsEnabled) { ?>
                 <h6><?= $Settings->topicLabel() ?></h6>
 
                 <div class="filter">
@@ -294,6 +288,7 @@ $user = $user ?? $_SESSION['username'];
 
 <script>
     var dataTable;
+    var topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
 
     const minEl = document.querySelector('#filter-from');
     const maxEl = document.querySelector('#filter-to');
@@ -453,7 +448,7 @@ $user = $user ?? $_SESSION['username'];
                     data: 'activity',
                     render: function(data, type, row) {
                         var text = data;
-                        if (row.topics && row.topics.length > 0) {
+                        if (topicsEnabled && row.topics && row.topics.length > 0) {
                             text = '<span class="float-right topic-icons">'
                             row.topics.forEach(function(topic) {
                                 text += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
@@ -564,6 +559,7 @@ $user = $user ?? $_SESSION['username'];
                     searchable: true,
                     visible: false,
                     render: function(data, type, row) {
+                        if (data.length == 0 || !topicsEnabled) return ''
                         return data.join(', ')
                         // return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
                     }

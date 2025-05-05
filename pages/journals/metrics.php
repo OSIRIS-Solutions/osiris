@@ -77,7 +77,7 @@ $year = $_GET['year'] ?? $api_year;
 if (isset($_GET['year'])) {
 
     $count = $osiris->journals->count([
-        'metrics.year' => ['$ne' => $year],
+        'metrics.year' => ['$ne' => intval($year)],
         'no_metrics' => ['$ne' => true]
     ]);
     if ($count == 0) {

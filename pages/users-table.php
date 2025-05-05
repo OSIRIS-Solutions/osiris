@@ -16,6 +16,9 @@
  * @license     MIT
  */
 
+
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+
 $data_fields = $Settings->get('person-data');
 if (!is_null($data_fields)) {
     $data_fields = DB::doc2Arr($data_fields);
@@ -36,6 +39,7 @@ $keyword_name = 'Keywords';
 if ($active('keywords')) {
     $keyword_name = $Settings->get('staff-keyword-name', 'Keywords');
 }
+
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
@@ -98,7 +102,7 @@ if ($active('keywords')) {
             </div>
 
 
-            <?php if ($Settings->featureEnabled('topics')) { ?>
+            <?php if ($topicsEnabled) { ?>
                 <h6><?= $Settings->topicLabel() ?>
                     <a class="float-right" onclick="filterUsers('#filter-unit .active', null, 5)"><i class="ph ph-x"></i></a>
                 </h6>

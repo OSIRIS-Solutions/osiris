@@ -101,10 +101,10 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     data: 'open_access',
                     defaultContent: '-',
                     render: function(data, type, full, meta) {
-                        if (data === 'Nein' || data == 'No')
-                            return `<span class="text-danger">${data}</span>`;
-                        if (data === 'Ja' || data == 'Yes')
-                            return `<span class="text-success">${data}</span>`;
+                        if (data === 'Nein' || data == 'No' || data === 'false' || data === false)
+                            return `<span class="text-danger">${lang('No', 'Nein')}</span>`;
+                        if (data === 'Ja' || data == 'Yes' || data === 'true' || data === true)
+                            return `<span class="text-success">${lang('Yes', 'Ja')}</span>`;
                         return data;
                     },
                     className: 'unbreakable'
@@ -113,7 +113,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     type: 'natural',
                     targets: 4,
                     data: 'if',
-                    defaultContent: null,
+                    defaultContent: '-',
                     render: function(data, type, full, meta) {
                         if (!data) return '';
                         var impact = data.impact ?? 0;

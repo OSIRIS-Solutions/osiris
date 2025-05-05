@@ -702,20 +702,25 @@ Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
 });
 
 
-Route::post('/crud/categories/update-order', function () {
+Route::post('/crud/(categories|types)/update-order', function ($col) {
     include_once BASEPATH . "/php/init.php";
     // select the right collection
+    if ($col == 'categories') {
+        $collection = $osiris->adminCategories;
+    } else {
+        $collection = $osiris->adminTypes;
+    }
 
     foreach ($_POST['order'] as $i => $id) {
-        $osiris->adminCategories->updateOne(
+        $collection->updateOne(
             ['id' => $id],
             ['$set' => ['order' => $i]]
         );
-        # code...
     }
 
+    $_SESSION['msg'] = lang("Order updated", "Reihenfolge aktualisiert");
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=deleted-" . $deletedCount);
+        header("Location: " . $_POST['redirect']);
         die();
     }
 });
