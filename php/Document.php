@@ -1049,7 +1049,7 @@ class Document extends Settings
         if ($format == 'date') {
             return Document::format_date($val);
         }
-        if ($format == 'url') {
+        if ($format == 'url' && !empty($val) && $val != '-') {
             return "<a href='$val' target='_blank' class='link'>$val</a>";
         }
         return $val;
