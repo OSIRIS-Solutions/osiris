@@ -520,9 +520,9 @@ Route::post('/crud/admin/features', function () {
 
 
     if (isset($_POST['values'])) {
-        $osiris->adminFeatures->deleteMany([]);
         $features = $_POST['values'];
         foreach ($features as $feature => $enabled) {
+            $osiris->adminFeatures->deleteOne(['feature' => $feature]);
             $r = [
                 'feature' => $feature,
                 'enabled' => boolval($enabled)
