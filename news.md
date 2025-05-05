@@ -83,6 +83,13 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Inaktive Nutzer:innen werden bei Auswahllisten nun nach unten sortiert.
 - Mehr Felder für die erweiterte Suche hinzugefügt.
 - Sidebar-Navigation im Admin-Bereich verbessert.
+- Ein Problem wurde gefixt, durch das die Jahre in Metriken dupliziert wurde, wenn man aktualisiert hat
+- In der Liste der Journale wird jetzt der neuste JCR-Impact factor gezeigt
+- Im CV wird nun die Korrekte Sprache für die Überschriften verwendet. Außerdem wurden die teils hard-gecodeten Kategorien durch die flexiblen Kategorien ersetzt.
+- Der Name der Aktivitätskategorie in "Mein Jahr" wird nun korrekt angezeigt
+- In "Mein Jahr" werden die Aktivitätskategorien nun korrekt sortiert
+- Typen lassen sich ebenfalls sortieren
+- Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
 
 
 ---
