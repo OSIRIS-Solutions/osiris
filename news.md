@@ -91,6 +91,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Typen lassen sich ebenfalls sortieren
 - Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
+- Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
 
 ---
 

@@ -683,8 +683,7 @@ Route::get('/api/dashboard/author-network', function () {
 
     $depts = null;
     if (isset($_GET['dept'])) {
-        $depts = $Groups->getChildren($_GET['dept']);
-        $filter = ['authors.units' => ['$in' => $depts], 'type' => 'publication'];
+        $filter = ['units' => $_GET['dept'], 'type' => 'publication'];
     }
 
     if (isset($_GET['year'])) {

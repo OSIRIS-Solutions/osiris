@@ -20,10 +20,10 @@ function navigate(key) {
             if (publicationTable) break;
             publicationTable = true;
             initActivities('#publication-table', {
-                page: 'my-activities',
-                display_activities: 'web',
-                'units': DEPT,
-                type: 'publication'
+                filter: {
+                    'units': DEPT,
+                    type: 'publication'
+                }
             })
             // impactfactors('chart-impact', 'chart-impact-canvas', { user: {'$in': USERS} })
             // authorrole('chart-authors', 'chart-authors-canvas', { user: {'$in': USERS} })
@@ -33,10 +33,10 @@ function navigate(key) {
             if (activitiesTable) break;
             activitiesTable = true;
             initActivities('#activities-table', {
-                page: 'my-activities',
-                display_activities: 'web',
-                'units': DEPT,
-                type: { '$ne': 'publication' }
+                filter: {
+                    'units': DEPT,
+                    type: { '$ne': 'publication' }
+                }
             })
             // activitiesChart('chart-activities', 'chart-activities-canvas', { user: {'$in': USERS} })
             break;
