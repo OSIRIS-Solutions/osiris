@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routing file for database manipulations
  * 
@@ -16,16 +17,42 @@
 
 Route::get('/rerender', function () {
     set_time_limit(6000);
+    // TODO: tell the browser not to cache this page
+    
+    include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
+    include BASEPATH . "/header.php"; ?>
+
+    <p class="text-danger">
+        <i class="ph ph-warning"></i>
+        <?= lang('Start to render all activities. This might take a while. Please be patient and do not reload the page.', 'Ich starte damit, die Aktivitäten neu zu rendern. Dies kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
+    </p>
+    <?php
+    flush();
+    ob_flush();
+
+    // start rendering process
     renderActivities();
-    echo "Done.";
+    ?>
+
+    <div class="alert success">
+        <h4 class="title">
+            <?= lang('Success', 'Erfolg') ?>
+        </h4>
+        <?= lang('The rendering has finished. All activities should now be displayed correctly. You can now safely close this window.', 'Das Rendering ist abgeschlossen. Alle Aktivitäten sollten jetzt korrekt dargestellt werden. Du kannst diese Seite jetzt schließen.') ?>
+    </div>
+
+<?php
+    include BASEPATH . "/footer.php";
 });
 
 Route::get('/rerender-projects', function () {
     set_time_limit(6000);
     include_once BASEPATH . "/php/Render.php";
+    include BASEPATH . "/header.php";
     renderAuthorUnitsProjects();
     echo "Done.";
+    include BASEPATH . "/footer.php";
 });
 
 Route::get('/rerender-units/?(.*)', function ($username) {
@@ -33,8 +60,11 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     include_once BASEPATH . "/php/Render.php";
     $filter = [];
     if (!empty($username)) $filter['authors.user'] = $username;
+
+    include BASEPATH . "/header.php";
     renderAuthorUnitsMany($filter);
     echo "Done.";
+    include BASEPATH . "/footer.php";
 });
 
 Route::get('/check-duplicate-id', function () {

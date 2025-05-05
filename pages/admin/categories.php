@@ -37,8 +37,8 @@
             </style>
 
             <form action="<?= ROOTPATH ?>/crud/categories/update-order" method="post">
-            <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
-                    
+                <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
+
                 <table class="table w-auto">
                     <tbody id="authors">
                         <?php foreach ($Categories->categories as $type) { ?>
@@ -47,7 +47,7 @@
                                     <i class="ph ph-dots-six-vertical text-muted handle cursor-pointer"></i>
                                 </td>
                                 <td style="color: <?= $type['color'] ?? 'inherit' ?>">
-                                    <input type="hidden" name="order[]" value="<?=$type['id']?>">
+                                    <input type="hidden" name="order[]" value="<?= $type['id'] ?>">
                                     <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
                                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                                 </td>
@@ -64,11 +64,11 @@
             <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
             <script>
                 $(document).ready(function() {
-        $('#authors').sortable({
-            handle: ".handle",
-            // change: function( event, ui ) {}
-        });
-    })
+                    $('#authors').sortable({
+                        handle: ".handle",
+                        // change: function( event, ui ) {}
+                    });
+                })
             </script>
 
 
@@ -86,6 +86,23 @@
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
     </a>
+    <div class="dropdown">
+        <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">
+            <i class="ph ph-gear"></i>
+            Rerender <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="dropdown-menu w-400" aria-labelledby="rerender">
+            <h6 class="header">Rerender</h6>
+            <div class="content">
+                <?= lang('In case some activities are not looking right or if you changed something, you can trigger a complete rerendering by clicking the button below:', 'Falls einige Aktivitäten seltsam aussehen, sich die URL eures OSIRIS geändert hat oder ihr einfach Templates angepasst habt, könnt ihr hier ein komplettes neu-rendern der Daten einleiten:') ?>
+                <a class="btn block primary" href="<?=ROOTPATH?>/rerender">Rerender now!</a>
+
+                <small>
+                    <?=lang('This won\'t change any data. It will only fix the displaying of data.', 'Dies ändert keine Daten, sondern repariert nur die Anzeige der Daten.')?>
+                </small>
+            </div>
+        </div>
+    </div>
     <a class="btn ml-auto" href="#order">
         <i class="ph ph-list-numbers"></i>
         <?= lang('Change order', 'Reihenfolge ändern') ?>
@@ -107,7 +124,7 @@ foreach ($Categories->categories as $type) { ?>
         <h5><?= lang('Types', 'Typen') ?>:</h5>
         <ul class="horizontal mb-0">
             <?php
-            $children = $osiris->adminTypes->find(['parent' => $type['id']]);
+            $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
                 <li>
                     <a href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
