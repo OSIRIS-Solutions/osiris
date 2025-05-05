@@ -41,11 +41,6 @@
                     <h5 class="title text-center"><?= $q ?></h5>
 
                     <canvas id="overview-<?= $q ?>"></canvas>
-                    <!-- <div class="text-right mt-5">
-                        <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $d['quarter'] ?>', y: '<?= $d['year'] ?>'})">
-                            <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Activities') ?>
-                        </button>
-                    </div> -->
 
                     <script>
                         var ctx = document.getElementById('overview-<?= $q ?>')
@@ -101,6 +96,7 @@
     <?php }
 
 
+if ($Settings->featureEnabled('quarterly-reporting', true))
     foreach ($quarters as $q => $d) {
 
         $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);

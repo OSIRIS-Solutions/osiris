@@ -33,6 +33,14 @@ foreach ($M as $m) {
     if ($m == 'supervisor') $sws = true;
 }
 
+$projects = [];
+if (isset($activity['projects']) && count($activity['projects']) > 0) {
+    $projects = $osiris->projects->find(
+        ['_id' => ['$in' => $activity['projects']]],
+        ['projection' => ['_id' => 1, 'name' => 1, 'start'=>1, 'end'=>1, 'title'=>1, 'funder'=>1]]
+    )->toArray();
+}
+
 $guests_involved = boolval($typeArr['guests'] ?? false);
 $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
@@ -156,25 +164,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <i class="ph ph-upload"></i>
         <?= lang('Upload file', 'Datei hochladen') ?>
     </a>
-    <div class="btn-group">
-        <?php if ($Settings->featureEnabled('projects')) { ?>
-            <a href="#projects" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Project", "Projekt") ?>
-            </a>
-        <?php } ?>
-        <!-- <a href="#connect" class="btn text-primary border-primary">
-            <i class="ph ph-plus-circle"></i>
-            <?= lang("Tags", "Schlagwörter") ?>
-        </a> -->
-        <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-            <a href="#infrastructures" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Infrastructure", "Infrastruktur") ?>
-            </a>
-        <?php } ?>
-        
-    </div>
 
 
     <div class="btn-group">
@@ -354,12 +343,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         </div>
     <?php } ?>
 
-    <?php if (isset($doc['projects']) && count($doc['projects']) > 0) { ?>
+    <?php if (!empty($projects)) { ?>
         <div class="mr-10 badge bg-white">
             <small><?= lang('Projects', 'Projekte') ?>: </small>
             <br />
-            <?php foreach ($doc['projects'] as $p) { ?>
-                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p ?>"><?= $p ?></a>
+            <?php foreach ($projects as $p) { ?>
+                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['name'] ?></a>
             <?php } ?>
         </div>
     <?php } ?>
@@ -374,7 +363,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                 <div class="custom-switch">
                     <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                     <label for="hide" id="hide-label">
-                        <?= $doc['hide'] ? lang('Visible', 'Sichtbar') : lang('Hidden', 'Versteckt') ?>
+                        <?= $doc['hide'] ? lang('Hidden', 'Versteckt') :  lang('Visible', 'Sichtbar')  ?>
                     </label>
                 </div>
 
@@ -388,7 +377,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                             },
                             success: function(response) {
                                 var hide = $('#hide').prop('checked');
-                                $('#hide-label').text(hide ? '<?= lang('Visible', 'Sichtbar') ?>' : '<?= lang('Hidden', 'Versteckt') ?>');
+                                $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>': '<?= lang('Visible', 'Sichtbar') ?>');
                                 toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
                             },
                             error: function(response) {
@@ -503,8 +492,8 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         if ($count_infrastructures) :
         ?>
             <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
-                <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+                <?= $Settings->infrastructureLabel() ?>
                 <span class="index"><?= $count_infrastructures ?></span>
             </a>
 
@@ -1041,14 +1030,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             <?= lang('Projects', 'Projekte') ?>
         </h2>
 
-        <?php if (!empty($doc['projects'] ?? '') && !empty($doc['projects'][0])) {
+        <?php if (!empty($projects)) {
 
             require_once BASEPATH . "/php/Project.php";
             $Project = new Project();
 
-            foreach ($doc['projects'] as $project_id) {
-                $project = $osiris->projects->findOne(['name' => $project_id]);
-                if (empty($project)) continue;
+            foreach ($projects as $project) {
                 $Project->setProject($project);
         ?>
                 <?= $Project->widgetSmall(true) ?>
@@ -1072,7 +1059,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('Connect infrastructures', 'Infrastrukturen verknüpfen') ?>
+                    <?= lang('Connect '.$Settings->infrastructureLabel(), $Settings->infrastructureLabel().' verknüpfen') ?>
                 </h5>
                 <div>
                     <?php
@@ -1086,13 +1073,13 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
     <section id="infrastructures" style="display: none;">
         <div class="btn-toolbar float-sm-right">
             <a href="#infrastructures" class="btn secondary mr-5">
-                <i class="ph ph-tree-structure"></i>
+                <i class="ph ph-cube-transparent"></i>
                 <?= lang("Connect", "Verknüpfen") ?>
             </a>
         </div>
 
         <h2 class="title">
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h2>
 
         <?php if (!empty($doc['infrastructures'] ?? '') ) {
@@ -1311,37 +1298,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
     </p>
 
-    <style>
-        .history-list {
-            /* reverse order */
-            display: flex;
-            flex-direction: column-reverse;
-        }
-
-        .history-list .box {
-            margin-top: 0;
-        }
-
-        .del {
-            color: var(--danger-color);
-        }
-
-        .ins {
-            color: var(--success-color);
-        }
-
-        blockquote.signal {
-            border-left: 5px solid var(--signal-color);
-            padding-left: 1rem;
-            margin-top: 1rem;
-            margin-left: 0;
-        }
-
-        blockquote.signal .title {
-            font-weight: bold;
-            color: var(--signal-color);
-        }
-    </style>
     <?php
     if (empty($doc['history'] ?? [])) {
         echo lang('No history available.', 'Keine Historie verfügbar.');

@@ -14,35 +14,60 @@
  * @license     MIT
  */
 
-Route::get('/projects', function () {
+
+Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Projects", "Projekte")]
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge')]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/projects.php";
+    include BASEPATH . "/pages/$collection/list.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/projects/new', function () {
+Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => lang("New", "Neu")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/proposals/edit.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/projects/create-from-proposal/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $collection = 'projects';
     $breadcrumb = [
         ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
         ['name' => lang("New", "Neu")]
     ];
+    if (DB::is_ObjectID($id)) {
+        $mongo_id = $DB->to_ObjectID($id);
+        $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    } else {
+        $project = $osiris->proposals->findOne(['name' => $id]);
+        $id = strval($project['_id'] ?? '');
+    }
+
+    global $form;
+    $form = DB::doc2Arr($project);
+
+    $from_proposal = true;
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/edit.php";
+    include BASEPATH . "/pages/proposals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
-
-Route::get('/projects/search', function () {
+Route::get('/(projects|proposals)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("Search", "Suche")]
     ];
     include BASEPATH . "/header.php";
@@ -51,11 +76,11 @@ Route::get('/projects/search', function () {
 }, 'login');
 
 
-Route::get('/projects/statistics', function () {
+Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -64,15 +89,15 @@ Route::get('/projects/statistics', function () {
 }, 'login');
 
 
-Route::get('/projects/view/(.*)', function ($id) {
+Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);
-        $project = $osiris->projects->findOne(['_id' => $mongo_id]);
+        $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->projects->findOne(['name' => $id]);
+        $project = $osiris->$collection->findOne(['name' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -80,12 +105,76 @@ Route::get('/projects/view/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => $project['name']]
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/project.php";
+    include BASEPATH . "/pages/$collection/view.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+
+Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
+    include_once BASEPATH . "/php/init.php";
+    require_once BASEPATH . "/php/Project.php";
+
+    $user = $_SESSION['username'];
+
+    $mongo_id = $DB->to_ObjectID($id);
+    $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
+    $Project = new Project($project);
+
+    $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
+    $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+    if (!$edit_perm) {
+        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
+        die;
+    }
+
+    switch ($page) {
+        case 'collaborators':
+            $name = lang("Collaborators", "Kooperationspartner");
+            break;
+        case 'finance':
+            $name = lang("Finance", "Finanzen");
+            break;
+        case 'persons':
+            $name = lang("Persons", "Personen");
+            break;
+        default:
+            $name = lang("Edit", "Bearbeiten");
+            break;
+    }
+
+    $breadcrumb = [
+        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' =>  $project['name'], 'path' => "/$collection/view/$id"],
+        ['name' => $name]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($project);
+
+    include BASEPATH . "/header.php";
+    switch ($page) {
+        case 'collaborators':
+            include BASEPATH . "/pages/projects/collaborators.php";
+            break;
+        case 'finance':
+            include BASEPATH . "/pages/proposals/finance.php";
+            break;
+        case 'persons':
+            include BASEPATH . "/pages/projects/persons.php";
+            break;
+        default:
+            include BASEPATH . "/pages/proposals/edit.php";
+    }
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -104,67 +193,20 @@ Route::get('/nagoya', function () {
         ['name' => 'Nagoya Protocol']
     ];
 
-    $nagoya = $osiris->projects->find(
+    $nagoya_proposals = $osiris->proposals->find(
         ['nagoya' => 'yes']
     )->toArray();
+
+    $nagoya_projects = $osiris->proposals->find(
+        ['nagoya' => 'yes']
+    )->toArray();
+
+    $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/nagoya.php";
     include BASEPATH . "/footer.php";
 }, 'login');
-
-
-Route::get('/projects/(edit|collaborators|finance|public)/([a-zA-Z0-9]*)', function ($page, $id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-
-    $mongo_id = $DB->to_ObjectID($id);
-    $project = $osiris->projects->findOne(['_id' => $mongo_id]);
-    if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
-        die;
-    }
-
-    switch ($page) {
-        case 'collaborators':
-            $name = lang("Collaborators", "Kooperationspartner");
-            break;
-        case 'finance':
-            $name = lang("Finance", "Finanzen");
-            break;
-        case 'public':
-            $name = lang("Public representation", "Öffentliche Darstellung");
-            break;
-        default:
-            $name = lang("Edit", "Bearbeiten");
-    }
-
-    $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' =>  $project['name'], 'path' => "/projects/view/$id"],
-        ['name' => $name]
-    ];
-
-    global $form;
-    $form = DB::doc2Arr($project);
-
-    include BASEPATH . "/header.php";
-    switch ($page) {
-        case 'collaborators':
-            include BASEPATH . "/pages/projects/collaborators.php";
-            break;
-        case 'finance':
-            include BASEPATH . "/pages/projects/finance.php";
-            break;
-        case 'public':
-            include BASEPATH . "/pages/projects/public.php";
-            break;
-        default:
-            include BASEPATH . "/pages/projects/edit.php";
-    }
-    include BASEPATH . "/footer.php";
-}, 'login');
-
 
 
 Route::get('/projects/subproject/(.*)', function ($id) {
@@ -211,21 +253,29 @@ Route::get('/projects/subproject/(.*)', function ($id) {
         $form['name'] = $form['name'] . "-" . uniqid();
     }
     // delete stuff that should not be inherited
-    unset($form['title']);
-    unset($form['ressources']);
-    unset($form['personnel']);
-    unset($form['in-kind']);
-    unset($form['_id']);
+    $delete = [
+        'title',
+        'title_de',
+        'ressources',
+        'personnel',
+        'in-kind',
+        'created',
+        'created_by',
+        'updated',
+        'updated_by',
+        '_id'
+    ];
+    foreach ($delete as $key) {
+        unset($form[$key]);
+    }
 
     // add parent project
     $form['parent'] = $project['name'];
     $form['parent_id'] = strval($project['_id']);
-
-    // set type to subproject
-    $type = 'Teilprojekt';
+    $form['type'] = $project['type'];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/edit.php";
+    include BASEPATH . "/pages/proposals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -344,28 +394,75 @@ Route::post('/projects/download/(.*)', function ($id) {
  * CRUD routes
  */
 
-Route::post('/crud/projects/create', function () {
+
+
+Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
-    $collection = $osiris->projects;
+
 
     $values = validateValues($_POST['values'], $DB);
-
-    // check if project name already exists:
-    $project_exist = $collection->findOne(['name' => $values['name']]);
-    if (!empty($project_exist)) {
-        header("Location: " . $red . "?msg=project ID does already exist.");
+    if (!isset($values['type']) || !isset($values['name'])) {
+        header("Location: " . ROOTPATH . "/$collection/new?msg=missing-parameters");
         die();
     }
+
+    // check if project name already exists:
+    // $project_exist = $osiris->$collection->findOne(['name' => $values['name']]);
+    // if (!empty($project_exist)) {
+    //     header("Location: " . ROOTPATH . "/$collection?msg=project ID does already exist.");
+    //     die();
+    // }
+    // get project type
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
 
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['end-delay'] = endOfCurrentQuarter(true);
     $values['created_by'] = $_SESSION['username'];
 
-    // add false checkbox values
-    $values['public'] = boolval($values['public'] ?? false);
+    if (isset($values['parent_id'])) {
+        $values['parent_id'] = $DB->to_ObjectID($values['parent_id']);
+        $values['subproject'] = true;
+        $parent = $osiris->projects->findOne(['_id' => $values['parent_id']]);
+        if (!empty($parent)) {
+            $values['parent'] = $parent['name'];
+            // inherit persons
+            $values['persons'] = $parent['persons'];
+        } else {
+            unset($values['parent_id']);
+        }
+        if (isset($values['proposal_id'])) {
+            // shared proposal
+            $values['proposal_id'] = $DB->to_ObjectID($values['proposal_id']);
+        }
+    } else if ($collection == 'proposals') {
+        $values['status'] = 'proposed';
+    } else {
+        $values['status'] = 'project';
+        if (isset($values['proposal_id'])) {
+            // connect project to proposal
+            $values['proposal_id'] = $DB->to_ObjectID($values['proposal_id']);
+            $proposal = $osiris->proposals->findOne(['_id' => $values['proposal_id']]);
+            if (!empty($proposal)) {
+                $values['persons'] = $proposal['persons'];
+                $values['_id'] = $values['proposal_id'];
+
+                $osiris->proposals->updateOne(
+                    ['_id' => $values['proposal_id']],
+                    ['$set' => ['project_id' => $values['proposal_id']]]
+                );
+            } else {
+                unset($values['proposal_id']);
+            }
+        }
+    }
+
+    if (isset($values['public'])) {
+        $values['public'] = boolval($values['public']);
+    }
 
     // add persons
     $persons = [];
@@ -377,9 +474,38 @@ Route::post('/crud/projects/create', function () {
             'name' => $DB->getNameFromId($values[$key])
         ];
     }
+    if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
+        $persons[] = [
+            'user' => $user,
+            'role' => ($key == 'contact' ? 'applicant' : $key),
+            'name' => $DB->getNameFromId($user)
+        ];
+    }
     if (!empty($persons)) {
         $values['persons'] = $persons;
+    } else {
+        // add current user as applicant
+        $values['persons'] = [
+            [
+                'user' => $_SESSION['username'],
+                'role' => 'applicant',
+                'name' => $DB->getNameFromId($_SESSION['username'])
+            ]
+        ];
     }
+
+    if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
+        $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
+    }
+    if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
+        $values['university'] = $DB->to_ObjectID($values['university']);
+    }
+
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderProject($values);
+
+    $insertOneResult  = $osiris->$collection->insertOne($values);
+    $id = $insertOneResult->getInsertedId();
 
     if (isset($values['funding_number'])) {
         $values['funding_number'] = explode(',', $values['funding_number']);
@@ -388,37 +514,70 @@ Route::post('/crud/projects/create', function () {
         // check if there are already activities with this funding number
         $osiris->activities->updateMany(
             ['funding' => ['$in' => $values['funding_number']]],
-            ['$push' => ['projects' => $values['name']]]
+            ['$addToSet' => ['projects' => $id]]
         );
     }
 
-    // check if type is Teilprojekt
-    if (isset($values['parent_id'])) {
-        // get parent project
-        $parent = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($values['parent_id'])]);
-
-        // take over parent projects parameters
-        if (!empty($parent)) {
-            $values['type'] = 'Teilprojekt';
-            $values['parent'] = $parent['name'];
-            foreach (Project::INHERITANCE as $key) {
-                if (isset($parent[$key])) {
-                    $values[$key] = $parent[$key];
-                }
-            }
-            // add project to parent project
-            $osiris->projects->updateOne(
-                ['_id' => $DB->to_ObjectID($values['parent_id'])],
-                ['$push' => ['subprojects' => $values['name']]]
+    // check for notifications on create
+    if (!empty($type['notification_created'] ?? null)) {
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        if ($collection == 'projects') {
+            $DB->addMessages(
+                $type['notification_created'],
+                'New project has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'project',
+                "/$collection/view/" . $id,
             );
+        } else {
+            $DB->addMessages(
+                $type['notification_created'],
+                'New project proposal has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'Ein neuer Projektantrag wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'proposal',
+                "/$collection/view/" . $id,
+            );
+        }
+
+        if (!empty($type['notification_created_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_created'], 'mail');
+            if (!empty($mails)) foreach ($mails as $mail) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Neues Projekt erstellt';
+                    $title = 'Neues Projekt erstellt';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Neuer Projektantrag erstellt';
+                    $title = 'Neuer Projektantrag erstellt';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id;
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $values['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $values['title'] . '</li>
+                    <li><b>Erstellt von:</b> ' . $creator . '</li>
+                    <li><b>Erstellt am:</b> ' . date('d.m.Y') . '</li>
+                </ul>
+                ';
+                sendMail(
+                    $mail,
+                    $subject,
+                    buildNotificationMail($title, $html, $linkText, $linkUrl)
+                );
+            }
         }
     }
 
-    include_once BASEPATH . "/php/Render.php";
-    $values = renderAuthorUnits($values, [], 'persons');
-
-    $insertOneResult  = $collection->insertOne($values);
-    $id = $insertOneResult->getInsertedId();
+    // update parent project if subproject
+    if (isset($values['parent_id'])) {
+        $osiris->projects->updateOne(
+            ['_id' => $values['parent_id']],
+            ['$push' => ['subprojects' => $id]]
+        );
+    }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
@@ -433,26 +592,62 @@ Route::post('/crud/projects/create', function () {
 });
 
 
-Route::post('/crud/projects/update/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
-    $collection = $osiris->projects;
 
+    /**
+     * Combine values[grant_years] && values[grant_amounts] to associative array
+     */
+    $grant_years = $_POST['values']['grant_years'] ?? [];
+    $grant_amounts = $_POST['values']['grant_amounts'] ?? [];
 
-    // $user_project = in_array($user, array_column(DB::doc2Arr($project['persons']), 'user'));
-    // $edit_perm = ($Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+    $grant_years = array_map('intval', $grant_years);
+    $grant_amounts = array_map('floatval', $grant_amounts);
 
-    // if (!$edit_perm) {
-    //     header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
-    //     die;
-    // }
+    $grants = array_combine($grant_years, $grant_amounts);
+    // sort by year (key)
+    ksort($grants);
+
+    $id = $DB->to_ObjectID($id);
+    $updateResult = $osiris->$collection->updateOne(
+        ['_id' => $id],
+        ['$set' => [
+            'grant_years' => $grants
+        ]]
+    );
+
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        die();
+    }
+    echo json_encode([
+        'inserted' => $updateResult->getModifiedCount(),
+        'id' => $id,
+    ]);
+    die;
+});
+
+Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!isset($_POST['values'])) die("no values given");
+
+    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
 
     $values = validateValues($_POST['values'], $DB);
     // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
 
-    $values['public'] = boolval($values['public'] ?? false);
+    if (isset($values['public'])) {
+        $values['public'] = boolval($values['public']);
+    }
 
     if (isset($values['persons']) && !empty($values['persons'])) {
         $values['persons'] = array_values($values['persons']);
@@ -463,30 +658,81 @@ Route::post('/crud/projects/update/([A-Za-z0-9]*)', function ($id) {
         $values['funding_number'] = array_map('trim', $values['funding_number']);
     }
 
-    // update all children
-    if ($osiris->projects->count(['parent_id' => $id]) > 0) {
-        include_once BASEPATH . "/php/Project.php";
-        $sub = [];
-        foreach ($values as $key => $value) {
-            if (in_array($key, Project::INHERITANCE)) {
-                $sub[$key] = $value;
-            }
-        }
-        $collection->updateMany(
-            ['parent_id' => $id],
-            ['$set' => $sub]
-        );
+    if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
+        $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
+    }
+    if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
+        $values['university'] = $DB->to_ObjectID($values['university']);
     }
 
-    include_once BASEPATH . "/php/Render.php";
-    $values = renderAuthorUnits($values, [], 'persons');
+    if (isset($values['abstract'])) {
+        $abstract_en = $values['abstract'];
+        $abstract_de = $values['abstract_de'] ?? $abstract_en;
+
+        $values['teaser_en'] = get_preview($abstract_en);
+        $values['teaser_de'] = get_preview($abstract_de);
+    }
+
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
+
+    // get history of project
+    $values = $Project->updateHistory($values, $id, $collection);
+
+    // check for notifications on create
+    if (!empty($type['notification_changed'] ?? null)) {
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        $tag = $collection == 'projects' ? 'project' : 'proposal';
+        $DB->addMessages(
+            $type['notification_changed'],
+            'Project has been changed by ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Projekt wurde geändert von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            $tag,
+            "/$collection/view/" . $id . '#section-history',
+        );
+
+        if (!empty($type['notification_changed_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_changed'], 'mail');
+            if (!empty($mails)) foreach ($mails as $mail) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Projekt bearbeitet';
+                    $title = 'Projekt bearbeitet';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Projektantrag bearbeitet';
+                    $title = 'Projektantrag bearbeitet';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id . '#section-history';
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $values['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $values['title'] . '</li>
+                    <li><b>Bearbeitet von:</b> ' . $creator . '</li>
+                    <li><b>Bearbeitet am:</b> ' . date('d.m.Y') . '</li>
+                    <li><b>Status:</b> ' . ($values['status'] ?? 'proposed') . '</li>
+                </ul>
+                ';
+                sendMail(
+                    $mail,
+                    $subject,
+                    buildNotificationMail($title, $html, $linkText, $linkUrl)
+                );
+            }
+        }
+    }
+
 
     $id = $DB->to_ObjectID($id);
-    $updateResult = $collection->updateOne(
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderProject($values, $id);
+
+    $updateResult = $osiris->$collection->updateOne(
         ['_id' => $id],
         ['$set' => $values]
     );
-
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
@@ -539,21 +785,82 @@ Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
 });
 
 
-Route::post('/crud/projects/update-persons/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
     $values = $_POST['persons'];
     foreach ($values as $i => $p) {
         $values[$i]['name'] =  $DB->getNameFromId($p['user']);
     }
     // avoid object transformation
     $values = array_values($values);
+    $values = ['persons' => $values];
 
-    $osiris->projects->updateOne(
+    $id = $DB->to_ObjectID($id);
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderProject($values, $collection, $id);
+
+
+    $Project = new Project();
+    $type = $Project->getProjectType($values['type']);
+
+    // get history of project
+    $values = $Project->updateHistory($values, $id, $collection);
+
+    // check for notifications on create
+    if (!empty($type['notification_changed'] ?? null)) {
+        $project = $osiris->$collection->findOne(['_id' => $id]);
+        $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+        $tag = $collection == 'projects' ? 'project' : 'proposal';
+        $DB->addMessages(
+            $type['notification_changed'],
+            'Persons of a project have been changed by ' . $creator . ': <b>' . $project['name'] . '</b>',
+            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . $project['name'] . '</b>',
+            $tag,
+            "/$collection/view/" . $id . '#section-history',
+        );
+
+
+        if (!empty($type['notification_changed_email'] ?? null)) {
+            include_once BASEPATH . "/php/MailSender.php";
+            $mails = $DB->getMessageGroup($type['notification_changed'], 'mail');
+            if (!empty($mails)) {
+                if ($collection == 'projects') {
+                    $subject = '[OSIRIS] Projekt bearbeitet';
+                    $title = 'Personen des Projekts bearbeitet';
+                    $linkText = 'Projekt anzeigen';
+                } else {
+                    $subject = '[OSIRIS] Projektantrag bearbeitet';
+                    $title = 'Personen des Projektantrags bearbeitet';
+                    $linkText = 'Projektantrag anzeigen';
+                }
+                $linkUrl = '/' . $collection . '/view/' . $id . '#section-history';
+                $html = '
+                <h3>Details:</h3>
+                <ul>
+                    <li><b>Kurztitel:</b> ' . $project['name'] . '</li>
+                    <li><b>Voller Titel:</b> ' . $project['title'] . '</li>
+                    <li><b>Bearbeitet von:</b> ' . $creator . '</li>
+                    <li><b>Bearbeitet am:</b> ' . date('d.m.Y') . '</li>
+                </ul>
+                ';
+                foreach ($mails as $mail) {
+                    sendMail(
+                        $mail,
+                        $subject,
+                        buildNotificationMail($title, $html, $linkText, $linkUrl)
+                    );
+                }
+            }
+        }
+    }
+
+    $osiris->$collection->updateOne(
         ['_id' => $DB::to_ObjectID($id)],
-        ['$set' => ["persons" => $values]]
+        ['$set' => $values]
     );
 
-    header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
+    header("Location: " . ROOTPATH . "/$collection/view/$id?msg=update-success");
 });
 
 Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id) {
@@ -585,6 +892,8 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
                 'created' => date('Y-m-d')
             ]);
             $coll_id = $new_org->getInsertedId();
+        } else {
+            $coll_id = $coll_id['_id'];
         }
         $collaborators[$i]['organization'] = $coll_id;
     }
@@ -598,28 +907,8 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
 });
 
 
-Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    $values = $_POST['values'];
-
-    $values['public'] = boolval($values['public'] ?? false);
-
-    foreach (['public_abstract', 'public_abstract_de', 'public_image', 'teaser_en', 'teaser_de', 'public_subtitle_de', 'public_title_de', 'public_subtitle', 'public_title'] as $key) {
-        if (!isset($values[$key]) || empty($values[$key])) {
-            $values[$key] = null;
-        }
-    }
-
-    if (isset($values['public_abstract']) && !empty($values['public_abstract'])) {
-        $abstract_en = $values['public_abstract'];
-        $abstract_de = $values['public_abstract_de'] ?? $abstract_en;
-
-        $values['teaser_en'] = get_preview($abstract_en);
-        $values['teaser_de'] = get_preview($abstract_de);
-    }
-
-    // dump($values, true);
-    // die;
 
     $target_dir = BASEPATH . "/uploads/";
     if (!is_writable($target_dir)) {
@@ -635,7 +924,6 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
         $filename = $id . "." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
         // $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["file"]["size"];
-        $values['public_image'] = "projects/" . $filename;
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
@@ -648,19 +936,24 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
             };
-            printMsg($errorMsg, "error");
+            $_SESSION['msg'] = $errorMsg;
         } else if ($filesize > 16000000) {
-            printMsg(lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."), "error");
-        } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            printMsg(lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."), "success");
+            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+        } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
+            $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
+            // update project with new image
+            $osiris->projects->updateOne(
+                ['_id' => $DB::to_ObjectID($id)],
+                ['$set' => ["image" => "projects/" . $filename]]
+            );
         } else {
             $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
         }
     } else if (isset($_POST['delete'])) {
         $filename = $_POST['delete'];
-        if (file_exists($target_dir . $filename)) {
+        if (file_exists($target_dir . '/' . $filename)) {
             // Use unlink() function to delete a file
-            if (!unlink($target_dir . $filename)) {
+            if (!unlink($target_dir . '/' . $filename)) {
                 $_SESSION['msg'] = lang("$filename cannot be deleted due to an error.", "$filename kann nicht gelöscht werden, da ein Fehler aufgetreten ist.");
             } else {
                 $_SESSION['msg'] = lang("$filename has been deleted.", "$filename wurde gelöscht.");
@@ -669,24 +962,15 @@ Route::post('/crud/projects/update-public/([A-Za-z0-9]*)', function ($id) {
 
         $osiris->projects->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
-            ['$set' => ["public_image" => null]]
+            ['$set' => ["image" => null]]
         );
-        // printMsg("File has been deleted from the database.", "success");
-
-        header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
-        die();
+    } else {
+        $_SESSION['msg'] = lang("No file was uploaded.", "Es wurde keine Datei hochgeladen.");
     }
 
-    $osiris->projects->updateOne(
-        ['_id' => $DB::to_ObjectID($id)],
-        ['$set' => $values]
-    );
-
-    header("Location: " . ROOTPATH . "/projects/view/$id?msg=update-success");
+    header("Location: " . ROOTPATH . "/projects/view/$id");
     die;
 });
-
-
 
 
 Route::post('/crud/projects/connect-activities', function () {
@@ -701,12 +985,12 @@ Route::post('/crud/projects/connect-activities', function () {
         die;
     }
 
-    $project = $_POST['project'];
-    $activity = $_POST['activity'];
+    $project = DB::to_ObjectID($_POST['project']);
+    $activity = DB::to_ObjectID($_POST['activity']);
 
     if (isset($_POST['delete'])) {
         $osiris->activities->updateOne(
-            ['_id' => $DB::to_ObjectID($activity)],
+            ['_id' => $activity],
             ['$pull' => ["projects" => $project]]
         );
         header("Location: " . $_POST['redirect'] . "?msg=disconnected-activity-from-project#add-activity");

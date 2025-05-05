@@ -21,6 +21,12 @@ $currentuser = $user == $_SESSION['username'];
 $YEAR = intval($_GET['year'] ?? CURRENTYEAR);
 $QUARTER = intval($_GET['quarter'] ?? CURRENTQUARTER);
 
+if (isset($_GET['quarter']) && strpos($_GET['quarter'], 'Q') !== false) {
+    $temp = explode("Q", $_GET['quarter']);
+    $YEAR = intval($temp[0]);
+    $QUARTER = intval($temp[1]);
+}
+
 $q = $YEAR . "Q" . $QUARTER;
 
 
@@ -172,7 +178,7 @@ if (!$Settings->featureEnabled('coins')) {
             <?php } ?>
 
             <?php
-            if ($currentuser) {
+            if ($currentuser && $Settings->featureEnabled('quarterly-reporting', true)) {
                 $approved = isset($USER['approved']) && in_array($q, DB::doc2Arr($USER['approved']));
                 $approval_needed = array();
 

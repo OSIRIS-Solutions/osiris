@@ -97,6 +97,19 @@ function validateValues($values, $DB)
                     'approved' => $value == $_SESSION['username']
                 ]
             ];
+        } else if ($key == 'kdsf-ffk') {
+            $values[$key] = array_map('strval', $value);
+            continue;
+        } else if ($key == 'countries'){
+            $countries = [];
+            foreach ($value as $country) {
+                $country = explode(';', $country, 2);
+                $countries[] = [
+                    'country' => $country[0],
+                    'role' => $country[1] ?? ''
+                ];
+            }
+            $values[$key] = $countries;
         } else if (is_array($value)) {
             $values[$key] = validateValues($value, $DB);
         } else if ($key == 'issn') {
@@ -114,9 +127,11 @@ function validateValues($values, $DB)
             $values[$key] = boolval($value);
         } else if ($key == 'oa_status') {
             $values['open_access'] = $value != 'closed';
+        } else if ($key == 'title' || $key == 'title_de'){
+            // strip <p> tags
+            $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
+            $values[$key] = trim($values[$key]);
         } else if (in_array($key, ['aoi', 'epub', 'correction'])) {
-            // dump($value);
-            // $values[$key] = boolval($value);
             $values[$key] = true;
         } else if ($value === '') {
             $values[$key] = null;
@@ -141,9 +156,6 @@ function validateValues($values, $DB)
         } else if ($key == 'month' || $key == 'year') {
             $values[$key] = intval($value);
         } else if (is_numeric($value)) {
-            // dump($key);
-            // dump($value);
-            // die;
             if (str_starts_with($value, "0")) {
                 $values[$key] = trim($value);
             } elseif (is_float($value + 0)) {
@@ -177,8 +189,8 @@ function validateValues($values, $DB)
         echo "The year $values[year] is not valid!";
         die();
     }
-    // dump($values, true);
-    // die();
+    // dump($values);
+    // die;
     return $values;
 }
 

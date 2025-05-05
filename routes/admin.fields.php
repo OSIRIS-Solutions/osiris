@@ -19,6 +19,7 @@ Route::get('/admin/fields', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Custom fields")]
     ];
 
@@ -56,6 +57,7 @@ Route::get('/admin/fields/(.*)', function ($id) {
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Custom Fields"), 'path' => "/admin/fields"],
         ['name' => $name]
     ];

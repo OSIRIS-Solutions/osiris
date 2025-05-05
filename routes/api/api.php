@@ -270,6 +270,10 @@ Route::get('/api/all-activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (isset($filter['projects'])) {
+        $filter['projects'] = DB::to_ObjectID($filter['projects']);
+    }
+
     $result = [];
     if ($page == "my-activities") {
         // only own work
@@ -551,7 +555,8 @@ Route::get('/api/users', function () {
             'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
-            'topics' => $user['topics'] ?? array()
+            'topics' => $user['topics'] ?? array(),
+            'keywords' => $user['keywords'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));
@@ -685,13 +690,18 @@ Route::get('/api/teaching', function () {
 });
 
 
-Route::get('/api/projects', function () {
+Route::get('/api/(projects|proposals)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
+    }
+    if ($type == 'projects') {
+        $collection = $osiris->projects;
+    } else {
+        $collection = $osiris->proposals;
     }
 
     $filter = [];
@@ -705,12 +715,17 @@ Route::get('/api/projects', function () {
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['$or' =>  [
-            ['title' => ['$regex' => $j]],
-            ['id' => $_GET['search']]
-        ]];
+        $filter = ['title' => ['$regex' => $j]];
     }
-    $result = $osiris->projects->find($filter)->toArray();
+
+    if (!$Settings->hasPermission($type . '.view')) {
+        $filter['$or'] = [
+            ['persons.user' => $_SESSION['username']],
+            ['created_by' => $_SESSION['username']]
+        ];
+    }
+
+    $result = $collection->find($filter)->toArray();
 
     if (isset($_GET['formatted'])) {
         $data = [];
@@ -734,7 +749,8 @@ Route::get('/api/projects', function () {
                 'role' => $project['role'] ?? '',
                 'topics' => $project['topics'] ?? array(),
                 'units' => $Project->getUnits(true),
-                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name')
+                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name'),
+                'subproject' => $doc['subproject'] ?? false,
             ];
         }
         $result = $data;

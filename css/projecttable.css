@@ -48,8 +48,8 @@
     }
 }
 
-@media (min-width: 1600px) {
+/* @media (min-width: 1600px) {
     .table.cards tbody tr {
         width: calc(33.3% - 1.4rem);
     }
-}
+} */

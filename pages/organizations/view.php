@@ -106,7 +106,14 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
         </thead>
         <tbody>
             <?php
-            $projects = $osiris->projects->find(['collaborators.organization' => $organization['_id']])->toArray();
+            $projects = $osiris->projects->find([
+                '$or' => [
+                  ['collaborators.organization' => $organization['_id']],
+                  ['funding_organization' => $organization['_id']],
+                  ['university' => $organization['_id']],
+
+                ]
+            ])->toArray();
             foreach ($projects as $project) {
                 $Project->setProject($project);
             ?>
@@ -138,7 +145,7 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     <table class="table dataTable responsive" id="infrastructures-table">
         <thead>
             <tr>
-                <th><?= lang('Infrastructure', 'Infrastruktur') ?></th>
+                <th><?= $Settings->infrastructureLabel() ?></th>
             </tr>
         </thead>
         <tbody>
@@ -175,6 +182,28 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     $('#infrastructures-table').DataTable({});
 </script>
 <?php } ?>
+
+<?php if ($Settings->hasPermission('organizations.delete')) { ?>
+    <button type="button" class="btn danger mt-20" id="delete-organization" onclick="$('#delete-organization-confirm').toggle();$(this).toggle();">
+        <i class="ph ph-trash"></i>
+        <?= lang('Delete organization', 'Organisation löschen') ?>
+    </button>
+
+    <div class="mt-20 alert danger" style="display: none;" id="delete-organization-confirm">
+        <form action="<?= ROOTPATH ?>/crud/organizations/delete/<?= $organization['_id'] ?>" method="post">
+            <h4 class="title">
+                <?= lang('Delete organization', 'Organisation löschen') ?>
+            </h4>
+            <p>
+                <?= lang('Are you sure you want to delete this organization?', 'Sind Sie sicher, dass Sie diese Organisation löschen möchten?') ?>
+            </p>
+            <button type="submit" class="btn danger">
+                <?= lang('Delete', 'Löschen') ?>
+            </button>
+        </form>
+    </div>
+<?php } ?>
+
 
 
 <?php if (isset($_GET['verbose'])) {

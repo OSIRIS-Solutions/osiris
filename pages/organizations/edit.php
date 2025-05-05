@@ -35,10 +35,10 @@ function sel($index, $value)
 $form = $GLOBALS['form'] ?? [];
 
 if (empty($form) || !isset($form['_id'])) {
-    $formaction = ROOTPATH . "/crud/organization/create";
+    $formaction = ROOTPATH . "/crud/organizations/create";
     $url = ROOTPATH . "/organizations/view/*";
 } else {
-    $formaction = ROOTPATH . "/crud/organization/update/" . $form['_id'];
+    $formaction = ROOTPATH . "/crud/organizations/update/" . $form['_id'];
     $url = ROOTPATH . "/organizations/view/" . $form['_id'];
 }
 
@@ -219,5 +219,3 @@ if (empty($form) || !isset($form['_id'])) {
         <button type="submit" class="btn secondary" id="submit"><?= lang('Save', 'Speichern') ?></button>
     </form>
 </div>
-
-<script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?= CSS_JS_VERSION ?>"></script>

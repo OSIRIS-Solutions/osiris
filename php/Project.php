@@ -15,118 +15,46 @@
  */
 
 require_once "DB.php";
+require_once "Vocabulary.php";
 require_once "Country.php";
 require_once "Groups.php";
 
-class Project extends DB
+class Project extends Vocabulary
 {
     public $project = array();
 
-    public $fields = [
-        'Drittmittel' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'grant_income',
-            'funder',
-            'funding_organization',
-            'funding_number',
-            'grant_sum_proposed',
-            'grant_income_proposed',
-            'personnel',
-            'ressources',
-            'contact',
-            'purpose',
-            'role',
-            'coordinator',
-            'nagoya',
-            'countries'
+    public $FIELDS = [];
+
+    public const PHASES = [
+        [
+            'id' => 'proposed',
+            'name' => 'Proposed',
+            'name_de' => 'Beantragt',
+            'color' => 'signal',
+            'type' => 'proposal'
         ],
-        'Stipendium' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'grant_sum',
-            'grant_income',
-            'supervisor',
-            'scholar',
-            'scholarship',
-            'university',
+        [
+            'id' => 'approved',
+            'name' => 'Approved',
+            'name_de' => 'Bewilligt',
+            'color' => 'success',
+            'type' => 'proposal'
         ],
-        'Eigenfinanziert' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
-            'personnel',
-            'ressources',
-            'contact',
+        [
+            'id' => 'rejected',
+            'name' => 'Rejected',
+            'name_de' => 'Abgelehnt',
+            'color' => 'danger',
+            'type' => 'proposal'
+
         ],
-        'Teilprojekt' => [
-            'name',
-            'title',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'grant_subproject',
-            'funding_number',
-            'grant_subproject_proposed',
-            'personnel',
-            'ressources',
-            'contact',
-            // 'status',
-            // 'website',
-            // 'grant_sum',
-            // 'grant_income',
-            // 'funder',
-            // 'funding_organization',
-            // 'grant_sum_proposed',
-            // 'grant_income_proposed',
-            // 'purpose',
-            // 'role',
-            // 'coordinator',
-        ],
-        'default' => [
-            'name',
-            'title',
-            'status',
-            'time',
-            'abstract',
-            'public',
-            'internal_number',
-            'website',
+        [
+            'id' => 'project',
+            'name' => 'Project',
+            'name_de' => 'Projekt',
+            'color' => 'primary',
+            'type' => 'project'
         ]
-    ];
-
-    public const STATUS = [
-        'applied' => 'beantragt',
-        'approved' => 'bewilligt',
-        'rejected' => 'abgelehnt',
-        'finished' => 'abgeschlossen',
-    ];
-
-    public const PURPOSE = [
-        'research' => 'Forschung',
-        'teaching' => 'Lehre',
-        'promotion' => 'Förderung des wissenschaftlichen Nachwuchs',
-        'transfer' => 'Transfer',
-        'others' => 'Sonstiger Zweck',
     ];
 
     public const TYPE = [
@@ -137,38 +65,12 @@ class Project extends DB
         'other' => 'Sonstiges',
     ];
 
-    public const ROLE = [
-        'coordinator' => 'Koordinator',
-        'partner' => 'Partner',
-        'associated' => 'Beteiligt',
-    ];
-
     public const FUNDING = [
         'funding' => 'Förderung',
         'scholarship' => 'Stipendium',
         'self_funded' => 'Eigenfinanziert',
         'subproject' => 'Teilprojekt',
         'other' => 'Sonstiges',
-    ];
-    public const FUNDER = [
-        'DFG',
-        'Bund',
-        'Bundesländer',
-        'Wirtschaft',
-        'EU',
-        'Stiftungen',
-        'Leibniz Wettbewerb',
-        'Sonstige Drittmittelgeber',
-    ];
-
-    public const PERSON_ROLE = [
-        'PI' => 'Projektleitung',
-        'applicant' => 'Antragsteller:in',
-        'worker' => 'Projektmitarbeiter:in',
-        'scholar' => 'Stipediat:in',
-        'supervisor' => 'Betreuer:in',
-        'associate' => 'Beteiligte Person',
-        'coordinator' => 'Wiss. Koordinator:in'
     ];
 
     public const COLLABORATOR = [
@@ -182,39 +84,299 @@ class Project extends DB
         'Other' => 'Sonstiges',
     ];
 
-    public const INHERITANCE = [
-        'status',
-        'website',
-        'grant_sum',
-        'grant_income',
-        'funder',
-        'funding_organization',
-        'grant_sum_proposed',
-        'grant_income_proposed',
-        'purpose',
-        'role',
-        'coordinator',
-    ];
-    public const INHERITANCE_PUBLIC = [
-        'website',
-        'funder',
-        'funding_organization',
-        'purpose',
-        'role',
-        'coordinator',
-        'collaborators'
-    ];
+    // public const INHERITANCE = [
+    //     'status',
+    //     'website',
+    //     'grant_sum',
+    //     'grant_income',
+    //     'funder',
+    //     'funding_organization',
+    //     'grant_sum_proposed',
+    //     'grant_income_proposed',
+    //     'purpose',
+    //     'role',
+    //     'coordinator',
+    // ];
+    // public const INHERITANCE_PUBLIC = [
+    //     'website',
+    //     'funder',
+    //     'funding_organization',
+    //     'purpose',
+    //     'role',
+    //     'coordinator',
+    //     'collaborators'
+    // ];
 
     function __construct($project = null)
     {
         parent::__construct();
+
+        $this->initFields();
+
         if ($project !== null)
             $this->project = $project;
     }
 
-    public function getFields($type)
+    public function initFields()
     {
-        return $this->fields[$type] ?? $this->fields['default'];
+        // get all fields from file data/project-fields.json
+        $fields = json_decode(file_get_contents(BASEPATH . '/data/project-fields.json'), true);
+        if (empty($fields)) return;
+        $this->FIELDS = [];
+        foreach ($fields as $field) {
+            $this->FIELDS[$field['id']] = [
+                'id' => $field['id'],
+                'en' => $field['en'],
+                'de' => $field['de'],
+                'kdsf' => $field['kdsf'] ?? null,
+                'custom' => false,
+                "scope" => $field['scope'] ?? [],
+                'order' => $field['order'] ?? 99,
+            ];
+        }
+
+        $custom_fields = $this->db->adminFields->find();
+        foreach ($custom_fields as $field) {
+            $this->FIELDS[$field['id']] = [
+                'id' => $field['id'],
+                'en' => $field['name'],
+                'de' => $field['name_de'],
+                'kdsf' => null,
+                'custom' => true,
+                'scope' => ["project" => false, "proposed" => false, "approved" => false],
+                'order' => $field['order'] ?? 99,
+            ];
+        }
+
+        // check if topics are enabled
+        $topics = $this->db->adminFeatures->findOne(['feature' => 'topics']);
+        if ($topics['enabled'] ?? false) {
+            $label = $this->db->adminGeneral->findOne(['key' => 'topics_label']);
+            if (empty($label) || empty($label['value'])) $label = ['en' => 'Research topics', 'de' => 'Forschungsbereiche'];
+            else $label = $label['value'];
+            $this->FIELDS['topics'] = [
+                'id' => 'topics',
+                'en' => $label['en'],
+                'de' => $label['de'],
+                'required' => false,
+                'kdsf' => null,
+                'scope' => ["project" => false, "proposed" => false, "approved" => false],
+                'order' => $field['order'] ?? 99,
+            ];
+        }
+
+        // order by 'order'
+        uasort($this->FIELDS, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+    }
+
+    public function getProjectType($id)
+    {
+        $filter = [
+            'id' => $id
+        ];
+        $type = $this->db->adminProjects->findOne($filter);
+        return DB::doc2Arr($type);
+    }
+
+    public function getProjectTypes($include_hidden = false)
+    {
+        $filter = [];
+        if (!$include_hidden) $filter = ['disabled' => ['$ne' => true]];
+        return $this->db->adminProjects->find($filter)->toArray();
+    }
+
+    public function getFields($type_id, $phase)
+    {
+        $type = $this->db->adminProjects->findOne(['id' => $type_id]);
+        if (empty($type)) return [];
+        $phases = $type['phases'] ?? [];
+
+        $fields = [];
+        foreach ($phases as $p) {
+            if ($p['id'] == $phase) {
+                $fields = $p['modules'] ?? [];
+                break;
+            }
+        }
+        $fields = DB::doc2Arr($fields);
+        foreach ($this->FIELDS as $key => $value) {
+            $scope = $value['scope'] ?? [];
+            if (array_key_exists($phase, $scope) && $scope[$phase] === true) {
+                $fields[] = [
+                    'module' => $key,
+                    'required' => true
+                ];
+            }
+        }
+        // sort by 'order' in $this->FIELDS
+        usort($fields, function ($a, $b) {
+            $a_order = $this->FIELDS[$a['module']]['order'] ?? 0;
+            $b_order = $this->FIELDS[$b['module']]['order'] ?? 0;
+            return $a_order <=> $b_order;
+        });
+        return $fields;
+    }
+
+    public function printLabel($key)
+    {
+        $field = $this->FIELDS[$key] ?? null;
+        if (empty($field)) return $key;
+        return lang($field['en'], $field['de'] ?? null);
+    }
+
+    public function printField($field, $value)
+    {
+        if (empty($value)) return '-';
+        switch ($field) {
+            case 'type':
+                return $this->getType('');
+            case 'website':
+                $url = str_replace('https://', '', $value);
+                $url = str_replace('http://', '', $url);
+                $url = str_replace('www.', '', $url);
+                return '<a href="' . $value . '" target="_blank" class="link">' . $url . '</a>';
+            case 'start':
+            case 'end':
+            case 'start_proposed':
+            case 'end_proposed':
+            case 'submission_date':
+            case 'approval_date':
+            case 'rejection_date':
+                return Document::format_date($value);
+            case 'nagoya':
+                if ($value == 'no') {
+                    return lang('Not relevant', 'Nicht relevant');
+                }
+                $lang = lang('name', 'name_de');
+                $countriesList = '';
+                foreach ($this->project['nagoya_countries'] ?? [] as $c) {
+                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . '</li>';
+                }
+                return '<div class="alert signal">'
+                    . '<h6 class="title">' . lang('Countries', 'Länder:') . '</h6>'
+                    . '<ul class="list signal mb-0">' . $countriesList . '</ul>'
+                    . '</div>';
+
+            case 'countries':
+                $lang = lang('name', 'name_de');
+                $countriesList = '';
+                foreach ($value ?? [] as $c) {
+                    $role = '';
+                    if (isset($c['country'])) {
+                        $iso = $c['country'];
+                    }
+                    if (isset($c['role'])) {
+                        $role = ' (' . $c['role'] . ')';
+                    }
+                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . $role . '</li>';
+                }
+                return '<ul class="list signal mb-0">' . $countriesList . '</ul>';
+            case 'purpose':
+                return $this->getPurpose();
+            case 'role':
+                return $this->getRole();
+            case 'status':
+                return $this->getStatus();
+            case 'funder':
+                return $this->getFunder();
+            case 'funding_number':
+                return $this->getFundingNumbers('<br>');
+            case 'funding_type':
+                return $this->getFundingType();
+            case 'contact':
+            case 'stipendiate':
+            case 'scholar':
+            case 'supervisor':
+                return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
+            case 'persons':
+                $value = DB::doc2Arr($value);
+                $value = array_column($value, 'name');
+                return implode(', ', $value);
+            case 'units':
+                $value = DB::doc2Arr($value);
+                return implode(', ', $value);
+            case 'applicants':
+                $applicants = DB::doc2Arr($value);
+                $applicantsList = '';
+                foreach ($applicants as $a) {
+                    $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                }
+                return '<ul class="list mb-0">' . $applicantsList . '</ul>';
+            case 'grant_sum_proposed':
+            case 'grant_income_proposed':
+            case 'grant_sum':
+            case 'grant_income':
+                return number_format($value, 2, ',', '.') . ' €';
+            case 'abstract':
+            case 'abstract_de':
+                // shorten 
+                $abstract = $value;
+                if (strlen($abstract) > 200) {
+                    $abstract = '<div class="preview-text">' . $value . '</div>';
+                    $abstract .= '<a class="text-muted font-size-12" onclick="$(this).prev().removeClass(\'preview-text\'); $(this).toggle()">' . lang('Show more', 'Mehr anzeigen') . '...</a>';
+                }
+                return $abstract;
+            case 'kdsf-ffk':
+                $return = '<ul class="list mb-0">';
+                foreach ($value as $k) {
+                    $kdsf = $this->getKDSF($k, 'labels');
+                    if (empty($kdsf)) continue;
+                    $return .= '<li>' . lang($kdsf['en'], $kdsf['de'] ?? null) . '</li>';
+                }
+                return $return . '</ul>';
+            case 'public':
+                if ($value) {
+                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('yes', 'ja') . '</span>';
+                } else {
+                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('no', 'nein') . '</span>';
+                }
+            case 'image':
+                if (empty($value)) return '-';
+                $image = '<img src="' . ROOTPATH . '/uploads/' . $value . '" class="img-fluid" alt="' . lang('Project image', 'Projektbild') . '">';
+                return $image;
+            case 'topics':
+                $topics = DB::doc2Arr($value);
+                $Settings = new Settings();
+                return $Settings->printTopics($topics);
+            case 'ressources':
+                # { "material": "no", "material_details": null, "personnel": "no", "personnel_details": null, "room": "yes", "room_details": "1 Schreibtischarbeitsplatz", "other": "no", "other_details": null }
+                $return = '<ul class="list mb-0">';
+                foreach (
+                    [
+                        'material' => lang('Additional material resources', 'Zusätzliche Sachmittel'),
+                        'personnel' => lang('Additional personnel resources', 'Zusätzliche Personalmittel'),
+                        'room' => lang('Additional room capacities', 'Zusätzliche Raumkapazitäten'),
+                        'other' => lang('Other resources', 'Sonstige Ressourcen')
+                    ] as $res => $label
+                ) {
+                    if (isset($value[$res]) && $value[$res] == 'yes') {
+                        $details = $value[$res . '_details'] ?? null;
+                        if (!empty($details)) {
+                            $details = '<br><small>' . $details . '</small>';
+                        }
+                        $return .= '<li>' . $label . $details . '</li>';
+                    }
+                }
+                return $return . '</ul>';
+            case 'funding_organization':
+            case 'scholarship':
+            case 'university':
+                $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return $value;
+                return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+            default:
+                if (is_string($value)) {
+                    return $value;
+                }
+                return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function getFieldsLegacy($type)
+    {
+        return 'NO LONGER SUPPORTED';
     }
     public function setProject($project)
     {
@@ -225,12 +387,14 @@ class Project extends DB
         $this->project = $this->db->projects->findOne(['_id' => DB::to_ObjectID($project_id)]);
     }
 
-    public function getStatus()
+    public function getStatus($status = '')
     {
-        switch ($this->project['status'] ?? '') {
+        switch ($this->project['status'] ?? $status) {
             case 'applied':
-                return "<span class='badge signal'>" . lang('applied', 'beantragt') . "</span>";
+            case 'proposed':
+                return "<span class='badge signal'>" . lang('proposed', 'beantragt') . "</span>";
             case 'approved':
+            case 'accepted':
                 if ($this->inPast())
                     return "<span class='badge dark'>" . lang('expired', 'abgelaufen') . "</span>";
                 return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
@@ -238,36 +402,53 @@ class Project extends DB
                 return "<span class='badge danger'>" . lang('rejected', 'abgelehnt') . "</span>";
             case 'finished':
                 return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
+            case 'project':
+                if ($this->inPast())
+                    return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
+                return "<span class='badge primary'>" . lang('ongoing', 'laufend') . "</span>";
             default:
-                return "<span class='badge'>-</span>";
+                return "<span class='badge'>" . lang('unknown', 'unbekannt') . "</span>";
         }
     }
-    public function getType($cls= '')
+
+    public function getType($cls = '', $default='third-party')
     {
-        $type = $this->project['type'] ?? 'Drittmittel';
+        $type = $this->project['type'] ?? $default;
+        $project_type = $this->getProjectType($type);
+        if (!empty($project_type)) {
+            $style = "style='background-color: " . $project_type['color'] . "33; color: " . $project_type['color'] . "'";
+            $return = "<span class='badge no-wrap $cls' $style>";
+            if (isset($project_type['icon'])) {
+                $return .= '<i class="ph ph-' . $project_type['icon'] . '"></i> ';
+            }
+            $return .= lang($project_type['name'], $project_type['name_de'] ?? null) . "</span>";
+            return $return;
+        }
+
+        // LEGACY SUPPORT
         if ($type == 'Drittmittel') { ?>
-            <span class="badge text-danger no-wrap <?=$cls?>">
+            <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Third-party funded', 'Drittmittel') ?>
             </span>
 
         <?php } elseif ($type == 'Stipendium') { ?>
-            <span class="badge text-success no-wrap <?=$cls?>">
+            <span class="badge text-success no-wrap <?= $cls ?>">
                 <i class="ph ph-tip-jar"></i>
                 <?= lang('Stipendiate', 'Stipendium') ?>
             </span>
         <?php } else if ($type == 'Eigenfinanziert') { ?>
-            <span class="badge text-signal no-wrap <?=$cls?>">
+            <span class="badge text-signal no-wrap <?= $cls ?>">
                 <i class="ph ph-piggy-bank"></i>
                 <?= lang('Self-funded', 'Eigenfinanziert') ?>
             </span>
         <?php } else if ($type == 'Teilprojekt') { ?>
-            <span class="badge text-danger no-wrap <?=$cls?>">
+            <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
                 <?= lang('Subproject', 'Teilprojekt') ?>
             </span>
         <?php } else { ?>
-            <span class="badge text-muted no-wrap <?=$cls?>">
+            <span class="badge text-muted no-wrap <?= $cls ?>">
                 <i class="ph ph-coin"></i>
                 <?= lang('Other', 'Sonstiges') ?>
             </span>
@@ -276,11 +457,8 @@ class Project extends DB
 
     public function getRoleRaw()
     {
-        if (($this->project['role'] ?? '') == 'coordinator')
-            return lang('Coordinator', 'Koordinator');
-        if (($this->project['role'] ?? '') == 'associated')
-            return lang('Associated', 'Beteiligt');
-        return 'Partner';
+        $role = $this->project['role'] ?? 'associated';
+        return $this->getValue('project-institute-role', $role);
     }
 
     public function getRole()
@@ -319,22 +497,21 @@ class Project extends DB
         }
     }
 
+    public function getFunder()
+    {
+        $funder = $this->project['funder'] ?? 'others';
+        return $this->getValue('funder', $funder);
+    }
+    public function getFundingType()
+    {
+        $funder = $this->project['funding_type'] ?? 'others';
+        return $this->getValue('funding-type', $funder);
+    }
+
     public function getPurpose()
     {
-        switch ($this->project['purpose'] ?? '') {
-            case "research":
-                return lang('Research', 'Forschung');
-            case "teaching":
-                return lang('Teaching', 'Lehre');
-            case "promotion":
-                return lang('Promotion of young scientists', 'Förderung des wissenschaftlichen Nachwuchs');
-            case "transfer":
-                return lang('Transfer', 'Transfer');
-            case "others":
-                return lang('Other purpose', 'Sonstiger Zweck');
-            default:
-                return '-';
-        }
+        $purpose = $this->project['purpose'] ?? 'others';
+        return $this->getValue('project-purpose', $purpose);
     }
     function getFundingNumbers($seperator)
     {
@@ -373,21 +550,38 @@ class Project extends DB
 
     public function getStartDate()
     {
+        if (!isset($this->project['start']) && isset($this->project['start_proposed'])){
+            // start proposed is in ISO
+            return Document::format_date($this->project['start_proposed']);
+        }
+
         return sprintf('%02d', $this->project['start']['month']) . "/" . $this->project['start']['year'];
     }
     public function getEndDate()
     {
+        if (!isset($this->project['end']) && isset($this->project['end_proposed'])){
+            // end proposed is in ISO
+            return Document::format_date($this->project['end_proposed']);
+        }
         return sprintf('%02d', $this->project['end']['month']) . "/" . $this->project['end']['year'];
     }
     public function getDuration()
     {
-        $year1 = $this->project['start']['year'];
-        $year2 = $this->project['end']['year'];
+        if (!isset($this->project['start']) || !isset($this->project['end']))
+            return '-';
 
-        $month1 = $this->project['start']['month'];
-        $month2 = $this->project['end']['month'];
+        $start = $this->project['start_date']; // in format yyyy-mm-dd
+        $end = $this->project['end_date']; // in format yyyy-mm-dd
 
-        return (($year2 - $year1) * 12) + ($month2 - $month1) + 1;
+        // get number of month between start and end
+        $start = new DateTime($start);
+        $end = new DateTime($end);
+        $interval = $start->diff($end);
+        $years = $interval->y;
+        $months = $interval->m;
+
+        $total_month = $years * 12 + $months + 1;
+        return $total_month;
     }
     public function getProgress()
     {
@@ -413,35 +607,28 @@ class Project extends DB
         return round($progress);
     }
 
-    public static function personRoleRaw($role)
+    public function personRoleRaw($role)
     {
-        switch ($role) {
-            case 'PI':
-                return ['en' => 'Project lead', 'de' => 'Projektleitung'];
-            case 'applicant':
-                return ['en' => 'Applicant', 'de' => 'Antragsteller:in'];
-            case 'worker':
-                return ['en' => 'Project member', 'de' => 'Projektmitarbeiter:in'];
-            case 'scholar':
-                return ['en' => 'Scholar', 'de' => 'Stipediat:in'];
-            case 'supervisor':
-                return ['en' => 'Supervisor', 'de' => 'Betreuer:in'];
-            case 'coordinator':
-                return ['en' => 'Scientific Coordinator', 'de' => 'Wiss. Koordinator:in'];
-            default:
-                return ['en' => 'Associate', 'de' => 'Beteiligte Person'];
-        }
+        return $this->getValues('project-person-role', $role);
     }
 
-    public static function personRole($role, $gender = 'n')
+    public function personRole($role)
     {
-        $role = self::personRoleRaw($role);
-        return lang($role['en'], $role['de']);
+        return $this->getValue('project-person-role', $role);
+    }
+
+    public function getProjectStatus(){
+        if ($this->inPast()){
+            return '<i class="ph ph-check-circle text-success"></i> '. lang('ended', 'abgeschlossen');
+        } else {
+            return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
+        }
     }
 
     public function widgetSmall()
     {
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
         if (isset($this->project['funder']))
@@ -454,7 +641,7 @@ class Project extends DB
     public function widgetSubproject()
     {
         $contacts = array_column(DB::doc2Arr($this->project['persons']), 'name');
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
+        $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
         // contact
@@ -470,6 +657,7 @@ class Project extends DB
     public function widgetPortal($cls = "module")
     {
         $widget = '<a class="' . $cls . '" href="' . PORTALPATH . '/project/' . $this->project['_id'] . '">';
+        $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<p class="d-block text-muted">' . $this->project['title'] . '</p>';
         if (isset($this->project['funder']))
@@ -480,10 +668,9 @@ class Project extends DB
     }
 
 
-    public function widgetLarge($user = null, $external = false)
+    public function widgetLarge($user = null, $external = false, $collection = 'projects')
     {
-        $widget = '<a class="module ' . ($this->inPast() ? 'inactive' : '') . '" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
-
+        $widget = '<a class="module" href="' . ROOTPATH . '/'.$collection.'/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
         $widget .= '<span class="float-right">' . $this->getDateRange() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
@@ -500,7 +687,9 @@ class Project extends DB
             }
             $widget .= '<span class="float-right badge">' . $this->personRole($userrole) . '</span> ';
         }
-        $widget .= '<span class="mr-10">' . $this->getStatus() . '</span> ';
+        if ($this->project['status'] != 'project') {
+            $widget .= '<span class="mr-10">' . $this->getStatus() . '</span> ';
+        }
         if (isset($this->project['funder']))
             $widget .= '<span class="text-muted">' . $this->project['funder'] . '</span>';
         $widget .= '</a>';
@@ -560,9 +749,9 @@ class Project extends DB
         foreach ($this->project['persons'] as $person) {
             $u = DB::doc2Arr($person['units'] ?? []);
             if (empty($u)) {
-               $u = $Groups->getPersonUnit($person['user'], $start);
-               if (empty($u)) continue;
-               $u = array_column($u, 'unit');
+                $u = $Groups->getPersonUnit($person['user'], $start);
+                if (empty($u)) continue;
+                $u = array_column($u, 'unit');
             }
 
             if (!empty($u)) {
@@ -572,4 +761,69 @@ class Project extends DB
         if (!$depts_only) return $units;
         return $Groups->deptHierarchies($units);
     }
+
+    
+    /**
+     * Function to convert array into human readable Module fields
+     */
+    private function convertProject4humans($doc)
+    {
+
+        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date'];
+
+        $result = [];
+
+        foreach ($doc as $key => $val) {
+            if (in_array($key, $omit_fields)) continue;
+            $val = $this->printField($key, $val);
+            if ($val instanceof BSONArray || $val instanceof BSONDocument) {
+                $val = DB::doc2Arr($val);
+            }
+            if (is_array($val)) {
+                if (is_string($val[0])) {
+                    $val = implode(', ', $val);
+                } else {
+                    $val = json_encode($val);
+                }
+            }
+            $val = strip_tags($val);
+            $result[$key] = $val;
+        }
+        return $result;
+    }
+
+    /**
+     * function to add update history in a document
+     */
+    public function updateHistory($new_doc, $id, $collection = 'projects')
+    {
+        if (DB::is_ObjectID($id)) {
+            $id = $this->to_ObjectID($id);
+        }
+        $old_doc = $this->db->$collection->findOne(['_id' => $id]);
+        $hist = [
+            'date' => date('Y-m-d'),
+            'user' => $_SESSION['username'] ?? 'system',
+            'type' => 'edited',
+            // 'current' => 'unchanged'
+            'changes' => []
+        ];
+        $new_ = $this->convertProject4humans($new_doc);
+        $old_ = $this->convertProject4humans($old_doc);
+        $diff = array_diff_assoc($new_, $old_);
+
+        if (!empty($diff)) {
+            $changes = [];
+            foreach ($diff as $key => $val) {
+                $changes[$key] = ['before' => $old_[$key] ?? null, 'after' => $val];
+            }
+            $hist['changes'] = $changes;
+        }
+        // dump($hist, true);
+        // die;
+        $new_doc['history'] = $old_doc['history'] ?? [];
+        $new_doc['history'][] = $hist;
+        return $new_doc;
+    }
 }
+

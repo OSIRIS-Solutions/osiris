@@ -87,7 +87,6 @@ if (!empty($Groups->tree)) {
     // take only id => name
     $Departments = array_column($Departments, 'name', 'id');
 } else $Departments = [];
-
 // Activity categories and types
 include_once BASEPATH . "/php/Categories.php";
 global $Categories;

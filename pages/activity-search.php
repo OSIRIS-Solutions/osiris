@@ -264,32 +264,6 @@ $filters = array_map(function ($f) {
     </div>
 </div>
 
-<style>
-    .checkbox-badge {
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .checkbox-badge label {
-        margin-bottom: .5rem;
-        background: white;
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        padding: .5rem;
-        padding-left: 3rem;
-    }
-
-    .checkbox-badge label:before {
-        top: .5rem;
-        left: .5rem;
-    }
-
-    .checkbox-badge label:after {
-        left: 1.1rem;
-        top: 0.8rem;
-    }
-</style>
-
 <div class="modal" id="column-select-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

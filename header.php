@@ -197,15 +197,171 @@ $pageactive = function ($p) use ($page) {
 
             </ul>
 
+            <!-- messages -->
+            <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+                $notifications = $DB->notifications();
+                $n_notifications = $_SESSION['has_notifications'] ?? false;
+            ?>
+                <div class="dropdown modal-sm">
+                    <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="messages" aria-haspopup="true" aria-expanded="false">
+                        <i class="ph ph-bell"></i>
+                        <span class="sr-only"><?= lang('Notifications', 'Benachrichtigungen') ?></span>
+                        <?php if ($n_notifications > 0) { ?>
+                            <span class="notification"><?= $n_notifications ?></span>
+                        <?php } ?>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-center notifications" aria-labelledby="messages">
+                        <h6 class="header text-primary"><?= lang('Notifications', 'Benachrichtigungen') ?></h6>
+                        <table class="table simple">
+                            <?php
+                            if ($n_notifications > 0) {
+                                if (isset($notifications['activity'])) {
+                                    
+                                    $issues = $notifications['activity']['values'];
+                                    $n_issues = $notifications['activity']['count'];
+                            ?>
+
+                                    <tr>
+                                        <td>
+                                            <p class="mt-0">
+                                                <?= lang(
+                                                    "You have <b class='text-danger'>$n_issues</b> " . ($n_issues == 1 ? 'message' : 'messages') . " for your activities:",
+                                                    "Du hast <b class='text-danger'>$n_issues</b> " . ($n_issues == 1 ? 'Benachrichtigung' : 'Benachrichtigungen') . " zu deinen Aktivitäten:"
+                                                ) ?>
+                                            </p>
+                                            <ul class="list danger mb-0">
+                                                <?php foreach ($issues as $issue) {
+                                                ?>
+                                                    <li>
+                                                        <?= $issue['name'] ?>:
+                                                        <b class="text-danger"><?= $issue['count'] ?></b>
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                            <a class="btn danger filled mt-10" href="<?= ROOTPATH ?>/issues">
+                                                <?= lang('View all', 'Alle anzeigen') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                                <?php if (isset($notifications['queue'])) {
+                                    $queue = $notifications['queue']['count'];
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <p class="mt-0">
+                                                <?= lang(
+                                                    "We found <b class='text-primary'>$queue</b> new " . ($queue == 1 ? 'activity' : 'activities') . " for you. Review them now.",
+                                                    "Wir haben <b class='text-primary'>$queue</b> " . ($queue == 1 ? 'Aktivität' : 'Aktivitäten') . " von dir gefunden. Überprüfe sie jetzt."
+                                                ) ?>
+                                            </p>
+                                            <a class="btn primary filled" href="<?= ROOTPATH ?>/queue/user">
+                                                <?= lang('Review', 'Überprüfen') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                                <?php if (isset($notifications['version'])) {
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <p class="mt-0">
+                                                <?= lang(
+                                                    "There has been an OSIRIS-Update since your last login. Have a look at the news.",
+                                                    "Es gab ein OSIRIS-Update, seitdem du das letzte Mal hier warst. Schau in die News, um zu wissen, was neu ist."
+                                                ) ?>
+                                            </p>
+                                            <a class="btn primary filled" href="<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>">
+                                                <?= lang('Show me', 'Anzeigen') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                                <?php if (isset($notifications['approval'])) {
+                                    $quarter = $notifications['approval']['key'];
+                                ?>
+                                    <tr>
+                                        <td>
+
+                                            <b>
+                                                <?= lang("The past quarter ($quarter) has not been approved yet.", "Das vergangene Quartal ($quarter) wurde von dir noch nicht freigegeben.") ?>
+                                            </b>
+
+                                            <p>
+                                                <?= lang('
+                                        For the quarterly controlling, you need to confirm that all activities from the previous quarter are stored in OSIRIS and saved correctly.
+                                        To do this, go to your year and check your activities. Afterwards you can release the quarter via the green button.
+                                        ', '
+                                        Für das Quartalscontrolling musst du bestätigen, dass alle Aktivitäten aus dem vergangenen Quartal in OSIRIS hinterlegt und korrekt gespeichert sind.
+                                        Gehe dazu in dein Jahr und überprüfe deine Aktivitäten. Danach kannst du über den grünen Button das Quartal freigeben.
+                                        ') ?>
+                                            </p>
+
+                                            <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
+                                                <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                                <?php if (isset($notifications['messages'])) {
+                                    $n_messages = count($notifications['messages']);
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <p class="mt-0">
+                                                <?= lang(
+                                                    "You have <b class='text-primary'>$n_messages</b> unread " . ($n_messages == 1 ? 'message' : 'messages') . ".",
+                                                    "Du hast <b class='text-primary'>$n_messages</b> ungelesene " . ($n_messages == 1 ? 'Nachricht' : 'Nachrichten') . "."
+                                                ) ?>
+                                            </p>
+                                            <a class="btn primary filled" href="<?= ROOTPATH ?>/messages">
+                                                <?= lang('View all', 'Alle anzeigen') ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                            <?php } else {
+                                echo lang('No new messages', 'Keine neuen Nachrichten');
+                            } ?>
+                        </table>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <div class="dropdown modal-sm">
+                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
+                    <i class="ph ph-translate"></i>
+                    <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
+                    <h6 class="header text-primary"><?= lang('Change language', 'Sprache ändern') ?></h6>
+
+                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
+                        <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
+                        <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
+                        <button type="submit" class="btn primary block ">
+                            <i class="ph ph-translate" aria-hidden="true"></i>
+                            <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                            <?= lang('Deutsch', 'English') ?>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Accessibility menu -->
-            <div class="dropdown d-none d-md-block">
-                <button class="btn text-primary border-primary square mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
+            <div class="dropdown modal-sm">
+                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-person-arms-spread ph-person-simple-circle"></i>
                     <span class="sr-only"><?= lang('Accessibility Options', 'Accessibility-Optionen') ?></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center w-300" aria-labelledby="accessibility-menu">
                     <h6 class="header text-primary">Accessibility</h6>
-                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content">
+                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                         <input type="hidden" name="accessibility[check]">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
 
@@ -241,53 +397,54 @@ $pageactive = function ($p) use ($page) {
                 </div>
             </div>
 
-            <form action="<?= ROOTPATH ?>/set-preferences" method="get">
-                <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
-                <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
-                <button type="submit" class="btn text-primary border-primary mr-5">
-                    <i class="ph ph-translate" aria-hidden="true"></i>
-                    <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
-                    <?= lang('DE', 'EN') ?>
-                </button>
-            </form>
 
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
-                <a href="<?= ROOTPATH ?>/" class="btn text-primary border-primary mr-5">
+                <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
                     <?= lang('Log in', 'Anmelden') ?>
                 </a>
                 <?php } else {
                 $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
-                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists'=>true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
+                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
-                    <form action="" class="nav-search" id="navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
-                            </div>
+                    <div class="dropdown modal-sm">
+                        <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
+                            <i class="ph ph-user-switch"></i>
+                            <span class="sr-only"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
+                            <h6 class="header text-primary"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></h6>
 
-                            <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
-                                <option value="" disabled>
-                                    <?= lang('Switch user', 'Benutzer wechseln') ?>
-                                </option>
-                                <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
-                                <?php
-                                foreach ($maintain as $d) { ?>
-                                    <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
-                                <?php } ?>
-                            </select>
+                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="content pt-0" id="navbar-search">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
+                                    </div>
+
+                                    <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
+                                        <option value="" disabled>
+                                            <?= lang('Switch user', 'Benutzer wechseln') ?>
+                                        </option>
+                                        <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
+                                        <?php
+                                        foreach ($maintain as $d) { ?>
+                                            <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                <?php } else { ?>
-                    <form id="navbar-search" action="<?= ROOTPATH ?>/activities" method="get" class="nav-search">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control border-primary" autocomplete="off" placeholder="<?= lang('Search in activities', 'Suche in Aktivitäten') ?>">
-                            <div class="input-group-append">
-                                <button class="btn primary filled"><i class="ph ph-magnifying-glass"></i></button>
-                            </div>
+                    </div>
+                <?php }  ?>
+                <form id="navbar-search" action="<?= ROOTPATH ?>/activities" method="get" class="nav-search d-none d-md-block">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control border-primary" autocomplete="off" placeholder="<?= lang('Search in activities', 'Suche in Aktivitäten') ?>">
+                        <div class="input-group-append">
+                            <button class="btn primary filled"><i class="ph ph-magnifying-glass"></i></button>
                         </div>
-                    </form>
-            <?php }
+                    </div>
+                </form>
+            <?php
             } ?>
 
 
@@ -304,7 +461,7 @@ $pageactive = function ($p) use ($page) {
                         <?= lang('Log in', 'Anmelden') ?>
                     </a>
 
-                    <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH') { ?>
+                    <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && $Settings->get('auth-self-registration', true)) { ?>
                         <a href="<?= ROOTPATH ?>/auth/new-user" class="with-icon <?= $pageactive('auth/new-user') ?>">
                             <i class="ph ph-user-plus" aria-hidden="true"></i>
                             <?= lang('Register', 'Registrieren') ?>
@@ -314,16 +471,49 @@ $pageactive = function ($p) use ($page) {
 
                 <?php } else { ?>
 
-
                     <!-- search bar -->
                     <div class="content" style="margin-top:-4rem">
                         <input type="text" class="form-control small border-primary" autocomplete="off" placeholder="<?= lang('Search', 'Suche') ?>" oninput="searchNavBar(this.value)">
                     </div>
 
-                    <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
-                        <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
-                        <?= lang('Add activity', 'Aktivität hinzuf.') ?>
-                    </a>
+                    <nav id="sidebar-add">
+                        <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
+                            <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
+                            <?= lang('Add activity', 'Aktivität hinzuf.') ?>
+                        </a>
+
+                        <div id="sidebar-add-navigation">
+
+                            <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
+                                <?php if ($DB->canProposalsBeCreated()) { ?>
+                                    <a href="<?= ROOTPATH ?>/proposals/new" class="">
+                                        <i class="ph ph-tree-structure"></i>
+                                        <?= lang('Add project', 'Projekt hinzufügen') ?>
+                                    </a>
+                                <?php } else if ($DB->canProjectsBeCreated()) { ?>
+                                    <a href="<?= ROOTPATH ?>/projects/new" class="">
+                                        <i class="ph ph-tree-structure"></i>
+                                        <?= lang('Add project', 'Projekt hinzuf.') ?>
+                                    </a>
+                                <?php } ?>
+
+                            <?php } ?>
+                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
+                                <a href="<?= ROOTPATH ?>/conferences#add-conference">
+                                    <i class="ph ph-calendar-plus"></i>
+                                    <?= lang('Add event', 'Event hinzufügen') ?>
+                                </a>
+                            <?php } ?>
+                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) { ?>
+                                <a href="<?= ROOTPATH ?>/infrastructures/new">
+                                    <i class="ph ph-cube-transparent"></i>
+                                    <?= lang('Add infrastructure', 'Infrastruktur hinzuf.') ?>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </nav>
+
+
 
                     <script>
                         function searchNavBar(value) {
@@ -395,31 +585,6 @@ $pageactive = function ($p) use ($page) {
 
                     <nav>
 
-                        <style>
-                            .sidebar-menu>a.inline-btn,
-                            .sidebar-menu nav>a.inline-btn {
-                                position: absolute;
-                                right: 2rem;
-                                margin: .5rem;
-                                background: white;
-                                padding: .5rem;
-                                width: 3rem;
-                                height: 3rem;
-                                font-size: 1.4rem;
-                                border-radius: var(--border-radius);
-                            }
-
-                            .sidebar-menu>a.inline-btn:not(.active),
-                            .sidebar-menu nav>a.inline-btn:not(.active) {
-                                display: none;
-                            }
-
-                            .sidebar-menu:hover>a.inline-btn:not(.active),
-                            .sidebar-menu:hover nav>a.inline-btn:not(.active) {
-                                display: block;
-                            }
-                        </style>
-
                         <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                             <i class="ph ph-magnifying-glass-plus"></i>
                         </a>
@@ -429,6 +594,13 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
+                            <?php if ($DB->canProposalsBeCreated()) { ?>
+                                <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
+                                    <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                                    <?= lang('Proposals', 'Anträge') ?>
+                                </a>
+                            <?php } ?>
+
 
                             <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                                 <i class="ph ph-magnifying-glass-plus"></i>
@@ -454,14 +626,16 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <a href="<?= ROOTPATH ?>/conferences" class="with-icon <?= $pageactive('conferences') ?>">
-                            <i class="ph ph-presentation-chart" aria-hidden="true"></i>
+                            <i class="ph ph-calendar-dots" aria-hidden="true"></i>
                             <?= lang('Events') ?>
                         </a>
 
-                        <a href="<?= ROOTPATH ?>/teaching" class="with-icon <?= $pageactive('teaching') ?>">
-                            <i class="ph ph-chalkboard-simple" aria-hidden="true"></i>
-                            <?= lang('Teaching modules', 'Lehrmodule') ?>
-                        </a>
+                        <?php if ($Settings->featureEnabled('teaching-modules', true)) { ?>
+                            <a href="<?= ROOTPATH ?>/teaching" class="with-icon <?= $pageactive('teaching') ?>">
+                                <i class="ph ph-chalkboard-simple" aria-hidden="true"></i>
+                                <?= lang('Teaching modules', 'Lehrmodule') ?>
+                            </a>
+                        <?php } ?>
 
                         <?php if ($Settings->featureEnabled('topics')) { ?>
                             <a href="<?= ROOTPATH ?>/topics" class="with-icon <?= $pageactive('topics') ?>">
@@ -473,7 +647,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->featureEnabled('infrastructures')) { ?>
                             <a href="<?= ROOTPATH ?>/infrastructures" class="with-icon <?= $pageactive('infrastructures') ?>">
                                 <i class="ph ph-cube-transparent" aria-hidden="true"></i>
-                                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                                <?= $Settings->infrastructureLabel() ?>
                             </a>
                         <?php } ?>
 
@@ -512,7 +686,7 @@ $pageactive = function ($p) use ($page) {
                             <i class="ph ph-users-three" aria-hidden="true"></i>
                             <?= lang('Organisational Units', 'Einheiten') ?>
                         </a>
-                        
+
                         <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
                             <i class="ph ph-building-office" aria-hidden="true"></i>
                             <?= lang('Organizations', 'Organisationen') ?>
@@ -641,14 +815,12 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-shield-check" aria-hidden="true"></i>
                                 <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/admin/fields" class="with-icon <?= $pageactive('admin/fields') ?>">
-                                <i class="ph ph-textbox" aria-hidden="true"></i>
-                                <?= lang('Custom fields') ?>
+
+                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                <?= lang('Contents', 'Inhalte') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/admin/categories" class="with-icon <?= $pageactive('admin/categories') ?>">
-                                <i class="ph ph-bookmarks" aria-hidden="true"></i>
-                                <?= lang('Activities', 'Aktivitäten') ?>
-                            </a>
+
                             <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
                                 <i class="ph ph-wrench" aria-hidden="true"></i>
                                 <?= lang('Features', 'Funktionen') ?>

@@ -385,7 +385,7 @@ Route::get('/api/dashboard/project-timeline', function () {
         die;
     }
 
-    $filter = ['status' => ['$in' => ['approved', 'finished']]];
+    $filter = [];
     if (isset($_GET['user'])) {
         $filter['persons.user'] = $_GET['user'];
     }
@@ -1074,7 +1074,7 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
 
     // exclude project id
     if (isset($_GET['exclude-project'])) {
-        $exclude = DB::doc2Arr($_GET['exclude-project']);
+        $exclude = DB::to_ObjectID($_GET['exclude-project']);
         $filter['projects'] = ['$ne' => $exclude];
     }
 

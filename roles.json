@@ -144,6 +144,36 @@
         "en": "Projects",
         "fields": [
             {
+                "id": "proposals.add",
+                "de": "Anträge anlegen",
+                "en": "Add new proposals"
+            },
+            {
+                "id": "proposals.view",
+                "de": "Alle existierende Anträge sehen",
+                "en": "See all existing proposals"
+            },
+            {
+                "id": "proposals.edit",
+                "de": "Alle Anträge bearbeiten, inklusive Statusänderung",
+                "en": "Edit all proposals, including status change"
+            },
+            {
+                "id": "proposals.edit-own",
+                "de": "Eigene Anträge editieren (nur aktueller Status)",
+                "en": "Edit own proposals (only current status)"
+            },
+            {
+                "id": "proposals.status-own",
+                "de": "Den Status eigener Anträge ändern",
+                "en": "Change status of own proposals"
+            },
+            {
+                "id": "proposals.delete",
+                "de": "Anträge löschen",
+                "en": "Delete proposals"
+            },
+            {
                 "id": "projects.add",
                 "de": "Projekte anlegen",
                 "en": "Add new projects"
@@ -201,14 +231,14 @@
                 "en": "Add new infrastructures"
             },
             {
-                "id": "infrastructures.view",
-                "de": "Alle existierenden Infrastrukturen sehen",
-                "en": "See all existing infrastructures"
-            },
-            {
                 "id": "infrastructures.edit",
                 "de": "Alle Infrastrukturen bearbeiten",
                 "en": "Edit all infrastructures"
+            },
+            {
+                "id": "infrastructures.edit-own",
+                "de": "Eigene Infrastrukturen bearbeiten",
+                "en": "Edit own infrastructures"
             },
             {
                 "id": "infrastructures.statistics",

@@ -1,0 +1,57 @@
+[
+    {
+        "id": "description",
+        "default": true,
+        "en": "Description",
+        "de": "Beschreibung",
+        "kdsf": "KDSF-B-13-11",
+        "description": {
+            "en": "This enables a description text field.",
+            "de": "Dies aktiviert ein Textfeld für die Beschreibung."
+        }
+    },
+    {
+        "id": "type",
+        "default": true,
+        "en": "Category",
+        "de": "Kategorie",
+        "kdsf": "KDSF-B-13-5",
+        "description": {
+            "en": "A category list of the infrastructure. Defaults to KDSF-B-13-5 and can be extended in the vocabulary section of the admin panel.",
+            "de": "Eine Kategorieliste der Infrastruktur. Standardmäßig auf KDSF-B-13-5 und kann im Vokabularbereich des Admin-Panels erweitert werden."
+        }
+    },
+    {
+        "id": "infrastructure_type",
+        "default": true,
+        "en": "Type of infrastructure",
+        "de": "Art der Infrastruktur",
+        "kdsf": "KDSF-B-13-6",
+        "description": {
+            "en": "A list of types of infrastructure. Defaults to KDSF-B-13-6 and can be extended in the vocabulary section of the admin panel.",
+            "de": "Eine Liste von Arten der Infrastruktur. Standardmäßig auf KDSF-B-13-6 und kann im Vokabularbereich des Admin-Panels erweitert werden."
+        }
+    },
+    {
+        "id": "access",
+        "default": true,
+        "en": "User Access",
+        "de": "Art des Zugangs",
+        "kdsf": "KDSF-B-13-7",
+        "description": {
+            "en": "A list of access types. Defaults to KDSF-B-13-7 and can be extended in the vocabulary section of the admin panel.",
+            "de": "Eine Liste von Zugangstypen. Standardmäßig auf KDSF-B-13-7 und kann im Vokabularbereich des Admin-Panels erweitert werden."
+        }
+    },
+    {
+        "id": "collaborative",
+        "default": true,
+        "en": "Collaborative research infrastructure",
+        "de": "Verbundforschungsinfrastruktur",
+        "kdsf": "KDSF-B-13-12",
+        "description": {
+            "en": "This enables a list of collaborative research infrastructures including the option to add collaborator institutions.",
+            "de": "Dies aktiviert eine Liste von Verbundforschungsinfrastrukturen, einschließlich der Option, Kooperationsinstitutionen hinzuzufügen."
+        }
+    }
+]

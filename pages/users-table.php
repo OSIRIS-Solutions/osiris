@@ -16,7 +16,30 @@
  * @license     MIT
  */
 
- $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+
+$data_fields = $Settings->get('person-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/person-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
+
+$active = function ($field) use ($data_fields) {
+    return in_array($field, $data_fields);
+};
+$keyword_name = 'Keywords';
+if ($active('keywords')) {
+    $keyword_name = $Settings->get('staff-keyword-name', 'Keywords');
+}
+
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
@@ -103,6 +126,29 @@
                 </div>
             <?php } ?>
 
+            <?php if ($active('keywords')) {
+                $keywords = $Settings->get('staff-keywords', []);
+                if (!empty($keywords)) { ?>
+                    <h6><?= $keyword_name ?>
+                        <a class="float-right" onclick="filterUsers('#filter-keywords .active', null, 6)"><i class="ph ph-x"></i></a>
+                    </h6>
+
+                    <div class="filter">
+                        <table id="filter-keywords" class="table small simple">
+                            <?php foreach ($keywords as $kw) { ?>
+                                <tr>
+                                    <td>
+                                        <a data-type="<?= $kw ?>" onclick="filterUsers(this, '<?= $kw ?>', 14)" class="item" id="<?= $kw ?>-btn">
+                                            <span><?= $kw ?></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
+                <?php }
+            } ?>
+
 
             <h6><?= lang('Active workers', 'Aktive Mitarbeitende') ?></h6>
             <div class="custom-switch">
@@ -174,6 +220,10 @@
         {
             title: lang('Username', 'Kürzel'),
             'key': 'username'
+        },
+        {
+            title: lang('Keywords', 'Schlagwörter'),
+            'key': 'keywords'
         }
     ]
 
@@ -203,27 +253,35 @@
                         window.location.href = '<?= ROOTPATH ?>/user/search';
                     }
                 },
-                {
-                    text: '<i class="ph ph-barbell"></i> <?= lang('Expertise search', 'Expertise-Suche') ?>',
-                    className: 'btn small text-primary mr-10',
-                    action: function(e, dt, node, config) {
-                        window.location.href = '<?= ROOTPATH ?>/expertise';
-                    }
-                },
-                {
+                <?php if ($active('expertise')) { ?> {
+                        text: '<i class="ph ph-barbell"></i> <?= lang('Expertise', 'Expertise') ?>',
+                        className: 'btn small text-primary',
+                        action: function(e, dt, node, config) {
+                            window.location.href = '<?= ROOTPATH ?>/expertise';
+                        }
+                    },
+                <?php } ?>
+                <?php if ($active('keywords')) { ?> {
+                        text: '<i class="ph ph-tag"></i> <?= $keyword_name ?>',
+                        className: 'btn small text-primary',
+                        action: function(e, dt, node, config) {
+                            window.location.href = '<?= ROOTPATH ?>/keywords';
+                        }
+                    },
+                <?php } ?> {
                     extend: 'excelHtml5',
                     exportOptions: {
-                        columns: [6,7,8,9,10,11,12,2,3,4,13],
+                        columns: [6, 7, 8, 9, 10, 11, 12, 2, 3, 4, 13],
                         format: {
                             header: function(html, index, node) {
                                 return headers[index].title ?? '';
                             }
                         }
                     },
-                    className: 'btn small',
+                    className: 'btn small ml-10',
                     title: 'OSIRIS Users',
                     text: '<i class="ph ph-file-xls"></i> <?= lang('Excel', 'Excel') ?>',
-                }                
+                }
             ],
             dom: 'fBrtip',
             columnDefs: [{
@@ -311,7 +369,13 @@
                     data: 'username',
                     visible: false,
                     defaultContent: ''
-                }
+                },
+                {
+                    target: 14,
+                    data: 'keywords',
+                    visible: false,
+                    defaultContent: ''
+                },
             ],
             "order": [
                 [1, 'asc'],
