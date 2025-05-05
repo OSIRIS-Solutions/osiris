@@ -793,7 +793,10 @@ Route::get('/api/journals', function () {
     header("Expires: 0");
     $pipeline = [
         [
-            '$unwind' => '$impact'
+            '$unwind' => [
+                'path' => '$impact',
+                'preserveNullAndEmptyArrays' => true
+            ]
         ],
         [
             '$sort' => ['impact.year' => -1]

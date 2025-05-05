@@ -90,7 +90,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - In "Mein Jahr" werden die Aktivitätskategorien nun korrekt sortiert
 - Typen lassen sich ebenfalls sortieren
 - Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
-
+- Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 
 ---
 
