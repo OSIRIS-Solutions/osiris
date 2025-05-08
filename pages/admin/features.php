@@ -536,7 +536,7 @@
                     <?= lang('The activity type <kbd>travel</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>travel</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
                 </p>
            <?php }
-           else if ($modules_available < 2) { ?>
+           else if ($modules_available == 0) { ?>
                 <p>
                     <i class="ph ph-warning text-danger"></i>
                     <?= lang('The activity type <kbd>travel</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>travel</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>
