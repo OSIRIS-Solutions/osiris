@@ -520,9 +520,32 @@
             <label for="">
                 <?= lang('Enable a module for analysing research trips', 'Aktiviere ein Modul, das Forschungsreisen analysieren kann') ?>
             </label>
+            
+            <p class="text-muted">
+                <?=lang('The add-on requires an activity type called <kbd>travel</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>travel</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.')?>
+            </p>
             <?php
             $trips = $Settings->featureEnabled('trips');
-            ?>
+
+            $travel_available = $osiris->adminTypes->count(['id' => 'travel']);
+            $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+
+            if ($travel_available == 0){ ?>
+                <p>
+                    <i class="ph ph-warning text-danger"></i>
+                    <?= lang('The activity type <kbd>travel</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>travel</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
+                </p>
+           <?php }
+           else if ($modules_available < 2) { ?>
+                <p>
+                    <i class="ph ph-warning text-danger"></i>
+                    <?= lang('The activity type <kbd>travel</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>travel</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>
+                </p>
+            <?php } else { ?>
+                <p>
+                    <i class="ph ph-seal-check text-success"></i>
+                    <?= lang('The module is available and can be activated here.', 'Das Modul ist verfügbar und kann hier aktiviert werden.') ?>
+                </p>
 
             <div class="custom-radio">
                 <input type="radio" id="trips-true" value="1" name="values[trips]" <?= $trips ? 'checked' : '' ?>>
@@ -533,10 +556,8 @@
                 <input type="radio" id="trips-false" value="0" name="values[trips]" <?= $trips ? '' : 'checked' ?>>
                 <label for="trips-false"><?= lang('disabled', 'deaktiviert') ?></label>
             </div>
+            <?php } ?>
 
-            <p class="text-muted">
-                <?=lang('The add-on requires an activity type called <kbd>travel</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>travel</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.')?>
-            </p>
 
         </div>
     </div>
