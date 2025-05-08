@@ -92,12 +92,11 @@
             Rerender <i class="ph ph-caret-down"></i>
         </button>
         <div class="dropdown-menu w-400" aria-labelledby="rerender">
-            <h6 class="header">Rerender</h6>
             <div class="content">
                 <?= lang('In case some activities are not looking right or if you changed something, you can trigger a complete rerendering by clicking the button below:', 'Falls einige Aktivitäten seltsam aussehen, sich die URL eures OSIRIS geändert hat oder ihr einfach Templates angepasst habt, könnt ihr hier ein komplettes neu-rendern der Daten einleiten:') ?>
                 <a class="btn block primary" href="<?=ROOTPATH?>/rerender">Rerender now!</a>
 
-                <small>
+                <small class="text-muted">
                     <?=lang('This won\'t change any data. It will only fix the displaying of data.', 'Dies ändert keine Daten, sondern repariert nur die Anzeige der Daten.')?>
                 </small>
             </div>

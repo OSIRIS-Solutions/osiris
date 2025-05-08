@@ -162,7 +162,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                         foreach ($subtypes as $subtype) {
                                             $subid = $subtype['id'];
                                         ?>
-                                            <a data-type="<?= $subid ?>" onclick="filterSubtype(this, '<?= $subid ?>')" class="item" id="<?= $subid ?>-sub-btn">
+                                            <a data-type="<?= $subid ?>" onclick="filterSubtype(this, '<?= $subid ?>')" class="item subitem" id="<?= $subid ?>-sub-btn">
                                                 <span class="text-<?= $subid ?>">
                                                     <span class="mr-5"> <i class="ph ph-<?= $subtype['icon'] ?>"></i> </span>
                                                     <?= lang($subtype['name'], $subtype['name_de']) ?>
@@ -668,7 +668,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             for (const key in all_filters) {
                 if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
                     const element = all_filters[key];
-                    const filter = $(element).find('a')
+                    const filter = $(element).find('a:not(.subitem)');
                     filter.each(function(i, el) {
                         let type = $(el).data('type')
                         // console.log(type);

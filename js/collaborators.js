@@ -43,11 +43,11 @@ $(document).ready(function () {
 });
 
 function addCollaboratorROR(ror, msg = true) {
-    if (!ror) {
+    if (ror == undefined || ror == null || ror == '') {
         toastError('Please provide a ROR ID')
         return
     }
-    var url = 'https://api.ror.org/organizations/' + ror.trim()
+    var url = 'https://api.ror.org/v2/organizations/' + ror.trim()
     $.ajax({
         type: "GET",
         url: url,
@@ -58,7 +58,8 @@ function addCollaboratorROR(ror, msg = true) {
                 toastError(', '.join(response.errors))
                 return
             }
-            addCollaborator(response)
+            var org = translateROR(response)
+            addCollaborator(org)
             $('#collaborators-ror-id').val('')
             if (msg)
                 toastSuccess(lang('Collaborator added', 'Kooperationspartner hinzugefügt'))
@@ -74,14 +75,45 @@ function addCollaboratorROR(ror, msg = true) {
         }
     })
 }
+function translateROR(o) {
+    let name = ""
+    o.names.forEach(n => {
+        if (n.types.includes("ror_display")) {
+            name = n.value
+        }
+    })
+    if (name == "") {
+        name = o.names[0].value ?? o.id
+    }
+    let location = o.locations[0]
+    let location_name = null;
+    if (location && location.geonames_details) {
+        location = location.geonames_details
+        location_name = location.name ?? '';
+        if (location.country_name) {
+            location_name += ', ' + location.country_name
+        }
+    }
+    let org = {
+        ror: o.id,
+        name: name,
+        location: location_name,
+        country: location.country_code ?? null,
+        lat: location.lat ?? null,
+        lng: location.lng ?? null,
+        type: o.types[0],
+        chosen: false
+    }
+    return org
+}
 
 function getCollaborators(name) {
     console.log(name);
     const SUGGEST = $('#collaborators-suggest')
     SUGGEST.empty()
-    var url = 'https://api.ror.org/organizations'
+    var url = 'https://api.ror.org/v2/organizations'
     var data = {
-        affiliation: name
+        query: name
     }
     $.ajax({
         type: "GET",
@@ -91,27 +123,20 @@ function getCollaborators(name) {
         url: url,
         success: function (response) {
             console.log(response);
-            response.items.forEach(j => {
-                var o = j.organization
-
+            response.items.forEach(o => {
+                console.log(o);
+                var org = translateROR(o)
                 var row = $('<tr>')
                 var button = $('<button class="btn" title="select">')
                 button.html('<i class="ph ph-check text-success"></i>')
                 button.on('click', function () {
-                    addCollaborator(o);
+                    addCollaborator(org);
                 })
 
                 var data = $('<td>')
-                data.append(`<h5 class="m-0">${o.name}</h5>`)
-                if (j.chosen) {
-                    data.addClass('text-success')
-                    button.addClass('success')
-                        .attr('data-toggle', 'tooltip')
-                        .attr('data-title', 'Best Result by ROR')
-
-                }
-                data.append(`<span class="float-right text-muted">${o.types[0]}</span>`)
-                data.append(`<span class="text-muted">${o.addresses[0].city}, ${o.country.country_name}</span>`)
+                data.append(`<h5 class="m-0">${org.name}</h5>`)
+                data.append(`<span class="float-right text-muted">${org.type}</span>`)
+                data.append(`<span class="text-muted">${org.location}</span>`)
 
                 row.append($('<td class="w-50">').append(button))
 
@@ -183,27 +208,7 @@ function addCollabRow(data = {}) {
 }
 
 function addCollaborator(data = {}) {
-    let address = data.addresses[0]
-    // let city = address.city
-    let lat = address.lat
-    let lng = address.lng
-
-    let ror = data.id
-    let name = data.name
-    let type = data.types[0]
-    // Education, Healthcare, Company, Archive, Nonprofit, Government, Facility, Other
-    let country = data.country.country_code
-    let location = address.city + ", " + data.country.country_name
-
-    addCollabRow({
-        name: name,
-        ror: ror,
-        location: location,
-        country: country,
-        lat: lat,
-        lng: lng,
-        type: type
-    });
+    addCollabRow(data);
 
     $('#collaborators-suggest').empty()
     $('#collaborators-search').val('')

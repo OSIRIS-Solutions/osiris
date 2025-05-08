@@ -421,4 +421,11 @@ class Settings
         $html .= '</div>';
         return $html;
     }
+
+    function printTopic($topic){
+        $topic = $this->osiris->topics->findOne(['id' => $topic]);
+        if (empty($topic)) return '';
+        return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+
+    }
 }

@@ -78,3 +78,15 @@ Route::get('/pivot', function () {
     include BASEPATH . "/pages/pivot.php";
     include BASEPATH . "/footer.php";
 });
+
+
+// pivot table
+Route::get('/trips', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang('Research Trips', 'Forschungsreisen')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/trips.php";
+    include BASEPATH . "/footer.php";
+});

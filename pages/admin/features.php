@@ -511,6 +511,36 @@
         </div>
     </div>
 
+    
+    <div class="box px-20">
+        <h3>
+            <?= lang('Research Trips', 'Forschungsreisen') ?>
+        </h3>
+        <div class="form-group">
+            <label for="">
+                <?= lang('Enable a module for analysing research trips', 'Aktiviere ein Modul, das Forschungsreisen analysieren kann') ?>
+            </label>
+            <?php
+            $trips = $Settings->featureEnabled('trips');
+            ?>
+
+            <div class="custom-radio">
+                <input type="radio" id="trips-true" value="1" name="values[trips]" <?= $trips ? 'checked' : '' ?>>
+                <label for="trips-true"><?= lang('enabled', 'aktiviert') ?></label>
+            </div>
+
+            <div class="custom-radio">
+                <input type="radio" id="trips-false" value="0" name="values[trips]" <?= $trips ? '' : 'checked' ?>>
+                <label for="trips-false"><?= lang('disabled', 'deaktiviert') ?></label>
+            </div>
+
+            <p class="text-muted">
+                <?=lang('The add-on requires an activity type called <kbd>travel</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>travel</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.')?>
+            </p>
+
+        </div>
+    </div>
+
     <button class="btn success">
         <i class="ph ph-floppy-disk"></i>
         Save

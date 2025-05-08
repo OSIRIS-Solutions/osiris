@@ -244,6 +244,13 @@ class Modules
             "description" => "A field for a country, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird."
         ],
+        "countries" => [
+            "fields" => ["countries" => ['DE', 'AT', 'CH']],
+            "name" => "Countries",
+            "name_de" => "Länder",
+            "description" => "A field for a list of countries, that can be selected from a list and is saved as a two-letter ISO country code.",
+            "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden."
+        ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
             "name" => "Abstract",
@@ -823,6 +830,62 @@ class Modules
                 </div>
             <?php
                 break;
+            case 'countries':
+                $countries = $this->val('countries', []);
+            ?>
+
+                <div class="data-module floating-form col-sm-6" data-module="teaching-gender">
+                    <b>
+                        <?= lang('Countries:', 'Länder:') ?>
+                    </b>
+                    <div class="author-widget">
+                        <div class="author-list p-10" id="country-list">
+                            <?php
+                            foreach ($countries as $k) { ?>
+                                <div class='author'>
+                                    <?= $this->DB->getCountry($k, lang('name', 'name_de')) ?>
+                                    <input type='hidden' name='values[countries][]' value='<?= $k ?>'>
+                                    <a onclick='$(this).parent().remove()'>&times;</a>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="footer">
+                            <div class="input-group small d-inline-flex w-auto">
+                                <select class="form-control" id="country-select">
+                                    <option value="" disabled selected><?= lang("Add country ...", "Füge Land hinzu ...") ?></option>
+                                    <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                        <option value="<?= $iso ?>"><?= $name ?></option>
+                                    <?php } ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
+                                        <i class="ph ph-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function addCountry(event) {
+                            var el = $('#country-select')
+                            var iso = el.val()
+                            var name = el.find('option:selected').text()
+                            if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                                event.preventDefault();
+                                if (iso) {
+                                    var html = `<div class='author'>${name} <input type='hidden' name='values[countries][]' value='${iso}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                                    $('#country-list').append(html)
+                                }
+                                $(el).val('')
+                                return false;
+                            }
+                        }
+                    </script>
+
+                </div>
+
+            <?php
+                break;
             case 'abstract':
             ?>
                 <div class="data-module floating-form col-sm-12" data-module="abstract">
@@ -1362,27 +1425,28 @@ class Modules
                 break;
 
             case "status":
+                $status = $this->val('status') ?? 'preparation';
             ?>
                 <div class="data-module col-sm-6" data-module="status" style="align-self: center;">
                     <label for="status" class="<?= $required ?> floating-title">Status</label>
                     <div id="end-question">
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-preparation" value="preparation" checked="checked" value="1">
+                            <input type="radio" name="values[status]" id="status-preparation" value="preparation" value="1" <?= $status == 'preparation' ? 'checked' : '' ?>>
                             <label for="status-preparation"><?= lang('In preparation', 'In Vorbereitung') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-in-progress" value="in progress" checked="checked" value="1">
+                            <input type="radio" name="values[status]" id="status-in-progress" value="in progress" value="1" <?= $status == 'in progress' ? 'checked' : '' ?>>
                             <label for="status-in-progress"><?= lang('In progress', 'In Progress') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-completed" value="completed" value="1">
+                            <input type="radio" name="values[status]" id="status-completed" value="completed" value="1" <?= $status == 'completed' ? 'checked' : '' ?>>
                             <label for="status-completed"><?= lang('Completed', 'Abgeschlossen') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-aborted" value="aborted" value="1">
+                            <input type="radio" name="values[status]" id="status-aborted" value="aborted" value="1" <?= $status == 'aborted' ? 'checked' : '' ?>>
                             <label for="status-aborted"><?= lang('Aborted', 'Abgebrochen') ?></label>
                         </div>
                     </div>

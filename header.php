@@ -729,6 +729,14 @@ $pageactive = function ($p) use ($page) {
                             <i class="ph ph-table" aria-hidden="true"></i>
                             <?= lang('Pivot table', 'Pivot-Tabelle') ?>
                         </a>
+
+                        <?php if ($Settings->featureEnabled('trips')) { ?>
+                            <a href="<?= ROOTPATH ?>/trips" class="with-icon <?= $pageactive('trips') ?>">
+                                <i class="ph ph-map-trifold" aria-hidden="true"></i>
+                                <?= lang('Research Trips', 'Forschungsreisen') ?>
+                            </a>
+                        <?php } ?>
+                        
                     </nav>
 
 

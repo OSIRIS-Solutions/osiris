@@ -100,7 +100,7 @@ function validateValues($values, $DB)
         } else if ($key == 'kdsf-ffk') {
             $values[$key] = array_map('strval', $value);
             continue;
-        } else if ($key == 'countries'){
+        } else if ($key == 'countries' && is_array($value) && strlen($value[0]) > 2) {
             $countries = [];
             foreach ($value as $country) {
                 $country = explode(';', $country, 2);

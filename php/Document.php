@@ -1002,6 +1002,13 @@ class Document extends Settings
             case "nationality":
                 $code = $this->getVal('country');
                 return $this->DB->getCountry($code, lang('name', 'name_de'));
+            case 'countries':
+                $countries = DB::doc2Arr($this->getVal('countries', []));
+                if (empty($countries)) return '';
+                $country_names = array_map(function ($code) {
+                    return $this->DB->getCountry($code, lang('name', 'name_de'));
+                }, $countries);
+                return implode(', ', $country_names);
             case "gender":
                 switch ($this->getVal('gender')) {
                     case 'f':
