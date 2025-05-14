@@ -37,7 +37,7 @@ $style = $_GET['style'] ?? 'cards';
         <span class="badge text-muted"><?= lang('Show as', 'Zeige als') ?></span>
         <a class="btn <?= $style == 'cards' ? 'active' : '' ?>" href="?style=cards"><?= lang('Cards', 'Karten') ?></a>
         <a class="btn <?= $style == 'hierarchy' ? 'active' : '' ?>" href="?style=hierarchy"><?= lang('Hierarchy', 'Hierarchie') ?></a>
-        <a class="btn <?= $style == 'organigramm' ? 'active' : '' ?>" href="?style=organigramm"><?= lang('Organization Chart', 'Organigramm') ?></a>
+        <a class="btn <?= $style == 'organigramm' ? 'active' : '' ?>" href="?style=organigramm"><?= lang('Organisation Chart', 'Organigramm') ?></a>
     </div>
 </div>
 

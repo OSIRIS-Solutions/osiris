@@ -26,7 +26,7 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
 
     <h1>
         <i class="ph ph-graph" aria-hidden="true"></i>
-        <?= lang('Visualizations', 'Visualisierungen') ?>
+        <?= lang('Visualisations', 'Visualisierungen') ?>
     </h1>
 
 

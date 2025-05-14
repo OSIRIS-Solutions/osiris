@@ -19,7 +19,7 @@ Route::get('/organizations', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Organizations", "Organisationen")]
+        ['name' => lang("Organisations", "Organisationen")]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/list.php";
@@ -36,7 +36,7 @@ Route::get('/organizations/new', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Organizations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -63,7 +63,7 @@ Route::get('/organizations/view/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Organizations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
         ['name' => $organization['name']]
     ];
 
@@ -96,7 +96,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Organizations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
         ['name' => $form['name'], 'path' => "/organizations/view/$id"],
         ['name' => lang("Edit", "Bearbeiten")]
     ];
@@ -147,7 +147,7 @@ Route::post('/crud/organizations/create', function () {
             header("Location: " . $red . "?msg=organization does already exist.");
         } else {
             echo json_encode([
-                'msg' => "Organization ID already exists.",
+                'msg' => "Organisation ID already exists.",
                 'id' => strval($exist['_id']),
                 'ror' => $exist['ror'] ?? '',
                 'name' => $exist['name'],
@@ -235,6 +235,6 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang("Organization has been deleted successfully.", "Organisation wurde erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang("Organisation has been deleted successfully.", "Organisation wurde erfolgreich gelöscht.");
     header("Location: " . ROOTPATH . "/organizations");
 });

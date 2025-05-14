@@ -90,7 +90,7 @@ $active = function ($field) use ($data_fields) {
     </a>
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
-        <?= lang('Organization', 'Organisation') ?>
+        <?= lang('Organisation', 'Organisation') ?>
     </a>
 
     <a onclick="navigate('research')" id="btn-research" class="btn">
@@ -228,7 +228,7 @@ $active = function ($field) use ($data_fields) {
     <section id="organization" style="display:none;">
 
         <h2 class="title mb-0">
-            <?= lang('Organizational information', 'Organisatorische Informationen') ?>
+            <?= lang('Organisational information', 'Organisatorische Informationen') ?>
         </h2>
 
         <p>

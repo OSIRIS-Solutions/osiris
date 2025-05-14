@@ -689,7 +689,7 @@ $pageactive = function ($p) use ($page) {
 
                         <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
                             <i class="ph ph-building-office" aria-hidden="true"></i>
-                            <?= lang('Organizations', 'Organisationen') ?>
+                            <?= lang('Organisations', 'Organisationen') ?>
                         </a>
 
                         <!-- <a href="<?= ROOTPATH ?>/expertise" class="with-icon <?= $pageactive('expertise') ?>">
@@ -707,7 +707,7 @@ $pageactive = function ($p) use ($page) {
                     </nav>
 
                     <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tools">
-                        <?= lang('Visualization', 'Visualisierung') ?>
+                        <?= lang('Visualisation', 'Visualisierung') ?>
                     </div>
                     <nav>
                         <!-- <a href="<?= ROOTPATH ?>/activities/search" class="with-icon <?= $pageactive('activities/search') ?>">
@@ -722,7 +722,7 @@ $pageactive = function ($p) use ($page) {
 
                         <a href="<?= ROOTPATH ?>/visualize" class="with-icon <?= $pageactive('visualize') ?>">
                             <i class="ph ph-graph" aria-hidden="true"></i>
-                            <?= lang('Visualizations', 'Visualisierung') ?>
+                            <?= lang('Visualisations', 'Visualisierung') ?>
                         </a>
 
                         <a href="<?= ROOTPATH ?>/pivot" class="with-icon <?= $pageactive('pivot') ?>">
