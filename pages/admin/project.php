@@ -145,6 +145,21 @@ if ($process == 'project') {
         background-color: var(--danger-color);
         border-color: var(--danger-color);
     }
+
+    .kdsf-icon {
+        width: 1.4em;
+        height: 1.4em;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+    }
+
+    .kdsf {
+        font-weight: bold;
+        font-size: x-small;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+
+    }
 </style>
 
 
@@ -445,11 +460,18 @@ if ($process == 'project') {
 
 
                         foreach ($required_fields as $field) {
+                            $kdsf = $field['kdsf'] ?? false;
                             if (empty($field)) $field = ['en' => $m, 'de' => null];
                         ?>
                             <div class="required-badge">
                                 <i class="ph ph-asterisk text-danger"></i>
                                 <?= lang($field['en'], $field['de']) ?>
+                                <?php if ($kdsf) { ?>
+                                    <small class="kdsf"  data-toggle="tooltip" data-title="<?= $kdsf ?>">
+                                        <!-- <img src="<?=ROOTPATH?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
+                                         KDSF
+                                    </small>
+                                <?php } ?>
                             </div>
                         <?php } ?>
 
@@ -470,6 +492,7 @@ if ($process == 'project') {
                     $modules = array_column($modules, 'required', 'module');
                     $custom = false;
                     foreach ($optional_fields as $field) {
+                            $kdsf = $field['kdsf'] ?? false;
                         $m = $field['id'];
                         // if ($m['required'] ?? false) continue;
                         $active = array_key_exists($m, $modules);
@@ -496,6 +519,12 @@ if ($process == 'project') {
                                 onclick="toggleCheckboxStates(this)">
                             <label for="module-<?= $phase_id ?>-<?= $m ?>">
                                 <?= lang($field['en'], $field['de']) ?>
+                                <?php if ($kdsf) { ?>
+                                    <small class="kdsf"  data-toggle="tooltip" data-title="<?= $kdsf ?>">
+                                        <!-- <img src="<?=ROOTPATH?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
+                                         KDSF
+                                    </small>
+                                <?php } ?>
                             </label>
                         </div>
                     <?php } ?>
