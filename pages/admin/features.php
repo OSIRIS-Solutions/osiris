@@ -10,6 +10,7 @@
  *
  * @package OSIRIS
  * @since 1.3.0
+ * @deprecated 1.5.0
  * 
  * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>

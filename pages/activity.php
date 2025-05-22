@@ -243,10 +243,10 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <li><?= $Format->activity_subtype() ?></li>
     </ul>
     <h1 class="mt-10">
-        <?= $Format->getTitle() ?>
+        <?= $Format->getTitle('web') ?>
     </h1>
 
-    <p class="lead"><?= $Format->getSubtitle() ?></p>
+    <p class="lead"><?= $Format->getSubtitle('web') ?></p>
 
 </div>
 

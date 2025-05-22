@@ -160,7 +160,7 @@ Route::post('/download', function () {
         }
     }
     $Format = new Document($highlight, 'word');
-    $Format->full = true;
+    // $Format->full = true;
 
     $categories = $Categories->categories;
     $order = array_column($categories, 'id');
@@ -538,8 +538,8 @@ function clean_comment_export($subject, $front_addition_text = '')
     // Remove double spaces 
     $subject = preg_replace('!\s+!', ' ', $subject);
 
-    // Strip all tags, except <b><i><strike>
-    $subject = strip_tags($subject, '<b><i><strike><sub><sup><br>');
+    // Strip all tags, except <b><i><strike><u><sub><sup>
+    $subject = strip_tags($subject, '<b><i><u><strike><sub><sup><br>');
 
     // Remove any ### at the start
     $subject = rtrim(ltrim($subject, "#"), "#");

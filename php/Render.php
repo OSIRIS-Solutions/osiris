@@ -20,7 +20,9 @@ function renderActivities($filter = [])
 
         // $depts = $Groups->getDeptFromAuthors($doc['authors']);
 
+        $Format->usecase = 'print';
         $f = $Format->format();
+        $Format->usecase = 'web';
         $web = $Format->formatShort();
 
         $Format->usecase = 'portal';

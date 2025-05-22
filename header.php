@@ -817,22 +817,22 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->hasPermission('admin.see')) { ?>
                             <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
                                 <i class="ph ph-gear" aria-hidden="true"></i>
-                                <?= lang('General settings', 'Einstellungen') ?>
+                                <?= lang('Settings', 'Einstellungen') ?>
+                            </a>
+                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                <?= lang('Contents', 'Inhalte') ?>
                             </a>
                             <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
                                 <i class="ph ph-shield-check" aria-hidden="true"></i>
                                 <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
 
-                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
-                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
-                                <?= lang('Contents', 'Inhalte') ?>
-                            </a>
 
-                            <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
+                            <!-- <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
                                 <i class="ph ph-wrench" aria-hidden="true"></i>
                                 <?= lang('Features', 'Funktionen') ?>
-                            </a>
+                            </a> -->
                         <?php } ?>
 
 
