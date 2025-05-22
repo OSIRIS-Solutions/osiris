@@ -654,5 +654,35 @@ function val($index, $default = '')
     </script>
 <?php } ?>
 
+<!-- for selecting organisations -->
+ 
+
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script>
+    function selectOrgEvent(event = null, type = 'organization') {
+        console.log(type);
+        if (event === null || event.key === 'Enter') {
+            if (event) event.preventDefault();
+
+            SUGGEST = $('#org-' + type + '-suggest')
+            INPUT = $('#org-' + type + '-search')
+            SELECTED = $('#org-' + type + '-value')
+            COMMENT = $('#org-' + type + '-search-comment')
+            console.log(SUGGEST);
+            window.createOrganizationTR = function(org) {
+                // overwrite organisation function
+                let id = cleanID(org.id)
+                $('#org-' + type + '-value').html(
+                    `<b>${org.name}</b> <br><small class="text-muted">${org.location}</small>`
+                );
+                $('#org-' + type + '-organization').val(id);
+                location.href = '#' + type;
+            }
+
+            getOrganization(INPUT.val());
+            return false;
+        }
+    }
+</script>
 
 <!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?=CSS_JS_VERSION?>"></script> -->

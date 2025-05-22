@@ -89,6 +89,7 @@ class Document extends Settings
         "openaccess" => ["open_access"],
         "openaccess-text" => ["open_access"],
         "openaccess-status" => ["oa_status"],
+        "organization" => ["organization"],
         "pages" => ["pages"],
         "pages-pp" => ["pages"],
         "person" => ["name", "affiliation", "academic_title"],
@@ -1066,6 +1067,12 @@ class Document extends Settings
             case "openaccess-status": // ["oa_status"],
                 return $this->getVal('oa_status', 'Unknown Status');
 
+            case "organization": // ["organization"],
+                $value = $this->getVal('organization');
+                if (empty($value)) return $default;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return $value;
+                return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
             case "pages": // ["pages"],
                 return $this->getVal('pages');
             case "pages-pp": // ["pages"],

@@ -566,6 +566,20 @@ class Modules
             "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
             "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung."
         ],
+        "organization" => [
+            "fields" => ["organization" => 'Technische Universität Braunschweig'],
+            "name" => "Organisation",
+            "name_de" => "Organisation",
+            "description" => "A field for an organisation that is connected to an activity, e.g. a university or a company. This field is used to identify the organisation that is responsible for the activity.",
+            "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist."
+        ],
+        "organizations" => [
+            "fields" => ["organizations" => ['Technische Universität Braunschweig', 'Deutsche Forschungsgemeinschaft']],
+            "name" => "Organisations",
+            "name_de" => "Organisationen",
+            "description" => "A field for a list of organisations that are connected to an activity, e.g. a university or a company. This field is used to identify the organisations that are responsible for the activity.",
+            "description_de" => "Ein Feld für eine Liste von Organisationen, die mit einer Aktivität verbunden sind, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisationen zu identifizieren, die für die Aktivität verantwortlich sind."
+        ],
     );
 
     private $DB;
@@ -922,15 +936,11 @@ class Modules
 
             case "subtitle":
             ?>
-                <div class="data-module col-12" data-module="subtitle">
-                    <label for="subtitle" class="<?= $required ?> floating-title">
+                <div class="data-module floating-form col-sm-12" data-module="subtitle">
+                    <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $required ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
+                    <label for="subtitle" class="<?= $required ?>">
                         <?= lang('Subtitle', 'Untertitel') ?>
                     </label>
-
-                    <div class="form-group floating-form" id="subtitle-editor">
-                        <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $required ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
-                        <label for="subtitle" class="<?= $required ?>"><?= lang('Subtitle', 'Untertitel') ?></label>
-                    </div>
                 </div>
             <?php
                 break;
@@ -2122,6 +2132,63 @@ class Modules
                 </div>
             <?php
                 break;
+
+            case "organization":
+                $org_id = $form['organization'] ?? '';
+                $rand_id = rand(1000, 9999);
+            ?>
+                <div class="data-module" data-module="organization">
+                    <label for="organization" class="floating-title <?= $required ?>">
+                        <?= lang('Organisation', 'Organisation') ?>
+                    </label>
+                    <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
+                        <i class="ph ph-edit float-right"></i>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $required ?> readonly id="org-<?= $rand_id ?>-organization" />
+
+                        <div id="org-<?= $rand_id ?>-value">
+                            <?php if (empty($org_id)) { ?>
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php } else {
+                                $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                if (!empty($collab)) { ?>
+                                    <b><?= $collab['name'] ?></b>
+                                    <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                <?php } else { ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <br><small class="text-muted"><?= $org_id ?></small>
+                            <?php }
+                            } ?>
+                        </div>
+                    </a>
+
+                    <div class="modal" id="organization-modal-<?= $rand_id ?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                                <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                                <p id="org-<?= $rand_id ?>-search-comment"></p>
+                                <table class="table simple">
+                                    <tbody id="org-<?= $rand_id ?>-suggest">
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            <?php
+                break;
+
 
             default:
             ?>
