@@ -198,15 +198,16 @@ class Modules
                 ]
             ]],
             "name" => "Editors",
-            "name_de" => "Editoren",
+            "name_de" => "Herausgeber",
             "description" => "A compressed module for editors, with 'tag-like' input fields for editors. Supports multiple editors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
-            "description_de" => "Ein komprimiertes Modul für Editoren, mit 'tag-ähnlichen' Eingabefeldern für Editoren. Unterstützt mehrere Editoren, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
+            "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
         ],
         "editorial" => [
             "fields" => ["editor_type" => 'Guest Editor'],
             "name" => "Editorial",
-            "name_de" => "Editorenschaft",
+            "name_de" => "Herausgeberschaft",
             "description" => "A field for the editorial type, e.g. for a special issue.",
+            "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe."
         ],
         "event-select" => [
             "fields" => [],
@@ -214,7 +215,6 @@ class Modules
             "name_de" => "Veranstaltungsauswahl",
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt."
-
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -523,6 +523,13 @@ class Modules
             "name_de" => "Titel",
             "description" => "A field for the title of an activity, e.g. for a journal article. Always mandatory.",
             "description_de" => "Ein Feld für den Titel einer Aktivität, z.B. für einen Zeitschriftenartikel. Immer erforderlich."
+        ],
+        "subtitle" => [
+            "fields" => ["subtitle" => 'A new way to manage research information'],
+            "name" => "Subtitle",
+            "name_de" => "Untertitel",
+            "description" => "A field for the subtitle of an activity.",
+            "description_de" => "Ein Feld für den Untertitel einer Aktivität."
         ],
         "university" => [
             "fields" => ["publisher" => 'Technische Universität Braunschweig'],
@@ -910,6 +917,21 @@ class Modules
                 <script>
                     initQuill(document.getElementById('title-editor-<?= $id ?>'));
                 </script>
+            <?php
+                break;
+
+            case "subtitle":
+            ?>
+                <div class="data-module col-12" data-module="subtitle">
+                    <label for="subtitle" class="<?= $required ?> floating-title">
+                        <?= lang('Subtitle', 'Untertitel') ?>
+                    </label>
+
+                    <div class="form-group floating-form" id="subtitle-editor">
+                        <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $required ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
+                        <label for="subtitle" class="<?= $required ?>"><?= lang('Subtitle', 'Untertitel') ?></label>
+                    </div>
+                </div>
             <?php
                 break;
 
