@@ -61,3 +61,19 @@
         <small class="text-muted"><?= lang('Modify existing vocabularies for activities and projects', 'Bearbeite existierendes Vokabular für Aktivitäten und Projekte') ?></small>
     </a>
 </div>
+
+<!-- smaller section with links to helper tools -->
+<h4>
+    <?= lang('Helper tools', 'Hilfswerkzeuge') ?>
+</h4>
+<div class="link-list w-600 mw-full">
+    <a href="<?= ROOTPATH ?>/admin/module-helper" style="--secondary-color: var(--muted-color)">
+        <i class="ph ph-textbox text-muted" aria-hidden="true"></i>
+        <?= lang('Field overview', 'Datenfelder-Übersicht') ?>
+    </a>
+
+    <a href="<?= ROOTPATH ?>/admin/templates" style="--secondary-color: var(--muted-color)">
+        <i class="ph ph-text-aa text-muted" aria-hidden="true"></i>
+        <?= lang('Template builder', 'Template-Baukasten') ?>
+    </a>
+</div>
