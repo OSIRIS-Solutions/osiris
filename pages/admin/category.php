@@ -252,7 +252,7 @@ $member = $osiris->activities->count(['type' => $t]);
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang("Can't delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View activities', 'Aktivitäten zeigen') ?>
