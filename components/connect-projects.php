@@ -20,7 +20,7 @@ $full_permission = $Settings->hasPermission('projects.edit');
 $filter = [];
 if (!$full_permission) {
     // make sure to include currently selected projects
-    $filter = ['$or' => [['persons.user' => $_SESSION['username']], ['_id' => ['$in' => $activity['projects']]]]];
+    $filter = ['$or' => [['persons.user' => $_SESSION['username']], ['_id' => ['$in' => $activity['projects'] ?? []]]]];
 }
 $project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, 'name' => 1]])->toArray();
 ?>
@@ -36,8 +36,8 @@ $project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, '
         </thead>
         <tbody id="project-list">
             <?php
-            if (!isset($doc['projects']) || empty($doc['projects'])) {
-                $doc['projects'] = [''];
+            if (!isset($activity['projects']) || empty($activity['projects'])) {
+                $activity['projects'] = [''];
             }
             foreach ($activity['projects'] as $i => $con) { ?>
                 <tr>
