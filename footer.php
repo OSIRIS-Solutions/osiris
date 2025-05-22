@@ -34,7 +34,7 @@
                     <?= lang('Documentation', 'Dokumentation') ?>
                 </a>
 
-                <a href="https://github.com/JKoblitz/osiris/issues" target="_blank" class="">
+                <a href="https://github.com/OSIRIS-Solutions/osiris/issues" target="_blank" class="">
                     <?= lang('Report an issue', "Problem melden") ?>
                     <i class="ph ph-arrow-square-out"></i>
                 </a>
@@ -58,7 +58,7 @@
                 <a href="<?= ROOTPATH ?>/impress"><?= lang('Impress', 'Impressum') ?></a>
                 <a href="<?= ROOTPATH ?>/license"><?= lang('License', 'Lizenz') ?></a>
                 <p>
-                    &copy; OSIRIS Solutions GmbH <?=CURRENTYEAR?>
+                    <a href="https://osiris-solutions.de" target="_blank" rel="noopener noreferrer" class="colorless">&copy; OSIRIS Solutions GmbH <?=CURRENTYEAR?></a> 
                 </p>
             </div>
         </div>
