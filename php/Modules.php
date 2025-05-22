@@ -2189,6 +2189,78 @@ class Modules
             <?php
                 break;
 
+            case "organizations":
+                $organizations = $this->val('organizations', []);
+            ?>
+                <div class="data-module col-12" data-module="organizations">
+                    <label for="organization" class="floating-title <?= $required ?>">
+                        <?= lang('Organisations', 'Organisationen') ?>
+                    </label>
+                    <table class="table simple">
+                        <tbody id="collaborators">
+                            <?php
+                            if (empty($organizations)) {
+                                echo '<tr id="org-none-selected"><td colspan="2">' . lang('No organization selected', 'Keine Organisation ausgewählt') . '</td></tr>';
+                            } else foreach ($organizations as $org_id) {
+                                $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                if (empty($collab)) continue;
+                            ?>
+                                <tr data-row="<?= $org_id ?>">
+                                    <td>
+                                        <?= $collab['name'] ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= $collab['location'] ?? null ?>
+                                        </small>
+                                        <input type="hidden" name="values[organizations][]" value="<?= $org_id ?>" class="form-control">
+                                    </td>
+                                    <td><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <div class="form-group mt-20 box padded bg-light">
+                        <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                            <div class="input-group-append">
+                                <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                        <p id="search-comment"></p>
+                        <table class="table simple">
+                            <tbody id="organization-suggest">
+                            </tbody>
+                        </table>
+                        <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                        <script>
+                            $(document).ready(function() {
+                                SUGGEST = $('#organization-suggest')
+                                INPUT = $('#organization-search')
+                                SELECTED = $('#collaborators')
+                                COMMENT = $('#search-comment')
+                                USE_RADIO = false;
+                                DATAFIELD = 'organizations'
+                            });
+
+                            function handleKeyDown(event) {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();
+                                    if ($('#org-none-selected').length) {
+                                        $('#org-none-selected').remove();
+                                    }
+                                    getOrganization($('#organization-search').val());
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            <?php
+                break;
+
+            case "project":
+                break;
 
             default:
             ?>

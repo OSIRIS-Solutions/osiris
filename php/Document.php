@@ -10,6 +10,7 @@ require_once "Settings.php";
 require_once "DB.php";
 require_once "Schema.php";
 require_once "Country.php";
+require_once "Organization.php";
 
 class Document extends Settings
 {
@@ -90,6 +91,8 @@ class Document extends Settings
         "openaccess-text" => ["open_access"],
         "openaccess-status" => ["oa_status"],
         "organization" => ["organization"],
+        "organization-location" => ["organization"],
+        "organizations" => ["organizations"],
         "pages" => ["pages"],
         "pages-pp" => ["pages"],
         "person" => ["name", "affiliation", "academic_title"],
@@ -860,10 +863,10 @@ class Document extends Settings
             if ($aoi_format == 'none') {
                 // do nothing
             } elseif (($this->highlight === true && ($person['aoi'] ?? false)) || ($person['user'] === $this->highlight)) {
-                if ($this->usecase == 'web'){
+                if ($this->usecase == 'web') {
                     $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
-                // } else if (!in_array($this->usecase, ['print', 'word'])) {
-                //     $author = "<u>$author</u>";
+                    // } else if (!in_array($this->usecase, ['print', 'word'])) {
+                    //     $author = "<u>$author</u>";
                 } else if ($aoi_format == 'bold') {
                     $author = "<b>$author</b>";
                 } else if ($aoi_format == 'italic') {
@@ -1072,7 +1075,40 @@ class Document extends Settings
                 if (empty($value)) return $default;
                 $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
                 if (empty($org)) return $value;
-                return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+                if ($this->usecase == 'web') {
+                    return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+                }
+                if ($this->usecase == 'list') {
+                    return '
+                        <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
+                            <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                            <ul class="horizontal mb-0">
+                                <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
+                            </ul>
+                        </a>';
+                }
+                return $org['name'];
+            case "organization-location":
+                $value = $this->getVal('organization');
+                if (empty($value)) return $default;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return $value;
+                return $org['location'] ?? $default;
+            case 'organizations':
+                $value = $this->getVal('organizations', []);
+                if (empty($value)) return $default;
+                $orgs = [];
+                foreach ($value as $org_id) {
+                    $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
+                    if (empty($org)) continue;
+                    if ($this->usecase == 'web' || $this->usecase == 'list') {
+                        $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . htmlspecialchars($org['name']) . '</a>';
+                    } else {
+                        $orgs[] = htmlspecialchars($org['name']);
+                    }
+                }
+                return implode(', ', $orgs);
             case "pages": // ["pages"],
                 return $this->getVal('pages');
             case "pages-pp": // ["pages"],
@@ -1438,7 +1474,7 @@ class Document extends Settings
         }
         $template = $this->subtypeArr['template']['subtitle'] ?? '{authors}';
         $result = $this->template($template);
-        
+
         $this->usecase = $usecase;
         return $result;
     }

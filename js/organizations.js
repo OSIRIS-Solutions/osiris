@@ -2,6 +2,8 @@ let SUGGEST;
 let INPUT;
 let SELECTED;
 let COMMENT;
+let USE_RADIO = true;
+let DATAFIELD = 'collaborators'
 
 $(document).ready(function () {
     SUGGEST = $('#organization-suggest')
@@ -119,12 +121,14 @@ function createOrganizationTR(org) {
     var row = $('<tr>')
     var td = $('<td>')
     td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
-    td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
+    td.append(`<input type="hidden" name="values[${DATAFIELD}][]" value="${id}">`)
     row.append(td)
-    row.append($('<td>').append(`<div class="custom-radio">
+    if (USE_RADIO) {
+        row.append($('<td>').append(`<div class="custom-radio">
                                         <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
                                         <label for="coordinator-${id}" class="empty"></label>
                                     </div>`))
+    }
 
     td = $('<td>')
     var deletebtn = $('<button type="button" class="btn danger" title="remove">')

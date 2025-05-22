@@ -91,38 +91,35 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     }
 </style>
 
-<?php if ($Settings->featureEnabled('projects')) { ?>
 <h2>
-    <?= lang('Connected projects', 'Verknüpfte Projekte') ?>
+    <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
 </h2>
-
+<!-- TODO: add download button -->
 <div class="mt-20 w-full">
-    <table class="table dataTable responsive" id="projects-table">
+    <table class="table dataTable responsive" id="activities-table">
         <thead>
             <tr>
-                <th class="w-100"><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Project', 'Projekt') ?></th>
+                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('Activity', 'Aktivität') ?></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $projects = $osiris->projects->find([
+            $org_id = strval($organization['_id']);
+            $activities = $osiris->activities->find([
                 '$or' => [
-                  ['collaborators.organization' => $organization['_id']],
-                  ['funding_organization' => $organization['_id']],
-                  ['university' => $organization['_id']],
-
+                    ['organization' => $org_id],
+                    ['organizations' => $org_id]
                 ]
-            ])->toArray();
-            foreach ($projects as $project) {
-                $Project->setProject($project);
+            ], ['projection' => ['rendered' => 1]])->toArray();
+            foreach ($activities as $doc) {
             ?>
                 <tr>
-                    <td>
-                        <?= $Project->getType('ph-fw ph-2x m-0') ?>
+                    <td class="w-50">
+                        <?= $doc['rendered']['icon'] ?>
                     </td>
                     <td>
-                        <?= $Project->widgetSmall() ?>
+                        <?= $doc['rendered']['web'] ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -130,57 +127,107 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     </table>
 </div>
 <script>
-    $('#projects-table').DataTable({});
+    $('#activities-table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        "columnDefs": [{
+            "targets": 0,
+            "orderable": false
+        }]
+    });
 </script>
+
+<?php if ($Settings->featureEnabled('projects')) { ?>
+    <h2>
+        <?= lang('Connected projects', 'Verknüpfte Projekte') ?>
+    </h2>
+
+    <div class="mt-20 w-full">
+        <table class="table dataTable responsive" id="projects-table">
+            <thead>
+                <tr>
+                    <th class="w-100"><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('Project', 'Projekt') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $projects = $osiris->projects->find([
+                    '$or' => [
+                        ['collaborators.organization' => $organization['_id']],
+                        ['funding_organization' => $organization['_id']],
+                        ['university' => $organization['_id']],
+
+                    ]
+                ])->toArray();
+                foreach ($projects as $project) {
+                    $Project->setProject($project);
+                ?>
+                    <tr>
+                        <td>
+                            <?= $Project->getType('ph-fw ph-2x m-0') ?>
+                        </td>
+                        <td>
+                            <?= $Project->widgetSmall() ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#projects-table').DataTable({});
+    </script>
 <?php } ?>
 
 
 
 <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-<h2>
-    <?= lang('Connected infrastructures', 'Verknüpfte Infrastrukturen') ?>
-</h2>
+    <h2>
+        <?= lang('Connected infrastructures', 'Verknüpfte Infrastrukturen') ?>
+    </h2>
 
-<div class="mt-20 w-full">
-    <table class="table dataTable responsive" id="infrastructures-table">
-        <thead>
-            <tr>
-                <th><?= $Settings->infrastructureLabel() ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $infrastructures = $osiris->infrastructures->find(['collaborators' => $organization['_id']])->toArray();
-            foreach ($infrastructures as $infra) {
-            ?>
+    <div class="mt-20 w-full">
+        <table class="table dataTable responsive" id="infrastructures-table">
+            <thead>
                 <tr>
-                    <td>
-                        <h6 class="m-0">
-                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
-                            </a>
-                            <br>
-                        </h6>
-
-                        <div class="text-muted mb-5">
-                            <?php if (!empty($infra['subtitle'])) { ?>
-                                <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
-                            <?php } else { ?>
-                                <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
-                            <?php } ?>
-                        </div>
-                        <div>
-                            <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
-                        </div>
-                    </td>
+                    <th><?= $Settings->infrastructureLabel() ?></th>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
-<script>
-    $('#infrastructures-table').DataTable({});
-</script>
+            </thead>
+            <tbody>
+                <?php
+                $infrastructures = $osiris->infrastructures->find(['collaborators' => $organization['_id']])->toArray();
+                foreach ($infrastructures as $infra) {
+                ?>
+                    <tr>
+                        <td>
+                            <h6 class="m-0">
+                                <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                    <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                </a>
+                                <br>
+                            </h6>
+
+                            <div class="text-muted mb-5">
+                                <?php if (!empty($infra['subtitle'])) { ?>
+                                    <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                <?php } else { ?>
+                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                <?php } ?>
+                            </div>
+                            <div>
+                                <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#infrastructures-table').DataTable({});
+    </script>
 <?php } ?>
 
 <?php if ($Settings->hasPermission('organizations.delete')) { ?>
