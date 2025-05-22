@@ -28,6 +28,7 @@ Route::get('/rerender', function () {
         <?= lang('Start to render all activities. This might take a while. Please be patient and do not reload the page.', 'Ich starte damit, die Aktivitäten neu zu rendern. Dies kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
     </p>
     <?php
+    // flush the output buffer
     flush();
     ob_flush();
 

@@ -858,7 +858,7 @@ class Document extends Settings
             // markup of affiliated authors
             if ($aoi_format == 'none') {
                 // do nothing
-            } elseif (($this->highlight === true && $person['aoi'] ?? false) || ($person['user'] === $this->highlight)) {
+            } elseif (($this->highlight === true && ($person['aoi'] ?? false)) || ($person['user'] === $this->highlight)) {
                 if ($this->usecase == 'web'){
                     $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
                 // } else if (!in_array($this->usecase, ['print', 'word'])) {

@@ -134,10 +134,10 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="form-group">
                     <!-- affiliation formatting -->
-                     <?php
-                        $format = $Settings->get('affiliation_format', 'bold');
-                     ?>
-                     
+                    <?php
+                    $format = $Settings->get('affiliation_format', 'bold');
+                    ?>
+
                     <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affilierten Autor:innen') ?></label>
                     <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
                         <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('Bold (default)', 'Fett (Standard)') ?></option>
@@ -149,12 +149,23 @@ $affiliation = $Settings->get('affiliation_details');
                         <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
                     </select>
 
+                    <p class="mt-5">
+                        <b>
+                            <i class="ph ph-warning"></i>
+                            <?= lang('Hint:', 'Hinweis:') ?>
+                        </b>
+                        <?= lang('you have to rerender all activities to see the changes. You can do this here:', 'Du musst alle Aktivitäten neu rendern, um die Änderungen zu sehen. Du kannst dies hier tun:') ?>
+                        <a href="<?= ROOTPATH ?>/rerender" class="btn small primary">
+                            <?= lang('Render all activities', 'Alle Aktivitäten rendern') ?>
+                        </a>
+                        <?= lang('This might take a while. Please be patient and do not reload the page.', 'Das kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
+                    </p>
                 </div>
 
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    Save
+                    <?=lang('Save', 'Speichern')?>
                 </button>
 
             </div>
@@ -223,7 +234,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    Save
+                    <?=lang('Save', 'Speichern')?>
                 </button>
             </div>
 
@@ -257,7 +268,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    Save
+                    <?=lang('Save', 'Speichern')?>
                 </button>
             </div>
         </div>
@@ -298,15 +309,15 @@ $affiliation = $Settings->get('affiliation_details');
                     </span>
                 </div>
 
-                <!-- reset -->
-                <button type="button" class="btn danger" onclick="resetColors()">
-                    <i class="ph ph-trash"></i>
-                    <?= lang('Reset to default colors', 'Setze Farben auf Standard zurück') ?>
-                </button>
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    Save
+                    <?=lang('Save', 'Speichern')?>
+                </button>
+                <!-- reset -->
+                <button type="button" class="btn" onclick="resetColors()">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                    <?= lang('Reset to default colors', 'Setze Farben auf Standard zurück') ?>
                 </button>
 
                 <script>
@@ -538,7 +549,7 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
 
-               
+
                 <div class="box px-20">
                     <h3 id="journal-metrics">
                         <?= lang('Journals', 'Journale') ?>
