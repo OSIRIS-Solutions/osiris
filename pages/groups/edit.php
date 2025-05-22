@@ -34,7 +34,7 @@ $form = $form ?? array();
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
 $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-$url = ROOTPATH . "/groups/view/" . $form['_id'];
+$url = ROOTPATH . "/groups/edit/" . $form['_id'] ;
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
 $level = $Groups->getLevel($id);
