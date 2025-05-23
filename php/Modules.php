@@ -2196,13 +2196,11 @@ class Modules
                     <label for="organization" class="floating-title <?= $required ?>">
                         <?= lang('Organisations', 'Organisationen') ?>
                     </label>
-                    <table class="table simple">
+                    <table class="table">
                         <tbody id="collaborators">
                             <?php
-                            if (empty($organizations)) {
-                                echo '<tr id="org-none-selected"><td colspan="2">' . lang('No organization selected', 'Keine Organisation ausgewählt') . '</td></tr>';
-                            } else foreach ($organizations as $org_id) {
-                                $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                            foreach ($organizations as $org_id) {
+                                $collab = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
                                 if (empty($collab)) continue;
                             ?>
                                 <tr data-row="<?= $org_id ?>">
@@ -2218,10 +2216,10 @@ class Modules
                                 </tr>
                             <?php } ?>
                         </tbody>
-                    </table>
-
-                    <div class="form-group mt-20 box padded bg-light">
-                        <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">
+                                <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
                             <div class="input-group-append">
@@ -2229,7 +2227,7 @@ class Modules
                             </div>
                         </div>
                         <p id="search-comment"></p>
-                        <table class="table simple">
+                        <table class="table simple mb-0">
                             <tbody id="organization-suggest">
                             </tbody>
                         </table>
@@ -2247,14 +2245,15 @@ class Modules
                             function handleKeyDown(event) {
                                 if (event.key === 'Enter') {
                                     event.preventDefault();
-                                    if ($('#org-none-selected').length) {
-                                        $('#org-none-selected').remove();
-                                    }
                                     getOrganization($('#organization-search').val());
                                 }
                             }
                         </script>
-                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
                 </div>
             <?php
                 break;
