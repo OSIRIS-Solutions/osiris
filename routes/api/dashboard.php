@@ -256,7 +256,7 @@ Route::get('/api/dashboard/impact-factor-hist', function () {
         die;
     }
 
-    $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'impact' => ['$ne' => null]];
+    $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'impact' => ['$ne' => null], 'type' => 'publication'];
     if (isset($_GET['user'])) {
         $filter['authors.user'] = $_GET['user'];
     }
