@@ -23,6 +23,8 @@ class LDAPInterface
         "uniqueid" => "objectguid",
         // "academic_title" => "title",
         "room" => "physicaldeliveryofficename",
+        "distinguishedName" => "dn",
+        "userPrincipalName" => "userPrincipalName",
     ];
 
     public function __construct()
@@ -41,6 +43,8 @@ class LDAPInterface
                 "uniqueid" => "entryuuid",
                 "position" => "title",
                 "room" => "roomnumber",
+                "distinguishedName" => "dn",
+                // "academic_title" => "title",
             ];
             $this->uniqueid = 'entryuuid';
         }
@@ -237,19 +241,13 @@ class LDAPInterface
             return $return;
         }
 
-        // Step 1: User-Bind (zum Prüfen der Credentials)
-        if (!$this->bind($username, $password)) {
-            $return['msg'] = lang("Login failed. Please check your username and password.", "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.");
-            return $return;
-        }
-
-        // Step 2: Re-bind mit Admin für Suche
+        // Step 1: bind mit Admin für Suche
         if (!$this->bind(LDAP_USER, LDAP_PASSWORD)) {
             $return['msg'] = "Internal error: cannot search LDAP.";
             return $return;
         }
 
-        // Step 3: Suche nach dem Benutzer (um Daten zu holen)
+        // Step 2: Suche nach dem Benutzer (um Daten zu holen)
         $filter = "(" . $this->userkey . "=" . ldap_escape($username, "", LDAP_ESCAPE_FILTER) . ")";
         $search = ldap_search($this->connection, LDAP_BASEDN, $filter, $this->attributes);
         if ($search === false) {
@@ -275,6 +273,34 @@ class LDAPInterface
             $ldap_uniqueid = $this->convertObjectGUID($ldap_uniqueid);
         }
         $return['uniqueid'] = $ldap_uniqueid;
+
+        $bindIdentifier = null;
+        $bindMethod = defined('LDAP_BIND_METHOD') ? LDAP_BIND_METHOD : 'username';
+        switch ($bindMethod) {
+            case 'username':
+                $bindIdentifier = $username;
+                break;
+
+            case 'dn':
+                $bindIdentifier = $result['dn'] ?? null; 
+                break;
+
+            case 'userPrincipalName':
+                $bindIdentifier = $result['userPrincipalName'][0] ?? null;
+                break;
+
+            default:
+                $return['msg'] = "Internal error: invalid LDAP_BIND_METHOD.";
+                return $return;
+        }
+
+        // Step 3: User-Bind (zum Prüfen der Credentials)
+        if (empty($bindIdentifier) || !$this->bind($bindIdentifier, $password)) {
+            $return['msg'] = lang("Login failed. Please check your username and password.", "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.");
+            return $return;
+        }
+
+        $this->close();
 
         $_SESSION['username'] = $ldap_username;
         $_SESSION['name'] = $ldap_first_name . " " . $ldap_last_name;
@@ -356,7 +382,7 @@ class LDAPInterface
 
             // check if user already exists
             $user = $osiris->persons->findOne(['username' => $username], ['projection' => ['_id' => 1]]);
-            if (empty($user)){
+            if (empty($user)) {
                 // check if user already exists by uniqueid
                 $uniqueid = $entry[$this->uniqueid][0] ?? null;
                 if ($this->uniqueid == 'objectguid') {
@@ -370,15 +396,15 @@ class LDAPInterface
             }
             if (empty($user)) {
                 continue;
-            //     // user does not exist, create new user
-            //     $userData = $this->newUser($username);
-            //     if (empty($userData)) {
-            //         echo "Fehler beim Erstellen des Benutzers: " . $username . "\n";
-            //         continue;
-            //     }
-            //     $osiris->persons->insertOne($userData);
+                //     // user does not exist, create new user
+                //     $userData = $this->newUser($username);
+                //     if (empty($userData)) {
+                //         echo "Fehler beim Erstellen des Benutzers: " . $username . "\n";
+                //         continue;
+                //     }
+                //     $osiris->persons->insertOne($userData);
             }
-            
+
             echo $username . "\n";
 
             $userData = [];
@@ -484,7 +510,7 @@ class LDAPInterface
                 }
             }
 
-            if (isset($ldapMappings['is_active'])){
+            if (isset($ldapMappings['is_active'])) {
                 $accountControl = isset($entry[$ldapMappings['is_active']][0]) ? (int)$entry[$ldapMappings['is_active']][0] : 0;
                 $userData['is_active'] = boolval(!($accountControl & 2)); // 2 entspricht ACCOUNTDISABLE
                 var_dump($userData['is_active']);
