@@ -887,7 +887,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <td>
                                         <div class="d-flex justify-content-between">
                                             <h6 class="m-0">
-                                                <a href="<?= ROOTPATH ?>/conferences/<?= $c['_id'] ?>">
+                                                <a href="<?= ROOTPATH ?>/conferences/view/<?= $c['_id'] ?>">
                                                     <?= $c['title'] ?>
                                                 </a>
                                                 <?php if (!empty($c['url'] ?? null)) { ?>
@@ -922,7 +922,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                                     <small class="btn small cursor-default">
                                                         <?= $days ?>
                                                     </small>
-                                                    <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
+                                                    <a class="btn small" href="<?= ROOTPATH ?>/conferences/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
                                                         <i class="ph ph-calendar-plus"></i>
                                                     </a>
                                                 </div>

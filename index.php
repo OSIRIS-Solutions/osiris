@@ -156,7 +156,7 @@ if (
     include_once BASEPATH . "/routes/reports.php";
     include_once BASEPATH . "/routes/concepts.php";
     include_once BASEPATH . "/routes/admin.php";
-    include_once BASEPATH . "/routes/conferences.php";
+    include_once BASEPATH . "/routes/events.php";
     require_once BASEPATH . '/routes/guests.php';
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";

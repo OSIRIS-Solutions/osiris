@@ -2219,36 +2219,36 @@ class Modules
                         <tfoot>
                             <tr>
                                 <td colspan="2">
-                                <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
-                            <div class="input-group-append">
-                                <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
-                            </div>
-                        </div>
-                        <p id="search-comment"></p>
-                        <table class="table simple mb-0">
-                            <tbody id="organization-suggest">
-                            </tbody>
-                        </table>
-                        <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-                        <script>
-                            $(document).ready(function() {
-                                SUGGEST = $('#organization-suggest')
-                                INPUT = $('#organization-search')
-                                SELECTED = $('#collaborators')
-                                COMMENT = $('#search-comment')
-                                USE_RADIO = false;
-                                DATAFIELD = 'organizations'
-                            });
+                                    <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                                        </div>
+                                    </div>
+                                    <p id="search-comment"></p>
+                                    <table class="table simple mb-0">
+                                        <tbody id="organization-suggest">
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                    <script>
+                                        $(document).ready(function() {
+                                            SUGGEST = $('#organization-suggest')
+                                            INPUT = $('#organization-search')
+                                            SELECTED = $('#collaborators')
+                                            COMMENT = $('#search-comment')
+                                            USE_RADIO = false;
+                                            DATAFIELD = 'organizations'
+                                        });
 
-                            function handleKeyDown(event) {
-                                if (event.key === 'Enter') {
-                                    event.preventDefault();
-                                    getOrganization($('#organization-search').val());
-                                }
-                            }
-                        </script>
+                                        function handleKeyDown(event) {
+                                            if (event.key === 'Enter') {
+                                                event.preventDefault();
+                                                getOrganization($('#organization-search').val());
+                                            }
+                                        }
+                                    </script>
                                 </td>
                             </tr>
                         </tfoot>

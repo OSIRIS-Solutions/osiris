@@ -17,17 +17,34 @@
 Route::get('/conferences', function () {
 
     $breadcrumb = [
-        ['name' => lang('Conferences', 'Konferenzen')]
+        ['name' => lang('Events')]
     ];
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/conferences.php";
+    include BASEPATH . "/pages/events/list.php";
     include BASEPATH . "/footer.php";
 });
 
 
-Route::get('/conferences/(.*)', function ($id) {
+Route::get('/conferences/new', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $breadcrumb = [
+        ['name' => lang('Events'), 'path' => '/conferences'],
+        ['name' => lang('New event', 'Neues Event')]
+    ];
+
+    $form = [];
+    $new = true;
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/events/edit.php";
+    include BASEPATH . "/footer.php";
+});
+
+
+Route::get('/conferences/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $conf_id = DB::to_ObjectID($id);
@@ -40,14 +57,40 @@ Route::get('/conferences/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Conferences', 'Konferenzen'), 'path' => '/conferences'],
+        ['name' => lang('Events'), 'path' => '/conferences'],
         ['name' => $conference['title']]
     ];
 
     $activities = $osiris->activities->find(['conference_id' => $id])->toArray();
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/conference.php";
+    include BASEPATH . "/pages/events/view.php";
+    include BASEPATH . "/footer.php";
+});
+
+
+Route::get('/conferences/edit/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $conf_id = DB::to_ObjectID($id);
+    // get conference
+    $new = false;
+    $form = $osiris->conferences->findOne(['_id' => $conf_id]);
+    if (!$form) {
+        $_SESSION['msg'] = lang('Conference not found', 'Konferenz nicht gefunden');
+        header("Location: " . ROOTPATH . '/conferences');
+        die();
+    }
+
+    $breadcrumb = [
+        ['name' => lang('Events'), 'path' => '/conferences'],
+        ['name' => $form['title']]
+    ];
+
+    $activities = $osiris->activities->find(['conference_id' => $id])->toArray();
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/events/edit.php";
     include BASEPATH . "/footer.php";
 });
 
@@ -82,12 +125,19 @@ Route::get('/conference/ics/(.*)', function ($id) {
 Route::post('/crud/conferences/add', function () {
     include_once BASEPATH . "/php/init.php";
 
-    $values = $_POST['values'] ?? $_POST;
-    $redirect = false;
-    if (isset($values['redirect'])) {
-        $redirect = $values['redirect'];
-        unset($values['redirect']);
+    $values = $_POST['values'];
+
+    // required fields:
+    if (!isset($_POST['title']) || !isset($_POST['start']) || !isset($_POST['location'])) {
+        // $new = true;
+        // $form = $values;
+        // include BASEPATH . "/header.php";
+        // printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
+        // include BASEPATH . "/pages/events/edit.php";
+        // include BASEPATH . "/footer.php";
+        die;
     }
+
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
 
@@ -113,18 +163,41 @@ Route::post('/crud/conferences/add', function () {
 
     $id = $added->getInsertedId();
 
-    if ($redirect) {
-        header("Location: $redirect");
-    } else {
-        echo json_encode(['success' => true, 'id' => strval($id)]);
+    header("Location: " . ROOTPATH . "/conferences/view/$id?msg=update-success");
+}, 'login');
+
+
+Route::post('/crud/conferences/update/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $values = $_POST['values'];
+    $redirect = false;
+    if (isset($values['redirect'])) {
+        $redirect = $values['redirect'];
+        unset($values['redirect']);
     }
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = $_SESSION['username'];
+
+    $start = strtotime($values['start']);
+    $values['year'] = intval(date('Y', $start));
+    $values['month'] = intval(date('n', $start));
+    $values['quarter'] = ceil($values['month'] / 3);
+    $values['day'] = intval(date('j', $start));
+
+    $updated = $osiris->conferences->updateOne(
+        ['_id' => $DB::to_ObjectID($id)],
+        ['$set' => $values]
+    );
+
+    header("Location: " . ROOTPATH . "/conferences/view/$id?msg=update-success");
 }, 'login');
 
 
 Route::post('/crud/conferences/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $osiris->conferences->deleteOne(['_id' => DB::to_ObjectID($id)]);
-    header("Location: " . ROOTPATH . '/');
+    header("Location: " . ROOTPATH . '/conferences');
 }, 'login');
 
 

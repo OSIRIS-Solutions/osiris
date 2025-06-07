@@ -8,7 +8,7 @@
 
 In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibler gestaltet. Datenfelder können nun sowohl bei Projekten als auch bei Personen vollständig definiert werden. Auch Custom Fields sind jetzt bei Projekten, Personen und Infrastrukturen möglich.
 
-<i class="ph ph-gear"></i> Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
+<i class="ph ph-gear"></i> Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Außerdem gibt es einen Link zu Helfertools, wie der Liste mit den Datenfeldern und den Templates. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
 
 
 #### <i class="ph ph-chat-circle-dots"></i> Benachrichtigungen und Nachrichten
@@ -67,6 +67,22 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Viele Filter- und Statistikfunktionen (z.B. Suche nach Projekttypen, Förderstatus) wurden erweitert.
 - Es gibt die Möglichkeit, bei Erstellung oder Bearbeitung eines Projektes bestimmte Nutzer oder Rollen zu benachrichtigen, entweder direkt in OSIRIS über das neue Benachrichtigungssystem oder per E-Mail.
 
+
+#### <i class="ph ph-clipboard-text"></i> Neue Datenfelder für Aktivitäten
+Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
+- Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
+- Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
+- Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
+- KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist.
+
+#### <i class="ph ph-users-three"></i> Neue Templates für die Formatierung von Aktivitäten
+Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen.
+
+
+#### <i class="ph ph-calendar"></i> Verbessertes Event-Management
+- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
+- Das User Interface bei der Anzeige von Events wurde verbessert
+- Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
