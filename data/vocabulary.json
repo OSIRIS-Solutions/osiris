@@ -313,5 +313,30 @@
                 "de": "Sonstiges"
             }
         ]
+    }, 
+    {
+        "id": "event-type",
+        "category": "Event",
+        "name": "Event Type",
+        "name_de": "Eventtyp",
+        "description": "The type of an event.",
+        "description_de": "Der Typ eines Events.",
+        "values": [
+            {
+                "id": "local",
+                "en": "Local",
+                "de": "Lokal"
+            },
+            {
+                "id": "national",
+                "en": "National",
+                "de": "National"
+            },
+            {
+                "id": "international",
+                "en": "International",
+                "de": "International"
+            }
+        ]
     }
 ]

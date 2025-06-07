@@ -72,8 +72,8 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
 - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
-- Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
-- KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist.
+<!-- - Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
+- KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
 
 #### <i class="ph ph-users-three"></i> Neue Templates für die Formatierung von Aktivitäten
 Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen.
@@ -83,6 +83,7 @@ Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, in
 - Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
 - Das User Interface bei der Anzeige von Events wurde verbessert
 - Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
+- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren.
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 

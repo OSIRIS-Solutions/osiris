@@ -1,8 +1,13 @@
 <?php
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
+
 $action = ROOTPATH . "/crud/conferences/add";
+$btn = lang('Add event', 'Event hinzufügen');
 if (!empty($form ?? []) && isset($form['_id'])) {
-    $action = ROOTPATH . "/crud/conferences/update/".$form['_id'];
-} 
+    $action = ROOTPATH . "/crud/conferences/update/" . $form['_id'];
+    $btn = lang('Save event', 'Event speichern');
+}
 ?>
 
 
@@ -23,6 +28,20 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <div class="form-group floating-form">
             <input type="text" name="values[title_full]" class="form-control" value="<?= $form['title_full'] ?? '' ?>" placeholder="title_full">
             <label for="title"><?= lang('Full Title', 'Kompletter Titel') ?></label>
+        </div>
+
+        <div class="form-group floating-form">
+            <select name="values[type]" id="type" class="form-control" required>
+                <?php
+                $vocab = $Vocabulary->getValues('event-type');
+                $sel = $form['type'] ?? '';
+                foreach ($vocab as $v) { ?>
+                    <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected': '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                <?php } ?>
+            </select>
+            <label for="type" class="required">
+                <?= lang('Type', 'Typ') ?>
+            </label>
         </div>
 
         <div class="form-group">
@@ -57,6 +76,6 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             <label for="url"><?= lang('URL', 'URL') ?></label>
         </div>
 
-        <button class="btn mb-10" type="submit"><?= lang('Add event', 'Event hinzufügen') ?></button>
+        <button class="btn mb-10" type="submit"><?= $btn ?></button>
     </form>
 </div>
