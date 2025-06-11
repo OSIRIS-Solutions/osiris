@@ -50,7 +50,7 @@
         "id": "title_de",
         "en": "Full title (German)",
         "de": "Voller Titel (Deutsch)",
-        "kdsf": "KDSF-B-2-2",
+        "kdsf": null,
         "scope": {
             "project": false,
             "proposed": false,

@@ -52,6 +52,12 @@ if (!is_null($data)) {
                             </td>
                             <td>
                                 <b><?= lang($field['en'], $field['de'] ?? null) ?></b>
+                                <?php if (!empty($field['kdsf'])) { ?>
+                                    <span class="badge kdsf">
+                                        <?= $field['kdsf'] ?>
+                                    </span>
+                                <?php } ?>
+                                
                                 <?php if (isset($field['description'])) { ?>
                                     <small class="d-block text-muted">
                                         <?= lang($field['description']['en'], $field['description']['de'] ?? null) ?>
