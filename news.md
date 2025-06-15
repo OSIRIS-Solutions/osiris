@@ -87,6 +87,7 @@ Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, in
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
+- Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.
 - Globale Steuerung der quartalsweisen Berichtspflicht (Controlling) möglich (standardmäßig aktiviert).
 - Diverse kleinere Layout- und Darstellungsoptimierungen (u.a. Profile, Notifications, Listenansichten).
