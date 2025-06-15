@@ -10,6 +10,7 @@
  *
  * @package OSIRIS
  * @since 1.3.0
+ * @deprecated 1.5.0
  * 
  * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
@@ -39,120 +40,62 @@
 
     <div class="box px-20">
         <h3>
-            <?= lang('General settings', 'Allgemeine Einstellungen') ?>
+            <?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?>
+        </h3>
+        <div class="form-group">
+
+            <p>
+                <?=lang('OSIRIS reminds users every 3 months to update their activities and submit them for reporting. They can check the data on the "My year" page and confirm the quarter. The controlling dashboard then provides an overview of all those who have not yet updated their data.', 'OSIRIS erinnert Nutzende alle 3 Monate daran, ihre Aktivitäten zu aktualisieren und für die Berichterstattung zu übermitteln. Dabei können sie auf der Seite "Mein Jahr" die Daten überprüfen und dann das Quartal bestätigen. Im Controlling-Dashbord gibt es dann eine Übersicht über alle Personen, die ihre Daten noch nicht aktualisiert haben.')?>
+                <br>
+                <?=lang('If you do not wish to use this function, you can deactivate it here. Reminders will then no longer be sent to users and there will no longer be an option to confirm the data on the "My year" page.', 'Wenn ihr diese Funktion nicht nutzen wollt, könnt ihr sie hier deaktivieren. Es wird dann keine Erinnerung mehr an die Nutzenden geschickt und in der Seite "Mein Jahr" gibt es keine Möglichkeit mehr, die Daten zu bestätigen.')?>
+            </p>
+
+            <?php
+            $quarterly = $Settings->featureEnabled('quarterly-reporting', true);
+            ?>
+
+            <div class="custom-radio">
+                <input type="radio" id="quarterly-reporting-true" value="1" name="values[quarterly-reporting]" <?= $quarterly ? 'checked' : '' ?>>
+                <label for="quarterly-reporting-true">
+                    <?= lang('Enabled', 'Aktiviert') ?>
+                </label>
+            </div>
+            <div class="custom-radio">
+                <input type="radio" id="quarterly-reporting-false" value="0" name="values[quarterly-reporting]" <?= $quarterly ? '' : 'checked' ?>>
+                <label for="quarterly-reporting-false">
+                    <?= lang('Disabled', 'Deaktiviert') ?>
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="box px-20">
+        <h3>
+            <?= lang('Journals', 'Journale') ?>
         </h3>
         <div class="form-group">
             <label for="">
-                <?= lang('Coins', 'Coins') ?>
+                <?= lang('Automatic retrieval of journal metrics', 'Automatischer Download von Journal-Metriken') ?>
             </label>
             <?php
-            $coins = $Settings->featureEnabled('coins');
-            ?>
-            <div class=" custom-radio">
-                <input type="radio" id="coins-true" value="1" name="values[coins]" <?= $coins ? 'checked' : '' ?>>
-                <label for="coins-true"><?= lang('enabled', 'aktiviert') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="coins-false" value="0" name="values[coins]" <?= $coins ? '' : 'checked' ?>>
-                <label for="coins-false"><?= lang('disabled', 'deaktiviert') ?></label>
-            </div>
-
-            <small> Coins werden nirgendwo gespeichert, sondern on-demand berechnet. Wenn ihr Coins global ausschaltet, werden sie also gar nicht erst berechnet und nirgendwo gezeigt.</small>
-
-        </div>
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('Achievements', 'Errungenschaften') ?>
-            </label>
-            <?php
-            $achievements = $Settings->featureEnabled('achievements');
+            $journals = $Settings->featureEnabled('no-journal-metrics');
             ?>
 
+            <p>
+                <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
+            </p>
             <div class="custom-radio">
-                <input type="radio" id="achievements-true" value="1" name="values[achievements]" <?= $achievements ? 'checked' : '' ?>>
-                <label for="achievements-true"><?= lang('enabled', 'aktiviert') ?></label>
+                <input type="radio" id="no-journal-metrics-false" value="0" name="values[no-journal-metrics]" <?= $journals ? '' : 'checked' ?>>
+                <label for="no-journal-metrics-false"><?= lang('Retrieve metrics automatically', 'Metriken automatisch abrufen') ?></label>
             </div>
-
             <div class="custom-radio">
-                <input type="radio" id="achievements-false" value="0" name="values[achievements]" <?= $achievements ? '' : 'checked' ?>>
-                <label for="achievements-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                <input type="radio" id="no-journal-metrics-true" value="1" name="values[no-journal-metrics]" <?= $journals ? 'checked' : '' ?>>
+                <label for="no-journal-metrics-true"><?= lang('Disable automatic retrieval', 'Automatischen Abruf deaktivieren') ?></label>
             </div>
 
         </div>
-
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('User profile metrics', 'Metriken im Nutzerprofil') ?>
-            </label>
-            <?php
-            $user_metrics = $Settings->featureEnabled('user-metrics');
-            ?>
-
-            <div class=" custom-radio">
-                <input type="radio" id="user-metrics-true" value="1" name="values[user-metrics]" <?= $user_metrics ? 'checked' : '' ?>>
-                <label for="user-metrics-true"><?= lang('enabled', 'aktiviert') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="user-metrics-false" value="0" name="values[user-metrics]" <?= $user_metrics ? '' : 'checked' ?>>
-                <label for="user-metrics-false"><?= lang('disabled', 'deaktiviert') ?></label>
-            </div>
-
-            <small> Wenn diese Funktion ausgeschaltet wird, sind Nutzermetriken (Graphen) nur noch auf der eigenen Profilseite sichtbar.</small>
-
-        </div>
-
-        <div class="form-group">
-            <label for="">
-                <?= lang('Profile images', 'Profilbilder der Nutzenden') ?>
-            </label>
-            <?php
-            $db_pictures = $Settings->featureEnabled('db_pictures');
-            ?>
-            <div class=" custom-radio">
-                <input type="radio" id="db_pictures-true" value="1" name="values[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
-                <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
-            </div>
-
-            <div class="custom-radio">
-                <input type="radio" id="db_pictures-false" value="0" name="values[db_pictures]" <?= $db_pictures ? '' : 'checked' ?>>
-                <label for="db_pictures-false"><?= lang('Save in file system', 'Im Dateisystem speichern') ?></label>
-            </div>
-
-            <small>
-                <?= lang(
-                    'Saving the profile pictures in the database is recommended if the pictures are maintained exclusively via OSIRIS. If the images are saved in the file system, they can be uploaded more easily (into the folder <code>/img/users</code>) and, for example, updated automatically. However, they must then have the user name as the name and be in JPEG format!',
-                    'Die Profilbilder in der Datenbank zu speichern wird empfohlen, wenn die Bilder ausschließlich über OSIRIS gepflegt werden. Wenn die Bilder im Dateisystem gespeichert werden, kann man sie leichter anders hochladen (in den Ordner <code>/img/users</code>) und z.B. automatisch aktualisieren. Sie müssen dann aber den Username als Namen haben und im JPEG-Format sein!'
-                ) ?>
-            </small>
-        </div>
-
-
-        <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
-            <div class="form-group">
-                <label for="">
-                    <?= lang('LDAP user synchronization', 'LDAP-Nutzersynchronisierung') ?>
-                </label>
-                <?php
-                $sync = $Settings->featureEnabled('ldap-sync');
-                ?>
-
-                <div class="form-">
-                    <label for="ldap-sync-blacklist"><?= lang('Username Blacklist (separated by comma)', 'Username-Blacklist (Komma-getrennt)') ?></label>
-                    <textarea class="form-control small" name="general[ldap-sync-blacklist]" id="ldap-sync-blacklist"><?= $Settings->get('ldap-sync-blacklist') ?></textarea>
-                </div>
-                <div class="form-">
-                    <label for="ldap-sync-whitelist"><?= lang('Username whitelist (separated by comma)', 'Username-Whitelist (Komma-getrennt)') ?></label>
-                    <textarea class="form-control small" name="general[ldap-sync-whitelist]" id="ldap-sync-whitelist"><?= $Settings->get('ldap-sync-whitelist') ?></textarea>
-                </div>
-
-            </div>
-        <?php } ?>
     </div>
-
 
     <div class="box px-20">
         <h3>
@@ -328,6 +271,33 @@
 
     <div class="box px-20">
         <h3>
+            <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
+        </h3>
+        <div class="form-group">
+            <label for="">
+                <?= lang('Show Teaching modules in Sidebar', 'Zeige Lehrveranstaltungen in der Seitennavigation') ?>
+            </label>
+            <?php
+            $teachingModules = $Settings->featureEnabled('teaching-modules', true);
+            ?>
+
+            <div class="custom-radio">
+                <input type="radio" id="teaching-modules-true" value="1" name="values[teaching-modules]" <?= $teachingModules ? 'checked' : '' ?>>
+                <label for="teaching-modules-true"><?= lang('enabled', 'aktiviert') ?></label>
+            </div>
+
+            <div class="custom-radio">
+                <input type="radio" id="teaching-modules-false" value="0" name="values[teaching-modules]" <?= $teachingModules ? '' : 'checked' ?>>
+                <label for="teaching-modules-false"><?= lang('disabled', 'deaktiviert') ?></label>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="box px-20">
+        <h3>
             <?= lang('Research Topics', 'Forschungsbereiche') ?>
         </h3>
         <div class="form-group">
@@ -350,28 +320,28 @@
 
         </div>
 
-        
+
         <div class="form-group">
-                <label for="position">
-                    <h5><?= lang('Label', 'Bezeichnung') ?></h5>
-                </label>
+            <label for="position">
+                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+            </label>
 
-                <?php
-                    $label = $Settings->get('topics_label');
-                ?>
-                
+            <?php
+            $label = $Settings->get('topics_label');
+            ?>
 
-                <div class="row row-eq-spacing my-0">
-                    <div class="col-md-6">
-                        <label for="topics_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                        <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="topics_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                        <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
-                    </div>
+
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <label for="topics_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="topics_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
                 </div>
             </div>
+        </div>
 
         <?php
         $n_topics = $osiris->topics->count();
@@ -390,7 +360,7 @@
 
     <div class="box px-20">
         <h3>
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h3>
         <div class="form-group">
             <label for="">
@@ -410,6 +380,27 @@
                 <label for="infrastructures-false"><?= lang('disabled', 'deaktiviert') ?></label>
             </div>
 
+        </div>
+
+        <div class="form-group">
+            <label for="position">
+                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+            </label>
+
+            <?php
+            $label = $Settings->get('infrastructures_label');
+            ?>
+
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <label for="infrastructures_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Infrastructures') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="infrastructures_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Infrastrukturen') ?>">
+                </div>
+            </div>
         </div>
 
     </div>
@@ -521,6 +512,57 @@
         </div>
     </div>
 
+    
+    <div class="box px-20">
+        <h3>
+            <?= lang('Research Trips', 'Forschungsreisen') ?>
+        </h3>
+        <div class="form-group">
+            <label for="">
+                <?= lang('Enable a module for analysing research trips', 'Aktiviere ein Modul, das Forschungsreisen analysieren kann') ?>
+            </label>
+            
+            <p class="text-muted">
+                <?=lang('The add-on requires an activity type called <kbd>travel</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>travel</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.')?>
+            </p>
+            <?php
+            $trips = $Settings->featureEnabled('trips');
+
+            $travel_available = $osiris->adminTypes->count(['id' => 'travel']);
+            $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+
+            if ($travel_available == 0){ ?>
+                <p>
+                    <i class="ph ph-warning text-danger"></i>
+                    <?= lang('The activity type <kbd>travel</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>travel</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
+                </p>
+           <?php }
+           else if ($modules_available == 0) { ?>
+                <p>
+                    <i class="ph ph-warning text-danger"></i>
+                    <?= lang('The activity type <kbd>travel</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>travel</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>
+                </p>
+            <?php } else { ?>
+                <p>
+                    <i class="ph ph-seal-check text-success"></i>
+                    <?= lang('The module is available and can be activated here.', 'Das Modul ist verfügbar und kann hier aktiviert werden.') ?>
+                </p>
+
+            <div class="custom-radio">
+                <input type="radio" id="trips-true" value="1" name="values[trips]" <?= $trips ? 'checked' : '' ?>>
+                <label for="trips-true"><?= lang('enabled', 'aktiviert') ?></label>
+            </div>
+
+            <div class="custom-radio">
+                <input type="radio" id="trips-false" value="0" name="values[trips]" <?= $trips ? '' : 'checked' ?>>
+                <label for="trips-false"><?= lang('disabled', 'deaktiviert') ?></label>
+            </div>
+            <?php } ?>
+
+
+        </div>
+    </div>
+
     <button class="btn success">
         <i class="ph ph-floppy-disk"></i>
         Save
@@ -559,18 +601,18 @@
 
                     <ul class="list">
                         <li>
-                            <?=lang('The selected custom field is used to create new research areas on this basis. Don\'t worry, you can still edit them later.', 'Das ausgewählte Custom Field wird genommen, um auf dieser Grundlage neue Forschungsbereiche anzulegen. Keine Sorge, du kannst sie später noch bearbeiten.')?>
+                            <?= lang('The selected custom field is used to create new research areas on this basis. Don\'t worry, you can still edit them later.', 'Das ausgewählte Custom Field wird genommen, um auf dieser Grundlage neue Forschungsbereiche anzulegen. Keine Sorge, du kannst sie später noch bearbeiten.') ?>
                         </li>
                         <li>
-                            <?=lang('All activities for which the custom field was completed are assigned to the respective research areas.', 'Alle Aktivitäten, bei denen das Custom Field ausgefüllt war, werden den jeweiligen Forschungsbereichen zugeordnet.')?>
+                            <?= lang('All activities for which the custom field was completed are assigned to the respective research areas.', 'Alle Aktivitäten, bei denen das Custom Field ausgefüllt war, werden den jeweiligen Forschungsbereichen zugeordnet.') ?>
                         </li>
                         <li>
-                            <?=lang('The custom field is then deleted, i.e. the field itself, the assignment to forms and the values set for the activities are removed.', 'Das Custom Field wird daraufhin gelöscht, d.h. das Feld selbst, die Zuordnung zu Formularen und die gesetzten Werte bei den Aktivitäten werden entfernt.')?>
+                            <?= lang('The custom field is then deleted, i.e. the field itself, the assignment to forms and the values set for the activities are removed.', 'Das Custom Field wird daraufhin gelöscht, d.h. das Feld selbst, die Zuordnung zu Formularen und die gesetzten Werte bei den Aktivitäten werden entfernt.') ?>
                         </li>
                     </ul>
 
                     <button class="btn primary">
-                        <?=lang('Migrate', 'Migrieren')?>
+                        <?= lang('Migrate', 'Migrieren') ?>
                     </button>
                 </form>
 

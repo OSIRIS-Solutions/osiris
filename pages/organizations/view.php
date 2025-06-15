@@ -92,29 +92,34 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
 </style>
 
 <h2>
-    <?= lang('Connected projects', 'Verknüpfte Projekte') ?>
+    <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
 </h2>
-
+<!-- TODO: add download button -->
 <div class="mt-20 w-full">
-    <table class="table dataTable responsive" id="projects-table">
+    <table class="table dataTable responsive" id="activities-table">
         <thead>
             <tr>
-                <th class="w-100"><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Project', 'Projekt') ?></th>
+                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('Activity', 'Aktivität') ?></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $projects = $osiris->projects->find(['collaborators.organization' => $organization['_id']])->toArray();
-            foreach ($projects as $project) {
-                $Project->setProject($project);
+            $org_id = strval($organization['_id']);
+            $activities = $osiris->activities->find([
+                '$or' => [
+                    ['organization' => $org_id],
+                    ['organizations' => $org_id]
+                ]
+            ], ['projection' => ['rendered' => 1]])->toArray();
+            foreach ($activities as $doc) {
             ?>
                 <tr>
-                    <td>
-                        <?= $Project->getType('ph-fw ph-2x m-0') ?>
+                    <td class="w-50">
+                        <?= $doc['rendered']['icon'] ?>
                     </td>
                     <td>
-                        <?= $Project->widgetSmall() ?>
+                        <?= $doc['rendered']['web'] ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -122,53 +127,129 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
     </table>
 </div>
 <script>
-    $('#projects-table').DataTable({});
+    $('#activities-table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        "columnDefs": [{
+            "targets": 0,
+            "orderable": false
+        }]
+    });
 </script>
 
-<h2>
-    <?= lang('Connected infrastructures', 'Verknüpfte Infrastrukturen') ?>
-</h2>
+<?php if ($Settings->featureEnabled('projects')) { ?>
+    <h2>
+        <?= lang('Connected projects', 'Verknüpfte Projekte') ?>
+    </h2>
 
-<div class="mt-20 w-full">
-    <table class="table dataTable responsive" id="infrastructures-table">
-        <thead>
-            <tr>
-                <th><?= lang('Infrastructure', 'Infrastruktur') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $infrastructures = $osiris->infrastructures->find(['collaborators' => $organization['_id']])->toArray();
-            foreach ($infrastructures as $infra) {
-            ?>
+    <div class="mt-20 w-full">
+        <table class="table dataTable responsive" id="projects-table">
+            <thead>
                 <tr>
-                    <td>
-                        <h6 class="m-0">
-                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
-                            </a>
-                            <br>
-                        </h6>
-
-                        <div class="text-muted mb-5">
-                            <?php if (!empty($infra['subtitle'])) { ?>
-                                <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
-                            <?php } else { ?>
-                                <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
-                            <?php } ?>
-                        </div>
-                        <div>
-                            <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
-                        </div>
-                    </td>
+                    <th class="w-100"><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('Project', 'Projekt') ?></th>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
-<script>
-    $('#infrastructures-table').DataTable({});
-</script>
+            </thead>
+            <tbody>
+                <?php
+                $projects = $osiris->projects->find([
+                    '$or' => [
+                        ['collaborators.organization' => $organization['_id']],
+                        ['funding_organization' => $organization['_id']],
+                        ['university' => $organization['_id']],
+
+                    ]
+                ])->toArray();
+                foreach ($projects as $project) {
+                    $Project->setProject($project);
+                ?>
+                    <tr>
+                        <td>
+                            <?= $Project->getType('ph-fw ph-2x m-0') ?>
+                        </td>
+                        <td>
+                            <?= $Project->widgetSmall() ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#projects-table').DataTable({});
+    </script>
+<?php } ?>
+
+
+
+<?php if ($Settings->featureEnabled('infrastructures')) { ?>
+    <h2>
+        <?= lang('Connected infrastructures', 'Verknüpfte Infrastrukturen') ?>
+    </h2>
+
+    <div class="mt-20 w-full">
+        <table class="table dataTable responsive" id="infrastructures-table">
+            <thead>
+                <tr>
+                    <th><?= $Settings->infrastructureLabel() ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $infrastructures = $osiris->infrastructures->find(['collaborators' => $organization['_id']])->toArray();
+                foreach ($infrastructures as $infra) {
+                ?>
+                    <tr>
+                        <td>
+                            <h6 class="m-0">
+                                <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                    <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                </a>
+                                <br>
+                            </h6>
+
+                            <div class="text-muted mb-5">
+                                <?php if (!empty($infra['subtitle'])) { ?>
+                                    <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                <?php } else { ?>
+                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                <?php } ?>
+                            </div>
+                            <div>
+                                <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#infrastructures-table').DataTable({});
+    </script>
+<?php } ?>
+
+<?php if ($Settings->hasPermission('organizations.delete')) { ?>
+    <button type="button" class="btn danger mt-20" id="delete-organization" onclick="$('#delete-organization-confirm').toggle();$(this).toggle();">
+        <i class="ph ph-trash"></i>
+        <?= lang('Delete organization', 'Organisation löschen') ?>
+    </button>
+
+    <div class="mt-20 alert danger" style="display: none;" id="delete-organization-confirm">
+        <form action="<?= ROOTPATH ?>/crud/organizations/delete/<?= $organization['_id'] ?>" method="post">
+            <h4 class="title">
+                <?= lang('Delete organization', 'Organisation löschen') ?>
+            </h4>
+            <p>
+                <?= lang('Are you sure you want to delete this organization?', 'Sind Sie sicher, dass Sie diese Organisation löschen möchten?') ?>
+            </p>
+            <button type="submit" class="btn danger">
+                <?= lang('Delete', 'Löschen') ?>
+            </button>
+        </form>
+    </div>
+<?php } ?>
 
 
 

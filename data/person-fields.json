@@ -1,0 +1,193 @@
+[
+    {
+        "id": "gender",
+        "default": true,
+        "searchable": true,
+        "en": "Gender",
+        "de": "Geschlecht",
+        "type": "string",
+        "input": "select",
+        "values": {
+            "m": "male / männlich",
+            "f": "female / weiblich",
+            "d": "non-binary / divers",
+            "n": "not specified / nicht angegeben"
+        }
+    },
+    {
+        "id": "telephone",
+        "default": true,
+        "searchable": true,
+        "type": "string",
+        "en": "Phone",
+        "de": "Telefon"
+    },
+    {
+        "id": "mobile",
+        "default": false,
+        "searchable": true,
+        "type": "string",
+        "en": "Mobile",
+        "de": "Mobiltelefon"
+    },
+    {
+        "id": "internal_id",
+        "default": false,
+        "searchable": true,
+        "type": "string",
+        "en": "Internal ID",
+        "de": "Interne ID"
+    },
+    {
+        "id": "position",
+        "default": true,
+        "searchable": true,
+        "type": "string",
+        "en": "Position",
+        "de": "Position",
+        "description": {
+            "en": "This enables a field for the position, which can be either a text field or a list of standard positions. This behavior can be configured in the tab <q>Vocabulary</q>.",
+            "de": "Dies aktiviert ein Feld für die Position, das entweder ein Textfeld oder eine Liste von Standardpositionen sein kann. Dieses Verhalten kann im Tab <q>Vokabular</q> konfiguriert werden."
+        }
+    },
+    {
+        "id": "room",
+        "default": true,
+        "searchable": true,
+        "type": "string",
+        "en": "Room",
+        "de": "Raum"
+    },
+    {
+        "id": "hide",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Hide in Portfolio",
+        "de": "Profil im Portfolio ausblenden",
+        "description": {
+            "en": "If this data field is active, users will have the option to hide their profile in Portfolio.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihr Profil im Portfolio auszublenden."
+        }
+    },
+    {
+        "id": "public_image",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Public image",
+        "de": "Öffentliches Bild",
+        "description": {
+            "en": "If this data field is active, users will have the option to disable their image in Portfolio.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihr Bild im Portfolio zu deaktivieren."
+        }
+    },
+    {
+        "id": "socials",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Socials",
+        "de": "Soziale Netzwerke",
+        "description": {
+            "en": "If this data field is active, users will have the option to add their social media profiles.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihre Social-Media-Profile hinzuzufügen."
+        }
+    },
+    {
+        "id": "topics",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Research Topics",
+        "de": "Forschungsbereiche",
+        "description": {
+            "en": "If research topics are enabled globally, they can be added to users.",
+            "de": "Wenn Forschungsthemen global aktiviert sind, können sie Benutzern hinzugefügt werden."
+        }
+    },
+    {
+        "id": "research",
+        "default": true,
+        "searchable": true,
+        "type": "string",
+        "en": "Research interests",
+        "de": "Forschungsinteressen",
+        "description": {
+            "en": "This enables a list of research interests.",
+            "de": "Dies aktiviert eine Liste von Forschungsinteressen."
+        }
+    },
+    {
+        "id": "research_profile",
+        "default": false,
+        "searchable": false,
+        "type": "string",
+        "en": "Research profile",
+        "de": "Forschungsprofil",
+        "description": {
+            "en": "This enables a research profile text field.",
+            "de": "Dies aktiviert ein Textfeld für das Forschungsprofil."
+        }
+    },
+    {
+        "id": "cv",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "CV",
+        "de": "Lebenslauf",
+        "description": {
+            "en": "This enables a standardized tabular CV.",
+            "de": "Dies aktiviert einen standardisierten tabellarischen Lebenslauf."
+        }
+    },
+    {
+        "id": "biography",
+        "default": false,
+        "searchable": false,
+        "type": "string",
+        "en": "Biography",
+        "de": "Biografie",
+        "description": {
+            "en": "This enables a biography text field.",
+            "de": "Dies aktiviert ein Biografie-Textfeld."
+        }
+    },
+    {
+        "id": "education",
+        "default": false,
+        "searchable": false,
+        "type": "string",
+        "en": "Education",
+        "de": "Ausbildung",
+        "description": {
+            "en": "This enables a text field for ones education.",
+            "de": "Dies aktiviert ein Textfeld für die Ausbildung."
+        }
+    },
+    {
+        "id": "expertise",
+        "default": true,
+        "searchable": true,
+        "type": "string",
+        "en": "Expertise",
+        "de": "Expertise",
+        "description": {
+            "en": "This enables a text list of expertise.",
+            "de": "Dies aktiviert eine Liste von Expertisen, in die Benutzer selbst neue Einträge hinzufügen können."
+        }
+    },
+    {
+        "id": "keywords",
+        "default": false,
+        "searchable": true,
+        "type": "string",
+        "en": "Keywords",
+        "de": "Schlagworte",
+        "description": {
+            "en": "This enables a defined list of keywords, which users can select from. The list of keywords and how they should be named can be configured in the tab <q>Vocabulary</q>.",
+            "de": "Dies aktiviert eine definierte Liste von Schlagwörtern, aus der die Benutzer auswählen können. Die Liste der Schlagwörter und wie sie genannt werden sollen kann im Tab <q>Vokabular</q> konfiguriert werden."
+        }
+    }
+]

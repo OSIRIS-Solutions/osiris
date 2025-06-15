@@ -924,22 +924,7 @@ function getDOI(doi) {
         success: function (data) {
             var pub = data.message
             console.log(pub);
-
-
             var date = getPublishingDate(pub)
-            // if (pub['journal-issue'] !== undefined) {
-            //     if (
-            //         (pub['journal-issue']['published-online'] !== undefined && pub['journal-issue']['published-online']['date-parts'] !== undefined)
-            //         ||
-            //         (pub['journal-issue']['published-print'] !== undefined && pub['journal-issue']['published-print']['date-parts'] !== undefined)
-            //     ) {
-            //         var date = getPublishingDate(pub['journal-issue'])
-            //         // console.log(date);
-            //     }
-            // }
-            // if (pub['issued'] !== undefined && pub['issued']['date-parts'] !== undefined) {
-            //     date = getPublishingDate(pub['issued'])
-            // }
             var authors = [];
             // var editors = [];
             var first = 1
@@ -983,7 +968,7 @@ function getDOI(doi) {
             // console.log(funder);
 
             var pages = pub.page
-            if (pub.page === undefined || pub.page !== null) {
+            if (pub.page === undefined || pub.page === null) {
                 pages = pub['article-number'] ?? null;
             }
 

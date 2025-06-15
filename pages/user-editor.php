@@ -28,6 +28,23 @@ if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
 }
 
 $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed by your organisation.', 'Dieses Feld wird durch deine Organisation zentral verwaltet.') . '</small>';
+
+$data_fields = $Settings->get('person-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/person-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
+
+$active = function ($field) use ($data_fields) {
+    return in_array($field, $data_fields);
+};
 ?>
 
 
@@ -73,7 +90,7 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
     </a>
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
-        <?= lang('Organization', 'Organisation') ?>
+        <?= lang('Organisation', 'Organisation') ?>
     </a>
 
     <a onclick="navigate('research')" id="btn-research" class="btn">
@@ -132,14 +149,14 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
             </div>
             <div class="col-sm">
                 <label for="first"><?= lang('First name', 'Vorname') ?></label>
-                <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : 'required' ?> >
+                <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('first', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
             </div>
             <div class="col-sm">
                 <label for="last"><?= lang('Last name', 'Nachname') ?></label>
-                <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : 'required' ?> >
+                <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('last', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
@@ -178,32 +195,32 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
             </div>
         </div>
 
+        <?php if ($active('gender')) { ?>
+            <div class="form-group">
+                <span><?= lang('Gender', 'Geschlecht') ?>:</span><br>
+                <?php
+                $gender = $data['gender'] ?? 'n';
+                ?>
 
-        <div class="form-group">
-            <span><?= lang('Gender', 'Geschlecht') ?>:</span><br>
-            <?php
-            $gender = $data['gender'] ?? 'n';
-            ?>
+                <div class="custom-radio d-inline-block mr-10">
+                    <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
+                    <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+                </div>
+                <div class="custom-radio d-inline-block mr-10">
+                    <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
+                    <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+                </div>
+                <div class="custom-radio d-inline-block mr-10">
+                    <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
+                    <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+                </div>
+                <div class="custom-radio d-inline-block mr-10">
+                    <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
+                    <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+                </div>
 
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
             </div>
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
-            </div>
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
-            </div>
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
-            </div>
-
-        </div>
-
+        <?php } ?>
     </section>
 
 
@@ -211,7 +228,7 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
     <section id="organization" style="display:none;">
 
         <h2 class="title mb-0">
-            <?= lang('Organizational information', 'Organisatorische Informationen') ?>
+            <?= lang('Organisational information', 'Organisatorische Informationen') ?>
         </h2>
 
         <p>
@@ -223,22 +240,46 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
         </p>
 
         <!-- internal_id -->
-        <div class="form-group">
-            <label for="internal_id"><?= lang('Internal ID', 'Interne ID') ?></label>
-            <input type="text" name="values[internal_id]" id="internal_id" class="form-control w-auto" value="<?= $data['internal_id'] ?? '' ?>" <?= in_array('internal_id', $ldap_fields) ? 'disabled' : '' ?>>
-            <?php if (in_array('internal_id', $ldap_fields)) {
-                echo $ldap_msg;
-            } ?>
-        </div>
+        <?php if ($active('internal_id')) { ?>
+            <div class="form-group">
+                <label for="internal_id"><?= lang('Internal ID', 'Interne ID') ?></label>
+                <input type="text" name="values[internal_id]" id="internal_id" class="form-control w-auto" value="<?= $data['internal_id'] ?? '' ?>" <?= in_array('internal_id', $ldap_fields) ? 'disabled' : '' ?>>
+                <?php if (in_array('internal_id', $ldap_fields)) {
+                    echo $ldap_msg;
+                } ?>
+            </div>
+        <?php } ?>
+
+
+        <!-- check if there are active custom fields -->
+        <?php
+        $custom_fields = $osiris->adminFields->find()->toArray();
+        if (!empty($custom_fields)) {
+            require_once BASEPATH . "/php/Modules.php";
+            $Modules = new Modules($data);
+
+            // echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+            foreach ($custom_fields as $field) {
+                $key = $field['id'] ?? null;
+                if ($active($key)) {
+                    $Modules->custom_field($key);
+                }
+            }
+        } ?>
+
+
+
 
         <!-- room -->
-        <div class="form-group">
-            <label for="room"><?= lang('Room', 'Raum') ?></label>
-            <input type="text" name="values[room]" id="room" class="form-control w-auto" value="<?= $data['room'] ?? '' ?>" <?= in_array('room', $ldap_fields) ? 'disabled' : '' ?>>
-            <?php if (in_array('room', $ldap_fields)) {
-                echo $ldap_msg;
-            } ?>
-        </div>
+        <?php if ($active('room')) { ?>
+            <div class="form-group">
+                <label for="room"><?= lang('Room', 'Raum') ?></label>
+                <input type="text" name="values[room]" id="room" class="form-control w-auto" value="<?= $data['room'] ?? '' ?>" <?= in_array('room', $ldap_fields) ? 'disabled' : '' ?>>
+                <?php if (in_array('room', $ldap_fields)) {
+                    echo $ldap_msg;
+                } ?>
+            </div>
+        <?php } ?>
 
         <style>
             #depts .table tr.selected td::before {
@@ -251,47 +292,49 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
 
         <div class="depts mb-20">
 
-            <div class="form-group">
-                <label for="position">
-                    <h5><?= lang('Current Position', 'Aktuelle Position') ?></h5>
-                </label>
+            <?php if ($active('position')) { ?>
+                <div class="form-group">
+                    <label for="position">
+                        <h5><?= lang('Current Position', 'Aktuelle Position') ?></h5>
+                    </label>
 
-                <?php
-                $staff = $Settings->get('staff');
-                $staffPos = $staff['positions'] ?? [];
-                $staffFree = $staff['free'] ?? true;
-                ?>
-                <?php if ($staffFree) { ?>
-                    <div class="row row-eq-spacing my-0">
-                        <div class="col-md-6">
-                            <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                            <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
-                            <?php if (in_array('position', $ldap_fields)) {
-                                echo $ldap_msg;
-                            } ?>
+                    <?php
+                    $staff = $Settings->get('staff');
+                    $staffPos = $staff['positions'] ?? [];
+                    $staffFree = $staff['free'] ?? true;
+                    ?>
+                    <?php if ($staffFree) { ?>
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <?php if (in_array('position', $ldap_fields)) {
+                                    echo $ldap_msg;
+                                } ?>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <?php if (in_array('position', $ldap_fields)) {
+                                    echo $ldap_msg;
+                                } ?>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                            <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
-                            <?php if (in_array('position', $ldap_fields)) {
-                                echo $ldap_msg;
-                            } ?>
-                        </div>
-                    </div>
-                <?php } else { ?>
-                    <!-- select list from predifined pos -->
-                    <select name="values[position_both]" id="position" class="form-control">
-                        <option value=""> -- <?= lang('no position selected', 'keine Position gewählt') ?> --- </option>
-                        <?php foreach ($staffPos as $pos) {
-                            $en = $pos[0] ?? '-';
-                            $de = $pos[1] ?? '-';
-                        ?>
-                            <option value="<?= $en ?>;;<?= $de ?>" <?= $data['position'] == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
-                        <?php } ?>
-                    </select>
-                <?php } ?>
+                    <?php } else { ?>
+                        <!-- select list from predifined pos -->
+                        <select name="values[position_both]" id="position" class="form-control">
+                            <option value=""> -- <?= lang('no position selected', 'keine Position gewählt') ?> --- </option>
+                            <?php foreach ($staffPos as $pos) {
+                                $en = $pos[0] ?? '-';
+                                $de = $pos[1] ?? '-';
+                            ?>
+                                <option value="<?= $en ?>;;<?= $de ?>" <?= $data['position'] == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
 
-            </div>
+                </div>
+            <?php } ?>
 
             <h5>
                 <?= lang('Organisational units', 'Organisationseinheiten') ?>
@@ -344,30 +387,35 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
         <section id="portfolio" style="display:none;">
             <h2 class="title"><?= lang('Public visibility', 'Öffentliche Darstellung') ?> (Portfolio)</h2>
 
-            <div class="alert danger">
-                <div class="custom-checkbox">
-                    <input type="checkbox" id="hide" value="1" name="values[hide]" <?= ($data['hide'] ?? false) ? 'checked' : '' ?>>
-                    <label for="hide"><?= lang('Hide profile in Portfolio', 'Profil nicht im Portfolio zeigen') ?></label>
-                </div>
-                <small class="text-danger">
-                    <?= lang(
-                        'By hiding your profile, you prevent OSIRIS Portfolio from displaying your profile to the public. You can revoke this at any time by unticking the checkbox again.',
-                        'Indem du dein Profil versteckst, verhinderst du, dass OSIRIS Portfolio dein Profil öffentlich zeigt. Du kannst dies jederzeit wieder rückgängig machen, indem du das Häkchen wieder entfernst.'
-                    ) ?>
-                </small>
-            </div>
 
-            <!-- show profile picture -->
-            <p class="text-danger">
-                <?= lang(
-                    'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
-                    'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
-                ) ?>
-            </p>
-            <div class="custom-checkbox mb-20">
-                <input type="checkbox" id="public_image" value="1" name="values[public_image]" <?= ($data['public_image'] ?? false) ? 'checked' : '' ?>>
-                <label for="public_image"><?= lang('Show profile picture', 'Zeige Profilbild') ?></label>
-            </div>
+            <?php if ($active('hide')) { ?>
+                <div class="alert danger">
+                    <div class="custom-checkbox">
+                        <input type="checkbox" id="hide" value="1" name="values[hide]" <?= ($data['hide'] ?? false) ? 'checked' : '' ?>>
+                        <label for="hide"><?= lang('Hide profile in Portfolio', 'Profil nicht im Portfolio zeigen') ?></label>
+                    </div>
+                    <small class="text-danger">
+                        <?= lang(
+                            'By hiding your profile, you prevent OSIRIS Portfolio from displaying your profile to the public. You can revoke this at any time by unticking the checkbox again.',
+                            'Indem du dein Profil versteckst, verhinderst du, dass OSIRIS Portfolio dein Profil öffentlich zeigt. Du kannst dies jederzeit wieder rückgängig machen, indem du das Häkchen wieder entfernst.'
+                        ) ?>
+                    </small>
+                </div>
+            <?php } ?>
+
+            <?php if ($active('public_image')) { ?>
+                <!-- show profile picture -->
+                <p class="text-danger">
+                    <?= lang(
+                        'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
+                        'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
+                    ) ?>
+                </p>
+                <div class="custom-checkbox mb-20">
+                    <input type="checkbox" id="public_image" value="1" name="values[public_image]" <?= ($data['public_image'] ?? false) ? 'checked' : '' ?>>
+                    <label for="public_image"><?= lang('Show profile picture', 'Zeige Profilbild') ?></label>
+                </div>
+            <?php } ?>
 
             <div class="custom-checkbox mb-20">
                 <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
@@ -405,21 +453,25 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
         </div>
 
         <div class="form-row row-eq-spacing">
-            <div class="col-sm-6">
-                <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
-                <input type="tel" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" <?= in_array('telephone', $ldap_fields) ? 'disabled' : '' ?>>
-                <?php if (in_array('telephone', $ldap_fields)) {
-                    echo $ldap_msg;
-                } ?>
-            </div>
+            <?php if ($active('telephone')) { ?>
+                <div class="col-sm-6">
+                    <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+                    <input type="tel" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" <?= in_array('telephone', $ldap_fields) ? 'disabled' : '' ?>>
+                    <?php if (in_array('telephone', $ldap_fields)) {
+                        echo $ldap_msg;
+                    } ?>
+                </div>
+            <?php } ?>
 
-            <div class="col-sm-6">
-                <label for="mobile">mobile</label>
-                <input type="tel" name="values[mobile]" id="mobile" class="form-control" value="<?= $data['mobile'] ?? '' ?>" <?= in_array('mobile', $ldap_fields) ? 'disabled' : '' ?>>
-                <?php if (in_array('mobile', $ldap_fields)) {
-                    echo $ldap_msg;
-                } ?>
-            </div>
+            <?php if ($active('mobile')) { ?>
+                <div class="col-sm-6">
+                    <label for="mobile">mobile</label>
+                    <input type="tel" name="values[mobile]" id="mobile" class="form-control" value="<?= $data['mobile'] ?? '' ?>" <?= in_array('mobile', $ldap_fields) ? 'disabled' : '' ?>>
+                    <?php if (in_array('mobile', $ldap_fields)) {
+                        echo $ldap_msg;
+                    } ?>
+                </div>
+            <?php } ?>
 
         </div>
 
@@ -463,66 +515,67 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
         </script>
 
 
-        <?php if ($Settings->featureEnabled('portal')) { ?>
-            <p class="text-danger">
-                <?= lang('
+        <?php if ($active('socials')) { ?>
+            <?php if ($Settings->featureEnabled('portal')) { ?>
+                <p class="text-danger">
+                    <?= lang('
             Please note that the following information is optional. If you do not wish to make your contact information publicly visible, you can leave the corresponding fields blank. If you fill them in, you authorise OSIRIS Portfolio to show this data publicly. You can revoke this at any time by leaving the fields blank.
             ', '
             Bitte beachte, dass die folgenden Informationen freiwillige Angaben sind. Wenn du deine Kontaktinformationen nicht öffentlich sichtbar machen möchtest, kannst du die entsprechenden Felder leer lassen. Solltest du sie ausfüllen, erlaubst du OSIRIS Portfolio, diese Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Felder leer lässt.
             ') ?>
-            </p>
-        <?php } ?>
+                </p>
+            <?php } ?>
 
-        <h4>
-            <?= lang('Social Media', 'Soziale Medien') ?>
-        </h4>
-        <div id="socials">
+            <h4>
+                <?= lang('Social Media', 'Soziale Medien') ?>
+            </h4>
+            <div id="socials">
 
-            <?php
-            $socials = DB::doc2Arr($data['socials'] ?? []);
-            foreach ($socials as $t => $url) {
-            ?>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <?= $t ?>
-                            </span>
-                        </div>
-                        <input type="text" name="values[socials][<?= $t ?>]" class="form-control" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
-                        <div class="input-group-append">
-                            <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                <?php
+                $socials = DB::doc2Arr($data['socials'] ?? []);
+                foreach ($socials as $t => $url) {
+                ?>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <?= $t ?>
+                                </span>
+                            </div>
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
+                            <div class="input-group-append">
+                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php } ?>
-        </div>
-
-        <!-- dropdown to add new social -->
-        <div class="dropdown">
-            <button class="btn" data-toggle="dropdown" type="button" id="socials-dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="ph ph-plus"></i>
-                <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="socials-dropdown">
-                <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'website'] as $s) {
-                    if (array_key_exists($s, $socials)) continue;
-                    $logo = socialLogo($s);
-                ?>
-                    <a class="item py-0" onclick="addSocial(event, '<?= $s ?>', '<?= $logo ?>');">
-                        <i class="ph <?= $logo ?> text-primary"></i>
-                        <?= ucfirst($s) ?>
-                    </a>
                 <?php } ?>
             </div>
-        </div>
 
-        <script>
-            function addSocial(e, type, logo) {
-                e.preventDefault();
-                // var i = $(btn).closest('form').find('select[name^="values[socials]"]').last().attr('name').match(/\[(\d+)\]/)[1];
-                // get last index
-                var html = `
+            <!-- dropdown to add new social -->
+            <div class="dropdown">
+                <button class="btn" data-toggle="dropdown" type="button" id="socials-dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ph ph-plus"></i>
+                    <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="socials-dropdown">
+                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'website'] as $s) {
+                        if (array_key_exists($s, $socials)) continue;
+                        $logo = socialLogo($s);
+                    ?>
+                        <a class="item py-0" onclick="addSocial(event, '<?= $s ?>', '<?= $logo ?>');">
+                            <i class="ph <?= $logo ?> text-primary"></i>
+                            <?= ucfirst($s) ?>
+                        </a>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <script>
+                function addSocial(e, type, logo) {
+                    e.preventDefault();
+                    // var i = $(btn).closest('form').find('select[name^="values[socials]"]').last().attr('name').match(/\[(\d+)\]/)[1];
+                    // get last index
+                    var html = `
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -537,9 +590,10 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
                 </div>
             </div>
         `;
-                $('#socials').append(html);
-            }
-        </script>
+                    $('#socials').append(html);
+                }
+            </script>
+        <?php } ?>
     </section>
 
 
@@ -714,156 +768,269 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
 
     <section id="research" style="display:none">
 
-        <!-- if topics are registered, you can choose them here -->
-        <?php $Settings->topicChooser($data['topics'] ?? []) ?>
+        <?php if ($active('topics')) { ?>
+            <!-- if topics are registered, you can choose them here -->
+            <?php $Settings->topicChooser($data['topics'] ?? []) ?>
+        <?php } ?>
 
 
-        <h2 class="title">
-            <?= lang('Research interest', 'Forschungsinteressen') ?>
-        </h2>
+        <?php if ($active('keywords')) {
+            $kw_name = $Settings->get('staff-keyword-name', 'Keywords');
+            $all_kw = DB::doc2Arr($Settings->get('staff-keywords', []));
+            $selected_kw = DB::doc2Arr($data['keywords'] ?? []);
+        ?>
+            <h2 class="title">
+                <?= $kw_name ?>
+            </h2>
 
-        <small class="text-muted">Max. 5</small><br>
-        <table class="table simple">
-            <thead>
-                <tr>
-                    <th><label for="research" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label></th>
-                    <th><label for="research_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="research-interests">
+            <div class="author-widget">
+                <div class="author-list p-10" id="keyword-list">
+                    <?php
+                    $module_lst = [];
+                    foreach ($selected_kw as $k) { ?>
+                        <div class='author'>
+                            <?= $k ?>
+                            <input type='hidden' name='values[keywords][]' value='<?= $k ?>'>
+                            <a onclick='$(this).parent().remove()'>&times;</a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="footer">
+                    <div class="input-group small d-inline-flex w-auto">
+                        <select class="form-control" id="keyword-select">
+                            <option value="" disabled selected><?= lang("Add $kw_name ...", "Füge $kw_name hinzu ...") ?></option>
+                            <?php
+                            foreach ($all_kw as $kw) {
+                                if (in_array($kw, $selected_kw)) continue;
+                            ?>
+                                <option><?= $kw ?></option>
+                            <?php } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn secondary h-full" type="button" onclick="addKeyword();">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function addKeyword() {
+                    var kw = $('#keyword-select').val();
+                    console.log(kw);
+                    if (kw == '') return;
+                    // check if already exists
+                    // if ($('#keyword-list').find('span:contains("' + kw + '")').length > 0) return;
+                    var html = `<div class='author'>${kw} <input type='hidden' name='values[keywords][]' value='${kw}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                    $('#keyword-list').append(html);
+                    // add hidden input to form
+                    // $('#keyword-list').append(``);
+                }
+            </script>
+
+        <?php } ?>
+
+
+
+        <?php if ($active('expertise')) { ?>
+            <h2 class="title">
+                <?= lang('Expertise') ?>
+            </h2>
+
+            <?php
+            $expertise = $data['expertise'] ?? array();
+            foreach ($expertise as $n) { ?>
+                <div class="input-group d-inline-flex w-auto mr-5 mb-10">
+                    <input type="text" name="values[expertise][]" value="<?= $n ?>" list="expertise-list" required class="form-control">
+                    <div class="input-group-append">
+                        <a class="btn" onclick="$(this).closest('.input-group').remove();">&times;</a>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <button class="btn mb-10" type="button" onclick="addExpertise(event, this);">
+                <i class="ph ph-plus"></i>
+            </button>
+            <datalist id="expertise-list">
                 <?php
-                $data['research_de'] = $data['research_de'] ?? array();
-                foreach (($data['research'] ?? array()) as $i => $n) {
-                    $n_de = $data['research_de'][$i] ?? '';
-                ?>
-                    <tr class="research-interest">
-                        <td>
-                            <input type="text" name="values[research][]" value="<?= $n ?>" list="research-list" required class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" name="values[research_de][]" value="<?= $n_de ?>" list="research-list-de" class="form-control">
-                        </td>
-                        <td><a class="btn text-danger" onclick="$(this).closest('.research-interest').remove();"><i class="ph ph-trash"></i></a></td>
-                    </tr>
+                foreach ($osiris->persons->distinct('expertise') as $d) { ?>
+                    <option><?= $d ?></option>
                 <?php } ?>
-            </tbody>
-        </table>
+            </datalist>
 
-        <button class="btn" type="button" onclick="addResearchInterest(event);">
-            <i class="ph ph-plus"></i>
-        </button>
+            <script>
+                function addExpertise(evt, el) {
+                    var group = $('<div class="input-group d-inline-flex w-auto mr-5 mb-10"> ')
+                    group.append('<input type="text" name="values[expertise][]" value="" list="expertise-list" required class="form-control">')
+                    // var input = $()
+                    var btn = $('<a class="btn">')
+                    btn.on('click', function() {
+                        $(this).closest('.input-group').remove();
+                    })
+                    btn.html('&times;')
 
-        <h2 class="title"><?= lang('Research Profile', 'Forschungsprofil') ?></h2>
+                    group.append($('<div class="input-group-append">').append(btn))
+                    // $(el).prepend(group);
+                    $(group).insertBefore(el);
+                }
+            </script>
 
-        <div class="row row-eq-spacing">
-            <div class="col-md-6">
-                <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="research_profile-editor-quill"><?= $data['research_profile'] ?? '' ?></div>
-                    <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $data['research_profile'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('research_profile-editor');
-                    </script>
+
+        <?php } ?>
+
+
+
+
+        <?php if ($active('research')) { ?>
+            <h2 class="title">
+                <?= lang('Research interest', 'Forschungsinteressen') ?>
+            </h2>
+
+            <small class="text-muted">Max. 5</small><br>
+            <table class="table simple">
+                <thead>
+                    <tr>
+                        <th><label for="research" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label></th>
+                        <th><label for="research_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="research-interests">
+                    <?php
+                    $data['research_de'] = $data['research_de'] ?? array();
+                    foreach (($data['research'] ?? array()) as $i => $n) {
+                        $n_de = $data['research_de'][$i] ?? '';
+                    ?>
+                        <tr class="research-interest">
+                            <td>
+                                <input type="text" name="values[research][]" value="<?= $n ?>" list="research-list" required class="form-control">
+                            </td>
+                            <td>
+                                <input type="text" name="values[research_de][]" value="<?= $n_de ?>" list="research-list-de" class="form-control">
+                            </td>
+                            <td><a class="btn text-danger" onclick="$(this).closest('.research-interest').remove();"><i class="ph ph-trash"></i></a></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+
+            <button class="btn" type="button" onclick="addResearchInterest(event);">
+                <i class="ph ph-plus"></i>
+            </button>
+
+            <datalist id="research-list">
+                <?php
+                foreach ($osiris->persons->distinct('research') as $d) { ?>
+                    <option><?= $d ?></option>
+                <?php } ?>
+            </datalist>
+            <datalist id="research-list-de">
+                <?php
+                foreach ($osiris->persons->distinct('research-de') as $d) { ?>
+                    <option><?= $d ?></option>
+                <?php } ?>
+            </datalist>
+
+
+        <?php } ?>
+
+
+        <?php if ($active('research_profile')) { ?>
+            <h2 class="title"><?= lang('Research Profile', 'Forschungsprofil') ?></h2>
+
+            <div class="row row-eq-spacing">
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="research_profile-editor-quill"><?= $data['research_profile'] ?? '' ?></div>
+                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $data['research_profile'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('research_profile-editor');
+                        </script>
+                    </div>
+
                 </div>
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="research_profile_de-editor-quill"><?= $data['research_profile_de'] ?? '' ?></div>
+                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $data['research_profile_de'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('research_profile_de-editor');
+                        </script>
+                    </div>
 
-            </div>
-            <div class="col-md-6">
-                <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="research_profile_de-editor-quill"><?= $data['research_profile_de'] ?? '' ?></div>
-                    <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $data['research_profile_de'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('research_profile_de-editor');
-                    </script>
                 </div>
-
             </div>
-        </div>
-
-
-        <datalist id="research-list">
-            <?php
-            foreach ($osiris->persons->distinct('research') as $d) { ?>
-                <option><?= $d ?></option>
-            <?php } ?>
-        </datalist>
-        <datalist id="research-list-de">
-            <?php
-            foreach ($osiris->persons->distinct('research-de') as $d) { ?>
-                <option><?= $d ?></option>
-            <?php } ?>
-        </datalist>
-
-
+        <?php } ?>
 
     </section>
 
 
+
     <section id="biography" style="display:none">
 
+        <?php if ($active('cv')) { ?>
+            <h2 class="title"><?= lang('Curriculum Vitae') ?></h2>
 
-        <h2 class="title"><?= lang('Curriculum Vitae') ?></h2>
+            <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
+            <br>
+            <small class="text-muted float-right"><?= lang('Sorting will be done automatically', 'Wir sortieren das automatisch für dich') ?></small>
+            <br>
+            <div id="cv-list">
+                <?php
+                if (isset($data['cv']) && !empty($data['cv'])) {
 
-        <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
-        <br>
-        <small class="text-muted float-right"><?= lang('Sorting will be done automatically', 'Wir sortieren das automatisch für dich') ?></small>
-        <br>
-        <div id="cv-list">
-            <?php
-            if (isset($data['cv']) && !empty($data['cv'])) {
+                    foreach ($data['cv'] as $i => $con) { ?>
 
-                foreach ($data['cv'] as $i => $con) { ?>
-
-                    <div class="alert mb-10">
-                        <div class="input-group my-10">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><?= lang('From', 'Von') ?></span>
+                        <div class="alert mb-10">
+                            <div class="input-group my-10">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><?= lang('From', 'Von') ?></span>
+                                </div>
+                                <input type="number" name="values[cv][<?= $i ?>][from][month]" value="<?= $con['from']['month'] ?? '' ?>" class="form-control" placeholder="month *" min="1" max="12" step="1" id="from-month" required>
+                                <input type="number" name="values[cv][<?= $i ?>][from][year]" value="<?= $con['from']['year'] ?? '' ?>" class="form-control" placeholder="year *" min="1900" max="<?= CURRENTYEAR ?>" step="1" id="from-year" required>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><?= lang('to', 'bis') ?></span>
+                                </div>
+                                <input type="number" name="values[cv][<?= $i ?>][to][month]" value="<?= $con['to']['month'] ?? '' ?>" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month">
+                                <input type="number" name="values[cv][<?= $i ?>][to][year]" value="<?= $con['to']['year'] ?? '' ?>" class="form-control" placeholder="year" min="1900" step="1" id="to-year">
                             </div>
-                            <input type="number" name="values[cv][<?= $i ?>][from][month]" value="<?= $con['from']['month'] ?? '' ?>" class="form-control" placeholder="month *" min="1" max="12" step="1" id="from-month" required>
-                            <input type="number" name="values[cv][<?= $i ?>][from][year]" value="<?= $con['from']['year'] ?? '' ?>" class="form-control" placeholder="year *" min="1900" max="<?= CURRENTYEAR ?>" step="1" id="from-year" required>
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><?= lang('to', 'bis') ?></span>
+
+                            <div class="form-group mb-10">
+                                <input name="values[cv][<?= $i ?>][position]" type="text" class="form-control" value="<?= $con['position'] ?? '' ?>" placeholder="Position *" required>
                             </div>
-                            <input type="number" name="values[cv][<?= $i ?>][to][month]" value="<?= $con['to']['month'] ?? '' ?>" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month">
-                            <input type="number" name="values[cv][<?= $i ?>][to][year]" value="<?= $con['to']['year'] ?? '' ?>" class="form-control" placeholder="year" min="1900" step="1" id="to-year">
-                        </div>
-
-                        <div class="form-group mb-10">
-                            <input name="values[cv][<?= $i ?>][position]" type="text" class="form-control" value="<?= $con['position'] ?? '' ?>" placeholder="Position *" required>
-                        </div>
-                        <div class="form-group mb-0">
-                            <input name="values[cv][<?= $i ?>][affiliation]" type="text" class="form-control" value="<?= $con['affiliation'] ?? '' ?>" placeholder="Affiliation *" list="affiliation-list" required>
-                        </div>
-
-                        <small class="text-muted">* <?= lang('required', 'benötigt') ?></small><br>
-
-                        <!-- checkbox to hide from portfolio -->
-
-                        <?php if ($Settings->featureEnabled('portal')) { ?>
-                            <div class="custom-checkbox ml-10">
-                                <input type="checkbox" id="hide-<?= $i ?>" <?= ($con['hide'] ?? false) ? 'checked' : '' ?> name="values[cv][<?= $i ?>][hide]">
-                                <label for="hide-<?= $i ?>">
-                                    <?= lang('Hide in portfolio', 'Im Portfolio verstecken') ?>
-                                </label>
+                            <div class="form-group mb-0">
+                                <input name="values[cv][<?= $i ?>][affiliation]" type="text" class="form-control" value="<?= $con['affiliation'] ?? '' ?>" placeholder="Affiliation *" list="affiliation-list" required>
                             </div>
-                        <?php } ?>
 
+                            <small class="text-muted">* <?= lang('required', 'benötigt') ?></small><br>
 
-                        <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
-                    </div>
-            <?php }
-            } ?>
-        </div>
+                            <!-- checkbox to hide from portfolio -->
 
-        <script>
-            var i = <?= $i ?? 0 ?>
+                            <?php if ($Settings->featureEnabled('portal')) { ?>
+                                <div class="custom-checkbox ml-10">
+                                    <input type="checkbox" id="hide-<?= $i ?>" <?= ($con['hide'] ?? false) ? 'checked' : '' ?> name="values[cv][<?= $i ?>][hide]">
+                                    <label for="hide-<?= $i ?>">
+                                        <?= lang('Hide in portfolio', 'Im Portfolio verstecken') ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
 
-            var CURRENTYEAR = <?= CURRENTYEAR ?>;
+                            <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
+                        </div>
+                <?php }
+                } ?>
+            </div>
 
-            function addCVrow(evt, parent) {
-                i++;
-                var el = `
+            <script>
+                var i = <?= $i ?? 0 ?>
+
+                var CURRENTYEAR = <?= CURRENTYEAR ?>;
+
+                function addCVrow(evt, parent) {
+                    i++;
+                    var el = `
             <div class="alert mb-10">
                     <div class="input-group my-10">
                         <div class="input-group-prepend">
@@ -891,76 +1058,80 @@ $ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed
                     <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
                 </div>
                 `;
-                $(parent).prepend(el);
-            }
-        </script>
+                    $(parent).prepend(el);
+                }
+            </script>
 
 
-        <datalist id="affiliation-list">
-            <?php
-            foreach ($osiris->persons->distinct('cv.affiliation') as $d) { ?>
-                <option><?= $d ?></option>
-            <?php } ?>
-        </datalist>
+            <datalist id="affiliation-list">
+                <?php
+                foreach ($osiris->persons->distinct('cv.affiliation') as $d) { ?>
+                    <option><?= $d ?></option>
+                <?php } ?>
+            </datalist>
+        <?php } ?>
 
 
 
-        <h2 class="title"><?= lang('Biography', 'Biografie') ?></h2>
+        <?php if ($active('biography')) { ?>
+            <h2 class="title"><?= lang('Biography', 'Biografie') ?></h2>
 
-        <div class="row row-eq-spacing my-0">
-            <div class="col-md-6">
-                <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="biography-editor-quill"><?= $data['biography'] ?? '' ?></div>
-                    <textarea name="values[biography]" id="biography-editor" class="d-none" readonly><?= $data['biography'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('biography-editor');
-                    </script>
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="biography-editor-quill"><?= $data['biography'] ?? '' ?></div>
+                        <textarea name="values[biography]" id="biography-editor" class="d-none" readonly><?= $data['biography'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('biography-editor');
+                        </script>
+                    </div>
+
                 </div>
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="biography_de-editor-quill"><?= $data['biography_de'] ?? '' ?></div>
+                        <textarea name="values[biography_de]" id="biography_de-editor" class="d-none" readonly><?= $data['biography_de'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('biography_de-editor');
+                        </script>
+                    </div>
 
-            </div>
-            <div class="col-md-6">
-                <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="biography_de-editor-quill"><?= $data['biography_de'] ?? '' ?></div>
-                    <textarea name="values[biography_de]" id="biography_de-editor" class="d-none" readonly><?= $data['biography_de'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('biography_de-editor');
-                    </script>
                 </div>
-
             </div>
-        </div>
+        <?php } ?>
 
 
-        <h2><?= lang('Eduction', 'Ausbildung') ?></h2>
 
+        <?php if ($active('education')) { ?>
+            <h2><?= lang('Education', 'Ausbildung') ?></h2>
 
-        <div class="row row-eq-spacing my-0">
-            <div class="col-md-6">
-                <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="education-editor-quill"><?= $data['education'] ?? '' ?></div>
-                    <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $data['education'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('education-editor');
-                    </script>
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="education-editor-quill"><?= $data['education'] ?? '' ?></div>
+                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $data['education'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('education-editor');
+                        </script>
+                    </div>
+
                 </div>
+                <div class="col-md-6">
+                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
+                    <div class="form-group mb-0">
+                        <div id="education_de-editor-quill"><?= $data['education_de'] ?? '' ?></div>
+                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $data['education_de'] ?? '' ?></textarea>
+                        <script>
+                            quillEditor('education_de-editor');
+                        </script>
+                    </div>
 
-            </div>
-            <div class="col-md-6">
-                <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                <div class="form-group mb-0">
-                    <div id="education_de-editor-quill"><?= $data['education_de'] ?? '' ?></div>
-                    <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $data['education_de'] ?? '' ?></textarea>
-                    <script>
-                        quillEditor('education_de-editor');
-                    </script>
                 </div>
-
             </div>
-        </div>
-
+        <?php } ?>
 
     </section>
 

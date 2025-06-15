@@ -22,18 +22,21 @@ $Project = new Project();
                 </a>
             </h5>
             <small class="d-block text-muted mb-5"><?= $project['title'] ?></small>
-            <?php if ($project['contact']) { 
-                $contact = $DB->getPerson($project['contact']);
-                echo "<p class='mb-0'><strong>" . lang('Contact', 'Kontakt') . ":</strong> " . $contact['name'] . "</p>";
-             } ?>
+            <div>
+            <?php 
+            echo $Project->printField('persons', $project['persons']);
+            ?>
+            </div>
             
 
             <span class="text-muted"><?= $Project->getDateRange() ?></span>
 
             <h6 class="title"><?= lang('Countries', 'Länder:') ?></h6>
             <ul class="list signal mb-0">
-                <?php foreach ($project['nagoya_countries'] ?? [] as $c) { ?>
-                    <li><?= Country::get($c) ?></li>
+                <?php 
+                $lang = lang('name', 'name_de');
+                foreach ($project['nagoya_countries'] ?? [] as $c) { ?>
+                    <li><?= $DB->getCountry($c, $lang) ?></li>
                 <?php } ?>
             </ul>
 

@@ -144,6 +144,36 @@
         "en": "Projects",
         "fields": [
             {
+                "id": "proposals.add",
+                "de": "Anträge anlegen",
+                "en": "Add new proposals"
+            },
+            {
+                "id": "proposals.view",
+                "de": "Alle existierende Anträge sehen",
+                "en": "See all existing proposals"
+            },
+            {
+                "id": "proposals.edit",
+                "de": "Alle Anträge bearbeiten, inklusive Statusänderung",
+                "en": "Edit all proposals, including status change"
+            },
+            {
+                "id": "proposals.edit-own",
+                "de": "Eigene Anträge editieren (nur aktueller Status)",
+                "en": "Edit own proposals (only current status)"
+            },
+            {
+                "id": "proposals.status-own",
+                "de": "Den Status eigener Anträge ändern",
+                "en": "Change status of own proposals"
+            },
+            {
+                "id": "proposals.delete",
+                "de": "Anträge löschen",
+                "en": "Delete proposals"
+            },
+            {
                 "id": "projects.add",
                 "de": "Projekte anlegen",
                 "en": "Add new projects"
@@ -201,14 +231,14 @@
                 "en": "Add new infrastructures"
             },
             {
-                "id": "infrastructures.view",
-                "de": "Alle existierenden Infrastrukturen sehen",
-                "en": "See all existing infrastructures"
-            },
-            {
                 "id": "infrastructures.edit",
                 "de": "Alle Infrastrukturen bearbeiten",
                 "en": "Edit all infrastructures"
+            },
+            {
+                "id": "infrastructures.edit-own",
+                "de": "Eigene Infrastrukturen bearbeiten",
+                "en": "Edit own infrastructures"
             },
             {
                 "id": "infrastructures.statistics",
@@ -227,24 +257,9 @@
         "en": "Organizations",
         "fields": [
             {
-                "id": "organizations.add",
-                "de": "Organisationen hinzufügen",
-                "en": "Add new organizations"
-            },
-            {
-                "id": "organizations.view",
-                "de": "Alle existierenden Organisationen sehen",
-                "en": "See all existing organizations"
-            },
-            {
                 "id": "organizations.edit",
-                "de": "Alle Organisationen bearbeiten",
-                "en": "Edit all organizations"
-            },
-            {
-                "id": "organizations.statistics",
-                "de": "Infrastrukturstatistiken ergänzen",
-                "en": "Add infrastructure statistics"
+                "de": "Organisationen hinzufügen und bearbeiten",
+                "en": "Add and edit organizations"
             },
             {
                 "id": "organizations.delete",

@@ -53,8 +53,72 @@ function sel($index, $value)
     return val($index) == $value ? 'selected' : '';
 }
 
+$children = $osiris->adminTypes->find(['parent' => $id], ['sort'=>['order'=>1]])->toArray();
 
+$type = $form;
+$t = $id;
+$color = $type['color'] ?? '';
+$member = $osiris->activities->count(['type' => $t]);
 ?>
+
+
+<div class="modal" id="order" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h5 class="title">
+                <i class="ph ph-list-numbers"></i>
+                <?= lang('Change order', 'Reihenfolge ändern') ?>
+            </h5>
+
+            <style>
+                tr.ui-sortable-helper {
+                    background-color: white;
+                    border: 1px solid var(--border-color);
+                }
+            </style>
+
+            <form action="<?= ROOTPATH ?>/crud/types/update-order" method="post">
+                <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $id ?>">
+
+                <table class="table w-auto">
+                    <tbody id="authors">
+                        <?php foreach ($children as $ch) { ?>
+                            <tr>
+                                <td class="w-50">
+                                    <i class="ph ph-dots-six-vertical text-muted handle cursor-pointer"></i>
+                                </td>
+                                <td style="color: <?= $color ?? 'inherit' ?>">
+                                    <input type="hidden" name="order[]" value="<?= $ch['id'] ?>">
+                                    <i class="ph ph-<?= $ch['icon'] ?? 'placeholder' ?> mr-10"></i>
+                                    <?= lang($ch['name'], $ch['name_de'] ?? $ch['name']) ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+
+                </table>
+                <button class="btn secondary mt-20">
+                    <i class="ph ph-check"></i>
+                    <?= lang('Submit', 'Bestätigen') ?>
+                </button>
+            </form>
+            <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#authors').sortable({
+                        handle: ".handle",
+                        // change: function( event, ui ) {}
+                    });
+                })
+            </script>
+
+
+        </div>
+    </div>
+</div>
 
 <div class="modal" id="unique" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -86,13 +150,6 @@ function sel($index, $value)
 
 <form action="<?= $formaction ?>" method="post" id="group-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
-
-    <?php
-    $type = $form;
-    $t = $id;
-    $color = $type['color'] ?? '';
-    $member = $osiris->activities->count(['type' => $t]);
-    ?>
 
     <div class="box type" id="type-<?= $t ?>" style="">
 
@@ -156,16 +213,20 @@ function sel($index, $value)
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>
                     <?php
-                    $children = $osiris->adminTypes->find(['parent' => $id]);
                     foreach ($children as $subtype) { ?>
-                            <a class="btn primary mb-5" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
-                                <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
-                                <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
-                            </a>
-                    <?php } ?>
-                        <a class="btn" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $id ?>"><i class="ph ph-plus-circle"></i>
-                            <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
+                        <a class="btn primary mb-5" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                            <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
+                            <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                         </a>
+                    <?php } ?>
+                    <a class="btn" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $id ?>"><i class="ph ph-plus-circle"></i>
+                        <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
+                    </a>
+
+                    <a class="btn ml-auto" href="#order">
+                        <i class="ph ph-list-numbers"></i>
+                        <?= lang('Change order', 'Reihenfolge ändern') ?>
+                    </a>
                 </div>
             <?php } ?>
 
@@ -191,7 +252,7 @@ function sel($index, $value)
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang("Can't delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View activities', 'Aktivitäten zeigen') ?>

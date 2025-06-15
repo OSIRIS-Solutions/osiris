@@ -86,7 +86,7 @@ Um die Lesbarkeit zu erhöhen, wird in der Dokumentation das generische Maskulin
 <ul class="list">
     <li><?= lang('Advanced search', 'Erweiterte Suche') ?></li>
     <li><?= lang('Download functions', 'Download-Funktionen') ?></li>
-    <li><?= lang('Visualizations', 'Visualisierungen') ?></li>
+    <li><?= lang('Visualisations', 'Visualisierungen') ?></li>
     <li><?= lang('Improvement of FAQ', 'Erweiterung des FAQ') ?></li>
     <li><?= lang('Translation in english! Sorry...', 'Übersetzungen ins Englische') ?></li>
 </ul>

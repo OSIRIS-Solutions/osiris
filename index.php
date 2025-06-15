@@ -21,14 +21,14 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '1.0.0');
+define('CSS_JS_VERSION', '1.0.6');
 
 // error_reporting(E_ERROR);
 
 session_start();
 
 define('BASEPATH', $_SERVER['DOCUMENT_ROOT'] . ROOTPATH);
-define('OSIRIS_VERSION', '1.4.1');
+define('OSIRIS_VERSION', '1.5.0');
 
 // set time constants
 $year = date("Y");
@@ -37,25 +37,6 @@ $quarter = ceil($month / 3);
 define('CURRENTQUARTER', intval($quarter));
 define('CURRENTMONTH', intval($month));
 define('CURRENTYEAR', intval($year));
-
-if (isset($_GET['OSIRIS-SELECT-MAINTENANCE-USER'])) {
-    // someone tries to switch users
-    include_once BASEPATH . "/php/init.php";
-    $realusername = ($_SESSION['realuser'] ?? $_SESSION['username']);
-    $username = ($_GET['OSIRIS-SELECT-MAINTENANCE-USER']);
-
-    // check if the user is allowed to do that
-    $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
-    // change username if user is allowed
-    if ($allowed == 1 || $realusername == $username) {
-        $msg = "User switched!";
-        $_SESSION['realuser'] = $realusername;
-        $_SESSION['username'] = $username;
-        header("Location: " . ROOTPATH . "/profile/$username");
-    }
-
-    // do nothing if user is not allowed
-}
 
 function lang($en, $de = null)
 {
@@ -155,7 +136,7 @@ if (
     &&
     isset($_SESSION['username']) && !empty($_SESSION['username'])
 ) {
-    include_once BASEPATH . "/routes/components.php";
+    include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
     include_once BASEPATH . "/routes/controlling.php";
     include_once BASEPATH . "/routes/database.php";
@@ -175,7 +156,7 @@ if (
     include_once BASEPATH . "/routes/reports.php";
     include_once BASEPATH . "/routes/concepts.php";
     include_once BASEPATH . "/routes/admin.php";
-    include_once BASEPATH . "/routes/conferences.php";
+    include_once BASEPATH . "/routes/events.php";
     require_once BASEPATH . '/routes/guests.php';
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";

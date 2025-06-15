@@ -55,7 +55,7 @@
                     </label>
                     <select class="form-control" id="username" name="values[user]" autocomplete="off" required>
                         <?php
-                        foreach ($osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]) as $j) { ?>
+                        foreach ($osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]) as $j) { ?>
                             <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['supervisor']['user'] ?? $_SESSION['username']) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                         <?php } ?>
                     </select>

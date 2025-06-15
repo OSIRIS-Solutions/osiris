@@ -34,7 +34,7 @@ $form = $form ?? array();
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
 $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-$url = ROOTPATH . "/groups/view/" . $form['_id'];
+$url = ROOTPATH . "/groups/edit/" . $form['_id'] ;
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
 $level = $Groups->getLevel($id);
@@ -394,11 +394,11 @@ function sel($index, $value)
 
                 </div>
                 <div class="footer">
-                    <div class="input-group sm d-inline-flex w-auto">
+                    <div class="input-group small d-inline-flex w-auto">
                         <select class="head-input form-control">
                             <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
                             <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) {
                                 if (in_array($j['username'], $heads) || empty($j['last'])) continue;
                             ?>

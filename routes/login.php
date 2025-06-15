@@ -184,9 +184,13 @@ Route::post('/user/login', function () {
                 }
             } else {
                 // user exists in our database
+                $set = ["lastlogin" => date('Y-m-d')];
+                if (!empty($uniqueid)) {
+                    $set['uniqueid'] = $uniqueid;
+                }
                 $updateResult = $osiris->persons->updateOne(
                     ['username' => $USER['username']],
-                    ['$set' => ["lastlogin" => date('Y-m-d'), "uniqueid" => $uniqueid]]
+                    ['$set' => $set]
                 );
             }
 
@@ -208,7 +212,7 @@ Route::post('/user/login', function () {
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/userlogin.php";
     if (isset($auth)) {
-        printMsg($auth["msg"], "error", "");
+        printMsg($auth["msg"] ?? 'Something went wrong', "error", "");
     }
     if (empty($_POST['username'])) {
         printMsg("Username is required!", "error", "");

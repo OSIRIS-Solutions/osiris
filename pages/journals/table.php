@@ -20,7 +20,7 @@
 
 
 <h1 class="mt-0">
-<i class="ph ph-stack text-primary"></i>
+    <i class="ph ph-stack text-primary"></i>
     <?= lang('Journals', 'Journale') ?>
 </h1>
 
@@ -31,35 +31,12 @@ if ($Settings->hasPermission('journals.edit')) { ?>
             <i class="ph ph-stack-plus"></i>
             <?= lang('Add Journal', 'Journal hinzufügen') ?>
         </a>
-        <a href="#check-metrics">
-            <i class="ph ph-chart-line-up"></i>
-            <?= lang('Check metrics', 'Metriken prüfen') ?>
-        </a>
-    </div>
-
-    <!-- modal -->
-    <div class="modal" id="check-metrics">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><?= lang('Check metrics', 'Metriken prüfen') ?></h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><?= lang('This will check the metrics for all journals. This may take a while.', 'Dies wird die Metriken für alle Journale prüfen. Dies kann eine Weile dauern.') ?></p>
-                    <div class="alert danger font-weight-bold">
-                        <?= lang('Attention: This will overwrite existing metrics.', 'Achtung: Dies wird bestehende Metriken überschreiben.') ?>
-                    </div>
-                    <p><?= lang('Do you want to continue?', 'Möchten Sie fortfahren?') ?></p>
-                </div>
-                <div class="modal-footer">
-                    <a href="<?= ROOTPATH ?>/journal/check-metrics" class="btn primary"><?= lang('Check metrics', 'Metriken prüfen') ?></a>
-                    <button type="button" class="btn secondary" data-dismiss="modal"><?= lang('Cancel', 'Abbrechen') ?></button>
-                </div>
-            </div>
-        </div>
+        <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
+            <a href="<?= ROOTPATH ?>/journal/metrics">
+                <i class="ph ph-ranking"></i>
+                <?= lang('Check metrics', 'Metriken prüfen') ?>
+            </a>
+        <?php } ?>
     </div>
 <?php }
 ?>
@@ -124,10 +101,10 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     data: 'open_access',
                     defaultContent: '-',
                     render: function(data, type, full, meta) {
-                        if (data === 'Nein' || data == 'No') 
-                            return `<span class="text-danger">${data}</span>`;
-                        if (data === 'Ja' || data == 'Yes')
-                            return `<span class="text-success">${data}</span>`;
+                        if (data === 'Nein' || data == 'No' || data === 'false' || data === false)
+                            return `<span class="text-danger">${lang('No', 'Nein')}</span>`;
+                        if (data === 'Ja' || data == 'Yes' || data === 'true' || data === true)
+                            return `<span class="text-success">${lang('Yes', 'Ja')}</span>`;
                         return data;
                     },
                     className: 'unbreakable'
@@ -136,7 +113,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     type: 'natural',
                     targets: 4,
                     data: 'if',
-                    defaultContent: null,
+                    defaultContent: '-',
                     render: function(data, type, full, meta) {
                         if (!data) return '';
                         var impact = data.impact ?? 0;

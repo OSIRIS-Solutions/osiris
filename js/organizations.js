@@ -2,12 +2,14 @@ let SUGGEST;
 let INPUT;
 let SELECTED;
 let COMMENT;
+let USE_RADIO = true;
+let DATAFIELD = 'collaborators'
 
 $(document).ready(function () {
-SUGGEST = $('#organization-suggest')
-INPUT = $('#organization-search')
-SELECTED = $('#collaborators')
-COMMENT = $('#search-comment')
+    SUGGEST = $('#organization-suggest')
+    INPUT = $('#organization-search')
+    SELECTED = $('#collaborators')
+    COMMENT = $('#search-comment')
 })
 
 function getOrganization(name, ror = false) {
@@ -72,7 +74,7 @@ function getOrganization(name, ror = false) {
 
 function suggestOrganization(data, create = false) {
     console.info('suggestOrganization')
-    
+
     if (data.length === 0) {
         COMMENT.html(lang('No results found', 'Keine Ergebnisse gefunden'))
     } else {
@@ -113,7 +115,37 @@ function cleanID(id) {
     return id
 }
 
-function selectOrganization(org, create = false) {
+function createOrganizationTR(org) {
+    console.info('createOrganizationTR')
+    var id = cleanID(org.id)
+    var row = $('<tr>')
+    var td = $('<td>')
+    td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
+    td.append(`<input type="hidden" name="values[${DATAFIELD}][]" value="${id}">`)
+    row.append(td)
+    if (USE_RADIO) {
+        row.append($('<td>').append(`<div class="custom-radio">
+                                        <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
+                                        <label for="coordinator-${id}" class="empty"></label>
+                                    </div>`))
+    }
+
+    td = $('<td>')
+    var deletebtn = $('<button type="button" class="btn danger" title="remove">')
+    deletebtn.html('<i class="ph ph-trash"></i>')
+    deletebtn.on('click', function () {
+        $(this).closest('tr').remove()
+    })
+    td.append(deletebtn)
+    row.append(td)
+
+    SELECTED.append(row)
+}
+
+function selectOrganization(org, create = false, callback = null) {
+    if (callback === null) {
+        callback = createOrganizationTR
+    }
     console.log(org);
     console.info('selectOrganization')
     if (create) {
@@ -123,38 +155,17 @@ function selectOrganization(org, create = false) {
                 values: org
             },
             dataType: "json",
-            url: ROOTPATH + '/crud/organization/create',
+            url: ROOTPATH + '/crud/organizations/create',
             success: function (response) {
                 // $('.loader').removeClass('show')
                 // console.log(response);
                 if (response.msg) {
                     toastWarning(response.msg)
-                    selectOrganization(response, false)
+                    selectOrganization(response, false, callback)
                     return;
                 } else {
                     // random id
-                    var id = cleanID(response.id)
-                    var row = $('<tr>')
-                    var td = $('<td>')
-                    td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
-                    td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
-                    row.append(td)
-                    row.append($('<td>').append(`<div class="custom-radio">
-                            <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
-                            <label for="coordinator-${id}" class="empty"></label>
-                        </div>`))
-
-                    td = $('<td>')
-                    var deletebtn = $('<button type="button" class="btn danger" title="remove">')
-                    deletebtn.html('<i class="ph ph-trash"></i>')
-                    deletebtn.on('click', function () {
-                        $(this).closest('tr').remove()
-                    })
-                    td.append(deletebtn)
-                    row.append(td)
-
-                    SELECTED.append(row)
-
+                    callback(response)
                     toastSuccess(lang('Organization added', 'Organisation angelegt'))
                 }
                 SUGGEST.empty()
@@ -166,28 +177,7 @@ function selectOrganization(org, create = false) {
             }
         })
     } else {
-        // random id
-        var id = cleanID(org.id)
-        var row = $('<tr>')
-        var td = $('<td>')
-        td.append(`${org.name} <br><small class="text-muted">${org.location}</small>`)
-        td.append(`<input type="hidden" name="values[collaborators][]" value="${id}">`)
-        row.append(td)
-        row.append($('<td>').append(`<div class="custom-radio">
-                                        <input type="radio" required name="values[coordinator]" id="coordinator-${id}" value="${id}">
-                                        <label for="coordinator-${id}" class="empty"></label>
-                                    </div>`))
-
-        td = $('<td>')
-        var deletebtn = $('<button type="button" class="btn danger" title="remove">')
-        deletebtn.html('<i class="ph ph-trash"></i>')
-        deletebtn.on('click', function () {
-            $(this).closest('tr').remove()
-        })
-        td.append(deletebtn)
-        row.append(td)
-
-        SELECTED.append(row)
+        callback(org)
         toastSuccess(lang('Organization connected', 'Organisation verknüpft'))
 
         SUGGEST.empty()
@@ -213,7 +203,20 @@ function getRORid(ror, msg = true) {
                 toastError(', '.join(response.errors))
                 return
             }
-            selectOrganization(response, true)
+            let o = response
+            let address = o.addresses[0] ?? {}
+            selectOrganization({
+                name: o.name,
+                location: `${address.city}, ${o.country.country_name}`,
+                ror_id: o.id,
+                country: o.country.country_code,
+                types: o.types,
+                type: o.types[0],
+                lat: address.lat ?? null,
+                lng: address.lng ?? null,
+                url: o.links[0] ?? null,
+                chosen: true,
+            }, true)
             $('#organizations-ror-id').val('')
             if (msg)
                 toastSuccess(lang('Organization added', 'Organisation hinzugefügt'))

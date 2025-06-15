@@ -16,14 +16,28 @@
 
 
 Route::get('/journal', function () {
-    // if ($page == 'users') 
     $breadcrumb = [
-        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
-        ['name' => lang('Table', 'Tabelle')]
+        ['name' => lang('Journals', 'Journale')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/table.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/journal/metrics', function () {
+    include_once BASEPATH . "/php/init.php";
+    if ($Settings->featureEnabled('no-journal-metrics')) {
+        echo "<p class='alert alert-danger'>" . lang('Feature not available', 'Funktion nicht verfügbar') . "</p>";
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
+        ['name' => lang('Metrics', 'Metriken')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/journals/metrics.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -94,10 +108,10 @@ Route::get('/journal/check-metrics', function () {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     $result = curl_exec($curl);
     $result = json_decode($result, true);
-    $year = $result['year'] ?? date('Y');
+    $year = $result['latest_year'] ?? date('Y');
     // {"metrics.year": {$ne: 2023}}
     $collection = $osiris->journals;
-    $cursor = $collection->find(['metrics.year' => ['$ne' => $year], 'no_metrics'=> ['$ne'=>true]], ['issn' => 1]);
+    $cursor = $collection->find(['metrics.year' => ['$ne' => $year], 'no_metrics' => ['$ne' => true]], ['issn' => 1]);
     $N = 0;
     foreach ($cursor as $doc) {
         $issn = $doc['issn'] ?? [];
@@ -161,6 +175,149 @@ Route::get('/journal/check-metrics', function () {
     header("Location: " . ROOTPATH . "/journal");
 });
 
+// update metrics
+
+// journals/metrics/update/:year
+Route::post('/journal/metrics/update/(\d{4})', function ($year) {
+    include_once BASEPATH . "/php/init.php";
+    // enhance time limit
+    set_time_limit(0);
+    $year = intval($year);
+
+    $count = $osiris->journals->count([
+        'metrics.year' => ['$ne' => $year],
+        'no_metrics' => ['$ne' => true]
+    ]);
+
+    $url = "https://osiris-app.de/api/v1/metrics/$year";
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
+        'Accept: application/json',
+    ]);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($curl);
+    $result = json_decode($result, true);
+    $result = array_column($result, null, 'issn');
+
+    if (empty($result)) {
+        echo json_encode([
+            'done' => true,
+            'message' => lang("No metrics found for this year.", "Keine Metriken für dieses Jahr gefunden."),
+            'value' => $count
+        ]);
+        die;
+    }
+    $collection = $osiris->journals;
+    // get issn list of all journals
+    $cursor = $collection->find(['metrics.year' => ['$ne' => $year], 'no_metrics' => ['$ne' => true]], ['issn' => 1]);
+
+    foreach ($cursor as $j) {
+        $mongoid = $j['_id'];
+        //check if issn is empty
+        $issn = $j['issn'] ?? [];
+        $found = false;
+        $metric = null;
+        foreach ($issn as $i) {
+            if (empty($i)) continue;
+            // remove '-' from issn
+            $i = str_replace('-', '', $i);
+            // check if issn exists in result
+            if (isset($result[$i])) {
+                $found = true;
+                $metric = $result[$i];
+                break;
+            }
+        }
+        if (empty($issn) || !$found || empty($metric)) {
+            // make sure to skip for future check
+            $collection->updateOne(
+                ['_id' => $mongoid],
+                ['$set' => ['no_metrics' => true]]
+            );
+            continue;
+        }
+        // Remove existing year
+        $collection->updateOne(
+            ['_id' => $mongoid, 'impact.year' => ['$exists' => true]],
+            [
+                '$pull' => [
+                    'impact' => ['year' => ['$in' => [$year, strval($year)]]],
+                ]
+            ]
+        );
+        // Remove existing metrics
+        $collection->updateOne(
+            ['_id' => $mongoid, 'metrics.year' => ['$exists' => true]],
+            [
+                '$pull' => [
+                    'metrics' => ['year' => ['$in' => [$year, strval($year)]]],
+                ]
+            ]
+        );
+
+        // Add new metrics
+        // check for BulkWriteException
+        try {
+            $collection->updateOne(
+                ['_id' => $mongoid],
+                [
+                    '$push' => [
+                        'impact' => ['year' => $year, 'impact' => $metric['if_2y'] ?? 0],
+                        'metrics' => [
+                            'year' => $year,
+                            'quartile' => $metric['quartile'] ?? null,
+                            'sjr' => $metric['sjr'] ?? null,
+                            'if_2y' => $metric['if_2y'] ?? 0,
+                            'if_3y' => $metric['if_3y'] ?? null,
+                        ]
+                    ]
+                ]
+            );
+        } catch (MongoDB\Driver\Exception\BulkWriteException $th) {
+            // if the journal has no metrics, set it to empty array
+            $collection->updateOne(
+                ['_id' => $mongoid],
+                [
+                    '$set' => [
+                        'impact' => [['year' => $year, 'impact' => $metric['if_2y'] ?? 0]],
+                        'metrics' => [[
+                            'year' => $year,
+                            'quartile' => $metric['quartile'] ?? null,
+                            'sjr' => $metric['sjr'] ?? null,
+                            'if_2y' => $metric['if_2y'] ?? 0,
+                            'if_3y' => $metric['if_3y'] ?? null,
+                        ]]
+                    ]
+                ]
+            );
+        }
+    }
+});
+// journals/metrics/progress/:year
+Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
+    include_once BASEPATH . "/php/init.php";
+    $count = $osiris->journals->count([
+        'metrics.year' => ['$ne' => $year],
+        'no_metrics' => ['$ne' => true]
+    ]);
+    if (empty($count)) {
+        echo json_encode([
+            'done' => true,
+            'message' => lang("All journals have been updated.", "Alle Journale wurden aktualisiert."),
+            'value' => $count
+        ]);
+        die;
+    }
+    echo json_encode([
+        'done' => false,
+        'message' => lang("Still updating journals...", "Aktualisiere..."),
+        'value' => $count
+    ]);
+});
+
+
+
 /**
  * CRUD routes
  */
@@ -195,83 +352,41 @@ Route::post('/crud/journal/create', function () {
 
     $values['issn'] = array_filter($values['issn'] ?? []);
 
-    try {
-        // try to get impact factor from WoS Journal info
-        // include_once BASEPATH . "/php/simple_html_dom.php";
+    if (!$Settings->featureEnabled('no-journal-metrics')) {
+        try {
+            foreach ($values['issn'] as $issn) {
+                if (empty($issn)) continue;
 
-        // if (defined('WOS_JOURNAL_INFO') && !empty(WOS_JOURNAL_INFO)) {
-        //     $YEAR = WOS_JOURNAL_INFO ?? 2021;
+                $url = "https://osiris-app.de/api/v1/journals/" . $issn;
 
-        //     $html = new simple_html_dom();
-        //     foreach ($values['issn'] as $i) {
-        //         if (empty($i)) continue;
-        //         $url = 'https://wos-journal.info/?jsearch=' . $i;
-        //         $html->load_file($url);
-        //         foreach ($html->find("div.row") as $row) {
-        //             $el = $row->plaintext;
-        //             if (preg_match('/Impact Factor \(IF\):\s+(\d+\.?\d*)/', $el, $match)) {
-        //                 $values['impact'] = [['year' => $YEAR, 'impact' => floatval($match[1])]];
-        //                 break 2;
-        //             }
-        //         }
-        //     }
-        // }
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept: application/json',
+                    // "X-ApiKey: $apikey"
+                ]);
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                $result = curl_exec($curl);
+                $result = json_decode($result, true);
+                if (!empty($result['metrics'] ?? null)) {
+                    $values['metrics'] = $result['metrics'];
+                    # sort metrics by year
+                    usort($values['metrics'], function ($a, $b) {
+                        return $a['year'] <=> $b['year'];
+                    });
 
-        // if (defined('WOS_STARTER_KEY') && !empty(WOS_STARTER_KEY)) {
-        //     $apikey = WOS_STARTER_KEY;
-        //     foreach ($values['issn'] as $i) {
-        //         if (empty($i)) continue;
-
-        //         $url = "https://api.clarivate.com/apis/wos-starter/v1/journals";
-        //         $url .= "?issn=" . $i;
-
-        //         $curl = curl_init();
-        //         curl_setopt($curl, CURLOPT_HTTPHEADER, [
-        //             'Accept: application/json',
-        //             "X-ApiKey: $apikey"
-        //         ]);
-        //         curl_setopt($curl, CURLOPT_URL, $url);
-        //         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        //         $result = curl_exec($curl);
-        //         $result = json_decode($result, true);
-        //         if (!empty($result['hits'])) {
-        //             $values['wos'] = $result['hits'][0];
-        //         }
-        //     }
-        // }
-
-        foreach ($values['issn'] as $issn) {
-            if (empty($issn)) continue;
-
-            $url = "https://osiris-app.de/api/v1/journals/" . $issn;
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_HTTPHEADER, [
-                'Accept: application/json',
-                // "X-ApiKey: $apikey"
-            ]);
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            $result = curl_exec($curl);
-            $result = json_decode($result, true);
-            if (!empty($result['metrics'] ?? null)) {
-                $values['metrics'] = $result['metrics'];
-                # sort metrics by year
-                usort($values['metrics'], function ($a, $b) {
-                    return $a['year'] <=> $b['year'];
-                });
-
-                $values['impact'] = [];
-                foreach ($values['metrics'] as $i) {
-                    $values['impact'][] = [
-                        'year' => $i['year'],
-                        'impact' => floatval($i['if_2y'])
-                    ];
+                    $values['impact'] = [];
+                    foreach ($values['metrics'] as $i) {
+                        $values['impact'][] = [
+                            'year' => $i['year'],
+                            'impact' => floatval($i['if_2y'])
+                        ];
+                    }
+                    break;
                 }
-                break;
             }
+        } catch (\Throwable $th) {
         }
-    } catch (\Throwable $th) {
     }
 
     // dump($values, true);
@@ -297,6 +412,13 @@ Route::post('/crud/journal/create', function () {
 Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
+    if ($Settings->featureEnabled('no-journal-metrics')) {
+        echo json_encode([
+            'msg' => "Feature not available",
+            'id' => $id,
+        ]);
+        die;
+    }
     $collection = $osiris->journals;
     $mongoid = $DB->to_ObjectID($id);
 
@@ -377,31 +499,70 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
 
     if (isset($values['year'])) {
         $year = intval($values['year']);
-        $if = $values['if'] ?? null;
+        if (isset($values['if'])) {
+            $if = $values['if'] ?? null;
 
-        // remove existing year
-        $updateResult = $collection->updateOne(
-            ['_id' => $mongoid, 'impact.year' => ['$exists' => true]],
-            ['$pull' => ['impact' => ['year' => $year]]]
-        );
-        if (empty($if)) {
-            // do nothing more
-        } else {
-            // add new impact factor
-            try {
+            // remove existing year
+            $updateResult = $collection->updateOne(
+                ['_id' => $mongoid, 'impact.year' => ['$exists' => true]],
+                ['$pull' => ['impact' => ['year' => $year]]]
+            );
+            if (empty($if)) {
+                // do nothing more
+            } else {
+                // add new impact factor
+                try {
+                    $updateResult = $collection->updateOne(
+                        ['_id' => $mongoid],
+                        ['$push' => ['impact' => ['year' => $year, 'impact' => $if]]]
+                    );
+                } catch (MongoDB\Driver\Exception\BulkWriteException $th) {
+                    $updateResult = $collection->updateOne(
+                        ['_id' => $mongoid],
+                        ['$set' => ['impact' => [['year' => $year, 'impact' => $if]]]]
+                    );
+                }
+            }
+        } else if (isset($values['quartile'])) {
+            $quartile = $values['quartile'] ?? null;
+            // get existing metrics
+            $metrics = $collection->findOne(['_id' => $mongoid], ['projection' => ['metrics' => 1]]);
+            // find the year in metrics
+            $found = false;
+            $newMetric = [];
+            foreach ($metrics['metrics'] as $m) {
+                if ($m['year'] == $year) {
+                    $found = true;
+                    $newMetric = $m;
+                    break;
+                }
+            }
+            $newMetric['year'] = $year;
+            $newMetric['quartile'] = $quartile;
+            if ($found) {
+                // remove existing year
                 $updateResult = $collection->updateOne(
-                    ['_id' => $mongoid],
-                    ['$push' => ['impact' => ['year' => $year, 'impact' => $if]]]
-                );
-            } catch (MongoDB\Driver\Exception\BulkWriteException $th) {
-                $updateResult = $collection->updateOne(
-                    ['_id' => $mongoid],
-                    ['$set' => ['impact' => [['year' => $year, 'impact' => $if]]]]
+                    ['_id' => $mongoid, 'metrics.year' => ['$exists' => true]],
+                    ['$pull' => ['metrics' => ['year' => $year]]]
                 );
             }
-
-            // dump([$values, $updateResult], true);
-            // die;
+            if (empty($quartile)) {
+                // do nothing more
+            } else {
+                // add new metrics
+                try {
+                    $updateResult = $collection->updateOne(
+                        ['_id' => $mongoid],
+                        ['$push' => ['metrics' => $newMetric]]
+                    );
+                } catch (MongoDB\Driver\Exception\BulkWriteException $th) {
+                    // if the journal has no metrics, set it to empty array
+                    $updateResult = $collection->updateOne(
+                        ['_id' => $mongoid],
+                        ['$set' => ['metrics' => [$newMetric]]]
+                    );
+                }
+            }
         }
     } else {
 

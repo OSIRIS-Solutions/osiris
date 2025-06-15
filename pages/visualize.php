@@ -15,7 +15,7 @@
  * @license     MIT
  */
 
-$users = $osiris->persons->find(['roles' => 'scientist'], ['sort' => ["last" => 1]]);
+$users = $osiris->persons->find(['roles' => 'scientist'], ['sort' => ['is_active' => -1, 'last' => 1]]);
 
 $scientist = $_GET['scientist'] ?? $_SESSION['username'];
 $selectedUser = $osiris->persons->findone(['user' => $scientist]);
@@ -26,7 +26,7 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
 
     <h1>
         <i class="ph ph-graph" aria-hidden="true"></i>
-        <?= lang('Visualizations', 'Visualisierungen') ?>
+        <?= lang('Visualisations', 'Visualisierungen') ?>
     </h1>
 
 

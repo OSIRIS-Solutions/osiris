@@ -23,7 +23,7 @@ foreach ($projects as $project) {
                 'ror' => $p['ror'],
                 'lat' => $p['lat'] ?? null,
                 'lng' => $p['lng'] ?? null,
-                'created_by' => $_SESSION['username'],
+                'created_by' => $_SESSION['username'] ?? 'system',
                 'created' => date('Y-m-d')
             ]);
             $coll_id = $new_org->getInsertedId();

@@ -1,6 +1,6 @@
 <?php
 $institute = $Settings->get('affiliation_details');
-$institute['role'] = $project['role'];
+$institute['role'] = $project['role'] ?? 'partner';
 if (!isset($project['collaborators']) || empty($project['collaborators'])) {
     $collaborators = [];
 } else {
@@ -148,7 +148,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                     <?= ucfirst($institute['role'] ?? '') ?>
                 </td>
                 <td>
-                    <?= $institute['type'] ?? '' ?>
+                    <?= $institute['type'] ?? lang('Your institute', 'Dein Institut') ?>
                 </td>
                 <td class="hidden">
                     <?= $institute['ror'] ?? '' ?>

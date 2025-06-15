@@ -53,6 +53,18 @@ Route::get('/activities/search', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/activities/statistics', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Statistics", "Statistiken")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/activities/statistics.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/add-activity', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -633,6 +645,10 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
     } else {
         $values = $_POST['projects'];
         $values = array_values($values);
+        // convert values to ObjectID
+        $values = array_map(function ($v) use ($DB) {
+            return $DB->to_ObjectID($v);
+        }, $values);
 
         $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
@@ -745,6 +761,9 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     }
 
     $updateCount = $updateResult->getModifiedCount();
+    
+    // force update of user notifications
+    $DB->notifications(true);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
@@ -817,6 +836,9 @@ Route::post('/crud/activities/approve-all', function () {
         ['authors.user' => $user],
         ['$set' => ["authors.$.approved" => true]]
     );
+
+    // force update of user notifications
+    $DB->notifications(true);
 
     header("Location: " . ROOTPATH . "/issues?msg=update-success");
 });

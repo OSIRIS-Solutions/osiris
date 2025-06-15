@@ -1,6 +1,6 @@
 <?php
 /**
- * Routing file for dashboard and visualizations
+ * Routing file for dashboard and visualisations
  * 
  * This file is part of the OSIRIS package.
  * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
@@ -16,7 +16,7 @@
 Route::get('/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Visualization', 'Visualisierung')]
+        ['name' => lang('Visualisation', 'Visualisierung')]
     ];
     // include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -37,7 +37,7 @@ Route::get('/visualize/(\w*)', function ($page) {
         die("404");
     }
     $breadcrumb = [
-        ['name' => lang('Visualization', 'Visualisierung'), 'path' => "/visualize"],
+        ['name' => lang('Visualisation', 'Visualisierung'), 'path' => "/visualize"],
         ['name' => $names[$page]]
     ];
     include_once BASEPATH . "/php/init.php";
@@ -76,5 +76,17 @@ Route::get('/pivot', function () {
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/pivot.php";
+    include BASEPATH . "/footer.php";
+});
+
+
+// pivot table
+Route::get('/trips', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang('Research Trips', 'Forschungsreisen')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/trips.php";
     include BASEPATH . "/footer.php";
 });

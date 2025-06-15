@@ -186,7 +186,7 @@ $count_wordcloud = 0;
 
             <?php
             $publication_filter = [
-                'authors.units' => ['$in' => $children],
+                'units' => $id,
                 'type' => 'publication'
             ];
             $count_publications = $osiris->activities->count($publication_filter);
@@ -201,7 +201,7 @@ $count_wordcloud = 0;
 
             <?php
             $activities_filter = [
-                'authors.units' => ['$in' => $children],
+                'units' => $id,
                 'type' => ['$ne' => 'publication']
             ];
             $count_activities = $osiris->activities->count($activities_filter);

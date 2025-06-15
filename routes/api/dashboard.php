@@ -256,7 +256,7 @@ Route::get('/api/dashboard/impact-factor-hist', function () {
         die;
     }
 
-    $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'impact' => ['$ne' => null]];
+    $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'impact' => ['$ne' => null], 'type' => 'publication'];
     if (isset($_GET['user'])) {
         $filter['authors.user'] = $_GET['user'];
     }
@@ -385,7 +385,7 @@ Route::get('/api/dashboard/project-timeline', function () {
         die;
     }
 
-    $filter = ['status' => ['$in' => ['approved', 'finished']]];
+    $filter = [];
     if (isset($_GET['user'])) {
         $filter['persons.user'] = $_GET['user'];
     }
@@ -683,8 +683,7 @@ Route::get('/api/dashboard/author-network', function () {
 
     $depts = null;
     if (isset($_GET['dept'])) {
-        $depts = $Groups->getChildren($_GET['dept']);
-        $filter = ['authors.units' => ['$in' => $depts], 'type' => 'publication'];
+        $filter = ['units' => $_GET['dept'], 'type' => 'publication'];
     }
 
     if (isset($_GET['year'])) {
@@ -1074,7 +1073,7 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
 
     // exclude project id
     if (isset($_GET['exclude-project'])) {
-        $exclude = DB::doc2Arr($_GET['exclude-project']);
+        $exclude = DB::to_ObjectID($_GET['exclude-project']);
         $filter['projects'] = ['$ne' => $exclude];
     }
 
@@ -1243,7 +1242,7 @@ Route::get('/api/pivot-data', function () {
         'status' => 1,
         'software_type' => 1,
         'country' => 1,
-        'openaccess-status' => 1,
+        'oa_status' => 1,
         'quartile' => 1,
         'impact' => 1,
         // 'pubmed' => 1,
@@ -1256,7 +1255,6 @@ Route::get('/api/pivot-data', function () {
     ];
 
     // add custom fields
-
     foreach ($osiris->adminFields->find() as $field) {
         $projection[$field['id']] = 1;
     }

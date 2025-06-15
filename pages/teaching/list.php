@@ -31,7 +31,7 @@ function val($index, $default = '')
 
 ?>
 <!-- <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script> -->
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 
@@ -87,7 +87,7 @@ function val($index, $default = '')
                         </label>
                         <select class="form-control" id="username" name="values[contact_person]" required autocomplete="off">
                             <?php
-                            $userlist = $osiris->persons->find([], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find([], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['user'] ?? $_SESSION['username']) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>
@@ -112,11 +112,18 @@ function val($index, $default = '')
     <i class="ph ph-chalkboard-simple text-osiris mr-5"></i>
     <?= lang('Teaching Modules', 'Lehrveranstaltungen') ?>
 </h1>
-<a href="#add-teaching" class="btn link px-0">
-    <i class="ph ph-plus"></i>
-    <?= lang('Add new teaching module', 'Neue Lehrveranstaltung anlegen') ?>
-</a>
 
+<div class="btn-toolbar">
+    <a href="<?= ROOTPATH ?>/teaching/statistics" class="btn">
+        <i class="ph ph-chart-line-up"></i>
+        <?= lang('Statistics', 'Statistiken') ?>
+    </a>
+    <a href="#add-teaching" class="btn link px-0">
+        <i class="ph ph-plus"></i>
+        <?= lang('Add new teaching module', 'Neue Lehrveranstaltung anlegen') ?>
+    </a>
+</div>
+<br>
 
 <div class="form-group with-icon">
     <input class="form-control mb-20" type="search" name="search" id="search" oninput="filterTeaching(this.value);" placeholder="Filter ...">
@@ -163,14 +170,14 @@ function val($index, $default = '')
                     if (count($activities) != 0) {
                     ?>
                         <a onclick="showAll(this)">
-                        <?php
+                            <?php
                             $N = count($activities);
-                            if ($N==1)
+                            if ($N == 1)
                                 echo lang('Show 1 connected activity', 'Zeige  1 verknüpfte Aktivität');
                             else
                                 echo lang('Show ' . $N . ' connected activities', 'Zeige  ' . $N . ' verknüpfte Aktivitäten');
-                        ?>
-                    </a>
+                            ?>
+                        </a>
                         <table class="w-full hidden">
                             <?php foreach ($activities as $n => $doc) :
                                 if (!isset($doc['rendered'])) renderActivities(['_id' => $doc['_id']]);
@@ -225,7 +232,7 @@ function val($index, $default = '')
 <script src="<?= ROOTPATH ?>/js/masonry.pkgd.min.js"></script>
 <script>
     // $(document).on('load', function() {
-        const layout = {
+    const layout = {
         // options
         itemSelector: '.teaching',
         // columnWidth: 300,

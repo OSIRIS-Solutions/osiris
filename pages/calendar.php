@@ -288,7 +288,7 @@ function updateCalendar(el, unit) {
                 switch (type) {
                     case 'event':
                         label = lang('Event', 'Veranstaltung');
-                        link = ROOTPATH + '/conferences/' + info.event.id;
+                        link = ROOTPATH + '/conferences/view/' + info.event.id;
                         break;
                     case 'research_trip':
                         label = lang('Field research', 'Forschungsreise');

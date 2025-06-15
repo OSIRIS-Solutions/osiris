@@ -11,30 +11,30 @@ if (!empty($form) && isset($form['_id'])) {
     $new = false;
 
     // render example
-    include_once BASEPATH . "/php/Modules.php";
-    $Modules = new Modules();
-    $EXAMPLE = ['_id' => 1, 'type' => $form['parent'], 'subtype' => $form['id']];
-    foreach ($form['modules'] ?? array() as $module) {
-        $name = trim($module);
-        if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
-            $name = str_replace('*', '', $name);
-        }
-        $f = $Modules->all_modules[$name] ?? array();
-        $EXAMPLE = array_merge($f['fields'] ?? [], $EXAMPLE);
-    }
-    include_once BASEPATH . "/php/Document.php";
-    $Document = new Document(false, 'print');
-    $Document->setDocument($EXAMPLE);
-    $type['example'] = $Document->format();
-    $type['example_web'] = $Document->formatShort(false);
+    // include_once BASEPATH . "/php/Modules.php";
+    // $Modules = new Modules();
+    // $EXAMPLE = ['_id' => 1, 'type' => $form['parent'], 'subtype' => $form['id']];
+    // foreach ($form['modules'] ?? array() as $module) {
+    //     $name = trim($module);
+    //     if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
+    //         $name = str_replace('*', '', $name);
+    //     }
+    //     $f = $Modules->all_modules[$name] ?? array();
+    //     $EXAMPLE = array_merge($f['fields'] ?? [], $EXAMPLE);
+    // }
+    // include_once BASEPATH . "/php/Document.php";
+    // $Document = new Document(false, 'print');
+    // $Document->setDocument($EXAMPLE);
+    // $type['example'] = $Document->format();
+    // $type['example_web'] = $Document->formatShort(false);
 
-    $osiris->adminTypes->updateOne(
-        ['_id' => $form['_id']],
-        ['$set' => [
-            'example' => $type['example'],
-            'example_web' => $type['example_web'],
-        ]]
-    );
+    // $osiris->adminTypes->updateOne(
+    //     ['_id' => $form['_id']],
+    //     ['$set' => [
+    //         'example' => $type['example'],
+    //         'example_web' => $type['example_web'],
+    //     ]]
+    // );
     $member = $osiris->activities->count(['subtype' => $id]);
 } else {
     $new = true;
@@ -237,7 +237,7 @@ if (!empty($form) && isset($form['_id'])) {
 
                 </div>
                 <div class=" footer">
-                    <div class="input-group sm d-inline-flex w-auto">
+                    <div class="input-group small d-inline-flex w-auto">
                         <select class="module-input form-control">
                             <option value="" disabled selected><?= lang('Add module ...', 'Füge Module hinzu ...') ?></option>
                             <?php
@@ -303,7 +303,7 @@ if (!empty($form) && isset($form['_id'])) {
             </div>
 
 
-            <div class="alert primary ">
+            <!-- <div class="alert primary ">
                 <h3 class="title text-primary">
                     <?= lang('Example', 'Beispiel') ?>
                     <span data-toggle="tooltip" data-title="<?= lang('Will be updated as soon as you save the type.', 'Wird aktualisiert, sobald der Typ gespeichert wird.') ?>">
@@ -311,12 +311,12 @@ if (!empty($form) && isset($form['_id'])) {
                     </span>
                 </h3>
                 <b>Print</b> <br>
-                <?= $type['example'] ?? '- save current form to generate an example -' ?>
+                < $type['example'] ?? '- save current form to generate an example -' ?>
                 <hr>
 
                 <b>Web</b> <br>
-                <?= $type['example_web'] ?? '- save current form to generate an example -' ?>
-            </div>
+                < $type['example_web'] ?? '- save current form to generate an example -' ?>
+            </div> -->
         </div>
 
 
@@ -364,7 +364,7 @@ if (!empty($form) && isset($form['_id'])) {
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete type: $member activities associated.", "Kann Typ nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang("Can't delete type: $member activities associated.", "Kann Typ nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View activities', 'Aktivitäten zeigen') ?>

@@ -501,12 +501,12 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
         'sort' => ['year' => -1, 'month' => -1],
         'projection' => [
             'name' => 1,
+            'name_de' => 1,
             'title' => 1,
-            'public_title' => 1,
-            'public_title_de' => 1,
-            'public_subtitle' => 1,
-            'public_subtitle_de' => 1,
+            'title_de' => 1,
             'funder' => 1,
+            'abstract' => 1,
+            'abstract_de' => 1,
             'funding_organization' => 1,
             'funding_number' => 1,
             'role' => 1,
@@ -580,6 +580,7 @@ Route::get('/portfolio/unit/([^/]*)/staff', function ($id) {
 Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    include(BASEPATH . '/php/Project.php');
     // if (!apikey_check($_GET['apikey'] ?? null)) {
     //     echo return_permission_denied();
     //     die;
@@ -588,7 +589,6 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
     header('Content-Type: application/json');
-    include(BASEPATH . '/php/Project.php');
     // dump($_SERVER, true);
 
     // $filter = [
@@ -604,6 +604,7 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
         echo rest([]);
         die;
     }
+    $Project = new Project($project);
 
     $persons = DB::doc2Arr($project['persons']);
     // sort project team by role (custom order)
@@ -630,7 +631,7 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
             $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
         }
         $row['id'] = strval($person['_id']);
-        $row['role'] = Project::personRole($row['role']);
+        $row['role'] = $Project->personRole($row['role']);
 
         if (!empty($person['depts'])) {
             foreach ($person['depts'] as $d) {
@@ -798,12 +799,12 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
 
     $project = [
         'id' => strval($result['_id']),
-        'name' => $result['public_title'] ?? $result['name'],
-        'name_de' => $result['public_title_de'] ?? null,
-        'title' => $result['public_subtitle'] ?? $result['title'] ?? '',
-        'title_de' => $result['public_subtitle_de'] ?? null,
-        'abstract' => $result['public_abstract'] ?? $result['abstract'] ?? '',
-        'abstract_de' => $result['public_abstract_de'] ?? null,
+        'name' => $result['name'],
+        'name_de' => $result['name_de'] ?? null,
+        'title' => $result['title'] ?? '',
+        'title_de' => $result['title_de'] ?? null,
+        'abstract' => $result['abstract'] ?? '',
+        'abstract_de' => $result['abstract_de'] ?? null,
         'funder' => $result['funder'] ?? null,
         'funding_organization' => $result['funding_organization'] ?? null,
         'funding_number' => $result['funding_number'] ?? null,
@@ -820,9 +821,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         'website' => $result['website'] ?? null,
         'img' => null
     ];
+    $Project = new Project($project);
 
-    if (isset($result['public_image']) && !empty($result['public_image']))
-        $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['public_image'];
+    if (isset($result['image']) && !empty($result['image']))
+        $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['image'];
 
     $project['activities'] = $osiris->activities->count(['projects' => $id, 'hide' => ['$ne' => true]]);
 
@@ -845,7 +847,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
             }
             unset($row['user']);
             $row['id'] = strval($person['_id']);
-            $row['role'] = Project::personRoleRaw($row['role']);
+            $row['role'] = $Project->personRoleRaw($row['role']);
             $depts = [];
             if (!empty($person['depts'])) {
                 foreach ($Groups->deptHierarchies($person['depts']) as $d) {
@@ -873,12 +875,12 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
                 'title' => $parent['title'] ?? ''
             ];
 
-            // add inherited fields
-            foreach (Project::INHERITANCE_PUBLIC as $key) {
-                if (isset($parent[$key]) && empty($project[$key])) {
-                    $project[$key] = $parent[$key];
-                }
-            }
+            // // add inherited fields
+            // foreach (Project::INHERITANCE_PUBLIC as $key) {
+            //     if (isset($parent[$key]) && empty($project[$key])) {
+            //         $project[$key] = $parent[$key];
+            //     }
+            // }
         }
     }
 
@@ -1273,7 +1275,7 @@ Route::get('/portfolio/projects', function () {
             'type' => 1,
             'teaser_en' => 1,
             'teaser_de' => 1,
-            'public_image' => 1
+            'image' => 1
         ]
     ];
 

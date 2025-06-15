@@ -29,20 +29,47 @@ $end = $form['end_date'] ?? '';
 ?>
 
 
-<h5 class="modal-title">
+<h2>
     <?= lang('Connect persons', 'Personen verknüpfen') ?>
-</h5>
+</h2>
 <form action="<?= ROOTPATH ?>/crud/infrastructures/update-persons/<?= $id ?>" method="post">
 
     <table class="table simple">
         <thead>
             <tr>
-                <th><?= lang('Person', 'Person') ?></th>
-                <th><?= lang('Role', 'Rolle') ?></th>
-                <th><?= lang('Scope (FTE)', 'Umfang (VZÄ)') ?></th>
-                <th><?= lang('Start', 'Start') ?></th>
-                <th><?= lang('End', 'Ende') ?></th>
-                <th><?= lang('Reporter*') ?></th>
+                <th>
+                    <?= lang('Person', 'Person') ?><br>
+                    <span class="badge kdsf m-0">
+                        KDSF-B-13-16-A
+                    </span>
+                </th>
+                <th>
+                    <?= lang('Role', 'Rolle') ?>
+                    <span class="badge kdsf m-0">
+                        KDSF-B-13-16-E
+                    </span>
+                </th>
+                <th>
+                    <?= lang('Scope (FTE)', 'Umfang (VZÄ)') ?>
+                    <span class="badge kdsf m-0">
+                        KDSF-B-13-16-D
+                    </span>
+                </th>
+                <th>
+                    <?= lang('Start', 'Start') ?>
+                    <span class="badge kdsf m-0">
+                        KDSF-B-13-16-B
+                    </span>
+                </th>
+                <th>
+                    <?= lang('End', 'Ende') ?>
+                    <span class="badge kdsf m-0">
+                        KDSF-B-13-16-C
+                    </span>
+                </th>
+                <th>
+                    <?= lang('Reporter*') ?>
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -50,7 +77,7 @@ $end = $form['end_date'] ?? '';
             <?php foreach ($persons as $i => $con) { ?>
                 <tr>
                     <td class="">
-                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>-user" class="form-control person" required>
+                        <select name="persons[<?= $i ?>][user]" class="form-control person" required>
                             <?php
                             foreach ($all_users as $s) { ?>
                                 <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
@@ -76,10 +103,14 @@ $end = $form['end_date'] ?? '';
                     </td>
                     <td>
                         <input type="date" name="persons[<?= $i ?>][end]" id="persons-<?= $i ?>-end" class="form-control end" value="<?= $con['end'] ?? $end ?>">
+                    </td>
                     <td>
+                        <?php
+                        $reporter = $con['reporter'] ?? 0;
+                        ?>
                         <select name="persons[<?= $i ?>][reporter]" id="persons-<?= $i ?>-reporter" class="form-control" required>
-                            <option value="0" <?= ($con['reporter'] == 0 ? 'selected' : '') ?>><?= lang('No', 'Nein') ?></option>
-                            <option value="1" <?= ($con['reporter'] == 1 ? 'selected' : '') ?>><?= lang('Yes', 'Ja') ?></option>
+                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('No', 'Nein') ?></option>
+                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('Yes', 'Ja') ?></option>
                         </select>
                     </td>
                     <td>
@@ -117,7 +148,7 @@ $end = $form['end_date'] ?? '';
     function addInfrastructureRow() {
         counter++;
         const row = tr.clone()
-        row.find('select').each(function() {
+        row.find('select,input').each(function() {
             const name = $(this).attr('name').replace(/\d+/, counter)
             $(this).attr('name', name)
         })

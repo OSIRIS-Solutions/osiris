@@ -36,20 +36,35 @@ function navigate(key) {
         default:
             break;
     }
+    // scroll to #project-nav 
+    $('html, body').animate({
+        scrollTop: $('#project-badges').offset().top
+    }, 200);
 
+    // save as hash
+    window.location.hash = 'section-'+key
 }
 
-var collabChart = false    
-function initCollabs (){
+$(document).ready(function () {
+    // get hash
+    var hash = window.location.hash
+    if (hash && hash.includes('#section-')) {
+        navigate(hash.replace('#section-', ''))
+    }
+});
+
+var collabChart = false
+function initCollabs() {
     collabChart = true
+    key = collaborator_id ?? PROJECT
     $.ajax({
         type: "GET",
         url: ROOTPATH + "/api/dashboard/collaborators",
         data: {
-            project: PROJECT
+            project: key
         },
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             console.log(response);
 
             var zoomlvl = 1;
@@ -78,7 +93,7 @@ function initCollabs (){
 
                 Plotly.newPlot('map', [data], layout);
         },
-        error: function(response) {
+        error: function (response) {
             console.log(response);
         }
     });
@@ -93,7 +108,7 @@ function initActivities() {
                 page: 'activities',
                 display_activities: 'web',
                 // user: CURRENT_USER,
-                filter: {'projects': PROJECT}
+                filter: { 'projects': PROJECT }
             },
             dataSrc: 'data'
         },

@@ -222,12 +222,14 @@ Route::get('/api/html', function () {
         } elseif (!empty($doc['link'] ?? null)) {
             $link = $doc['link'];
         }
-
+        $depts = DB::doc2Arr($doc['units'] ?? []);
+        $depts = array_intersect($depts, array_keys($Departments));
+        $depts = array_values($depts);
         $entry = [
             'id' => strval($doc['_id']),
             'html' => $rendered['print'],
             'year' => $doc['year'] ?? null,
-            'departments' => $rendered['depts'],
+            'departments' => $depts,
             'link' => $link
         ];
         $result[] = $entry;
@@ -266,6 +268,10 @@ Route::get('/api/all-activities', function () {
     }
     if (isset($_GET['json'])) {
         $filter = json_decode($_GET['json'], true);
+    }
+
+    if (isset($filter['projects'])) {
+        $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
 
     $result = [];
@@ -494,6 +500,7 @@ Route::get('/api/users', function () {
         die;
     }
 
+    $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
     $table = [];
     foreach ($result as $user) {
         $subtitle = "";
@@ -512,7 +519,7 @@ Route::get('/api/users', function () {
                 </a>';
         }
         $topics = '';
-        if ($user['topics'] ?? false) {
+        if ($topicsEnabled && $user['topics'] ?? false) {
             $topics = '<span class="float-right topic-icons">';
             foreach ($user['topics'] as $topic) {
                 $topics .= '<a href="' . ROOTPATH . '/topics/view/' . $topic . '" class="topic-icon topic-' . $topic . '"></a> ';
@@ -548,7 +555,8 @@ Route::get('/api/users', function () {
             'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
-            'topics' => $user['topics'] ?? array()
+            'topics' => $user['topics'] ?? array(),
+            'keywords' => $user['keywords'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));
@@ -682,13 +690,18 @@ Route::get('/api/teaching', function () {
 });
 
 
-Route::get('/api/projects', function () {
+Route::get('/api/(projects|proposals)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
+    }
+    if ($type == 'projects') {
+        $collection = $osiris->projects;
+    } else {
+        $collection = $osiris->proposals;
     }
 
     $filter = [];
@@ -702,12 +715,17 @@ Route::get('/api/projects', function () {
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['$or' =>  [
-            ['title' => ['$regex' => $j]],
-            ['id' => $_GET['search']]
-        ]];
+        $filter = ['title' => ['$regex' => $j]];
     }
-    $result = $osiris->projects->find($filter)->toArray();
+
+    if (!$Settings->hasPermission($type . '.view')) {
+        $filter['$or'] = [
+            ['persons.user' => $_SESSION['username']],
+            ['created_by' => $_SESSION['username']]
+        ];
+    }
+
+    $result = $collection->find($filter)->toArray();
 
     if (isset($_GET['formatted'])) {
         $data = [];
@@ -731,7 +749,8 @@ Route::get('/api/projects', function () {
                 'role' => $project['role'] ?? '',
                 'topics' => $project['topics'] ?? array(),
                 'units' => $Project->getUnits(true),
-                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name')
+                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name'),
+                'subproject' => $doc['subproject'] ?? false,
             ];
         }
         $result = $data;
@@ -774,15 +793,36 @@ Route::get('/api/journals', function () {
     header("Expires: 0");
     $pipeline = [
         [
+            '$unwind' => [
+                'path' => '$impact',
+                'preserveNullAndEmptyArrays' => true
+            ]
+        ],
+        [
+            '$sort' => ['impact.year' => -1]
+        ],
+        [
+            '$group' => [
+                '_id' => '$_id',
+                'journal' => ['$first' => '$journal'],
+                'abbr' => ['$first' => '$abbr'],
+                'publisher' => ['$first' => '$publisher'],
+                'open_access' => ['$first' => '$oa'],
+                'issn' => ['$first' => '$issn'],
+                'country' => ['$first' => '$country'],
+                'latest_impact' => ['$first' => '$impact']
+            ]
+        ],
+        [
             '$project' => [
                 'id' => ['$toString' => '$_id'],
                 'name' => '$journal',
                 'abbr' => '$abbr',
                 'publisher' => 1,
-                'open_access' => '$oa',
+                'open_access' => '$open_access',
                 'issn' => '$issn',
                 'country' => '$country',
-                'if' => ['$arrayElemAt' => ['$impact', -1]]
+                'if' => '$latest_impact',
             ]
         ],
         [
@@ -814,8 +854,6 @@ Route::get('/api/journals', function () {
                 'count' => 1
             ]
         ]
-
-
     ];
 
     $journals = $osiris->journals->aggregate($pipeline)->toArray();

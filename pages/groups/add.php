@@ -127,7 +127,7 @@ $title = lang('New group', 'Neue Gruppe');
 
                 </div>
                 <div class="footer">
-                    <div class="input-group sm d-inline-flex w-auto">
+                    <div class="input-group small d-inline-flex w-auto">
                         <select class="head-input form-control">
                             <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
                             <?php

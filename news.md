@@ -1,5 +1,162 @@
 # Neuigkeiten
 
+
+<span class="badge float-right">04.05.2025</span>
+<a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
+
+## Version 1.5.0 (Beta)
+
+In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibler gestaltet. Datenfelder können nun sowohl bei Projekten als auch bei Personen vollständig definiert werden. Auch Custom Fields sind jetzt bei Projekten, Personen und Infrastrukturen möglich.
+
+<i class="ph ph-gear"></i> Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Außerdem gibt es einen Link zu Helfertools, wie der Liste mit den Datenfeldern und den Templates. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
+
+
+#### <i class="ph ph-chat-circle-dots"></i> Benachrichtigungen und Nachrichten
+
+- Die Navigation wurde überarbeitet: Die Benachrichtigungen sind jetzt im Header und nicht mehr auf der Startseite.
+- Neben den bisherigen System-Benachrichtigungen können nun gezielt Nachrichten an bestimmte Nutzer:innen oder Rollen verschickt werden.
+- Eingegangene Nachrichten können als gelesen markiert oder gelöscht werden.
+- Die Darstellung der Nachrichten wurde verbessert und das Styling modernisiert.
+- OSIRIS verschickt jetzt optional **E-Mail-Benachrichtigungen**, z.B. bei Erstellung oder Bearbeitung von Projekten. Im Admin-Interface kann dies konfiguriert werden.
+
+
+#### <i class="ph ph-users-three"></i> Personen-Einstellungen
+
+- Die Personeneinstellungen sind jetzt unter "Inhalte" zu finden.
+- Datenfelder für Personen können angepasst und Custom Fields hinzugefügt werden.
+- Positionen werden nun ebenfalls in diesem neuen Bereich verwaltet (zuvor in Generelle Einstellungen), genau wie die Einstellungen zu Coins und Achievements (zuvor in Funktionen) 
+- Es wurde ein neues Datenfeld "Schlagworte" hinzugefügt, das ähnlich wie Expertise verwendet werden kann, allerdings mit einem definierten Vokabular arbeitet. Wie genau dieses Datenfeld heißen soll, kann ebenfalls im Admin-Bereich definiert werden.
+- Es kann festgelegt werden, ob sich Nutzer:innen selbst registrieren dürfen oder ob dies nur Admins möglich ist.
+- Die Auswahl von Organisationseinheiten bei der Zuordnung von Personen wurde verbessert.
+
+
+#### <i class="ph ph-cube-transparent"></i> Forschungsinfrastrukturen
+
+- Die Datenfelder für Infrastrukturen sind jetzt konfigurierbar. Diese Einstellungen sind unter "Inhalte" zu finden.
+- Custom Fields sind auch hier möglich.
+- Die Übersichtstabellen für Infrastrukturen unterstützen jetzt Filter und Suchfunktionen.
+- Die Darstellung von Verbundinfrastrukturen und Kooperationspartnern wurde verbessert.
+- Der Begriff "Infrastrukturen" kann jetzt im Admin-Bereich angepasst werden.
+
+
+#### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
+
+Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projektlebenszyklus ab:
+
+- **Projekttypen** sind konfigurierbar (Inhalte > Projekte), inklusive der zugehörigen Datenfelder.
+- Vokabulare wie Fördererkategorien sind frei definierbar.
+- Förderer, Universitäten und Kooperationspartner können über ROR-IDs verknüpft werden.
+- Custom Fields sind auch bei Projekten möglich.
+- Bessere Unterstützung für mehrsprachige Eingabefelder (z.B. Projekttitel, Abstracts).
+- Teilprojekte wurden ebenfalls verbessert und zeigen nun die Kooperationspartner des Elternprojekts an. Die automatische Vererbung wurde entfernt, um die Flexibilität zu erhöhen.
+
+**Projektanträge**:
+
+- Neue Entität "Projektantrag" eingeführt, inklusive Statusverwaltung (Beantragt, Bewilligt, Abgelehnt).
+- In Formularen werden nun nur die relevanten Felder angezeigt, abhängig vom Status des Antrags.
+- Neue Antragsübersicht mit Filtermöglichkeiten.
+- Bewilligte Anträge können in Projekte überführt werden.
+- Neue Felder zum Tracken von Antrags- und Bewilligungsdaten wurden hinzugefügt.
+- Finanzierungsinformationen (z.B. Drittmitteleinnahmen) können bei Anträgen gepflegt werden.
+- Das Berechtigungssystem für die Bearbeitung und Ansicht von Anträgen wurde verfeinert.
+
+**Weitere Verbesserungen**:
+
+- Verbesserte Darstellung und Verwaltung von Projektbeteiligten, inkl. einer Erweiterung des Rollenvokabulars.
+- Optimiertes Layout und übersichtlichere Struktur auf den Bearbeitungsseiten.
+- Viele Filter- und Statistikfunktionen (z.B. Suche nach Projekttypen, Förderstatus) wurden erweitert.
+- Es gibt die Möglichkeit, bei Erstellung oder Bearbeitung eines Projektes bestimmte Nutzer oder Rollen zu benachrichtigen, entweder direkt in OSIRIS über das neue Benachrichtigungssystem oder per E-Mail.
+
+
+#### <i class="ph ph-clipboard-text"></i> Neue Datenfelder für Aktivitäten
+Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
+- Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
+- Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
+<!-- - Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
+- KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
+
+#### <i class="ph ph-users-three"></i> Neue Templates für die Formatierung von Aktivitäten
+Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen.
+
+
+#### <i class="ph ph-calendar"></i> Verbessertes Event-Management
+- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
+- Das User Interface bei der Anzeige von Events wurde verbessert
+- Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
+- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren.
+
+#### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
+
+- Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.
+- Globale Steuerung der quartalsweisen Berichtspflicht (Controlling) möglich (standardmäßig aktiviert).
+- Diverse kleinere Layout- und Darstellungsoptimierungen (u.a. Profile, Notifications, Listenansichten).
+- Verbesserungen bei der Filterung und Sortierung von Projekten, Anträgen, Aktivitäten und Infrastrukturen.
+- In der Übersicht über Aktivitäten, Infrastrukturen, Projekten und Anträgen zeigen kleine Zahlen an den Filtern nun an, wie viele Einträge es in den jeweiligen Kategorien gibt.
+- Probleme mit der Sichtbarkeit bei der Online-Stellung von Aktivitäten korrigiert.
+- Wenn nur die englische Bezeichnung für Features gesetzt wird, wird auch auf deutsch nun die englische Bezeichnung angezeigt.
+- Fehlerhafte Anzeigen von Organisationen und Partnern in Listen behoben.
+- Rechteverwaltung für Infrastruktur-Bearbeitungen verbessert, inklusive "edit-own"-Recht.
+- Verbesserte Verwaltung von Organisationen (Löschen und Bearbeiten).
+- Inaktive Nutzer:innen werden bei Auswahllisten nun nach unten sortiert.
+- Mehr Felder für die erweiterte Suche hinzugefügt.
+- Sidebar-Navigation im Admin-Bereich verbessert.
+- Ein Problem wurde gefixt, durch das die Jahre in Metriken dupliziert wurde, wenn man aktualisiert hat
+- In der Liste der Journale wird jetzt der neuste JCR-Impact factor gezeigt
+- Im CV wird nun die Korrekte Sprache für die Überschriften verwendet. Außerdem wurden die teils hard-gecodeten Kategorien durch die flexiblen Kategorien ersetzt.
+- Der Name der Aktivitätskategorie in "Mein Jahr" wird nun korrekt angezeigt
+- In "Mein Jahr" werden die Aktivitätskategorien nun korrekt sortiert
+- Typen lassen sich ebenfalls sortieren
+- Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
+- Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
+- Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
+
+---
+
+<span class="badge float-right">13.04.2025</span>
+<a class="anchor" href="#version-1.4.3" id="version-1.4.3"></a>
+
+## Version 1.4.3
+
+#### <i class="ph ph-stack"></i> Journale und Impact Faktoren
+
+- Die automatische Synchronisation der Metriken kann nun deaktiviert werden. Ihr findet eine Einstellung im Admin-Bereich unter "Features".
+- Es wurde eine neue Seite hinzugefügt, auf der die Metriken eines Jahres für alle Journale aktualisiert werden können. Ihr findet sie mit den Bearbeitsrechten der Journale in der Übersicht der Journale.
+- Die Metriken für das Jahr 2024 sind nun über unsere OSIRIS-API verfügbar und können automatisch aktualisiert werden.
+- Die Quartile können nun auch manuell hinzugefügt werden, für den Fall, dass ihr sie nicht über die API aktualisieren wollt. 
+- Es wurde ein Graph hinzugefügt, der die Quartile der letzten Jahre anzeigt. Dieser ist in der Detailansicht des Journals zu finden.
+- Die Kategorien der Journale können nun ebenfalls manuell bearbeitet werden. Dies kann in der Detailansicht des Journals gefunden werden.
+
+---
+
+<span class="badge float-right">03.04.2025</span>
+<a class="anchor" href="#version-1.4.2" id="version-1.4.2"></a>
+
+## Version 1.4.2
+
+####  <i class="ph ph-chart-line-up"></i> Statistiken
+
+Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infrastrukturen funktionieren. Statistiken wurden für Aktivitäten und Publikationen, Projekte, und Lehrveranstaltungen hinzugefügt
+- Die Statistiken sind in den jeweiligen Übersichtseiten zu finden
+- Eine ganze Reihe vorgefertigter Statistiken sind bereits vorhanden, inklusive einiger cooler Abbildungen
+
+
+#### <i class="ph ph-lock-key-open"></i> Module: Open Access und politische Beratung
+- Dem Open Access-Modul wurde "Diamond" als weitere Option hinzugefügt
+  - Diamond wird auch über de DOI ausgeliefert und somit automatisch ausgefüllt
+- Außerdem wurde ein neues Feld für politische und soziale Beratungsbeiträge hinzugefügt
+  - Dieses Feld ist für die Paktabfrage der GWK relevant
+
+#### <i class="ph ph-globe"></i> Länder
+- Länder können jetzt semi-automatisch aktualisiert werden
+- Dafür wird eine aktuelle Liste der Länder [heruntergeladen](https://stefangabos.github.io/world_countries/) und in OSIRIS importiert
+- Um die Liste zu aktualisieren und einen Überblick über die aktuell vorhandenen Länder zu bekommen, gibt es eine neue Seite im Admin-Bereich "Generelle Einstellungen"
+
+#### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
+- Es wurde ein seltsames Verhalten mit dem Login beim Auth-Addon behoben
+- In der Autorenliste wird jetzt kein Link mehr gezeigt, wenn kein Nutzer verknüpft ist
+
+----
+
 <span class="badge float-right">03.04.2025</span>
 <a class="anchor" href="#version-1.4.1" id="version-1.4.1"></a>
 

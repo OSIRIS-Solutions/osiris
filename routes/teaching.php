@@ -22,7 +22,21 @@ Route::get('/teaching', function () {
         ['name' => lang("Teaching", "Lehrveranstaltungen")]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/teaching.php";
+    include BASEPATH . "/pages/teaching/list.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/teaching/statistics', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Teaching", "Lehrveranstaltungen"), 'path' => "/teaching"],
+        ['name' => lang("Statistics", "Statistiken")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/teaching/statistics.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 

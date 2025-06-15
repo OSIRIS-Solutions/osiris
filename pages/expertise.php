@@ -16,20 +16,27 @@
  * @license     MIT
  */
 
+ if ($collection == 'keywords') {
+    $icon ="tag";
+    $title = $Settings->get('staff-keyword-name', 'Keywords');
+} else if ($collection == 'expertise') {
+    $icon = 'dumbbell';
+    $title = lang('Expertise', 'Expertise');
+ }  
 
 $cursor = $osiris->persons->aggregate([
     [
         '$match' => [
-            'expertise' => ['$exists' => true],
+            $collection => ['$exists' => true],
             'is_active' => ['$ne'=>false]
         ]
     ],
     ['$sort' => ['last' => 1]],
-    ['$project' => ['expertise' => 1, 'displayname' => 1, 'username' => 1]],
-    ['$unwind' => '$expertise'],
+    ['$project' => [$collection => 1, 'displayname' => 1, 'username' => 1]],
+    ['$unwind' => '$'.$collection],
     [
         '$group' => [
-            '_id' => ['$toLower' => '$expertise'],
+            '_id' => ['$toLower' => '$'.$collection],
             'count' => ['$sum' => 1],
             'users' => ['$push' => '$$ROOT']
         ]
@@ -58,8 +65,8 @@ $cursor = $osiris->persons->aggregate([
 
 
 <h1 class="mt-0">
-    <i class="fal ph-lg ph-barbell text-osiris"></i>
-    <?= lang('Expertise search', 'Experten-Suche') ?>
+    <i class="ph ph-<?= $icon ?> mr-10"></i>
+    <?= $title ?>
 </h1>
 
 <div class="form-group with-icon mw-full w-400">

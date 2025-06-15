@@ -26,7 +26,7 @@ function login($username, $password)
     $_SESSION['username'] = $username;
     $_SESSION['loggedin'] = true;
 
-    $return["status"] = true;
+    $return["success"] = true;
 
     return $return;
 };

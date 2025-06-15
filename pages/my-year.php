@@ -21,6 +21,12 @@ $currentuser = $user == $_SESSION['username'];
 $YEAR = intval($_GET['year'] ?? CURRENTYEAR);
 $QUARTER = intval($_GET['quarter'] ?? CURRENTQUARTER);
 
+if (isset($_GET['quarter']) && strpos($_GET['quarter'], 'Q') !== false) {
+    $temp = explode("Q", $_GET['quarter']);
+    $YEAR = intval($temp[0]);
+    $QUARTER = intval($temp[1]);
+}
+
 $q = $YEAR . "Q" . $QUARTER;
 
 
@@ -47,7 +53,7 @@ $coins = $Coins->getCoins($user, $YEAR);
 
 
 $groups = [];
-foreach ($Settings->getActivities() as $value) {
+foreach ($Categories->categories as $value) {
     $groups[$value['id']] = [];
 }
 
@@ -172,7 +178,7 @@ if (!$Settings->featureEnabled('coins')) {
             <?php } ?>
 
             <?php
-            if ($currentuser) {
+            if ($currentuser && $Settings->featureEnabled('quarterly-reporting', true)) {
                 $approved = isset($USER['approved']) && in_array($q, DB::doc2Arr($USER['approved']));
                 $approval_needed = array();
 
@@ -309,7 +315,7 @@ if (!$Settings->featureEnabled('coins')) {
         <div class="content my-0">
 
             <h2>
-                <?= lang('Research activities in ', 'Forschungsaktivitäten in ') . $YEAR ?>
+                <?= lang('Activities in ', 'Aktivitäten in ') . $YEAR ?>
             </h2>
 
 
@@ -346,13 +352,14 @@ if (!$Settings->featureEnabled('coins')) {
 
             <?php
             foreach ($groups as $col => $data) {
+                $type = $Settings->getActivities($col);
             ?>
 
                 <div class="box box-<?= $col ?>" id="<?= $col ?>">
                     <div class="content mb-0">
                         <h3 class="title text-<?= $col ?> m-0">
-                            <i class="ph ph-fw ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i>
-                            <?= $Settings->getActivities($col)[lang('name', 'name_de')] ?>
+                            <i class="ph ph-fw ph-<?= $type['icon'] ?> mr-5"></i>
+                            <?= lang($type['name'], $type['name_de'] ?? null) ?>
                         </h3>
                     </div>
                     <?php if (empty($data)) { ?>
@@ -479,10 +486,12 @@ if (!$Settings->featureEnabled('coins')) {
             <nav class="on-this-page-nav">
                 <div class="content">
                     <div class="title"><?= lang('Activities', 'Aktivitäten') ?></div>
-                    <?php foreach ($groups as $col => $data) { ?>
+                    <?php foreach ($groups as $col => $data) { 
+                        $type = $Settings->getActivities($col);
+                        ?>
                         <a href="#<?= $col ?>" class="text-<?= $col ?>">
-                            <i class="ph ph-fw ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i>
-                            <?= $Settings->getActivities($col)[lang('name', 'name_de')] ?>
+                            <i class="ph ph-fw ph-<?= $type['icon'] ?> mr-5"></i>
+                            <?= lang($type['name'], $type['name_de'] ?? null) ?>
                             (<?= count($data) ?>)
                         </a>
                     <?php } ?>

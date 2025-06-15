@@ -43,7 +43,7 @@ class Settings
         }
     }
 
-    function get($key)
+    function get($key, $default = null)
     {
         switch ($key) {
             case 'affiliation':
@@ -67,7 +67,7 @@ class Settings
             default:
                 $req = $this->osiris->adminGeneral->findOne(['key' => $key]);
                 if (!empty($req)) return $req['value'];
-                return '';
+                return $default;
                 break;
         }
     }
@@ -176,13 +176,9 @@ class Settings
      * @param string $feature
      * @return boolean
      */
-    function featureEnabled($feature)
+    function featureEnabled($feature, $default=false)
     {
-        return $this->features[$feature] ?? false;
-        // $active = $this->osiris->adminFeatures->findOne([
-        //     'feature'=>$feature
-        // ]);
-        // return boolval($active['enabled'] ?? false);
+        return $this->features[$feature] ?? $default;
     }
 
     /**
@@ -366,6 +362,13 @@ class Settings
         return $return;
     }
 
+    function infrastructureLabel(){
+        if (!$this->featureEnabled('infrastructures')) return '';
+        $settings = $this->get('infrastructures_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Infrastructures', 'Infrastrukturen');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
+
     function topicLabel(){
         if (!$this->featureEnabled('topics')) return '';
         $settings = $this->get('topics_label');
@@ -410,12 +413,19 @@ class Settings
         $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
         $html = '<div class="topics ' . $class . '">';
         if ($header) {
-            $html .= '<h5 class="m-0">' . lang('Research Topics', 'Forschungsbereiche') . '</h5>';
+            $html .= '<h5 class="m-0">' . $this->topicLabel() . '</h5>';
         }
         foreach ($topics as $topic) {
             $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
         }
         $html .= '</div>';
         return $html;
+    }
+
+    function printTopic($topic){
+        $topic = $this->osiris->topics->findOne(['id' => $topic]);
+        if (empty($topic)) return '';
+        return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+
     }
 }

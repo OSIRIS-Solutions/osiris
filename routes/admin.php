@@ -14,15 +14,30 @@
  * @license     MIT
  */
 
+Route::get('/admin', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang("Admin Panel")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/content.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 include_once BASEPATH . "/routes/admin.fields.php";
 
 
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang("Admin Panel Users")]
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Users", "Nutzer:innen")]
     ];
     include BASEPATH . "/header.php";
     if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
@@ -40,7 +55,8 @@ Route::get('/admin/(general|roles|features)', function ($page) {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang("Admin Panel $page")]
+        ['name' => lang('Admin'), 'path' => '/admin'],
+        ['name' => ucfirst($page)]
     ];
 
     include BASEPATH . "/header.php";
@@ -94,6 +110,7 @@ Route::get('/admin/categories', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Activity Types", "Aktivitäts-Kategorien")]
     ];
     include BASEPATH . "/header.php";
@@ -107,6 +124,7 @@ Route::get('/admin/categories/new', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")]
     ];
@@ -129,6 +147,7 @@ Route::get('/admin/categories/(.*)', function ($id) {
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
@@ -150,6 +169,7 @@ Route::get('/admin/types/new', function () {
     $user = $_SESSION['username'];
 
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang("New Type", "Neuer Typ")]
     ];
@@ -203,6 +223,7 @@ Route::get('/admin/types/(.*)', function ($id) {
     $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
 
     $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
@@ -237,6 +258,21 @@ Route::get('/settings/activities', function () {
     ]);
 });
 
+
+Route::get('/admin/vocabulary', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Vocabulary", "Vokabular")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/vocabulary.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/settings/modules', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -256,6 +292,99 @@ Route::get('/settings/modules', function () {
 });
 
 
+
+Route::get('/admin/persons', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Persons", "Personen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/persons.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/admin/infrastructures', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Infrastructures", "Infrastrukturen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/infrastructures.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/admin/projects', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Projects", "Projekte")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/projects.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (DB::is_ObjectID($id)) {
+        $project = $osiris->adminProjects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    } else {
+        $project = $osiris->adminProjects->findOne(['id' => $id]);
+    }
+    if (empty($project)) {
+        $project = array();
+    } else {
+        $project = DB::doc2Arr($project);
+    }
+    $type = $project['id'];
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
+        ['name' => $type . ' - ' . $stage . '/2']
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/project.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/admin/projects/new', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $stage = 1;
+    $project = array();
+    $type = null;
+
+    $breadcrumb = [
+        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
+        ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/project.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+
+
 /**
  * CRUD routes
  */
@@ -267,12 +396,25 @@ Route::post('/crud/admin/general', function () {
     $msg = 'settings-saved';
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
+            if ($key == 'auth-self-registration') $value = boolval($value);
+            if (str_contains($key, 'keywords')) {
+                $value = array_map('trim', explode(PHP_EOL, $value));
+                $value = array_filter($value);
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,
                 'value' => $value
             ]);
         }
+    }
+    if (isset($_POST['mail'])) {
+
+        $osiris->adminGeneral->deleteOne(['key' => 'mail']);
+        $osiris->adminGeneral->insertOne([
+            'key' => 'mail',
+            'value' => $_POST['mail']
+        ]);
     }
 
     if (isset($_POST['staff'])) {
@@ -330,6 +472,11 @@ Route::post('/crud/admin/general', function () {
         }
     }
 
+    if (isset($_POST['redirect'])) {
+        header("Location: " . $_POST['redirect'] . "?msg=" . $msg);
+        die();
+    }
+
     header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg);
 }, 'login');
 
@@ -373,9 +520,9 @@ Route::post('/crud/admin/features', function () {
 
 
     if (isset($_POST['values'])) {
-        $osiris->adminFeatures->deleteMany([]);
         $features = $_POST['values'];
         foreach ($features as $feature => $enabled) {
+            $osiris->adminFeatures->deleteOne(['feature' => $feature]);
             $r = [
                 'feature' => $feature,
                 'enabled' => boolval($enabled)
@@ -386,6 +533,9 @@ Route::post('/crud/admin/features', function () {
 
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
+            if (isset($value['en']) && $value['de'] == '') {
+                $value['de'] = $value['en'];
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,
@@ -393,8 +543,6 @@ Route::post('/crud/admin/features', function () {
             ]);
         }
     }
-
-
 
     $msg = 'settings-saved';
 
@@ -470,7 +618,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
             [$key => $_POST['original_id']],
             ['$set' => [$key => $values['id']]]
         );
-        $_POST['redirect'] = ROOTPATH."/admin/types/" . $values['id'];
+        $_POST['redirect'] = ROOTPATH . "/admin/types/" . $values['id'];
 
         if ($col == 'categories') {
             // update all connected types
@@ -478,7 +626,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
                 ['parent' => $_POST['original_id']],
                 ['$set' => ['parent' => $values['id']]]
             );
-            $_POST['redirect'] = ROOTPATH."/admin/categories/" . $values['id'];
+            $_POST['redirect'] = ROOTPATH . "/admin/categories/" . $values['id'];
         }
     }
 
@@ -554,20 +702,25 @@ Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
 });
 
 
-Route::post('/crud/categories/update-order', function () {
+Route::post('/crud/(categories|types)/update-order', function ($col) {
     include_once BASEPATH . "/php/init.php";
     // select the right collection
+    if ($col == 'categories') {
+        $collection = $osiris->adminCategories;
+    } else {
+        $collection = $osiris->adminTypes;
+    }
 
     foreach ($_POST['order'] as $i => $id) {
-        $osiris->adminCategories->updateOne(
+        $collection->updateOne(
             ['id' => $id],
             ['$set' => ['order' => $i]]
         );
-        # code...
     }
 
+    $_SESSION['msg'] = lang("Order updated", "Reihenfolge aktualisiert");
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=deleted-" . $deletedCount);
+        header("Location: " . $_POST['redirect']);
         die();
     }
 });
@@ -634,3 +787,212 @@ Route::post('/crud/admin/add-user', function () {
 
     header("Location: " . ROOTPATH . "/admin/users?success=" . $person['username']);
 }, 'login');
+
+
+Route::post('/crud/admin/projects/create', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (!isset($_POST['values'])) die("no values given");
+
+    $values = validateValues($_POST['values'], $DB);
+
+    $collection = $osiris->adminProjects;
+
+    // check if category ID already exists:
+    $category_exist = $collection->findOne(['id' => $values['id']]);
+    if (!empty($category_exist)) {
+        header("Location: " . ROOTPATH . "/admin/projects?msg=ID does already exist.");
+        die();
+    }
+
+    $insertOneResult  = $collection->insertOne($values);
+    // $id = $insertOneResult->getInsertedId();
+    $id = $values['id'];
+
+    $_SESSION['msg'] = lang("Project <q>$id</q> successfully created.", "Projekt <q>$id</q> erfolgreich erstellt.");
+    header("Location: " . ROOTPATH . "/admin/projects/2/$id");
+    die();
+});
+
+Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    include_once BASEPATH . "/php/Project.php";
+    $Project = new Project();
+
+    $collection = $osiris->adminProjects;
+    $mongo_id = $DB->to_ObjectID($id);
+
+    $original = $collection->findOne(['_id' => $mongo_id]);
+    if (empty($original)) {
+        header("Location: " . ROOTPATH . "/admin/projects?msg=not-found");
+        die;
+    }
+    $name = lang($original['name'] ?? $original['id'], $original['name_de'] ?? null);
+
+    $stage = $_POST['stage'] ?? 1;
+
+    $values = validateValues($_POST['values'] ?? [], $DB);
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = $_SESSION['username'];
+    $values['stage'] = $stage;
+
+    if ($stage == 1) {
+        // first stage: update basic information
+        if ($original['id'] != $values['id']) {
+            // update all connected projects with this type 
+            $osiris->projects->updateMany(
+                ['type' => $original['id']],
+                ['$set' => ['type' => $values['id']]]
+            );
+        }
+
+        $values['disabled'] = boolval($values['disabled'] ?? false);
+        $values['notification_changed_email'] = boolval($values['notification_changed_email'] ?? false);
+        $values['notification_created_email'] = boolval($values['notification_created_email'] ?? false);
+
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+        if (isset($values['disabled']) && $values['disabled']) {
+            $_SESSION['msg'] = lang("Deactivated project <q>$name</q> successfully saved.", "Deaktiviertes projekt <q>$name</q> erfolgreich gespeichert.");
+            header("Location: " . ROOTPATH . "/admin/projects");
+            die;
+        }
+
+        header("Location: " . ROOTPATH . "/admin/projects/2/$id");
+        die;
+    } elseif ($stage == 2) {
+
+        if (!isset($_POST['phase'])) {
+            // save empty phases
+            $values['phases'] = [];
+            $updateResult = $collection->updateOne(
+                ['_id' => $mongo_id],
+                ['$set' => $values]
+            );
+            $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
+            header("Location: " . ROOTPATH . "/admin/projects");
+            die;
+        }
+
+        $phases = $_POST['phase'];
+
+        $values['phases'] = [];
+        foreach ($Project::PHASES as $phase) {
+            $phase_id = $phase['id'];
+            // if projects are created directly, skip proposal phase
+            if ($original['process'] == 'project' && $phase['type'] == 'proposal') {
+                continue;
+            }
+            // check if pahse was not selected, if so create it with empty modules
+            if (!isset($phases[$phase_id])) {
+                $phases[$phase_id] = [
+                    'modules' => [],
+                ];
+            }
+            // add modules to phase
+            $modules = [];
+            foreach ($phases[$phase_id]['modules'] ?? [] as $m) {
+                if (str_ends_with($m, '*')) {
+                    $m = substr($m, 0, -1);
+                    $modules[] = [
+                        'module' => $m,
+                        'required' => true
+                    ];
+                } else {
+                    $modules[] = [
+                        'module' => $m,
+                        'required' => false
+                    ];
+                }
+            }
+            // add phase to values
+            $values['phases'][] = [
+                'id' => $phase_id,
+                'name' => $phase['name'],
+                'name_de' => $phase['name_de'],
+                'color' => $phase['color'] ?? 'muted',
+                'modules' => $modules
+            ];
+        }
+
+        $updateResult = $collection->updateOne(
+            ['_id' => $mongo_id],
+            ['$set' => $values]
+        );
+
+
+        $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
+        header("Location: " . ROOTPATH . "/admin/projects");
+        // header("Location: " . ROOTPATH . "/admin/projects/3/$id");
+        die;
+    }
+    dump($values, true);
+    die;
+
+});
+
+
+
+Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $collection = $osiris->adminProjects;
+    $mongo_id = $DB->to_ObjectID($id);
+
+    // check if ID is in use
+    $project = $collection->findOne(['_id' => $mongo_id]);
+    if (empty($project)) {
+        $_SESSION['msg'] = lang("Project <q>$id</q> could not be deleted as it does not exist.", "Projekt <q>$id</q> konnte nicht gelöscht werden, da es nicht existiert.");
+        header("Location: " . ROOTPATH . "/admin/projects");
+        die();
+    }
+    $project_id = $project['id'];
+
+    if ($osiris->projects->count(['type' => $project_id]) > 0) {
+        $_SESSION['msg'] = lang("Project <q>$project_id</q> could not be deleted, projects are still associated to this type.", "Projekt <q>$project_id</q> konnte nicht gelöscht werden, da Projekte noch mit diesem Typ verbunden sind.");
+        header("Location: " . ROOTPATH . "/admin/projects");
+        die();
+    }
+
+    $deleted = $collection->deleteOne(['_id' => $mongo_id]);
+    if ($deleted->getDeletedCount() == 0) {
+        $_SESSION['msg'] = lang("Project <q>$project_id</q> could not be deleted.", "Projekt <q>$project_id</q> konnte nicht gelöscht werden.");
+        header("Location: " . ROOTPATH . "/admin/projects");
+        die();
+    }
+
+    $_SESSION['msg'] = lang("Project <q>$project_id</q> successfully deleted.", "Projekt <q>$project_id</q> erfolgreich gelöscht.");
+    header("Location: " . ROOTPATH . "/admin/projects");
+    die();
+});
+
+Route::post('/crud/admin/vocabularies/([a-z\-]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    if (!isset($_POST['values'])) die("no values given");
+    $doc = [
+        'id' => $id,
+        'values' => $_POST['values']
+    ];
+
+    // delete old vocabulary
+    $osiris->adminVocabularies->deleteOne(['id' => $id]);
+    // insert new vocabulary
+    $osiris->adminVocabularies->insertOne($doc);
+
+    $_SESSION['msg'] = lang(
+        "Vocabulary <q>$id</q> successfully saved.",
+        "Vokabular <q>$id</q> erfolgreich gespeichert."
+    );
+
+    $red = ROOTPATH . "/admin/vocabulary#vocabulary-$id";
+    header("Location: " . $red);
+});

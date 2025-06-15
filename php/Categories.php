@@ -49,7 +49,7 @@ class Categories
             $c['children'] = [];
             $this->categories[$c['id']] = $c;
         }
-        $types = $this->osiris->db->adminTypes->find()->toArray();
+        $types = $this->osiris->db->adminTypes->find([], ['sort'=>['order'=>1]])->toArray();
         foreach ($types as $c) {
             if (!isset($this->categories[$c['parent']])) continue;
             $this->types[$c['id']] = $c;
