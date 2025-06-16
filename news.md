@@ -72,18 +72,26 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
 - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
+
 <!-- - Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
 - KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
 
-#### <i class="ph ph-users-three"></i> Neue Templates für die Formatierung von Aktivitäten
-Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen.
+
+
+#### <i class="ph ph-book-bookmark"></i> Darstellung und Sichtbarkeit von Aktivitäten
+- Neue Templates: Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+- Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
+- Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
 - Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
 - Das User Interface bei der Anzeige von Events wurde verbessert
 - Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
-- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren.
+- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
+
+
+
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 

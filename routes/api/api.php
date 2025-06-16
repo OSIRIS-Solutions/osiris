@@ -100,6 +100,10 @@ Route::get('/api/activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+        $filter = $Settings->getActivityFilter($filter);
+    }
+
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
         $group = $_GET['aggregate'];
@@ -262,6 +266,7 @@ Route::get('/api/all-activities', function () {
     }
     // $Format = new Document($highlight);
 
+    
     $filter = [];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -278,10 +283,12 @@ Route::get('/api/all-activities', function () {
     if ($page == "my-activities") {
         // only own work
         $filter = ['$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]];
-    }
-    if (isset($_GET['type'])) {
+    } else if (isset($_GET['type'])) {
         $filter['type'] = $_GET['type'];
+    } else if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+        $filter = $Settings->getActivityFilter($filter);
     }
+
     $cursor = $osiris->activities->find($filter);
     $cart = readCart();
     foreach ($cursor as $doc) {

@@ -53,7 +53,7 @@ function sel($index, $value)
     return val($index) == $value ? 'selected' : '';
 }
 
-$children = $osiris->adminTypes->find(['parent' => $id], ['sort'=>['order'=>1]])->toArray();
+$children = $osiris->adminTypes->find(['parent' => $id], ['sort' => ['order' => 1]])->toArray();
 
 $type = $form;
 $t = $id;
@@ -206,6 +206,25 @@ $member = $osiris->activities->count(['type' => $t]);
                     <label for="name_de" class="">Name (de)</label>
                     <input type="text" class="form-control" name="values[name_de]" value="<?= $type['name_de'] ?? '' ?>">
                 </div>
+            </div>
+
+
+            <div class="form-group mt-20">
+                <label for="visible-role"><?= lang('Role that can see this type', 'Rolle die diese Aktivitäten sehen können') ?></label>
+                <select class="form-control" name="values[visible_role]" id="visible-role">
+                    <option value="" <?= sel('visible_role', '') ?>><?= lang('All users', 'Alle Nutzende') ?></option>
+                    <?php
+                    $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
+                    $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
+                    
+                    foreach ($roles as $role) { 
+                        if ($role == 'user') continue;
+                        ?>
+                        <option value="<?= $role ?>" <?= sel('visible_role', $role) ?>>
+                            <?= strtoupper($role) ?>
+                        </option>
+                    <?php } ?>
+                </select>
             </div>
 
             <?php if (!empty($type)) { ?>
