@@ -53,12 +53,23 @@ class Settings
         }
     }
 
-    function getActivityFilter($filter, $user = null)
+    /**
+     * Get the filter for activities based on the provided filter and user.
+     *
+     * @param array $filter The filter criteria.
+     * @param string|null $user The username to filter by, defaults to current user.
+     * @return array The MongoDB query filter for activities.
+     */
+    function getActivityFilter($filter, $user = null, $reduced = false)
     {
         $user = $user ?? ($_GET['user'] ?? $_SESSION['username']);
+        $filterAllowed = ['type' => ['$in' => $this->allowedTypes]];
+        if ($reduced) {
+            return $filterAllowed;
+        }
         if (empty($filter)) return [
             '$or' => [
-                ['type' => ['$in' => $this->allowedTypes]],
+                $filterAllowed,
                 ['authors.user' => $user],
                 ['editors.user' => $user],
                 ['user' => $user]
@@ -68,7 +79,7 @@ class Settings
             '$and' => [
                 $filter,
                 ['$or' => [
-                    ['type' => ['$in' => $this->allowedTypes]],
+                    $filterAllowed,
                     ['authors.user' => $user],
                     ['editors.user' => $user],
                     ['user' => $user]

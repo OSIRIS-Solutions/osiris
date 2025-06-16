@@ -281,12 +281,19 @@ Route::get('/api/all-activities', function () {
 
     $result = [];
     if ($page == "my-activities") {
-        // only own work
-        $filter = ['$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]];
-    } else if (isset($_GET['type'])) {
+        // reduced filter for my activities
+        $filter = $Settings->getActivityFilter($filter, $user, true);
+        $filter = array_merge($filter, [
+            '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
+        ]);
+    } else {
+        if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+            $filter = $Settings->getActivityFilter($filter);
+        }
+    }
+    
+    if (isset($_GET['type']) && in_array($_GET['type'], $Settings->allowedTypes)) {
         $filter['type'] = $_GET['type'];
-    } else if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
-        $filter = $Settings->getActivityFilter($filter);
     }
 
     $cursor = $osiris->activities->find($filter);
