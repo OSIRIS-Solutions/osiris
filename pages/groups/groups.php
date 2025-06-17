@@ -17,6 +17,7 @@
  */
 
 $style = $_GET['style'] ?? 'cards';
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 ?>
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -141,10 +142,18 @@ $style = $_GET['style'] ?? 'cards';
                     <td class="<?= $inactive ? 'inactive' : '' ?>" id="<?= $group['id'] ?>" <?= $Groups->cssVar($group['id']) ?>>
                         <span style="display:none">
                             <!-- hidden field for sorting based on level -->
-                            <?= $inactive ? '100' :$Groups->getLevel($group['id']) ?>
+                            <?= $inactive ? '100' : $Groups->getLevel($group['id']) ?>
                         </span>
                         <span class="badge dept-id float-md-right"><?= $group['id'] ?></span>
                         <span class="text-muted"><?= $group['unit'] ?></span>
+                        <?php if ($topicsEnabled && ($group['topics'] ?? false)) {
+                            $topics = '<span class="topic-icons-">';
+                            foreach ($group['topics'] as $topic) {
+                                $topics .= '<a href="' . ROOTPATH . '/topics/view/' . $topic . '" class="topic-icon topic-' . $topic . '"></a> ';
+                            }
+                            $topics .= '</span>';
+                            echo $topics;
+                        } ?>
                         <h5>
                             <a href="<?= ROOTPATH ?>/groups/view/<?= $group['id'] ?>" class="title">
                                 <?= lang($group['name'], $group['name_de'] ?? null) ?>
@@ -172,9 +181,8 @@ $style = $_GET['style'] ?? 'cards';
                                     <?= implode(', ', $heads) ?>
                                 </div>
                             <?php } ?>
-
                         <?php } ?>
-
+                        
                     </td>
                 </tr>
             <?php } ?>

@@ -48,7 +48,7 @@ $count_wordcloud = 0;
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 <!-- <script src="<?= ROOTPATH ?>/js/d3-graph.js"></script> -->
 
@@ -58,7 +58,9 @@ $count_wordcloud = 0;
     const DEPT_TREE = <?= json_encode($children) ?>;
     const DEPT = '<?= $id ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/units.js?v=<?=CSS_JS_VERSION?>"></script>
+<!-- // my year for the activity timeline -->
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/units.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 <style>
@@ -150,6 +152,8 @@ $count_wordcloud = 0;
             Level <?= $Groups->getLevel($id) ?>
         </b>
     </h3>
+
+    <?= $Settings->printTopics($group['topics'] ?? [], 'mt-10'); ?>
 
 
 
@@ -479,9 +483,46 @@ $count_wordcloud = 0;
 
 
     <section id="activities" style="display:none">
-
-
         <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2>
+
+        <style>
+            .type-badge {
+                opacity: 0.6;
+                cursor: pointer;
+                margin-right: .5rem;
+                color: white;
+                text-decoration: line-through;
+            }
+
+            .type-badge.active {
+                opacity: .8;
+                text-decoration: none;
+            }
+
+            .type-badge:hover,
+            .type-badge.active:hover {
+                opacity: 1;
+            }
+        </style>
+        <div class="box">
+            <div class="content">
+                <div class="btn-toolbar justify-content-between">
+                    <div id="event-selector"></div>
+                    <div>
+                        <div class="input-group small mr-10">
+                            <div class="input-group-prepend">
+                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1); timelineChart()"><i class="ph ph-caret-left"></i></button>
+                            </div>
+                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart()">
+                            <div class="input-group-append">
+                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1); timelineChart()"><i class="ph ph-caret-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="timeline"></div>
+        </div>
 
         <div class="mt-20 w-full">
             <table class="table dataTable responsive" id="activities-table">
@@ -494,11 +535,8 @@ $count_wordcloud = 0;
                 </thead>
                 <tbody>
                 </tbody>
-
             </table>
         </div>
-
-
     </section>
 
 
@@ -506,62 +544,49 @@ $count_wordcloud = 0;
     <?php if ($Settings->featureEnabled('projects')) { ?>
         <section id="projects" style="display:none">
 
-            <div class="row row-eq-spacing my-0">
-                <?php
-                if ($count_projects > 0) {
-                    $projects = $osiris->projects->find($project_filter, ['sort' => ["start" => -1, "end" => -1]]);
+            <?php
+            if ($count_projects > 0) {
+                $projects = $osiris->projects->find($project_filter, ['sort' => ["start" => -1, "end" => -1]]);
 
-                    $ongoing = [];
-                    $past = [];
+                $ongoing = [];
+                $past = [];
 
-                    require_once BASEPATH . "/php/Project.php";
-                    $Project = new Project();
-                    foreach ($projects as $project) {
-                        $Project->setProject($project);
-                        if ($Project->inPast()) {
-                            $past[] = $Project->widgetSmall();
-                        } else {
-                            $ongoing[] = $Project->widgetSmall();
-                        }
+                require_once BASEPATH . "/php/Project.php";
+                $Project = new Project();
+                foreach ($projects as $project) {
+                    $Project->setProject($project);
+                    if ($Project->inPast()) {
+                        $past[] = $Project->widgetSmall();
+                    } else {
+                        $ongoing[] = $Project->widgetSmall();
                     }
-                    $i = 0;
-                    $breakpoint = ceil($count_projects / 2);
-                ?>
-                    <div class="col-md-6">
-                        <?php if (!empty($ongoing)) { ?>
+                }
+            ?>
+                <?php if (!empty($ongoing)) { ?>
+                    <h3><?= lang('Ongoing projects', 'Laufende Projekte') ?></h3>
+                    <div class="row row-eq-spacing my-0">
 
-                            <h2><?= lang('Ongoing projects', 'Laufende Projekte') ?></h2>
-                            <?php foreach ($ongoing as $html) { ?>
+                        <?php foreach ($ongoing as $html) { ?>
+                            <div class="col-md-6">
                                 <?= $html ?>
-                            <?php
-                                $i++;
-                                if ($i == $breakpoint) {
-                                    echo "</div><div class='col-md-6'>";
-                                }
-                            } ?>
-
-                        <?php } ?>
-
-
-                        <?php if (!empty($past)) { ?>
-                            <h3><?= lang('Past projects', 'Vergangene Projekte') ?></h3>
-
-                            <?php foreach ($past as $html) { ?>
-                                <?= $html ?>
-                            <?php
-                                $i++;
-                                if ($i == $breakpoint) {
-                                    echo "</div><div class'col-md-6'>";
-                                }
-                            } ?>
-
+                            </div>
                         <?php } ?>
                     </div>
-
-
-
                 <?php } ?>
-            </div>
+
+                <?php if (!empty($past)) { ?>
+                    <h3><?= lang('Past projects', 'Vergangene Projekte') ?></h3>
+                    <div class="row row-eq-spacing my-0">
+
+                        <?php foreach ($past as $html) { ?>
+                            <div class="col-md-6">
+                                <?= $html ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+
+            <?php } ?>
 
             <!-- <h3 class="title">
             <?= lang('Timeline of all approved projects', 'Zeitstrahl aller bewilligten Projekte') ?>

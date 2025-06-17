@@ -100,7 +100,7 @@ class Groups
                     'level' => $depth,
                     'inactive' => $data[$i]['inactive'] ?? false,
                     // 'head' => $v,
-                    'children' => $this->tree($data, $data[$i]['id'], $depth + 1)
+                    'children' => $this->tree($data, $data[$i]['id'], $depth + 1),
                 ];
             }
         }

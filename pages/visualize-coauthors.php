@@ -72,6 +72,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
         },
         dataType: "json",
         success: function(response) {
+            console.log(response);
             var matrix = response.data.matrix;
             var DEPTS = response.data.labels;
 

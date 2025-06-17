@@ -835,7 +835,7 @@ function prependRow(trcontent) {
 
 
 function initActivities(selector, data = {}) {
-    $(selector).DataTable({
+    return $(selector).DataTable({
         "ajax": {
             "url": ROOTPATH + '/api/all-activities',
             "data": data,
@@ -870,6 +870,12 @@ function initActivities(selector, data = {}) {
                 searchable: true,
                 visible: false,
             },
+            {
+                targets: 5,
+                data: 'raw_type',
+                searchable: true,
+                visible: false,
+            }
         ],
         "order": [
             [4, 'desc'],
@@ -942,54 +948,26 @@ function initProjects(selector, data = {}) {
 
             }
         },
-        {
-            data: 'role', render: function (data) {
-                if (data == 'coordinator') {
-                    return `<span class="badge text-signal">
-                    <i class="ph ph-crown-simple"></i>
-                    ${lang('Coordinator', 'Koordinator')}
-                    </span>`
-                }
-                if (data == 'associated') {
-                    return `<span class="badge text-success">
-                    <i class="ph ph-address-book"></i>
-                    ${lang('Associated', 'Beteiligt')}
-                    </span>`
-                }
-                return `<span class="badge text-muted">
-                    <i class="ph ph-handshake"></i>
-                    ${lang('Partner')}
-                    </span>`
-            }
-        },
-        {
-            data: 'applicant',
-            render: function (data, type, row) {
-                if (!row.contact && row.supervisor)
-                    return `<a href="${ROOTPATH}/profile/${row.supervisor}">${data}</a>`;
-                if (!row.contact)
-                    return data;
-                return `<a href="${ROOTPATH}/profile/${row.contact}">${data}</a>`
-            }
-        },
-        {
-            data: 'status',
-            render: function (data) {
-                console.log(data);
-                switch (data) {
-                    case 'approved':
-                        return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
-                    case 'finished':
-                        return `<span class='badge success'>${lang('finished', 'abgeschlossen')}</span>`;
-                    case 'applied':
-                        return `<span class='badge signal'>${lang('applied', 'beantragt')}</span>`;
-                    case 'rejected':
-                        return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
-                    case 'expired':
-                        return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
-                }
-            }
-        }
+        // {
+        //     data: 'role', render: function (data) {
+        //         if (data == 'coordinator') {
+        //             return `<span class="badge text-signal">
+        //             <i class="ph ph-crown-simple"></i>
+        //             ${lang('Coordinator', 'Koordinator')}
+        //             </span>`
+        //         }
+        //         if (data == 'associated') {
+        //             return `<span class="badge text-success">
+        //             <i class="ph ph-address-book"></i>
+        //             ${lang('Associated', 'Beteiligt')}
+        //             </span>`
+        //         }
+        //         return `<span class="badge text-muted">
+        //             <i class="ph ph-handshake"></i>
+        //             ${lang('Partner')}
+        //             </span>`
+        //     }
+        // },
         ],
         order: [
             [4, 'desc']

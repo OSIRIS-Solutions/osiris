@@ -267,6 +267,12 @@ function sel($index, $value)
                 <input type="text" class="form-control" name="values[costcenter]" id="costcenter" value="<?= val('costcenter') ?>">
             </div>
 
+            
+        <?php if ($Settings->featureEnabled('topics')) { ?>
+            <!-- if topics are registered, you can choose them here -->
+            <?php $Settings->topicChooser($form['topics'] ?? []) ?>
+        <?php } ?>
+
         </fieldset>
 
         <button class="btn secondary" type="submit" id="submit-btn">

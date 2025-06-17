@@ -8,6 +8,7 @@ var activitiesTable = false,
     personsExists = false,
     wordcloudExists = false;
 
+
 let activeCategories = new Set(); // Wird initial leer, also zeigt alles
 
 // DataTables Filterfunktion registrieren
@@ -28,22 +29,21 @@ function navigate(key) {
     $('.pills .btn#btn-' + key).addClass('active')
 
     switch (key) {
-        case 'publications':
-            if (publicationTable) break;
-            publicationTable = initActivities('#publication-table', {
-                filter: {
-                    'units': DEPT,
-                    type: 'publication'
-                }
-            })
-            break;
+        // case 'publications':
+        //     if (publicationTable) break;
+        //     publicationTable = initActivities('#publication-table', {
+        //         filter: {
+        //             topics: TOPIC,
+        //             type: 'publication'
+        //         }
+        //     })
+        //     break;
 
         case 'activities':
             if (activitiesTable) break;
             activitiesTable = initActivities('#activities-table', {
                 filter: {
-                    'units': DEPT,
-                    type: { '$ne': 'publication' }
+                    topics: TOPIC,
                 }
             })
             timelineChart();
@@ -63,7 +63,7 @@ function navigate(key) {
         case 'graph':
             if (collabGraphExists) break;
             collabGraphExists = true;
-            collabGraph('#collabGraph', { dept: DEPT, single: true })
+            collabGraph('#collabGraph', { topics: TOPIC, single: true })
             break;
 
         case 'persons':
@@ -71,7 +71,7 @@ function navigate(key) {
             personsExists = true;
             userTable('#user-table', {
                 filter: {
-                    'units': DEPT_TREE,
+                    topics: TOPIC,
                     is_active: { '$ne': false }
                 },
                 subtitle: 'position',
@@ -83,26 +83,34 @@ function navigate(key) {
             collabExists = true;
             collabChart('#collab-chart', {
                 type: 'publication',
-                dept: DEPT,
+                topics: TOPIC
             })
             break;
 
-        case 'concepts':
-            if (conceptsExists) break;
-            conceptsExists = true;
-            conceptTooltip()
-            break;
+        // case 'concepts':
+        //     if (conceptsExists) break;
+        //     conceptsExists = true;
+        //     conceptTooltip()
+        //     break;
 
         case 'wordcloud':
             if (wordcloudExists) break;
             wordcloudExists = true;
-            wordcloud('#wordcloud-chart', { 'units': DEPT_TREE })
+            wordcloud('#wordcloud-chart', { topics: TOPIC })
             break;
         default:
             break;
     }
-
 }
+
+// function filterActivities(activity){
+//     if (!activitiesTable) return;
+//     let column = 5;
+
+
+//             dataTable.columns(column).search(activity, true, false, true).draw();
+
+//     }
 
 function timelineChart() {
     if (typeof timeline !== 'function') {
@@ -127,8 +135,8 @@ function timelineChart() {
     $('#event-selector').empty()
 
     let filter = {
-        'units': DEPT,
-        'start_date': { 
+        'topics': TOPIC,
+        'start_date': {
             '$gte': `${year}-01-01`,
             '$lte': `${year}-12-31`
         },
@@ -161,7 +169,6 @@ function timelineChart() {
     });
 }
 
-
 function toggleTimelineActivity(type) {
     // check if type is active
     let active = ($('.badge.' + type).hasClass('active'));
@@ -182,7 +189,6 @@ function toggleTimelineActivity(type) {
 }
 
 
-
 function collabChart(selector, data) {
     $.ajax({
         type: "GET",
@@ -191,10 +197,6 @@ function collabChart(selector, data) {
         dataType: "json",
         success: function (response) {
             console.log(response);
-            // if (response.count <= 1) {
-            //     $('#collab').hide()
-            //     return
-            // }
             var matrix = response.data.matrix;
             var data = response.data.labels;
 
