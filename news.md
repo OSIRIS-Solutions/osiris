@@ -82,6 +82,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Neue Templates: Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
 - Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
 - Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
+- Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
@@ -91,7 +92,11 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
 
 
-
+#### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
+- Forschungsbereiche können jetzt auch zu Organisationseinheiten hinzugefügt werden.
+- Das Web-Interface für die Darstellung von Forschungsbereichen wurde verbessert und folgt jetzt dem Tab-basierten Ansatz, der auch an vielen anderen Stellen verwendet wird.
+- Bei den Forschungsbereichen wurden neue Abbildungen hinzugefügt: es gibt jetzt eine Netzwerkansicht mit allen verknüpften Autor:innen, eine Wordmap und eine Konfetti-Timeline.
+- Bei den mit Bereichen verknüpften Entitäten (z.B. Aktivitäten): Wenn keine Forschungsbereiche existieren, wird das Forschungsbereich-Filterwidget nicht mehr angezeigt.
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
@@ -115,7 +120,6 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Der Name der Aktivitätskategorie in "Mein Jahr" wird nun korrekt angezeigt
 - In "Mein Jahr" werden die Aktivitätskategorien nun korrekt sortiert
 - Typen lassen sich ebenfalls sortieren
-- Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 - Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
 
