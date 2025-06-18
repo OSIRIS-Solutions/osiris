@@ -22,6 +22,7 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
 });
 
 function navigate(key) {
+    console.log(key);
     $('section').hide()
     $('section#' + key).show()
 

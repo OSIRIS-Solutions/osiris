@@ -14,6 +14,48 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$group_filter = [
+    'topics' => $topic['id'],
+    'is_active' => ['$ne' => false],
+];
+$count_groups = $osiris->groups->count($group_filter);
+$person_filter = [
+    'topics' => $topic['id'],
+    'is_active' => ['$ne' => false],
+];
+$count_persons = $osiris->persons->count($person_filter);
+$publication_filter = [
+    'topics' => $topic['id'],
+    'type' => 'publication'
+];
+$count_publications = $osiris->activities->count($publication_filter);
+$activities_filter = [
+    'topics' => $topic['id'],
+    // 'type' => ['$ne' => 'publication']
+];
+$count_activities = $osiris->activities->count($activities_filter);
+
+$count_projects = 0;
+if ($Settings->featureEnabled('projects')) {
+    $project_filter = [
+        'topics' => $topic['id']
+    ];
+    $count_projects = $osiris->projects->count($project_filter);
+}
+// which page is active?
+$active_page = $_GET['page'] ?? 'general';
+if ($count_groups > 0){
+    $active_page = 'groups';
+} elseif ($count_persons > 0) {
+    $active_page = 'persons';
+// } elseif ($count_publications > 0) {
+    // $active_page = 'publications';
+} elseif ($count_activities > 0) {
+    $active_page = 'activities';
+} elseif ($count_projects > 0) {
+    $active_page = 'projects';
+}
 ?>
 
 <style>
@@ -153,19 +195,10 @@
 </div>
 
 <nav class="pills mt-20 mb-0">
-    <a onclick="navigate('general')" id="btn-general" class="btn active">
-        <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
-    </a>
-
     <?php
-    $group_filter = [
-        'topics' => $topic['id'],
-        'is_active' => ['$ne' => false],
-    ];
-    $count_groups = $osiris->groups->count($group_filter);
+
     if ($count_groups > 0) { ?>
-        <a onclick="navigate('groups')" id="btn-groups" class="btn">
+        <a onclick="navigate('groups')" id="btn-groups" class="btn <?=$active_page == 'groups' ? 'active':''?>">
             <i class="ph ph-users-three" aria-hidden="true"></i>
             <?= lang('Groups', 'Gruppen') ?>
             <span class="index"><?= $count_groups ?></span>
@@ -173,13 +206,9 @@
     <?php } ?>
 
     <?php
-    $person_filter = [
-        'topics' => $topic['id'],
-        'is_active' => ['$ne' => false],
-    ];
-    $count_persons = $osiris->persons->count($person_filter);
+
     if ($count_persons > 0) { ?>
-        <a onclick="navigate('persons')" id="btn-persons" class="btn">
+        <a onclick="navigate('persons')" id="btn-persons" class="btn  <?=$active_page == 'persons' ? 'active':''?>">
             <i class="ph ph-users" aria-hidden="true"></i>
             <?= lang('Persons', 'Personen') ?>
             <span class="index"><?= $count_persons ?></span>
@@ -187,11 +216,7 @@
     <?php } ?>
 
     <?php
-    $publication_filter = [
-        'topics' => $topic['id'],
-        'type' => 'publication'
-    ];
-    $count_publications = $osiris->activities->count($publication_filter);
+
     if ($count_publications > 0) { ?>
         <!-- <a onclick="navigate('publications')" id="btn-publications" class="btn">
             <i class="ph ph-books" aria-hidden="true"></i>
@@ -201,34 +226,26 @@
     <?php } ?>
 
     <?php
-    $activities_filter = [
-        'topics' => $topic['id'],
-        // 'type' => ['$ne' => 'publication']
-    ];
-    $count_activities = $osiris->activities->count($activities_filter);
 
     if ($count_activities > 0) { ?>
-        <a onclick="navigate('activities')" id="btn-activities" class="btn">
+        <a onclick="navigate('activities')" id="btn-activities" class="btn  <?=$active_page == 'activities' ? 'active':''?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
             <?= lang('Activities', 'Aktivitäten')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
 
-    <?php if ($Settings->featureEnabled('projects')) { ?>
-        <?php
-        $project_filter = [
-            'topics' => $topic['id']
-        ];
-        $count_projects = $osiris->projects->count($project_filter);
-        if ($count_projects > 0) { ?>
-            <a onclick="navigate('projects')" id="btn-projects" class="btn">
-                <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Projects', 'Projekte')  ?>
-                <span class="index"><?= $count_projects ?></span>
-            </a>
-        <?php } ?>
+    <?php  ?>
+    <?php
+
+    if ($count_projects > 0) { ?>
+        <a onclick="navigate('projects')" id="btn-projects" class="btn <?=$active_page == 'projects' ? 'active':''?>">
+            <i class="ph ph-tree-structure" aria-hidden="true"></i>
+            <?= lang('Projects', 'Projekte')  ?>
+            <span class="index"><?= $count_projects ?></span>
+        </a>
     <?php } ?>
+    <?php  ?>
     <?php if ($count_publications > 0) { ?>
         <a onclick="navigate('graph')" id="btn-graph" class="btn">
             <i class="ph ph-graph" aria-hidden="true"></i>
@@ -239,10 +256,15 @@
             <?= lang('Word cloud')  ?>
         </a>
     <?php } ?>
+
+    <a onclick="navigate('general')" id="btn-general" class="btn  <?=$active_page == 'general' ? 'active':''?>">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        <?= lang('General', 'Allgemein') ?>
+    </a>
 </nav>
 
 
-<section id="general">
+<section id="general" style="display: none;">
     <p>
         <?= lang($topic['description'], $topic['description_de'] ?? null) ?>
     </p>
@@ -362,7 +384,7 @@
 </section>
 
 
-<section id="publications" style="display:none">
+<section id="publications" style="display: none;">
 
     <h2><?= lang('Publications', 'Publikationen') ?></h2>
 
@@ -383,7 +405,7 @@
 </section>
 
 
-<section id="activities" style="display:none">
+<section id="activities" style="display: none;">
     <h2><?= lang('Activities', 'Aktivitäten') ?></h2>
 
     <style>
@@ -437,7 +459,7 @@
 
 
 <?php if ($Settings->featureEnabled('projects')) { ?>
-    <section id="projects" style="display:none">
+    <section id="projects" style="display: none;">
 
         <?php
         if ($count_projects > 0) {
@@ -555,3 +577,9 @@
         }
     });
 </script> -->
+
+<script>
+    $(document).ready(function() {
+        navigate('<?= $active_page ?>');
+    });
+</script>
