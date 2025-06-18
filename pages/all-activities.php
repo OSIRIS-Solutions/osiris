@@ -678,7 +678,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             type = false
                         }
                         const count = dataTable.column(key).data().filter(function(d) {
-                            if (key == 7 || key == 14) {
+                            if ((key == 7 || key == 14) && d instanceof Array) {
                                 return d.includes(type)
                             }
                             return d == type
