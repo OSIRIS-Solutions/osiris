@@ -485,15 +485,15 @@ $pageactive = function ($p) use ($page) {
                         <div id="sidebar-add-navigation">
 
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
-                                <?php if ($DB->canProposalsBeCreated()) { ?>
+                                <?php if ($Settings->canProposalsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/proposals/new" class="">
                                         <i class="ph ph-tree-structure"></i>
                                         <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
-                                <?php } else if ($DB->canProjectsBeCreated()) { ?>
+                                <?php } else if ($Settings->canProjectsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/new" class="">
                                         <i class="ph ph-tree-structure"></i>
-                                        <?= lang('Add project', 'Projekt hinzuf.') ?>
+                                        <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
                                 <?php } ?>
 
@@ -594,7 +594,7 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
-                            <?php if ($DB->canProposalsBeCreated()) { ?>
+                            <?php if ($Settings->canProposalsBeCreated()) { ?>
                                 <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
                                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
                                     <?= lang('Proposals', 'Anträge') ?>

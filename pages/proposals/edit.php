@@ -114,6 +114,15 @@ if ($is_subproject) {
         <div class="select-btns">
             <?php
             foreach ($project_types as $pt) {
+                // ensure that the user has permission to add this type of project
+                if ($pt['process'] == 'proposal' && !$Settings->hasPermission('proposals.add')) {
+                    // skip proposal type if user has no permission to add proposals
+                    continue;
+                }
+                if ($pt['process'] == 'project' && !$Settings->hasPermission('projects.add')) {
+                    // skip project type if user has no permission to add projects
+                    continue;
+                }
                 $key = $pt['id'];
             ?>
                 <a href="<?= $current_url ?>?type=<?= $key ?>" class="btn select <?= $type == $key ? 'active' : '' ?>" style="color: <?= $pt['color'] ?? 'var(--text-color)' ?>">

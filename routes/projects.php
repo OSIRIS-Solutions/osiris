@@ -101,7 +101,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
     $breadcrumb = [
@@ -125,7 +125,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
     $Project = new Project($project);
@@ -634,9 +634,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
 
-    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
 

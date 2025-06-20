@@ -117,7 +117,7 @@ $Vocabulary = new Vocabulary();
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
 
-    <?php if ($Settings->hasPermission('projects.add') && $Project->canProjectsBeCreated()) { ?>
+    <?php if ($Settings->canProjectsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/projects/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new project', 'Neues Projekt anlegen') ?>

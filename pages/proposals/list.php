@@ -92,7 +92,7 @@ $filter = [];
     </a>
      -->
 
-    <?php if ($Settings->hasPermission('proposals.add') && $Project->canProposalsBeCreated()) { ?>
+    <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>

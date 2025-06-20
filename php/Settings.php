@@ -477,4 +477,23 @@ class Settings
         if (empty($topic)) return '';
         return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
     }
+
+    
+    public function canProjectsBeCreated()
+    {
+        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'project']);
+        if ($ability > 0) {
+            return ($this->hasPermission('projects.add'));
+        }
+        return false;
+    }
+
+    public function canProposalsBeCreated()
+    {
+        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'proposal']);
+        if ($ability > 0) {
+            return ($this->hasPermission('proposals.add'));
+        }
+        return false;
+    }
 }
