@@ -508,6 +508,9 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $id = $insertOneResult->getInsertedId();
 
     if (isset($values['funding_number'])) {
+        if (is_integer($values['funding_number'])) {
+            $values['funding_number'] = strval($values['funding_number']);
+        } 
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
 
@@ -654,6 +657,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
     if (isset($values['funding_number'])) {
+        if (is_integer($values['funding_number'])) {
+            $values['funding_number'] = strval($values['funding_number']);
+        } 
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
     }

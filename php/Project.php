@@ -517,8 +517,11 @@ class Project extends Vocabulary
     {
         if (!isset($this->project['funding_number']) || empty($this->project['funding_number']))
             return '-';
-        if (is_string($this->project['funding_number']))
+        if (is_string($this->project['funding_number']) || is_numeric($this->project['funding_number']))
             return $this->project['funding_number'];
+        if (is_array($this->project['funding_number'])) {
+            return implode($seperator, $this->project['funding_number']);
+        }
         return implode($seperator, DB::doc2Arr($this->project['funding_number']));
     }
 
@@ -769,7 +772,7 @@ class Project extends Vocabulary
     private function convertProject4humans($doc)
     {
 
-        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date'];
+        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date', 'teaser', 'teaser_en', 'end_date'];
 
         $result = [];
 
