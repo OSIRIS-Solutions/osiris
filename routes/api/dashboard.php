@@ -740,14 +740,15 @@ Route::get('/api/dashboard/author-network', function () {
     $single_authors = $_GET['single'] ?? false;
 
     $depts = null;
+    $filter = ['type' => 'publication'];
     if (isset($_GET['dept'])) {
-        $filter = ['units' => $_GET['dept'], 'type' => 'publication'];
         $depts = $Groups->getChildren($_GET['dept'], 1);
+        $filter['units'] = $_GET['dept'];
     } else if (isset($_GET['topics'])) {
-        $filter = ['topics' => $_GET['topics'], 'type' => 'publication'];
+        $filter['topics'] = $_GET['topics'];
     } elseif (isset($_GET['units'])) {
         // $depts = $_GET['units'];
-        $filter = ['units' => $_GET['units'], 'type' => 'publication'];
+        $filter['units'] = $_GET['units'];
     }
 
     if (isset($_GET['year'])) {

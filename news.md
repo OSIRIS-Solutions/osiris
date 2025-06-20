@@ -98,6 +98,16 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Bei den Forschungsbereichen wurden neue Abbildungen hinzugefügt: es gibt jetzt eine Netzwerkansicht mit allen verknüpften Autor:innen, eine Wordmap und eine Konfetti-Timeline.
 - Bei den mit Bereichen verknüpften Entitäten (z.B. Aktivitäten): Wenn keine Forschungsbereiche existieren, wird das Forschungsbereich-Filterwidget nicht mehr angezeigt.
 
+#### <i class="ph ph-map"></i> Forschungsreisen
+- Es wurde ein neues Addon hinzugefügt, das es ermöglicht, Forschungsreisen zu analysieren.
+- Um dieses Addon zu aktivieren, müsst ihr folgende Schritte durchführen:
+  1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
+  2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
+     - `date-range`
+     - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
+     - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
+  3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
+
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
@@ -122,6 +132,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Typen lassen sich ebenfalls sortieren
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 - Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
+- Im Profil werden die bestätigten Quartale jetzt in der Tabelle mit den Details angezeigt
 
 ---
 

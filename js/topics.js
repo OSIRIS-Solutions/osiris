@@ -248,8 +248,7 @@ function collabGraph(selector, data) {
                     depts_in_use[d.dept.id] = d.dept;
             })
 
-            Chords(selector, matrix, labels, null, data, links, false, null);
-
+            Chords(selector, matrix, labels, null, data, links, true, null);
 
             var legend = d3.select('#legend')
                 .append('div').attr('class', 'content')
