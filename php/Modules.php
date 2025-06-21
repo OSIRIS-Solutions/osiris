@@ -596,7 +596,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if (empty($this->preset) || count($this->preset) === 0)
+        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -1856,7 +1856,7 @@ class Modules
             case "peer-reviewed":
             ?>
                 <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block ml-20" id="peer_reviewed-div">
+                    <div class="custom-radio d-inline-block mr-20" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
                         <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
                     </div>
