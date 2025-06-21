@@ -317,6 +317,7 @@ $fields_projects = array_merge($fields_projects, [
     "subprojects",
     "teaser_de",
     "teaser_en",
+    "topics"
 ]);
 $general_fields = [
     'created',

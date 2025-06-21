@@ -407,6 +407,30 @@
             "approved": false
         },
         "order": 99
+    }, 
+    {
+        "id": "countries-in",
+        "en": "Research conducted in countries",
+        "de": "Forschung in Ländern",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    }, 
+    {
+        "id": "countries-about",
+        "en": "Research about countries",
+        "de": "Forschung über Länder",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
     },
     {
         "id": "comment",

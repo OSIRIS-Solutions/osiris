@@ -229,11 +229,15 @@ $member = $osiris->activities->count(['type' => $t]);
 
             <?php if (!empty($type)) { ?>
                 <hr>
+                    <a class="btn float-right" href="#order">
+                        <i class="ph ph-list-numbers"></i>
+                        <?= lang('Change order', 'Reihenfolge ändern') ?>
+                    </a>
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>
                     <?php
                     foreach ($children as $subtype) { ?>
-                        <a class="btn primary mb-5" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                        <a class="btn mb-5 text-<?=$type['id']?>" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
                             <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
                             <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                         </a>
@@ -242,10 +246,6 @@ $member = $osiris->activities->count(['type' => $t]);
                         <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
                     </a>
 
-                    <a class="btn ml-auto" href="#order">
-                        <i class="ph ph-list-numbers"></i>
-                        <?= lang('Change order', 'Reihenfolge ändern') ?>
-                    </a>
                 </div>
             <?php } ?>
 

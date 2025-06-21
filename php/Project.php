@@ -260,17 +260,18 @@ class Project extends Vocabulary
                     . '</div>';
 
             case 'countries':
+            case 'countries-in':
+            case 'countries-about':
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
+                
                 foreach ($value ?? [] as $c) {
+                    $iso = $c['country'] ?? $c;
                     $role = '';
-                    if (isset($c['country'])) {
-                        $iso = $c['country'];
-                    }
                     if (isset($c['role'])) {
                         $role = ' (' . $c['role'] . ')';
                     }
-                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . $role . '</li>';
+                    $countriesList .= '<li>' . $this->getCountry($iso, $lang) . $role . '</li>';
                 }
                 return '<ul class="list signal mb-0">' . $countriesList . '</ul>';
             case 'purpose':

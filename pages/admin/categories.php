@@ -110,36 +110,31 @@
 
 <?php
 foreach ($Categories->categories as $type) { ?>
-    <div class="box px-20 py-10 mb-10">
-        <h3 class="title" style="color: <?= $type['color'] ?? 'inherit' ?>">
+    <div class="box px-20 py-10 mb-10" style="--primary-color: <?=$type['color'] ?? 'var(--primary-color);'?>">
+        <h3 class="title text-primary">
             <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
             <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
         </h3>
-        <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>">
+        <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
+            <i class="ph ph-edit"></i>
             <?= lang('Edit', 'Bearbeiten') ?>
         </a>
-
-        <hr>
-        <h5><?= lang('Types', 'Typen') ?>:</h5>
-        <ul class="horizontal mb-0">
+       <div class="d-flex align-items-baseline flex-wrap">
+       <h5><?= lang('Types', 'Typen') ?>:</h5>
             <?php
             $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
-                <li>
-                    <a href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                    <a class="btn small ml-10 text-primary" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
                         <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
                         <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                     </a>
-                </li>
             <?php } ?>
-            <li>
-                <a class="btn" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
+                <a class="btn small ml-10" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
                     <i class="ph ph-plus-circle"></i>
                     <span class="sr-only">
                         <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
                     </span>
                 </a>
-            </li>
-        </ul>
+       </div>
     </div>
 <?php } ?>
