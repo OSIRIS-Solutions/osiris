@@ -1856,13 +1856,13 @@ class Modules
             case "peer-reviewed":
             ?>
                 <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="icon-closed-access text-danger"></i> Non-refereed</label>
-                    </div>
                     <div class="custom-radio d-inline-block ml-20" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="icon-open-access text-success"></i> Peer-Reviewed</label>
+                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
+                    </div>
+                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> Non peer reviewed</label>
                     </div>
                 </div>
             <?php
