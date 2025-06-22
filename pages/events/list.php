@@ -84,34 +84,34 @@ $conferences = $osiris->conferences->find(
                 </table>
             </div>
 
-            
+
             <?php if ($topicsEnabled) { ?>
-                    <h6>
-                        <?= $Settings->topicLabel() ?>
-                        <a class="float-right" onclick="filterEvents('#filter-topics .active', null, 5)"><i class="ph ph-x"></i></a>
-                    </h6>
+                <h6>
+                    <?= $Settings->topicLabel() ?>
+                    <a class="float-right" onclick="filterEvents('#filter-topics .active', null, 5)"><i class="ph ph-x"></i></a>
+                </h6>
 
-                    <div class="filter">
-                        <table id="filter-topics" class="table small simple">
-                            <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                                $topic_id = $a['id'];
-                            ?>
-                                <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                    <td>
-                                        <a data-type="<?= $topic_id ?>" onclick="filterEvents(this, '<?= $topic_id ?>', 5)" class="item" id="<?= $topic_id ?>-btn">
-                                            <span style="color: var(--highlight-color)">
-                                                <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </table>
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $topic_id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $topic_id ?>" onclick="filterEvents(this, '<?= $topic_id ?>', 5)" class="item" id="<?= $topic_id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
 
-                    </div>
-                <?php } ?>
+                </div>
+            <?php } ?>
 
-                <!-- filter by year -->
+            <!-- filter by year -->
             <h6>
                 <?= lang('By year', 'Nach Jahr') ?>
                 <a class="float-right" onclick="filterEvents('#filter-year .active', null, 2)"><i class="ph ph-x"></i></a>
@@ -139,7 +139,7 @@ $conferences = $osiris->conferences->find(
                         </tr>
                     <?php } ?>
                 </table>
-            </div>  
+            </div>
 
 
         </div>
@@ -150,7 +150,7 @@ $conferences = $osiris->conferences->find(
 
 <script>
     const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
-    
+
     var dataTable;
     var rootpath = '<?= ROOTPATH ?>'
 
@@ -180,6 +180,20 @@ $conferences = $osiris->conferences->find(
         },
     ]
 
+
+    function renderTopic(data) {
+        let topics = '';
+        if (topicsEnabled && data && data.length > 0) {
+            topics = '<span class="topic-icons d-inline-flex">'
+            data.forEach(function(topic) {
+                topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
+            })
+            topics += '</span>'
+        }
+        return topics;
+    }
+
+
     const activeFilters = $('#active-filters')
     $(document).ready(function() {
         dataTable = $('#result-table').DataTable({
@@ -196,6 +210,7 @@ $conferences = $osiris->conferences->find(
                     searchable: true,
                     render: function(data, type, row) {
                         return `<a href="${rootpath}/conferences/view/${row.id}" class="font-weight-bold">${row.title}</a>
+                        ${renderTopic(row.topics)}
                         <br>
                         ${row.title_full ?? ''}
                         `;
@@ -308,7 +323,6 @@ $conferences = $osiris->conferences->find(
         });
 
     });
-
 
 
     function filterEvents(btn, filter = null, column = 1) {
