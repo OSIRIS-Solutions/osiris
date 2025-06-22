@@ -546,7 +546,7 @@ Route::post('/crud/admin/features', function () {
 
     $msg = 'settings-saved';
 
-    header("Location: " . ROOTPATH . "/admin/features?msg=" . $msg);
+    header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg . '#features');
 }, 'login');
 
 

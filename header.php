@@ -216,7 +216,7 @@ $pageactive = function ($p) use ($page) {
                             <?php
                             if ($n_notifications > 0) {
                                 if (isset($notifications['activity'])) {
-                                    
+
                                     $issues = $notifications['activity']['values'];
                                     $n_issues = $notifications['activity']['count'];
                             ?>
@@ -560,10 +560,13 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-calendar" aria-hidden="true"></i>
                                 <?= lang('My year', 'Mein Jahr') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
-                                <i class="ph ph-calendar-dots" aria-hidden="true"></i>
-                                <?= lang('Calendar', 'Kalender') ?>
-                            </a>
+
+                            <?php if ($Settings->featureEnabled('calendar', false)) { ?>
+                                <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
+                                    <i class="ph ph-calendar-dots" aria-hidden="true"></i>
+                                    <?= lang('Calendar', 'Kalender') ?>
+                                </a>
+                            <?php } ?>
 
                             <a href="<?= ROOTPATH ?>/my-activities" class="with-icon <?= $pageactive('my-activities') ?>">
                                 <i class="ph ph-folder-user" aria-hidden="true"></i>
@@ -736,7 +739,7 @@ $pageactive = function ($p) use ($page) {
                                 <?= lang('Research Trips', 'Forschungsreisen') ?>
                             </a>
                         <?php } ?>
-                        
+
                     </nav>
 
 
