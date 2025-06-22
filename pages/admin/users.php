@@ -18,7 +18,7 @@
 ?>
 
 <style>
-    .form-row.row-eq-spacing > [class^=col].floating-form {
+    .form-row.row-eq-spacing>[class^=col].floating-form {
         padding-left: unset;
     }
 </style>
@@ -42,7 +42,18 @@
 
 <h1><?= lang('User Management', 'Nutzermanagement') ?></h1>
 
-<form action="<?=ROOTPATH?>/crud/admin/add-user" method="post" class="box padded">
+<span class="badge primary">
+    <?= lang('By', 'Mittels') ?>
+    <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+        <?= lang('AUTH', 'AUTH') ?>
+    <?php } elseif (strtoupper(USER_MANAGEMENT) == 'LDAP') { ?>
+        <?= lang('LDAP', 'LDAP') ?>
+    <?php } elseif (strtoupper(USER_MANAGEMENT) == 'OAUTH2') { ?>
+        <?= lang('OAUTH2', 'OAUTH2') ?>
+    <?php } ?>
+</span>
+
+<form action="<?= ROOTPATH ?>/crud/admin/add-user" method="post" class="box padded">
 
     <h3 class="title">
         <?= lang('Create new user', 'Nutzer anlegen') ?>
@@ -51,15 +62,29 @@
     <div class="form-row row-eq-spacing">
         <div class="col floating-form">
             <input class="form-control" type="text" id="username" name="username" required placeholder="username">
-            <label class="required" for="username">Username </label>
+            <label class="required" for="username"><?= lang('Username', 'Nutzername') ?></label>
+            <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+                <small class="text-muted">
+                    <?= lang('Please choose a username without spaces or special characters', 'Bitte wähle einen Benutzernamen ohne Leerzeichen oder Sonderzeichen ') ?>
+                </small>
+            <?php } elseif (strtoupper(USER_MANAGEMENT) == 'LDAP') { ?>
+                <small class="text-muted">
+                    <?= lang('Please make sure that the username equals the username in LDAP (case-sensitive)', 'Vergewisser dich, dass der Benutzername mit dem Benutzernamen in LDAP übereinstimmt (Groß- und Kleinschreibung wird beachtet)') ?>
+                </small>
+            <?php } elseif (strtoupper(USER_MANAGEMENT) == 'OAUTH2') { ?>
+                <small class="text-muted">
+                    <?= lang('Please use the exact email address of the user so that OSIRIS can identify them later', 'Bitte verwende die genaue E-Mail-Adresse des Nutzers, damit OSIRIS ihn später identifizieren kann') ?>
+                </small>
+            <?php } ?>
         </div>
-        <div class="col floating-form">
-            <input class="form-control" type="password" id="password" name="password" required placeholder="password">
-            <label class="required" for="password">Password</label>
-        </div>
+
+        <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+            <div class="col floating-form">
+                <input class="form-control" type="password" id="password" name="password" required placeholder="password">
+                <label class="required" for="password">Password</label>
+            </div>
+        <?php } ?>
     </div>
-
-
 
 
     <div class="form-row row-eq-spacing">
@@ -68,7 +93,7 @@
             $title = $data['academic_title'] ?? '';
             ?>
             <select name="values[academic_title]" id="academic_title" class="form-control">
-                <option value="" <?= $title == '' ? 'selected' : '' ?>><?=lang('None', 'NA')?></option>
+                <option value="" <?= $title == '' ? 'selected' : '' ?>><?= lang('None', 'NA') ?></option>
                 <option value="Dr." <?= $title == 'Dr.' ? 'selected' : '' ?>>Dr.</option>
                 <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option>
                 <option value="PD Dr." <?= $title == 'PD Dr.' ? 'selected' : '' ?>>PD Dr.</option>

@@ -28,6 +28,7 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Es wurde ein neues Datenfeld "Schlagworte" hinzugefügt, das ähnlich wie Expertise verwendet werden kann, allerdings mit einem definierten Vokabular arbeitet. Wie genau dieses Datenfeld heißen soll, kann ebenfalls im Admin-Bereich definiert werden.
 - Es kann festgelegt werden, ob sich Nutzer:innen selbst registrieren dürfen oder ob dies nur Admins möglich ist.
 - Die Auswahl von Organisationseinheiten bei der Zuordnung von Personen wurde verbessert.
+- Beim Anlegen einer Person wird jetzt nicht mehr nach dem Passwort gefragt, wenn als User-Management nicht das `AUTH`-Addon ausgewählt ist, z.B. wenn LDAP oder OAUTH2 verwendet wird.
 
 
 #### <i class="ph ph-cube-transparent"></i> Forschungsinfrastrukturen
@@ -86,10 +87,12 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
-- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
-- Das User Interface bei der Anzeige von Events wurde verbessert
+- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten.
+- Das User Interface bei der Anzeige von Events wurde verbessert.
 - Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
 - Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
+- Forschungsbereiche können jetzt auch bei Events hinzugefügt werden. Ein entsprechender Filter wurde ebenfalls hinzugefügt.
+- Es gibt jetzt einen Filter für das Jahr, in dem das Event stattfindet.
 
 
 #### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
