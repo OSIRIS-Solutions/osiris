@@ -600,6 +600,7 @@ $all = $osiris->projects->count();
                     ['0.0', 'rgb(253.4, 229.8, 204.8)'],
                     ['1.0', '#008084']
                 ],
+                colorbar: {len: 0.5, title: lang('Number of<br>partners', 'Anzahl der<br>Partner')},
             }];
 
             Plotly.newPlot("map", data, layout, {
@@ -738,7 +739,8 @@ $all = $osiris->projects->count();
                         ['1.0', '#008084']
                     ],
                     colorbar: {
-                        title: lang('Research in', 'Forschung in')
+                        title: lang('Research in', 'Forschung in'),
+                        len: 0.5
                     }
                 }];
                 layout.title = {
