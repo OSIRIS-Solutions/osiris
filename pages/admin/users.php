@@ -73,7 +73,7 @@
                 </small>
             <?php } elseif (strtoupper(USER_MANAGEMENT) == 'OAUTH2') { ?>
                 <small class="text-muted">
-                    <?= lang('Please use the exact email address of the user so that OSIRIS can identify them later', 'Bitte verwende die genaue E-Mail-Adresse des Nutzers, damit OSIRIS ihn später identifizieren kann') ?>
+                    <?= lang('Please use the exact user name from the email address of the user (everything before @)', 'Bitte verwende den genauen Benutzernamen aus der E-Mail-Adresse des Benutzers (alles vor @)') ?>
                 </small>
             <?php } ?>
         </div>
