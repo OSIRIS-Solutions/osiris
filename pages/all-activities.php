@@ -282,10 +282,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 </div>
 <!-- </div> -->
 
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
-
 <script>
     var dataTable;
     var topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;

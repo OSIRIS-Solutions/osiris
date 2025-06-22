@@ -842,6 +842,44 @@ function initActivities(selector, data = {}) {
             dataSrc: 'data'
         },
         deferRender: true,
+        buttons: [
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [3]
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-clipboard"></i> ${lang('Copy', 'Kopieren')}`,
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [5, 3, 4, 6, 7, 8, 9],
+                    format: {
+                    header: function (data, columnIdx) {
+                        // eigene Header-Texte definieren
+                        const customHeaders = {
+                            0: lang('Icon', 'Icon'),
+                            1: lang('Activity', 'Aktivität'),
+                            2: lang('Links', 'Links'),
+                            3: lang('Formatted text', 'Formatierter Text'),
+                            4: lang('Start date', 'Startdatum'),
+                            5: lang('Type', 'Typ'),
+                            6: lang('Subtype', 'Untertyp'),
+                            7: lang('Title', 'Titel'),
+                            8: lang('Authors', 'Autoren'),
+                            9: lang('Year', 'Jahr')
+                        };
+                        return customHeaders[columnIdx] || data;
+                    }
+                }
+                },
+                className: 'btn small',
+                title: 'OSIRIS_activities',
+                text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            }
+        ],
+        dom: 'fBrtip',
         pageLength: 5,
         columnDefs: [
             {
@@ -863,6 +901,7 @@ function initActivities(selector, data = {}) {
                 data: 'search-text',
                 searchable: true,
                 visible: false,
+                header: 'Test'
             },
             {
                 targets: 4,
@@ -875,7 +914,31 @@ function initActivities(selector, data = {}) {
                 data: 'raw_type',
                 searchable: true,
                 visible: false,
-            }
+            },
+            {
+                targets: 6,
+                data: 'raw_subtype',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 7,
+                data: 'title',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 8,
+                data: 'authors',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 9,
+                data: 'year',
+                searchable: true,
+                visible: false,
+            },
         ],
         "order": [
             [4, 'desc'],
@@ -948,26 +1011,26 @@ function initProjects(selector, data = {}) {
 
             }
         },
-        // {
-        //     data: 'role', render: function (data) {
-        //         if (data == 'coordinator') {
-        //             return `<span class="badge text-signal">
-        //             <i class="ph ph-crown-simple"></i>
-        //             ${lang('Coordinator', 'Koordinator')}
-        //             </span>`
-        //         }
-        //         if (data == 'associated') {
-        //             return `<span class="badge text-success">
-        //             <i class="ph ph-address-book"></i>
-        //             ${lang('Associated', 'Beteiligt')}
-        //             </span>`
-        //         }
-        //         return `<span class="badge text-muted">
-        //             <i class="ph ph-handshake"></i>
-        //             ${lang('Partner')}
-        //             </span>`
-        //     }
-        // },
+            // {
+            //     data: 'role', render: function (data) {
+            //         if (data == 'coordinator') {
+            //             return `<span class="badge text-signal">
+            //             <i class="ph ph-crown-simple"></i>
+            //             ${lang('Coordinator', 'Koordinator')}
+            //             </span>`
+            //         }
+            //         if (data == 'associated') {
+            //             return `<span class="badge text-success">
+            //             <i class="ph ph-address-book"></i>
+            //             ${lang('Associated', 'Beteiligt')}
+            //             </span>`
+            //         }
+            //         return `<span class="badge text-muted">
+            //             <i class="ph ph-handshake"></i>
+            //             ${lang('Partner')}
+            //             </span>`
+            //     }
+            // },
         ],
         order: [
             [4, 'desc']
@@ -1694,11 +1757,11 @@ function userTable(selector, data = {}) {
     });
 }
 
-function iconTest(icon){
-    $('#test-icon').attr('class', 'ph ph-'+icon);
+function iconTest(icon) {
+    $('#test-icon').attr('class', 'ph ph-' + icon);
 }
 
-function spark($selector, $filter){
+function spark($selector, $filter) {
     // TODO: unfinished
     $.ajax({
         type: "GET",
@@ -1717,7 +1780,7 @@ function spark($selector, $filter){
             // transform data
             var labels = data.map(item => item.activity);
             // labels are years. fill the gaps
-            labels = Array.from({length: labels[0] - labels[labels.length - 1] + 1}, (_, i) => labels[labels.length - 1] + i);
+            labels = Array.from({ length: labels[0] - labels[labels.length - 1] + 1 }, (_, i) => labels[labels.length - 1] + i);
 
             var y = data.map(item => item.count);
 

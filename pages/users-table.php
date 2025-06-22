@@ -160,9 +160,6 @@ if ($active('keywords')) {
 </div>
 
 
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     const headers = [{
