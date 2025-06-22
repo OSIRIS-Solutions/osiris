@@ -3,6 +3,8 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $user = $_SESSION['username'];
+
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 ?>
 
 
@@ -44,6 +46,7 @@ $conferences = $osiris->conferences->find(
                     <th><?= lang('Start', 'Anfang') ?></th>
                     <th><?= lang('End', 'Ende') ?></th>
                     <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= $Settings->topicLabel() ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +64,7 @@ $conferences = $osiris->conferences->find(
 
             <h6>
                 <?= lang('By type', 'Nach Typ') ?>
-                <a class="float-right" onclick="filterInfra('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
+                <a class="float-right" onclick="filterEvents('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
                 <table id="filter-type" class="table small simple">
@@ -70,7 +73,7 @@ $conferences = $osiris->conferences->find(
                     foreach ($vocab as $v) { ?>
                         <tr>
                             <td>
-                                <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 4)" class="item" id="<?= $v['id'] ?>-btn">
+                                <a data-type="<?= $v['id'] ?>" onclick="filterEvents(this, '<?= $v['id'] ?>', 4)" class="item" id="<?= $v['id'] ?>-btn">
                                     <span>
                                         <?= lang($v['en'], $v['de'] ?? null) ?>
                                     </span>
@@ -81,6 +84,64 @@ $conferences = $osiris->conferences->find(
                 </table>
             </div>
 
+            
+            <?php if ($topicsEnabled) { ?>
+                    <h6>
+                        <?= $Settings->topicLabel() ?>
+                        <a class="float-right" onclick="filterEvents('#filter-topics .active', null, 5)"><i class="ph ph-x"></i></a>
+                    </h6>
+
+                    <div class="filter">
+                        <table id="filter-topics" class="table small simple">
+                            <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                                $topic_id = $a['id'];
+                            ?>
+                                <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                    <td>
+                                        <a data-type="<?= $topic_id ?>" onclick="filterEvents(this, '<?= $topic_id ?>', 5)" class="item" id="<?= $topic_id ?>-btn">
+                                            <span style="color: var(--highlight-color)">
+                                                <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+
+                    </div>
+                <?php } ?>
+
+                <!-- filter by year -->
+            <h6>
+                <?= lang('By year', 'Nach Jahr') ?>
+                <a class="float-right" onclick="filterEvents('#filter-year .active', null, 2)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-year" class="table small simple">
+                    <?php
+                    $years = [];
+                    foreach ($conferences as $c) {
+                        $year = date('Y', strtotime($c['start']));
+                        if (!in_array($year, $years)) {
+                            $years[] = $year;
+                        }
+                    }
+                    rsort($years);
+                    foreach ($years as $y) { ?>
+                        <tr>
+                            <td>
+                                <a data-type="<?= $y ?>" onclick="filterEvents(this, '<?= $y ?>', 2)" class="item" id="<?= $y ?>-btn">
+                                    <span>
+                                        <?= $y ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>  
+
+
         </div>
     </div>
 </div>
@@ -88,7 +149,8 @@ $conferences = $osiris->conferences->find(
 
 
 <script>
-    const CARET_DOWN = ' <i class="ph ph-caret-down"></i>';
+    const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
+    
     var dataTable;
     var rootpath = '<?= ROOTPATH ?>'
 
@@ -111,6 +173,10 @@ $conferences = $osiris->conferences->find(
         {
             'key': 'type',
             'title': lang('Type', 'Typ')
+        },
+        {
+            title: '<?= $Settings->topicLabel() ?>',
+            key: 'topics'
         },
     ]
 
@@ -172,6 +238,17 @@ $conferences = $osiris->conferences->find(
                     data: 'type',
                     searchable: true,
                     defaultContent: '',
+                },
+                {
+                    targets: 5,
+                    data: 'topics',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    render: function(data, type, row) {
+                        if (data.length === 0) return '';
+                        return data.join(' ');
+                    }
                 }
             ],
             "order": [
@@ -184,13 +261,16 @@ $conferences = $osiris->conferences->find(
 
             var hash = readHash();
             if (hash.type !== undefined) {
-                filterInfra(document.getElementById(hash.status + '-btn'), hash.status, 1)
+                filterEvents(document.getElementById(hash.status + '-btn'), hash.status, 1)
             }
             if (hash.search !== undefined) {
                 dataTable.search(hash.search).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
+            }
+            if (hash.start !== undefined) {
+                filterEvents(document.getElementById(hash.start + '-btn'), hash.start, 2)
             }
             initializing = false;
 
@@ -231,7 +311,7 @@ $conferences = $osiris->conferences->find(
 
 
 
-    function filterInfra(btn, filter = null, column = 1) {
+    function filterEvents(btn, filter = null, column = 1) {
         var tr = $(btn).closest('tr')
         var table = tr.closest('table')
         $('#filter-' + column).remove()
@@ -252,7 +332,7 @@ $conferences = $osiris->conferences->find(
             const a = $('<a>')
             a.html('&times;')
             a.on('click', function() {
-                filterInfra(btn, null, column);
+                filterEvents(btn, null, column);
             })
             filterBtn.append(a)
             activeFilters.append(filterBtn)

@@ -125,7 +125,13 @@ $subproject = $project['subproject'] ?? false;
 </div>
 
 <!-- show research topics -->
-<?= $Settings->printTopics($project['topics'] ?? [], 'mb-20', true) ?>
+ <?php
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+if ($topicsEnabled){
+    echo $Settings->printTopics($project['topics'] ?? [], 'mb-20', false);
+}
+?>
+
 
 <div class="d-flex" id="project-badges">
 

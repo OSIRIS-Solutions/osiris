@@ -43,6 +43,14 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 </h2>
 
 
+<!-- show research topics -->
+<?php
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+if ($topicsEnabled) {
+    echo $Settings->printTopics($conference['topics'] ?? [], 'mb-20', false);
+}
+?>
+
 <?php if ($conference['created_by'] == $_SESSION['username'] || $Settings->hasPermission('conferences.edit')) { ?>
     <div class="btn-toolbar">
         <a href="<?= ROOTPATH ?>/conferences/edit/<?= $conference['_id'] ?>" class="btn text-primary">
@@ -65,13 +73,6 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
     </div>
 <?php } ?>
 
-
-<?php if (isset($conference['description'])) { ?>
-
-    <div id="description">
-        <?= $conference['description'] ?? '' ?>
-    </div>
-<?php } ?>
 
 <div class="row row-eq-spacing">
 
@@ -144,7 +145,19 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 
         </table>
     </div>
+    <?php if (isset($conference['description'])) { ?>
 
+        <div class="col">
+            <div id="description" class="box padded m-0" style="max-height: 36rem; overflow-x: auto;">
+                <?= $conference['description'] ?? '' ?>
+            </div>
+        </div>
+    <?php } ?>
+
+</div>
+
+
+<div class="row row-eq-spacing">
     <div class="col">
         <div class="header d-flex align-items-center justify-content-between">
             <h5 class="mt-0"><?= lang('Participating persons', 'Teilnehmende Personen') ?>:</h5>
@@ -216,7 +229,7 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 
 <h2><?= lang('Activities', 'Aktivitäten') ?></h2>
 <div class="btn-toolbar">
-    <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=poster&conference=<?= $id ?>">
+    <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=lecture&conference=<?= $id ?>">
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add contribution', 'Beitrag hinzufügen') ?>
     </a>
