@@ -71,7 +71,7 @@ if ($count_groups > 0){
     }
 </style>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
 
 <style>
     .table.cards#group-table {

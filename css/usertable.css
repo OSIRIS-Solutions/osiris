@@ -35,9 +35,21 @@
      display: block;
  }
 
+ .table.cards tbody tr td small {
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     /* max. 2 Zeilen */
+     -webkit-box-orient: vertical;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     overflow-wrap: anywhere;
+ }
+
  .table.cards tbody tr img,
  .table#persons img {
-     max-height: 6rem;
+     width: 4rem;
+     height: 6rem;
+     object-fit: cover;
  }
 
  .table.cards tbody tr td {

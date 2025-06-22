@@ -42,7 +42,7 @@ $count_publications = 0;
 $count_wordcloud = 0;
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
 
 <!-- all necessary javascript -->
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
