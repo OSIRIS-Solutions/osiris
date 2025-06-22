@@ -994,6 +994,7 @@ class Document extends Settings
             case "editorial": // ["editor_type"],
                 return $this->getVal('editor_type');
             case "file-icons":
+                if (!($this->typeArr['upload'] ?? true)) return '';
                 if ($this->usecase == 'portal') return '';
                 $files = '';
                 foreach ($this->getVal('files', array()) as $file) {

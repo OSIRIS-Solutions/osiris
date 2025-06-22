@@ -216,10 +216,10 @@ $member = $osiris->activities->count(['type' => $t]);
                     <?php
                     $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
                     $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
-                    
-                    foreach ($roles as $role) { 
+
+                    foreach ($roles as $role) {
                         if ($role == 'user') continue;
-                        ?>
+                    ?>
                         <option value="<?= $role ?>" <?= sel('visible_role', $role) ?>>
                             <?= strtoupper($role) ?>
                         </option>
@@ -227,17 +227,28 @@ $member = $osiris->activities->count(['type' => $t]);
                 </select>
             </div>
 
+            <?php
+                $upload = $type['upload'] ?? true;
+            ?>
+            <div class="form-group">
+                <input type="hidden" name="values[upload]" value="false">
+                <div class="custom-checkbox">
+                    <input type="checkbox" id="upload-checkbox" value="true" name="values[upload]" <?= $upload ? 'checked' : '' ?>>
+                    <label for="upload-checkbox"><?=lang('Upload of documents possible', 'Upload von Dokumenten möglich')?></label>
+                </div>
+            </div>
+
             <?php if (!empty($type)) { ?>
                 <hr>
-                    <a class="btn float-right" href="#order">
-                        <i class="ph ph-list-numbers"></i>
-                        <?= lang('Change order', 'Reihenfolge ändern') ?>
-                    </a>
+                <a class="btn float-right" href="#order">
+                    <i class="ph ph-list-numbers"></i>
+                    <?= lang('Change order', 'Reihenfolge ändern') ?>
+                </a>
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>
                     <?php
                     foreach ($children as $subtype) { ?>
-                        <a class="btn mb-5 text-<?=$type['id']?>" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                        <a class="btn mb-5 text-<?= $type['id'] ?>" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
                             <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
                             <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                         </a>
