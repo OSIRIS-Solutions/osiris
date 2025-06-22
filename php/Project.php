@@ -260,16 +260,15 @@ class Project extends Vocabulary
                     . '</div>';
 
             case 'countries':
-            case 'countries-in':
-            case 'countries-about':
+            case 'research-countries':
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
                 
                 foreach ($value ?? [] as $c) {
-                    $iso = $c['country'] ?? $c;
+                    $iso = $c['iso'] ?? $c;
                     $role = '';
                     if (isset($c['role'])) {
-                        $role = ' (' . $c['role'] . ')';
+                        $role = ' (' . $this->getCountryRole($c['role']) . ')';
                     }
                     $countriesList .= '<li>' . $this->getCountry($iso, $lang) . $role . '</li>';
                 }
@@ -507,6 +506,16 @@ class Project extends Vocabulary
     {
         $funder = $this->project['funding_type'] ?? 'others';
         return $this->getValue('funding-type', $funder);
+    }
+
+    public function getCountryRole($role)
+    {
+        $country_roles = [
+            'in' => lang('Research in', 'Forschund in'),
+            'about' => lang('Research about', 'Forschung über'),
+            'both' => lang('Research in and about', 'Forschung in und über')
+        ];
+        return $country_roles[$role] ?? $role;
     }
 
     public function getPurpose()

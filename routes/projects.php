@@ -670,17 +670,17 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
         $values['university'] = $DB->to_ObjectID($values['university']);
     }
-    // if (isset($values['countries']) && is_array($values['countries'])) {
-    //     $countries = [];
-    //     foreach ($value as $country) {
-    //         $country = explode(';', $country, 2);
-    //         $countries[] = [
-    //             'country' => $country[0],
-    //             'role' => $country[1] ?? ''
-    //         ];
-    //     }
-    //     $values[$key] = $countries;
-    // }
+    if (isset($values['research-countries']) && is_array($values['research-countries'])) {
+        $countries = [];
+        foreach ($values['research-countries'] as $country) {
+            $country = explode(';', $country, 2);
+            $countries[] = [
+                'iso' => $country[0],
+                'role' => $country[1] ?? ''
+            ];
+        }
+        $values['research-countries'] = $countries;
+    }
 
     if (isset($values['abstract'])) {
         $abstract_en = $values['abstract'];

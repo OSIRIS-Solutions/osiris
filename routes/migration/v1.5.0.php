@@ -282,7 +282,7 @@ $osiris->adminProjects->insertOne([
                 ["module" => "abstract", "required" => false],
                 ["module" => "abstract_de", "required" => false],
                 ["module" => "coordinator", "required" => false],
-                ["module" => "countries", "required" => false],
+                ["module" => "research-countries", "required" => false],
                 ["module" => "funding_number", "required" => false],
                 ["module" => "funding_organization", "required" => false],
                 ["module" => "kdsf-ffk", "required" => false],

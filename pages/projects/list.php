@@ -234,6 +234,33 @@ $Vocabulary = new Vocabulary();
                 </table>
             </div>
 
+            
+            <?php if ($topicsEnabled) { ?>
+                    <h6>
+                        <?= $Settings->topicLabel() ?>
+                        <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
+                    </h6>
+
+                    <div class="filter">
+                        <table id="filter-topics" class="table small simple">
+                            <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                                $topic_id = $a['id'];
+                            ?>
+                                <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                    <td>
+                                        <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
+                                            <span style="color: var(--highlight-color)">
+                                                <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+
+                    </div>
+                <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
@@ -299,32 +326,6 @@ $Vocabulary = new Vocabulary();
                 </div>
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div> -->
-
-                <?php if ($topicsEnabled) { ?>
-                    <h6>
-                        <?= $Settings->topicLabel() ?>
-                        <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
-                    </h6>
-
-                    <div class="filter">
-                        <table id="filter-topics" class="table small simple">
-                            <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                                $topic_id = $a['id'];
-                            ?>
-                                <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                    <td>
-                                        <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
-                                            <span style="color: var(--highlight-color)">
-                                                <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </table>
-
-                    </div>
-                <?php } ?>
 
             </div>
         </div>

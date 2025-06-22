@@ -398,8 +398,8 @@
     },
     {
         "id": "countries",
-        "en": "Countries of research",
-        "de": "Forschungsländer",
+        "en": "Countries of research (simple)",
+        "de": "Forschungsländer (einfach)",
         "kdsf": null,
         "scope": {
             "project": false,
@@ -409,21 +409,9 @@
         "order": 99
     }, 
     {
-        "id": "countries-in",
-        "en": "Research conducted in countries",
-        "de": "Forschung in Ländern",
-        "kdsf": null,
-        "scope": {
-            "project": false,
-            "proposed": false,
-            "approved": false
-        },
-        "order": 99
-    }, 
-    {
-        "id": "countries-about",
-        "en": "Research about countries",
-        "de": "Forschung über Länder",
+        "id": "research-countries",
+        "en": "Research in/about countries",
+        "de": "Forschung in/über Länder",
         "kdsf": null,
         "scope": {
             "project": false,

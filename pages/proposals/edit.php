@@ -1074,60 +1074,87 @@ if ($is_subproject) {
             <?php } ?>
 
 
-            <?php if (array_key_exists('countries-in', $fields)) {
-                $countries = $form['countries-in'] ?? [];
+            <?php if (array_key_exists('research-countries', $fields)) {
+                $countries = $form['research-countries'] ?? [];
             ?>
-                <h5>
-                    <?= lang('Research conducted in countries:', 'Forschung in Ländern:') ?>
+            <h5>
+                    <?= lang('Countries you will do research on/in:', 'Länder über/in denen Forschung betrieben wird:') ?>
                 </h5>
 
-                <div class="author-widget" id="countries-in-widget">
-                    <div class="author-list p-10" id="countries-in-list">
-                        <?php
-                        $lang = lang('name', 'name_de');
-                        foreach ($countries as $iso) { ?>
-                            <div class='author'>
-                                <input type='hidden' name='values[countries-in][]' value='<?= $iso ?>'>
-                                <?= $DB->getCountry($iso, $lang) ?>
-                                <a onclick="$(this).closest('.author').remove()">&times;</a>
-                            </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('Research', 'Forschung') ?></th>
+                            <th><?= lang('Action', 'Aktion') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody id="country-list">
+                        <?php foreach ($countries as $country) {
+                            if (empty($country) || !isset($country['iso'])) continue;
+                            $iso = $country['iso'];
+                            $role = $country['role'] ?? 'both';
+                        ?>
+                            <tr>
+                                <td><?= $DB->getCountry($iso, lang('name', 'name_de')) ?></td>
+                                <td><?= $role ?></td>
+                                <td>
+                                    <a onclick="$(this).closest('tr').remove()"><?= lang('Remove', 'Entfernen') ?></a>
+                                    <input type="text" name="values[research-countries][]" value="<?= $iso ?>;<?= $role ?>" hidden>
+                                </td>
+                            </tr>
                         <?php } ?>
+                            </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <div class="input-group small d-inline-flex w-auto">
+                                    <select id="add-research-country" class="form-control">
+                                        <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                            <option value="<?= $iso ?>"><?= $name ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <select id="add-research-country-role" class="form-control">
+                                        <option value="" disabled checked><?= lang('Please select a role', 'Bitte wähle einen Typ aus') ?></option>
+                                        <option value="in"><?= lang('Research in this country', 'Forschung in diesem Land') ?></option>
+                                        <option value="about"><?= lang('Research about this country', 'Forschung über dieses Land') ?></option>
+                                        <option value="both"><?= lang('both', 'beides') ?></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn secondary" type="button" onclick="addResearchCountry(event);">
+                                            <i class="ph ph-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
 
-                    </div>
-                    <div class="footer">
-                        <div class="input-group sm d-inline-flex w-auto">
-                            <select id="add-countries-in">
-                                <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
-                                    <option value="<?= $iso ?>"><?= $name ?></option>
-                                <?php } ?>
-                            </select>
-                            <div class="input-group-append">
-                                <button class="btn secondary h-full" type="button" onclick="addCountryIn(event);">
-                                    <i class="ph ph-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        function addCountryIn(event) {
-                            var el = $('#add-countries-in')
-                            var data = el.val()
-                            if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
-                                event.preventDefault();
-                                if (data) {
-                                    $('#countries-in-list').append('<div class="author"><input type="hidden" name="values[countries-in][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
-                                }
-                                $(el).val('')
-                                return false;
+                <script>
+                    function addResearchCountry(event) {
+                        var el = $('#add-research-country')
+                        var data = el.val()
+                        var type = $('#add-research-country-role').val()
+                        if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                            event.preventDefault();
+                            if (data) {
+                                let tr = $('<tr>')
+                                tr.append('<td>' + el.find('option:selected').text() + '</td>')
+                                tr.append('<td>' + type + '</td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('Remove', 'Entfernen') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                $('#country-list').append(tr)
                             }
+                            $(el).val('')
+                            return false;
                         }
-                    </script>
-
-                </div>
+                    }
+                </script>
             <?php } ?>
 
-
+<!-- 
             <?php if (array_key_exists('countries-about', $fields)) {
                 $countries = $form['countries-about'] ?? [];
             ?>
@@ -1179,7 +1206,7 @@ if ($is_subproject) {
                     </script>
 
                 </div>
-            <?php } ?>
+            <?php } ?> -->
 
             <!-- if topics are registered, you can choose them here -->
             <?php if (array_key_exists('topics', $fields)) { ?>
