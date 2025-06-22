@@ -211,6 +211,29 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </table>
             </div>
 
+            <?php if ($topicsEnabled) { ?>
+                <h6><?= $Settings->topicLabel() ?></h6>
+
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
@@ -246,29 +269,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </div>
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div>
-
-            <?php if ($topicsEnabled) { ?>
-                <h6><?= $Settings->topicLabel() ?></h6>
-
-                <div class="filter">
-                    <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                            $id = $a['id'];
-                        ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                <td>
-                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
-                                        <span style="color: var(--highlight-color)">
-                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </table>
-
-                </div>
-            <?php } ?>
 
 
             <h6><?= lang('More', 'Weiteres') ?></h6>
