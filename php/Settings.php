@@ -425,6 +425,14 @@ class Settings
         return lang($settings['en'], $settings['de'] ?? null);
     }
 
+    function tripLabel()
+    {
+        if (!$this->featureEnabled('topics')) return '';
+        $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
+        if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
+        return lang($arr['name'], $arr['name_de'] ?? null);
+    }
+
     function topicChooser($selected = [])
     {
         if (!$this->featureEnabled('topics')) return '';

@@ -736,7 +736,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->featureEnabled('trips')) { ?>
                             <a href="<?= ROOTPATH ?>/trips" class="with-icon <?= $pageactive('trips') ?>">
                                 <i class="ph ph-map-trifold" aria-hidden="true"></i>
-                                <?= lang('Research Trips', 'Forschungsreisen') ?>
+                                <?= $Settings->tripLabel() ?>
                             </a>
                         <?php } ?>
 
