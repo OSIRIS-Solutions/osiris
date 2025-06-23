@@ -510,7 +510,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (isset($values['funding_number'])) {
         if (is_integer($values['funding_number'])) {
             $values['funding_number'] = strval($values['funding_number']);
-        } 
+        }
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
 
@@ -659,7 +659,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     if (isset($values['funding_number'])) {
         if (is_integer($values['funding_number'])) {
             $values['funding_number'] = strval($values['funding_number']);
-        } 
+        }
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
     }
@@ -763,16 +763,16 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 });
 
 
-Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
 
-    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
 
     // check if user has permission to delete project
     $edit_perm = (
-        $Settings->hasPermission('projects.delete')
+        $Settings->hasPermission($collection . '.delete')
         ||
-        ($Settings->hasPermission('projects.delete-own') &&
+        ($Settings->hasPermission($collection . '.delete-own') &&
             (
                 $project['created_by'] == $_SESSION['username']
                 ||
@@ -782,23 +782,48 @@ Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
 
     // if user has no permission: redirect to project view
     if (!$edit_perm) {
-        header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
+        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
         die;
     }
 
-    // remove project name from activities
-    $osiris->activities->updateMany(
-        ['projects' => $project['name']],
-        ['$pull' => ['projects' => $project['name']]]
-    );
+    if ($collection == 'projects') {
+        // remove project name from activities
+        $osiris->activities->updateMany(
+            ['projects' => $project['name']],
+            ['$pull' => ['projects' => $project['name']]]
+        );
+    }
+
+    if ($collection == 'proposals') {
+        // check if a project with the same ID exists
+        $existing_project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+        if (!empty($existing_project)) {
+            $_SESSION['msg'] = lang("Project proposal cannot be deleted, because it is connected to a project. Delete the project first.", "Projektantrag kann nicht gelöscht werden, da er mit einem Projekt verbunden ist. Lösche das Projekt zuerst.");
+            header("Location: " . ROOTPATH . "/$collection/view/$id");
+            die;
+        }
+    }
+
+    // check if project has documents
+    $documents = $osiris->uploads->find(['type' => $collection, 'id' => $id])->toArray();
+    if (!empty($documents)) {
+        // delete all documents
+        foreach ($documents as $doc) {
+            $osiris->uploads->deleteOne(['_id' => $doc['_id']]);
+            // delete file from filesystem
+            if (file_exists(BASEPATH . '/uploads/' . $doc['_id']. '.' . $doc['extension'])) {
+                unlink(BASEPATH . '/uploads/' . $doc['_id']. '.' . $doc['extension']);
+            }
+        }
+    }
 
     // remove project
-    $osiris->projects->deleteOne(
+    $osiris->$collection->deleteOne(
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang("Project has been deleted successfully.", "Projekt wurde erfolgreich gelöscht.");
-    header("Location: " . ROOTPATH . "/projects");
+    $_SESSION['msg'] = lang("Element has been deleted successfully.", "Element wurde erfolgreich gelöscht.");
+    header("Location: " . ROOTPATH . "/$collection");
 });
 
 

@@ -179,3 +179,36 @@ Route::post('/data/upload', function () {
     $redirectUrl = ROOTPATH . "/". $values['type'] . "/view/" . $values['id'] . "?tab=documents";
     header("Location: $redirectUrl");
 });
+
+// central delete of documents
+Route::post('/data/delete', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!isset($_POST['id'])) {
+        die("Ungültige Anfrage");
+    }
+    $id = $_POST['id'];
+
+    // get the document from the database
+    $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($document)) {
+        die("Dokument nicht gefunden");
+    }
+
+    // delete the document from the database
+    $result = $osiris->uploads->deleteOne(['_id' => DB::to_ObjectID($id)]);
+    if ($result->getDeletedCount() === 0) {
+        die("Fehler beim Löschen des Dokuments");
+    }
+
+    // delete the file from the filesystem
+    $filePath = BASEPATH . '/uploads/' . $id . '.' . ($document['extension'] ?? '');
+    if (file_exists($filePath)) {
+        unlink($filePath);
+    }
+
+    // redirect
+    $_SESSION['msg'] = lang('Document deleted successfully.', 'Dokument erfolgreich gelöscht.');
+    $redirectUrl = ROOTPATH . "/". $document['type'] . "/view/" . $document['id'] . "?tab=documents";
+    header("Location: $redirectUrl");
+});

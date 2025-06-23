@@ -60,6 +60,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Neue Felder zum Tracken von Antrags- und Bewilligungsdaten wurden hinzugefügt.
 - Finanzierungsinformationen (z.B. Drittmitteleinnahmen) können bei Anträgen gepflegt werden.
 - Das Berechtigungssystem für die Bearbeitung und Ansicht von Anträgen wurde verfeinert.
+- Man kann Dokumente zu Anträgen hochladen und verwalten. Es gibt neue Rechte für das Hochladen und globale Bearbeiten von Dokumenten.
 
 **Weitere Verbesserungen**:
 

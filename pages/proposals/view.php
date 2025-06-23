@@ -26,6 +26,8 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArray();
+
+$connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
 ?>
 
 
@@ -121,7 +123,7 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
 <div class="btn-toolbar">
     <?php if ($edit_perm) { ?>
         <?php
-        if ($status == 'approved' && (!isset($project['project_id']) || empty($project['project_id']))) {
+        if ($status == 'approved' && (empty($connected_project) || !$connected_project)) {
             // if project is not connected yet
         ?>
             <a href="<?= ROOTPATH ?>/projects/create-from-proposal/<?= $id ?>" class="btn primary">
@@ -159,7 +161,10 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
 
     <?php } ?>
 
-    <?php if ($Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)) { ?>
+    <?php if (
+
+        $Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)
+    ) { ?>
 
         <div class="dropdown">
             <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
@@ -169,16 +174,25 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <div class="content">
-                    <b class="text-danger"><?= lang('Attention', 'Achtung') ?>!</b><br>
-                    <small>
-                        <?= lang(
-                            'The project is permanently deleted and the connection to all associated persons and activities is also removed. This cannot be undone.',
-                            'Das Projekt wird permanent gelöscht und auch die Verbindung zu allen zugehörigen Personen und Aktivitäten entfernt. Dies kann nicht rückgängig gemacht werden.'
-                        ) ?>
-                    </small>
-                    <form action="<?= ROOTPATH ?>/crud/proposals/delete/<?= $project['_id'] ?>" method="post">
-                        <button class="btn btn-block danger" type="submit"><?= lang('Delete permanently', 'Permanent löschen') ?></button>
-                    </form>
+                    <?php if (!empty($connected_project)) { ?>
+                        <b>
+                            <?= lang(
+                                'Deleting this proposal is not possible while it is connected to a project. Delete the connected project first.',
+                                'Das Löschen dieses Antrags ist nicht möglich, solange er mit einem Projekt verbunden ist. Lösche zuerst das verbundene Projekt.'
+                            ) ?>
+                        </b>
+                    <?php } else { ?>
+                        <b class="text-danger"><?= lang('Attention', 'Achtung') ?>!</b><br>
+                        <small>
+                            <?= lang(
+                                'The proposal is permanently deleted and the connection to all associated persons, documents, etc. is also removed. This cannot be undone.',
+                                'Der Antrag wird permanent gelöscht und auch die Verbindung zu allen zugehörigen Personen, Dokumenten usw. entfernt. Dies kann nicht rückgängig gemacht werden.'
+                            ) ?>
+                        </small>
+                        <form action="<?= ROOTPATH ?>/crud/proposals/delete/<?= $project['_id'] ?>" method="post">
+                            <button class="btn btn-block danger" type="submit"><?= lang('Delete permanently', 'Permanent löschen') ?></button>
+                        </form>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -192,8 +206,8 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
         <i class="ph ph-file-text"></i>
         <?= lang('Proposaldetails', 'Antragsdetails') ?>
     </button>
-    <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
-        <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
+    <?php if (!empty($connected_project)) { ?>
+        <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">
             <i class="ph ph-link m-0"></i>
             <?= lang('Project', 'Projekt') ?>
         </a>
@@ -428,13 +442,27 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
                             ?>
                                     <tr>
                                         <td>
+                                            <div class="dropdown float-right">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-trash text-danger"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/delete" method="post">
+                                                            <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <a href="<?= $file_url ?>" class="">
                                                 <h6 class="m-0">
                                                     <?= $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Sonstiges', 'Other')) ?>
-                                                <i class="ph ph-download"></i>
+                                                    <i class="ph ph-download"></i>
                                                 </h6>
                                             </a>
-                                             <?= $doc['description'] ?? '' ?>
+                                            <?= $doc['description'] ?? '' ?>
                                             <br>
                                             <small class="text-muted">
                                                 <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)

@@ -145,8 +145,8 @@
         ]
     },
     {
-        "de": "Projekte",
-        "en": "Projects",
+        "de": "Projekte und Anträge",
+        "en": "Projects and Proposals",
         "icon": "tree-structure",
         "fields": [
             {
@@ -208,7 +208,7 @@
             },
             {
                 "id": "projects.edit-own",
-                "de": "Eigene Projekte editieren",
+                "de": "Eigene Projekte bearbeiten",
                 "en": "Edit own projects"
             },
             {
