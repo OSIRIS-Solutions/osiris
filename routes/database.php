@@ -18,7 +18,7 @@
 Route::get('/rerender', function () {
     set_time_limit(6000);
     // TODO: tell the browser not to cache this page
-    
+
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
     include BASEPATH . "/header.php"; ?>
@@ -123,4 +123,59 @@ Route::get('/settings', function () {
     }
     $json = file_get_contents($file_name);
     echo $json;
+});
+
+
+// central upload of documents
+Route::post('/data/upload', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $values = $_POST['values'] ?? [];
+
+    if (!isset($values['type']) || !isset($values['id'])) {
+        die("Ungültige Anfrage");
+    }
+
+    if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        die("Fehler beim Upload");
+    }
+
+    $file = $_FILES['file'];
+    $filename = basename($file['name']);
+
+    // Prepare MongoDB array
+    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+    $document = [
+        'filename'     => $filename,
+        'mimetype'     => mime_content_type($file['tmp_name']),
+        'extension'    => $extension,
+        'size'         => filesize($file['tmp_name']),
+        'uploaded'     => date('Y-m-d'),
+        'uploaded_by'  => $_SESSION['username'] ?? null,
+        'type'         => $values['type'],
+        'id'           => $values['id'],
+        'name'         => $values['name'] ?? null,
+        'description'  => $values['description'] ?? null,
+    ];
+
+    // Save the document to MongoDB
+    $result = $osiris->uploads->insertOne($document);
+    if ($result->getInsertedCount() === 0) {
+        die("Fehler beim Speichern in der Datenbank");
+    }
+
+    // Get the inserted document ID
+    $doc_id = $result->getInsertedId();
+
+    $targetPath = BASEPATH . '/uploads/' . strval($doc_id) . '.' . $extension;
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        // Wenn der Upload fehlschlägt, entferne den Eintrag aus der Datenbank
+        $osiris->uploads->deleteOne(['_id' => $doc_id]);
+        die("Upload fehlgeschlagen");
+    }
+
+    // redirect
+    $_SESSION['msg'] = lang('Document uploaded successfully.', 'Dokument erfolgreich hochgeladen.');
+    $redirectUrl = ROOTPATH . "/". $values['type'] . "/view/" . $values['id'] . "?tab=documents";
+    header("Location: $redirectUrl");
 });

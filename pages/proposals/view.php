@@ -24,6 +24,8 @@ $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPer
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+
+$documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArray();
 ?>
 
 
@@ -215,31 +217,6 @@ $Vocabulary = new Vocabulary();
     <?php } ?>
 </nav>
 
-<style>
-    .tabs {
-        margin-bottom: -1px;
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-
-    .tabs .btn {
-        /* padding-bottom: 1rem; */
-        height: 3.2rem;
-        margin-bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border: 1px solid var(--border-color);
-        box-shadow: none !important;
-        color: var(--primary-color);
-    }
-
-    .tabs .btn.active {
-        border: 1px solid var(--primary-color);
-        background-color: var(--primary-color-20);
-        color: var(--primary-color);
-    }
-</style>
-
 <section id="general">
 
     <?php
@@ -274,6 +251,13 @@ $Vocabulary = new Vocabulary();
                         <?= lang('Rejection', 'Ablehnungs') ?>
                     </button>
                 <?php } ?>
+
+                <!-- documents -->
+                <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
+                    <i class="ph ph-file-text"></i>
+                    <?= lang('Documents', 'Dokumente') ?>
+                    <span class="index"><?= count($documents) ?></span>
+                </button>
             </div>
             <table class="table" id="proposal-details">
                 <tbody>
@@ -387,7 +371,9 @@ $Vocabulary = new Vocabulary();
                         <tbody>
                             <?php
                             $years = $project['grant_years'] ?? [];
-                            foreach ($years as $year => $amount) {
+                            if (empty($years)) {
+                                echo '<tr><td>' . lang('No funding information available.', 'Keine Drittmitteleinnahmen verfügbar.') . '</td></tr>';
+                            } else foreach ($years as $year => $amount) {
                                 if (empty($amount)) continue;
                             ?>
                                 <tr>
@@ -428,6 +414,79 @@ $Vocabulary = new Vocabulary();
                 </table>
             <?php } ?>
 
+
+            <?php if ($Settings->hasPermission('proposals.view-documents') || $user_project) { ?>
+                <div id="documents-details" style="display:none;">
+                    <table class="table">
+                        <tbody>
+                            <?php
+                            if (empty($documents)) {
+                                echo '<tr><td>' . lang('No documents available.', 'Keine Dokumente verfügbar.') . '</td></tr>';
+                            } else {
+                                foreach ($documents as $doc) {
+                                    $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+                            ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?= $file_url ?>" class="">
+                                                <h6 class="m-0">
+                                                    <?= $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Sonstiges', 'Other')) ?>
+                                                <i class="ph ph-download"></i>
+                                                </h6>
+                                            </a>
+                                             <?= $doc['description'] ?? '' ?>
+                                            <br>
+                                            <small class="text-muted">
+                                                <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
+                                                <br>
+                                                <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                                <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                            </small>
+                                        </td>
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <?php if ($Settings->hasPermission('proposals.upload-documents')) { ?>
+                        <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
+                            <h5 class="title font-size-16">
+                                <?= lang('Upload document', 'Dokument hochladen') ?>
+                            </h5>
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                                    <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="values[type]" value="proposals">
+                            <input type="hidden" name="values[id]" value="<?= $id ?>">
+                            <div class="form-group floating-form">
+                                <select class="form-control" name="values[name]" placeholder="Name" required>
+                                    <?php
+                                    $vocab = $Vocabulary->getValues('proposal-document-types');
+                                    foreach ($vocab as $v) { ?>
+                                        <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                    <?php } ?>
+                                </select>
+                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                            </div>
+                            <div class="form-group floating-form">
+                                <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
+                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                            </div>
+                            <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                        </form>
+
+                    <?php } ?>
+
+                </div>
+
+            <?php } ?>
+
+
             <script>
                 // select tab function
                 function selectTab(tab) {
@@ -435,6 +494,7 @@ $Vocabulary = new Vocabulary();
                     $('#approval-details').hide();
                     $('#rejection-details').hide();
                     $('#finance-details').hide();
+                    $('#documents-details').hide();
                     $('#' + tab + '-details').show();
 
                     $('#status-tabs .btn').removeClass('active');
