@@ -480,25 +480,6 @@ $affiliation = $Settings->get('affiliation_details');
 
 
 <section id="features" style="display: none;">
-    <?php
-
-    /**
-     * Page for admin dashboard for features settings
-     * 
-     * This file is part of the OSIRIS package.
-     * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
-     * 
-     * @link /admin/features
-     *
-     * @package OSIRIS
-     * @since 1.3.0
-     * 
-     * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
-     * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
-     * @license     MIT
-     */
-
-    ?>
 
     <style>
         .table td.description {

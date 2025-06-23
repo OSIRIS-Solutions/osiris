@@ -2,6 +2,7 @@
     {
         "de": "Zugriff auf Einstellungen",
         "en": "Access to Settings",
+        "icon": "gear",
         "fields": [
             {
                 "id": "admin.see",
@@ -13,6 +14,7 @@
     {
         "de": "Aktivitäten",
         "en": "Activities",
+        "icon": "book-bookmark",
         "fields": [
             {
                 "id": "activities.edit",
@@ -54,6 +56,7 @@
     {
         "de": "Metriken und Berichte",
         "en": "Metrics and Reports",
+        "icon": "chart-line-up",
         "fields": [
             {
                 "id": "report.dashboard",
@@ -80,6 +83,7 @@
     {
         "de": "Nutzerprofile",
         "en": "User profiles",
+        "icon": "users",
         "fields": [
             {
                 "id": "admin.give-right",
@@ -126,6 +130,7 @@
     {
         "de": "Ansichten",
         "en": "Views",
+        "icon": "eye",
         "fields": [
             {
                 "id": "scientist",
@@ -142,6 +147,7 @@
     {
         "de": "Projekte",
         "en": "Projects",
+        "icon": "tree-structure",
         "fields": [
             {
                 "id": "proposals.add",
@@ -220,6 +226,7 @@
     {
         "de": "Research Topics",
         "en": "Forschungsbereiche",
+        "icon": "puzzle-piece",
         "fields": [
             {
                 "id": "topics.edit",
@@ -236,6 +243,7 @@
     {
         "de": "Infrastrukturen",
         "en": "Infrastructures",
+        "icon": "cube-transparent",
         "fields": [
             {
                 "id": "infrastructures.add",
@@ -267,6 +275,7 @@
     {
         "de": "Organisationen",
         "en": "Organizations",
+        "icon": "building-office",
         "fields": [
             {
                 "id": "organizations.edit",
@@ -283,6 +292,7 @@
     {
         "de": "Organisationseinheiten",
         "en": "Organisational Units",
+        "icon": "users-three",
         "fields": [
             {
                 "id": "units.add",
@@ -294,6 +304,7 @@
     {
         "de": "Gäste",
         "en": "Guests",
+        "icon": "user-switch",
         "fields": [
             {
                 "id": "guests.add",
@@ -320,6 +331,7 @@
     {
         "de": "Nagoya-Protokoll",
         "en": "Nagoya Protocol",
+        "icon": "scales",
         "fields": [
             {
                 "id": "nagoya.view",
