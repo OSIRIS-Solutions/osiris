@@ -149,6 +149,7 @@ if (
     include_once BASEPATH . "/routes/queue.php";
     include_once BASEPATH . "/routes/tags.php";
     include_once BASEPATH . "/routes/static.php";
+    include_once BASEPATH . "/routes/committees.php";
     include_once BASEPATH . "/routes/teaching.php";
     include_once BASEPATH . "/routes/users.php";
     include_once BASEPATH . "/routes/visualize.php";

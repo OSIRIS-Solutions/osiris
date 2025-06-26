@@ -922,6 +922,29 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
 
+                
+                <div class="box px-20">
+                    <h3 id="committees">
+                        <?= lang('Committees & Boards', 'Gremien und Boards') ?>
+                    </h3>
+                    <div class="form-group">
+                        <?php
+                        $committees = $Settings->featureEnabled('committees');
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="committees-true" value="1" name="values[committees]" <?= $committees ? 'checked' : '' ?>>
+                            <label for="committees-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="committees-false" value="0" name="values[committees]" <?= $committees ? '' : 'checked' ?>>
+                            <label for="committees-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+
+                    </div>
+                </div>
+
 
                 <div class="box px-20">
                     <h3 id="wordcloud">
@@ -1085,6 +1108,9 @@ $affiliation = $Settings->get('affiliation_details');
                         </a>
                         <a href="#concepts">
                             <?= lang('Concepts', 'Konzepte') ?>
+                        </a>
+                        <a href="#committees">
+                            <?= lang('Committees & Boards', 'Gremien und Boards') ?>
                         </a>
                         <a href="#wordcloud">
                             <?= lang('Word cloud', 'Word Cloud') ?>

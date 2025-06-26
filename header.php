@@ -644,6 +644,13 @@ $pageactive = function ($p) use ($page) {
                             </a>
                         <?php } ?>
 
+                        <?php if ($Settings->featureEnabled('committees', false)) { ?>
+                            <a href="<?= ROOTPATH ?>/committees" class="with-icon <?= $pageactive('committees') ?>">
+                                <i class="ph ph-identification-card" aria-hidden="true"></i>
+                                <?= lang('Committees & Boards', 'Gremien und Boards') ?>
+                            </a>
+                        <?php } ?>
+
                         <?php if ($Settings->featureEnabled('topics')) { ?>
                             <a href="<?= ROOTPATH ?>/topics" class="with-icon <?= $pageactive('topics') ?>">
                                 <i class="ph ph-puzzle-piece" aria-hidden="true"></i>

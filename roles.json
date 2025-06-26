@@ -289,6 +289,23 @@
             }
         ]
     },
+     {
+        "de": "Gremien & Boards",
+        "en": "Committees & Boards",
+        "icon": "identification-card",
+        "fields": [
+            {
+                "id": "committees.edit",
+                "de": "Gremien hinzufügen und bearbeiten",
+                "en": "Add and edit committees"
+            },
+            {
+                "id": "committees.delete",
+                "de": "Gremien löschen",
+                "en": "Delete committees"
+            }
+        ]
+    },
     {
         "de": "Organisationseinheiten",
         "en": "Organisational Units",
