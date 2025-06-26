@@ -484,26 +484,7 @@ $count_wordcloud = 0;
 
     <section id="activities" style="display:none">
         <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2>
-
-        <style>
-            .type-badge {
-                opacity: 0.6;
-                cursor: pointer;
-                margin-right: .5rem;
-                color: white;
-                text-decoration: line-through;
-            }
-
-            .type-badge.active {
-                opacity: .8;
-                text-decoration: none;
-            }
-
-            .type-badge:hover,
-            .type-badge.active:hover {
-                opacity: 1;
-            }
-        </style>
+        
         <div class="box">
             <div class="content">
                 <div class="btn-toolbar justify-content-between">
@@ -511,11 +492,11 @@ $count_wordcloud = 0;
                     <div>
                         <div class="input-group small mr-10">
                             <div class="input-group-prepend">
-                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1); timelineChart()"><i class="ph ph-caret-left"></i></button>
+                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                             </div>
-                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart()">
+                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>"  onchange="timelineChart({'units': DEPT})">
                             <div class="input-group-append">
-                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1); timelineChart()"><i class="ph ph-caret-right"></i></button>
+                                <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                             </div>
                         </div>
                     </div>

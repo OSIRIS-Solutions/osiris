@@ -30,6 +30,14 @@ Route::get('/api/dashboard/timeline', function () {
     } elseif (isset($_GET['json'])) {
         $filter = json_decode($_GET['json'], true);
     }
+    if (isset($filter['projects'])) {
+        $id = $filter['projects'];
+        if (DB::is_ObjectID($id)) {
+            $mongo_id = $DB->to_ObjectID($id);
+            $filter['projects'] = $mongo_id;
+        }
+    }
+    // dump($filter);
 
     $typeInfo = $Settings->getActivities(null);
     $typeInfo = array_column($typeInfo, null, 'id');

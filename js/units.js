@@ -46,7 +46,9 @@ function navigate(key) {
                     type: { '$ne': 'publication' }
                 }
             })
-            timelineChart();
+            timelineChart({
+                'units': DEPT,
+            });
             break;
 
         case 'projects':
@@ -103,85 +105,6 @@ function navigate(key) {
     }
 
 }
-
-function timelineChart() {
-    if (typeof timeline !== 'function') {
-        console.error('Timeline function is not defined. Please ensure the timeline.js script is included.');
-        return;
-    }
-    // current year and quarter
-    // let date = new Date();
-    let year = $('#activity-year').val();
-    let currentYear = new Date().getFullYear();
-    // check if year is a valid 4 digit number
-    if (!/^\d{4}$/.test(year)) {
-        toastError('Invalid year format. Please enter a valid 4-digit year.');
-        return;
-    }
-    if (year > currentYear) {
-        year = currentYear;
-        $('#activity-year').val(year);
-    }
-
-    $('#timeline').empty()
-    $('#event-selector').empty()
-
-    let filter = {
-        'units': DEPT,
-        'start_date': { 
-            '$gte': `${year}-01-01`,
-            '$lte': `${year}-12-31`
-        },
-    };
-    // let quarter = Math.ceil((date.getMonth() + 1) / 3);
-    $.ajax({
-        type: "GET",
-        url: ROOTPATH + "/api/dashboard/timeline",
-        data: {
-            filter: filter
-        },
-        dataType: "json",
-        success: function (response) {
-            console.log(response);
-            let typeInfo = response.data.info;
-            let events = response.data.events;
-            let types = response.data.types;
-            types.forEach(t => {
-                let type = typeInfo[t];
-                if (!type) return;
-                let item = $('<small class="badge type-badge active ' + type.id + '" onclick="toggleTimelineActivity(\'' + type.id + '\')">' + lang(type.name, type.name_de ?? null) + '</small>');
-                item.css('background-color', type.color);
-                $('#event-selector').append(item);
-            });
-            timeline(year, 0, typeInfo, events);
-        },
-        error: function (response) {
-            console.log(response);
-        }
-    });
-}
-
-
-function toggleTimelineActivity(type) {
-    // check if type is active
-    let active = ($('.badge.' + type).hasClass('active'));
-
-    $('.badge.' + type).toggleClass('active');
-    $('.event-circle.' + type).toggle();
-
-    if (activitiesTable) {
-        // activitiesTable.columns(5).search(type, true, false, true).draw();
-        if (active) {
-            activeCategories.add(type);
-        } else {
-            activeCategories.delete(type);
-        }
-
-        activitiesTable.draw(); // Tabelle neu zeichnen
-    }
-}
-
-
 
 function collabChart(selector, data) {
     $.ajax({

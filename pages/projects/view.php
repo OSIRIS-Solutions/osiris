@@ -88,6 +88,11 @@ $subproject = $project['subproject'] ?? false;
 </script>
 
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
+
+<script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
+<script src="<?= ROOTPATH ?>/js/popover.js"></script>
+<!-- // my year for the activity timeline -->
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <style>
@@ -125,9 +130,9 @@ $subproject = $project['subproject'] ?? false;
 </div>
 
 <!-- show research topics -->
- <?php
+<?php
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
-if ($topicsEnabled){
+if ($topicsEnabled) {
     echo $Settings->printTopics($project['topics'] ?? [], 'mb-20', false);
 }
 ?>
@@ -517,10 +522,10 @@ if ($topicsEnabled){
     <?php if ($subproject) { ?>
         <p class="text-primary">
             <i class="ph ph-info"></i>
-        <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
+            <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
         </p>
     <?php } ?>
-    
+
 
     <div class="row row-eq-spacing">
         <div class="col-lg-4">
@@ -672,6 +677,26 @@ if ($topicsEnabled){
         </div>
     </div>
 
+
+    <div class="box">
+        <div class="content">
+            <div class="btn-toolbar justify-content-between">
+                <div id="event-selector"></div>
+                <div>
+                    <div class="input-group small mr-10">
+                        <div class="input-group-prepend">
+                            <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
+                        </div>
+                        <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'projects':  PROJECT})">
+                        <div class="input-group-append">
+                            <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="timeline"></div>
+    </div>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">

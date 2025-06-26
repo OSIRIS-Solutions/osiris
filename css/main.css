@@ -12760,6 +12760,24 @@ table img {
   color: var(--success-color);
 }
 
+.type-badge {
+  opacity: 0.6;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  color: white;
+  text-decoration: line-through;
+}
+
+.type-badge.active {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.type-badge:hover,
+.type-badge.active:hover {
+  opacity: 1;
+}
+
 /*!
  * Quill Editor v1.3.6
  * https://quilljs.com/
