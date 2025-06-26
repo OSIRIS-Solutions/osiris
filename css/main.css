@@ -7156,7 +7156,7 @@ Tooltips
 [data-toggle=tooltip]::after {
   content: attr(data-title);
   white-space: normal;
-  width: 10rem;
+  width: 14rem;
   font-size: 1.2rem;
   line-height: 1.5;
   padding: 0.5rem 1rem;
