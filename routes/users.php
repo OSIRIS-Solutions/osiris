@@ -546,6 +546,10 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['cv'] = $cv;
     }
 
+    if (isset($values['is_active'])) {
+        $person['is_active'] = boolval($values['is_active']);
+    }
+
     // if new password is set, update password
     if (isset($_POST['password']) && !empty($_POST['password'])) {
         // check if old password matches

@@ -402,7 +402,7 @@ Route::post('/crud/activities/create', function () {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['name'])) $values['projects'][] = $project['name'];
+                if (isset($project['_id'])) $values['projects'][] = $project['_id'];
             }
         }
     }

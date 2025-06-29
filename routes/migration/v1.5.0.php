@@ -282,7 +282,7 @@ $osiris->adminProjects->insertOne([
                 ["module" => "abstract", "required" => false],
                 ["module" => "abstract_de", "required" => false],
                 ["module" => "coordinator", "required" => false],
-                ["module" => "countries", "required" => false],
+                ["module" => "research-countries", "required" => false],
                 ["module" => "funding_number", "required" => false],
                 ["module" => "funding_organization", "required" => false],
                 ["module" => "kdsf-ffk", "required" => false],
@@ -317,6 +317,7 @@ $fields_projects = array_merge($fields_projects, [
     "subprojects",
     "teaser_de",
     "teaser_en",
+    "topics"
 ]);
 $general_fields = [
     'created',
@@ -597,3 +598,7 @@ if ($count > 0) {
     </h4>
     <?= lang('Migration of project types was successful. You can now use the new project types and the new proposals collection.', 'Migration der Projekttypen war erfolgreich. Du kannst jetzt die neuen Projekttypen und die neue Antragsammlung verwenden.') ?>
 </div>
+
+<b class="text-danger">
+    <?=lang('Start rerendering all activities, please have patience.', 'Starte jetzt das Rendern der Aktivitäten. Bitte habe Geduld.')?>
+</b>

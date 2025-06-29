@@ -14,6 +14,71 @@
  * @license     MIT
  */
 
+
+Route::get('/api/dashboard/timeline', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+
+    $filter = ['year' => CURRENTYEAR];
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    } elseif (isset($_GET['json'])) {
+        $filter = json_decode($_GET['json'], true);
+    }
+    if (isset($filter['projects'])) {
+        $id = $filter['projects'];
+        if (DB::is_ObjectID($id)) {
+            $mongo_id = $DB->to_ObjectID($id);
+            $filter['projects'] = $mongo_id;
+        }
+    }
+    // dump($filter);
+
+    $typeInfo = $Settings->getActivities(null);
+    $typeInfo = array_column($typeInfo, null, 'id');
+
+    $result = [
+        'info' => $typeInfo,
+        'events' => [],
+        'types' => []
+    ];
+
+    $events = $osiris->activities->find(
+        $filter,
+        [
+            'sort' => ['start' => 1, 'end' => 1],
+            'projection' => [
+                'title' => '$rendered.title',
+                'start_date' => 1,
+                'type' => 1,
+                'id' => ['$toString' => '$_id']
+            ]
+        ]
+    )->toArray();
+
+    // Convert ISO date string to timestamp in PHP if needed
+    foreach ($events as &$event) {
+        if (!empty($event['start_date'])) {
+            $event['starting_time'] = strtotime($event['start_date']);
+        }
+    }
+
+    $result['events'] = $events;
+
+    if (!empty($events)) {
+        $types = array_column($events, 'type');
+        $types = array_unique($types);
+        $result['types'] = array_values($types);
+    }
+
+    echo return_rest($result, count($result));
+});
+
  
 Route::get('/api/dashboard/oa-status', function () {
     error_reporting(E_ERROR | E_PARSE);
@@ -431,11 +496,12 @@ Route::get('/api/dashboard/wordcloud', function () {
     $filter = ['type' => 'publication'];
     if (isset($_GET['user'])) {
         $filter['authors.user'] = $_GET['user'];
-    }
-    if (isset($_GET['units'])) {
+    } else if (isset($_GET['units'])) {
         $units = $_GET['units'];
         if (!is_array($units)) $units = [$units];
         $filter['authors.units'] = ['$in' => $units];
+    } else if (isset($_GET['topics'])) {
+        $filter['topics'] = $_GET['topics'];
     }
 
     $result = $osiris->activities->find(
@@ -682,8 +748,15 @@ Route::get('/api/dashboard/author-network', function () {
     $single_authors = $_GET['single'] ?? false;
 
     $depts = null;
+    $filter = ['type' => 'publication'];
     if (isset($_GET['dept'])) {
-        $filter = ['units' => $_GET['dept'], 'type' => 'publication'];
+        $depts = $Groups->getChildren($_GET['dept'], 1);
+        $filter['units'] = $_GET['dept'];
+    } else if (isset($_GET['topics'])) {
+        $filter['topics'] = $_GET['topics'];
+    } elseif (isset($_GET['units'])) {
+        // $depts = $_GET['units'];
+        $filter['units'] = $_GET['units'];
     }
 
     if (isset($_GET['year'])) {

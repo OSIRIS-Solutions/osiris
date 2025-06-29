@@ -28,6 +28,7 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Es wurde ein neues Datenfeld "Schlagworte" hinzugefügt, das ähnlich wie Expertise verwendet werden kann, allerdings mit einem definierten Vokabular arbeitet. Wie genau dieses Datenfeld heißen soll, kann ebenfalls im Admin-Bereich definiert werden.
 - Es kann festgelegt werden, ob sich Nutzer:innen selbst registrieren dürfen oder ob dies nur Admins möglich ist.
 - Die Auswahl von Organisationseinheiten bei der Zuordnung von Personen wurde verbessert.
+- Beim Anlegen einer Person wird jetzt nicht mehr nach dem Passwort gefragt, wenn als User-Management nicht das `AUTH`-Addon ausgewählt ist, z.B. wenn LDAP oder OAUTH2 verwendet wird.
 
 
 #### <i class="ph ph-cube-transparent"></i> Forschungsinfrastrukturen
@@ -59,6 +60,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Neue Felder zum Tracken von Antrags- und Bewilligungsdaten wurden hinzugefügt.
 - Finanzierungsinformationen (z.B. Drittmitteleinnahmen) können bei Anträgen gepflegt werden.
 - Das Berechtigungssystem für die Bearbeitung und Ansicht von Anträgen wurde verfeinert.
+- Man kann Dokumente zu Anträgen hochladen und verwalten. Es gibt neue Rechte für das Hochladen und globale Bearbeiten von Dokumenten.
 
 **Weitere Verbesserungen**:
 
@@ -72,21 +74,48 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
 - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
+
 <!-- - Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
 - KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
 
-#### <i class="ph ph-users-three"></i> Neue Templates für die Formatierung von Aktivitäten
-Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen.
+
+
+#### <i class="ph ph-book-bookmark"></i> Darstellung und Sichtbarkeit von Aktivitäten
+- Neue Templates: Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+- Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
+- Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
+- Es ist nun möglich, den Upload von Dokumenten für einzelne Aktivitäts-Kategorien zu deaktivieren. Diese Einstellung findet ihr ebenfalls unter Inhalte > Aktivitäten, wenn ihr eine Kategorie bearbeitet. Standardmäßig ist der Upload für alle Kategorien aktiviert. Wenn er deaktiviert ist, wird der Upload-Button in der Detailansicht der Aktivität nicht mehr angezeigt und es können keine Dokumente hochgeladen werden. Vorhandene Dokumente werden nicht gelöscht, werden aber auch nicht mehr angezeigt.
+- Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
-- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten
-- Das User Interface bei der Anzeige von Events wurde verbessert
+- Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten.
+- Das User Interface bei der Anzeige von Events wurde verbessert.
 - Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
-- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren.
+- Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
+- Forschungsbereiche können jetzt auch bei Events hinzugefügt werden. Ein entsprechender Filter wurde ebenfalls hinzugefügt.
+- Es gibt jetzt einen Filter für das Jahr, in dem das Event stattfindet.
+
+
+#### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
+- Forschungsbereiche können jetzt auch zu Organisationseinheiten hinzugefügt werden.
+- Das Web-Interface für die Darstellung von Forschungsbereichen wurde verbessert und folgt jetzt dem Tab-basierten Ansatz, der auch an vielen anderen Stellen verwendet wird.
+- Bei den Forschungsbereichen wurden neue Abbildungen hinzugefügt: es gibt jetzt eine Netzwerkansicht mit allen verknüpften Autor:innen, eine Wordmap und eine Konfetti-Timeline.
+- Bei den mit Bereichen verknüpften Entitäten (z.B. Aktivitäten): Wenn keine Forschungsbereiche existieren, wird das Forschungsbereich-Filterwidget nicht mehr angezeigt.
+
+#### <i class="ph ph-map"></i> Forschungsreisen
+- Es wurde ein neues Addon hinzugefügt, das es ermöglicht, Forschungsreisen zu analysieren.
+- Um dieses Addon zu aktivieren, müsst ihr folgende Schritte durchführen:
+  1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
+  2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
+     - `date-range`
+     - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
+     - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
+  3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
+- Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.
 - Globale Steuerung der quartalsweisen Berichtspflicht (Controlling) möglich (standardmäßig aktiviert).
 - Diverse kleinere Layout- und Darstellungsoptimierungen (u.a. Profile, Notifications, Listenansichten).
@@ -106,9 +135,9 @@ Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, in
 - Der Name der Aktivitätskategorie in "Mein Jahr" wird nun korrekt angezeigt
 - In "Mein Jahr" werden die Aktivitätskategorien nun korrekt sortiert
 - Typen lassen sich ebenfalls sortieren
-- Wenn keine Topics existieren, wird das Topic-Filterwidget nicht mehr angezeigt
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 - Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
+- Im Profil werden die bestätigten Quartale jetzt in der Tabelle mit den Details angezeigt
 
 ---
 

@@ -42,7 +42,7 @@ if ($active('keywords')) {
 
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
     <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
@@ -160,9 +160,6 @@ if ($active('keywords')) {
 </div>
 
 
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     const headers = [{

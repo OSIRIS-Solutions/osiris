@@ -72,6 +72,7 @@ $countries = [];
 $people = [];
 $topics = [];
 $timelineData = [];
+$mapData = [];
 
 $template = [];
 foreach ($statuses as $key => $label) {
@@ -102,8 +103,7 @@ foreach ($trips as $trip) {
     $authors = DB::doc2Arr($trip['authors']);
     $current_countries = [];
     foreach ($trip['countries'] as $country) {
-        $country = $DB->getCountry($country);
-        $country = lang($country['name'], $country['name_de'] ?? null);
+        // $country = lang($country['name'], $country['name_de'] ?? null);
         $current_countries[] = $country;
 
         if (!isset($countries[$country])) {
@@ -139,7 +139,19 @@ foreach ($trips as $trip) {
         }
         $people[$person][$status]['days'] += $days;
         $people[$person][$status]['trips'] += 1;
-    }    
+    }
+}
+
+// map data sums up the trips per country regardless of the status
+foreach ($countries as $iso => $data) {
+    $country = $DB->getCountry($iso);
+    $mapData[] = [
+        'iso3' => $country['iso3'],
+        'days' => array_sum(array_column($data, 'days')),
+        'people' => array_sum(array_column($data, 'people')),
+        'trips' => array_sum(array_column($data, 'trips')),
+        'name' => lang($country['name'], $country['name_de'] ?? null),
+    ];
 }
 
 
@@ -203,7 +215,7 @@ foreach ($trips as $trip) {
 </style>
 
 <div class="container">
-    <h1><?= lang('Research trips', 'Forschungsreisen') ?></h1>
+    <h1><?= $Settings->tripLabel() ?></h1>
 
     <div class="btn-toolbar">
         <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=travel">
@@ -255,53 +267,68 @@ foreach ($trips as $trip) {
         </div>
 
         <h4><?= lang('Countries', 'Länder') ?></h4>
-        <?php
-        $numbers = [];
-        ?>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><?= lang('Country', 'Land') ?></th>
-                    <?php foreach ($statuses as $key => $name) {
-                        $numbers[$key] = [
-                            'days' => 0,
-                            'people' => 0,
-                            'trips' => 0
-                        ];
-                        echo "<th>$name</th>";
-                    } ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($countries as $country => $days): ?>
-                    <tr>
-                        <td><?= $country ?></td>
-                        <?php foreach ($statuses as $key => $name) {
-                            $numbers[$key]['days'] += $days[$key]['days'] ?? 0;
-                            $numbers[$key]['people'] += $days[$key]['people'] ?? 0;
-                            $numbers[$key]['trips'] += $days[$key]['trips'] ?? 0;
-                            echo "<td class='$key'>";
-                            echo "<span class='days'>" . ($days[$key]['days'] ?? 0) . "</span>";
-                            echo "<span class='people'>" . ($days[$key]['people'] ?? 0) . "</span>";
-                            echo "<span class='trips'>" . ($days[$key]['trips'] ?? 0) . "</span>";
-                            echo "</td>";
-                        } ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td><?= lang('Sum', 'Summe') ?></td>
-                    <?php foreach ($statuses as $key => $name) {
-                        echo "<td class='$key'>";
-                        echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
-                        echo "<span class='people'>" . ($numbers[$key]['people'] ?? 0) . "</span>";
-                        echo "<span class='trips'>" . ($numbers[$key]['trips'] ?? 0) . "</span>";
-                        echo "</td>";
-                    } ?>
-                </tr>
-            </tfoot>
-        </table>
+
+        <div class="row row-eq-spacing">
+            <div class="col-md">
+                <?php
+                $numbers = [];
+                ?>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Country', 'Land') ?></th>
+                            <?php foreach ($statuses as $key => $name) {
+                                $numbers[$key] = [
+                                    'days' => 0,
+                                    'people' => 0,
+                                    'trips' => 0
+                                ];
+                                echo "<th>$name</th>";
+                            } ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($countries as $iso => $days):
+                            $country = $DB->getCountry($iso);
+                            $country = lang($country['name'], $country['name_de'] ?? null);
+
+                        ?>
+                            <tr>
+                                <td><?= $country ?></td>
+                                <?php foreach ($statuses as $key => $name) {
+                                    $numbers[$key]['days'] += $days[$key]['days'] ?? 0;
+                                    $numbers[$key]['people'] += $days[$key]['people'] ?? 0;
+                                    $numbers[$key]['trips'] += $days[$key]['trips'] ?? 0;
+                                    echo "<td class='$key'>";
+                                    echo "<span class='days'>" . ($days[$key]['days'] ?? 0) . "</span>";
+                                    echo "<span class='people'>" . ($days[$key]['people'] ?? 0) . "</span>";
+                                    echo "<span class='trips'>" . ($days[$key]['trips'] ?? 0) . "</span>";
+                                    echo "</td>";
+                                } ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><?= lang('Sum', 'Summe') ?></td>
+                            <?php foreach ($statuses as $key => $name) {
+                                echo "<td class='$key'>";
+                                echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
+                                echo "<span class='people'>" . ($numbers[$key]['people'] ?? 0) . "</span>";
+                                echo "<span class='trips'>" . ($numbers[$key]['trips'] ?? 0) . "</span>";
+                                echo "</td>";
+                            } ?>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md">
+                <div class="box p-5 m-0">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+
 
         <h4><?= lang('People', 'Personen') ?></h4>
         <?php
@@ -415,6 +442,8 @@ foreach ($trips as $trip) {
         $('#statistics .btn').removeClass('active');
         // add active class to the selected button
         $(el).addClass('active');
+
+        updateMap(type);
     }
 </script>
 
@@ -612,4 +641,108 @@ $unique_number = count($uniques);
         .on("mouseout", mouseout)
     rect.on("mouseover", mouseover)
         .on("mouseout", mouseout)
+</script>
+
+
+<script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
+<script>
+    function unpack(rows, key) {
+        return rows.map(function(row) {
+            return row[key];
+        });
+    }
+
+    var layout = {
+        geo: {
+            projection: {
+                type: 'robinson'
+            }
+        },
+        margin: {
+            t: 50,
+            b: 10,
+            l: 10,
+            r: 10
+        },
+        // height: 400,
+        // width: '100%',
+    };
+    var collaboratorRows = <?= json_encode($mapData) ?>;
+    $(document).ready(function() {
+        var z = unpack(collaboratorRows, 'days');
+        var data = [{
+            type: 'choropleth',
+            locationmode: 'ISO-3',
+            locations: unpack(collaboratorRows, 'iso3'),
+            z: z,
+            text: unpack(collaboratorRows, 'country'),
+            autocolorscale: false,
+            colorscale: [
+                ['0.0', 'rgb(253.4, 229.8, 204.8)'],
+                ['1.0', '#008084']
+            ],
+            colorbar: {
+                len: 0.5,
+                title: lang('Days', 'Tage'),
+                autotic: false,
+            },
+            zmin: 0,
+            zmax: Math.max(...z),
+        }];
+        var config = {
+            responsive: true,
+            showLink: false
+        }
+
+        Plotly.newPlot("map", data, layout, config);
+    });
+
+
+
+    function updateMap(mode) {
+        var z = unpack(collaboratorRows, mode);
+        var label = '';
+        switch (mode) {
+            case 'days':
+                label = lang('Days', 'Tage');
+                break;
+            case 'people':
+                label = lang('People', 'Personen');
+                break;
+            case 'trips':
+                label = lang('Trips', 'Reisen');
+                break;
+            default:
+                label = lang('Unknown', 'Unbekannt');
+        }
+        console.log(mode);
+        Plotly.update("map", {
+            z: [z],
+            colorbar: {
+                title: label,
+                len: 0.5
+            },
+            zmin: 0,
+            zmax: Math.max(...z),
+        });
+
+    }
+
+    function filterByYear(year, table) {
+        var rows = document.querySelectorAll(table + ' tbody tr');
+        if (year == '') {
+            rows.forEach(function(row) {
+                row.style.display = 'table-row';
+            });
+            return;
+        }
+        rows.forEach(function(row) {
+            var cells = row.querySelectorAll('td');
+            if (cells[2].innerText == year) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 </script>

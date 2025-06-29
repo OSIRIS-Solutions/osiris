@@ -36,7 +36,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 $vocab = $Vocabulary->getValues('event-type');
                 $sel = $form['type'] ?? '';
                 foreach ($vocab as $v) { ?>
-                    <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected': '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                    <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                 <?php } ?>
             </select>
             <label for="type" class="required">
@@ -48,7 +48,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             <label for="description" class="floating-title"><?= lang('Description', 'Beschreibung') ?></label>
 
             <div class="form-group title-editor" id="description-quill"><?= $form['description'] ?? '' ?></div>
-            <input type="text" class="form-control hidden" name="values[description]" id="description" value="<?= $form['description'] ?? '' ?>">
+            <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
 
             <script>
                 quillEditor('description');
@@ -75,6 +75,13 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             <input type="url" name="values[url]" class="form-control" value="<?= $form['url'] ?? '' ?>" placeholder="url">
             <label for="url"><?= lang('URL', 'URL') ?></label>
         </div>
+
+        <?php
+        $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+        if ($topicsEnabled) {
+            $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? []));
+        }
+        ?>
 
         <button class="btn mb-10" type="submit"><?= $btn ?></button>
     </form>

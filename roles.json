@@ -2,6 +2,7 @@
     {
         "de": "Zugriff auf Einstellungen",
         "en": "Access to Settings",
+        "icon": "gear",
         "fields": [
             {
                 "id": "admin.see",
@@ -13,6 +14,7 @@
     {
         "de": "Aktivitäten",
         "en": "Activities",
+        "icon": "book-bookmark",
         "fields": [
             {
                 "id": "activities.edit",
@@ -54,6 +56,7 @@
     {
         "de": "Metriken und Berichte",
         "en": "Metrics and Reports",
+        "icon": "chart-line-up",
         "fields": [
             {
                 "id": "report.dashboard",
@@ -80,6 +83,7 @@
     {
         "de": "Nutzerprofile",
         "en": "User profiles",
+        "icon": "users",
         "fields": [
             {
                 "id": "admin.give-right",
@@ -126,6 +130,7 @@
     {
         "de": "Ansichten",
         "en": "Views",
+        "icon": "eye",
         "fields": [
             {
                 "id": "scientist",
@@ -140,8 +145,9 @@
         ]
     },
     {
-        "de": "Projekte",
-        "en": "Projects",
+        "de": "Projekte und Anträge",
+        "en": "Projects and Proposals",
+        "icon": "tree-structure",
         "fields": [
             {
                 "id": "proposals.add",
@@ -174,6 +180,18 @@
                 "en": "Delete proposals"
             },
             {
+                "id": "proposals.upload-documents",
+                "de": "Antragsdokumente hochladen",
+                "en": "Upload proposal documents"
+            },
+            {
+                "id": "proposals.view-documents",
+                "de": "Alle Antragsdokumente sehen",
+                "en": "View all proposal documents",
+                "comment_de": "Antragstellende können Dokumente in ihren eigenen Anträgen immer sehen. Diese Einstellung erlaubt es, alle Dokumente zu sehen, auch die in Anträgen anderer Personen. Dies ist wirkungslos, wenn die Anträge von anderen Personen nicht gesehen werden können.",
+                "comment_en": "Applicants can always see documents in their own proposals. This setting allows seeing all documents, even those in proposals of other people. This is ineffective if proposals of other people cannot be seen."
+            },
+            {
                 "id": "projects.add",
                 "de": "Projekte anlegen",
                 "en": "Add new projects"
@@ -190,7 +208,7 @@
             },
             {
                 "id": "projects.edit-own",
-                "de": "Eigene Projekte editieren",
+                "de": "Eigene Projekte bearbeiten",
                 "en": "Edit own projects"
             },
             {
@@ -208,6 +226,7 @@
     {
         "de": "Research Topics",
         "en": "Forschungsbereiche",
+        "icon": "puzzle-piece",
         "fields": [
             {
                 "id": "topics.edit",
@@ -224,6 +243,7 @@
     {
         "de": "Infrastrukturen",
         "en": "Infrastructures",
+        "icon": "cube-transparent",
         "fields": [
             {
                 "id": "infrastructures.add",
@@ -255,6 +275,7 @@
     {
         "de": "Organisationen",
         "en": "Organizations",
+        "icon": "building-office",
         "fields": [
             {
                 "id": "organizations.edit",
@@ -271,6 +292,7 @@
     {
         "de": "Organisationseinheiten",
         "en": "Organisational Units",
+        "icon": "users-three",
         "fields": [
             {
                 "id": "units.add",
@@ -282,6 +304,7 @@
     {
         "de": "Gäste",
         "en": "Guests",
+        "icon": "user-switch",
         "fields": [
             {
                 "id": "guests.add",
@@ -308,6 +331,7 @@
     {
         "de": "Nagoya-Protokoll",
         "en": "Nagoya Protocol",
+        "icon": "scales",
         "fields": [
             {
                 "id": "nagoya.view",

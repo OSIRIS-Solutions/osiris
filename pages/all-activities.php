@@ -211,6 +211,29 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </table>
             </div>
 
+            <?php if ($topicsEnabled) { ?>
+                <h6><?= $Settings->topicLabel() ?></h6>
+
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
@@ -247,29 +270,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div>
 
-            <?php if ($topicsEnabled) { ?>
-                <h6><?= $Settings->topicLabel() ?></h6>
-
-                <div class="filter">
-                    <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                            $id = $a['id'];
-                        ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                <td>
-                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
-                                        <span style="color: var(--highlight-color)">
-                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </table>
-
-                </div>
-            <?php } ?>
-
 
             <h6><?= lang('More', 'Weiteres') ?></h6>
             <div class="custom-switch">
@@ -281,10 +281,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     </div>
 </div>
 <!-- </div> -->
-
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     var dataTable;
@@ -678,7 +674,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             type = false
                         }
                         const count = dataTable.column(key).data().filter(function(d) {
-                            if (key == 7 || key == 14) {
+                            if ((key == 7 || key == 14) && d instanceof Array) {
                                 return d.includes(type)
                             }
                             return d == type

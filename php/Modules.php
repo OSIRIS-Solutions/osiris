@@ -596,7 +596,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if (empty($this->preset) || count($this->preset) === 0)
+        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -756,7 +756,7 @@ class Modules
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea placeholder="custom-field">';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
                 break;
             case 'int':
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
@@ -1856,13 +1856,13 @@ class Modules
             case "peer-reviewed":
             ?>
                 <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="icon-closed-access text-danger"></i> Non-refereed</label>
+                    <div class="custom-radio d-inline-block mr-20" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
                     </div>
-                    <div class="custom-radio d-inline-block ml-20" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="icon-open-access text-success"></i> Peer-Reviewed</label>
+                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> Non peer reviewed</label>
                     </div>
                 </div>
             <?php

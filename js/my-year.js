@@ -1,4 +1,4 @@
-function timeline(year, quarter, typeInfo, events, types) {
+function timeline(year, quarter, typeInfo, events) {
     var radius = 3,
         distance = 12,
         divSelector = '#timeline'
@@ -25,11 +25,11 @@ function timeline(year, quarter, typeInfo, events, types) {
         .range([0, width]);
 
     // var types = Object.keys(typeInfo)
-    let ordinalScale = d3.scaleOrdinal()
-        .domain(types.reverse())
-        .range(Array.from({
-            length: types.length
-        }, (x, i) => i * (height / (types.length - 1))));
+    // let ordinalScale = d3.scaleOrdinal()
+    //     .domain(types.reverse())
+    //     .range(Array.from({
+    //         length: types.length
+    //     }, (x, i) => i * (height / (types.length - 1))));
 
 
     // let axisLeft = d3.axisLeft(ordinalScale);
@@ -44,39 +44,41 @@ function timeline(year, quarter, typeInfo, events, types) {
         .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
         .call(axisBottom);
 
-    var quarter = svg.append('g')
-        .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
-        // .selectAll("g")
-        .append('rect')
-        .style("fill", 'rgb(236, 175, 0)')
-        // .attr('height', height+margin.top+radius*4)
-        .attr('height', 8)
-        .attr('width', function (d, i) {
-            return width / 4
-        })
-        .style('opacity', .2)
-        .attr('x', (d) => {
-            var Q = quarter *3 -2; 
-            var date = new Date(`${year}-${Q}-01`)
-            return timescale(date)
-        })
-        // .attr('y', radius*-2)
-        .attr('y', 0)
+    if (quarter > 0) {
+        var quarterBox = svg.append('g')
+            .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
+            // .selectAll("g")
+            .append('rect')
+            .style("fill", 'rgb(236, 175, 0)')
+            // .attr('height', height+margin.top+radius*4)
+            .attr('height', 8)
+            .attr('width', function (d, i) {
+                return width / 4
+            })
+            .style('opacity', .2)
+            .attr('x', (d) => {
+                var Q = quarter * 3 - 2;
+                var date = new Date(`${year}-${Q}-01`)
+                return timescale(date)
+            })
+            // .attr('y', radius*-2)
+            .attr('y', 0)
+    }
 
     d3.selectAll("g>.tick>text")
         .each(function (d, i) {
             d3.select(this).style("font-size", "8px");
         });
 
-    var Tooltip = d3.select(divSelector)
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
-        .style("border-radius", "5px")
-        .style("padding", "5px")
+    // var Tooltip = d3.select(divSelector)
+    //     .append("div")
+    //     .style("opacity", 0)
+    //     .attr("class", "tooltip")
+    //     .style("background-color", "white")
+    //     .style("border", "solid")
+    //     .style("border-width", "2px")
+    //     .style("border-radius", "5px")
+    //     .style("padding", "5px")
 
 
     function mouseover(d, i) {
@@ -134,7 +136,9 @@ function timeline(year, quarter, typeInfo, events, types) {
     dots.on("mouseover", mouseover)
         // .on("mousemove", mousemove)
         .on("mouseout", mouseout)
-        .on("click", (d) => {
+
+    if (quarter > 0) {
+        dots.on("click", (d) => {
             // $('tr.active').removeClass('active')
             var element = document.getElementById("tr-" + d.id);
             // element.className="active"
@@ -147,6 +151,7 @@ function timeline(year, quarter, typeInfo, events, types) {
                 behavior: "smooth"
             });
         });
+    }
     // .style("stroke", "gray")
 
     var circle = dots.append('circle')
@@ -157,6 +162,7 @@ function timeline(year, quarter, typeInfo, events, types) {
         .attr("r", radius)
         .attr('cy', (d) => Math.random() * distance - distance / 2)
         .style('opacity', .6)
+        .attr('class', (d) => `event-circle ${d.type}`);
 
     var lines = dots.append('rect')
         .style("fill", function (d, i) {

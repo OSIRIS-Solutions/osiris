@@ -14,6 +14,8 @@ class Settings
     public $settings = array();
     // private $user = array();
     public $roles = array();
+    public $allowedTypes = array();
+    public $allowedFilter = array();
     private $osiris = null;
     private $features = array();
 
@@ -36,11 +38,54 @@ class Settings
         // everyone is a user
         $this->roles[] = 'user';
 
+        $catFilter = ['$or' => [
+            ['visible_role' => ['$exists' => false]],
+            ['visible_role' => null],
+            ['visible_role' => ['$in' => $this->roles]]
+        ]];
+        $allowedTypes = $this->osiris->adminCategories->find($catFilter, ['projection' => ['_id' => 0, 'id' => 1]]);
+        $this->allowedTypes = array_column($allowedTypes->toArray(), 'id');
+
         // init Features
         $featList = $this->osiris->adminFeatures->find([]);
         foreach ($featList as $f) {
             $this->features[$f['feature']] = boolval($f['enabled']);
         }
+    }
+
+    /**
+     * Get the filter for activities based on the provided filter and user.
+     *
+     * @param array $filter The filter criteria.
+     * @param string|null $user The username to filter by, defaults to current user.
+     * @return array The MongoDB query filter for activities.
+     */
+    function getActivityFilter($filter, $user = null, $reduced = false)
+    {
+        $user = $user ?? ($_GET['user'] ?? $_SESSION['username']);
+        $filterAllowed = ['type' => ['$in' => $this->allowedTypes]];
+        if ($reduced) {
+            return $filterAllowed;
+        }
+        if (empty($filter)) return [
+            '$or' => [
+                $filterAllowed,
+                ['authors.user' => $user],
+                ['editors.user' => $user],
+                ['user' => $user]
+            ]
+        ];
+        return [
+            '$and' => [
+                $filter,
+                ['$or' => [
+                    $filterAllowed,
+                    ['authors.user' => $user],
+                    ['editors.user' => $user],
+                    ['user' => $user]
+                ]]
+            ]
+        ];
     }
 
     function get($key, $default = null)
@@ -145,7 +190,8 @@ class Settings
         }
 
         if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
-            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === 443)) {
+            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === 443)
+        ) {
             return 'https';
         }
 
@@ -176,7 +222,7 @@ class Settings
      * @param string $feature
      * @return boolean
      */
-    function featureEnabled($feature, $default=false)
+    function featureEnabled($feature, $default = false)
     {
         return $this->features[$feature] ?? $default;
     }
@@ -317,19 +363,19 @@ class Settings
             $style .= "
             :root {
                 --primary-color: $primary;
-                --primary-color-light: ".adjustBrightness($primary, 20).";
-                --primary-color-very-light: ".adjustBrightness($primary, 200).";
-                --primary-color-dark: ".adjustBrightness($primary, -20).";
-                --primary-color-very-dark: ".adjustBrightness($primary, -200).";
+                --primary-color-light: " . adjustBrightness($primary, 20) . ";
+                --primary-color-very-light: " . adjustBrightness($primary, 200) . ";
+                --primary-color-dark: " . adjustBrightness($primary, -20) . ";
+                --primary-color-very-dark: " . adjustBrightness($primary, -200) . ";
                 --primary-color-20: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.2);
                 --primary-color-30: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.3);
                 --primary-color-60: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.6);
 
                 --secondary-color: $secondary;
-                --secondary-color-light: ".adjustBrightness($secondary, 20).";
-                --secondary-color-very-light: ".adjustBrightness($secondary, 200).";
-                --secondary-color-dark: ".adjustBrightness($secondary, -20).";
-                --secondary-color-very-dark: ".adjustBrightness($secondary, -200).";
+                --secondary-color-light: " . adjustBrightness($secondary, 20) . ";
+                --secondary-color-very-light: " . adjustBrightness($secondary, 200) . ";
+                --secondary-color-dark: " . adjustBrightness($secondary, -20) . ";
+                --secondary-color-very-dark: " . adjustBrightness($secondary, -200) . ";
                 --secondary-color-20: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.2);
                 --secondary-color-30: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.3);
                 --secondary-color-60: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.6);
@@ -339,41 +385,52 @@ class Settings
         return "<style>$style</style>";
     }
 
-    private function adjustBrightness($hex, $steps) {
+    private function adjustBrightness($hex, $steps)
+    {
         // Steps should be between -255 and 255. Negative = darker, positive = lighter
         $steps = max(-255, min(255, $steps));
-    
+
         // Normalize into a six character long hex string
         $hex = str_replace('#', '', $hex);
         if (strlen($hex) == 3) {
-            $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+            $hex = str_repeat(substr($hex, 0, 1), 2) . str_repeat(substr($hex, 1, 1), 2) . str_repeat(substr($hex, 2, 1), 2);
         }
-    
+
         // Split into three parts: R, G and B
         $color_parts = str_split($hex, 2);
         $return = '#';
-    
+
         foreach ($color_parts as $color) {
             $color   = hexdec($color); // Convert to decimal
-            $color   = max(0,min(255,$color + $steps)); // Adjust color
+            $color   = max(0, min(255, $color + $steps)); // Adjust color
             $return .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
         }
-    
+
         return $return;
     }
 
-    function infrastructureLabel(){
+    function infrastructureLabel()
+    {
         if (!$this->featureEnabled('infrastructures')) return '';
         $settings = $this->get('infrastructures_label');
         if (empty($settings) || !isset($settings['en'])) return lang('Infrastructures', 'Infrastrukturen');
         return lang($settings['en'], $settings['de'] ?? null);
     }
 
-    function topicLabel(){
+    function topicLabel()
+    {
         if (!$this->featureEnabled('topics')) return '';
         $settings = $this->get('topics_label');
         if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
         return lang($settings['en'], $settings['de'] ?? null);
+    }
+
+    function tripLabel()
+    {
+        if (!$this->featureEnabled('topics')) return '';
+        $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
+        if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
+        return lang($arr['name'], $arr['name_de'] ?? null);
     }
 
     function topicChooser($selected = [])
@@ -422,10 +479,29 @@ class Settings
         return $html;
     }
 
-    function printTopic($topic){
+    function printTopic($topic)
+    {
         $topic = $this->osiris->topics->findOne(['id' => $topic]);
         if (empty($topic)) return '';
         return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+    }
 
+    
+    public function canProjectsBeCreated()
+    {
+        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'project']);
+        if ($ability > 0) {
+            return ($this->hasPermission('projects.add'));
+        }
+        return false;
+    }
+
+    public function canProposalsBeCreated()
+    {
+        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'proposal']);
+        if ($ability > 0) {
+            return ($this->hasPermission('proposals.add'));
+        }
+        return false;
     }
 }

@@ -267,7 +267,6 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
         $project_filter = [
             'persons.user' => ['$in' => $users],
             "public" => true,
-            "status" => ['$in' => ["approved", 'finished']]
         ];
 
         $result['projects'] = $osiris->projects->count($project_filter);
@@ -357,10 +356,11 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
         ];
     } elseif ($context == 'project') {
         if (DB::is_ObjectID($id)) {
-            $project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
-            if (!empty($project)) {
-                $id = $project['name'];
-            }
+            // $project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
+            // if (!empty($project)) {
+            //     $id = $project['name'];
+            // }
+            $id = DB::to_ObjectID($id);
         }
         $filter = [
             'projects' => $id,
@@ -478,7 +478,6 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
 
     $filter = [
         'public' => true,
-        "status" => ['$in' => ["approved", 'finished']]
     ];
 
     if ($context == 'unit') {
@@ -1009,11 +1008,11 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         'publications' => $osiris->activities->count(['authors.user' => $person['username'], 'type' => 'publication', 'hide' => ['$ne' => true]]),
         'activities' => $osiris->activities->count(['authors.user' => $person['username'], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio()], 'hide' => ['$ne' => true]]),
         'teaching' => $osiris->activities->count(['authors.user' => $person['username'], 'type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]]),
-        'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true, "status" => ['$in' => ["approved", 'finished']]]),
+        'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true, ]),
     ];
 
     if ($result['numbers']['projects'] > 0) {
-        $raw = $osiris->projects->find(['persons.user' => $person['username'], "public" => true, "status" => ['$in' => ["approved", 'finished']]])->toArray();
+        $raw = $osiris->projects->find(['persons.user' => $person['username'], "public" => true, ])->toArray();
         $projects = ['current' => [], 'past' => []];
         foreach ($raw as $project) {
             $Project->setProject($project);
@@ -1109,7 +1108,6 @@ Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($con
         $filter = [
             'persons.user' => ['$in' => $users],
             "public" => true,
-            "status" => ['$in' => ["approved", 'finished']],
             'collaborators' => ['$exists' => 1]
         ];
         $result = $osiris->projects->aggregate([
@@ -1258,7 +1256,6 @@ Route::get('/portfolio/projects', function () {
     include(BASEPATH . '/php/init.php');
     $filter = [
         'public' => true,
-        "status" => ['$in' => ["approved", 'finished']]
     ];  
 
     $options = [
@@ -1347,25 +1344,4 @@ Route::get('/portfolio/person-images', function () {
     }
     
     echo rest($result);
-});
-
-// function getPersonImage($person){
-//     global $Settings;
-//     if ($Settings->featureEnabled('db_pictures')) {
-//         $img = $Settings->printProfilePicture($person['username'], 'profile-img');
-//     } else {
-//         $user = $person['username'];
-//         if (!file_exists(BASEPATH . "/img/users/$user.jpg")) {
-//             return null;
-//         } else {
-//             $img = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/img/users/$user.jpg";
-//         }
-//     }
-//     return $img;
-// }
-
-Route::get('/portfolio/test', function () {
-    include(BASEPATH . '/php/init.php');
-    $test = $Settings->getActivitiesPortfolio(false);
-    dump($test);
 });

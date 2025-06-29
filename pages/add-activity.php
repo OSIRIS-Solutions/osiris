@@ -363,7 +363,7 @@ function val($index, $default = '')
             });
             if (empty($subtypes)) continue;
         ?>
-            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>')" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
+            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>', false)" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
                 <span>
                     <i class='ph ph-<?= $type['icon'] ?? 'circle' ?>'></i>
                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>

@@ -117,7 +117,7 @@ $Vocabulary = new Vocabulary();
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
 
-    <?php if ($Settings->hasPermission('projects.add') && $Project->canProjectsBeCreated()) { ?>
+    <?php if ($Settings->canProjectsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/projects/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new project', 'Neues Projekt anlegen') ?>
@@ -234,6 +234,33 @@ $Vocabulary = new Vocabulary();
                 </table>
             </div>
 
+
+            <?php if ($topicsEnabled) { ?>
+                <h6>
+                    <?= $Settings->topicLabel() ?>
+                    <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
+                </h6>
+
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $topic_id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
@@ -281,7 +308,7 @@ $Vocabulary = new Vocabulary();
                 </table>
             </div>
 
-                <!-- 
+            <!-- 
             <h6>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
@@ -300,272 +327,243 @@ $Vocabulary = new Vocabulary();
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div> -->
 
-                <?php if ($topicsEnabled) { ?>
-                    <h6>
-                        <?= $Settings->topicLabel() ?>
-                        <a class="float-right" onclick="filterProjects('#filter-topics .active', null, 9)"><i class="ph ph-x"></i></a>
-                    </h6>
-
-                    <div class="filter">
-                        <table id="filter-topics" class="table small simple">
-                            <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                                $topic_id = $a['id'];
-                            ?>
-                                <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                    <td>
-                                        <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
-                                            <span style="color: var(--highlight-color)">
-                                                <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </table>
-
-                    </div>
-                <?php } ?>
-
-            </div>
         </div>
     </div>
+</div>
 
 
-    <script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
-    <script>
-        const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
+<script>
+    const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
 
-        var dataTable;
+    var dataTable;
 
-        const minEl = document.querySelector('#filter-from');
-        const maxEl = document.querySelector('#filter-to');
+    const minEl = document.querySelector('#filter-from');
+    const maxEl = document.querySelector('#filter-to');
 
-        const activeFilters = $('#active-filters')
-        const headers = [{
-                title: lang('Project', 'Projekt'),
-                key: 'name'
-            },
-            {
-                title: lang('Type', 'Typ'),
-                key: 'type'
-            },
-            {
-                title: lang('Funder', 'Mittelgeber'),
-                key: 'funder'
-            },
-            {
-                title: lang('Start date', 'Startdatum'),
-                key: 'start_date'
-            },
-            {
-                title: lang('End date', 'Enddatum'),
-                key: 'end_date'
-            },
-            {
-                title: lang('Role', 'Rolle'),
-                key: 'role'
-            },
-            {
-                title: lang('Applicant', 'Antragsteller'),
-                key: 'applicant'
-            },
-            {
-                title: lang('Proposal-ID', 'Antrags-ID'),
-                key: 'proposal_id'
-            },
-            {
-                title: lang('Units', 'Einheiten'),
-                key: 'units'
-            },
-            {
-                title: lang('Topics', 'Themen'),
-                key: 'topics'
-            },
-            {
-                title: lang('Funding organization', 'Förderorganisation'),
-                key: 'funding_organization'
-            },
-            {
-                title: lang('Project', 'Projekt'),
-                key: 'name'
-            },
-            {
-                title: lang('Title', 'Titel'),
-                key: 'title'
-            },
-            {
-                title: lang('Staff', 'Mitarbeitende'),
-                key: 'persons'
-            },
-            {
-                title: lang('Subproject', 'Teilprojekt'),
-                key: 'subproject'
-            }
-        ]
+    const activeFilters = $('#active-filters')
+    const headers = [{
+            title: lang('Project', 'Projekt'),
+            key: 'name'
+        },
+        {
+            title: lang('Type', 'Typ'),
+            key: 'type'
+        },
+        {
+            title: lang('Funder', 'Mittelgeber'),
+            key: 'funder'
+        },
+        {
+            title: lang('Start date', 'Startdatum'),
+            key: 'start_date'
+        },
+        {
+            title: lang('End date', 'Enddatum'),
+            key: 'end_date'
+        },
+        {
+            title: lang('Role', 'Rolle'),
+            key: 'role'
+        },
+        {
+            title: lang('Applicant', 'Antragsteller'),
+            key: 'applicant'
+        },
+        {
+            title: lang('Proposal-ID', 'Antrags-ID'),
+            key: 'proposal_id'
+        },
+        {
+            title: lang('Units', 'Einheiten'),
+            key: 'units'
+        },
+        {
+            title: '<?= $Settings->topicLabel() ?>',
+            key: 'topics'
+        },
+        {
+            title: lang('Funding organization', 'Förderorganisation'),
+            key: 'funding_organization'
+        },
+        {
+            title: lang('Project', 'Projekt'),
+            key: 'name'
+        },
+        {
+            title: lang('Title', 'Titel'),
+            key: 'title'
+        },
+        {
+            title: lang('Staff', 'Mitarbeitende'),
+            key: 'persons'
+        },
+        {
+            title: lang('Subproject', 'Teilprojekt'),
+            key: 'subproject'
+        }
+    ]
 
-        function renderType(data, subproject = false) {
-            <?php
-            $vocab = $Project->getProjectTypes();
-            foreach ($vocab as $v) { ?>
-                if (data == '<?= $v['id'] ?>' || data == '<?= $v['id'] ?>') {
-                    let icon = '<i class="ph ph-<?= $v['icon'] ?>"></i>';
-                    if (subproject) {
-                        icon = `<i class="ph ph-git-merge"></i>`
-                    }
-                    return `<span class="badge" style="color: <?= $v['color'] ?>">
+    function renderType(data, subproject = false) {
+        <?php
+        $vocab = $Project->getProjectTypes();
+        foreach ($vocab as $v) { ?>
+            if (data == '<?= $v['id'] ?>' || data == '<?= $v['id'] ?>') {
+                let icon = '<i class="ph ph-<?= $v['icon'] ?>"></i>';
+                if (subproject) {
+                    icon = `<i class="ph ph-git-merge"></i>`
+                }
+                return `<span class="badge" style="color: <?= $v['color'] ?>">
                             ${icon}&nbsp;<?= lang($v['name'], $v['name_de'] ?? null) ?>
                         </span>`
-                }
-            <?php } ?>
-            // Legacy types
-            if (data == 'Eigenfinanziert' || data == 'self-funded') {
-                return `<span class="badge text-signal">
+            }
+        <?php } ?>
+        // Legacy types
+        if (data == 'Eigenfinanziert' || data == 'self-funded') {
+            return `<span class="badge text-signal">
                         <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
                         </span>`
-            }
-            if (data == 'Stipendium' || data == 'stipendiate') {
-                return `<span class="badge text-success no-wrap">
+        }
+        if (data == 'Stipendium' || data == 'stipendiate') {
+            return `<span class="badge text-success no-wrap">
                         <i class="ph ph-tip-jar"></i>&nbsp;${lang('Stipendiate', 'Stipendium')}
                         </span>`
-            }
-            if (data == 'Drittmittel' || data == 'third-party') {
-                return `<span class="badge text-danger">
+        }
+        if (data == 'Drittmittel' || data == 'third-party') {
+            return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Third-party funded', 'Drittmittel')}
                         </span>`
-            }
-            if (data == 'Teilprojekt' || data == 'subproject') {
-                return `<span class="badge text-danger">
+        }
+        if (data == 'Teilprojekt' || data == 'subproject') {
+            return `<span class="badge text-danger">
                         <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
                         </span>`
-            }
-            return data;
         }
+        return data;
+    }
 
-        function renderFunder(row) {
-            if (!row.funder && row.scholarship) return row.scholarship;
-            return row.funder;
-        }
+    function renderFunder(row) {
+        if (!row.funder && row.scholarship) return row.scholarship;
+        return row.funder;
+    }
 
-        function renderRole(data) {
-            if (data == 'coordinator') {
-                return `<span class="badge text-signal">
+    function renderRole(data) {
+        if (data == 'coordinator') {
+            return `<span class="badge text-signal">
         <i class="ph ph-crown"></i>
         ${lang('Coordinator', 'Koordinator')}
         </span>`
-            }
-            if (data == 'associated') {
-                return `<span class="badge text-success">
+        }
+        if (data == 'associated') {
+            return `<span class="badge text-success">
         <i class="ph ph-address-book"></i>
         ${lang('Associated', 'Beteiligt')}
         </span>`
-            }
-            return `<span class="badge text-muted">
+        }
+        return `<span class="badge text-muted">
         <i class="ph ph-handshake"></i>
         ${lang('Partner')}
         </span>`
-        }
+    }
 
-        function renderContact(row) {
-            if (!row.contact && row.supervisor)
-                return `<a href="<?= ROOTPATH ?>/profile/${row.supervisor}">${row.applicant}</a>`;
-            if (!row.contact)
-                return row.applicant;
-            return `<a href="<?= ROOTPATH ?>/profile/${row.contact}">${row.applicant}</a>`
-        }
+    function renderContact(row) {
+        if (!row.contact && row.supervisor)
+            return `<a href="<?= ROOTPATH ?>/profile/${row.supervisor}">${row.applicant}</a>`;
+        if (!row.contact)
+            return row.applicant;
+        return `<a href="<?= ROOTPATH ?>/profile/${row.contact}">${row.applicant}</a>`
+    }
 
-        function renderTopic(data) {
-            let topics = '';
-            if (topicsEnabled && data && data.length > 0) {
-                topics = '<span class="float-right topic-icons">'
-                data.forEach(function(topic) {
-                    topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
-                })
-                topics += '</span>'
-            }
-            return topics;
+    function renderTopic(data) {
+        let topics = '';
+        if (topicsEnabled && data && data.length > 0) {
+            topics = '<span class="float-right topic-icons">'
+            data.forEach(function(topic) {
+                topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
+            })
+            topics += '</span>'
         }
+        return topics;
+    }
 
-        function renderDate(data) {
-            var start = data.start_date;
-            // format from ISO to MM/YYYY
-            if (start) {
-                start = new Date(start).toLocaleDateString('de-DE', {
-                    month: 'short',
-                    year: 'numeric'
-                });
-            }
-            var end = data.end_date;
-            if (end) {
-                end = new Date(end).toLocaleDateString('de-DE', {
-                    month: 'short',
-                    year: 'numeric'
-                });
-                return `${start} - ${end}`;
-            } else {
-                return start;
-            }
+    function renderDate(data) {
+        var start = data.start_date;
+        // format from ISO to MM/YYYY
+        if (start) {
+            start = new Date(start).toLocaleDateString('de-DE', {
+                month: 'short',
+                year: 'numeric'
+            });
         }
+        var end = data.end_date;
+        if (end) {
+            end = new Date(end).toLocaleDateString('de-DE', {
+                month: 'short',
+                year: 'numeric'
+            });
+            return `${start} - ${end}`;
+        } else {
+            return start;
+        }
+    }
 
-        $(document).ready(function() {
-            dataTable = new DataTable('#project-table', {
-                ajax: {
-                    url: '<?= ROOTPATH ?>/api/projects',
-                    // add data to the request
-                    data: {
-                        json: '<?= json_encode($filter) ?>',
-                        // formatted: true
-                    },
+    $(document).ready(function() {
+        dataTable = new DataTable('#project-table', {
+            ajax: {
+                url: '<?= ROOTPATH ?>/api/projects',
+                // add data to the request
+                data: {
+                    json: '<?= json_encode($filter) ?>',
+                    // formatted: true
                 },
-                type: 'GET',
-                deferRender: true,
-                responsive: true,
-                language: {
-                    url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+            },
+            type: 'GET',
+            deferRender: true,
+            responsive: true,
+            language: {
+                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+            },
+            buttons: [{
+                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
+                    className: 'btn small text-primary mr-10',
+                    action: function(e, dt, node, config) {
+                        window.location.href = '<?= ROOTPATH ?>/projects/search';
+                    }
                 },
-                buttons: [{
-                        text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
-                        className: 'btn small text-primary mr-10',
-                        action: function(e, dt, node, config) {
-                            window.location.href = '<?= ROOTPATH ?>/projects/search';
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [10, 1, 2, 9, 3, 4, 5, 6, 7],
+                        format: {
+                            header: function(html, index, node) {
+                                return headers[index].title ?? '';
+                            }
                         }
                     },
-                    {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: [10, 1, 2, 9, 3, 4, 5, 6, 7],
-                            format: {
-                                header: function(html, index, node) {
-                                    return headers[index].title ?? '';
-                                }
-                            }
-                        },
-                        className: 'btn small',
-                        title: function() {
-                            var filters = []
-                            activeFilters.find('.badge').find('span').each(function(i, el) {
-                                filters.push(el.innerHTML)
-                            })
-                            console.log(filters);
-                            if (filters.length == 0) return "OSIRIS All Projects";
-                            return 'OSIRIS Projects ' + filters.join('_')
-                        },
-                        text: '<i class="ph ph-file-xls"></i> Export'
+                    className: 'btn small',
+                    title: function() {
+                        var filters = []
+                        activeFilters.find('.badge').find('span').each(function(i, el) {
+                            filters.push(el.innerHTML)
+                        })
+                        console.log(filters);
+                        if (filters.length == 0) return "OSIRIS All Projects";
+                        return 'OSIRIS Projects ' + filters.join('_')
                     },
-                ],
-                dom: 'fBrtip',
-                columnDefs: [{
-                        target: 0,
-                        data: 'name',
-                        render: function(data, type, row) {
-                            console.log(row);
-                            let persons = '';
-                            if (Array.isArray(row.persons)) {
-                                persons = row.persons.map(a => a.name).join(', ')
-                            }
-                            return `
+                    text: '<i class="ph ph-file-xls"></i> Export'
+                },
+            ],
+            dom: 'fBrtip',
+            columnDefs: [{
+                    target: 0,
+                    data: 'name',
+                    render: function(data, type, row) {
+                        console.log(row);
+                        let persons = '';
+                        if (Array.isArray(row.persons)) {
+                            persons = row.persons.map(a => a.name).join(', ')
+                        }
+                        return `
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
@@ -588,257 +586,257 @@ $Vocabulary = new Vocabulary();
                         </div>
                     </div>
                         `
-                            // ${renderFunder(row)}
-                            // ${renderContact(row)}
-                            // ${renderRole(row.role)}
-                        }
-                    },
-                    {
-                        target: 1,
-                        data: 'type',
-                        searchable: true,
-                        visible: false,
-                        header: lang('Type', 'Typ')
-                    },
-                    {
-                        target: 2,
-                        data: 'funder',
-                        defaultContent: '',
-                        searchable: true,
-                        visible: false,
-                        header: lang('Funder', 'Drittmmittelgeber'),
-                        render: (data, type, row) => renderFunder(row)
-                    },
-                    {
-                        target: 3,
-                        data: 'start_date',
-                        searchable: true,
-                        visible: false,
-                        header: lang('Start date', 'Startdatum')
-                    },
-                    {
-                        target: 4,
-                        data: 'end_date',
-                        searchable: true,
-                        visible: false,
-                        header: lang('End date', 'Enddatum')
-                    },
-                    {
-                        target: 5,
-                        data: 'role',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Role', 'Rolle')
-                    },
-                    {
-                        target: 6,
-                        data: 'applicant',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Applicant', 'Antragsteller')
-                    },
-                    {
-                        target: 7,
-                        data: 'proposal_id',
-                        searchable: true,
-                        visible: false,
-                        header: lang('Proposal-ID', 'Antrags-ID'),
-                        defaultContent: '-',
-                    },
-                    {
-                        target: 8,
-                        data: 'units',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Units', 'Einheiten')
-                    },
-                    {
-                        target: 9,
-                        data: 'topics',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Topics', 'Forschungsbereiche'),
-                        render: (data, type, row) => {
-                            if (topicsEnabled && Array.isArray(data)) {
-                                return data.join(', ')
-                            }
-                        }
-                    },
-                    {
-                        target: 10,
-                        data: 'funding_organization',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Funding organization', 'Förderorganisation')
-                    },
-                    {
-                        target: 11,
-                        data: 'name',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Project', 'Projekt')
-                    },
-                    {
-                        target: 12,
-                        data: 'title',
-                        searchable: false,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Title', 'Titel')
-                    },
-                    {
-                        target: 13,
-                        data: 'persons',
-                        searchable: true,
-                        visible: false,
-                        defaultContent: '',
-                        header: lang('Staff', 'Mitarbeitende'),
-                        render: (data, type, row) => {
-                            if (Array.isArray(data)) {
-                                return data.map(a => a.user).join(', ')
-                            }
-                            return data
-                        }
-                    },
-                    {
-                        target: 14,
-                        data: 'subproject',
-                        defaultContent: false,
-                        searchable: true,
-                        visible: false,
-                        header: lang('Subproject', 'Teilprojekt'),
-                        render: (data, type, row) => {
-                            if (data) {
-                                return lang('Subproject', 'Teilprojekt');
-                            }
-                            return lang('Main project', 'Hauptprojekt');
+                        // ${renderFunder(row)}
+                        // ${renderContact(row)}
+                        // ${renderRole(row.role)}
+                    }
+                },
+                {
+                    target: 1,
+                    data: 'type',
+                    searchable: true,
+                    visible: false,
+                    header: lang('Type', 'Typ')
+                },
+                {
+                    target: 2,
+                    data: 'funder',
+                    defaultContent: '',
+                    searchable: true,
+                    visible: false,
+                    header: lang('Funder', 'Drittmmittelgeber'),
+                    render: (data, type, row) => renderFunder(row)
+                },
+                {
+                    target: 3,
+                    data: 'start_date',
+                    searchable: true,
+                    visible: false,
+                    header: lang('Start date', 'Startdatum')
+                },
+                {
+                    target: 4,
+                    data: 'end_date',
+                    searchable: true,
+                    visible: false,
+                    header: lang('End date', 'Enddatum')
+                },
+                {
+                    target: 5,
+                    data: 'role',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Role', 'Rolle')
+                },
+                {
+                    target: 6,
+                    data: 'applicant',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Applicant', 'Antragsteller')
+                },
+                {
+                    target: 7,
+                    data: 'proposal_id',
+                    searchable: true,
+                    visible: false,
+                    header: lang('Proposal-ID', 'Antrags-ID'),
+                    defaultContent: '-',
+                },
+                {
+                    target: 8,
+                    data: 'units',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Units', 'Einheiten')
+                },
+                {
+                    target: 9,
+                    data: 'topics',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Topics', 'Forschungsbereiche'),
+                    render: (data, type, row) => {
+                        if (topicsEnabled && Array.isArray(data)) {
+                            return data.join(', ')
                         }
                     }
-                ],
-                order: [
-                    [3, 'desc']
-                ],
-                paging: true,
-                autoWidth: true,
-                pageLength: 8,
-            });
-
-            // $('#project-table_wrapper').prepend($('.filters'))
-
-
-            var initializing = true;
-            dataTable.on('init', function() {
-
-                var hash = readHash();
-                console.log(hash);
-                if (hash.status !== undefined) {
-                    filterProjects(document.getElementById(hash.status + '-btn'), hash.status, 7)
-                }
-                if (hash.units !== undefined) {
-                    filterProjects(document.getElementById(hash.unit + '-btn'), hash.unit, 8)
-                }
-                if (hash.role !== undefined) {
-                    filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 5)
-                }
-                if (topicsEnabled && hash.topics !== undefined) {
-                    filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
-                }
-
-                if (hash.search !== undefined) {
-                    dataTable.search(hash.search).draw();
-                }
-                if (hash.page !== undefined) {
-                    dataTable.page(parseInt(hash.page) - 1).draw('page');
-                }
-                initializing = false;
-
-                // count data for the filter and add it to the filter
-                let all_filters = {
-                    1: '#filter-type',
-                    2: '#filter-funder',
-                    8: '#filter-units',
-                    9: '#filter-topics'
-                }
-                for (const key in all_filters) {
-                    if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
-                        const element = all_filters[key];
-                        const filter = $(element).find('a')
-                        filter.each(function(i, el) {
-                            let type = $(el).data('type')
-                            const count = dataTable.column(key).data().filter(function(d) {
-                                if (key == 8 || key == 9) {
-                                    return d.includes(type)
-                                }
-                                return d == type
-                            }).length
-                            $(el).append(` <em>${count}</em>`)
-                        })
+                },
+                {
+                    target: 10,
+                    data: 'funding_organization',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Funding organization', 'Förderorganisation')
+                },
+                {
+                    target: 11,
+                    data: 'name',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Project', 'Projekt')
+                },
+                {
+                    target: 12,
+                    data: 'title',
+                    searchable: false,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Title', 'Titel')
+                },
+                {
+                    target: 13,
+                    data: 'persons',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Staff', 'Mitarbeitende'),
+                    render: (data, type, row) => {
+                        if (Array.isArray(data)) {
+                            return data.map(a => a.user).join(', ')
+                        }
+                        return data
+                    }
+                },
+                {
+                    target: 14,
+                    data: 'subproject',
+                    defaultContent: false,
+                    searchable: true,
+                    visible: false,
+                    header: lang('Subproject', 'Teilprojekt'),
+                    render: (data, type, row) => {
+                        if (data) {
+                            return lang('Subproject', 'Teilprojekt');
+                        }
+                        return lang('Main project', 'Hauptprojekt');
                     }
                 }
-            });
+            ],
+            order: [
+                [3, 'desc']
+            ],
+            paging: true,
+            autoWidth: true,
+            pageLength: 8,
+        });
+
+        // $('#project-table_wrapper').prepend($('.filters'))
 
 
-            dataTable.on('draw', function(e, settings) {
-                if (initializing) return;
-                var info = dataTable.page.info();
-                console.log(settings.oPreviousSearch.sSearch);
-                writeHash({
-                    page: info.page + 1,
-                    search: settings.oPreviousSearch.sSearch
-                })
-            });
+        var initializing = true;
+        dataTable.on('init', function() {
 
+            var hash = readHash();
+            console.log(hash);
+            if (hash.status !== undefined) {
+                filterProjects(document.getElementById(hash.status + '-btn'), hash.status, 7)
+            }
+            if (hash.units !== undefined) {
+                filterProjects(document.getElementById(hash.unit + '-btn'), hash.unit, 8)
+            }
+            if (hash.role !== undefined) {
+                filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 5)
+            }
+            if (topicsEnabled && hash.topics !== undefined) {
+                filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
+            }
+
+            if (hash.search !== undefined) {
+                dataTable.search(hash.search).draw();
+            }
+            if (hash.page !== undefined) {
+                dataTable.page(parseInt(hash.page) - 1).draw('page');
+            }
+            initializing = false;
+
+            // count data for the filter and add it to the filter
+            let all_filters = {
+                1: '#filter-type',
+                2: '#filter-funder',
+                8: '#filter-units',
+                9: '#filter-topics'
+            }
+            for (const key in all_filters) {
+                if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
+                    const element = all_filters[key];
+                    const filter = $(element).find('a')
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            if (key == 8 || key == 9) {
+                                return d.includes(type)
+                            }
+                            return d == type
+                        }).length
+                        $(el).append(` <em>${count}</em>`)
+                    })
+                }
+            }
         });
 
 
-        function filterProjects(btn, activity = null, column = 1) {
-            console.log(column);
-            var tr = $(btn).closest('tr')
-            var table = tr.closest('table')
-            $('#filter-' + column).remove()
-            const field = headers[column]
-            const hash = {}
-            hash[field.key] = activity
+        dataTable.on('draw', function(e, settings) {
+            if (initializing) return;
+            var info = dataTable.page.info();
+            console.log(settings.oPreviousSearch.sSearch);
+            writeHash({
+                page: info.page + 1,
+                search: settings.oPreviousSearch.sSearch
+            })
+        });
 
-            if (tr.hasClass('active') || activity === null) {
-                hash[field.key] = null
-                table.find('.active').removeClass('active')
-                dataTable.columns(column).search("", true, false, true).draw();
+    });
 
-            } else {
 
-                table.find('.active').removeClass('active')
-                tr.addClass('active')
-                dataTable.column(column).search(activity, true, false, true).draw();
-                // dataTable.column(column).data().filter(function (value, index) {
-                //     return value == activity;
-                // });
-                // indicator
-                const filterBtn = $('<span class="badge" id="filter-' + column + '">')
-                filterBtn.html(`<b>${field.title}:</b> <span>${activity}</span>`)
-                const a = $('<a>')
-                a.html('&times;')
-                a.on('click', function() {
-                    filterProjects(btn, null, column);
-                })
-                filterBtn.append(a)
-                activeFilters.append(filterBtn)
-            }
-            writeHash(hash)
+    function filterProjects(btn, activity = null, column = 1) {
+        console.log(column);
+        var tr = $(btn).closest('tr')
+        var table = tr.closest('table')
+        $('#filter-' + column).remove()
+        const field = headers[column]
+        const hash = {}
+        hash[field.key] = activity
 
+        if (tr.hasClass('active') || activity === null) {
+            hash[field.key] = null
+            table.find('.active').removeClass('active')
+            dataTable.columns(column).search("", true, false, true).draw();
+
+        } else {
+
+            table.find('.active').removeClass('active')
+            tr.addClass('active')
+            dataTable.column(column).search(activity, true, false, true).draw();
+            // dataTable.column(column).data().filter(function (value, index) {
+            //     return value == activity;
+            // });
+            // indicator
+            const filterBtn = $('<span class="badge" id="filter-' + column + '">')
+            filterBtn.html(`<b>${field.title}:</b> <span>${activity}</span>`)
+            const a = $('<a>')
+            a.html('&times;')
+            a.on('click', function() {
+                filterProjects(btn, null, column);
+            })
+            filterBtn.append(a)
+            activeFilters.append(filterBtn)
         }
+        writeHash(hash)
 
-        function sortTable(el, column, direction = 'asc') {
-            $(el).closest('.dropdown-menu').find('.active').removeClass('active');
-            $(el).addClass('active');
+    }
 
-            dataTable.order([column, direction]).draw();
-            return false;
-        }
-    </script>
+    function sortTable(el, column, direction = 'asc') {
+        $(el).closest('.dropdown-menu').find('.active').removeClass('active');
+        $(el).addClass('active');
+
+        dataTable.order([column, direction]).draw();
+        return false;
+    }
+</script>

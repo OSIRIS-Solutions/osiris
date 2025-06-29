@@ -546,7 +546,7 @@ Route::post('/crud/admin/features', function () {
 
     $msg = 'settings-saved';
 
-    header("Location: " . ROOTPATH . "/admin/features?msg=" . $msg);
+    header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg . '#features');
 }, 'login');
 
 
@@ -557,6 +557,8 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     if (!isset($_POST['values'])) die("no values given");
 
     $values = validateValues($_POST['values'], $DB);
+    
+    // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
         $collection = $osiris->adminCategories;
@@ -597,6 +599,8 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
 
     if (!isset($_POST['values'])) die("no values given");
     $values = validateValues($_POST['values'], $DB);
+    
+    // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
         $collection = $osiris->adminCategories;

@@ -100,6 +100,10 @@ Route::get('/api/activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+        $filter = $Settings->getActivityFilter($filter);
+    }
+
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
         $group = $_GET['aggregate'];
@@ -262,6 +266,7 @@ Route::get('/api/all-activities', function () {
     }
     // $Format = new Document($highlight);
 
+    
     $filter = [];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -276,12 +281,21 @@ Route::get('/api/all-activities', function () {
 
     $result = [];
     if ($page == "my-activities") {
-        // only own work
-        $filter = ['$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]];
+        // reduced filter for my activities
+        $filter = $Settings->getActivityFilter($filter, $user, true);
+        $filter = array_merge($filter, [
+            '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
+        ]);
+    } else {
+        if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+            $filter = $Settings->getActivityFilter($filter);
+        }
     }
-    if (isset($_GET['type'])) {
+    
+    if (isset($_GET['type']) && in_array($_GET['type'], $Settings->allowedTypes)) {
         $filter['type'] = $_GET['type'];
     }
+
     $cursor = $osiris->activities->find($filter);
     $cart = readCart();
     foreach ($cursor as $doc) {
@@ -526,6 +540,8 @@ Route::get('/api/users', function () {
             }
             $topics .= '</span>';
         }
+        // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
+        $units = $Groups->getPersonDept($user['units'] ?? []);
         $table[] = [
             'id' => strval($user['_id']),
             'username' => $user['username'],
@@ -552,7 +568,7 @@ Route::get('/api/users', function () {
             'telephone' => $user['telephone'] ?? '',
             'orcid' => $user['orcid'] ?? '',
             'academic_title' => $user['academic_title'],
-            'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
+            'dept' => $units,
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
             'topics' => $user['topics'] ?? array(),

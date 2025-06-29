@@ -165,7 +165,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    <?=lang('Save', 'Speichern')?>
+                    <?= lang('Save', 'Speichern') ?>
                 </button>
 
             </div>
@@ -234,7 +234,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    <?=lang('Save', 'Speichern')?>
+                    <?= lang('Save', 'Speichern') ?>
                 </button>
             </div>
 
@@ -268,7 +268,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    <?=lang('Save', 'Speichern')?>
+                    <?= lang('Save', 'Speichern') ?>
                 </button>
             </div>
         </div>
@@ -312,7 +312,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
-                    <?=lang('Save', 'Speichern')?>
+                    <?= lang('Save', 'Speichern') ?>
                 </button>
                 <!-- reset -->
                 <button type="button" class="btn" onclick="resetColors()">
@@ -480,25 +480,6 @@ $affiliation = $Settings->get('affiliation_details');
 
 
 <section id="features" style="display: none;">
-    <?php
-
-    /**
-     * Page for admin dashboard for features settings
-     * 
-     * This file is part of the OSIRIS package.
-     * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
-     * 
-     * @link /admin/features
-     *
-     * @package OSIRIS
-     * @since 1.3.0
-     * 
-     * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
-     * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
-     * @license     MIT
-     */
-
-    ?>
 
     <style>
         .table td.description {
@@ -774,6 +755,35 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
 
                 </div>
+
+
+                <div class="box px-20">
+                    <h3 id="calendar">
+                        <?= lang('Calendar', 'Kalender') ?>
+                    </h3>
+                    <div class="form-group">
+                        <label for="">
+                            <?= lang('Show the calendar in Sidebar', 'Zeige den Kalender in der Seitennavigation') ?>
+                        </label>
+                        <?php
+                        $teachingModules = $Settings->featureEnabled('calendar', false);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="calendar-true" value="1" name="values[calendar]" <?= $teachingModules ? 'checked' : '' ?>>
+                            <label for="calendar-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="calendar-false" value="0" name="values[calendar]" <?= $teachingModules ? '' : 'checked' ?>>
+                            <label for="calendar-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
 
 
                 <div class="box px-20">
@@ -1063,6 +1073,9 @@ $affiliation = $Settings->get('affiliation_details');
                         </a>
                         <a href="#teaching-modules">
                             <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
+                        </a>
+                        <a href="#calendar">
+                            <?= lang('Calendar', 'Kalender') ?>
                         </a>
                         <a href="#research-topics">
                             <?= lang('Research Topics', 'Forschungsbereiche') ?>

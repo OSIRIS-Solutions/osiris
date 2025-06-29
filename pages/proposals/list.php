@@ -92,7 +92,7 @@ $filter = [];
     </a>
      -->
 
-    <?php if ($Settings->hasPermission('proposals.add') && $Project->canProposalsBeCreated()) { ?>
+    <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>
@@ -292,9 +292,6 @@ $filter = [];
 </div>
 
 
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     var dataTable;
