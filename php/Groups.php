@@ -585,4 +585,16 @@ class Groups
         )->toArray();
         return $persons;
     }
+
+    function getPersonDept($units){
+        $units = DB::doc2Arr($units);
+        if (empty($units)) return [];
+        $depts = [];
+        foreach ($units as $unit) {
+            $unit = $this->getUnitParent($unit['unit'], 1);
+            if (empty($unit['id']) || in_array($unit['id'], $depts)) continue;
+            $depts[] = $unit['id'];
+        }
+        return $depts;
+    }
 }

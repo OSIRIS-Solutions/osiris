@@ -540,6 +540,8 @@ Route::get('/api/users', function () {
             }
             $topics .= '</span>';
         }
+        // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
+        $units = $Groups->getPersonDept($user['units'] ?? []);
         $table[] = [
             'id' => strval($user['_id']),
             'username' => $user['username'],
@@ -566,7 +568,7 @@ Route::get('/api/users', function () {
             'telephone' => $user['telephone'] ?? '',
             'orcid' => $user['orcid'] ?? '',
             'academic_title' => $user['academic_title'],
-            'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
+            'dept' => $units,
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
             'topics' => $user['topics'] ?? array(),
