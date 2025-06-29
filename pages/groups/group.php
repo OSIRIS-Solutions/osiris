@@ -359,12 +359,15 @@ $count_wordcloud = 0;
                     <div class="head">
                         <h5 class="mt-0"><?= $Groups->getUnit($group['unit'] ?? null, 'head') ?></h5>
                         <div>
-                            <?php foreach ($head as $h) { ?>
+                            <?php foreach ($head as $h) { 
+                                $name = $DB->getNameFromId($h);
+                                if (empty($name)) continue; // skip if no name found
+                                ?>
                                 <a href="<?= ROOTPATH ?>/profile/<?= $h ?>" class="colorless d-flex align-items-center border bg-white p-10 rounded mt-10">
                                     <?= $Settings->printProfilePicture($h, 'profile-img small mr-20') ?>
                                     <div class="">
                                         <h5 class="my-0">
-                                            <?= $DB->getNameFromId($h) ?>
+                                            <?= $name ?>
                                         </h5>
                                     </div>
                                 </a>
