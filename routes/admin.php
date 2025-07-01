@@ -485,7 +485,6 @@ Route::post('/crud/admin/roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-
     if (isset($_POST['values'])) {
         $osiris->adminRights->deleteMany([]);
         $rights = $_POST['values'];
@@ -500,7 +499,17 @@ Route::post('/crud/admin/roles', function () {
             }
         }
     }
-    if (isset($_POST['roles'])) {
+    if (isset($_POST['roles']) && is_array($_POST['roles']) && count($_POST['roles']) > 2) {
+        // user, scientist and admin must always be there
+        if (!in_array('user', $_POST['roles'])) {
+            $_POST['roles'][] = 'user';
+        }
+        if (!in_array('scientist', $_POST['roles'])) {
+            $_POST['roles'][] = 'scientist';
+        }
+        if (!in_array('admin', $_POST['roles'])) {
+            $_POST['roles'][] = 'admin';
+        }
         $osiris->adminGeneral->deleteOne(['key' => 'roles']);
         $osiris->adminGeneral->insertOne([
             'key' => 'roles',
