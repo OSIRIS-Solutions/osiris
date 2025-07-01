@@ -776,6 +776,12 @@ function _approve(id, approval) {
         url: ROOTPATH + '/crud/activities/approve/' + id,
         success: function (response) {
             $('.loader').removeClass('show')
+            let n_notifications = parseInt($('span.notification').text()) - 1
+            console.log(n_notifications);
+            if (n_notifications >= 0) {
+                $('span.notification').text(n_notifications)
+            }
+            
             var loc = location.pathname.split('/')
             if (loc[loc.length - 1] == "issues") {
                 $('#tr-' + id).remove()
@@ -793,6 +799,7 @@ function _approve(id, approval) {
                 $('#tr-' + id).remove()
                 toastSuccess('Removed activity')
             }
+            
             // toastSuccess("Updated " + response.updated + " datasets.")
             // $('#result').html(response)
         },
