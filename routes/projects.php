@@ -742,6 +742,25 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
 
+    // send messages to applicants
+    $applicants = $project['applicants'] ?? [];
+    if (!empty($applicants)){
+        foreach ($applicants as $applicant) {
+            if ($_SESSION['username'] == $applicant) continue; // do not send message to self
+            $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+            $tag = $collection == 'projects' ? 'project' : 'proposal';
+            $DB->addMessage(
+                $applicant,
+                'Your project <b>' . $values['name'] . '</b> has been changed by ' . $creator . '',
+                'Dein Projekt <b>' . $values['name'] . '</b> wurde aktualisiert von ' . $creator . '',
+                $tag,
+                "/$collection/view/" . $id . '#section-history',
+            );
+        }
+    }
+
+
+
     $id = $DB->to_ObjectID($id);
     include_once BASEPATH . "/php/Render.php";
     $values = renderProject($values, $id);
