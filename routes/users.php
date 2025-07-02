@@ -550,6 +550,13 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['is_active'] = boolval($values['is_active']);
     }
 
+    if (isset($values['roles'])){
+        // remove empty roles
+        $person['roles'] = array_filter($values['roles'], function ($role) {
+            return !empty($role);
+        });
+    }
+
     // if new password is set, update password
     if (isset($_POST['password']) && !empty($_POST['password'])) {
         // check if old password matches
