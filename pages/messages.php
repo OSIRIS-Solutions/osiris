@@ -70,7 +70,7 @@ $types = [
     </div>
 <?php } ?>
 
-<table class="table">
+<table class="table" id="messages-table">
     <?php if (empty($messages)) { ?>
         <tr>
             <td colspan="2" class="text-center">
@@ -140,7 +140,7 @@ $types = [
                 let msg = $('#message-' + id);
                 // order to bottom
                 msg.remove();
-                msg.appendTo('.table tbody');
+                msg.appendTo('#messages-table tbody');
                 msg.addClass('read');
                 msg.find('.read').remove();
             } else {
@@ -152,8 +152,8 @@ $types = [
     function markAllAsRead() {
         $.post(ROOTPATH + '/crud/messages/mark-all-as-read', function(data) {
             if (data.success) {
-                $('.table tbody tr').addClass('read');
-                $('.table tbody .mark-as-read').remove();
+                $('#messages-table tbody tr').addClass('read');
+                $('#messages-table tbody .mark-as-read').remove();
             } else {
                 toastError(lang('Error marking all messages as read', 'Fehler beim Markieren aller Nachrichten als gelesen'));
             }
@@ -173,8 +173,8 @@ $types = [
     function deleteAllMessages() {
         $.post(ROOTPATH + '/crud/messages/delete-all', function(data) {
             if (data.success) {
-                $('.table tbody tr').remove();
-                $('.table tbody').append(
+                $('#messages-table tbody tr').remove();
+                $('#messages-table tbody').append(
                     `<tr>
                         <td colspan="2" class="text-center">
                             <i class="ph ph-chat-circle text-muted"></i>
