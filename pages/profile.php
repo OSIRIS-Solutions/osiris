@@ -32,6 +32,12 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+if (!isset($scientist['is_active'])){
+    $scientist['is_active'] = true; // default value if not set
+    // update in database because it leads to problems in the frontend otherwise
+    $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
+}
 ?>
 
 
