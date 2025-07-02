@@ -935,9 +935,13 @@ function getDOI(doi) {
                 pub.author.forEach((a, i) => {
                     var aoi = false
                     a.affiliation.forEach(e => {
-                        if (e.name.includes(AFFILIATION)) {
+                        // check if AFFILIATION_REGEX matches the affiliation
+                        if (AFFILIATION_REGEX.test(e.name)) {
                             aoi = true
                         }
+                        // if (e.name.includes(AFFILIATION)) {
+                        //     aoi = true
+                        // }
                     })
                     if (a.sequence == "first") {
                         first = i + 1
@@ -1064,7 +1068,11 @@ function getOpenAlexDOI(doi) {
                 pub.authorships.forEach((a, i) => {
                     var aoi = false
                     a.institutions.forEach(e => {
-                        if (e.display_name.includes(AFFILIATION)) {
+                        // if (e.display_name.includes(AFFILIATION)) {
+                        //     aoi = true
+                        // }
+                        // check if AFFILIATION_REGEX matches the affiliation
+                        if (AFFILIATION_REGEX.test(e.display_name)) {
                             aoi = true
                         }
                     })
@@ -1187,7 +1195,11 @@ function getDataciteDOI(doi) {
             pub.creators.forEach((a, i) => {
                 var aoi = false
                 a.affiliation.forEach(e => {
-                    if (e.includes(AFFILIATION)) {
+                    // if (e.includes(AFFILIATION)) {
+                    //     aoi = true
+                    // }
+                    // check if AFFILIATION_REGEX matches the affiliation
+                    if (AFFILIATION_REGEX.test(e)) {
                         aoi = true
                     }
                 })

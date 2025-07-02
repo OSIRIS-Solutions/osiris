@@ -186,7 +186,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="row row-eq-spacing">
                     <div class="col-sm-2">
-                        <label for="icon" class="required">ID</label>
+                        <label for="icon" class="required"><?=lang('Abbreviation', 'Kürzel')?></label>
                         <input type="text" class="form-control" name="general[affiliation][id]" required value="<?= $affiliation['id'] ?>">
                     </div>
                     <div class="col-sm">
@@ -199,7 +199,19 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="openalex-id">
+                <label for="regex">
+                        Regular Expression (Regex) <?=lang('for affilation', 'für Affilierung')?>
+                    </label>
+                    <input type="text" class="form-control" name="general[regex]" value="<?= $Settings->getRegex(); ?>"  style="font-family: monospace;">
+                    <small class="text-muted">
+                        <?= lang('This pattern is used to match the affiliation in online repositories such as CrossRef. If you leave this empty, the institute abbreviation is used as is.', 'Dieses Muster wird verwendet, um die Zugehörigkeit in Online-Repositorien wie CrossRef abzugleichen. Wenn Sie dieses Feld leer lassen, wird die Institutsabkürzung unverändert verwendet.') ?>
+                        <!-- hint -->
+                        <br>
+                        <?=lang('As a reference, see', 'Als Referenz, siehe')?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?=lang('with flavour JavaScript', 'mit Flavour JavaScript')?>.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="openalex">
                         OpenAlex ID
                     </label>
                     <input type="text" class="form-control" name="general[affiliation][openalex]" value="<?= $affiliation['openalex'] ?? '' ?>">
