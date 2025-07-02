@@ -1001,7 +1001,9 @@ function getDOI(doi) {
                 doi: pub.DOI,
                 // pubmed: null,
                 abstract: abstract,
-                // edition: pub.edition,
+                edition: pub['edition-number'] ?? null,
+                subtitle: pub.subtitle ?? null,
+                'pub-language': pub.language ?? null,
                 publisher: pub['publisher'] ?? pub['publisher-name'],
                 isbn: pub['ISBN'],
                 city: pub['publisher-location'],
@@ -1348,7 +1350,9 @@ function fillForm(pub) {
         'software_doi',
         'open_access',
         'abstract',
-        'funding'
+        'funding',
+        'subtitle',
+        'pub-language'
     ]
 
     elements.forEach(element => {
