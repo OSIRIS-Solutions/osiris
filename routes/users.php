@@ -555,6 +555,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['roles'] = array_filter($values['roles'], function ($role) {
             return !empty($role);
         });
+        $person['roles'] = array_values($person['roles']);
     }
 
     // if new password is set, update password
