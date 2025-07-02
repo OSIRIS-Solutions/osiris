@@ -613,13 +613,14 @@ $active = function ($field) use ($data_fields) {
             </div>
         <?php } ?>
 
-        <h5>
-            <?= lang('Change password', 'Passwort ändern') ?>
-        </h5>
         <?php if (
             USER_MANAGEMENT == 'AUTH' &&
             $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
         ) { ?>
+
+            <h5>
+                <?= lang('Change password', 'Passwort ändern') ?>
+            </h5>
 
             <div class="form-group">
                 <label for="old_password"><?= lang('Old password', 'Vorheriges Password') ?></label>
