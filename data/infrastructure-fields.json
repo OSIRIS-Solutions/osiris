@@ -53,5 +53,17 @@
             "en": "This enables a list of collaborative research infrastructures including the option to add collaborator institutions.",
             "de": "Dies aktiviert eine Liste von Verbundforschungsinfrastrukturen, einschließlich der Option, Kooperationsinstitutionen hinzuzufügen."
         }
+    },
+    {
+        "id": "topics",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Research Topics",
+        "de": "Forschungsbereiche",
+        "description": {
+            "en": "If the feature research topics is enabled globally, those can be added to infrastructures. Please keep in mind that topics might be named differently in your organisation.",
+            "de": "Wenn die Funktion Forschungsbereiche global aktiviert ist, können diese den Infrastrukturen hinzugefügt werden. Bitte beachte, dass Bereiche in deiner Organisation anders benannt sein können."
+        }
     }
 ]

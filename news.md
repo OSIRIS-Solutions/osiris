@@ -38,6 +38,7 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Die Übersichtstabellen für Infrastrukturen unterstützen jetzt Filter und Suchfunktionen.
 - Die Darstellung von Verbundinfrastrukturen und Kooperationspartnern wurde verbessert.
 - Der Begriff "Infrastrukturen" kann jetzt im Admin-Bereich angepasst werden.
+- Forschungsbereiche können jetzt auch bei Infrastrukturen hinzugefügt und zum Filtern verwendet werden.
 
 
 #### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
