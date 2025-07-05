@@ -92,11 +92,16 @@ class Groups
         $tree = [];
         for ($i = 0; $i < $ni; $i++) {
             if ($data[$i]['parent'] == $parent) {
+                $color = $data[$i]['color'] ?? null;
+                if ((empty($color) || $color == '#000000') && $depth == 1) {
+                    // if the group is a department and has no color, set a default color
+                    $color = self::getNextColor();
+                }
                 $tree[] = [
                     'id' => $data[$i]['id'],
                     'name' => lang($data[$i]['name'], $data[$i]['name_de'] ?? null),
                     'unit' => $data[$i]['unit'],
-                    'color' => $data[$i]['color'] ?? '#000000',
+                    'color' => $color,
                     'level' => $depth,
                     'inactive' => $data[$i]['inactive'] ?? false,
                     // 'head' => $v,
@@ -122,6 +127,11 @@ class Groups
             $head = $group['head'];
             if (is_string($head)) $group['head'] = [$head];
             else $group['head'] = DB::doc2Arr($head);
+        }
+
+        if ($group['level'] == 1 && $group['color'] == '#000000') {
+            // if the group is a department and has no color, set a default color
+            $group['color'] = self::getNextColor();
         }
 
         return $group;
@@ -586,7 +596,8 @@ class Groups
         return $persons;
     }
 
-    function getPersonDept($units){
+    function getPersonDept($units)
+    {
         $units = DB::doc2Arr($units);
         if (empty($units)) return [];
         $depts = [];
@@ -596,5 +607,34 @@ class Groups
             $depts[] = $unit['id'];
         }
         return $depts;
+    }
+
+
+    private static function getNextColor()
+    {
+        static $palatte = [
+            '#1f77b4', // Blau
+            '#ff7f0e', // Orange
+            '#2ca02c', // Grün
+            '#d62728', // Rot
+            '#9467bd', // Violett
+            '#8c564b', // Braun
+            '#e377c2', // Pink
+            '#7f7f7f', // Grau
+            '#bcbd22', // Olivgrün
+            '#17becf', // Türkis
+            '#000080', // Dunkelblau
+            '#800000', // Dunkelrot
+            '#008000', // Dunkelgrün
+            '#808000', // Oliv
+            '#800080', // Dunkelviolett
+            '#008080', // Dunkeltürkis
+        ];
+        static $index = 0;
+
+        $color = $palatte[$index];
+        $index = ($index + 1) % count($palatte); // Zurück zum Anfang, wenn Ende erreicht
+
+        return $color;
     }
 }

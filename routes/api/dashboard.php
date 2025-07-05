@@ -743,13 +743,14 @@ Route::get('/api/dashboard/author-network', function () {
     // generate graph json
     $labels = [];
     $combinations = [];
-    $filter = ['authors.user' => $scientist, 'type' => 'publication'];
 
     $single_authors = $_GET['single'] ?? false;
 
     $depts = null;
     $filter = ['type' => 'publication'];
-    if (isset($_GET['dept'])) {
+    if (isset($_GET['user'])){
+        $filter['authors.user'] = $_GET['user'];
+    } else if (isset($_GET['dept'])) {
         $depts = $Groups->getChildren($_GET['dept'], 1);
         $filter['units'] = $_GET['dept'];
     } else if (isset($_GET['topics'])) {
@@ -767,7 +768,6 @@ Route::get('/api/dashboard/author-network', function () {
     }
 
     $activities = $osiris->activities->find($filter, ['projection' => ['authors' => 1]])->toArray();
-
     foreach ($activities as $doc) {
         $authors = [];
         foreach ($doc['authors'] as $a) {
@@ -928,7 +928,7 @@ Route::get('/api/dashboard/activity-authors', function () {
             $colors[] = '#00000095';
         } elseif ($key == 'unknown') {
             $labels[] = 'Unknown unit';
-            $colors[] = '#66666695';
+            $colors[] = '#cccccc95';
         } else {
             $group = $Groups->getGroup($key);
             $labels[] = $group['name'];

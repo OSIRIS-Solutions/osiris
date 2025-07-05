@@ -138,6 +138,8 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 - Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
 - Im Profil werden die bestätigten Quartale jetzt in der Tabelle mit den Details angezeigt
+- Man wird auf der Profilseite eines geteilten Profils jetzt nicht mehr nach Passwort-Anpassungen gefragt
+- Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
 
 ---
 

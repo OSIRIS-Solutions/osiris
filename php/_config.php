@@ -847,3 +847,28 @@ function socialLogo($type)
             return 'ph-link';
     }
 }
+
+function getNextColor() {
+    static $palatte = [
+        "#1f77b4",
+        "#ff7f0f",
+        "#2ba02b",
+        "#d62727",
+        "#9467bd",
+        "#8c564b",
+        "#e377c2",
+        "#7f7f7f",
+        "#bcbd22",
+        "#17becf",
+        "#ffbb78",
+        "#aec7e8",
+        "#98df8a",
+        "#ff9896",
+    ];
+    static $index = 0;
+
+    $color = $palatte[$index];
+    $index = ($index + 1) % count($palatte); // Zurück zum Anfang, wenn Ende erreicht
+
+    return $color;
+}
