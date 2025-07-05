@@ -261,7 +261,7 @@ $conferences = $osiris->conferences->find(
                     visible: false,
                     defaultContent: '',
                     render: function(data, type, row) {
-                        if (data.length === 0) return '';
+                        if (data === undefined || data.length === 0) return '';
                         return data.join(' ');
                     }
                 }
