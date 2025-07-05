@@ -252,6 +252,7 @@ $conferences = $osiris->conferences->find(
                     targets: 4,
                     data: 'type',
                     searchable: true,
+                    visible: false,
                     defaultContent: '',
                 },
                 {

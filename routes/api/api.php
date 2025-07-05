@@ -447,17 +447,17 @@ Route::get('/api/conferences', function () {
 
     include_once BASEPATH . "/php/Document.php";
 
-    $concepts = $osiris->conferences->find(
+    $events = $osiris->conferences->find(
         [],
         ['sort' => ['start' => -1]]
     )->toArray();
 
-    foreach ($concepts as $i => $row) {
-        $concepts[$i]['activities'] = $osiris->activities->count(['conference_id' => strval($row['_id'])]);
-        $concepts[$i]['id'] = strval($row['_id']);
+    foreach ($events as $i => $row) {
+        // $events[$i]['activities'] = $osiris->activities->count(['conference_id' => strval($row['_id'])]);
+        $events[$i]['id'] = strval($row['_id']);
     }
 
-    echo return_rest($concepts);
+    echo return_rest($events);
 });
 
 Route::get('/api/users', function () {
