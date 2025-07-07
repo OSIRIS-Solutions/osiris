@@ -51,8 +51,9 @@ $active = function ($field) use ($data_fields) {
 <script>
     const selectedOrgIds = JSON.parse('<?= json_encode($depts) ?>');
 </script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
+
 <script src="<?= ROOTPATH ?>/js/user-editor.js"></script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js"></script>
 
 <style>
     .form-control[readonly] {

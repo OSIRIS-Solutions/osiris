@@ -55,6 +55,9 @@ function sel($index, $value)
 
 ?>
 
+<script src="<?= ROOTPATH ?>/js/selectize.min.js"></script>
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css">
+
 <style>
     section {
         margin: 2rem 0;
@@ -102,7 +105,7 @@ function sel($index, $value)
 <script>
     const UNIT = '<?= $id ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/groups-editor.js"></script>
 
 
@@ -383,6 +386,8 @@ function sel($index, $value)
             <?= lang('Head(s)', 'Leitende Person(en)') ?>
         </h5>
         <div class="form-group">
+            <!-- save empty -->
+            <input type="hidden" name="values[head]" value="">
             <div class="author-widget">
                 <div class="author-list p-10">
                     <?php

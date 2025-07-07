@@ -53,7 +53,7 @@ $Vocabulary = new Vocabulary();
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <div class="container w-600">
 

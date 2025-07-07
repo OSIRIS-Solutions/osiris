@@ -59,10 +59,7 @@ function val($index, $default = '')
     return $val;
 }
 ?>
-
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?=CSS_JS_VERSION?>"></script>
 

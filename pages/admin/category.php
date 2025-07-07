@@ -61,6 +61,7 @@ $color = $type['color'] ?? '';
 $member = $osiris->activities->count(['type' => $t]);
 ?>
 
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <div class="modal" id="order" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -105,7 +106,6 @@ $member = $osiris->activities->count(['type' => $t]);
                     <?= lang('Submit', 'Bestätigen') ?>
                 </button>
             </form>
-            <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
             <script>
                 $(document).ready(function() {
                     $('#authors').sortable({
@@ -228,13 +228,13 @@ $member = $osiris->activities->count(['type' => $t]);
             </div>
 
             <?php
-                $upload = $type['upload'] ?? true;
+            $upload = $type['upload'] ?? true;
             ?>
             <div class="form-group">
                 <input type="hidden" name="values[upload]" value="false">
                 <div class="custom-checkbox">
                     <input type="checkbox" id="upload-checkbox" value="true" name="values[upload]" <?= $upload ? 'checked' : '' ?>>
-                    <label for="upload-checkbox"><?=lang('Upload of documents possible', 'Upload von Dokumenten möglich')?></label>
+                    <label for="upload-checkbox"><?= lang('Upload of documents possible', 'Upload von Dokumenten möglich') ?></label>
                 </div>
             </div>
 
@@ -294,6 +294,4 @@ $member = $osiris->activities->count(['type' => $t]);
 
 <?php } ?>
 
-
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>

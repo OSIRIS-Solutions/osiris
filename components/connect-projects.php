@@ -24,8 +24,6 @@ if (!$full_permission) {
 }
 $project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, 'name' => 1]])->toArray();
 ?>
-<script src="<?= ROOTPATH ?>/js/selectize.min.js"></script>
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css">
 
 <form action="<?= ROOTPATH ?>/crud/activities/update-project-data/<?= $id ?>" method="post">
 

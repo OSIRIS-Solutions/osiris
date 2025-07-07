@@ -27,7 +27,7 @@
         border-bottom: 0;
     }
 </style>
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
     <i class="ph ph-user text-primary"></i>

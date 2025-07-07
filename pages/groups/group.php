@@ -270,7 +270,7 @@ $count_wordcloud = 0;
         $children = $osiris->groups->find(['parent' => $id], ['sort' => ['order' => 1]])->toArray();
 
         if ($edit_perm) { ?>
-            <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+            <?php include_once BASEPATH . '/header-editor.php'; ?>
             <!-- reorder modal -->
             <div id="reorder-modal" class="modal">
                 <div class="modal-dialog" role="document">
@@ -359,10 +359,10 @@ $count_wordcloud = 0;
                     <div class="head">
                         <h5 class="mt-0"><?= $Groups->getUnit($group['unit'] ?? null, 'head') ?></h5>
                         <div>
-                            <?php foreach ($head as $h) { 
+                            <?php foreach ($head as $h) {
                                 $name = $DB->getNameFromId($h);
                                 if (empty($name)) continue; // skip if no name found
-                                ?>
+                            ?>
                                 <a href="<?= ROOTPATH ?>/profile/<?= $h ?>" class="colorless d-flex align-items-center border bg-white p-10 rounded mt-10">
                                     <?= $Settings->printProfilePicture($h, 'profile-img small mr-20') ?>
                                     <div class="">
@@ -487,7 +487,7 @@ $count_wordcloud = 0;
 
     <section id="activities" style="display:none">
         <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2>
-        
+
         <div class="box">
             <div class="content">
                 <div class="btn-toolbar justify-content-between">
@@ -497,7 +497,7 @@ $count_wordcloud = 0;
                             <div class="input-group-prepend">
                                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                             </div>
-                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>"  onchange="timelineChart({'units': DEPT})">
+                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'units': DEPT})">
                             <div class="input-group-append">
                                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                             </div>
