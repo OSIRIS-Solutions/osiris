@@ -96,6 +96,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
 - Forschungsbereiche können jetzt auch bei Events hinzugefügt werden. Ein entsprechender Filter wurde ebenfalls hinzugefügt.
 - Es gibt jetzt einen Filter für das Jahr, in dem das Event stattfindet.
+- Über den Events gibt es jetzt eine neue Visualisierung, die eine Timeline der Events anzeigt. Diese kann nach Jahr gefiltert werden. Die Timeline ist interaktiv und ermöglicht es, direkt zu den Events zu springen.
 
 
 #### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
@@ -142,6 +143,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Man wird auf der Profilseite eines geteilten Profils jetzt nicht mehr nach Passwort-Anpassungen gefragt
 - Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
 - Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
+- Es wurde ein Bug behoben, wodurch die Tabellensuche beim Neuladen einer Aktivität nicht mehr funktionierte, wenn Leerzeichen im Suchbegriff waren
 
 ---
 

@@ -291,7 +291,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 filterInfra(document.getElementById(hash.status + '-btn'), hash.status, 1)
             }
             if (hash.search !== undefined) {
-                dataTable.search(hash.search).draw();
+                dataTable.search(decodeURIComponent(hash.search)).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
