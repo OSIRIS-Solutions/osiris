@@ -141,6 +141,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Im Profil werden die bestätigten Quartale jetzt in der Tabelle mit den Details angezeigt
 - Man wird auf der Profilseite eines geteilten Profils jetzt nicht mehr nach Passwort-Anpassungen gefragt
 - Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
+- Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
 
 ---
 
