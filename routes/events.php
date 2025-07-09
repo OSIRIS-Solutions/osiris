@@ -128,15 +128,15 @@ Route::post('/crud/conferences/add', function () {
     $values = $_POST['values'];
 
     // required fields:
-    if (!isset($_POST['title']) || !isset($_POST['start']) || !isset($_POST['location'])) {
-        // $new = true;
-        // $form = $values;
-        // include BASEPATH . "/header.php";
-        // printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
-        // include BASEPATH . "/pages/events/edit.php";
-        // include BASEPATH . "/footer.php";
-        die;
-    }
+    // if (!isset($_POST['title']) || !isset($_POST['start']) || !isset($_POST['location'])) {
+    //     // $new = true;
+    //     // $form = $values;
+    //     // include BASEPATH . "/header.php";
+    //     // printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
+    //     // include BASEPATH . "/pages/events/edit.php";
+    //     // include BASEPATH . "/footer.php";
+    //     // die;
+    // }
 
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];

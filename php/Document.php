@@ -1110,6 +1110,13 @@ class Document extends Settings
                     }
                 }
                 return implode(', ', $orgs);
+            case "peer-reviewed":
+                $val = $this->getVal('peer_reviewed', false);
+                if ($this->usecase == 'list')
+                    return bool_icon($val);
+                if ($val != $default)
+                    return "<span style='color:#63a308;'>[Peer-reviewed]</span>";
+                else return '';
             case "pages": // ["pages"],
                 return $this->getVal('pages');
             case "pages-pp": // ["pages"],

@@ -85,7 +85,7 @@ function sel($index, $value)
     }
 </style>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h3 class="title">
     <?= $title ?>

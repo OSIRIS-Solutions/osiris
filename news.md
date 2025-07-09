@@ -38,6 +38,7 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Die Übersichtstabellen für Infrastrukturen unterstützen jetzt Filter und Suchfunktionen.
 - Die Darstellung von Verbundinfrastrukturen und Kooperationspartnern wurde verbessert.
 - Der Begriff "Infrastrukturen" kann jetzt im Admin-Bereich angepasst werden.
+- Forschungsbereiche können jetzt auch bei Infrastrukturen hinzugefügt und zum Filtern verwendet werden.
 
 
 #### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
@@ -95,6 +96,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Es wurde neu eine Beschreibung (mit Formatierungsmöglichkeiten) und ein Eventtyp hinzugefügt. Mögliche Typen lassen sich über das Vokabular definieren. Der Typ kann auf der Übersichtsseite zum Filtern verwendet werden.
 - Forschungsbereiche können jetzt auch bei Events hinzugefügt werden. Ein entsprechender Filter wurde ebenfalls hinzugefügt.
 - Es gibt jetzt einen Filter für das Jahr, in dem das Event stattfindet.
+- Über den Events gibt es jetzt eine neue Visualisierung, die eine Timeline der Events anzeigt. Diese kann nach Jahr gefiltert werden. Die Timeline ist interaktiv und ermöglicht es, direkt zu den Events zu springen.
 
 
 #### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
@@ -138,6 +140,10 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Es wurde ein Problem behoben, durch das Journale nicht in der Tabelle aufgelistet wurden, wenn sie keine Impact Faktoren hatten
 - Ein Problem wurde behoben, durch das bei Gruppen nicht die korrekten Aktivitäten angezeigt wurden
 - Im Profil werden die bestätigten Quartale jetzt in der Tabelle mit den Details angezeigt
+- Man wird auf der Profilseite eines geteilten Profils jetzt nicht mehr nach Passwort-Anpassungen gefragt
+- Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
+- Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
+- Es wurde ein Bug behoben, wodurch die Tabellensuche beim Neuladen einer Aktivität nicht mehr funktionierte, wenn Leerzeichen im Suchbegriff waren
 
 ---
 

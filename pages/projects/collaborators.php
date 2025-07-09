@@ -132,7 +132,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                 </th>
                 <!-- <th><label for="ror"><?= lang('ROR-ID') ?></label></th> -->
                 <th><label for="location"><?= lang('Location', 'Ort') ?></label></th>
-                <th><label class="required" for="country"><?= lang('Country', 'Land') ?></label></th>
+                <th><label class="required" for="country"><?= lang('Country code', 'Länder-Code') ?></label></th>
                 <th><label for="lat"><?= lang('Latitute') ?></label></th>
                 <th><label for="lng"><?= lang('Longitude') ?></label></th>
                 <th></th>
@@ -203,7 +203,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         <input name="values[location][]" type="text" class="form-control " value="<?= $con['location'] ?? '' ?>">
                     </td>
                     <td>
-                        <input name="values[country][]" type="text" maxlength="2" class="form-control w-50" value="<?= $con['country'] ?? '' ?>" required>
+                        <input name="values[country][]" type="text" list="country-list" maxlength="2" class="form-control w-50" value="<?= $con['country'] ?? '' ?>" required >
                     </td>
                     <td>
                         <input name="values[lat][]" type="text" class="form-control w-100" value="<?= $con['lat'] ?? '' ?>">
@@ -220,9 +220,21 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
         </tbody>
     </table>
 
+    <p class="text-muted">
+        <?=lang('Type at least 3 characters in the country field to search for a country code.', 'Tippe mindestens 3 Buchstaben in das Land-Feld, um nach einem Ländercode zu suchen.')?>
+    </p>
+
     <button type="submit" class="btn secondary mt-10">
         Save
     </button>
+
+    <datalist id="country-list">
+        <?php
+        foreach ($DB->getCountries() as $iso => $name) { ?>
+            <option value="<?= $iso ?>"><?= $name ?></option>
+        <?php } ?>
+    </datalist>
+
 </form>
 
 <script src="<?= ROOTPATH ?>/js/papaparse.min.js"></script>

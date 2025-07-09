@@ -111,7 +111,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" name="role" class="form-control" placeholder="<?= lang('Role', 'Rolle') ?>" id="newrole">
+                            <input type="text" class="form-control" placeholder="<?= lang('Role', 'Rolle') ?>" id="newrole">
                             <div class="input-group-append">
                                 <button class="btn success" type="button" onclick="addRole()">
                                     <i class="ph ph-plus"></i>
@@ -194,7 +194,6 @@ foreach ($osiris->adminRights->find([]) as $row) {
     <form action="<?= ROOTPATH ?>/crud/admin/roles" method="post" id="role-form">
 
         <div class="tabs">
-            <input type="hidden" readonly name="roles[]" value="<?= $role ?>">
             <?php foreach ($roles as $role) { ?>
                 <button class="btn" type="button" onclick="selectRole('<?= $role ?>')" id="btn-<?= $role ?>" <?= $role === 'user' ? 'class="active"' : '' ?>>
                     <?= strtoupper($role) ?>

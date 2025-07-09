@@ -22,7 +22,7 @@ $mode = $_GET['mode'] ?? 'standard';
     <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
 </h1>
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/pivottables-osiris.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js" integrity="sha512-XgJh9jgd6gAHu9PcRBBAp0Hda8Tg87zi09Q2639t0tQpFFQhGpeCgaiEFji36Ozijjx9agZxB0w53edOFGCQ0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 

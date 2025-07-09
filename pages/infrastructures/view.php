@@ -80,8 +80,17 @@ $active = function ($field) use ($data_fields) {
         <?= lang($infrastructure['subtitle'], $infrastructure['subtitle_de'] ?? null) ?>
     </h2>
 
+
+    <!-- show research topics -->
+    <?php
+    $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+    if ($topicsEnabled) {
+        echo $Settings->printTopics($infrastructure['topics'] ?? [], 'mb-20', false);
+    }
+    ?>
+
     <p class="font-size-12 text-muted">
-        <?= get_preview($infrastructure['description'], 400) ?>
+        <?= $infrastructure['description'] ?>
     </p>
 
     <?php if ($edit_perm) { ?>

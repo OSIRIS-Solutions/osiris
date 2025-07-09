@@ -79,6 +79,62 @@ Route::get('/api/dashboard/timeline', function () {
     echo return_rest($result, count($result));
 });
 
+Route::get('/api/dashboard/event-timeline', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+
+    $filter = ['year' => CURRENTYEAR];
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    } elseif (isset($_GET['json'])) {
+        $filter = json_decode($_GET['json'], true);
+    } elseif ($_GET['year'] ?? null) {
+        $filter['year'] = intval($_GET['year']);
+    } else {
+        $filter['year'] = ['$gte' => $Settings->get('startyear')];
+    }
+
+    $result = [
+        'info' => [],
+        'events' => [],
+        'types' => []
+    ];
+
+    $events = $osiris->conferences->find(
+        $filter,
+        [
+            'sort' => ['start' => 1, 'end' => 1],
+            'projection' => [
+                'title' => '$title',
+                'start_date' => '$start',
+                'end_time' => '$end',
+                'type' => 1,
+                'id' => ['$toString' => '$_id']
+            ]
+        ]
+    )->toArray();
+
+    // Convert ISO date string to timestamp in PHP if needed
+    foreach ($events as &$event) {
+        if (!empty($event['start_date'])) {
+            $event['starting_time'] = strtotime($event['start_date']);
+        }
+        if (!empty($event['end_time'])) {
+            $event['ending_time'] = strtotime($event['end_time']);
+        }
+    }
+
+    $result['events'] = $events;
+
+    if (!empty($events)) {
+        $types = array_column($events, 'type');
+        $types = array_unique($types);
+        $result['types'] = array_values($types);
+    }
+
+    echo return_rest($result, count($events));
+});
+
  
 Route::get('/api/dashboard/oa-status', function () {
     error_reporting(E_ERROR | E_PARSE);
@@ -743,13 +799,14 @@ Route::get('/api/dashboard/author-network', function () {
     // generate graph json
     $labels = [];
     $combinations = [];
-    $filter = ['authors.user' => $scientist, 'type' => 'publication'];
 
     $single_authors = $_GET['single'] ?? false;
 
     $depts = null;
     $filter = ['type' => 'publication'];
-    if (isset($_GET['dept'])) {
+    if (isset($_GET['user'])){
+        $filter['authors.user'] = $_GET['user'];
+    } else if (isset($_GET['dept'])) {
         $depts = $Groups->getChildren($_GET['dept'], 1);
         $filter['units'] = $_GET['dept'];
     } else if (isset($_GET['topics'])) {
@@ -767,7 +824,6 @@ Route::get('/api/dashboard/author-network', function () {
     }
 
     $activities = $osiris->activities->find($filter, ['projection' => ['authors' => 1]])->toArray();
-
     foreach ($activities as $doc) {
         $authors = [];
         foreach ($doc['authors'] as $a) {
@@ -928,7 +984,7 @@ Route::get('/api/dashboard/activity-authors', function () {
             $colors[] = '#00000095';
         } elseif ($key == 'unknown') {
             $labels[] = 'Unknown unit';
-            $colors[] = '#66666695';
+            $colors[] = '#cccccc95';
         } else {
             $group = $Groups->getGroup($key);
             $labels[] = $group['name'];

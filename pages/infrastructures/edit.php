@@ -66,7 +66,7 @@ $active = function ($field) use ($data_fields) {
 };
 ?>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <h3 class="title">
@@ -200,22 +200,27 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
     </div>
 
-    
-        <!-- check if there are active custom fields -->
-        <?php
-        $custom_fields = $osiris->adminFields->find()->toArray();
-        if (!empty($custom_fields)) {
-            require_once BASEPATH . "/php/Modules.php";
-            $Modules = new Modules($form);
 
-            // echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
-            foreach ($custom_fields as $field) {
-                $key = $field['id'] ?? null;
-                if ($active($key)) {
-                    $Modules->custom_field($key);
-                }
+    <!-- check if there are active custom fields -->
+    <?php
+    $custom_fields = $osiris->adminFields->find()->toArray();
+    if (!empty($custom_fields)) {
+        require_once BASEPATH . "/php/Modules.php";
+        $Modules = new Modules($form);
+
+        // echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+        foreach ($custom_fields as $field) {
+            $key = $field['id'] ?? null;
+            if ($active($key)) { ?>
+            <div class="form-group">
+<?php
+                $Modules->custom_field($key);
+            ?>
+            </div>
+            <?php
             }
-        } ?>
+        }
+    } ?>
 
 
 
@@ -236,6 +241,13 @@ $active = function ($field) use ($data_fields) {
             </div>
         <?php } ?>
     </div>
+
+    <?php if ($active('topics')) {
+        $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+        if ($topicsEnabled) {
+            $Settings->topicChooser(DB::doc2Arr($form['topics'] ?? []));
+        }
+    } ?>
 
     <?php if ($active('collaborative')) { ?>
 

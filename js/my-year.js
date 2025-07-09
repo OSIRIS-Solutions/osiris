@@ -1,4 +1,4 @@
-function timeline(year, quarter, typeInfo, events) {
+function timeline(year, quarter, typeInfo, events, clickEvent = false) {
     var radius = 3,
         distance = 12,
         divSelector = '#timeline'
@@ -100,7 +100,11 @@ function timeline(year, quarter, typeInfo, events) {
             content: function () {
                 var icon = '';
                 if (typeInfo[d.type]) {
-                    icon = `<i class="ph ph-${typeInfo[d.type].icon}" style="color:${typeInfo[d.type].color}"></i>`
+                    if (typeInfo[d.type].icon) {
+                        icon = `<i class="ph ph-${typeInfo[d.type].icon}" style="color:${typeInfo[d.type].color}"></i>`
+                    } else {
+                        icon = `<b style="color:${typeInfo[d.type].color}"><i class="ph ph-calendar"></i> ${d.type}</b><br>`; // Fallback icon
+                    }
                 }
                 return `${icon} ${d.title ?? 'No title available'}`
             }
@@ -137,6 +141,11 @@ function timeline(year, quarter, typeInfo, events) {
         // .on("mousemove", mousemove)
         .on("mouseout", mouseout)
 
+    if (clickEvent) {
+        dots.on("click", clickEvent)
+            .style("cursor", "pointer")
+    }
+
     if (quarter > 0) {
         dots.on("click", (d) => {
             // $('tr.active').removeClass('active')
@@ -172,14 +181,15 @@ function timeline(year, quarter, typeInfo, events) {
         .attr('height', radius * 2)
         .attr('width', function (d, i) {
             if (d.ending_time === undefined) return 0
-
+            // console.log(d);
             var date = new Date(d.starting_time * 1000)
             var x1 = timescale(date)
             var date = new Date(d.ending_time * 1000)
             var x2 = timescale(date)
-            return x2 - x1
+            return Math.max(radius * 2, x2 - x1) // Ensure width is not negative
         })
         .style('opacity', .6)
         .attr('rx', 3)
-        .attr('y', -radius)
+        // .attr('y', -radius)
+        .attr('y', (d) => Math.random() * distance - distance / 2)
 }

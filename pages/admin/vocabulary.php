@@ -133,7 +133,7 @@ $vocabularies = $Vocabulary->getVocabularies();
 
         <?php } ?>
 
-        <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+        <?php include_once BASEPATH . '/header-editor.php'; ?>
 
         <script>
             function addRow(btn) {
@@ -185,13 +185,13 @@ $vocabularies = $Vocabulary->getVocabularies();
             <div class="content">
                 <h4 class=""><?= lang('Content', 'Inhalt') ?></h4>
                 <div class="list">
-                    <?php 
+                    <?php
                     $cat = '';
                     foreach ($vocabularies as $vocab) {
                         if ($cat != $vocab['category']) {
                             if ($cat != '') echo '<br>';
                             $cat = $vocab['category'];
-                            ?>
+                    ?>
                             <b>
                                 <?= lang($cat) ?>
                             </b>

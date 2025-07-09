@@ -18,7 +18,7 @@
  */
 ?>
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <style>
     tr.ui-sortable-helper {
         background-color: white;

@@ -90,7 +90,7 @@ if ($process == 'project') {
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js?v=1"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 

@@ -35,6 +35,25 @@ $conferences = $osiris->conferences->find(
     ['sort' => ['start' => -1]]
 )->toArray();
 ?>
+<div class="box">
+    <div class="content">
+        <div class="btn-toolbar justify-content-between">
+            <div id="event-selector"></div>
+            <div>
+                <div class="input-group small mr-10">
+                    <div class="input-group-prepend">
+                        <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
+                    </div>
+                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
+                    <div class="input-group-append">
+                        <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="timeline"></div>
+</div>
 <div class="row row-eq-spacing">
     <div class="col-lg-9 order-last order-sm-first">
 
@@ -147,7 +166,10 @@ $conferences = $osiris->conferences->find(
 </div>
 
 
-
+<script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
+<script src="<?= ROOTPATH ?>/js/popover.js"></script>
+<!-- // my year for the activity timeline -->
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script>
     const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
 
@@ -252,6 +274,7 @@ $conferences = $osiris->conferences->find(
                     targets: 4,
                     data: 'type',
                     searchable: true,
+                    visible: false,
                     defaultContent: '',
                 },
                 {
@@ -261,7 +284,7 @@ $conferences = $osiris->conferences->find(
                     visible: false,
                     defaultContent: '',
                     render: function(data, type, row) {
-                        if (data.length === 0) return '';
+                        if (data === undefined || data.length === 0) return '';
                         return data.join(' ');
                     }
                 }
@@ -279,7 +302,7 @@ $conferences = $osiris->conferences->find(
                 filterEvents(document.getElementById(hash.status + '-btn'), hash.status, 1)
             }
             if (hash.search !== undefined) {
-                dataTable.search(hash.search).draw();
+                dataTable.search(decodeURIComponent(hash.search)).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
@@ -322,8 +345,79 @@ $conferences = $osiris->conferences->find(
             })
         });
 
+        eventTimeline();
+
     });
 
+
+    function eventTimeline(filter = {}, props = {}) {
+            if (typeof timeline !== 'function') {
+                console.error('Timeline function is not defined. Please ensure the timeline.js script is included.');
+                return;
+            }
+
+            let selector = props.timelineSelector || '#timeline';
+            let eventSelector = props.eventSelector || '#event-selector';
+            let yearSelector = props.yearSelector || '#activity-year';
+
+            // check if selector exists
+            if (!$(selector).length || !$(yearSelector).length) {
+                console.error('Timeline selector or year selector not found.');
+                return;
+            }
+            if (eventSelector && !$(eventSelector).length) {
+                eventSelector = null; // if eventSelector is not found, set it to null
+            }
+
+            // current year and quarter
+            // let date = new Date();
+            let year = $(yearSelector).val();
+            let currentYear = new Date().getFullYear();
+            // check if year is a valid 4 digit number
+            if (!/^\d{4}$/.test(year)) {
+                toastError('Invalid year format. Please enter a valid 4-digit year.');
+                return;
+            }
+            if (year > currentYear) {
+                year = currentYear;
+                $(yearSelector).val(year);
+            }
+
+            $(selector).empty()
+            if (eventSelector) {
+                $(eventSelector).empty()
+            }
+            // let quarter = Math.ceil((date.getMonth() + 1) / 3);
+            $.ajax({
+                type: "GET",
+                url: ROOTPATH + "/api/dashboard/event-timeline",
+                data: {
+                    year: year
+                },
+                dataType: "json",
+                success: function(response) {
+                    let events = response.data.events;
+                    if (events.length === 0) {
+                        $(selector).html('<div class="content text-muted text-center">' + lang('No activities found for this year.', 'Keine Aktivitäten für dieses Jahr gefunden.') + '</div>');
+                        return;
+                    }
+                    let typeInfo = {}
+                    let colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8', '#343a40'];
+                    for (const type of response.data.types) {
+                        typeInfo[type] = {
+                            title: type,
+                            color: colors[Object.keys(typeInfo).length % colors.length],
+                        }
+                    }
+                    timeline(year, 0, typeInfo, events, clickEvent=function(data) {
+                        location.href = ROOTPATH + '/conferences/view/' + data.id;
+                    });
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
 
     function filterEvents(btn, filter = null, column = 1) {
         var tr = $(btn).closest('tr')

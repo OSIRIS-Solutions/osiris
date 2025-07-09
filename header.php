@@ -94,6 +94,7 @@ $pageactive = function ($p) use ($page) {
     <script>
         const ROOTPATH = "<?= ROOTPATH ?>";
         const AFFILIATION = "<?= $Settings->get('affiliation') ?>";
+        const AFFILIATION_REGEX = new RegExp('<?= $Settings->getRegex(); ?>', 'i'); // Fallback to a simple regex if parsing fails
     </script>
 
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>

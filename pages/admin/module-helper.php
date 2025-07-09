@@ -23,7 +23,7 @@
     <?= lang('This page shows an overview of all data fields that are available in the system.', 'Diese Seite zeigt eine Übersicht aller Datenfelder, die im System verfügbar sind.') ?>
 </p>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <!-- search bar -->
 <input type="search" id="search" class="form-control" placeholder="<?= lang('Search', 'Suche') ?>">

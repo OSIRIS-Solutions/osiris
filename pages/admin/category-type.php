@@ -373,5 +373,5 @@ if (!empty($form) && isset($form['_id'])) {
 <?php } ?>
 
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>

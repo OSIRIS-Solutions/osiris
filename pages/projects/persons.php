@@ -93,7 +93,7 @@ $Vocabulary = new Vocabulary();
                     } else {
                         $person_units = array_column(DB::doc2Arr($person_units), 'unit');
                     ?>
-                        <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
+                        <select class="form-control units" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
                             <?php foreach ($person_units as $unit) { ?>
                                 <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
                             <?php } ?>
@@ -145,14 +145,15 @@ $Vocabulary = new Vocabulary();
         row.find('select').val('')
         row.find('input.start').val(start)
         row.find('input.end').val(end)
+        row.find('select.units').empty() // reset units selection
     }
 
     function removeRow(btn) {
         // make sure that at least one row is left
-        // if ($('#infrastructure-list tr').length <= 1) {
-        //     alert('<?= lang('At least one person is required', 'Mindestens eine Person ist erforderlich') ?>')
-        //     return
-        // }
+        if ($('#project-list tr').length <= 1) {
+            alert('<?= lang('At least one person is required', 'Mindestens eine Person ist erforderlich') ?>')
+            return
+        }
         $(btn).closest('tr').remove()
     }
 </script>

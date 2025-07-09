@@ -504,4 +504,22 @@ class Settings
         }
         return false;
     }
+
+    public function getRegex(){
+        $regex = $this->get('regex');
+        if (empty($regex)) $regex = $this->get('affiliation');
+
+        // check if regex starts with a slash and remove it
+        if (str_starts_with($regex, '/')) {
+            $regex = substr($regex, 1);
+        }  
+        // check if string ends with a slash and flag
+        if (preg_match('/\/[a-z]*$/', $regex)) {
+            $flags = substr($regex, strrpos($regex, '/') + 1);
+            $regex = substr($regex, 0, strrpos($regex, '/'));
+        } else {
+            $flags = '';
+        }
+        return $regex;
+    }
 }

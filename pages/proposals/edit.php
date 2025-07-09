@@ -97,7 +97,7 @@ if ($is_subproject) {
 ?>
 
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 <style>
@@ -963,12 +963,12 @@ if ($is_subproject) {
                 <?php if (array_key_exists('abstract', $fields)) { ?>
                     <div class="form-group with-icon">
                         <div class=" lang-<?= lang('en', 'de') ?>">
-                            <label for="abstract" class="required floating-title">
+                            <label for="abstract" class="floating-title  <?= $req('abstract') ?>">
                                 <?= lang('Abstract', 'Kurzbeschreibung') ?>
                             </label>
 
                             <div class="form-group title-editor" id="abstract-quill"><?= $form['abstract'] ?? '' ?></div>
-                            <input type="text" class="form-control hidden" name="values[abstract]" id="abstract" value="<?= val('abstract') ?>">
+                            <textarea class="form-control hidden" name="values[abstract]" id="abstract" <?= $req('abstract') ?>><?= val('abstract') ?></textarea>
                         </div>
 
                         <?php if (array_key_exists('abstract_de', $fields)) { ?>
@@ -983,12 +983,12 @@ if ($is_subproject) {
                 <?php if (array_key_exists('abstract_de', $fields)) { ?>
                     <div class="form-group with-icon">
                         <div class=" lang-<?= lang('en', 'de') ?>">
-                            <label for="abstract_de" class="floating-title">
+                            <label for="abstract_de" class="floating-title <?= $req('abstract_de') ?>">
                                 <?= lang('Abstract (German)', 'Kurzbeschreibung (Deutsch)') ?>
                             </label>
 
                             <div class="form-group title-editor" id="abstract_de-quill"><?= $form['abstract_de'] ?? '' ?></div>
-                            <input type="text" class="form-control hidden" name="values[abstract_de]" id="abstract_de" value="<?= val('abstract_de') ?>">
+                            <textarea class="form-control hidden" name="values[abstract_de]" id="abstract_de" <?= $req('abstract_de') ?>><?= val('abstract_de') ?></textarea>
                         </div>
                         <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
 

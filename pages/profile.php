@@ -32,6 +32,12 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+if (!isset($scientist['is_active'])){
+    $scientist['is_active'] = true; // default value if not set
+    // update in database because it leads to problems in the frontend otherwise
+    $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
+}
 ?>
 
 
@@ -355,7 +361,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <?php if ($currentuser) {
 
-    if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH') { ?>
+    if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH' && $scientist['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])) { ?>
         <!-- print message to change password -->
         <div class="alert danger mt-10">
             <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account'>
@@ -519,7 +525,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     $coauthors = $osiris->activities->aggregate([
         ['$match' => ['type' => 'publication', 'authors.user' => $user, 'year' => ['$gte' => CURRENTYEAR - 4]]],
         ['$unwind' => '$authors'],
-        ['$match' => ['authors.user' => ['$ne' => null]]],
+        ['$match' => ['authors.user' => ['$ne' => null], 'authors.aoi' => ['$ne' => null]]],
         [
             '$group' => [
                 '_id' => '$authors.user',
