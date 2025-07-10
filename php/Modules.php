@@ -1890,7 +1890,7 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-6" data-module="city">
                     <input type="text" class="form-control" <?= $required ?> name="values[city]" value="<?= $this->val('city') ?>" id="city" placeholder="city">
-                    <label for="city" class="element-other <?= $required ?>"><?= lang('Location (City, Country)', 'Ort (Stadt, Land)') ?></label>
+                    <label for="city" class="element-other <?= $required ?>"><?= lang('City', 'Stadt') ?></label>
                 </div>
             <?php
                 break;
