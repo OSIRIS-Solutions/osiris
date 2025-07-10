@@ -477,7 +477,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
         $persons[] = [
             'user' => $user,
-            'role' => ($key == 'contact' ? 'applicant' : $key),
+            'role' => 'applicant',
             'name' => $DB->getNameFromId($user)
         ];
     }
