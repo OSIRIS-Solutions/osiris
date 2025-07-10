@@ -20,6 +20,8 @@ $heads = $form['head'] ?? [];
 if (is_string($heads)) $heads = [$heads];
 else $heads = DB::doc2Arr($heads);
 
+// $user_groups = $USER['units'] ?? [];
+
 
 $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($id));
 
@@ -288,6 +290,9 @@ function sel($index, $value)
     <section id="research-interest" style="display:none;">
 
         <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
+
+        <!-- ensure empty list gets still submitted -->
+        <input type="hidden" name="values[research]" value="">
         <div id="research-list">
             <?php
             if (isset($form['research']) && !empty($form['research'])) {
@@ -347,6 +352,7 @@ function sel($index, $value)
                                         <?= $doc['rendered']['icon'] ?>
                                         <?= $doc['rendered']['plain'] ?>
                                         <input type="hidden" name="values[research][<?= $i ?>][activities][]" value="<?= $res ?>">
+                                        <button class="btn link text-danger small" type="button" onclick="$(this).closest('li').remove()"><i class="ph ph-trash"></i></button>
                                     </li>
                                 <?php } ?>
 
@@ -494,9 +500,11 @@ function sel($index, $value)
                     <td>
                         <?php if ($is_head) { ?>
                             <i class="ph ph-crown-simple text-secondary"></i>
+                        <?php } elseif ($unit['editor'] ?? false) { ?>
+                            <i class="ph ph-clipboard-text text-primary"></i>
                         <?php } ?>
 
-                        <?= $p['position'] ?? '-' ?>
+                        <?= $p['position'] ?? '' ?>
                     </td>
                     <td>
                         <?php if ($unit['start'] ?? false) { ?>
@@ -513,6 +521,18 @@ function sel($index, $value)
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
                             <button class="btn danger small"><i class="ph ph-trash"></i> <?= lang('Remove', 'Entfernen') ?></button>
                         </form>
+                        <!-- delegate editing rights -->
+                        <form action="<?= ROOTPATH ?>/crud/groups/editorperson/<?= $id ?>" method="post" class="d-inline">
+                            <input type="hidden" name="username" value="<?= $p['username'] ?>">
+                            <?php if ($unit['editor'] ?? false) { ?>
+                                <input type="hidden" name="action" value="remove">
+                                <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
+                            <?php } else { ?>
+                                <input type="hidden" name="action" value="add">
+                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
+                            <?php } ?>
+                        </form>
+
                     </td>
                 </tr>
             <?php } ?>

@@ -226,6 +226,22 @@ class Groups
     {
         if ($user === null) $user = $_SESSION['username'];
         $edit_perm = false;
+
+        // get user units
+        $user = $this->DB->getPerson($user);
+        if (!empty($user) && !empty($user['units'])) {
+            $units = DB::doc2Arr($user['units']);
+            $unit = array_filter($units, function ($unit) use ($id) {
+                return $unit['unit'] == $id;
+            });
+            if (!empty($unit)) {
+                $unit = array_values($unit)[0];
+                if (isset($unit['editor']) && $unit['editor']) {
+                    return true;
+                }
+            }
+        }
+
         // get all parent units
         $parents = $this->getParents($id);
         foreach ($parents as $p) {

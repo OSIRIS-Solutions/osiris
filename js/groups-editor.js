@@ -78,18 +78,20 @@ function searchActivities(index) {
 
 
 function addResearchrow(evt, parent) {
-    i++;
+    evt.preventDefault();
+    // i is a random number between 100 and 1000
+    var i = Math.floor(Math.random() * 1000) + 100;
     var el = `
 <div class="box padded">
     <div class="row row-eq-spacing my-0">
         <div class="col-md-6">
-            <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
+            <h5 class="mt-0 ">English</h5>
             <div class="form-group">
                 <input name="values[research][${i}][title]" type="text" class="form-control large" value="" placeholder="Title" required>
             </div>
         </div>
         <div class="col-md-6">
-            <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
+            <h5 class="mt-0 ">Deutsch</h5>
             <div class="form-group">
                 <input name="values[research][${i}][title_de]" type="text" class="form-control large" value="" placeholder="Title">
             </div>

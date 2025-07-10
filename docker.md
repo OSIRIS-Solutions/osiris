@@ -72,41 +72,21 @@ docker run -d --name osiris-app \
 
 ### With Docker Compose
 
-Create a `docker-compose.yml` file:
-
-```yaml
-version: '3'
-
-services:
-  app:
-    build:
-      context: nginx
-      dockerfile: nginx/Dockerfile
-    volumes:
-      - ./img:/var/www/html/img
-    ports:
-      - "9000:9000"
-
-  web:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./:/var/www/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - app
-```
-
-And start the services:
+**Start development environment:**
 
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.dev.yml up -d
 ```
+
+**Start production environment:**
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d
+```
+
 
 ## Notes
 
-- The image is optimized for production and contains no development tools
 - The `/var/www/html/img` directory has extended write permissions for the `www-data` user
 - Vendor dependencies are installed during the build and placed in the final image
 - Only the PHP extensions necessary for the application are installed
