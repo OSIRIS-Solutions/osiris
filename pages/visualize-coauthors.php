@@ -17,7 +17,7 @@
  */
 
 
-$users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+$users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
 
 $scientist = $_GET['scientist'] ?? $_SESSION['username'];
 $selectedUser = $osiris->persons->findone(['username' => $scientist]);
@@ -72,6 +72,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
         },
         dataType: "json",
         success: function(response) {
+            console.log(response);
             var matrix = response.data.matrix;
             var DEPTS = response.data.labels;
 

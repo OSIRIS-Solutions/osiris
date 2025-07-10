@@ -1,0 +1,523 @@
+[
+    {
+        "id": "type",
+        "en": "Type",
+        "de": "Typ",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true
+        },
+        "order": 1
+    },
+    {
+        "id": "name",
+        "en": "Short title",
+        "de": "Kurztitel",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true,
+            "approved": true
+        },
+        "order": 2
+    },
+    {
+        "id": "name_de",
+        "en": "Short title (German)",
+        "de": "Kurztitel (Deutsch)",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 3
+    },
+    {
+        "id": "title",
+        "en": "Full title",
+        "de": "Voller Titel",
+        "kdsf": "KDSF-B-2-2",
+        "scope": {
+            "project": true,
+            "proposed": true,
+            "approved": true
+        },
+        "order": 4
+    },
+    {
+        "id": "title_de",
+        "en": "Full title (German)",
+        "de": "Voller Titel (Deutsch)",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 5
+    },
+    {
+        "id": "image",
+        "en": "Project image",
+        "de": "Projekt-Bild",
+        "kdsf": null,
+        "scope": {
+            "project": false
+        },
+        "order": 5
+    },
+    {
+        "id": "status",
+        "en": "Status",
+        "de": "Status",
+        "kdsf": null,
+        "scope": {
+            "proposed": true,
+            "approved": true,
+            "rejected": true
+        },
+        "order": 6
+    },
+    {
+        "id": "applicants",
+        "en": "Applicants",
+        "de": "Antragstellende Personen",
+        "kdsf": "KDSF-B-2-15",
+        "scope": {
+            "proposed": true
+        },
+        "order": 7
+    },
+    {
+        "id": "submission_date",
+        "en": "Submission date",
+        "de": "Einreichungsdatum",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        },
+        "order": 8
+    },
+    {
+        "id": "approval_date",
+        "en": "Approval date",
+        "de": "Bewilligungsdatum",
+        "kdsf": null,
+        "scope": {
+            "approved": true
+        },
+        "order": 9
+    },
+    {
+        "id": "rejection_date",
+        "en": "Rejection date",
+        "de": "Ablehnungsdatum",
+        "kdsf": null,
+        "scope": {
+            "rejected": true
+        },
+        "order": 10
+    },
+    {
+        "id": "start",
+        "en": "Project start",
+        "de": "Projektbeginn",
+        "kdsf": "KDSF-B-2-3",
+        "scope": {
+            "project": true,
+            "approved": true
+        },
+        "order": 11
+    },
+    {
+        "id": "end",
+        "en": "Project end",
+        "de": "Projektende",
+        "kdsf": "KDSF-B-2-4",
+        "scope": {
+            "project": true,
+            "approved": true
+        },
+        "order": 12
+    },
+    {
+        "id": "start_proposed",
+        "en": "Proposed project start",
+        "de": "Beantragter Projektbeginn",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        },
+        "order": 13
+    },
+    {
+        "id": "end_proposed",
+        "en": "Proposed project end",
+        "de": "Beantragtes Projektende",
+        "kdsf": null,
+        "scope": {
+            "proposed": true
+        },
+        "order": 14
+    },
+    {
+        "id": "funder",
+        "en": "Funder (Category)",
+        "de": "Förderer (Kategorie)",
+        "kdsf": null,
+        "scope": {
+            "project": true,
+            "proposed": true
+        },
+        "order": 17
+    },
+    {
+        "id": "funding_organization",
+        "en": "Funding organization",
+        "de": "Förderorganisation",
+        "kdsf": "KDSF-B-3-6",
+        "scope": {
+            "project": false,
+            "proposed": false
+        },
+        "order": 18
+    },
+    {
+        "id": "funding_program",
+        "en": "Funding program",
+        "de": "Förderprogramm",
+        "kdsf": "KDSF-B-3-1",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 19
+    },
+    {
+        "id": "funding_number",
+        "en": "Funding reference number",
+        "de": "Förderkennzeichen",
+        "kdsf": "KDSF-B-3-2",
+        "scope": {
+            "project": false,
+            "approved": false
+        },
+        "order": 20
+    },
+    {
+        "id": "funding_type",
+        "en": "Funding type",
+        "de": "Förderart",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 21
+    },
+    {
+        "id": "project_type",
+        "en": "Project type",
+        "de": "Art des Projekts",
+        "kdsf": "KDSF-B-2-16 (GWK)",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 22
+    },
+    {
+        "id": "grant_income",
+        "en": "Grant sum (Institute)",
+        "de": "Fördersumme (Institut)",
+        "kdsf": null,
+        "scope": {
+            "approved": false
+        },
+        "order": 24
+    },
+    {
+        "id": "grant_income_proposed",
+        "en": "Proposed grant sum (Institute)",
+        "de": "Beantragte Fördersumme (Institut)",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 25
+    },
+    {
+        "id": "grant_sum",
+        "en": "Grant sum (total)",
+        "de": "Fördersumme (gesamt)",
+        "kdsf": "KDSF-B-3-4",
+        "scope": {
+            "approved": false
+        },
+        "order": 26
+    },
+    {
+        "id": "grant_sum_proposed",
+        "en": "Proposed grant sum (total)",
+        "de": "Beantragte Fördersumme (gesamt)",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 27
+    },
+    {
+        "id": "abstract",
+        "en": "Abstract",
+        "de": "Zusammenfassung",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false
+        },
+        "order": 27
+    },
+    {
+        "id": "abstract_de",
+        "en": "Abstract (German)",
+        "de": "Zusammenfassung (Deutsch)",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false
+        },
+        "order": 27
+    },
+    {
+        "id": "grant_subproject",
+        "en": "Grant sum (Subproject)",
+        "de": "Fördersumme (Teilprojekt)",
+        "kdsf": null,
+        "scope": {
+            "approved": false
+        },
+        "order": 29
+    },
+    {
+        "id": "grant_subproject_proposed",
+        "en": "Proposed grant sum (Subproject)",
+        "de": "Beantragte Fördersumme (Teilprojekt)",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 30
+    },
+    {
+        "id": "internal_number",
+        "en": "Internal ID",
+        "de": "Interne ID",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "approved": false,
+            "proposed": false
+        },
+        "order": 33
+    },
+    {
+        "id": "role",
+        "en": "Role of the institute",
+        "de": "Rolle des Instituts",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 70
+    },
+    {
+        "id": "coordinator",
+        "en": "Coordinator facility",
+        "de": "Koordinator-Einrichtung",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false
+        },
+        "order": 71
+    },
+    {
+        "id": "scholar",
+        "en": "Scholar",
+        "de": "Forschende Person",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 80
+    },
+    {
+        "id": "supervisor",
+        "en": "Supervisor",
+        "de": "Betreuende Person",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 81
+    },
+    {
+        "id": "university",
+        "en": "University",
+        "de": "Universität",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 82
+    },
+    {
+        "id": "scholarship",
+        "en": "Funding organization (Scholarship)",
+        "de": "Förderorganisation (Stipendium)",
+        "kdsf": "KDSF-B-3-6",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 83
+    },
+    {
+        "id": "countries",
+        "en": "Countries of research (simple)",
+        "de": "Forschungsländer (einfach)",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    }, 
+    {
+        "id": "research-countries",
+        "en": "Research in/about countries",
+        "de": "Forschung in/über Länder",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    },
+    {
+        "id": "comment",
+        "en": "Comment",
+        "de": "Kommentar",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false,
+            "rejected": false
+        },
+        "order": 99
+    },
+    {
+        "id": "nagoya",
+        "en": "Nagoya Protocol Compliance",
+        "de": "Nagoya Protocol Compliance",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    },
+    {
+        "id": "kdsf-ffk",
+        "en": "Research fields (KDSF)",
+        "de": "Forschungsfelder (KDSF)",
+        "kdsf": "KDSF-B-2-6",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    },
+    {
+        "id": "public",
+        "en": "Public presentation consent",
+        "de": "Zustimmung zur öffentlichen Präsentation",
+        "kdsf": null,
+        "scope": {
+            "project": false
+        },
+        "order": 99
+    },
+    {
+        "id": "purpose",
+        "en": "Purpose",
+        "de": "Zweck",
+        "kdsf": "KDSF-B-2-5",
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    },
+    {
+        "id": "website",
+        "en": "Website",
+        "de": "Webseite",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "approved": false
+        },
+        "order": 99
+    },
+    {
+        "id": "personnel",
+        "en": "Personnel measures planned",
+        "de": "Geplante Personalmaßnahmen",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 100
+    },
+    {
+        "id": "in-kind",
+        "en": "In-kind personnel",
+        "de": "Umfang des geplanten eigenen Personaleinsatzes",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 100
+    },
+    {
+        "id": "ressources",
+        "en": "Additional resources",
+        "de": "Zusätzliche Ressourcen",
+        "kdsf": null,
+        "scope": {
+            "proposed": false
+        },
+        "order": 100
+    }
+]

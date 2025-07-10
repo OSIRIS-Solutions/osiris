@@ -37,8 +37,8 @@
             </style>
 
             <form action="<?= ROOTPATH ?>/crud/categories/update-order" method="post">
-            <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
-                    
+                <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
+
                 <table class="table w-auto">
                     <tbody id="authors">
                         <?php foreach ($Categories->categories as $type) { ?>
@@ -47,7 +47,7 @@
                                     <i class="ph ph-dots-six-vertical text-muted handle cursor-pointer"></i>
                                 </td>
                                 <td style="color: <?= $type['color'] ?? 'inherit' ?>">
-                                    <input type="hidden" name="order[]" value="<?=$type['id']?>">
+                                    <input type="hidden" name="order[]" value="<?= $type['id'] ?>">
                                     <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
                                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                                 </td>
@@ -61,14 +61,14 @@
                     <?= lang('Submit', 'Bestätigen') ?>
                 </button>
             </form>
-            <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+            <?php include_once BASEPATH . '/header-editor.php'; ?>
             <script>
                 $(document).ready(function() {
-        $('#authors').sortable({
-            handle: ".handle",
-            // change: function( event, ui ) {}
-        });
-    })
+                    $('#authors').sortable({
+                        handle: ".handle",
+                        // change: function( event, ui ) {}
+                    });
+                })
             </script>
 
 
@@ -86,6 +86,22 @@
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
     </a>
+    <div class="dropdown">
+        <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">
+            <i class="ph ph-gear"></i>
+            Rerender <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="dropdown-menu w-400" aria-labelledby="rerender">
+            <div class="content">
+                <?= lang('In case some activities are not looking right or if you changed something, you can trigger a complete rerendering by clicking the button below:', 'Falls einige Aktivitäten seltsam aussehen, sich die URL eures OSIRIS geändert hat oder ihr einfach Templates angepasst habt, könnt ihr hier ein komplettes neu-rendern der Daten einleiten:') ?>
+                <a class="btn block primary" href="<?= ROOTPATH ?>/rerender">Rerender now!</a>
+
+                <small class="text-muted">
+                    <?= lang('This won\'t change any data. It will only fix the displaying of data.', 'Dies ändert keine Daten, sondern repariert nur die Anzeige der Daten.') ?>
+                </small>
+            </div>
+        </div>
+    </div>
     <a class="btn ml-auto" href="#order">
         <i class="ph ph-list-numbers"></i>
         <?= lang('Change order', 'Reihenfolge ändern') ?>
@@ -94,36 +110,31 @@
 
 <?php
 foreach ($Categories->categories as $type) { ?>
-    <div class="box px-20 py-10 mb-10">
-        <h3 class="title" style="color: <?= $type['color'] ?? 'inherit' ?>">
+    <div class="box px-20 py-10 mb-10" style="--primary-color: <?= $type['color'] ?? 'var(--primary-color);' ?>">
+        <h3 class="title text-primary">
             <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
             <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
         </h3>
-        <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>">
+        <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
+            <i class="ph ph-edit"></i>
             <?= lang('Edit', 'Bearbeiten') ?>
         </a>
-
-        <hr>
-        <h5><?= lang('Types', 'Typen') ?>:</h5>
-        <ul class="horizontal mb-0">
+        <div class="d-flex align-items-baseline flex-wrap">
+            <h5><?= lang('Types', 'Typen') ?>:</h5>
             <?php
-            $children = $osiris->adminTypes->find(['parent' => $type['id']]);
+            $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
-                <li>
-                    <a href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
-                        <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
-                        <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
-                    </a>
-                </li>
-            <?php } ?>
-            <li>
-                <a class="btn" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
-                    <i class="ph ph-plus-circle"></i>
-                    <span class="sr-only">
-                        <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
-                    </span>
+                <a class="btn small ml-10 text-primary" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                    <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
+                    <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                 </a>
-            </li>
-        </ul>
+            <?php } ?>
+            <a class="btn small ml-10" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
+                <i class="ph ph-plus-circle"></i>
+                <span class="sr-only">
+                    <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
+                </span>
+            </a>
+        </div>
     </div>
 <?php } ?>

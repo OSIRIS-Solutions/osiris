@@ -176,7 +176,7 @@
     <button class="btn success" type="submit"><?= lang('Save', 'Speichern') ?></button>
 </form>
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/reports.js"></script>
 
 <script>

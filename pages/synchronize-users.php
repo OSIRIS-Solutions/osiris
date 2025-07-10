@@ -34,6 +34,11 @@ if (isset($users['msg'])) {
     unset($users['msg']);
 }
 
+if (empty($users)) {
+    echo "<p>" . lang('No users found', 'Keine Nutzer:innen gefunden') . "</p>";
+    return;
+}
+
 $removed = $osiris->persons->find(
     ['username' => ['$nin' => array_keys($users)], 'is_active' => ['$in' => [1, true, '1']]],
     ['projection' => ['username' => 1, 'is_active' => 1, 'displayname' => 1]]

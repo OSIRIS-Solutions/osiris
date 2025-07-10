@@ -32,7 +32,7 @@ if (!$permission) {
     <table class="table simple">
         <thead>
             <tr>
-                <th><?= lang('Infrastructure', 'Infrastruktur') ?></th>
+                <th><?= $Settings->infrastructureLabel() ?></th>
                 <th></th>
             </tr>
         </thead>

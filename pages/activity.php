@@ -24,16 +24,26 @@ include_once BASEPATH . "/php/Modules.php";
 $ongoing = false;
 $sws = false;
 
-$typeArr = $Format->subtypeArr;
+$typeArr = $Format->typeArr;
+$upload_possible = $typeArr['upload'] ?? true;
+$subtypeArr = $Format->subtypeArr;
 
-$M = $typeArr['modules'] ?? array();
+$M = $subtypeArr['modules'] ?? array();
 foreach ($M as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
     if ($m == 'date-range-ongoing') $ongoing = true;
     if ($m == 'supervisor') $sws = true;
 }
 
-$guests_involved = boolval($typeArr['guests'] ?? false);
+$projects = [];
+if (isset($activity['projects']) && count($activity['projects']) > 0) {
+    $projects = $osiris->projects->find(
+        ['_id' => ['$in' => $activity['projects']]],
+        ['projection' => ['_id' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
+    )->toArray();
+}
+
+$guests_involved = boolval($subtypeArr['guests'] ?? false);
 $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
 //     $guests = $osiris->guests->find(['activity' => $id])->toArray();
@@ -57,23 +67,25 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             </a>
         </div>
     <?php } ?>
-    <div class="alert signal mb-20">
-        <h3 class="title">
-            <?= lang('For the good practice: ', 'Für die gute Praxis:') ?>
-        </h3>
-        <?= lang(
-            'Upload now all relevant files for this activity (e.g. as PDF) to have them available for documentation and exchange.',
-            'Lade jetzt die relevanten Dateien (z.B. PDF) hoch, um sie für die Dokumentation parat zu haben.'
-        ) ?>
-        <i class="ph ph-smiley"></i>
-        <b><?= lang('Thank you!', 'Danke!') ?></b>
-        <br>
-        <a href="#upload-files" class="btn signal">
-            <i class="ph ph-upload"></i>
-            <?= lang('Upload files', 'Dateien hochladen') ?>
-        </a>
-    </div>
 
+    <?php if ($upload_possible) { ?>
+        <div class="alert signal mb-20">
+            <h3 class="title">
+                <?= lang('For the good practice: ', 'Für die gute Praxis:') ?>
+            </h3>
+            <?= lang(
+                'Upload now all relevant files for this activity (e.g. as PDF) to have them available for documentation and exchange.',
+                'Lade jetzt die relevanten Dateien (z.B. PDF) hoch, um sie für die Dokumentation parat zu haben.'
+            ) ?>
+            <i class="ph ph-smiley"></i>
+            <b><?= lang('Thank you!', 'Danke!') ?></b>
+            <br>
+            <a href="#upload-files" class="btn signal">
+                <i class="ph ph-upload"></i>
+                <?= lang('Upload files', 'Dateien hochladen') ?>
+            </a>
+        </div>
+    <?php } ?>
 
 <?php } ?>
 
@@ -125,7 +137,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/activity.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/activity.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 
@@ -151,30 +163,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             </a>
         <?php } ?>
     </div>
-
-    <a href="#upload-files" class="btn text-primary border-primary">
-        <i class="ph ph-upload"></i>
-        <?= lang('Upload file', 'Datei hochladen') ?>
-    </a>
-    <div class="btn-group">
-        <?php if ($Settings->featureEnabled('projects')) { ?>
-            <a href="#projects" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Project", "Projekt") ?>
-            </a>
-        <?php } ?>
-        <!-- <a href="#connect" class="btn text-primary border-primary">
-            <i class="ph ph-plus-circle"></i>
-            <?= lang("Tags", "Schlagwörter") ?>
-        </a> -->
-        <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-            <a href="#infrastructures" class="btn text-primary border-primary">
-                <i class="ph ph-plus-circle"></i>
-                <?= lang("Infrastructure", "Infrastruktur") ?>
-            </a>
-        <?php } ?>
-        
-    </div>
+    <?php if ($upload_possible) { ?>
+        <a href="#upload-files" class="btn text-primary border-primary">
+            <i class="ph ph-upload"></i>
+            <?= lang('Upload file', 'Datei hochladen') ?>
+        </a>
+    <?php } ?>
 
 
     <div class="btn-group">
@@ -254,10 +248,10 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <li><?= $Format->activity_subtype() ?></li>
     </ul>
     <h1 class="mt-10">
-        <?= $Format->getTitle() ?>
+        <?= $Format->getTitle('web') ?>
     </h1>
 
-    <p class="lead"><?= $Format->getSubtitle() ?></p>
+    <p class="lead"><?= $Format->getSubtitle('web') ?></p>
 
 </div>
 
@@ -354,12 +348,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         </div>
     <?php } ?>
 
-    <?php if (isset($doc['projects']) && count($doc['projects']) > 0) { ?>
+    <?php if (!empty($projects)) { ?>
         <div class="mr-10 badge bg-white">
             <small><?= lang('Projects', 'Projekte') ?>: </small>
             <br />
-            <?php foreach ($doc['projects'] as $p) { ?>
-                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p ?>"><?= $p ?></a>
+            <?php foreach ($projects as $p) { ?>
+                <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['name'] ?></a>
             <?php } ?>
         </div>
     <?php } ?>
@@ -388,7 +382,9 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                             },
                             success: function(response) {
                                 var hide = $('#hide').prop('checked');
-                                $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>': '<?= lang('Visible', 'Sichtbar') ?>');
+
+                                $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>' : '<?= lang('Visible', 'Sichtbar') ?>');
+
                                 toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
                             },
                             error: function(response) {
@@ -503,8 +499,8 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         if ($count_infrastructures) :
         ?>
             <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="btn">
-                <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Infrastructures', 'Infrastrukturen') ?>
+                <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+                <?= $Settings->infrastructureLabel() ?>
                 <span class="index"><?= $count_infrastructures ?></span>
             </a>
 
@@ -517,20 +513,22 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
     <?php } ?>
 
     <?php
-    $count_files = count($doc['files'] ?? []);
-    if ($count_files) :
+    if ($upload_possible):
+        $count_files = count($doc['files'] ?? []);
+        if ($count_files) :
     ?>
-        <a onclick="navigate('files')" id="btn-files" class="btn">
-            <i class="ph ph-files" aria-hidden="true"></i>
-            <?= lang('Files', 'Dateien') ?>
-            <span class="index"><?= $count_files ?></span>
-        </a>
+            <a onclick="navigate('files')" id="btn-files" class="btn">
+                <i class="ph ph-files" aria-hidden="true"></i>
+                <?= lang('Files', 'Dateien') ?>
+                <span class="index"><?= $count_files ?></span>
+            </a>
 
-    <?php else : ?>
-        <a href="#upload-files" class="btn">
-            <i class="ph ph-plus-circle"></i>
-            <?= lang('Upload files', 'Datei hochladen') ?>
-        </a>
+        <?php else : ?>
+            <a href="#upload-files" class="btn">
+                <i class="ph ph-plus-circle"></i>
+                <?= lang('Upload files', 'Datei hochladen') ?>
+            </a>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($Settings->featureEnabled('concepts')) { ?>
@@ -679,7 +677,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
                                     <div class="module ">
                                         <h6 class="m-0">
-                                            <a href="<?= ROOTPATH ?>/conferences/<?= $doc['conference_id'] ?>">
+                                            <a href="<?= ROOTPATH ?>/conferences/view/<?= $doc['conference_id'] ?>">
                                                 <?= $conference['title'] ?>
                                             </a>
                                         </h6>
@@ -936,37 +934,37 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             <?php } ?>
 
             <h3>
-                <?=lang('Affiliated positions', 'Affilierte Positionen')?>
+                <?= lang('Affiliated positions', 'Affilierte Positionen') ?>
             </h3>
 
             <?php
-                $positions = [
-                    'first' => lang('First author', 'Erstautor:in'),
-                    'last' => lang('Last author', 'Letztautor:in'),
-                    'first_and_last' => lang('First and last author', 'Erst- und Letztautor:in'),
-                    'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
-                    'middle' => lang('Middle author', 'Mittelautor:in'),
-                    'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                    'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-                    'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
-                    'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
-                    'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
-                    'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
-                    'not_middle' => lang('Not middle author', 'Nicht Mittelautor:in'),
-                    'not_corresponding' => lang('Not corresponding author', 'Nicht korrespondierender Autor:in'),
-                    'not_first_or_last' => lang('Not first or last author', 'Nicht Erst- oder Letztautor:in'),
-                    'not_first_and_last' => lang('Not first and last author', 'Nicht Erst- und Letztautor:in'),
-                    'unspecified' => lang('Unspecified (no position specified)', 'Unspezifiziert (keine Positionsangabe)'),
-                ];
+            $positions = [
+                'first' => lang('First author', 'Erstautor:in'),
+                'last' => lang('Last author', 'Letztautor:in'),
+                'first_and_last' => lang('First and last author', 'Erst- und Letztautor:in'),
+                'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
+                'middle' => lang('Middle author', 'Mittelautor:in'),
+                'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
+                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
+                'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+                'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
+                'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
+                'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
+                'not_middle' => lang('Not middle author', 'Nicht Mittelautor:in'),
+                'not_corresponding' => lang('Not corresponding author', 'Nicht korrespondierender Autor:in'),
+                'not_first_or_last' => lang('Not first or last author', 'Nicht Erst- oder Letztautor:in'),
+                'not_first_and_last' => lang('Not first and last author', 'Nicht Erst- und Letztautor:in'),
+                'unspecified' => lang('Unspecified (no position specified)', 'Unspezifiziert (keine Positionsangabe)'),
+            ];
             ?>
-            
+
 
             <?php foreach ($doc['affiliated_positions'] ?? [] as $key) { ?>
-                <span class="badge bg-white mr-5 mb-5"><?=$positions[$key] ?? $key?></span>
+                <span class="badge bg-white mr-5 mb-5"><?= $positions[$key] ?? $key ?></span>
             <?php } ?>
             <br>
             <small class="text-muted">
-                <?=lang('Automatically calculated', 'Automatisch berechnet')?>
+                <?= lang('Automatically calculated', 'Automatisch berechnet') ?>
             </small>
 
             <h3>
@@ -1041,14 +1039,12 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             <?= lang('Projects', 'Projekte') ?>
         </h2>
 
-        <?php if (!empty($doc['projects'] ?? '') && !empty($doc['projects'][0])) {
+        <?php if (!empty($projects)) {
 
             require_once BASEPATH . "/php/Project.php";
             $Project = new Project();
 
-            foreach ($doc['projects'] as $project_id) {
-                $project = $osiris->projects->findOne(['name' => $project_id]);
-                if (empty($project)) continue;
+            foreach ($projects as $project) {
                 $Project->setProject($project);
         ?>
                 <?= $Project->widgetSmall(true) ?>
@@ -1072,7 +1068,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('Connect infrastructures', 'Infrastrukturen verknüpfen') ?>
+                    <?= lang('Connect ' . $Settings->infrastructureLabel(), $Settings->infrastructureLabel() . ' verknüpfen') ?>
                 </h5>
                 <div>
                     <?php
@@ -1086,46 +1082,46 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
     <section id="infrastructures" style="display: none;">
         <div class="btn-toolbar float-sm-right">
             <a href="#infrastructures" class="btn secondary mr-5">
-                <i class="ph ph-tree-structure"></i>
+                <i class="ph ph-cube-transparent"></i>
                 <?= lang("Connect", "Verknüpfen") ?>
             </a>
         </div>
 
         <h2 class="title">
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= $Settings->infrastructureLabel() ?>
         </h2>
 
-        <?php if (!empty($doc['infrastructures'] ?? '') ) {
+        <?php if (!empty($doc['infrastructures'] ?? '')) {
         ?>
-        <table class="table">
-            <tbody>
-                <?php foreach ($doc['infrastructures'] as $infra_id) {
-                $infra = $osiris->infrastructures->findOne(['name' => $infra_id]);
-                if (empty($infra)) continue;
-                 ?>
-                    <tr>
-                        <td>
-                            <h6 class="m-0">
-                                <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                    <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
-                                </a>
-                                <br>
-                            </h6>
-        
-                            <div class="text-muted mb-5">
-                                <?php if (!empty($infra['subtitle'])) { ?>
-                                    <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
-                                <?php } else { ?>
-                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
-                                <?php } ?>
-                            </div>
-                            <div>
-                                <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
-                            </div>
-                        </td>
-                    </tr>
-                <?php } ?>
-        </table>
+            <table class="table">
+                <tbody>
+                    <?php foreach ($doc['infrastructures'] as $infra_id) {
+                        $infra = $osiris->infrastructures->findOne(['name' => $infra_id]);
+                        if (empty($infra)) continue;
+                    ?>
+                        <tr>
+                            <td>
+                                <h6 class="m-0">
+                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                        <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                    </a>
+                                    <br>
+                                </h6>
+
+                                <div class="text-muted mb-5">
+                                    <?php if (!empty($infra['subtitle'])) { ?>
+                                        <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                    <?php } else { ?>
+                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                    <?php } ?>
+                                </div>
+                                <div>
+                                    <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+            </table>
 
         <?php } else { ?>
             <?= lang('No infrastructures connected.', 'Noch keine Infrastrukturen verknüpft.') ?>
@@ -1135,54 +1131,53 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 <?php } ?>
 
 
+<?php
+if ($upload_possible):
+?>
 
-<div class="modal" id="upload-files" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                <span aria-hidden="true">&times;</span>
-            </a>
-            <h5 class="title">
-                <?= lang('Upload files', 'Dateien hochladen') ?>
-            </h5>
-            <div>
-                <?php
-                include BASEPATH . "/components/upload-files.php";
-                ?>
+    <div class="modal" id="upload-files" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+                <h5 class="title">
+                    <?= lang('Upload files', 'Dateien hochladen') ?>
+                </h5>
+                <div>
+                    <?php
+                    include BASEPATH . "/components/upload-files.php";
+                    ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<section id="files" style="display: none;">
-
-
-
-
-    <div class="btn-toolbar float-sm-right">
-        <a href="#upload-files" class="btn secondary">
-            <i class="ph ph-upload"></i>
-            <?= lang('Upload', 'Hochladen') ?>
-        </a>
-    </div>
-
-    <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
-
-    <?php if (!empty($doc['files'])) : ?>
-        <?php foreach ($doc['files'] as $file) : ?>
-            <a href="<?= $file['filepath'] ?>" target="_blank" class="filelink">
-                <i class="ph ph-<?= getFileIcon($file['filetype']) ?> mr-10 ph-2x text-osiris"></i>
-
-                <?= $file['filename'] ?>
+    <section id="files" style="display: none;">
+        <div class="btn-toolbar float-sm-right">
+            <a href="#upload-files" class="btn secondary">
+                <i class="ph ph-upload"></i>
+                <?= lang('Upload', 'Hochladen') ?>
             </a>
-        <?php endforeach; ?>
-    <?php else : ?>
-        <span class="text-signal"><?= lang('No files attached', 'Noch keine Dateien hochgeladen') ?></span>
-    <?php endif; ?>
+        </div>
 
-</section>
+        <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
 
+        <?php if (!empty($doc['files'])) : ?>
+            <?php foreach ($doc['files'] as $file) : ?>
+                <a href="<?= $file['filepath'] ?>" target="_blank" class="filelink">
+                    <i class="ph ph-<?= getFileIcon($file['filetype']) ?> mr-10 ph-2x text-osiris"></i>
+
+                    <?= $file['filename'] ?>
+                </a>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <span class="text-signal"><?= lang('No files attached', 'Noch keine Dateien hochgeladen') ?></span>
+        <?php endif; ?>
+    </section>
+
+<?php endif; ?>
 
 <!-- 
 <div class="modal" id="connect" tabindex="-1" role="dialog">
@@ -1311,37 +1306,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
     </p>
 
-    <style>
-        .history-list {
-            /* reverse order */
-            display: flex;
-            flex-direction: column-reverse;
-        }
-
-        .history-list .box {
-            margin-top: 0;
-        }
-
-        .del {
-            color: var(--danger-color);
-        }
-
-        .ins {
-            color: var(--success-color);
-        }
-
-        blockquote.signal {
-            border-left: 5px solid var(--signal-color);
-            padding-left: 1rem;
-            margin-top: 1rem;
-            margin-left: 0;
-        }
-
-        blockquote.signal .title {
-            font-weight: bold;
-            color: var(--signal-color);
-        }
-    </style>
     <?php
     if (empty($doc['history'] ?? [])) {
         echo lang('No history available.', 'Keine Historie verfügbar.');

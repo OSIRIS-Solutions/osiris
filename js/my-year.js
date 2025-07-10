@@ -1,4 +1,4 @@
-function timeline(year, quarter, typeInfo, events, types) {
+function timeline(year, quarter, typeInfo, events, clickEvent = false) {
     var radius = 3,
         distance = 12,
         divSelector = '#timeline'
@@ -25,11 +25,11 @@ function timeline(year, quarter, typeInfo, events, types) {
         .range([0, width]);
 
     // var types = Object.keys(typeInfo)
-    let ordinalScale = d3.scaleOrdinal()
-        .domain(types.reverse())
-        .range(Array.from({
-            length: types.length
-        }, (x, i) => i * (height / (types.length - 1))));
+    // let ordinalScale = d3.scaleOrdinal()
+    //     .domain(types.reverse())
+    //     .range(Array.from({
+    //         length: types.length
+    //     }, (x, i) => i * (height / (types.length - 1))));
 
 
     // let axisLeft = d3.axisLeft(ordinalScale);
@@ -44,39 +44,41 @@ function timeline(year, quarter, typeInfo, events, types) {
         .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
         .call(axisBottom);
 
-    var quarter = svg.append('g')
-        .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
-        // .selectAll("g")
-        .append('rect')
-        .style("fill", 'rgb(236, 175, 0)')
-        // .attr('height', height+margin.top+radius*4)
-        .attr('height', 8)
-        .attr('width', function (d, i) {
-            return width / 4
-        })
-        .style('opacity', .2)
-        .attr('x', (d) => {
-            var Q = quarter *3 -2; 
-            var date = new Date(`${year}-${Q}-01`)
-            return timescale(date)
-        })
-        // .attr('y', radius*-2)
-        .attr('y', 0)
+    if (quarter > 0) {
+        var quarterBox = svg.append('g')
+            .attr('transform', `translate(${margin.left}, ${height + margin.top + radius * 2})`)
+            // .selectAll("g")
+            .append('rect')
+            .style("fill", 'rgb(236, 175, 0)')
+            // .attr('height', height+margin.top+radius*4)
+            .attr('height', 8)
+            .attr('width', function (d, i) {
+                return width / 4
+            })
+            .style('opacity', .2)
+            .attr('x', (d) => {
+                var Q = quarter * 3 - 2;
+                var date = new Date(`${year}-${Q}-01`)
+                return timescale(date)
+            })
+            // .attr('y', radius*-2)
+            .attr('y', 0)
+    }
 
     d3.selectAll("g>.tick>text")
         .each(function (d, i) {
             d3.select(this).style("font-size", "8px");
         });
 
-    var Tooltip = d3.select(divSelector)
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
-        .style("border-radius", "5px")
-        .style("padding", "5px")
+    // var Tooltip = d3.select(divSelector)
+    //     .append("div")
+    //     .style("opacity", 0)
+    //     .attr("class", "tooltip")
+    //     .style("background-color", "white")
+    //     .style("border", "solid")
+    //     .style("border-width", "2px")
+    //     .style("border-radius", "5px")
+    //     .style("padding", "5px")
 
 
     function mouseover(d, i) {
@@ -98,7 +100,11 @@ function timeline(year, quarter, typeInfo, events, types) {
             content: function () {
                 var icon = '';
                 if (typeInfo[d.type]) {
-                    icon = `<i class="ph ph-${typeInfo[d.type].icon}" style="color:${typeInfo[d.type].color}"></i>`
+                    if (typeInfo[d.type].icon) {
+                        icon = `<i class="ph ph-${typeInfo[d.type].icon}" style="color:${typeInfo[d.type].color}"></i>`
+                    } else {
+                        icon = `<b style="color:${typeInfo[d.type].color}"><i class="ph ph-calendar"></i> ${d.type}</b><br>`; // Fallback icon
+                    }
                 }
                 return `${icon} ${d.title ?? 'No title available'}`
             }
@@ -134,7 +140,14 @@ function timeline(year, quarter, typeInfo, events, types) {
     dots.on("mouseover", mouseover)
         // .on("mousemove", mousemove)
         .on("mouseout", mouseout)
-        .on("click", (d) => {
+
+    if (clickEvent) {
+        dots.on("click", clickEvent)
+            .style("cursor", "pointer")
+    }
+
+    if (quarter > 0) {
+        dots.on("click", (d) => {
             // $('tr.active').removeClass('active')
             var element = document.getElementById("tr-" + d.id);
             // element.className="active"
@@ -147,6 +160,7 @@ function timeline(year, quarter, typeInfo, events, types) {
                 behavior: "smooth"
             });
         });
+    }
     // .style("stroke", "gray")
 
     var circle = dots.append('circle')
@@ -157,6 +171,7 @@ function timeline(year, quarter, typeInfo, events, types) {
         .attr("r", radius)
         .attr('cy', (d) => Math.random() * distance - distance / 2)
         .style('opacity', .6)
+        .attr('class', (d) => `event-circle ${d.type}`);
 
     var lines = dots.append('rect')
         .style("fill", function (d, i) {
@@ -166,14 +181,15 @@ function timeline(year, quarter, typeInfo, events, types) {
         .attr('height', radius * 2)
         .attr('width', function (d, i) {
             if (d.ending_time === undefined) return 0
-
+            // console.log(d);
             var date = new Date(d.starting_time * 1000)
             var x1 = timescale(date)
             var date = new Date(d.ending_time * 1000)
             var x2 = timescale(date)
-            return x2 - x1
+            return Math.max(radius * 2, x2 - x1) // Ensure width is not negative
         })
         .style('opacity', .6)
         .attr('rx', 3)
-        .attr('y', -radius)
+        // .attr('y', -radius)
+        .attr('y', (d) => Math.random() * distance - distance / 2)
 }

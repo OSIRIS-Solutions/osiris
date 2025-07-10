@@ -53,7 +53,7 @@ function sel($index, $value)
     return val($index) == $value ? 'selected' : '';
 }
 
-$children = $osiris->adminTypes->find(['parent' => $id], ['sort'=>['order'=>1]])->toArray();
+$children = $osiris->adminTypes->find(['parent' => $id], ['sort' => ['order' => 1]])->toArray();
 
 $type = $form;
 $t = $id;
@@ -61,6 +61,7 @@ $color = $type['color'] ?? '';
 $member = $osiris->activities->count(['type' => $t]);
 ?>
 
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <div class="modal" id="order" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -105,7 +106,6 @@ $member = $osiris->activities->count(['type' => $t]);
                     <?= lang('Submit', 'Bestätigen') ?>
                 </button>
             </form>
-            <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
             <script>
                 $(document).ready(function() {
                     $('#authors').sortable({
@@ -208,13 +208,47 @@ $member = $osiris->activities->count(['type' => $t]);
                 </div>
             </div>
 
+
+            <div class="form-group mt-20">
+                <label for="visible-role"><?= lang('Role that can see this type', 'Rolle die diese Aktivitäten sehen können') ?></label>
+                <select class="form-control" name="values[visible_role]" id="visible-role">
+                    <option value="" <?= sel('visible_role', '') ?>><?= lang('All users', 'Alle Nutzende') ?></option>
+                    <?php
+                    $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
+                    $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
+
+                    foreach ($roles as $role) {
+                        if ($role == 'user') continue;
+                    ?>
+                        <option value="<?= $role ?>" <?= sel('visible_role', $role) ?>>
+                            <?= strtoupper($role) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <?php
+            $upload = $type['upload'] ?? true;
+            ?>
+            <div class="form-group">
+                <input type="hidden" name="values[upload]" value="false">
+                <div class="custom-checkbox">
+                    <input type="checkbox" id="upload-checkbox" value="true" name="values[upload]" <?= $upload ? 'checked' : '' ?>>
+                    <label for="upload-checkbox"><?= lang('Upload of documents possible', 'Upload von Dokumenten möglich') ?></label>
+                </div>
+            </div>
+
             <?php if (!empty($type)) { ?>
                 <hr>
+                <a class="btn float-right" href="#order">
+                    <i class="ph ph-list-numbers"></i>
+                    <?= lang('Change order', 'Reihenfolge ändern') ?>
+                </a>
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>
                     <?php
                     foreach ($children as $subtype) { ?>
-                        <a class="btn primary mb-5" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
+                        <a class="btn mb-5 text-<?= $type['id'] ?>" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
                             <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
                             <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                         </a>
@@ -223,10 +257,6 @@ $member = $osiris->activities->count(['type' => $t]);
                         <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
                     </a>
 
-                    <a class="btn ml-auto" href="#order">
-                        <i class="ph ph-list-numbers"></i>
-                        <?= lang('Change order', 'Reihenfolge ändern') ?>
-                    </a>
                 </div>
             <?php } ?>
 
@@ -252,7 +282,7 @@ $member = $osiris->activities->count(['type' => $t]);
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang("Can't delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View activities', 'Aktivitäten zeigen') ?>
@@ -264,6 +294,4 @@ $member = $osiris->activities->count(['type' => $t]);
 
 <?php } ?>
 
-
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>

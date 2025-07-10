@@ -160,19 +160,11 @@ Route::post('/download', function () {
         }
     }
     $Format = new Document($highlight, 'word');
-    $Format->full = true;
+    // $Format->full = true;
 
-    $order = array(
-        'publication',
-        'lecture',
-        'poster',
-        'review',
-        'teaching',
-        'students',
-        'software',
-        'award',
-        'misc',
-    );
+    $categories = $Categories->categories;
+    $order = array_column($categories, 'id');
+
     // select data
     $collection = $osiris->activities;
     $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
@@ -180,11 +172,11 @@ Route::post('/download', function () {
     // dump($params, true);
     $filter = [];
     if (isset($params['type']) && !empty($params['type'])) {
-        $filter['$and'][] = array('type'=> trim($params['type']));
+        $filter['$and'][] = array('type' => trim($params['type']));
         $filename .= "_" . trim($params['type']);
     }
     if (isset($params['user']) && !empty($params['user'])) {
-        $filter['$and'][] = array('$or'=> [['authors.user' => $params['user']], ['editors.user' => $params['user']]]);
+        $filter['$and'][] = array('$or' => [['authors.user' => $params['user']], ['editors.user' => $params['user']]]);
         $filename .= "_" . trim($params['user']);
     }
     if (isset($params['dept']) && !empty($params['dept'])) {
@@ -193,17 +185,17 @@ Route::post('/download', function () {
     }
     if (isset($params['id']) && !empty($params['id'])) {
         $id = DB::to_ObjectID($params['id']);
-        $filter['$and'][] = array('_id'=> $id);
+        $filter['$and'][] = array('_id' => $id);
         $filename .= "_" . trim($params['id']);
     }
 
     if (isset($params['project']) && !empty($params['project'])) {
-        $filter['$and'][] = array('projects'=> trim($params['project']));
+        $filter['$and'][] = array('projects' => trim($params['project']));
         $filename .= "_" . trim($params['project']);
     }
 
     if (isset($params['topic']) && !empty($params['topic'])) {
-        $filter['$and'][] = array('topics'=> trim($params['topic']));
+        $filter['$and'][] = array('topics' => trim($params['topic']));
         $filename .= "_" . trim($params['topic']);
     }
 
@@ -230,7 +222,7 @@ Route::post('/download', function () {
             }
 
             $filter['$and'][] =   array(
-                '$or'=> [
+                '$or' => [
                     [
                         "start.year" => array('$lte' => intval($startyear)),
                         '$and' => array(
@@ -307,7 +299,10 @@ Route::post('/download', function () {
             $scientist = $DB->getPerson($params['user']);
 
             $section->addTitle($scientist['displayname'], 1);
-            $section->addTitle($scientist['position'] ?? '', 3);
+            $section->addTitle(lang($scientist['position'] ?? '', $scientist['position_de'] ?? null), 3);
+
+            // add break
+            $section->addTextBreak(1, $styleParagraphCenter);
 
             $filename = "CV_" . str_replace(' ', '', $scientist['last']);
 
@@ -340,6 +335,36 @@ Route::post('/download', function () {
                     $cell->addText($entry['affiliation'],  ['italic' => true], $styleParagraph);
                 }
             }
+
+            if (isset($scientist['keywords']) && !empty($scientist['keywords'])) {
+                $kw_name = $Settings->get('staff-keyword-name', 'Keywords');
+                $section->addTitle($kw_name, 2);
+                foreach ($scientist['keywords'] as $key) {
+                    $paragraph = $section->addListItemRun(0);
+                    $paragraph->addText($key, ['bold' => false], $styleParagraph);
+                }
+            }
+
+            if (isset($scientist['research_profile']) && !empty($scientist['research_profile'])) {
+                $section->addTitle(lang('Research profile', 'Forschungsprofil'), 2);
+                $paragraph = $section->addTextRun($styleParagraph);
+                $line = clean_comment_export(lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null), false);
+                \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
+            }
+
+            if (isset($scientist['biography']) && !empty($scientist['biography'])) {
+                $section->addTitle(lang('Biography', 'Biografie'), 2);
+                $paragraph = $section->addTextRun($styleParagraph);
+                $line = clean_comment_export(lang($scientist['biography'], $scientist['biography_de'] ?? null), false);
+                \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
+            }
+
+            if (isset($scientist['education']) && !empty($scientist['education'])) {
+                $section->addTitle(lang('Education', 'Ausbildung'), 2);
+                $paragraph = $section->addTextRun($styleParagraph);
+                $line = clean_comment_export(lang($scientist['education'], $scientist['education_de'] ?? null), false);
+                \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
+            }
         }
 
 
@@ -363,7 +388,7 @@ Route::post('/download', function () {
             if ($timefilter && $endyear == $doc['year'] && $endmonth < $doc['month']) continue;
             if (!in_array($doc['type'], $headers)) {
                 $headers[] = $doc['type'];
-                $section->addTitle($Settings->getActivities($doc['type'])['name'], $headerlvl);
+                $section->addTitle($Settings->title($doc['type']), $headerlvl);
             }
             $Format->setDocument($doc);
             $paragraph = $section->addTextRun();
@@ -513,8 +538,8 @@ function clean_comment_export($subject, $front_addition_text = '')
     // Remove double spaces 
     $subject = preg_replace('!\s+!', ' ', $subject);
 
-    // Strip all tags, except <b><i><strike>
-    $subject = strip_tags($subject, '<b><i><strike><sub><sup><br>');
+    // Strip all tags, except <b><i><strike><u><sub><sup>
+    $subject = strip_tags($subject, '<b><i><u><strike><sub><sup><br>');
 
     // Remove any ### at the start
     $subject = rtrim(ltrim($subject, "#"), "#");
@@ -563,7 +588,8 @@ Route::post('/reports/old', function () {
     $phpWord->addNumberingStyle(
         'hNum',
         array(
-            'type' => 'multilevel', 'levels' => array(
+            'type' => 'multilevel',
+            'levels' => array(
                 array('pStyle' => 'Heading1', 'format' => 'decimal', 'text' => '%1'),
                 array('pStyle' => 'Heading2', 'format' => 'decimal', 'text' => '%1.%2'),
                 array('pStyle' => 'Heading3', 'format' => 'decimal', 'text' => '%1.%2.%3'),
@@ -743,10 +769,12 @@ Route::post('/reports/old', function () {
         $section->addTitle("Science and Services", 1);
 
         // publications
-        foreach ([
-            "autonom" => "Autonomous Research",
-            "collab" => "Collaborative Research"
-        ] as $cat => $title1) {
+        foreach (
+            [
+                "autonom" => "Autonomous Research",
+                "collab" => "Collaborative Research"
+            ] as $cat => $title1
+        ) {
             $section->addTitle($title1, 1);
 
             // count tables
@@ -778,20 +806,24 @@ Route::post('/reports/old', function () {
 
             $section->addTextRun();
 
-            foreach ([
-                "MIOS" => "Microbiology",
-                "MuTZ" => "Human Cell Biology",
-                "PFVI" => "Plant Virology"
-            ] as $D => $title2) {
+            foreach (
+                [
+                    "MIOS" => "Microbiology",
+                    "MuTZ" => "Human Cell Biology",
+                    "PFVI" => "Plant Virology"
+                ] as $D => $title2
+            ) {
 
                 if (isset($result['publication'][$cat][$D])) {
                     $section->addTitle($title2, 2);
 
-                    foreach ([
-                        "chapter" => "Book Chapters",
-                        "article" => "Refereed Publications",
-                        "magazine" => "Non-Refereed Publications"
-                    ] as $pubtype => $title3) {
+                    foreach (
+                        [
+                            "chapter" => "Book Chapters",
+                            "article" => "Refereed Publications",
+                            "magazine" => "Non-Refereed Publications"
+                        ] as $pubtype => $title3
+                    ) {
 
                         if (isset($result['publication'][$cat][$D][$pubtype])) {
                             $content = $result['publication'][$cat][$D][$pubtype];
@@ -878,14 +910,16 @@ Route::post('/reports/old', function () {
 
         $section->addTextRun();
 
-        foreach ([
-            "Lectures" => ["lecture"],
-            "Posters" => ["poster"],
-            "Committee involvement" => ["misc-annual"],
-            "Organisation of events" => ["organisation"],
-            "Public outreach" => ["outreach"],
-            "Other activities" => ["misc"]
-        ] as $title => $types) {
+        foreach (
+            [
+                "Lectures" => ["lecture"],
+                "Posters" => ["poster"],
+                "Committee involvement" => ["misc-annual"],
+                "Organisation of events" => ["organisation"],
+                "Public outreach" => ["outreach"],
+                "Other activities" => ["misc"]
+            ] as $title => $types
+        ) {
             $empty = true;
             foreach ($types as $type) {
                 if (!empty($result[$type] ?? [])) $empty = false;
@@ -912,10 +946,12 @@ Route::post('/reports/old', function () {
 
         $section->addTitle('Editorial Boards of Scientific Journals and Reviewing for Scientific Journals', 2);
 
-        foreach ([
-            "editorial" => "Editorial Board of Journals:",
-            "review" => "Reviewing for Journals:"
-        ] as $type => $title) {
+        foreach (
+            [
+                "editorial" => "Editorial Board of Journals:",
+                "review" => "Reviewing for Journals:"
+            ] as $type => $title
+        ) {
 
             if (!empty($result[$type])) {
                 $paragraph = $section->addTextRun()->addText($title, ['underline' => 'single']);
@@ -1025,21 +1061,25 @@ Route::post('/reports/old', function () {
         $section->addTitle("Foreword", 1);
 
         // publications
-        foreach ([
-            "autonom" => "Eigenständige Forschungstätigkeit",
-            "collab" => "Externe Zusammenarbeit"
-        ] as $cat => $title1) {
+        foreach (
+            [
+                "autonom" => "Eigenständige Forschungstätigkeit",
+                "collab" => "Externe Zusammenarbeit"
+            ] as $cat => $title1
+        ) {
             $section->addTitle($title1, 1);
 
             $section->addTextRun();
 
             if (isset($result['publication'][$cat])) {
 
-                foreach ([
-                    "chapter" => "Buchkapitel",
-                    "article" => "Referierte Publikationen",
-                    "magazine" => "Nicht-Referierte Publikationen"
-                ] as $pubtype => $title3) {
+                foreach (
+                    [
+                        "chapter" => "Buchkapitel",
+                        "article" => "Referierte Publikationen",
+                        "magazine" => "Nicht-Referierte Publikationen"
+                    ] as $pubtype => $title3
+                ) {
 
                     if (isset($result['publication'][$cat][$pubtype])) {
                         $content = $result['publication'][$cat][$pubtype];
@@ -1062,10 +1102,12 @@ Route::post('/reports/old', function () {
 
         $section->addTextRun();
 
-        foreach ([
-            "Vorträge" => ["lecture"],
-            "Poster" => ["poster"]
-        ] as $title => $types) {
+        foreach (
+            [
+                "Vorträge" => ["lecture"],
+                "Poster" => ["poster"]
+            ] as $title => $types
+        ) {
             $empty = true;
             foreach ($types as $type) {
                 if (!empty($result[$type] ?? [])) $empty = false;
@@ -1097,12 +1139,14 @@ Route::post('/reports/old', function () {
         foreach ($departmentwise as $dept => $data) {
             $department = $Groups->getName($dept);
             $section->addTitle($department, 1);
-            foreach ([
-                "editorial" => "Editorenschaften in Zeitschriften:",
-                "review" => "Peer-Reviews für Zeitschriften:",
-                "gutachten" => "Begutachtungen:",
-                "gremien" => "Beschäftigte der Abteilung $department waren in folgenden Gremien aktiv:"
-            ] as $type => $title) {
+            foreach (
+                [
+                    "editorial" => "Editorenschaften in Zeitschriften:",
+                    "review" => "Peer-Reviews für Zeitschriften:",
+                    "gutachten" => "Begutachtungen:",
+                    "gremien" => "Beschäftigte der Abteilung $department waren in folgenden Gremien aktiv:"
+                ] as $type => $title
+            ) {
                 if (!empty($data[$type])) {
                     $paragraph = $section->addTextRun()->addText($title, ['underline' => 'single']);
                     ksort($data[$type]);

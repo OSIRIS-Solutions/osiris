@@ -16,6 +16,57 @@
  * @license     MIT
  */
 $Format = new Document(true);
+
+$fields = file_get_contents(BASEPATH . '/data/person-fields.json');
+$fields = json_decode($fields, true);
+
+$active_fields = $Settings->get('person-data');
+if (!is_null($active_fields)) {
+    $active_fields = DB::doc2Arr($active_fields);
+} else {
+    $active_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $active_fields = array_column($active_fields, 'id');
+}
+
+foreach ($osiris->adminFields->find() as $field) {
+    $f = [
+        'id' => $field['id'],
+        'en' => $field['name'],
+        'de' => $field['name_de'] ?? null,
+        'type' => $field['format'] == 'int' ? 'integer' : $field['format'],
+        'input' => 'text',
+        'searchable' => true,
+    ];
+
+    if ($field['format'] == 'bool') {
+        $f['type'] = 'boolean';
+    }
+
+    if ($field['format'] == 'list') {
+        $f['values'] =  [];
+        foreach ($field['values'] as $value) {
+            $f['values'][$value[1]] = lang($value[0], $value[1] ?? null);
+        }
+        $f['input'] = 'select';
+    }
+    if ($field['format'] == 'url') {
+        $f['type'] = 'string';
+    }
+
+    $fields[] = $f;
+}
+
+$active = function ($field) use ($active_fields) {
+    return in_array($field, $active_fields);
+};
+
+$active_fields = array_filter($fields, function ($field) use ($active) {
+    return $active($field['id']);
+});
+$active_fields = array_values($active_fields);
+
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/query-builder.default.min.css">
@@ -64,96 +115,121 @@ $Format = new Document(true);
     foreach ($Groups->groups as $dept) {
         $depts[$dept['id']] = $dept['name'];
     }
+
+
+    $filters = [
+        [
+            'id' => "username",
+            'label' => lang('Username', 'Kürzel'),
+            'type' => 'string',
+            'input' => 'text',
+        ],
+        [
+            'id' => "first",
+            'label' => lang('First name', 'Vorname'),
+            'type' => 'string',
+            'input' => 'text',
+        ],
+        [
+            'id' => "last",
+            'label' => lang('Last name', 'Nachname'),
+            'type' => 'string',
+            'input' => 'text',
+        ],
+        [
+            'id' => "academic_title",
+            'label' => lang('Acad. title', 'Akad. Titel'),
+            'type' => 'string',
+            'input' => 'text',
+            'default_value' => 'Dr.'
+        ],
+        [
+            'id' => "mail",
+            'label' => lang('Mail', 'Email'),
+            'type' => 'string',
+            'input' => 'text',
+        ],
+        [
+            'id' => "orcid",
+            'label' => lang('ORCID', 'ORCID'),
+            'type' => 'string',
+            'input' => 'text',
+        ],
+        [
+            'id' => 'is_active',
+            'label' => lang('Is active', 'Ist aktiv'),
+            'type' => 'boolean',
+            'values' => [
+                'true' => lang('yes', 'ja'),
+                'false' => lang('no', 'nein')
+            ],
+            'input' => 'radio',
+            'default_value' => true
+        ],
+        [
+            'id' => 'created',
+            'label' => lang('Created at', 'Angelegt am'),
+            'type' => 'datetime',
+            'input' => 'date',
+        ],
+        [
+            'id' => 'updated',
+            'label' => lang('Updated at', 'Geändert am'),
+            'type' => 'datetime',
+            'input' => 'date',
+        ],
+        [
+            'id' => 'roles',
+            'label' => lang('Roles', 'Rollen'),
+            'type' => 'string',
+            'input' => 'text',
+        ]
+    ];
+    foreach ($active_fields as $field) {
+        if ($field['searchable'] ?? false) {
+            $field['label'] = lang($field['en'], $field['de'] ?? null);
+            $filters[] = $field;
+        }
+    }
+    if ($Settings->featureEnabled('topics')) {
+        $topics = $osiris->topics->find()->toArray();
+        $topics = array_column($topics, 'name', 'id');
+        $FIELDS[] = [
+            'id' => 'topics',
+            'module_of' => $typeModules['topics'] ?? [],
+            'usage' => [
+                'filter',
+                'columns'
+            ],
+            'label' => lang('Research Topics', 'Forschungsbereiche'),
+            'type' => 'list',
+            'input' => 'select',
+            'values' => $topics
+        ];
+    }
+    $filters = array_map(function ($f) {
+        if (!isset($f['type'])) {
+            dump($f);
+        }
+        if ($f['type'] == 'boolean') {
+            $f['input'] = 'radio';
+            $f['values'] = ['true' => lang('Yes', 'Ja'), 'false' => lang('No', 'Nein')];
+        }
+        if ($f['type'] == 'list') {
+            $f['type'] = 'string';
+        }
+        if (isset($f['usage'])) {
+            unset($f['usage']);
+        }
+        return $f;
+    }, $filters);
     ?>
 
 
     <script>
+        let filters = <?= json_encode($filters) ?>;
         var mongoQuery = $('#builder').queryBuilder({
-            filters: [{
-                    id: 'username',
-                    label: lang('Username', 'Kürzel'),
-                    type: 'string'
-                },
-                {
-                    id: 'first',
-                    label: lang('First name', 'Vorname'),
-                    type: 'string'
-                },
-                {
-                    id: 'last',
-                    label: lang('Last name', 'Nachname'),
-                    type: 'string'
-                },
-                {
-                    id: 'academic_title',
-                    label: lang('Acad. title', 'Akad. Titel'),
-                    type: 'string',
-                    default_value: 'Dr.'
-                },
-                // {
-                //     id: 'depts',
-                //     label: lang('Department', 'Abteilung'),
-                //     type: 'string',
-                //     input: 'select',
-                //     values: JSON.parse('<?= json_encode($depts) ?>')
-                // },
-                {
-                    id: 'telephone',
-                    label: lang('Telephone', 'Telefon'),
-                    type: 'string'
-                },
-                {
-                    id: 'mail',
-                    label: lang('Mail', 'Email'),
-                    type: 'string'
-                },
-                {
-                    id: 'is_active',
-                    label: lang('Is active', 'Ist aktiv'),
-                    type: 'boolean',
-                    values: {
-                        'true': 'yes',
-                        'false': 'no'
-                    },
-                    input: 'radio',
-                    default_value: true
-                },
-                {
-                    id: 'position',
-                    label: lang('Position', 'Position'),
-                    type: 'string'
-                },
-                {
-                    id: 'orcid',
-                    label: lang('ORCID', 'ORCID'),
-                    type: 'string'
-                },
-                {
-                    id: 'created',
-                    label: lang('Created at', 'Angelegt am'),
-                    type: 'datetime',
-                    input: 'date'
-                },
-                {
-                    id: 'updated',
-                    label: lang('Updated at', 'Geändert am'),
-                    type: 'datetime',
-                    input: 'date'
-                },
-                {
-                    id: 'gender',
-                    label: lang('Gender', 'Geschlecht'),
-                    type: 'string',
-                    input: 'select',
-                    values: {
-                        'm': lang('male', 'männlich'),
-                        'f': lang('female', 'weiblich'),
-                        'd': lang('non-binary', 'divers'),
-                        'n': lang('not specified', 'nicht angegeben')
-                    }
-                }
-
-            ],
+            filters: filters,
 
             'lang_code': lang('en', 'de'),
             'icons': {

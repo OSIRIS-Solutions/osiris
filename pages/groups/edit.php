@@ -36,7 +36,7 @@ $form = $form ?? array();
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
 $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-$url = ROOTPATH . "/groups/view/" . $form['_id'];
+$url = ROOTPATH . "/groups/edit/" . $form['_id'];
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
 $level = $Groups->getLevel($id);
@@ -56,6 +56,9 @@ function sel($index, $value)
 }
 
 ?>
+
+<script src="<?= ROOTPATH ?>/js/selectize.min.js"></script>
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css">
 
 <style>
     section {
@@ -104,7 +107,7 @@ function sel($index, $value)
 <script>
     const UNIT = '<?= $id ?>';
 </script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/groups-editor.js"></script>
 
 
@@ -269,6 +272,12 @@ function sel($index, $value)
                 <input type="text" class="form-control" name="values[costcenter]" id="costcenter" value="<?= val('costcenter') ?>">
             </div>
 
+
+            <?php if ($Settings->featureEnabled('topics')) { ?>
+                <!-- if topics are registered, you can choose them here -->
+                <?php $Settings->topicChooser($form['topics'] ?? []) ?>
+            <?php } ?>
+
         </fieldset>
 
         <button class="btn secondary" type="submit" id="submit-btn">
@@ -383,6 +392,8 @@ function sel($index, $value)
             <?= lang('Head(s)', 'Leitende Person(en)') ?>
         </h5>
         <div class="form-group">
+            <!-- save empty -->
+            <input type="hidden" name="values[head]" value="">
             <div class="author-widget">
                 <div class="author-list p-10">
                     <?php
@@ -390,6 +401,10 @@ function sel($index, $value)
                         $person = $osiris->persons->findOne(['username' => $h]);
                         if (empty($person)) continue;
                         $name = $person['last'] . ', ' . $person['first'];
+                        $active = $person['is_active'] ?? true;
+                        if (!$active) {
+                            $name .= ' <small class="text-danger">(' . lang('inactive', 'inaktiv') . ')</small>';
+                        }
                     ?>
                         <div class='author'>
                             <?= $name ?>
@@ -400,15 +415,15 @@ function sel($index, $value)
 
                 </div>
                 <div class="footer">
-                    <div class="input-group sm d-inline-flex w-auto">
-                        <select class="head-input form-control">
+                    <div class="input-group d-inline-flex w-auto">
+                        <select class="head-input form-control" id="head-select">
                             <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
                             <?php
-                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) {
                                 if (in_array($j['username'], $heads) || empty($j['last'])) continue;
                             ?>
-                                <option value="<?= $j['username'] ?>"><?= $j['last'] ?>, <?= $j['first'] ?></option>
+                                <option value="<?= $j['username'] ?>"><?= $j['last'] ?>, <?= $j['first'] ?> <?= ($j['is_active'] ?? true) ? '' : '(inaktiv)' ?></option>
                             <?php } ?>
                         </select>
                         <div class="input-group-append">
@@ -418,6 +433,9 @@ function sel($index, $value)
                         </div>
                     </div>
                 </div>
+                <script>
+                    $("#head-select").selectize();
+                </script>
             </div>
         </div>
         <button class="btn secondary" type="submit" id="submit-btn">
@@ -562,6 +580,9 @@ function sel($index, $value)
                             <option value="<?= $person['username'] ?>"><?= $person['last'] . ', ' . $person['first'] ?></option>
                         <?php } ?>
                     </select>
+                    <script>
+                        $("#person-username").selectize();
+                    </script>
                 </div>
 
                 <div class="form-group">

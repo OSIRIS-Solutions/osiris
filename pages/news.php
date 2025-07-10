@@ -32,15 +32,6 @@
 
 </style>
 
-<?php if (isset($USER) && !empty($USER)) {
-    if (!isset($USER['lastversion']) || $USER['lastversion'] !== OSIRIS_VERSION) {
-        $updateResult = $osiris->persons->updateOne(
-            ['username' => $_SESSION['username']],
-            ['$set' => ['lastversion' => OSIRIS_VERSION]]
-        );
-    }
-} ?>
-
 
 <div class='container'>
     <div class="content">

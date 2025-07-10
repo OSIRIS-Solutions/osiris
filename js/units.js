@@ -8,6 +8,18 @@ var activitiesTable = false,
     personsExists = false,
     wordcloudExists = false;
 
+let activeCategories = new Set(); // Wird initial leer, also zeigt alles
+
+// DataTables Filterfunktion registrieren
+$.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    const type = data[5]; // z. B. Spalte 1 ist der Typ (Publikation, Poster…)
+    console.log(type);
+    // Wenn keine Kategorien ausgewählt sind, alles zeigen
+    if (activeCategories.size === 0) return true;
+
+    return !activeCategories.has(type);
+});
+
 function navigate(key) {
     $('section').hide()
     $('section#' + key).show()
@@ -18,27 +30,25 @@ function navigate(key) {
     switch (key) {
         case 'publications':
             if (publicationTable) break;
-            publicationTable = true;
-            initActivities('#publication-table', {
-                page: 'my-activities',
-                display_activities: 'web',
-                'units': DEPT,
-                type: 'publication'
+            publicationTable = initActivities('#publication-table', {
+                filter: {
+                    'units': DEPT,
+                    type: 'publication'
+                }
             })
-            // impactfactors('chart-impact', 'chart-impact-canvas', { user: {'$in': USERS} })
-            // authorrole('chart-authors', 'chart-authors-canvas', { user: {'$in': USERS} })
             break;
 
         case 'activities':
             if (activitiesTable) break;
-            activitiesTable = true;
-            initActivities('#activities-table', {
-                page: 'my-activities',
-                display_activities: 'web',
-                'units': DEPT,
-                type: { '$ne': 'publication' }
+            activitiesTable = initActivities('#activities-table', {
+                filter: {
+                    'units': DEPT,
+                    type: { '$ne': 'publication' }
+                }
             })
-            // activitiesChart('chart-activities', 'chart-activities-canvas', { user: {'$in': USERS} })
+            timelineChart({
+                'units': DEPT,
+            });
             break;
 
         case 'projects':
@@ -95,7 +105,6 @@ function navigate(key) {
     }
 
 }
-
 
 function collabChart(selector, data) {
     $.ajax({
@@ -159,7 +168,7 @@ function collabGraph(selector, data) {
                     depts_in_use[d.dept.id] = d.dept;
             })
 
-            Chords(selector, matrix, labels, null, data, links, false, null);
+            Chords(selector, matrix, labels, null, data, links, true, null);
 
 
             var legend = d3.select('#legend')
