@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     && docker-php-ext-configure ldap \
     && docker-php-ext-install ldap zip \
-    && pecl install mongodb \
+    && pecl install mongodb-1.21.0 \
     && docker-php-ext-enable mongodb \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \

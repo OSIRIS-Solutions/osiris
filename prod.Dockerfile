@@ -31,7 +31,7 @@ RUN apk update && apk add --no-cache \
     make \
     && docker-php-ext-configure ldap \
     && docker-php-ext-install ldap zip \
-    && pecl install mongodb \
+    && pecl install mongodb-1.21.0 \
     && docker-php-ext-enable mongodb
 
 # Set workdir
