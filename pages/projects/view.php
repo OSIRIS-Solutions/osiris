@@ -360,10 +360,12 @@ if ($topicsEnabled) {
                                         echo $Subproject->widgetSubproject();
                                     }
                                 } ?>
-                                <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
-                                    <i class="ph ph-plus-circle" aria-hidden="true"></i>
-                                    <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
-                                </a>
+                                <?php if ($edit_perm && ($project_type['subprojects'] ?? false)) { ?>
+                                    <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
+                                        <i class="ph ph-plus-circle" aria-hidden="true"></i>
+                                        <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
+                                    </a>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php } ?>
