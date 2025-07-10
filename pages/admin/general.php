@@ -866,7 +866,7 @@ $affiliation = $Settings->get('affiliation_details');
                     </h3>
                     <div class="form-group">
                         <label for="">
-                            <?= lang('Infrastructures in OSIRIS', 'Infrastrukturen in OSIRIS') ?>
+                            <h5><?= lang('Infrastructures in OSIRIS', 'Infrastrukturen in OSIRIS') ?></h5>
                         </label>
                         <?php
                         $infrastructures = $Settings->featureEnabled('infrastructures');
@@ -964,7 +964,7 @@ $affiliation = $Settings->get('affiliation_details');
 
 
                 <div class="box px-20">
-                    <h3 id="osiris-portfolio">
+                    <h3 id="portal">
                         <?= lang('OSIRIS Portfolio') ?>
                     </h3>
                     <div class="form-group">

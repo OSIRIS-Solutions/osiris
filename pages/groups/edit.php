@@ -108,7 +108,7 @@ function sel($index, $value)
     const UNIT = '<?= $id ?>';
 </script>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
-<script src="<?= ROOTPATH ?>/js/groups-editor.js"></script>
+<script src="<?= ROOTPATH ?>/js/groups-editor.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 <h1 class="title">

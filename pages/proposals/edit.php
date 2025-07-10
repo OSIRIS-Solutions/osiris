@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Page to add new projects
+ * Page to add new proposals
  * 
  * This file is part of the OSIRIS package.
  * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
@@ -9,7 +9,7 @@
  * @link        /projects/new
  *
  * @package     OSIRIS
- * @since       1.2.2
+ * @since       1.5.0
  * 
  * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
@@ -199,8 +199,6 @@ if ($is_subproject) {
         $req = function ($field) use ($required_fields) {
             return in_array($field, $required_fields) ? 'required' : '';
         };
-
-
         ?>
 
         <h3 class="title">
@@ -396,7 +394,7 @@ if ($is_subproject) {
                             <input type="date" class="form-control" name="values[start_proposed]" value="<?= valueFromDateArray(val('start_proposed')) ?>" id="start_proposed" required>
 
                             <label for="start_proposed" class="required">
-                                Geplanter Projektbeginn
+                                <?=lang('Proposed Start Date', 'Geplanter Projektbeginn')?>
                             </label>
                         </div>
                         <div class="col-sm-4">
@@ -413,7 +411,7 @@ if ($is_subproject) {
                             <input type="date" class="form-control" name="values[end_proposed]" value="<?= valueFromDateArray(val('end_proposed')) ?>" id="end_proposed" required>
 
                             <label for="end_proposed" class="required">
-                                Geplantes Projektende
+                                <?= lang('Proposed End Date', 'Geplantes Projektende') ?>
                             </label>
                         </div>
                     </div>
@@ -446,7 +444,7 @@ if ($is_subproject) {
                             <input type="date" class="form-control" name="values[start]" value="<?= valueFromDateArray(val('start')) ?>" id="start" required>
 
                             <label for="start" class="required">
-                                Projektbeginn
+                                <?=lang('Project Start', 'Projektbeginn')?>
                             </label>
                         </div>
                         <div class="col-sm-4">
@@ -463,7 +461,7 @@ if ($is_subproject) {
                             <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end" required>
 
                             <label for="end" class="required">
-                                Projektende
+                                <?= lang('Project End', 'Projektende') ?>
                             </label>
                         </div>
                     </div>
@@ -1154,59 +1152,6 @@ if ($is_subproject) {
                 </script>
             <?php } ?>
 
-<!-- 
-            <?php if (array_key_exists('countries-about', $fields)) {
-                $countries = $form['countries-about'] ?? [];
-            ?>
-                <h5>
-                    <?= lang('Research about countries:', 'Forschung über Länder:') ?>
-                </h5>
-
-                <div class="author-widget" id="author-widget">
-                    <div class="author-list p-10" id="countries-about-list">
-                        <?php
-                        $lang = lang('name', 'name_de');
-                        foreach ($countries as $iso) { ?>
-                            <div class='author'>
-                                <input type='hidden' name='values[countries-about][]' value='<?= $iso ?>'>
-                                <?= $DB->getCountry($iso, $lang) ?>
-                                <a onclick="$(this).closest('.author').remove()">&times;</a>
-                            </div>
-                        <?php } ?>
-
-                    </div>
-                    <div class="footer">
-                        <div class="input-group sm d-inline-flex w-auto">
-                            <select id="add-countries-about">
-                                <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
-                                    <option value="<?= $iso ?>"><?= $name ?></option>
-                                <?php } ?>
-                            </select>
-                            <div class="input-group-append">
-                                <button class="btn secondary h-full" type="button" onclick="addCountryAbout(event);">
-                                    <i class="ph ph-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        function addCountryAbout(event) {
-                            var el = $('#add-countries-about')
-                            var data = el.val()
-                            if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
-                                event.preventDefault();
-                                if (data) {
-                                    $('#countries-about-list').append('<div class="author"><input type="hidden" name="values[countries-about][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
-                                }
-                                $(el).val('')
-                                return false;
-                            }
-                        }
-                    </script>
-
-                </div>
-            <?php } ?> -->
 
             <!-- if topics are registered, you can choose them here -->
             <?php if (array_key_exists('topics', $fields)) { ?>
@@ -1333,7 +1278,8 @@ if ($is_subproject) {
                             <?= lang('Personnel measures planned', 'Geplante Personalmaßnahmen') ?>
                         </label>
                         <small class="text-muted">
-                            Einstellungen/Verlängerungen in Personenmonaten & Kategorie
+                            <!-- Einstellungen/Verlängerungen in Personenmonaten & Kategorie -->
+                             <?=lang('Hiring/Extensions in person-months & category', 'Einstellungen/Verlängerungen in Personenmonaten & Kategorie')?>
                         </small>
                     </div>
                     <div class="form-group floating-form">
@@ -1343,7 +1289,7 @@ if ($is_subproject) {
                             <?= lang('In-kind personnel', 'Umfang des geplanten eigenen Personaleinsatzes') ?>
                         </label>
                         <small class="text-muted">
-                            Nachrichtliche Angaben in % unter Nennung der mitarbeitenden Personen (z.B. Antragsteller 10%, ABC 15%, etc.)
+                            <?=lang('Informative details in % mentioning the collaborating persons (e.g. Applicant 10%, ABC 15%, etc.)', 'Nachrichtliche Angaben in % unter Nennung der mitarbeitenden Personen (z.B. Antragsteller 10%, ABC 15%, etc.)')?>
                         </small>
                     </div>
                 <?php } ?>
@@ -1351,7 +1297,6 @@ if ($is_subproject) {
                 <?php if (array_key_exists('ressources', $fields)) {
                     $res = $form['ressources'] ?? [];
                 ?>
-                    <!-- each: Sachmittel, Personalmittel, Raumkapitäten, sonstige Ressourcen -->
                     <div class="ressources">
                         <div class="form-group">
                             <label for="ressource1">
@@ -1359,9 +1304,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= ($res['material'] ?? false) ? 'checked' : '' ?>>
-                                <label for="material-yes">Yes</label>
+                                <label for="material-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= ($res['material'] ?? false) ? '' : 'checked' ?>>
-                                <label for="material-no">No</label>
+                                <label for="material-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= ($res['material'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
@@ -1381,9 +1326,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= ($res['personnel'] ?? false) ? 'checked' : '' ?>>
-                                <label for="personnel-yes">Yes</label>
+                                <label for="personnel-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= ($res['personnel'] ?? false) ? '' : 'checked' ?>>
-                                <label for="personnel-no">No</label>
+                                <label for="personnel-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= ($res['personnel'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
@@ -1402,9 +1347,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= ($res['room'] ?? false) ? 'checked' : '' ?>>
-                                <label for="room-yes">Yes</label>
+                                <label for="room-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= ($res['room'] ?? false) ? '' : 'checked' ?>>
-                                <label for="room-no">No</label>
+                                <label for="room-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= ($res['room'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
@@ -1424,9 +1369,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= ($res['other'] ?? false) ? 'checked' : '' ?>>
-                                <label for="other-yes">Yes</label>
+                                <label for="other-yes"><?=lang('Yes', 'Ja')?></label>
                                 <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= ($res['other'] ?? false) ? '' : 'checked' ?>>
-                                <label for="other-no">No</label>
+                                <label for="other-no"><?=lang('No', 'Nein')?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= ($res['other'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>
