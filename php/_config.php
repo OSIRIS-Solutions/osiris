@@ -155,6 +155,8 @@ function validateValues($values, $DB)
             }
         } else if ($key == 'month' || $key == 'year') {
             $values[$key] = intval($value);
+        } else if ($key == 'room') {
+            // do not connvert room numbers to integers
         } else if (is_numeric($value)) {
             if (str_starts_with($value, "0")) {
                 $values[$key] = trim($value);
