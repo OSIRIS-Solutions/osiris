@@ -39,6 +39,7 @@ Route::get('/admin/users', function () {
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen")]
     ];
+    $page = 'users';
     include BASEPATH . "/header.php";
     if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
         include BASEPATH . "/pages/synchronize-users.php";
