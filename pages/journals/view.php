@@ -553,7 +553,7 @@ foreach ($metrics as $metric) {
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No impact factors available.', 'Keine Impact Faktoren verfügbar.') ?></p>
+            <p><?= lang('No quartiles available.', 'Keine Quartile verfügbar.') ?></p>
         <?php } ?>
 
 
