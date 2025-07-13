@@ -954,7 +954,7 @@ class Modules
                         <option value="book"><?= lang('Book', 'Buch') ?></option>
                         <option value="chapter"><?= lang('Book chapter', 'Buchkapitel') ?></option>
                         <option value="preprint">Preprint (non refereed)</option>
-                        <option value="conference"><?= lang('Conference preceedings', 'Konfrenzbeitrag') ?></option>
+                        <option value="conference"><?= lang('Conference preceedings', 'Konferenzbeitrag') ?></option>
                         <option value="magazine"><?= lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)') ?></option>
                         <option value="dissertation"><?= lang('Thesis') ?></option>
                         <option value="others"><?= lang('Others', 'Weiteres') ?></option>
