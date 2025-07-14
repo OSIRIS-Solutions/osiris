@@ -20,6 +20,7 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - OSIRIS verschickt jetzt optional **E-Mail-Benachrichtigungen**, z.B. bei Erstellung oder Bearbeitung von Projekten. Im Admin-Interface kann dies konfiguriert werden.
 
 
+
 #### <i class="ph ph-users-three"></i> Personen-Einstellungen
 
 - Die Personeneinstellungen sind jetzt unter "Inhalte" zu finden.
@@ -114,6 +115,9 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
      - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
      - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
   3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
+
+#### <i class="ph ph-gear"></i> Weitere Verbesserungen
+- Es wurde eine neue Seite zu den Einstellungen hinzugefügt, die es ermöglicht, den Footer der Seite anzupassen. Hier können Impressum, Datenschutzerklärung und Links zu externen Ressourcen hinzugefügt werden.
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 

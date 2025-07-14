@@ -656,7 +656,7 @@ if ($process == 'project') {
         </div>
     <?php } else { ?>
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
+            <?= lang("Can't delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/projects/search#{"$and":[{"type":"<?= $type ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View projects', 'Projekte zeigen') ?>

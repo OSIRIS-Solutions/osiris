@@ -130,6 +130,8 @@ Route::get('/set-preferences', function () {
     header("Location: " . $redirect);
 });
 
+// always include the static routes
+include_once BASEPATH . "/routes/static.php";
 
 if (
     isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
@@ -148,7 +150,6 @@ if (
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
     include_once BASEPATH . "/routes/tags.php";
-    include_once BASEPATH . "/routes/static.php";
     include_once BASEPATH . "/routes/teaching.php";
     include_once BASEPATH . "/routes/users.php";
     include_once BASEPATH . "/routes/visualize.php";

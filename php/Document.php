@@ -1135,7 +1135,26 @@ class Document extends Settings
                 if ($val == $default) return $val;
                 return "<a target='_blank' href='https://pubmed.ncbi.nlm.nih.gov/$val'>$val</a>";
             case "pubtype": // ["pubtype"],
-                return $this->getVal('pubtype');
+                switch ($this->getVal('pubtype')) {
+                    case 'article':
+                        return "Journal article (refereed)";
+                    case 'book':
+                        return lang('Book', 'Buch');
+                    case 'chapter':
+                        return lang('Book chapter', 'Buchkapitel');
+                    case 'preprint':
+                        return "Preprint (non refereed)";
+                    case 'conference':
+                        return lang('Conference preceedings', 'Konferenzbeitrag');
+                    case 'magazine':
+                        return lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)');
+                    case 'dissertation':
+                        return lang('Thesis');
+                    case 'others':
+                        return lang('Others', 'Weiteres');
+                    default:
+                        return $this->getVal('pubtype');
+                }
             case "review-description": // ["title"],
                 return $this->getVal('title');
             case "review-type": // ["title"],

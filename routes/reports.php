@@ -34,7 +34,7 @@ Route::get('/admin/reports', function () {
         ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen')],
     ];
-
+    $page = 'reports-templates';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
     include BASEPATH . "/footer.php";
@@ -48,7 +48,6 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         ['name' => lang("Builder", "Editor")]
     ];
 
-
     $report = [];
     $title = '';
     $steps = [];
@@ -59,6 +58,7 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         $steps = $report['steps'];
     }
 
+    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-builder.php";
     include BASEPATH . "/footer.php";
@@ -78,6 +78,7 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
 
+    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-preview.php";
     include BASEPATH . "/footer.php";

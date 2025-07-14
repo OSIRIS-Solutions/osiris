@@ -559,10 +559,10 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     // if new password is set, update password
-    if (isset($_POST['password']) && !empty($_POST['password'])) {
+    if (isset($_POST['password']) && !empty($_POST['password']) && $user == $_SESSION['username']) {
         // check if old password matches
         $account = $osiris->accounts->findOne(['username' => $user]);
-        if (!password_verify($_POST['old_password'], $account['password'])) {
+        if (!empty($account['password'] ?? null) && !password_verify($_POST['old_password'], $account['password'])) {
             $_SESSION['msg'] = lang("Old password is incorrect.", "Vorheriges Passwort ist falsch.");
         } else if ($_POST['password'] != $_POST['password2']) {
             $_SESSION['msg'] = lang("Passwords do not match.", "Passwörter stimmen nicht überein.");

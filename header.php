@@ -835,12 +835,6 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-shield-check" aria-hidden="true"></i>
                                 <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
-
-
-                            <!-- <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
-                                <i class="ph ph-wrench" aria-hidden="true"></i>
-                                <?= lang('Features', 'Funktionen') ?>
-                            </a> -->
                         <?php } ?>
 
 
@@ -853,7 +847,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->hasPermission('user.synchronize')) { ?>
                             <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
                                 <i class="ph ph-users"></i>
-                                <?= lang('Users', 'Nutzer') ?>
+                                <?= lang('User Management', 'Nutzerverwaltung') ?>
                             </a>
                         <?php } ?>
                     </nav>

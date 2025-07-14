@@ -16,15 +16,8 @@
 ?>
 
 <style>
-    .table td.description {
-        color: var(--muted-color);
-        padding-top: 0;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-
-    .with-description td {
-        border-bottom: 0;
+    h2 i {
+        color: var(--primary-color);
     }
 </style>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -39,32 +32,175 @@
         <i class="ph ph-gear" aria-hidden="true"></i>
         <?= lang('General', 'Allgemein') ?>
     </a>
+    <!-- authentication -->
+    <a onclick="navigate('auth')" id="btn-auth" class="btn">
+        <i class="ph ph-lock" aria-hidden="true"></i>
+        <?php switch (strtoupper(USER_MANAGEMENT)) {
+            case 'LDAP':
+                echo lang('LDAP settings', 'LDAP-Einstellungen');
+                break;
+            case 'SSO':
+            case 'OAUTH':
+                echo lang('SSO settings', 'SSO-Einstellungen');
+                break;
+            default:
+                echo lang('Authentication', 'Authentifizierung');
+        } ?>
+    </a>
     <!-- data fields -->
     <a onclick="navigate('data-fields')" id="btn-data-fields" class="btn">
         <i class="ph ph-database" aria-hidden="true"></i>
         <?= lang('Data fields', 'Datenfelder') ?>
     </a>
-    <!-- vocabulary -->
-    <a onclick="navigate('vocabulary')" id="btn-vocabulary" class="btn">
-        <i class="ph ph-book-bookmark" aria-hidden="true"></i>
-        <?= lang('Vocabulary', 'Vokabular') ?>
+    <!-- positions -->
+    <a onclick="navigate('positions')" id="btn-positions" class="btn">
+        <i class="ph ph-tree-view" aria-hidden="true"></i>
+        <?= lang('Positions', 'Positionen') ?>
+    </a>
+
+    <!-- keywords -->
+    <a onclick="navigate('keywords')" id="btn-keywords" class="btn">
+        <i class="ph ph-tag" aria-hidden="true"></i>
+        <?= lang('Keywords', 'Schlagwörter') ?>
     </a>
 </nav>
 
 <section id="general">
-    <h2>
-        <?= lang('General settings', 'Allgemeine Einstellungen') ?>
-    </h2>
-
-    <p>
-        <?= lang('Here you can manage the general settings for the person data.', 'Hier kannst du die allgemeinen Einstellungen für die Personendaten verwalten.') ?>
-    </p>
-
     <?php
     $persons = $osiris->adminPersons->find();
     ?>
+    <form action="<?= ROOTPATH ?>/crud/admin/features" method="post" id="role-form">
+
+        <div class="box padded">
+            <h2 class="title">
+            <i class="ph ph-gear" aria-hidden="true"></i>
+                <?= lang('General settings', 'Allgemeine Einstellungen') ?>
+            </h2>
+            <div class="form-group">
+                <label for="" class="font-weight-bold">
+                    <?= lang('Coins', 'Coins') ?>
+                </label>
+                <?php
+                $coins = $Settings->featureEnabled('coins');
+                ?>
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="coins-true" value="1" name="values[coins]" <?= $coins ? 'checked' : '' ?>>
+                    <label for="coins-true"><?= lang('enabled', 'aktiviert') ?></label>
+                </div>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="coins-false" value="0" name="values[coins]" <?= $coins ? '' : 'checked' ?>>
+                    <label for="coins-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                </div>
+
+                <small class="d-block text-muted">
+                    <?= lang('Coins are not saved anywhere, but are calculated on-demand. If you deactivate coins globally, they will not be calculated at all and will not be shown anywhere.', 'Coins werden nirgendwo gespeichert, sondern on-demand berechnet. Wenn ihr Coins global ausschaltet, werden sie also gar nicht erst berechnet und nirgendwo gezeigt.') ?>
+                </small>
+
+            </div>
+
+            <div class="form-group">
+                <label for="" class="font-weight-bold">
+                    <?= lang('Achievements', 'Errungenschaften') ?>
+                </label>
+                <?php
+                $achievements = $Settings->featureEnabled('achievements');
+                ?>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="achievements-true" value="1" name="values[achievements]" <?= $achievements ? 'checked' : '' ?>>
+                    <label for="achievements-true"><?= lang('enabled', 'aktiviert') ?></label>
+                </div>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="achievements-false" value="0" name="values[achievements]" <?= $achievements ? '' : 'checked' ?>>
+                    <label for="achievements-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                </div>
+
+            </div>
 
 
+            <div class="form-group">
+                <label for="" class="font-weight-bold">
+                    <?= lang('User profile metrics', 'Metriken im Nutzerprofil') ?>
+                </label>
+                <?php
+                $user_metrics = $Settings->featureEnabled('user-metrics');
+                ?>
+
+                <div class=" custom-radio d-inline-block ml-10">>
+                    <input type="radio" id="user-metrics-true" value="1" name="values[user-metrics]" <?= $user_metrics ? 'checked' : '' ?>>
+                    <label for="user-metrics-true"><?= lang('enabled', 'aktiviert') ?></label>
+                </div>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="user-metrics-false" value="0" name="values[user-metrics]" <?= $user_metrics ? '' : 'checked' ?>>
+                    <label for="user-metrics-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                </div>
+
+                <small class="d-block text-muted">
+                    <?= lang('If this function is switched off, user metrics (graphs) are only visible on your own profile page.', 'Wenn diese Funktion ausgeschaltet wird, sind Nutzermetriken (Graphen) nur noch auf der eigenen Profilseite sichtbar.') ?>
+                </small>
+
+            </div>
+
+            <div class="form-group">
+                <label for="" class="font-weight-bold">
+                    <?= lang('Profile images', 'Profilbilder der Nutzenden') ?>
+                </label>
+                <?php
+                $db_pictures = $Settings->featureEnabled('db_pictures');
+                ?>
+                <div class=" custom-radio d-inline-block ml-10">>
+                    <input type="radio" id="db_pictures-true" value="1" name="values[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
+                    <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
+                </div>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="db_pictures-false" value="0" name="values[db_pictures]" <?= $db_pictures ? '' : 'checked' ?>>
+                    <label for="db_pictures-false"><?= lang('Save in file system', 'Im Dateisystem speichern') ?></label>
+                </div>
+
+                <small class="d-block text-muted">
+                    <?= lang(
+                        'Saving the profile pictures in the database is recommended if the pictures are maintained exclusively via OSIRIS. If the images are saved in the file system, they can be uploaded more easily (into the folder <code>/img/users</code>) and, for example, updated automatically. However, they must then have the user name as the name and be in JPEG format!',
+                        'Die Profilbilder in der Datenbank zu speichern wird empfohlen, wenn die Bilder ausschließlich über OSIRIS gepflegt werden. Wenn die Bilder im Dateisystem gespeichert werden, kann man sie leichter anders hochladen (in den Ordner <code>/img/users</code>) und z.B. automatisch aktualisieren. Sie müssen dann aber den Username als Namen haben und im JPEG-Format sein!'
+                    ) ?>
+                </small>
+            </div>
+
+
+            <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
+                <div class="form-group">
+                    <label for="">
+                        <?= lang('LDAP user synchronization', 'LDAP-Nutzersynchronisierung') ?>
+                    </label>
+                    <?php
+                    $sync = $Settings->featureEnabled('ldap-sync');
+                    ?>
+
+                    <div class="form-">
+                        <label for="ldap-sync-blacklist"><?= lang('Username Blacklist (separated by comma)', 'Username-Blacklist (Komma-getrennt)') ?></label>
+                        <textarea class="form-control small" name="general[ldap-sync-blacklist]" id="ldap-sync-blacklist"><?= $Settings->get('ldap-sync-blacklist') ?></textarea>
+                    </div>
+                    <div class="form-">
+                        <label for="ldap-sync-whitelist"><?= lang('Username whitelist (separated by comma)', 'Username-Whitelist (Komma-getrennt)') ?></label>
+                        <textarea class="form-control small" name="general[ldap-sync-whitelist]" id="ldap-sync-whitelist"><?= $Settings->get('ldap-sync-whitelist') ?></textarea>
+                    </div>
+
+                </div>
+            <?php } ?>
+            <button class="btn signal">
+                <i class="ph ph-floppy-disk"></i>
+                <?= lang('Save', 'Speichern') ?>
+            </button>
+
+        </div>
+    </form>
+
+</section>
+
+<section id="auth" style="display: none;">
     <!-- Settings for different user management styles -->
     <?php
     switch (strtoupper(USER_MANAGEMENT)) {
@@ -136,17 +272,11 @@
             ];
 
     ?>
-            <p class="text-primary mt-0">
-                <?= lang('You are using the LDAP interface for your user management.', 'Ihr nutzt die LDAP-Schnittstelle fürs Nutzer-Management.') ?>
-            </p>
-            <?php
-            break;
-            // TODO: continue
-            ?>
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
 
 
                 <h2 class="title">
+                    <i class="ph ph-lock" aria-hidden="true"></i>
                     <?= lang('LDAP Settings', 'LDAP-Einstellungen') ?>
                 </h2>
 
@@ -199,6 +329,7 @@
                 <div class="box primary padded">
 
                     <h2 class="title">
+                        <i class="ph ph-lock" aria-hidden="true"></i>
                         <?= lang('AUTH settings', 'AUTH-Einstellungen') ?>
                     </h2>
 
@@ -219,8 +350,10 @@
         <?php
             break;
 
-        case 'SSO': ?>
-
+        case 'SSO':
+        case 'OAUTH':
+        ?>
+            <?= lang('No further settings available.', 'Keine weiteren Einstellungen verfügbar.') ?>
     <?php
             break;
 
@@ -228,133 +361,6 @@
             break;
     }
     ?>
-
-
-
-    <form action="<?= ROOTPATH ?>/crud/admin/features" method="post" id="role-form">
-
-        <div class="box padded">
-            <h3 class="title">
-                <?= lang('General settings', 'Allgemeine Einstellungen') ?>
-            </h3>
-            <div class="form-group">
-                <label for="" class="font-weight-bold">
-                    <?= lang('Coins', 'Coins') ?>
-                </label>
-                <?php
-                $coins = $Settings->featureEnabled('coins');
-                ?>
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="coins-true" value="1" name="values[coins]" <?= $coins ? 'checked' : '' ?>>
-                    <label for="coins-true"><?= lang('enabled', 'aktiviert') ?></label>
-                </div>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="coins-false" value="0" name="values[coins]" <?= $coins ? '' : 'checked' ?>>
-                    <label for="coins-false"><?= lang('disabled', 'deaktiviert') ?></label>
-                </div>
-
-                <small class="d-block text-muted"> Coins werden nirgendwo gespeichert, sondern on-demand berechnet. Wenn ihr Coins global ausschaltet, werden sie also gar nicht erst berechnet und nirgendwo gezeigt.</small>
-
-            </div>
-
-            <div class="form-group">
-                <label for="" class="font-weight-bold">
-                    <?= lang('Achievements', 'Errungenschaften') ?>
-                </label>
-                <?php
-                $achievements = $Settings->featureEnabled('achievements');
-                ?>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="achievements-true" value="1" name="values[achievements]" <?= $achievements ? 'checked' : '' ?>>
-                    <label for="achievements-true"><?= lang('enabled', 'aktiviert') ?></label>
-                </div>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="achievements-false" value="0" name="values[achievements]" <?= $achievements ? '' : 'checked' ?>>
-                    <label for="achievements-false"><?= lang('disabled', 'deaktiviert') ?></label>
-                </div>
-
-            </div>
-
-
-            <div class="form-group">
-                <label for="" class="font-weight-bold">
-                    <?= lang('User profile metrics', 'Metriken im Nutzerprofil') ?>
-                </label>
-                <?php
-                $user_metrics = $Settings->featureEnabled('user-metrics');
-                ?>
-
-                <div class=" custom-radio d-inline-block ml-10">>
-                    <input type="radio" id="user-metrics-true" value="1" name="values[user-metrics]" <?= $user_metrics ? 'checked' : '' ?>>
-                    <label for="user-metrics-true"><?= lang('enabled', 'aktiviert') ?></label>
-                </div>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="user-metrics-false" value="0" name="values[user-metrics]" <?= $user_metrics ? '' : 'checked' ?>>
-                    <label for="user-metrics-false"><?= lang('disabled', 'deaktiviert') ?></label>
-                </div>
-
-                <small class="d-block text-muted"> Wenn diese Funktion ausgeschaltet wird, sind Nutzermetriken (Graphen) nur noch auf der eigenen Profilseite sichtbar.</small>
-
-            </div>
-
-            <div class="form-group">
-                <label for="" class="font-weight-bold">
-                    <?= lang('Profile images', 'Profilbilder der Nutzenden') ?>
-                </label>
-                <?php
-                $db_pictures = $Settings->featureEnabled('db_pictures');
-                ?>
-                <div class=" custom-radio d-inline-block ml-10">>
-                    <input type="radio" id="db_pictures-true" value="1" name="values[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
-                    <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
-                </div>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="db_pictures-false" value="0" name="values[db_pictures]" <?= $db_pictures ? '' : 'checked' ?>>
-                    <label for="db_pictures-false"><?= lang('Save in file system', 'Im Dateisystem speichern') ?></label>
-                </div>
-
-                <small class="d-block text-muted">
-                    <?= lang(
-                        'Saving the profile pictures in the database is recommended if the pictures are maintained exclusively via OSIRIS. If the images are saved in the file system, they can be uploaded more easily (into the folder <code>/img/users</code>) and, for example, updated automatically. However, they must then have the user name as the name and be in JPEG format!',
-                        'Die Profilbilder in der Datenbank zu speichern wird empfohlen, wenn die Bilder ausschließlich über OSIRIS gepflegt werden. Wenn die Bilder im Dateisystem gespeichert werden, kann man sie leichter anders hochladen (in den Ordner <code>/img/users</code>) und z.B. automatisch aktualisieren. Sie müssen dann aber den Username als Namen haben und im JPEG-Format sein!'
-                    ) ?>
-                </small>
-            </div>
-
-
-            <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
-                <div class="form-group">
-                    <label for="">
-                        <?= lang('LDAP user synchronization', 'LDAP-Nutzersynchronisierung') ?>
-                    </label>
-                    <?php
-                    $sync = $Settings->featureEnabled('ldap-sync');
-                    ?>
-
-                    <div class="form-">
-                        <label for="ldap-sync-blacklist"><?= lang('Username Blacklist (separated by comma)', 'Username-Blacklist (Komma-getrennt)') ?></label>
-                        <textarea class="form-control small" name="general[ldap-sync-blacklist]" id="ldap-sync-blacklist"><?= $Settings->get('ldap-sync-blacklist') ?></textarea>
-                    </div>
-                    <div class="form-">
-                        <label for="ldap-sync-whitelist"><?= lang('Username whitelist (separated by comma)', 'Username-Whitelist (Komma-getrennt)') ?></label>
-                        <textarea class="form-control small" name="general[ldap-sync-whitelist]" id="ldap-sync-whitelist"><?= $Settings->get('ldap-sync-whitelist') ?></textarea>
-                    </div>
-
-                </div>
-            <?php } ?>
-            <button class="btn signal">
-                <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
-            </button>
-
-        </div>
-    </form>
-
 </section>
 
 
@@ -377,20 +383,13 @@ if (!is_null($data)) {
 
 
 <section id="data-fields" style="display: none;">
-    <h2>
-        <?= lang('Data fields', 'Datenfelder') ?>
-    </h2>
-
-    <p>
-        <?= lang('Here you can manage the data fields for the person data.', 'Hier kannst du die Datenfelder für die Personendaten verwalten.') ?>
-    </p>
-
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/persons">
         <div class="box primary padded">
-            <h3>
+            <h2 class="title">
+                <i class="ph ph-database" aria-hidden="true"></i>
                 <?= lang('Data fields', 'Datenfelder') ?>
-            </h3>
+            </h2>
 
             <table class="table simple w-auto small mb-10">
                 <thead>
@@ -442,8 +441,8 @@ if (!is_null($data)) {
                                 </td>
 
                             </tr>
-                    <?php } ?>
-                    
+                        <?php } ?>
+
                     <?php } ?>
                 </tbody>
             </table>
@@ -460,15 +459,7 @@ if (!is_null($data)) {
 </section>
 
 
-<section id="vocabulary" style="display: none;">
-    <h2>
-        <?= lang('Vocabulary', 'Vokabular') ?>
-    </h2>
-
-    <p>
-        <?= lang('Here you can manage the vocabulary for the person data.', 'Hier kannst du das Vokabular für die Personendaten verwalten.') ?>
-    </p>
-
+<section id="positions" style="display: none;">
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/persons">
@@ -476,9 +467,10 @@ if (!is_null($data)) {
 
         <div class="box primary padded">
 
-            <h5>
+            <h2 class="title">
+                <i class="ph ph-tree-view" aria-hidden="true"></i>
                 <?= lang('Possible Positions', 'Mögliche Positionen') ?>
-            </h5>
+            </h2>
 
             <p>
                 <?= lang('Define the fields that are used as position for the staff members.', 'Definiere die Felder, die für die Mitarbeitenden verwendet werden.') ?>
@@ -491,21 +483,33 @@ if (!is_null($data)) {
             ?>
 
 
-            <div>
-                <div class="custom-radio d-inline-block ml-10">
+            <div class="form-group">
+                <div class="custom-radio">
                     <input type="radio" name="staff[free]" id="free-1" value="1" <?= $staffFree ? 'checked' : '' ?>>
-                    <label for="free-1"><?= lang('Free field for positions', 'Freitextfeld für Positionen') ?></label>
+                    <label for="free-1"><?= lang('Free text', 'Freitext') ?></label>
                 </div>
-                <div class="custom-radio d-inline-block ml-10">
+                <small class="d-block text-muted">
+                    <?= lang('If this option is selected, the staff members can enter their own position freely.', 'Wenn diese Option ausgewählt ist, können die Mitarbeitenden ihre Position frei eingeben.') ?>
+                </small>
+            </div>
+            <div class="form-group">
+                <div class="custom-radio">
                     <input type="radio" name="staff[free]" id="free-0" value="0" <?= !$staffFree ? 'checked' : '' ?>>
-                    <label for="free-0"><?= lang('Select from list of positions', 'Wähle aus definierter Liste') ?></label>
+                    <label for="free-0"><?= lang('Defined selection', 'Definierte Liste') ?></label>
                 </div>
+                <small class="d-block text-muted">
+                    <?= lang('If this option is selected, the staff members can only select their position from the list you define below.', 'Wenn diese Option ausgewählt ist, können die Mitarbeitenden ihre Position nur aus der Liste auswählen, die du weiter unten definierst.') ?>
+                </small>
             </div>
 
-            <br>
-            <b>
+            <hr>
+
+            <h5>
                 <?= lang('Defined list of positions', 'Definierte Liste möglicher Positionen') ?>:
-            </b>
+            </h5>
+            <small class="text-muted">
+                <?=lang('This list will only be used if you select "Defined selection" above.', 'Diese Liste wird nur verwendet, wenn du "Definierte Liste" oben auswählst.')?>
+            </small>
 
             <table class="table simple small my-20">
                 <thead>
@@ -564,16 +568,17 @@ if (!is_null($data)) {
             </button>
         </div>
     </form>
+</section>
 
 
-
-
+<section id="keywords" style="display: none;">
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/persons">
         <div class="box primary padded">
-            <h5>
+            <h2 class="title">
+                <i class="ph ph-tag" aria-hidden="true"></i>
                 <?= lang('Keywords', 'Schlagwörter') ?>
-            </h5>
+            </h2>
 
             <p>
                 <?= lang('Define keywords that the staff members can use. Whether this field is displayed in the user profile or not can be defined in the <q>Data fields</q> tab.', 'Definiere Schlagworte, die für die Mitarbeitenden verwendet werden. Ob dieses Feld im Nutzerprofil angezeigt wird oder nicht, kann im Tab <q>Datenfelder</q> definiert werden.') ?>
@@ -592,13 +597,12 @@ if (!is_null($data)) {
             ?>
             <div class="form-group">
                 <label for="staff-keywords" class="font-weight-bold">
-                    <i class="ph ph-tags"></i>
                     <?= lang('Defined list of keywords', 'Definierte Liste von Schlagworten') ?>:
                 </label>
-                <textarea name="general[staff-keywords]" id="staff-keywords" class="form-control"><?= implode(PHP_EOL, $keywords) ?></textarea>
                 <small class="d-block text-muted">
                     <?= lang('Define a list of keywords that the staff members can use. Each keyword should be seperated by a new line.', 'Definiere eine Liste von Schlagworten, die die Mitarbeitenden verwenden können. Jedes Schlagwort sollte in einer neuen Zeile stehen.') ?>
                 </small>
+                <textarea name="general[staff-keywords]" id="staff-keywords" class="form-control" rows="10"><?= implode(PHP_EOL, $keywords) ?></textarea>
             </div>
 
             <button class="btn signal">

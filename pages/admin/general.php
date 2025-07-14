@@ -66,6 +66,10 @@ $affiliation = $Settings->get('affiliation_details');
         <i class="ph ph-envelope" aria-hidden="true"></i>
         <?= lang('Email', 'E-Mail') ?>
     </a>
+    <a onclick="navigate('custom-footer')" id="btn-custom-footer" class="btn">
+        <i class="ph ph-scales" aria-hidden="true"></i>
+        <?= lang('Footer contents', 'Inhalte im Footer') ?>
+    </a>
     <!-- export -->
     <!-- <a onclick="navigate('export')" id="btn-export" class="btn">
         <i class="ph ph-download" aria-hidden="true"></i>
@@ -186,7 +190,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="row row-eq-spacing">
                     <div class="col-sm-2">
-                        <label for="icon" class="required"><?=lang('Abbreviation', 'Kürzel')?></label>
+                        <label for="icon" class="required"><?= lang('Abbreviation', 'Kürzel') ?></label>
                         <input type="text" class="form-control" name="general[affiliation][id]" required value="<?= $affiliation['id'] ?>">
                     </div>
                     <div class="col-sm">
@@ -199,15 +203,15 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
                 <div class="form-group">
-                <label for="regex">
-                        Regular Expression (Regex) <?=lang('for affilation', 'für Affilierung')?>
+                    <label for="regex">
+                        Regular Expression (Regex) <?= lang('for affilation', 'für Affilierung') ?>
                     </label>
-                    <input type="text" class="form-control" name="general[regex]" value="<?= $Settings->getRegex(); ?>"  style="font-family: monospace;">
+                    <input type="text" class="form-control" name="general[regex]" value="<?= $Settings->getRegex(); ?>" style="font-family: monospace;">
                     <small class="text-muted">
                         <?= lang('This pattern is used to match the affiliation in online repositories such as CrossRef. If you leave this empty, the institute abbreviation is used as is.', 'Dieses Muster wird verwendet, um die Zugehörigkeit in Online-Repositorien wie CrossRef abzugleichen. Wenn Sie dieses Feld leer lassen, wird die Institutsabkürzung unverändert verwendet.') ?>
                         <!-- hint -->
                         <br>
-                        <?=lang('As a reference, see', 'Als Referenz, siehe')?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?=lang('with flavour JavaScript', 'mit Flavour JavaScript')?>.
+                        <?= lang('As a reference, see', 'Als Referenz, siehe') ?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?= lang('with flavour JavaScript', 'mit Flavour JavaScript') ?>.
                     </small>
                 </div>
                 <div class="form-group">
@@ -357,8 +361,8 @@ $affiliation = $Settings->get('affiliation_details');
                 <h2 class="title"><?= lang('Email Settings', 'E-Mail Einstellungen') ?></h2>
 
                 <div class="form-group">
-                    <label for="email"><?= lang('Email address', 'E-Mail-Adresse') ?></label>
-                    <input type="email" class="form-control" name="mail[email]" value="<?= $mail['email'] ?? '' ?>">
+                    <label for="email"><?= lang('Sender address', 'Absender-Adresse') ?></label>
+                    <input type="email" class="form-control" name="mail[email]" value="<?= $mail['email'] ?? 'no-reply@osiris-app.de' ?>">
                     <span class="text-muted">
                         <?= lang(
                             'This email address is used for sending notifications and as the default sender address. Defaults to no-reply@osiris-app.de',
@@ -379,34 +383,34 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
                 <div class="form-group">
-                    <label for="email"><?= lang('SMTP Port', 'SMTP-Port') ?></label>
+                    <label for="email"><?= lang('Port', 'Port') ?></label>
                     <input type="number" class="form-control" name="mail[smtp_port]" value="<?= $mail['smtp_port'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="email"><?= lang('SMTP User', 'SMTP-Benutzer') ?></label>
+                    <label for="email"><?= lang('Username', 'Benutzername') ?></label>
                     <input type="text" class="form-control" name="mail[smtp_user]" value="<?= $mail['smtp_user'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
                             'The SMTP user is used to authenticate the SMTP server. If you do not provide a user, the default PHP mail function will be used.',
-                            'Der SMTP-Benutzer wird verwendet, um den SMTP-Server zu authentifizieren. Falls kein Benutzer angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
+                            'Der Benutzername wird verwendet, um den SMTP-Server zu authentifizieren. Falls kein Benutzername angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
                         ) ?>
                     </span>
                 </div>
 
                 <div class="form-group">
-                    <label for="email"><?= lang('SMTP Password', 'SMTP-Passwort') ?></label>
+                    <label for="email"><?= lang('Password', 'Passwort') ?></label>
                     <input type="password" class="form-control" name="mail[smtp_password]" value="<?= $mail['smtp_password'] ?? '' ?>">
                     <span class="text-muted">
                         <?= lang(
-                            'The SMTP password is used to authenticate the SMTP server. If you do not provide a password, the default PHP mail function will be used.',
-                            'Das SMTP-Passwort wird verwendet, um den SMTP-Server zu authentifizieren. Falls kein Passwort angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
+                            'The password is used to authenticate the SMTP server. If you do not provide a password, the default PHP mail function will be used.',
+                            'Das Passwort wird verwendet, um den SMTP-Server zu authentifizieren. Falls kein Passwort angegeben wird, wird die Standard-PHP-Mail-Funktion verwendet.'
                         ) ?>
                     </span>
                 </div>
 
                 <div class="form-group">
-                    <label for="email"><?= lang('SMTP Security', 'SMTP-Sicherheit') ?></label>
+                    <label for="email"><?= lang('Security Protocol', 'Sicherheitsprotokoll') ?></label>
                     <select class="form-control" name="mail[smtp_security]">
                         <option value="none" <?= ($mail['smtp_security'] ?? '') == 'none' ? 'selected' : '' ?>>None</option>
                         <option value="ssl" <?= ($mail['smtp_security'] ?? '') == 'ssl' ? 'selected' : '' ?>>SSL</option>
@@ -414,8 +418,8 @@ $affiliation = $Settings->get('affiliation_details');
                     </select>
                     <span class="text-muted">
                         <?= lang(
-                            'The SMTP security is used to encrypt the connection to the SMTP server.',
-                            'Die SMTP-Sicherheit wird verwendet, um die Verbindung zum SMTP-Server zu verschlüsseln.'
+                            'The security protocol is used to encrypt the connection to the server.',
+                            'Das Sicherheitsprotokoll wird verwendet, um die Verbindung zum Server zu verschlüsseln.'
                         ) ?>
                     </span>
                 </div>
@@ -1194,6 +1198,131 @@ $affiliation = $Settings->get('affiliation_details');
         }
     </style>
 
+</section>
+
+<style>
+    #custom-footer .ql-editor p, #custom-footer .ql-editor ol, #custom-footer .ql-editor ul, #custom-footer .ql-editor pre, #custom-footer .ql-editor blockquote, #custom-footer .ql-editor h1, #custom-footer .ql-editor h2, #custom-footer .ql-editor h3, #custom-footer .ql-editor h4, #custom-footer .ql-editor h5, #custom-footer .ql-editor h6 {
+        margin-bottom: 1rem;
+    }
+</style>
+
+<section id="custom-footer" style="display: none;">
+    <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+        <div class="box primary">
+            <div class="content">
+                <h2 class="title"><?= lang('Footer contents', 'Inhalte im Footer') ?></h2>
+                <p>
+                    <?= lang('You can add custom link to the footer of your OSIRIS installation and manage general contents such as legal notice and privacy policy. This will be displayed on every page at the bottom.', 'Du kannst benutzerdefinierte Links zum Footer deiner OSIRIS-Installation hinzufügen und allgemeine Inhalte wie Impressum und Datenschutzerklärung verwalten. Diese werden auf jeder Seite am unteren Rand angezeigt.') ?>
+                </p>
+            </div>
+            <hr>
+            <div class="content">
+                <h3><?= lang('Legal Notice', 'Impressum') ?></h3>
+                <?php
+                $impress = $Settings->get('impress');
+                if (empty($impress)) {
+                    $impress = file_get_contents(BASEPATH . '/pages/impressum.html');
+                }
+                ?>
+                <div class="form-group">
+                    <div>
+                        <div class="form-group title-editor" id="impress-quill"><?= $impress ?></div>
+                        <textarea class="form-control hidden" name="general[impress]" id="impress"><?= htmlspecialchars($impress) ?></textarea>
+                    </div>
+
+                    <script>
+                        quillEditor('impress');
+                    </script>
+                </div>
+            </div>
+            <hr>
+            <div class="content">
+                <h3><?= lang('Privacy Policy', 'Datenschutzerklärung') ?></h3>
+                <?php
+                $privacy = $Settings->get('privacy');
+                if (empty($privacy)) {
+                    $privacy = file_get_contents(BASEPATH . '/pages/privacy.html');
+                }
+                ?>
+                <div class="form-group">
+                    <div>
+                        <div class="form-group title-editor" id="privacy-quill"><?= $privacy ?></div>
+                        <textarea class="form-control hidden" name="general[privacy]" id="privacy"><?= htmlspecialchars($privacy) ?></textarea>
+                    </div>
+                    <script>
+                        quillEditor('privacy');
+                    </script>
+                </div>
+            </div>
+            <hr>
+            <div class="content">
+                <h3><?= lang('Links', 'Links') ?></h3>
+                <p>
+                    <?= lang('You can add links to external resources that are relevant for your users. They will appear in the footer section <q>Links</q>.', 'Du kannst Links zu externen Ressourcen hinzufügen, die für deine Nutzer:innen relevant sind. Sie werden im Footer im Bereich <q>Links</q> angezeigt.') ?>
+                </p>
+
+                <?php
+                $links = $Settings->get('footer_links', []);
+                ?>
+                <!-- make sure empty links are saved too -->
+                <input type="hidden" name="footer_links" value="">
+                <table class="table simple" id="footer-links-table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Title (EN)', 'Titel (EN)') ?></th>
+                            <th><?= lang('Title (DE)', 'Titel (DE)') ?></th>
+                            <th><?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?></th>
+                            <th><?= lang('Actions', 'Aktionen') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($links as $link): ?>
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="footer_links[name][]" value="<?= htmlspecialchars($link['name'] ?? '') ?>" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= htmlspecialchars($link['name_de'] ?? '') ?>" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>">
+                                </td>
+                                <td>
+                                    <input type="url" class="form-control" name="footer_links[url][]" value="<?= htmlspecialchars($link['url'] ?? '') ?>" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('Delete', 'Löschen') ?>"></i></button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4">
+                                <button type="button" class="btn btn-primary" onclick="addLink()"><?= lang('Add new link', 'Neuen Link hinzufügen') ?></button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <script>
+                    function addLink() {
+                        const tbody = $('#footer-links-table tbody');
+                        const newRow = `
+                            <tr>
+                                <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>"></td>
+                                <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>"></td>
+                                <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>"></td>
+                                <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('Delete', 'Löschen') ?>"></i></button></td>
+                            </tr>`;
+                        tbody.append(newRow);
+                    }
+                </script>
+
+            </div>
+        </div>
+        <button class="btn success large mt-20">
+            <i class="ph ph-floppy-disk"></i>
+            <?= lang('Save', 'Speichern') ?>
+        </button>
+    </form>
 </section>
 
 
