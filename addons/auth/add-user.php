@@ -56,7 +56,7 @@ $data = $_POST['values'] ?? [];
         </div>
         <div class="col-sm">
             <label for="mail" class="required">Mail</label>
-            <input type="text" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required>
+            <input type="email" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required>
         </div>
 
     </div>
