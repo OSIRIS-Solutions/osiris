@@ -1096,7 +1096,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             <table class="table">
                 <tbody>
                     <?php foreach ($doc['infrastructures'] as $infra_id) {
-                        $infra = $osiris->infrastructures->findOne(['name' => $infra_id]);
+                        $infra = $osiris->infrastructures->findOne(['id' => $infra_id]);
                         if (empty($infra)) continue;
                     ?>
                         <tr>
