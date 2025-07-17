@@ -91,20 +91,24 @@
                                     echo '<small class="text-danger">No units found</small>';
                                 } else {
                                     $person_units = array_column(DB::doc2Arr($person_units), 'unit');
-                            ?>
-                                    <select class="form-control" name="authors[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem">
-                                        <?php foreach ($person_units as $unit) { ?>
-                                            <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
-                                        <?php } ?>
-                                    </select>
-                                <?php
+                                    foreach ($person_units as $unit) { ?>
+                                        <div class="custom-checkbox mb-5">
+                                            <input type="checkbox"
+                                                   name="authors[<?= $i ?>][units][]"
+                                                   id="unit-<?= $i ?>-<?= htmlspecialchars($unit) ?>"
+                                                   value="<?= htmlspecialchars($unit) ?>"
+                                                   <?= in_array($unit, $selected) ? 'checked' : '' ?>>
+                                            <label for="unit-<?= $i ?>-<?= htmlspecialchars($unit) ?>">
+                                                <?= htmlspecialchars($unit) ?>
+                                            </label>
+                                        </div>
+                                    <?php }
                                 }
                             } else { ?>
                                 <small>
                                     <?= lang('Not applicable', 'Nicht zutreffend') ?>
                                 </small>
                             <?php } ?>
-
                         </td>
                         <td>
                             <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
