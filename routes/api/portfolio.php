@@ -255,11 +255,7 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
 
     $membership_filter = [
         'authors.user' => ['$in' => $users],
-        // 'end' => null,
-        '$or' => array(
-            ['type' => 'misc', 'subtype' => 'misc-annual'],
-            ['type' => 'review', 'subtype' =>  'editorial'],
-        )
+        'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $result['memberships'] = $osiris->activities->count($membership_filter);
 

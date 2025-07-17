@@ -49,12 +49,7 @@ Route::post('/controlling', function () {
 
             if ($lock) {
                 // in progress stuff is not locked
-                if (
-                    (
-                        ($doc['type'] == 'misc' && $doc['iteration'] == 'annual') ||
-                        ($doc['type'] == 'review' && in_array($doc['role'], ['Editor', 'editorial']))
-                    ) && is_null($doc['end'])
-                ) {
+                if ( in_array($doc['subtype'], $Settings->continuousTypes) && is_null($doc['end'])) {
                     continue;
                 }
                 if ($doc['type'] == "students" && isset($doc['status']) && $doc['status'] == 'in progress') {

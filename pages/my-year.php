@@ -67,10 +67,7 @@ $filter['$or'] =   array(
             ['end.year' => array('$gte' => $YEAR)],
             [
                 'end' => null,
-                '$or' => array(
-                    ['type' => 'misc', 'subtype' => 'misc-annual'],
-                    ['type' => 'review', 'subtype' =>  'editorial'],
-                )
+                'subtype' => ['$in' => $Settings->continuousTypes]
             ]
         )
     ],
@@ -82,8 +79,6 @@ $options = [
     // 'projection' => ['file' => -1]
 ];
 $cursor = $osiris->activities->find($filter, $options);
-
-// dump($cursor->toArray(), true);
 
 
 $endOfYear = new DateTime("$YEAR-12-31");
@@ -101,19 +96,15 @@ foreach ($cursor as $doc) {
     if ($date < $startOfYear) $date = $startOfYear;
 
     $starttime = $date->getTimestamp();
-
     $event = [
         'starting_time' => $starttime,
         'type' => $doc['type'],
         'id' => strval($doc['_id']),
-        'title' => htmlspecialchars(strip_tags(trim($doc['title'] ?? $doc['journal']))),
-        // 'icon' => $icon
+        'title' => htmlspecialchars(strip_tags($doc['rendered']['title'])),
     ];
-    // $timeline[$doc['type']]['times'][] = $event;
     $timeline[] = $event;
 }
-// dump($timeline, true);
-// $showcoins = (!($scientist['hide_coins'] ?? true)  && !($USER['hide_coins'] ?? false));
+
 if (!$Settings->featureEnabled('coins')) {
     $showcoins = false;
 } else {
