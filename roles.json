@@ -246,6 +246,13 @@
         "icon": "cube-transparent",
         "fields": [
             {
+                "id": "infrastructures.view",
+                "de": "Alle Infrastrukturen sehen",
+                "en": "See all infrastructures",
+                "comment_de": "Wenn diese Berechtigung nicht gesetzt ist, können Nutzer*innen nur ihre eigenen Infrastrukturen sehen.",
+                "comment_en": "If this permission is not set, users can only see their own infrastructures."
+            },
+            {
                 "id": "infrastructures.add",
                 "de": "Infrastrukturen hinzufügen",
                 "en": "Add new infrastructures"
