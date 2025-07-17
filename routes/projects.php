@@ -468,17 +468,20 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $persons = [];
     foreach (['contact', 'scholar', 'supervisor'] as $key) {
         if (!isset($values[$key]) || empty($values[$key])) continue;
+        $user = $values[$key];
         $persons[] = [
-            'user' => $values[$key],
+            'user' => $user,
             'role' => ($key == 'contact' ? 'applicant' : $key),
-            'name' => $DB->getNameFromId($values[$key])
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
         ];
     }
     if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
         $persons[] = [
             'user' => $user,
             'role' => 'applicant',
-            'name' => $DB->getNameFromId($user)
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
         ];
     }
     if (!empty($persons)) {
