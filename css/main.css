@@ -12581,6 +12581,7 @@ a.concept:hover {
   display: inline-flex;
   align-items: center;
   margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .topic-pill:hover {
   color: white;
