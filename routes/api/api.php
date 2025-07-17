@@ -291,8 +291,7 @@ Route::get('/api/all-activities', function () {
             $filter = $Settings->getActivityFilter($filter);
         }
     }
-    
-    if (isset($_GET['type']) && in_array($_GET['type'], $Settings->allowedTypes)) {
+    if (isset($_GET['type']) ) {
         $filter['type'] = $_GET['type'];
     }
 
