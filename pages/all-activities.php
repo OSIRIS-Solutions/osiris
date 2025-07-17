@@ -47,6 +47,12 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <i class="ph ph-chart-line-up"></i>
             <?= lang('Statistics', 'Statistiken') ?>
         </a>
+        <?php if ($Settings->hasPermission('activities.lock')) { ?>
+            <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
+                <i class="ph ph-lock"></i>
+                <?= lang('Locking', 'Sperren') ?>
+            </a>
+        <?php } ?>
         <a href="<?= ROOTPATH ?>/add-activity">
             <i class="ph ph-plus"></i>
             <?= lang('Add activity', 'Aktivität hinzufügen') ?>

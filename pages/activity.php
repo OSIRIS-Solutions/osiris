@@ -149,6 +149,23 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
         </span>
     <?php } ?>
 
+    <?php if ($Settings->hasPermission('activities.lock')) { ?>
+        <input type="hidden" name="id" value="<?= $id ?>">
+        <form action="<?= ROOTPATH ?>/crud/activities/<?= $id ?>/lock" method="post">
+            <?php if ($doc['locked'] ?? false) { ?>
+                <button class="btn text-success border-success mr-10" type="submit">
+                    <i class="ph ph-lock-open"></i>
+                    <?= lang('Unlock', 'Entsperren') ?>
+                </button>
+            <?php } else { ?>
+                <button class="btn text-danger border-danger mr-10" type="submit">
+                    <i class="ph ph-lock"></i>
+                    <?= lang('Lock', 'Sperren') ?>
+                </button>
+            <?php } ?>
+        </form>
+    <?php } ?>
+
     <div class="btn-group">
         <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn text-primary border-primary">
@@ -163,12 +180,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             </a>
         <?php } ?>
     </div>
-    <?php if ($upload_possible) { ?>
-        <a href="#upload-files" class="btn text-primary border-primary">
-            <i class="ph ph-upload"></i>
-            <?= lang('Upload file', 'Datei hochladen') ?>
-        </a>
-    <?php } ?>
 
 
     <div class="btn-group">
