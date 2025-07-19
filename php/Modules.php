@@ -1407,7 +1407,7 @@ class Modules
                 </h6>
                 <div class="data-module col-12 row" data-module="person">
                     <div class="col-sm-5 floating-form">
-                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name">
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $required ?> element-other">
                             <?= lang('Name of the person', 'Name der Person') ?>
                             <?= lang('(last name, given name)', '(Nachname, Vorname)') ?>
