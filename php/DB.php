@@ -1073,6 +1073,8 @@ class DB
         foreach ($countries as $country) {
             $result[$country['iso']] = $country[$key];
         }
+        // sort by name
+        asort($result);
         return $result;
     }
 }
