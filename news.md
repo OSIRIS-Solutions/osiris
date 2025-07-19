@@ -118,10 +118,14 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 
 #### <i class="ph ph-gear"></i> Weitere Verbesserungen
 - Es wurde eine neue Seite zu den Einstellungen hinzugefügt, die es ermöglicht, den Footer der Seite anzupassen. Hier können Impressum, Datenschutzerklärung und Links zu externen Ressourcen hinzugefügt werden.
+- Sperren von Aktivitäten wurde verbessert:
+  - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
+  - Sie können jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
 
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
+- die Controlling-Seite wurde entfernt, da sie teilweise veraltete Informationen enthielt
 - Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.
 - Globale Steuerung der quartalsweisen Berichtspflicht (Controlling) möglich (standardmäßig aktiviert).
 - Diverse kleinere Layout- und Darstellungsoptimierungen (u.a. Profile, Notifications, Listenansichten).

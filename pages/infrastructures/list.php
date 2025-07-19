@@ -19,8 +19,12 @@
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+$filter = [];
+if (!$Settings->hasPermission('infrastructures.view') && !$Settings->hasPermission('infrastructures.edit')) {
+    $filter['persons.user'] = $_SESSION['username'];
+}
 $infrastructures  = $osiris->infrastructures->find(
-    [],
+    $filter,
     ['sort' => ['end_date' => -1, 'start_date' => 1]]
 )->toArray();
 
@@ -123,6 +127,11 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 <?php } ?>
             </tbody>
         </table>
+
+        <?php if (!$Settings->hasPermission('infrastructures.view') && !$Settings->hasPermission('infrastructures.edit')) {
+            echo '<p class="text-muted">' . lang('You only have permission to view your own infrastructures.', 'Du hast nur die Berechtigung, deine eigenen Infrastrukturen zu sehen.') . '</p>';
+        } ?>
+
     </div>
 
     <div class="col-3 filter-wrapper">

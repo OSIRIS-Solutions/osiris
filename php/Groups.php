@@ -149,7 +149,9 @@ class Groups
 
     public function getName($id)
     {
-        return $this->getGroup($id)['name'];
+        $group = $this->getGroup($id);
+        if (empty($group)) return lang('Unknown Unit', 'Unbekannte Einheit');
+        return lang($group['name'], $group['name_de'] ?? null);
     }
 
     public function getUnit($unit = null, $key = null)

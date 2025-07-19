@@ -140,7 +140,6 @@ if (
 ) {
     include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
-    include_once BASEPATH . "/routes/controlling.php";
     include_once BASEPATH . "/routes/database.php";
     include_once BASEPATH . "/routes/docs.php";
     include_once BASEPATH . "/routes/groups.php";

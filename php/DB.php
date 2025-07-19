@@ -772,6 +772,7 @@ class DB
      */
     public function get_reportable_activities($start, $end)
     {
+        $Settings = new Settings;
         $result = [];
 
         $startyear = intval(explode('-', $start, 2)[0]);
@@ -786,15 +787,9 @@ class DB
         $filter['$or'] =   array(
             [
                 "start.year" => array('$lte' => $startyear),
-                '$and' => array(
-                    ['$or' => array(
-                        ['end.year' => array('$gte' => $endyear)],
-                        ['end' => null]
-                    )],
-                    ['$or' => array(
-                        ['type' => 'misc', 'subtype' => 'misc-annual'],
-                        ['type' => 'review', 'subtype' =>  'editorial'],
-                    )]
+                '$or' => array(
+                    ['end.year' => array('$gte' => $endyear)],
+                    ['end' => null, 'subtype' => ['$in' => $Settings->continuousTypes]]
                 )
             ],
             [
@@ -808,7 +803,7 @@ class DB
             // check if time of activity ist in the correct time range
             $ds = getDateTime($doc['start'] ?? $doc);
             if (isset($doc['end']) && !empty($doc['end'])) $de = getDateTime($doc['end'] ?? $doc);
-            elseif (in_array($doc['subtype'], ['misc-annual', 'editorial']) && is_null($doc['end'])) {
+            elseif (in_array($doc['subtype'], $Settings->continuousTypes) && is_null($doc['end'])) {
                 $de = $endtime;
             } else
                 $de = $ds;
@@ -1078,6 +1073,8 @@ class DB
         foreach ($countries as $country) {
             $result[$country['iso']] = $country[$key];
         }
+        // sort by name
+        asort($result);
         return $result;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 include_once 'DB.php';
-// include_once 'Settings.php';
+include_once 'Settings.php';
 
 class Coins
 {
@@ -84,6 +84,7 @@ class Coins
 
     function getCoins($user, $year = null)
     {
+        $Settings = new Settings;
         $total = 0;
         foreach ($this->matrix as $subtype => $coins) {
             // dump($subtype);
@@ -100,10 +101,7 @@ class Coins
                             ['end.year' => array('$gte' => $year)],
                             [
                                 'end' => null,
-                                '$or' => array(
-                                    ['type' => 'misc', 'subtype' => 'misc-annual'],
-                                    ['type' => 'review', 'subtype' =>  'editorial'],
-                                )
+                                'subtype' => ['$in' => $Settings->continuousTypes]
                             ]
                         )
                     ],

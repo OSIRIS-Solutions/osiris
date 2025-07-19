@@ -230,11 +230,7 @@ $_SESSION['last_group'] = $id;
         <?php
         $membership_filter = [
             'authors.user' => ['$in' => $users],
-            // 'end' => null,
-            '$or' => array(
-                ['type' => 'misc', 'subtype' => 'misc-annual'],
-                ['type' => 'review', 'subtype' =>  'editorial'],
-            )
+            'subtype' => ['$in' => $Settings->continuousTypes]
         ];
         $count_memberships = 0; //$osiris->activities->count($membership_filter); TODO
         if ($count_memberships > 0) { ?>

@@ -13,7 +13,7 @@ const TYPES = {
     reviewer: "review",
     editor: "editorial",
     monograph: "book",
-    misc: "misc-annual",
+    misc: "misc",
     "edited-book": "book",
 };
 

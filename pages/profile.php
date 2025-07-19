@@ -560,11 +560,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <?php
     $membership_filter = [
         'authors.user' => "$user",
-        // 'end' => null,
-        '$or' => array(
-            ['type' => 'misc', 'subtype' => 'misc-annual'],
-            ['type' => 'review', 'subtype' =>  'editorial'],
-        )
+        'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $count_memberships = $osiris->activities->count($membership_filter);
     if ($count_memberships > 0) { ?>

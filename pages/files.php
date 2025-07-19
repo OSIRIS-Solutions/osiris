@@ -147,7 +147,7 @@ $Format->setDocument($doc);
         </div>
         <form action="#" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-            <div class="custom-file mb-20" id="file-input-div" data-visible="article,preprint,magazine,book,chapter,lecture,poster,misc-once,misc-annual">
+            <div class="custom-file mb-20" id="file-input-div" >
                 <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
                 <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>

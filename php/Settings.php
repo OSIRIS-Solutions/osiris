@@ -18,6 +18,7 @@ class Settings
     public $allowedFilter = array();
     private $osiris = null;
     private $features = array();
+    public $continuousTypes = [];
 
     public const FEATURES = ['coins', 'achievements', 'user-metrics', 'projects', 'guests'];
 
@@ -51,6 +52,17 @@ class Settings
         foreach ($featList as $f) {
             $this->features[$f['feature']] = boolval($f['enabled']);
         }
+
+        // get continuous types
+        $continuous = $this->osiris->adminTypes->find(
+            ['$or' => [
+                ['modules' => 'date-range-ongoing'],
+                ['modules' => 'date-range-ongoing*'],
+            ]],
+            ['projection' => ['_id' => 0, 'id' => 1]]
+        )->toArray();
+        $this->continuousTypes = array_column($continuous, 'id');
+        
     }
 
     /**
@@ -486,7 +498,7 @@ class Settings
         return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
     }
 
-    
+
     public function canProjectsBeCreated()
     {
         $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'project']);
@@ -505,14 +517,15 @@ class Settings
         return false;
     }
 
-    public function getRegex(){
+    public function getRegex()
+    {
         $regex = $this->get('regex');
         if (empty($regex)) $regex = $this->get('affiliation');
 
         // check if regex starts with a slash and remove it
         if (str_starts_with($regex, '/')) {
             $regex = substr($regex, 1);
-        }  
+        }
         // check if string ends with a slash and flag
         if (preg_match('/\/[a-z]*$/', $regex)) {
             $flags = substr($regex, strrpos($regex, '/') + 1);
