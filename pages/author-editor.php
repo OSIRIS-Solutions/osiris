@@ -80,7 +80,7 @@
                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                             </div>
                         </td>
-                        <td>
+                        <td class="units">
                             <?php
                             if ($author['aoi'] ?? 0) {
                                 $selected = DB::doc2Arr($author['units'] ?? []);
@@ -90,19 +90,25 @@
                                 if (empty($person_units)) {
                                     echo '<small class="text-danger">No units found</small>';
                                 } else {
-                                    $person_units = array_column(DB::doc2Arr($person_units), 'unit');
-                                    foreach ($person_units as $unit) { ?>
-                                        <div class="custom-checkbox mb-5">
+                                    foreach ($person_units as $unit) {
+                                        $unit_id = $unit['unit'];
+                                        $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
+                                        $group = $Groups->getGroup($unit_id);
+                                        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+                            ?>
+                                        <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                             <input type="checkbox"
-                                                   name="authors[<?= $i ?>][units][]"
-                                                   id="unit-<?= $i ?>-<?= htmlspecialchars($unit) ?>"
-                                                   value="<?= htmlspecialchars($unit) ?>"
-                                                   <?= in_array($unit, $selected) ? 'checked' : '' ?>>
-                                            <label for="unit-<?= $i ?>-<?= htmlspecialchars($unit) ?>">
-                                                <?= htmlspecialchars($unit) ?>
+                                                name="persons[<?= $i ?>][units][]"
+                                                id="unit-<?= $i ?>-<?= htmlspecialchars($unit_id) ?>"
+                                                value="<?= htmlspecialchars($unit_id) ?>"
+                                                <?= in_array($unit_id, $selected) ? 'checked' : '' ?>>
+                                            <label for="unit-<?= $i ?>-<?= htmlspecialchars($unit_id) ?>">
+                                                <span data-toggle="tooltip" data-title="<?= $unit['name'] ?>" class="underline-dashed">
+                                                    <?= htmlspecialchars($unit_id) ?>
+                                                </span>
                                             </label>
                                         </div>
-                                    <?php }
+                                <?php }
                                 }
                             } else { ?>
                                 <small>
@@ -111,7 +117,7 @@
                             <?php } ?>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
+                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="updateUnits(this)">
                             <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
                         </td>
                         <td>
@@ -135,14 +141,14 @@
             <?= lang('Submit', 'Bestätigen') ?>
         </button>
 
-        
-<datalist id="user-list">
-    <?php
-    $all_users = $osiris->persons->find(['username' => ['$ne' => null]]);
-    foreach ($all_users as $s) { ?>
-        <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
-    <?php } ?>
-</datalist>
+
+        <datalist id="user-list">
+            <?php
+            $all_users = $osiris->persons->find(['username' => ['$ne' => null]]);
+            foreach ($all_users as $s) { ?>
+                <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+            <?php } ?>
+        </datalist>
     </form>
 
     <p>
@@ -163,12 +169,46 @@
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
         tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle" selected>middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+        tr.append('<td class="units"><small>' + <?= json_encode(lang('Not applicable', 'Nicht zutreffend')) ?> + '</small></td>')
         tr.append('<td> <input name="authors[' + counter + '][user]" type="text" class="form-control" list="user-list"></td>')
         var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
             $(this).closest('tr').remove();
         });
         tr.append($('<td>').append(btn))
         $('#authors').append(tr)
+    }
+
+    function updateUnits(el) {
+        let username = el.value.trim();
+        let tr = $(el).closest('tr');
+        let td = tr.find('.units');
+        td.html('<i class="ph ph-spinner ph-spin"></i>');
+        if (!username) {
+            td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+            return;
+        }
+        $.getJSON(`${ROOTPATH}/api/user-units/${username}`, function(data) {
+            if (data.status !== 200) {
+                td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+                toastError(data.msg || 'Error fetching user units');
+                // remove the username from the input
+                $(el).val('');
+                return;
+            }
+            data = data.data;
+            const units = data.units || [];
+            td.html(` ${units.map(unit => `
+                        <div class="custom-checkbox mb-5 ${unit.in_past ? 'text-muted' : ''}">
+                            <input type="checkbox" name="persons[${username}][units][]" id="unit-${username}-${unit.unit}" value="${unit.unit}">
+                            <label for="unit-${username}-${unit.unit}">
+                                <span data-toggle="tooltip" data-title="${unit.name}" class="underline-dashed">
+                                    ${unit.unit}
+                                </span>
+                            </label>
+                        </div>
+                    `).join('')}`);
+        });
+
     }
 
     $(document).ready(function() {

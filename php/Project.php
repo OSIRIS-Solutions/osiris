@@ -187,7 +187,7 @@ class Project extends Vocabulary
         return $this->db->adminProjects->find($filter)->toArray();
     }
 
-    public function getFields($type_id, $phase)
+    public function getFields($type_id, $phase = 'all')
     {
         $type = $this->db->adminProjects->findOne(['id' => $type_id]);
         if (empty($type)) return [];
@@ -195,7 +195,7 @@ class Project extends Vocabulary
 
         $fields = [];
         foreach ($phases as $p) {
-            if ($p['id'] == $phase) {
+            if ($p['id'] == $phase || $phase == 'all') {
                 $fields = $p['modules'] ?? [];
                 break;
             }

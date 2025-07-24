@@ -391,7 +391,7 @@ $filter = [];
 
     function renderFunder(row) {
         if (!row.funder && row.scholarship) return row.scholarship;
-        return row.funder;
+        return row.funder ?? '';
     }
 
     function renderRole(data) {
@@ -550,9 +550,6 @@ $filter = [];
                         </div>
                     </div>
                         `
-                        // ${renderFunder(row)}
-                        // ${renderContact(row)}
-                        // ${renderRole(row.role)}
                     }
                 },
                 {
@@ -567,6 +564,7 @@ $filter = [];
                     data: 'funder',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     header: lang('Funder', 'Drittmmittelgeber'),
                     render: (data, type, row) => renderFunder(row)
                 },

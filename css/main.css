@@ -639,6 +639,11 @@ span.muted {
   padding: 0 0.5rem;
 }
 
+.underline-dashed {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
 i.ph {
   line-height: 1;
 }

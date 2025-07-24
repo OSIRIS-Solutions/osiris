@@ -291,7 +291,7 @@ if ($active('keywords')) {
                 {
                     targets: 1,
                     data: 'html',
-                    className: 'flex-grow-1'
+                    className: 'flex-grow-1',
                 },
                 {
                     targets: 2,

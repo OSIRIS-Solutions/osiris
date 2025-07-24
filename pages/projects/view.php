@@ -480,7 +480,7 @@ if ($topicsEnabled) {
             <table class="table unit-table w-full">
                 <tbody>
                     <?php
-                    $units = $project['units'] ?? [];
+                    $units = DB::doc2Arr($project['units'] ?? []);
                     // $tree =  $Groups->getPersonHierarchyTree($units);
                     if (!empty($units)) {
                         $hierarchy = $Groups->getPersonHierarchyTree($units);
@@ -495,8 +495,13 @@ if ($topicsEnabled) {
                                 </td>
                             </tr>
                     <?php }
-                    }
-                    ?>
+                    } else { ?>
+                        <tr>
+                            <td>
+                                <?= lang('No units connected.', 'Keine Einheiten verknüpft.') ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
 

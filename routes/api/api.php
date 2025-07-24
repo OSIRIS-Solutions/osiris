@@ -266,7 +266,7 @@ Route::get('/api/all-activities', function () {
     }
     // $Format = new Document($highlight);
 
-    
+
     $filter = [];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -610,6 +610,37 @@ Route::get('/api/users/(.*)', function ($id) {
     }
 
     echo return_rest($user, 1);
+});
+
+Route::get('/api/user-units/(.*)', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+    if (DB::is_ObjectID($id)) {
+        $filter = ['_id' => DB::to_ObjectID($id)];
+    } else {
+        $filter = ['username' => $id];
+    }
+    $person = $osiris->persons->findOne($filter, ['units' => 1, 'last' => 1, 'first' => 1]);
+    if (empty($person)) {
+        echo return_rest(lang('User not found', 'Nutzer nicht gefunden'), 0, 404);
+        die;
+    }
+    $person_units = $person['units'] ?? [];
+    foreach ($person_units as &$unit) {
+        $unit['in_past'] =  isset($unit['end']) && date('Y-m-d') > $unit['end'];
+        $group = $Groups->getGroup($unit['unit']);
+        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+    }
+
+    echo return_rest([
+        'name' => $person['first'] . ' ' . $person['last'],
+        'units' => $person_units
+    ], 1);
 });
 
 Route::get('/api/reviews', function () {

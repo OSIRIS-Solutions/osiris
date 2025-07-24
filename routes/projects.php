@@ -884,7 +884,7 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 
 
     $Project = new Project();
-    $type = $Project->getProjectType($values['type']);
+    $type = $Project->getProjectType($values['type'] ?? 'project');
 
     // get history of project
     $values = $Project->updateHistory($values, $id, $collection);

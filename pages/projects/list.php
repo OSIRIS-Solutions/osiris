@@ -444,7 +444,7 @@ $Vocabulary = new Vocabulary();
 
     function renderFunder(row) {
         if (!row.funder && row.scholarship) return row.scholarship;
-        return row.funder;
+        return row.funder ?? '';
     }
 
     function renderRole(data) {
