@@ -799,7 +799,7 @@ class Document extends Settings
             $aoi_format = 'none';
         }
 
-        $nameparts = ['last-f.', 'last-f', 'f-last', 'f.-last', 'last-first', 'first-last'];
+        $nameparts = ['last f.', 'last f', 'f last', 'f. last', 'last first', 'first last', 'last, f.', 'last, f', 'last, first'];
         foreach ($nameparts as $part) {
             if (str_contains($module, $part)) {
                 $nameFormat = $part;
@@ -839,20 +839,29 @@ class Document extends Settings
             $initialDot = $initial ? $initial . '.' : '';
             $author = '';
             switch ($nameFormat) {
-                case 'last-f':
+                case 'last f':
                     $author = "$last $initial";
                     break;
-                case 'f-last':
+                case 'f last':
                     $author = "$initial $last";
                     break;
-                case 'f.-last':
+                case 'f. last':
                     $author = "$initialDot $last";
                     break;
-                case 'last-first':
+                case 'last first':
                     $author = "$last, $first";
                     break;
-                case 'first-last':
+                case 'first last':
                     $author = "$first $last";
+                    break;
+                case 'last, f.':
+                    $author = "$last, $initialDot";
+                    break;
+                case 'last, f':
+                    $author = "$last, $initial";
+                    break;
+                case 'last, first':
+                    $author = "$last, $first";
                     break;
                 default:
                     $author = "$last $initialDot";
