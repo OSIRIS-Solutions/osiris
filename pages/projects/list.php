@@ -212,6 +212,46 @@ $Vocabulary = new Vocabulary();
 
 
             <h6>
+                <?= lang('By timeline', 'Nach Zeitachse') ?>
+                <a class="float-right" onclick="filterProjects('#filter-timeline .active', null, 15)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-timeline" class="table small simple">
+                    <tr style="--highlight-color: var(--success-color);">
+                        <td>
+                            <a data-type="ongoing" onclick="filterProjects(this, 'ongoing', 15)" class="item" id="ongoing-btn" style="color:var(--highlight-color);">
+                                <span>
+                                    <i class="ph ph-calendar-check"></i>&nbsp;
+                                    <?= lang('Ongoing', 'Laufend') ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr style="--highlight-color: var(--danger-color);">
+                        <td>
+                            <a data-type="past" onclick="filterProjects(this, 'past', 15)" class="item" id="past-btn" style="color:var(--highlight-color);">
+                                <span>
+                                    <i class="ph ph-calendar-x"></i>&nbsp;
+                                    <?= lang('Past', 'Vergangenheit') ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr style="--highlight-color: var(--signal-color);">
+                        <td>
+                            <a data-type="future" onclick="filterProjects(this, 'future', 15)" class="item" id="future-btn" style="color:var(--highlight-color);">
+                                <span>
+                                    <i class="ph ph-calendar-plus"></i>&nbsp;
+                                    <?= lang('Future', 'Zukünftig') ?>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <h6>
                 <?= lang('By funder', 'Nach Zuwendungsgeber') ?>
                 <a class="float-right" onclick="filterProjects('#filter-funder .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
@@ -401,6 +441,10 @@ $Vocabulary = new Vocabulary();
         {
             title: lang('Subproject', 'Teilprojekt'),
             key: 'subproject'
+        },
+        {
+            title: lang('Timeline', 'Zeitachse'),
+            key: 'timeline'
         }
     ]
 
@@ -505,6 +549,22 @@ $Vocabulary = new Vocabulary();
         } else {
             return start;
         }
+    }
+
+    function renderTimeline(data, type, row) {
+        let startDate = row.start_date; // ISO date string
+        let endDate = row.end_date; // ISO date string
+        if (startDate === undefined || endDate === undefined) {
+            return 'unknown';
+        }
+        if (startDate && new Date(startDate) > new Date()) {
+            return `future`;
+        }
+        // check if end is in the past
+        if (endDate && new Date(endDate) < new Date()) {
+            return `past`;
+        }
+        return `ongoing`;
     }
 
     $(document).ready(function() {
@@ -717,6 +777,15 @@ $Vocabulary = new Vocabulary();
                         }
                         return lang('Main project', 'Hauptprojekt');
                     }
+                },
+                {
+                    target: 15,
+                    data: 'timeline',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: lang('Timeline', 'Zeitachse'),
+                    render: (data, type, row) => renderTimeline(data, type, row)
                 }
             ],
             order: [
@@ -744,6 +813,18 @@ $Vocabulary = new Vocabulary();
             if (hash.role !== undefined) {
                 filterProjects(document.getElementById(hash.role + '-btn'), hash.role, 5)
             }
+            if (hash.type !== undefined) {
+                filterProjects(document.getElementById(hash.type + '-btn'), hash.type, 1)
+            }
+            if (hash.funder !== undefined) {
+                filterProjects(document.getElementById(hash.funder + '-btn'), hash.funder, 2)
+            }
+            if (hash.subproject !== undefined) {
+                filterProjects(document.getElementById('subproject-' + hash.subproject + '-btn'), hash.subproject, 14)
+            }
+            if (hash.timeline !== undefined) {
+                filterProjects(document.getElementById(hash.timeline + '-btn'), hash.timeline, 15)
+            }
             if (topicsEnabled && hash.topics !== undefined) {
                 filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
             }
@@ -761,7 +842,9 @@ $Vocabulary = new Vocabulary();
                 1: '#filter-type',
                 2: '#filter-funder',
                 8: '#filter-units',
-                9: '#filter-topics'
+                9: '#filter-topics',
+                14: '#filter-subproject',
+                // 15: '#filter-timeline'
             }
             for (const key in all_filters) {
                 if (Object.prototype.hasOwnProperty.call(all_filters, key)) {

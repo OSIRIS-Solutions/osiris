@@ -638,6 +638,25 @@ class Project extends Vocabulary
         }
     }
 
+    public function getTimeline(){
+        $startDate = $this->project['start_date']; // ISO date string
+        $endDate = $this->project['end_date']; // ISO date string
+        $today = strtotime(date('Y-m-d'));
+        if ($startDate === null || $endDate === null) {
+            return 'unknown';
+        }
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+        if ($startTimestamp > $today) {
+            return 'future';
+        }
+        // check if end is in the past
+        if ($endTimestamp < $today) {
+            return 'past';
+        }
+        return 'ongoing';
+    }
+
     public function widgetSmall()
     {
         $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
