@@ -127,6 +127,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - die Controlling-Seite wurde entfernt, da sie teilweise veraltete Informationen enthielt
 - Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.
+- Der visuelle Stil von allen Mitteilungen wurde verbessert
 - Globale Steuerung der quartalsweisen Berichtspflicht (Controlling) möglich (standardmäßig aktiviert).
 - Diverse kleinere Layout- und Darstellungsoptimierungen (u.a. Profile, Notifications, Listenansichten).
 - Verbesserungen bei der Filterung und Sortierung von Projekten, Anträgen, Aktivitäten und Infrastrukturen.
