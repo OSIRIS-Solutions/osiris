@@ -5436,10 +5436,10 @@ Alerts
   position: relative;
   border-radius: 0.5rem;
   background-color: #ffffff;
-  box-shadow: 0 10px 20px rgba(75, 50, 50, 0.05);
+  box-shadow: var(--box-shadow);
 }
 .alert .title {
-  color: var(--primary-color-light);
+  color: var(--primary-color);
 }
 .alert::before {
   content: "\e2ce";
@@ -5541,7 +5541,7 @@ Alerts
 }
 .alert.danger::before {
   color: var(--danger-color);
-  content: "\e4fa";
+  content: "\e4e0";
 }
 .alert.danger .title {
   color: var(--danger-color-light);
@@ -5560,6 +5560,7 @@ Alerts
 }
 .alert.signal::before {
   color: var(--signal-color);
+  content: "\e4e4";
 }
 .alert.signal .title {
   color: var(--signal-color-light);

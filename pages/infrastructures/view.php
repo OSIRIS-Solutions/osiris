@@ -192,7 +192,7 @@ $active = function ($field) use ($data_fields) {
         if (empty($persons)) {
         ?>
             <div class="col-md-6">
-                <div class="alert secondary mb-20">
+                <div class="alert primary mb-20">
                     <?= lang('No persons connected.', 'Keine Personen verknüpft.') ?>
                 </div>
             </div>
@@ -343,7 +343,7 @@ $active = function ($field) use ($data_fields) {
 
 
     <?php if (empty($statistics)) { ?>
-        <div class="alert secondary my-20 w-md-half">
+        <div class="alert primary my-20 w-md-half">
             <?= lang('No statistics found.', 'Keine Statistiken vorhanden.') ?>
         </div>
     <?php } else { ?>

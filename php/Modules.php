@@ -1386,9 +1386,8 @@ class Modules
                     <small class="text-muted">
                         <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
                     </small>
-                    <div class="alert danger mb-20 affiliation-warning" style="display: none;">
+                    <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <i class="ph ph-warning-circle"></i>
                             <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affilierten Autoren angegeben.') ?>
                         </h5>
                         <?= lang(
