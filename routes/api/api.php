@@ -291,7 +291,7 @@ Route::get('/api/all-activities', function () {
             $filter = $Settings->getActivityFilter($filter);
         }
     }
-    if (isset($_GET['type']) ) {
+    if (isset($_GET['type'])) {
         $filter['type'] = $_GET['type'];
     }
 
@@ -541,6 +541,13 @@ Route::get('/api/users', function () {
         }
         // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
         $units = $Groups->getPersonDept($user['units'] ?? []);
+        if (empty(trim($user['last'])) && empty(trim($user['first']))) {
+            if (empty($user['username'])) {
+                // this should not happen, but if it does, we set a default name
+                $user['username'] = 'unknown_user';
+            }
+            $user['last'] = $user['username'];
+        }
         $table[] = [
             'id' => strval($user['_id']),
             'username' => $user['username'],
