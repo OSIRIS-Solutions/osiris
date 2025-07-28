@@ -569,7 +569,7 @@ Route::get('/api/users', function () {
             'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
             'first' => $user['first'],
             'last' => $user['last'],
-            'position' => $user['position'] ?? '',
+            'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
             'mail' => $user['mail'] ?? '',
             'telephone' => $user['telephone'] ?? '',
             'orcid' => $user['orcid'] ?? '',

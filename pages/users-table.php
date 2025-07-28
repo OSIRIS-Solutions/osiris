@@ -292,6 +292,7 @@ if ($active('keywords')) {
                     targets: 1,
                     data: 'html',
                     className: 'flex-grow-1',
+                    searchable: false,
                 },
                 {
                     targets: 2,
