@@ -478,7 +478,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
             <?php } ?>
             <?php if (($scientist['is_active'] ?? true) && $Settings->hasPermission('user.inactive')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>">
+                    <i class="ph ph-user-circle-dashed ph-fw"></i>
+                </a>
+            <?php } ?>
+            <?php if ($Settings->hasPermission('user.delete')) { ?>
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Delete user', 'Nutzer:in löschen') ?>">
                     <i class="ph ph-trash ph-fw"></i>
                 </a>
             <?php } ?>

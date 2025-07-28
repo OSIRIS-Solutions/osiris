@@ -16,8 +16,6 @@
  * @license     MIT
  */
 
-use function PHPSTORM_META\type;
-
 ?>
 
 <h1>
@@ -25,7 +23,7 @@ use function PHPSTORM_META\type;
     <?= $data['name'] ?>
 </h1>
 
-<form action="<?= ROOTPATH ?>/crud/users/delete/<?= $user ?>" method="post">
+<form action="<?= ROOTPATH ?>/crud/users/inactivate/<?= $user ?>" method="post">
 
     <p class="text-danger">
         <?= lang(

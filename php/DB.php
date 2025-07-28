@@ -453,6 +453,7 @@ class DB
     public function getPerson($user = null)
     {
         if ($user === null) $user = $_SESSION['username'];
+        if ($user == '') return array();
         $person = $this->db->persons->findOne(['username' => $user]);
         if (empty($person)) return array();
         $person['name'] = $person['first'] . " " . $person['last'];

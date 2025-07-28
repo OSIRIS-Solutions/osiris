@@ -558,7 +558,7 @@ if ($topicsEnabled) {
                                         <?= Organization::getIcon($collab['type'], 'ph-fw ph-2x m-0') ?>
                                     </span>
                                     <div class="">
-                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization'] ?>">
+                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization']['_id'] ?? $collab['organization'] ?>">
                                             <?= $collab['name'] ?>
                                         </a>
                                         <?= $collab['location'] ?>

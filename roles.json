@@ -121,6 +121,11 @@
                 "en": "Set users to inactive"
             },
             {
+                "id": "user.delete",
+                "de": "Nutzer löschen",
+                "en": "Delete users"
+            },
+            {
                 "id": "user.synchronize",
                 "de": "Nutzer synchronisieren / hinzufügen",
                 "en": "Synchronize users"
