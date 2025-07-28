@@ -52,7 +52,7 @@
             </thead>
             <tbody id="authors">
                 <?php foreach ($form[$role] as $i => $author) { ?>
-                    <tr>
+                    <tr data-attr="<?= $i ?>">
                         <td>
                             <i class="ph ph-dots-six-vertical text-muted handle"></i>
                         </td>
@@ -98,7 +98,7 @@
                             ?>
                                         <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                             <input type="checkbox"
-                                                name="persons[<?= $i ?>][units][]"
+                                                name="authors[<?= $i ?>][units][]"
                                                 id="unit-<?= $i ?>-<?= htmlspecialchars($unit_id) ?>"
                                                 value="<?= htmlspecialchars($unit_id) ?>"
                                                 <?= in_array($unit_id, $selected) ? 'checked' : '' ?>>
@@ -164,6 +164,7 @@
     function addAuthorRow() {
         counter++;
         var tr = $('<tr>')
+        tr.attr('data-attr', counter);
         tr.append('<td><i class="ph ph-dots-six-vertical text-muted handle"></i></td>')
         tr.append('<td><input name="authors[' + counter + '][last]" type="text" class="form-control" required></td>')
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
@@ -182,6 +183,7 @@
         let username = el.value.trim();
         let tr = $(el).closest('tr');
         let td = tr.find('.units');
+        let counter = tr.data('attr');
         td.html('<i class="ph ph-spinner ph-spin"></i>');
         if (!username) {
             td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
@@ -199,8 +201,8 @@
             const units = data.units || [];
             td.html(` ${units.map(unit => `
                         <div class="custom-checkbox mb-5 ${unit.in_past ? 'text-muted' : ''}">
-                            <input type="checkbox" name="persons[${username}][units][]" id="unit-${username}-${unit.unit}" value="${unit.unit}">
-                            <label for="unit-${username}-${unit.unit}">
+                            <input type="checkbox" name="authors[${counter}][units][]" id="unit-${counter}-${unit.unit}" value="${unit.unit}">
+                            <label for="unit-${counter}-${unit.unit}">
                                 <span data-toggle="tooltip" data-title="${unit.name}" class="underline-dashed">
                                     ${unit.unit}
                                 </span>
