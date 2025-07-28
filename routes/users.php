@@ -461,6 +461,40 @@ Route::post('/synchronize-attributes', function () {
 });
 
 
+Route::post('/synchronize-attributes-now', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . '/php/LDAPInterface.php';
+
+    if (!$Settings->hasPermission('user.synchronize')) {
+        echo "<p>Permission denied.</p>";
+        die();
+    }
+
+    include BASEPATH . "/header.php";
+    $settings = $osiris->adminGeneral->findOne(['key' => 'ldap_mappings']);
+    $ldapMappings = DB::doc2Arr($settings['value'] ?? []);
+
+    if (empty($ldapMappings)) {
+        echo "No LDAP mappings found.\n";
+        exit;
+    }
+    $LDAP = new LDAPInterface();
+    $success = $LDAP->synchronizeAttributes($ldapMappings, $osiris);
+    if ($success) {
+        echo "User attributes synchronized successfully.\n";
+
+        $osiris->system->updateOne(
+            ['key' => 'ldap-sync'],
+            ['$set' => ['value' => date('Y-m-d H:i:s')]],
+            ['upsert' => true]
+        );
+    } else {
+        echo "Failed to synchronize user attributes.\n";
+    }
+    include BASEPATH . "/footer.php";
+});
+
+
 Route::post('/switch-user', function () {
 
     if (isset($_POST['OSIRIS-SELECT-MAINTENANCE-USER'])) {

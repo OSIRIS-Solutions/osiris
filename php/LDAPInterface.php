@@ -37,7 +37,7 @@ class LDAPInterface
                 "first" => "givenname",
                 "last" => "sn",
                 "displayname" => "cn",
-                "unit" => "ou",
+                "unit" => "department",
                 "telephone" => "telephonenumber",
                 "mail" => "mail",
                 "uniqueid" => "entryuuid",
@@ -129,12 +129,20 @@ class LDAPInterface
             echo "Internal error: cannot search LDAP.";
             return null;
         }
-
         $res = array();
         $cookie = '';
 
+        if (!empty($attributes)){
+            // add missing attributes to the attributes array
+            foreach ($attributes as $key) {
+                if (!in_array($key, $this->attributes)) {
+                    $this->attributes[] = $key;
+                }
+            }
+        }
+
         do {
-            $filter = '(cn=*)';
+            // $filter = '(cn=*)';
             // overwrite filter if set in CONFIG
             if (defined('LDAP_FILTER') && !empty(LDAP_FILTER)) $filter = LDAP_FILTER;
 
@@ -366,10 +374,10 @@ class LDAPInterface
         return $person;
     }
 
-    public function synchronizeAttributes(array $ldapMappings, $osiris)
+    public function synchronizeAttributes(array $ldapMappings, $osiris, $verbose = false)
     {
         $Groups = new Groups();
-        $users = $this->fetchUsers();
+        $users = $this->fetchUsers('(cn=*)', array_values($ldapMappings));
 
         if (!is_array($users)) {
             echo "Fehler beim Abrufen der Benutzer aus LDAP.";
@@ -405,7 +413,7 @@ class LDAPInterface
                 //     $osiris->persons->insertOne($userData);
             }
 
-            echo $username . "\n";
+            echo $username .' ';
 
             $userData = [];
 
@@ -513,7 +521,11 @@ class LDAPInterface
             if (isset($ldapMappings['is_active'])) {
                 $accountControl = isset($entry[$ldapMappings['is_active']][0]) ? (int)$entry[$ldapMappings['is_active']][0] : 0;
                 $userData['is_active'] = boolval(!($accountControl & 2)); // 2 entspricht ACCOUNTDISABLE
-                var_dump($userData['is_active']);
+                if ($userData['is_active']){
+                    echo " (active)";
+                } else {
+                    echo " (inactive)";
+                }
             } else {
                 $userData['is_active'] = true;
             }
@@ -525,6 +537,7 @@ class LDAPInterface
                 ['$set' => $userData],
                 // ['upsert' => true]
             );
+            echo "<br>";
         }
 
         return true;
