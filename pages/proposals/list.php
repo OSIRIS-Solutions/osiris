@@ -201,6 +201,11 @@ $filter = [];
                             <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
                         </td>
                     </tr>
+                    <tr style="--highlight-color: var(--muted-color)">
+                        <td> 
+                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('withdrawn', 'zurückgezogen') ?></a>
+                        </td>
+                    </tr>
                 </table>
             </div>
 
@@ -432,6 +437,8 @@ $filter = [];
                 return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
             case 'rejected':
                 return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
+            case 'withdrawn':
+                return `<span class='badge muted'>${lang('withdrawn', 'zurückgezogen')}</span>`;
             case 'expired':
                 return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
         }

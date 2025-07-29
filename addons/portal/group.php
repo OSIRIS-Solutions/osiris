@@ -246,7 +246,7 @@ $_SESSION['last_group'] = $id;
             $project_filter = [
                 'persons.user' => ['$in' => $users],
                 "public" => true,
-                "status" => ['$ne' => "rejected"]
+                // "status" => ['$ne' => "rejected"]
             ];
 
             $count_projects = $osiris->projects->count($project_filter);

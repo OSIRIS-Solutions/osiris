@@ -44,8 +44,7 @@ if (!$Settings->hasPermission('projects.view')) {
             ['persons.user' => $_SESSION['username']],
             ['created_by' => $_SESSION['username']],
             ['contact' => $_SESSION['username']],
-            ['supervisor' => $_SESSION['username']],
-            ['status' => ['$nin' => ['applied', 'rejected', 'expired']]]
+            ['supervisor' => $_SESSION['username']]
         ]
     ];
     $pagetitle = lang('My projects', 'Meine Projekte');

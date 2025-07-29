@@ -51,9 +51,14 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
     .badge.status.danger {
         border: 1px solid var(--danger-color);
     }
+
+    .badge.status.muted {
+        border: 1px solid var(--muted-color);
+    }
 </style>
 <script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
+<div class="proposal <?=$status?>">
 
 <div class="d-flex align-items-center justify-content-between">
     <div class="title">
@@ -65,6 +70,15 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
         <h2 class="subtitle">
             <?= $project['title'] ?>
         </h2>
+
+        <?php if ($status == 'withdrawn') { ?>
+            <p class="text-danger">
+                <?= lang('This proposal has been withdrawn with the following reason:', 'Dieser Antrag wurde zurückgezogen mit folgendem Grund:') ?>
+                <br>
+                <b><?= $project['withdrawn_reason'] ?? lang('No reason given', 'Kein Grund angegeben') ?></b>
+            </p>
+        <?php } ?>
+        
     </div>
     <div class="status">
         <?php if ($status_perm) { ?>
@@ -76,7 +90,8 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     </button>
                     <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                         <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></a>
                     </div>
                 </div>
             <?php } else if ($status == 'approved') { ?>
@@ -84,10 +99,15 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     <i class="ph ph-check-circle" aria-hidden="true"></i>
                     <?= lang('Approved', 'Bewilligt') ?>
                 </span>
-            <?php } else { ?>
+            <?php } else if ($status == 'rejected') { ?>
                 <span class="badge status danger">
                     <i class="ph ph-x-circle" aria-hidden="true"></i>
                     <?= lang('Rejected', 'Abgelehnt') ?>
+                </span>
+            <?php } else if ($status == 'withdrawn') { ?>
+                <span class="badge status muted">
+                    <i class="ph ph-x-circle" aria-hidden="true"></i>
+                    <?= lang('Withdrawn', 'Zurückgezogen') ?>
                 </span>
             <?php } ?>
 
@@ -721,3 +741,4 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
         </div>
     <?php } ?>
 </section>
+</div>

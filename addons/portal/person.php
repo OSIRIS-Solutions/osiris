@@ -353,7 +353,7 @@ $Format = new Document(false, 'portal');
                     ['contact' => $user],
                     ['persons.user' => $user],
                 ),
-                "status" => ['$ne' => "rejected"],
+                // "status" => ['$ne' => "rejected"],
                 'public' => true
             ];
 
