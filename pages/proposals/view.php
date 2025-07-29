@@ -224,7 +224,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
 <nav class="pills mt-20" id="nav-tabs">
     <button class="btn font-weight-bold active" id="general-btn" onclick="navigate('general')">
         <i class="ph ph-file-text"></i>
-        <?= lang('Proposaldetails', 'Antragsdetails') ?>
+        <?= lang('Proposal', 'Antragsdetails') ?>
     </button>
     <?php if (!empty($connected_project)) { ?>
         <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">

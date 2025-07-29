@@ -197,7 +197,7 @@ if ($topicsEnabled) {
 <nav class="pills mt-20 mb-0" id="project-nav">
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-        <?= lang('Project details', 'Projektdetails') ?>
+        <?= lang('Project', 'Projektdetails') ?>
     </a>
     <?php if ($subproject) {
         // collaborators are inherited from parent project
@@ -550,6 +550,9 @@ if ($topicsEnabled) {
                         </tr>
                     <?php
                     } else foreach ($project['collaborators'] as $collab) {
+                        if (isset($collab['organization']) && is_array($collab['organization'])) {
+                            $collab['organization'] = $collab['organization']['_id'];
+                        }
                     ?>
                         <tr>
                             <td>
@@ -558,7 +561,7 @@ if ($topicsEnabled) {
                                         <?= Organization::getIcon($collab['type'], 'ph-fw ph-2x m-0') ?>
                                     </span>
                                     <div class="">
-                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization']['_id'] ?? $collab['organization'] ?>">
+                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization'] ?>">
                                             <?= $collab['name'] ?>
                                         </a>
                                         <?= $collab['location'] ?>
