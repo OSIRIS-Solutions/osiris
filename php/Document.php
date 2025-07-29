@@ -487,7 +487,8 @@ class Document extends Settings
                             $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
                     }
                 } else if (!$this->full) {
-                    $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
+                    if (isset($a['user']) && !empty($a['user']))
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
                 } else if ($this->highlight === true) {
                     if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
                 } else if ($this->highlight && $a['user'] == $this->highlight) {
@@ -873,9 +874,9 @@ class Document extends Settings
                 // do nothing
             } elseif (($this->highlight === true && ($person['aoi'] ?? false)) || ($person['user'] === $this->highlight)) {
                 if ($this->usecase == 'web') {
-                    $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
-                    // } else if (!in_array($this->usecase, ['print', 'word'])) {
-                    //     $author = "<u>$author</u>";
+                    if (isset($person['user']) && !empty($person['user'])) {
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
+                    }
                 } else if ($aoi_format == 'bold') {
                     $author = "<b>$author</b>";
                 } else if ($aoi_format == 'italic') {
