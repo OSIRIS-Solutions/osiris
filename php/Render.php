@@ -73,6 +73,18 @@ function renderActivities($filter = [])
     return $rendered;
 }
 
+function renderDates($doc)
+{
+    $doc['start_date'] = valueFromDateArray($doc['start'] ?? $doc);
+    if (array_key_exists('end', DB::doc2Arr($doc)) && is_null($doc['end'])) {
+        $end = null;
+    } else {
+        $end = valueFromDateArray($doc['end'] ?? $doc['start'] ?? $doc);
+    }
+    $doc['end_date'] = $end;
+    return $doc;
+}
+
 function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
 {
     global $Groups;
@@ -82,6 +94,17 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
     $osiris = $DB->db;
 
     $units = [];
+    // make sure that start_date is set because we need it to filter units
+    if (!isset($doc['start_date']) && isset($old_doc['start_date'])) {
+        $doc['start_date'] = $old_doc['start_date'];
+    }
+    if (!isset($doc['start_date'])) {
+        $doc = renderDates($doc);
+    }
+    // if it still does not exist, use start of all times
+    if (!isset($doc['start_date'])) {
+        $doc['start_date'] = '1970-01-01';
+    }
     $startdate = strtotime($doc['start_date']);
 
     $authors = $doc[$author_key] ?? [];
@@ -206,16 +229,15 @@ function renderProject($doc, $col = 'projects', $id = null)
                     $units = array_merge($units, $u);
                 }
             }
-            
         } else {
             $units = flatten(array_column($doc['persons'], 'units'));
         }
         $units = array_unique($units);
-            foreach ($units as $unit) {
-                $units = array_merge($units, $Groups->getParents($unit, true));
-            }
-            $units = array_unique($units);
-            $doc['units'] = array_values($units);
+        foreach ($units as $unit) {
+            $units = array_merge($units, $Groups->getParents($unit, true));
+        }
+        $units = array_unique($units);
+        $doc['units'] = array_values($units);
         // $doc = renderAuthorUnits($doc, [], 'persons');
     }
     return $doc;
