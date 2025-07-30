@@ -490,18 +490,18 @@ $pageactive = function ($p) use ($page) {
                         <div id="sidebar-add-navigation">
 
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
-                                <?php if ($Settings->canProposalsBeCreated()) { ?>
-                                    <a href="<?= ROOTPATH ?>/proposals/new" class="">
-                                        <i class="ph ph-tree-structure"></i>
-                                        <?= lang('Add project', 'Projekt hinzufügen') ?>
-                                    </a>
-                                <?php } else if ($Settings->canProjectsBeCreated()) { ?>
+
+                                <?php if ($Settings->canProjectsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/new" class="">
                                         <i class="ph ph-tree-structure"></i>
                                         <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
+                                <?php } else if ($Settings->canProposalsBeCreated()) { ?>
+                                    <a href="<?= ROOTPATH ?>/proposals/new" class="">
+                                        <i class="ph ph-tree-structure"></i>
+                                        <?= lang('Add project proposal', 'Projektantrag hinzuf.') ?>
+                                    </a>
                                 <?php } ?>
-
                             <?php } ?>
                             <?php if ($Settings->hasPermission('conferences.edit')) { ?>
                                 <a href="<?= ROOTPATH ?>/conferences#add-conference">
