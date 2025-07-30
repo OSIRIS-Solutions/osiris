@@ -116,14 +116,12 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
      - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
   3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
 
-#### <i class="ph ph-gear"></i> Weitere Verbesserungen
+#### <i class="ph ph-code"></i> Weitere Verbesserungen und Bugfixes
 - Es wurde eine neue Seite zu den Einstellungen hinzugefügt, die es ermöglicht, den Footer der Seite anzupassen. Hier können Impressum, Datenschutzerklärung und Links zu externen Ressourcen hinzugefügt werden.
 - Sperren von Aktivitäten wurde verbessert:
   - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
-  - Sie können jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
-
-#### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
-
+  - Du kannst jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
+- Die Vorschau für Portfolios wurde überarbeitet und spiegelt jetzt mehr wieder, wie die Portfolio-Seite tatsächlich aussehen würde. Außerdem greift die Vorschau jetzt auf die tatsächlich von der Portfolio-API ausgelieferten Daten zurück, weshalb sie nun genauer ist und nicht mehr Dinge zeigt, die nicht dargestellt werden sollen.
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - die Controlling-Seite wurde entfernt, da sie teilweise veraltete Informationen enthielt
 - Email-Einstellungen können jetzt korrekt gespeichert werden und SMTP wird vollumfänglich unterstützt.

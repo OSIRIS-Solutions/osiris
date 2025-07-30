@@ -622,7 +622,7 @@ class Project extends Vocabulary
 
     public function personRoleRaw($role)
     {
-        return $this->getValues('project-person-role', $role);
+        return $this->getValuesByKey('project-person-role', $role);
     }
 
     public function personRole($role)

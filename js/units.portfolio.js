@@ -19,38 +19,108 @@ function navigate(key) {
     switch (key) {
         case 'publications':
             if (publicationTable) break;
-            publicationTable = true;
-            initActivities('#publication-table', {
-                type: 'publication',
-                json: JSON.stringify({
-                    'hide': { '$ne': true },
-                    'authors.user': { '$in': USERS },
-                    'authors.aoi': { '$in': [1, true, '1', 'true'] }
-                })
-            })
+            publicationTable = $('#publication-table').DataTable({
+                "ajax": {
+                    "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/publications',
+                    dataSrc: 'data'
+                },
+                "sort": false,
+                "pageLength": 6,
+                "lengthChange": false,
+                "searching": false,
+                "pagingType": "numbers",
+                columnDefs: [{
+                    targets: 0,
+                    data: 'icon',
+                    className: 'w-50'
+                },
+                {
+                    targets: 1,
+                    data: 'html',
+                    render: function (data, type, row) {
+                        // replace links to activities with links to the activity page
+                        data = data.replace(/href='\/activity/g, "href='" + ROOTPATH + "/preview/activity");
+                        return data;
+                    }
+                },
+                ],
+            });
             // impactfactors('chart-impact', 'chart-impact-canvas', { user: {'$in': USERS} })
             // authorrole('chart-authors', 'chart-authors-canvas', { user: {'$in': USERS} })
             break;
 
         case 'activities':
             if (activitiesTable) break;
-            activitiesTable = true;
-            initActivities('#activities-table', {
-                type: { '$in': ['poster', 'lecture', 'award', 'software'] },
-                json: JSON.stringify({
-                    'hide': { '$ne': true },
-                    'authors.user': { '$in': USERS },
-                    'authors.aoi': { '$in': [1, true, '1', 'true'] }
-                })
-            })
-            // activitiesChart('chart-activities', 'chart-activities-canvas', { user: {'$in': USERS} })
+            activitiesTable = $('#activities-table').DataTable({
+                "ajax": {
+                    "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/activities',
+                    dataSrc: 'data'
+                },
+                "sort": false,
+                "pageLength": 6,
+                "lengthChange": false,
+                "searching": false,
+                "pagingType": "numbers",
+                columnDefs: [{
+                    targets: 0,
+                    data: 'icon',
+                    className: 'w-50'
+                },
+                {
+                    targets: 1,
+                    data: 'html',
+                    render: function (data, type, row) {
+                        // replace links to activities with links to the activity page
+                        data = data.replace(/href='\/activity/g, "href='" + ROOTPATH + "/preview/activity");
+                        return data;
+                    }
+                },
+                ],
+            });
             break;
 
         case 'projects':
             if (projectsExists) break;
             projectsExists = true;
             // projectTimeline('#project-timeline', { user: {'$in': USERS} })
+            $('#projects-table').DataTable({
+                ajax: {
+                    url: ROOTPATH + '/portfolio/unit/' + DEPT + '/projects',
+                },
+                type: 'GET',
+                dom: 'frtipP',
+                columns: [
+                    {
+                        data: 'name',
+                        render: function (data, type, row) {
+                            let teaser = lang(row.teaser_en ?? '', row.teaser_de ?? null);
+                            if (teaser.length > 1) {
+                                teaser = `<hr><p class="">
+                    ${teaser}...
+                    <span class="link">Weiterlesen</span>
+                  </p>
+                    `;
+                            }
 
+                            return `<a class="d-block w-full colorless" href="${ROOTPATH}/preview/project/${row.id}">
+                  <div style="display: none;">${row.name}</div>
+                  <span class="float-right text-primary">${lang(row.type_details.name ?? '', row.type_details.name_de ?? null)}</span>
+                  <h5 class="my-0 text-primary">
+                      ${lang(row.name, row.name_de ?? null)}
+                  </h5>
+                  <small class="text-muted">
+                      ${lang(row.title, row.title_de ?? null)}
+                  </small>
+                  <p class="d-flex justify-content-between">
+                      <span class="text-secondary">${lang(row.start_date ?? '', row.start_date_de ?? null)} - 31.12.2026</span>
+
+                  </p>
+                    ${teaser}
+              </a>`;
+                        }
+                    },
+                ]
+            });
             collaboratorChart('#collaborators', {
                 'dept': DEPT,
             });
@@ -66,12 +136,53 @@ function navigate(key) {
             if (personsExists) break;
             personsExists = true;
             // console.log(personsExists);
-            userTable('#user-table', {
-                filter: { 'username': { '$in': USERS } },
-                hide_usernames: true,
-                subtitle: 'position',
-                'path': PORTALPATH
-            })
+            return $('#user-table').DataTable({
+                "ajax": {
+                    "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/staff',
+                    dataSrc: 'data'
+                },
+                dom: 'frtipP',
+                deferRender: true,
+                responsive: true,
+                language: {
+                    url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+                },
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: 'img',
+                        searchable: false,
+                        sortable: false,
+                        visible: true
+                    },
+                    {
+                        targets: 1,
+                        data: 'displayname',
+                        className: 'flex-grow-1',
+                        render: function (data, type, row) {
+                            return `<div class="w-full">
+                  <div style="display: none;">${row.displayname}</div>
+                  <h5 class="my-0">
+                      <a href="${ROOTPATH}/review/person/651cecd8b3c97f11cc28cc45">
+                        ${row.academic_title ?? ''} ${row.displayname}
+                      </a>
+                  </h5>
+                  <small>
+                      ${lang(row.position ?? '', row.position_de ?? null)}
+                  </small>
+              </div>`;
+                        }
+                    }
+
+                ],
+                "order": [
+                    [1, 'asc'],
+                ],
+
+                paging: true,
+                autoWidth: true,
+                pageLength: 18,
+            });
             break;
 
         case 'collab':
@@ -118,7 +229,7 @@ function collaboratorChart(selector, data) {
         url: ROOTPATH + "/api/dashboard/collaborators",
         dataType: "json",
         data: data,
-        success: function(response) {
+        success: function (response) {
             if (response.count <= 1) {
                 $(selector).hide()
                 return
@@ -184,7 +295,7 @@ function collaboratorChart(selector, data) {
 
             Plotly.newPlot('map', [data], layout);
         },
-        error: function(response) {
+        error: function (response) {
             console.log(response);
         }
     });

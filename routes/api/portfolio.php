@@ -476,6 +476,12 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
         'public' => true,
     ];
 
+    $projectTypes = $osiris->adminProjects->find(
+        [],
+        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1]]
+    )->toArray();
+    $projectTypes = array_column($projectTypes, null, 'id');
+
     if ($context == 'unit') {
         if ($id == 0) {
             $group = $osiris->groups->findOne(['level' => 0]);
@@ -495,6 +501,7 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
     $options = [
         'sort' => ['year' => -1, 'month' => -1],
         'projection' => [
+            'id' => ['$toString' => '$_id'],
             'name' => 1,
             'name_de' => 1,
             'title' => 1,
@@ -507,6 +514,8 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
             'role' => 1,
             'start' => 1,
             'end' => 1,
+            'start_date' => 1,
+            'end_date' => 1,
             'type' => 1,
             'teaser_en' => 1,
             'teaser_de' => 1,
@@ -517,6 +526,15 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
         $filter,
         $options
     )->toArray();
+
+    // Add projectTypes info based on type key
+    foreach ($result as &$project) {
+        if (isset($project['type']) && isset($projectTypes[$project['type']])) {
+            $project['type_details'] = $projectTypes[$project['type']];
+            $project['type'] = $projectTypes[$project['type']]['name'];
+        }
+    }
+    unset($project);
 
     echo rest($result);
 });
@@ -660,7 +678,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $doc = $osiris->activities->findOne(
         ['_id' => $id]
     );
-    if (empty($doc)) {
+    if (empty($doc) || ($doc['hide'] ?? false)) {
         echo rest('Activity not found', 0, 404);
         die;
     }
@@ -694,8 +712,8 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     }
 
     $depts = [];
-    if (!empty($doc['rendered']['depts'])) {
-        foreach ($doc['rendered']['depts'] as $d) {
+    if (!empty($doc['units'])) {
+        foreach ($doc['units'] as $d) {
             $dept = $Groups->getGroup($d);
             if ($dept['level'] !== 1) continue;
             $depts[$d] = [
@@ -790,7 +808,6 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         echo rest('Project not found', 0, 404);
         die;
     }
-    $id = $result['name'];
 
     $project = [
         'id' => strval($result['_id']),
@@ -809,6 +826,8 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         'role' => $result['role'] ?? 'partner',
         'start' => $result['start'] ?? '',
         'end' => $result['end'] ?? '',
+        'start_date' => $result['start_date'] ?? null,
+        'end_date' => $result['end_date'] ?? null,
         'persons' => [],
         'activities' => 0,
         'subprojects' => [],
@@ -821,7 +840,13 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     if (isset($result['image']) && !empty($result['image']))
         $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['image'];
 
-    $project['activities'] = $osiris->activities->count(['projects' => $id, 'hide' => ['$ne' => true]]);
+    $project['activities'] = $osiris->activities->count([
+        '$or' => [
+            ['projects' => $result['name']],
+            ['projects' => DB::to_ObjectID($id)]
+        ],
+        'hide' => ['$ne' => true]
+    ]);
 
     if (!empty($result['persons'])) {
 

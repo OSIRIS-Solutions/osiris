@@ -390,7 +390,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -466,7 +466,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <div class="btn-group btn-group-lg">
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             </div>
