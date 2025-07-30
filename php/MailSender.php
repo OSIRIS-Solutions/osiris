@@ -15,21 +15,23 @@ function sendMail(
 
     $Mailer = new PHPMailer\PHPMailer\PHPMailer(true);
 
-    $Mailer->isSMTP();
-    $Mailer->Host = $mail['smtp_server'] ?? 'localhost';
-    if (isset($mail['smtp_user']) && isset($mail['smtp_password'])) {
-        $Mailer->SMTPAuth = true;
-        $Mailer->Username = $mail['smtp_user'];
-        $Mailer->Password = $mail['smtp_password'];
-    }
-    if (isset($mail['smtp_security'])) {
-        if ($mail['smtp_security'] == 'ssl')
-            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        elseif ($mail['smtp_security'] == 'tls')
-            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-    }
+    if (!empty($mail['smtp_server'])) {
+        $Mailer->isSMTP();
+        $Mailer->Host = $mail['smtp_server'] ?? 'localhost';
+        if (isset($mail['smtp_user']) && isset($mail['smtp_password'])) {
+            $Mailer->SMTPAuth = true;
+            $Mailer->Username = $mail['smtp_user'];
+            $Mailer->Password = $mail['smtp_password'];
+        }
+        if (isset($mail['smtp_security'])) {
+            if ($mail['smtp_security'] == 'ssl')
+                $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+            elseif ($mail['smtp_security'] == 'tls')
+                $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        }
 
-    $Mailer->Port = $mail['smtp_port'] ?? 25;
+        $Mailer->Port = $mail['smtp_port'] ?? 25;
+    }
 
     // $Mailer->SMTPDebug = 2; // oder 3
     // $Mailer->Debugoutput = 'html';
@@ -45,8 +47,8 @@ function sendMail(
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
         $msg = $Mailer->ErrorInfo;
-        $_SESSION['msg'] = $msg;
     }
+    $_SESSION['msg'] = $msg;
     return $msg;
 }
 

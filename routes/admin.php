@@ -39,6 +39,7 @@ Route::get('/admin/users', function () {
         ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen")]
     ];
+    $page = 'users';
     include BASEPATH . "/header.php";
     if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
         include BASEPATH . "/pages/synchronize-users.php";
@@ -396,6 +397,7 @@ Route::post('/crud/admin/general', function () {
     $msg = 'settings-saved';
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
+            dump($key);
             if ($key == 'auth-self-registration') $value = boolval($value);
             if (str_contains($key, 'keywords')) {
                 $value = array_map('trim', explode(PHP_EOL, $value));
@@ -414,6 +416,30 @@ Route::post('/crud/admin/general', function () {
         $osiris->adminGeneral->insertOne([
             'key' => 'mail',
             'value' => $_POST['mail']
+        ]);
+    }
+
+    if (isset($_POST['footer_links'])) {
+        $links = [];
+        // join the name, name_de and url into an array
+        if (isset($_POST['footer_links']['name']) && is_array($_POST['footer_links']['name'])) {
+            $names = $_POST['footer_links']['name'];
+            $names_de = $_POST['footer_links']['name_de'] ?? $names;
+            $urls = $_POST['footer_links']['url'] ?? [];
+
+            foreach ($names as $i => $name) {
+                if (empty($name) || empty($urls[$i])) continue; // skip empty links
+                $links[] = [
+                    'name' => $name,
+                    'name_de' => $names_de[$i] ?? $name,
+                    'url' => $urls[$i]
+                ];
+            }
+        }
+        $osiris->adminGeneral->deleteOne(['key' => 'footer_links']);
+        $osiris->adminGeneral->insertOne([
+            'key' => 'footer_links',
+            'value' => $links
         ]);
     }
 
@@ -485,7 +511,6 @@ Route::post('/crud/admin/roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-
     if (isset($_POST['values'])) {
         $osiris->adminRights->deleteMany([]);
         $rights = $_POST['values'];
@@ -500,7 +525,17 @@ Route::post('/crud/admin/roles', function () {
             }
         }
     }
-    if (isset($_POST['roles'])) {
+    if (isset($_POST['roles']) && is_array($_POST['roles']) && count($_POST['roles']) > 2) {
+        // user, scientist and admin must always be there
+        if (!in_array('user', $_POST['roles'])) {
+            $_POST['roles'][] = 'user';
+        }
+        if (!in_array('scientist', $_POST['roles'])) {
+            $_POST['roles'][] = 'scientist';
+        }
+        if (!in_array('admin', $_POST['roles'])) {
+            $_POST['roles'][] = 'admin';
+        }
         $osiris->adminGeneral->deleteOne(['key' => 'roles']);
         $osiris->adminGeneral->insertOne([
             'key' => 'roles',
@@ -546,7 +581,7 @@ Route::post('/crud/admin/features', function () {
 
     $msg = 'settings-saved';
 
-    header("Location: " . ROOTPATH . "/admin/features?msg=" . $msg);
+    header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg . '#features');
 }, 'login');
 
 
@@ -557,6 +592,8 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     if (!isset($_POST['values'])) die("no values given");
 
     $values = validateValues($_POST['values'], $DB);
+    
+    // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
         $collection = $osiris->adminCategories;
@@ -597,6 +634,8 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
 
     if (!isset($_POST['values'])) die("no values given");
     $values = validateValues($_POST['values'], $DB);
+    
+    // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
         $collection = $osiris->adminCategories;

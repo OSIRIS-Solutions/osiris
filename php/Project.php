@@ -187,7 +187,7 @@ class Project extends Vocabulary
         return $this->db->adminProjects->find($filter)->toArray();
     }
 
-    public function getFields($type_id, $phase)
+    public function getFields($type_id, $phase = 'all')
     {
         $type = $this->db->adminProjects->findOne(['id' => $type_id]);
         if (empty($type)) return [];
@@ -195,7 +195,7 @@ class Project extends Vocabulary
 
         $fields = [];
         foreach ($phases as $p) {
-            if ($p['id'] == $phase) {
+            if ($p['id'] == $phase || $phase == 'all') {
                 $fields = $p['modules'] ?? [];
                 break;
             }
@@ -260,17 +260,17 @@ class Project extends Vocabulary
                     . '</div>';
 
             case 'countries':
+            case 'research-countries':
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
+                
                 foreach ($value ?? [] as $c) {
+                    $iso = $c['iso'] ?? $c;
                     $role = '';
-                    if (isset($c['country'])) {
-                        $iso = $c['country'];
-                    }
                     if (isset($c['role'])) {
-                        $role = ' (' . $c['role'] . ')';
+                        $role = ' (' . $this->getCountryRole($c['role']) . ')';
                     }
-                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . $role . '</li>';
+                    $countriesList .= '<li>' . $this->getCountry($iso, $lang) . $role . '</li>';
                 }
                 return '<ul class="list signal mb-0">' . $countriesList . '</ul>';
             case 'purpose':
@@ -508,6 +508,16 @@ class Project extends Vocabulary
         return $this->getValue('funding-type', $funder);
     }
 
+    public function getCountryRole($role)
+    {
+        $country_roles = [
+            'in' => lang('Research in', 'Forschund in'),
+            'about' => lang('Research about', 'Forschung über'),
+            'both' => lang('Research in and about', 'Forschung in und über')
+        ];
+        return $country_roles[$role] ?? $role;
+    }
+
     public function getPurpose()
     {
         $purpose = $this->project['purpose'] ?? 'others';
@@ -517,8 +527,11 @@ class Project extends Vocabulary
     {
         if (!isset($this->project['funding_number']) || empty($this->project['funding_number']))
             return '-';
-        if (is_string($this->project['funding_number']))
+        if (is_string($this->project['funding_number']) || is_numeric($this->project['funding_number']))
             return $this->project['funding_number'];
+        if (is_array($this->project['funding_number'])) {
+            return implode($seperator, $this->project['funding_number']);
+        }
         return implode($seperator, DB::doc2Arr($this->project['funding_number']));
     }
 
@@ -609,7 +622,7 @@ class Project extends Vocabulary
 
     public function personRoleRaw($role)
     {
-        return $this->getValues('project-person-role', $role);
+        return $this->getValuesByKey('project-person-role', $role);
     }
 
     public function personRole($role)
@@ -623,6 +636,25 @@ class Project extends Vocabulary
         } else {
             return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
         }
+    }
+
+    public function getTimeline(){
+        $startDate = $this->project['start_date']; // ISO date string
+        $endDate = $this->project['end_date']; // ISO date string
+        $today = strtotime(date('Y-m-d'));
+        if ($startDate === null || $endDate === null) {
+            return 'unknown';
+        }
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+        if ($startTimestamp > $today) {
+            return 'future';
+        }
+        // check if end is in the past
+        if ($endTimestamp < $today) {
+            return 'past';
+        }
+        return 'ongoing';
     }
 
     public function widgetSmall()
@@ -769,7 +801,7 @@ class Project extends Vocabulary
     private function convertProject4humans($doc)
     {
 
-        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date'];
+        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date', 'teaser', 'teaser_en', 'end_date'];
 
         $result = [];
 

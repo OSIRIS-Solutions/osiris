@@ -72,6 +72,8 @@ $all = $osiris->projects->count();
     }
 </style>
 
+<script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
+
 <h1>
     <i class="ph ph-chart-line-up" aria-hidden="true"></i>
     <?= lang('Statistics', 'Statistiken') ?>
@@ -542,44 +544,12 @@ $all = $osiris->projects->count();
         </div>
     </div>
 
-
-
-
-</div>
-
-<script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-<script>
-    function unpack(rows, key) {
-        return rows.map(function(row) {
-            return row[key];
-        });
-    }
-    $(document).ready(function() {
-        $('#collaborative-partners').DataTable({
-            "order": [
-                [3, "desc"]
-            ],
-        });
-        $('#collaborative-partners-by-country').DataTable({
-            "order": [
-                [1, "desc"]
-            ],
-        });
-
-        var rows = <?= json_encode($collaborations_by_country) ?>;
-        console.log(rows);
-        var data = [{
-            type: 'choropleth',
-            locationmode: 'ISO-3',
-            locations: unpack(rows, 'iso3'),
-            z: unpack(rows, 'count'),
-            text: unpack(rows, 'country'),
-            autocolorscale: false,
-            colorscale: [
-                ['0.0', 'rgb(253.4, 229.8, 204.8)'],
-                ['1.0', '#008084']
-            ],
-        }];
+    <script>
+        function unpack(rows, key) {
+            return rows.map(function(row) {
+                return row[key];
+            });
+        }
 
         var layout = {
             title: {
@@ -600,26 +570,201 @@ $all = $osiris->projects->count();
             width: '100%',
         };
 
-        Plotly.newPlot("map", data, layout, {
-            showLink: false
-        });
-    });
-
-    function filterByYear(year, table) {
-        var rows = document.querySelectorAll(table + ' tbody tr');
-        if (year == '') {
-            rows.forEach(function(row) {
-                row.style.display = 'table-row';
+        $(document).ready(function() {
+            $('#research-countries-table').DataTable({
+                "order": [
+                    [1, "desc"]
+                ],
             });
-            return;
-        }
-        rows.forEach(function(row) {
-            var cells = row.querySelectorAll('td');
-            if (cells[2].innerText == year) {
-                row.style.display = 'table-row';
-            } else {
-                row.style.display = 'none';
-            }
+            $('#collaborative-partners').DataTable({
+                "order": [
+                    [3, "desc"]
+                ],
+            });
+            $('#collaborative-partners-by-country').DataTable({
+                "order": [
+                    [1, "desc"]
+                ],
+            });
+
+            var collaboratorRows = <?= json_encode($collaborations_by_country) ?>;
+            console.log(collaboratorRows);
+            var data = [{
+                type: 'choropleth',
+                locationmode: 'ISO-3',
+                locations: unpack(collaboratorRows, 'iso3'),
+                z: unpack(collaboratorRows, 'count'),
+                text: unpack(collaboratorRows, 'country'),
+                autocolorscale: false,
+                colorscale: [
+                    ['0.0', 'rgb(253.4, 229.8, 204.8)'],
+                    ['1.0', '#008084']
+                ],
+                colorbar: {len: 0.5, title: lang('Number of<br>partners', 'Anzahl der<br>Partner')},
+            }];
+
+            Plotly.newPlot("map", data, layout, {
+                showLink: false
+            });
         });
-    }
-</script>
+
+
+        function filterByYear(year, table) {
+            var rows = document.querySelectorAll(table + ' tbody tr');
+            if (year == '') {
+                rows.forEach(function(row) {
+                    row.style.display = 'table-row';
+                });
+                return;
+            }
+            rows.forEach(function(row) {
+                var cells = row.querySelectorAll('td');
+                if (cells[2].innerText == year) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+
+    <?php
+    $filter_countries = $filter;
+    $filter_countries['research-countries'] = ['$exists' => true];
+
+    if ($osiris->projects->count($filter_countries) > 0) { ?>
+
+        <h3>
+            <?= lang('Research in and about countries', 'Forschung in und über Länder') ?>
+        </h3>
+
+        <?php
+
+        $research_countries = $osiris->projects->aggregate(
+            [
+                ['$match' => $filter_countries],
+                ['$project' => ['research-countries' => 1, '_id' => 0]],
+                ['$unwind' => '$research-countries'],
+                ['$project' => ['iso' => '$research-countries.iso', 'role' => '$research-countries.role']],
+                ['$project' => ['iso' => 1, 'in' => ['$cond' => [['$in' => ['$role', ['in', 'both']]], 1, 0]], 'about' => ['$cond' => [['$in' => ['$role', ['about', 'both']]], 1, 0]]]],
+                ['$group' => ['_id' => '$iso', 'research_in' => ['$sum' => '$in'], 'research_about' => ['$sum' => '$about']]],
+                ['$project' => ['_id' => 0, 'iso' => '$_id', 'research_in' => 1, 'research_about' => 1]],
+                ['$sort' => ['iso' => 1]]
+            ]
+        )->toArray();
+
+        foreach ($research_countries as &$project) {
+            $country = $DB->getCountry($project['iso']);
+            if (empty($country) || empty($country['name'])) {
+                continue; // Skip if no country found
+            }
+            $project['iso3'] = $country['iso3'];
+            $project['country'] = lang($country['name'], $country['name_de']);
+        }
+        $research_countries = array_filter($research_countries, function ($project) {
+            return !empty($project['country']);
+        });
+        $research_countries = array_values($research_countries); // Re-index the array
+
+        ?>
+
+        <div class="row row-eq-spacing">
+            <div class="col-md">
+
+                <table class="table" id="research-countries-table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('Research in the country', 'Forschung in dem Land') ?></th>
+                            <th><?= lang('Research about the country', 'Forschung über das Land') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $counts_in = array_sum(array_column($research_countries, 'research_in'));
+                        $counts_about = array_sum(array_column($research_countries, 'research_about'));
+                        foreach ($research_countries as $project) {
+                        ?>
+                            <tr>
+                                <td>
+                                    <?= $project['country'] ?>
+                                </td>
+                                <td>
+                                    <?= $project['research_in'] ?>
+                                </td>
+                                <td>
+                                    <?= $project['research_about'] ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th><?= lang('Total', 'Gesamt') ?></th>
+                            <th><?= $counts_in ?></th>
+                            <th><?= $counts_about ?></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md">
+                <div class="btn-toolbar">
+                    <button class="btn" onclick="updateResearchMap('research_in');">
+                        <i class="ph ph-globe"></i>
+                        <?= lang('Research in countries', 'Forschung in Ländern') ?>
+                    </button>
+                    <button class="btn" onclick="updateResearchMap('research_about');">
+                        <i class="ph ph-globe"></i>
+                        <?= lang('Research about countries', 'Forschung über Länder') ?>
+                    </button>
+                </div>
+                <div id="map-research" class="box p-5 m-0"></div>
+            </div>
+        </div>
+
+        <script>
+            let researchCountries = <?= json_encode($research_countries) ?>;
+            $(document).ready(function() {
+                // research map
+                var data = [{
+                    type: 'choropleth',
+                    locationmode: 'ISO-3',
+                    locations: unpack(researchCountries, 'iso3'),
+                    z: unpack(researchCountries, 'research_in'),
+                    text: unpack(researchCountries, 'country'),
+                    autocolorscale: false,
+                    colorscale: [
+                        ['0.0', 'rgb(253.4, 229.8, 204.8)'],
+                        ['1.0', '#008084']
+                    ],
+                    colorbar: {
+                        title: lang('Research in', 'Forschung in'),
+                        len: 0.5
+                    }
+                }];
+                layout.title = {
+                    text: lang('Research in and about countries', 'Forschung in und über Länder'),
+                };
+
+                Plotly.newPlot("map-research", data, layout, {
+                    showLink: false
+                });
+            });
+
+            function updateResearchMap(mode) {
+                var z = unpack(researchCountries, mode);
+                var label = (mode === 'research_in') ? lang('Research in', 'Forschung in') : lang('Research about', 'Forschung über');
+                console.log(mode);
+                Plotly.update("map-research", {
+                    z: [z],
+                    colorbar: {
+                        title: label
+                    }
+                });
+            }
+        </script>
+
+
+    <?php } ?>
+</div>

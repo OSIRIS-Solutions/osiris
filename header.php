@@ -94,11 +94,16 @@ $pageactive = function ($p) use ($page) {
     <script>
         const ROOTPATH = "<?= ROOTPATH ?>";
         const AFFILIATION = "<?= $Settings->get('affiliation') ?>";
+        const AFFILIATION_REGEX = new RegExp('<?= $Settings->getRegex(); ?>', 'i'); // Fallback to a simple regex if parsing fails
     </script>
 
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
     <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
     <script src="<?= ROOTPATH ?>/js/datatables/dataTables.responsive.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
+
     <script>
         $.extend($.fn.DataTable.ext.classes, {
             sPaging: "pagination mt-10 ",
@@ -216,7 +221,7 @@ $pageactive = function ($p) use ($page) {
                             <?php
                             if ($n_notifications > 0) {
                                 if (isset($notifications['activity'])) {
-                                    
+
                                     $issues = $notifications['activity']['values'];
                                     $n_issues = $notifications['activity']['count'];
                             ?>
@@ -485,15 +490,15 @@ $pageactive = function ($p) use ($page) {
                         <div id="sidebar-add-navigation">
 
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
-                                <?php if ($DB->canProposalsBeCreated()) { ?>
+                                <?php if ($Settings->canProposalsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/proposals/new" class="">
                                         <i class="ph ph-tree-structure"></i>
                                         <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
-                                <?php } else if ($DB->canProjectsBeCreated()) { ?>
+                                <?php } else if ($Settings->canProjectsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/new" class="">
                                         <i class="ph ph-tree-structure"></i>
-                                        <?= lang('Add project', 'Projekt hinzuf.') ?>
+                                        <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
                                 <?php } ?>
 
@@ -560,10 +565,13 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-calendar" aria-hidden="true"></i>
                                 <?= lang('My year', 'Mein Jahr') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
-                                <i class="ph ph-calendar-dots" aria-hidden="true"></i>
-                                <?= lang('Calendar', 'Kalender') ?>
-                            </a>
+
+                            <?php if ($Settings->featureEnabled('calendar', false)) { ?>
+                                <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
+                                    <i class="ph ph-calendar-dots" aria-hidden="true"></i>
+                                    <?= lang('Calendar', 'Kalender') ?>
+                                </a>
+                            <?php } ?>
 
                             <a href="<?= ROOTPATH ?>/my-activities" class="with-icon <?= $pageactive('my-activities') ?>">
                                 <i class="ph ph-folder-user" aria-hidden="true"></i>
@@ -594,7 +602,7 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
-                            <?php if ($DB->canProposalsBeCreated()) { ?>
+                            <?php if ($Settings->canProposalsBeCreated()) { ?>
                                 <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
                                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
                                     <?= lang('Proposals', 'Anträge') ?>
@@ -733,10 +741,10 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->featureEnabled('trips')) { ?>
                             <a href="<?= ROOTPATH ?>/trips" class="with-icon <?= $pageactive('trips') ?>">
                                 <i class="ph ph-map-trifold" aria-hidden="true"></i>
-                                <?= lang('Research Trips', 'Forschungsreisen') ?>
+                                <?= $Settings->tripLabel() ?>
                             </a>
                         <?php } ?>
-                        
+
                     </nav>
 
 
@@ -827,12 +835,6 @@ $pageactive = function ($p) use ($page) {
                                 <i class="ph ph-shield-check" aria-hidden="true"></i>
                                 <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
-
-
-                            <!-- <a href="<?= ROOTPATH ?>/admin/features" class="with-icon <?= $pageactive('admin/features') ?>">
-                                <i class="ph ph-wrench" aria-hidden="true"></i>
-                                <?= lang('Features', 'Funktionen') ?>
-                            </a> -->
                         <?php } ?>
 
 
@@ -845,7 +847,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->hasPermission('user.synchronize')) { ?>
                             <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
                                 <i class="ph ph-users"></i>
-                                <?= lang('Users', 'Nutzer') ?>
+                                <?= lang('User Management', 'Nutzerverwaltung') ?>
                             </a>
                         <?php } ?>
                     </nav>
@@ -883,6 +885,7 @@ $pageactive = function ($p) use ($page) {
         <div class="content-wrapper">
             <?php if ($pageactive('preview')) { ?>
                 <div class="title-bar text-danger text-center font-weight-bold d-block font-size-20">
+                    <i class="ph ph-globe"></i>
                     <b>PREVIEW</b>
                 </div>
             <?php } ?>

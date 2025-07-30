@@ -24,6 +24,10 @@ $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPer
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+
+$documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArray();
+
+$connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
 ?>
 
 
@@ -47,9 +51,14 @@ $Vocabulary = new Vocabulary();
     .badge.status.danger {
         border: 1px solid var(--danger-color);
     }
+
+    .badge.status.muted {
+        border: 1px solid var(--muted-color);
+    }
 </style>
 <script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
+<div class="proposal <?=$status?>">
 
 <div class="d-flex align-items-center justify-content-between">
     <div class="title">
@@ -61,6 +70,15 @@ $Vocabulary = new Vocabulary();
         <h2 class="subtitle">
             <?= $project['title'] ?>
         </h2>
+
+        <?php if ($status == 'withdrawn') { ?>
+            <p class="text-danger">
+                <?= lang('This proposal has been withdrawn with the following reason:', 'Dieser Antrag wurde zurückgezogen mit folgendem Grund:') ?>
+                <br>
+                <b><?= $project['withdrawn_reason'] ?? lang('No reason given', 'Kein Grund angegeben') ?></b>
+            </p>
+        <?php } ?>
+        
     </div>
     <div class="status">
         <?php if ($status_perm) { ?>
@@ -72,7 +90,8 @@ $Vocabulary = new Vocabulary();
                     </button>
                     <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                         <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></a>
                     </div>
                 </div>
             <?php } else if ($status == 'approved') { ?>
@@ -80,10 +99,15 @@ $Vocabulary = new Vocabulary();
                     <i class="ph ph-check-circle" aria-hidden="true"></i>
                     <?= lang('Approved', 'Bewilligt') ?>
                 </span>
-            <?php } else { ?>
+            <?php } else if ($status == 'rejected') { ?>
                 <span class="badge status danger">
                     <i class="ph ph-x-circle" aria-hidden="true"></i>
                     <?= lang('Rejected', 'Abgelehnt') ?>
+                </span>
+            <?php } else if ($status == 'withdrawn') { ?>
+                <span class="badge status muted">
+                    <i class="ph ph-x-circle" aria-hidden="true"></i>
+                    <?= lang('Withdrawn', 'Zurückgezogen') ?>
                 </span>
             <?php } ?>
 
@@ -119,7 +143,7 @@ $Vocabulary = new Vocabulary();
 <div class="btn-toolbar">
     <?php if ($edit_perm) { ?>
         <?php
-        if ($status == 'approved' && (!isset($project['project_id']) || empty($project['project_id']))) {
+        if ($status == 'approved' && (empty($connected_project) || !$connected_project)) {
             // if project is not connected yet
         ?>
             <a href="<?= ROOTPATH ?>/projects/create-from-proposal/<?= $id ?>" class="btn primary">
@@ -157,7 +181,10 @@ $Vocabulary = new Vocabulary();
 
     <?php } ?>
 
-    <?php if ($Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)) { ?>
+    <?php if (
+
+        $Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)
+    ) { ?>
 
         <div class="dropdown">
             <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
@@ -167,16 +194,25 @@ $Vocabulary = new Vocabulary();
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <div class="content">
-                    <b class="text-danger"><?= lang('Attention', 'Achtung') ?>!</b><br>
-                    <small>
-                        <?= lang(
-                            'The project is permanently deleted and the connection to all associated persons and activities is also removed. This cannot be undone.',
-                            'Das Projekt wird permanent gelöscht und auch die Verbindung zu allen zugehörigen Personen und Aktivitäten entfernt. Dies kann nicht rückgängig gemacht werden.'
-                        ) ?>
-                    </small>
-                    <form action="<?= ROOTPATH ?>/crud/proposals/delete/<?= $project['_id'] ?>" method="post">
-                        <button class="btn btn-block danger" type="submit"><?= lang('Delete permanently', 'Permanent löschen') ?></button>
-                    </form>
+                    <?php if (!empty($connected_project)) { ?>
+                        <b>
+                            <?= lang(
+                                'Deleting this proposal is not possible while it is connected to a project. Delete the connected project first.',
+                                'Das Löschen dieses Antrags ist nicht möglich, solange er mit einem Projekt verbunden ist. Lösche zuerst das verbundene Projekt.'
+                            ) ?>
+                        </b>
+                    <?php } else { ?>
+                        <b class="text-danger"><?= lang('Attention', 'Achtung') ?>!</b><br>
+                        <small>
+                            <?= lang(
+                                'The proposal is permanently deleted and the connection to all associated persons, documents, etc. is also removed. This cannot be undone.',
+                                'Der Antrag wird permanent gelöscht und auch die Verbindung zu allen zugehörigen Personen, Dokumenten usw. entfernt. Dies kann nicht rückgängig gemacht werden.'
+                            ) ?>
+                        </small>
+                        <form action="<?= ROOTPATH ?>/crud/proposals/delete/<?= $project['_id'] ?>" method="post">
+                            <button class="btn btn-block danger" type="submit"><?= lang('Delete permanently', 'Permanent löschen') ?></button>
+                        </form>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -188,10 +224,10 @@ $Vocabulary = new Vocabulary();
 <nav class="pills mt-20" id="nav-tabs">
     <button class="btn font-weight-bold active" id="general-btn" onclick="navigate('general')">
         <i class="ph ph-file-text"></i>
-        <?= lang('Proposaldetails', 'Antragsdetails') ?>
+        <?= lang('Proposal', 'Antragsdetails') ?>
     </button>
-    <?php if (isset($project['project_id']) && !empty($project['project_id'])) { ?>
-        <a href="<?= ROOTPATH ?>/projects/view/<?= $project['project_id'] ?>" class="btn font-weight-bold">
+    <?php if (!empty($connected_project)) { ?>
+        <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">
             <i class="ph ph-link m-0"></i>
             <?= lang('Project', 'Projekt') ?>
         </a>
@@ -214,31 +250,6 @@ $Vocabulary = new Vocabulary();
         </button>
     <?php } ?>
 </nav>
-
-<style>
-    .tabs {
-        margin-bottom: -1px;
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-
-    .tabs .btn {
-        /* padding-bottom: 1rem; */
-        height: 3.2rem;
-        margin-bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border: 1px solid var(--border-color);
-        box-shadow: none !important;
-        color: var(--primary-color);
-    }
-
-    .tabs .btn.active {
-        border: 1px solid var(--primary-color);
-        background-color: var(--primary-color-20);
-        color: var(--primary-color);
-    }
-</style>
 
 <section id="general">
 
@@ -274,6 +285,13 @@ $Vocabulary = new Vocabulary();
                         <?= lang('Rejection', 'Ablehnungs') ?>
                     </button>
                 <?php } ?>
+
+                <!-- documents -->
+                <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
+                    <i class="ph ph-file-text"></i>
+                    <?= lang('Documents', 'Dokumente') ?>
+                    <span class="index"><?= count($documents) ?></span>
+                </button>
             </div>
             <table class="table" id="proposal-details">
                 <tbody>
@@ -387,7 +405,9 @@ $Vocabulary = new Vocabulary();
                         <tbody>
                             <?php
                             $years = $project['grant_years'] ?? [];
-                            foreach ($years as $year => $amount) {
+                            if (empty($years)) {
+                                echo '<tr><td>' . lang('No funding information available.', 'Keine Drittmitteleinnahmen verfügbar.') . '</td></tr>';
+                            } else foreach ($years as $year => $amount) {
                                 if (empty($amount)) continue;
                             ?>
                                 <tr>
@@ -428,6 +448,93 @@ $Vocabulary = new Vocabulary();
                 </table>
             <?php } ?>
 
+
+            <?php if ($Settings->hasPermission('proposals.view-documents') || $user_project) { ?>
+                <div id="documents-details" style="display:none;">
+                    <table class="table">
+                        <tbody>
+                            <?php
+                            if (empty($documents)) {
+                                echo '<tr><td>' . lang('No documents available.', 'Keine Dokumente verfügbar.') . '</td></tr>';
+                            } else {
+                                foreach ($documents as $doc) {
+                                    $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+                            ?>
+                                    <tr>
+                                        <td>
+                                            <div class="dropdown float-right">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-trash text-danger"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/delete" method="post">
+                                                            <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="<?= $file_url ?>" class="">
+                                                <h6 class="m-0">
+                                                    <?= $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Sonstiges', 'Other')) ?>
+                                                    <i class="ph ph-download"></i>
+                                                </h6>
+                                            </a>
+                                            <?= $doc['description'] ?? '' ?>
+                                            <br>
+                                            <small class="text-muted">
+                                                <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
+                                                <br>
+                                                <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                                <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                            </small>
+                                        </td>
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <?php if ($Settings->hasPermission('proposals.upload-documents')) { ?>
+                        <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
+                            <h5 class="title font-size-16">
+                                <?= lang('Upload document', 'Dokument hochladen') ?>
+                            </h5>
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                                    <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="values[type]" value="proposals">
+                            <input type="hidden" name="values[id]" value="<?= $id ?>">
+                            <div class="form-group floating-form">
+                                <select class="form-control" name="values[name]" placeholder="Name" required>
+                                    <?php
+                                    $vocab = $Vocabulary->getValues('proposal-document-types');
+                                    foreach ($vocab as $v) { ?>
+                                        <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                    <?php } ?>
+                                </select>
+                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                            </div>
+                            <div class="form-group floating-form">
+                                <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
+                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                            </div>
+                            <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                        </form>
+
+                    <?php } ?>
+
+                </div>
+
+            <?php } ?>
+
+
             <script>
                 // select tab function
                 function selectTab(tab) {
@@ -435,6 +542,7 @@ $Vocabulary = new Vocabulary();
                     $('#approval-details').hide();
                     $('#rejection-details').hide();
                     $('#finance-details').hide();
+                    $('#documents-details').hide();
                     $('#' + tab + '-details').show();
 
                     $('#status-tabs .btn').removeClass('active');
@@ -450,132 +558,11 @@ $Vocabulary = new Vocabulary();
             </h2>
 
             <?php if ($edit_perm) { ?>
-                <a href="#persons" class="btn small primary mb-5">
-                    <i class="ph ph-edit"></i>
-                    <?= lang('Edit persons', 'Personen bearbeiten') ?>
-                </a>
-                <div class="modal" id="persons" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                                <span aria-hidden="true">&times;</span>
-                            </a>
-                            <h5 class="modal-title">
-                                <?= lang('Connect persons', 'Personen verknüpfen') ?>
-                            </h5>
-                            <div>
-                                <form action="<?= ROOTPATH ?>/crud/proposals/update-persons/<?= $id ?>" method="post">
-
-                                    <table class="table simple">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <?= lang('Person', 'Person') ?>
-                                                </th>
-                                                <th>
-                                                    <?= lang('Role', 'Rolle') ?>
-                                                </th>
-                                                <th>
-                                                    <?= lang('Units', 'Einheiten') ?>
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="project-list">
-                                            <?php
-                                            $persons = $project['persons'] ?? array();
-                                            if (empty($persons)) {
-                                                $persons = [
-                                                    ['user' => '', 'role' => '']
-                                                ];
-                                            }
-                                            $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
-                                            foreach ($persons as $i => $con) { ?>
-                                                <tr>
-                                                    <td>
-                                                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control" required>
-                                                            <?php
-                                                            foreach ($all_users as $s) { ?>
-                                                                <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
-                                                                    <?= "$s[last], $s[first] ($s[username])" ?>
-                                                                </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control" required>
-                                                            <?php
-                                                            $role = $con['role'] ?? '';
-                                                            $vocab = $Vocabulary->getValues('project-person-role');
-                                                            foreach ($vocab as $v) { ?>
-                                                                <option value="<?= $v['id'] ?>" <?= $role == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        $selected = DB::doc2Arr($con['units'] ?? []);
-                                                        if (!is_array($selected)) $selected = [];
-                                                        $person_units = $osiris->persons->findOne(['username' => $con['user']], ['units' => 1]);
-                                                        $person_units = $person_units['units'] ?? [];
-                                                        if (empty($person_units)) {
-                                                            echo '<small class="text-danger">No units found</small>';
-                                                        } else {
-                                                            $person_units = array_column(DB::doc2Arr($person_units), 'unit');
-                                                        ?>
-                                                            <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem" class="person-units">
-                                                                <?php foreach ($person_units as $unit) { ?>
-                                                                    <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        <?php } ?>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr id="last-row">
-                                                <td colspan="4">
-                                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-
-                                    </table>
-
-                                    <button class="btn primary mt-20">
-                                        <i class="ph ph-check"></i>
-                                        <?= lang('Submit', 'Bestätigen') ?>
-                                    </button>
-                                </form>
-
-                                <script>
-                                    var counter = <?= $i ?? 0 ?>;
-                                    const tr = $('#project-list tr').first()
-
-                                    function addProjectRow() {
-                                        counter++;
-                                        const row = tr.clone()
-                                        row.find('select').each(function() {
-                                            const name = $(this).attr('name')
-                                            const new_name = name.replace(/\d+/, counter)
-                                            $(this).attr('name', new_name)
-                                            $(this).val('')
-                                        })
-
-                                        //remove units 
-                                        row.find('select[id^="units"]').remove()
-
-                                        $('#project-list').append(row)
-                                    }
-                                </script>
-
-                            </div>
-                        </div>
-                    </div>
+                <div class="btn-toolbar mb-10">
+                    <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
+                        <i class="ph ph-edit"></i>
+                        <?= lang('Edit', 'Bearbeiten') ?>
+                    </a>
                 </div>
             <?php } ?>
 
@@ -622,7 +609,7 @@ $Vocabulary = new Vocabulary();
             <table class="table unit-table w-full">
                 <tbody>
                     <?php
-                    $units = $project['units'] ?? [];
+                    $units = DB::doc2Arr($project['units'] ?? []);
                     // $tree =  $Groups->getPersonHierarchyTree($units);
                     if (!empty($units)) {
                         $hierarchy = $Groups->getPersonHierarchyTree($units);
@@ -636,9 +623,14 @@ $Vocabulary = new Vocabulary();
                                     </a>
                                 </td>
                             </tr>
-                    <?php }
-                    }
-                    ?>
+                        <?php }
+                    } else { ?>
+                        <tr>
+                            <td>
+                                <?= lang('No units connected.', 'Keine Einheiten verknüpft.') ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
 
@@ -749,3 +741,4 @@ $Vocabulary = new Vocabulary();
         </div>
     <?php } ?>
 </section>
+</div>

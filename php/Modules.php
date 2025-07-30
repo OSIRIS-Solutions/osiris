@@ -596,7 +596,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if (empty($this->preset) || count($this->preset) === 0)
+        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -756,7 +756,7 @@ class Modules
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea placeholder="custom-field">';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
                 break;
             case 'int':
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
@@ -954,7 +954,7 @@ class Modules
                         <option value="book"><?= lang('Book', 'Buch') ?></option>
                         <option value="chapter"><?= lang('Book chapter', 'Buchkapitel') ?></option>
                         <option value="preprint">Preprint (non refereed)</option>
-                        <option value="conference"><?= lang('Conference preceedings', 'Konfrenzbeitrag') ?></option>
+                        <option value="conference"><?= lang('Conference preceedings', 'Konferenzbeitrag') ?></option>
                         <option value="magazine"><?= lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)') ?></option>
                         <option value="dissertation"><?= lang('Thesis') ?></option>
                         <option value="others"><?= lang('Others', 'Weiteres') ?></option>
@@ -1386,9 +1386,8 @@ class Modules
                     <small class="text-muted">
                         <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
                     </small>
-                    <div class="alert danger mb-20 affiliation-warning" style="display: none;">
+                    <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <i class="ph ph-warning-circle"></i>
                             <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affilierten Autoren angegeben.') ?>
                         </h5>
                         <?= lang(
@@ -1407,7 +1406,7 @@ class Modules
                 </h6>
                 <div class="data-module col-12 row" data-module="person">
                     <div class="col-sm-5 floating-form">
-                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name">
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $required ?> element-other">
                             <?= lang('Name of the person', 'Name der Person') ?>
                             <?= lang('(last name, given name)', '(Nachname, Vorname)') ?>
@@ -1856,13 +1855,13 @@ class Modules
             case "peer-reviewed":
             ?>
                 <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="icon-closed-access text-danger"></i> Non-refereed</label>
+                    <div class="custom-radio d-inline-block mr-20" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
                     </div>
-                    <div class="custom-radio d-inline-block ml-20" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="icon-open-access text-success"></i> Peer-Reviewed</label>
+                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> Non peer reviewed</label>
                     </div>
                 </div>
             <?php
@@ -1890,7 +1889,7 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-6" data-module="city">
                     <input type="text" class="form-control" <?= $required ?> name="values[city]" value="<?= $this->val('city') ?>" id="city" placeholder="city">
-                    <label for="city" class="element-other <?= $required ?>"><?= lang('Location (City, Country)', 'Ort (Stadt, Land)') ?></label>
+                    <label for="city" class="element-other <?= $required ?>"><?= lang('City', 'Stadt') ?></label>
                 </div>
             <?php
                 break;
@@ -2219,36 +2218,36 @@ class Modules
                         <tfoot>
                             <tr>
                                 <td colspan="2">
-                                <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
-                            <div class="input-group-append">
-                                <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
-                            </div>
-                        </div>
-                        <p id="search-comment"></p>
-                        <table class="table simple mb-0">
-                            <tbody id="organization-suggest">
-                            </tbody>
-                        </table>
-                        <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-                        <script>
-                            $(document).ready(function() {
-                                SUGGEST = $('#organization-suggest')
-                                INPUT = $('#organization-search')
-                                SELECTED = $('#collaborators')
-                                COMMENT = $('#search-comment')
-                                USE_RADIO = false;
-                                DATAFIELD = 'organizations'
-                            });
+                                    <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                                        </div>
+                                    </div>
+                                    <p id="search-comment"></p>
+                                    <table class="table simple mb-0">
+                                        <tbody id="organization-suggest">
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                    <script>
+                                        $(document).ready(function() {
+                                            SUGGEST = $('#organization-suggest')
+                                            INPUT = $('#organization-search')
+                                            SELECTED = $('#collaborators')
+                                            COMMENT = $('#search-comment')
+                                            USE_RADIO = false;
+                                            DATAFIELD = 'organizations'
+                                        });
 
-                            function handleKeyDown(event) {
-                                if (event.key === 'Enter') {
-                                    event.preventDefault();
-                                    getOrganization($('#organization-search').val());
-                                }
-                            }
-                        </script>
+                                        function handleKeyDown(event) {
+                                            if (event.key === 'Enter') {
+                                                event.preventDefault();
+                                                getOrganization($('#organization-search').val());
+                                            }
+                                        }
+                                    </script>
                                 </td>
                             </tr>
                         </tfoot>

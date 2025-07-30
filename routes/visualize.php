@@ -84,7 +84,7 @@ Route::get('/pivot', function () {
 Route::get('/trips', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Research Trips', 'Forschungsreisen')]
+        ['name' => $Settings->tripLabel()]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/trips.php";

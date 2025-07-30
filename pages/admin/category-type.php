@@ -107,8 +107,6 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } ?>
         </h4>
 
-        <?php // if (isset($type['new'])) { 
-        ?>
 
         <div class="content">
 
@@ -124,8 +122,6 @@ if (!empty($form) && isset($form['_id'])) {
             </select>
         </div>
         <hr>
-        <?php // } 
-        ?>
         <div class="content">
 
             <div class="row row-eq-spacing">
@@ -377,5 +373,5 @@ if (!empty($form) && isset($form['_id'])) {
 <?php } ?>
 
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>

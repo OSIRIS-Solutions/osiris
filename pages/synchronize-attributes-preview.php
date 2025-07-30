@@ -20,7 +20,7 @@ foreach ($ldap_fields as $field) {
 $filter .= ")";
 
 $LDAP = new LDAPInterface();
-$result = $LDAP->fetchUsers('cn=*,ou=people,dc=stark,dc=com', array_values($ldap_fields));
+$result = $LDAP->fetchUsers('(cn=*)', array_values($ldap_fields));
 if (is_string($result)) {
     echo $result;
     exit;
@@ -90,3 +90,15 @@ if (is_string($result)) {
         <?php } ?>
     </tbody>
 </table>
+
+<p>
+    <?=lang('You are now ready to synchronize attributes from LDAP to OSIRIS by <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">setting up a CRON-Job</a> or you can do it manually:', 
+    'Du bist nun bereit, die Attribute von LDAP nach OSIRIS zu synchronisieren, indem du einen <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">CRON-Job</a> einrichtest oder es manuell tust:')?>
+</p>
+
+<form action="<?= ROOTPATH ?>/synchronize-attributes-now" method="post">
+    <button class="btn primary">
+        <i class="ph ph-check"></i>
+        <?= lang('Synchronize now', 'Jetzt synchronisieren') ?>
+    </button>
+</form>

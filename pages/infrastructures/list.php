@@ -19,8 +19,12 @@
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+$filter = [];
+if (!$Settings->hasPermission('infrastructures.view') && !$Settings->hasPermission('infrastructures.edit')) {
+    $filter['persons.user'] = $_SESSION['username'];
+}
 $infrastructures  = $osiris->infrastructures->find(
-    [],
+    $filter,
     ['sort' => ['end_date' => -1, 'start_date' => 1]]
 )->toArray();
 
@@ -41,6 +45,8 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 ?>
 
 <h1>
@@ -70,17 +76,28 @@ $active = function ($field) use ($data_fields) {
                     <th><?= lang('Category', 'Kategorie') ?></th>
                     <th><?= lang('Type', 'Typ') ?></th>
                     <th><?= lang('Access', 'Zugang') ?></th>
+                    <th><?= $Settings->topicLabel() ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($infrastructures as $infra) { ?>
                     <tr>
                         <td>
+                            <?php
+                            $topics = '';
+                            if ($topicsEnabled && !empty($infra['topics'])) {
+                                $topics = '<span class="topic-icons float-right">';
+                                foreach ($infra['topics'] as $topic) {
+                                    $topics .= '<a href="' . ROOTPATH . '/topics/view/' . htmlspecialchars($topic) . '" class="topic-icon topic-' . htmlspecialchars($topic) . '"></a> ';
+                                }
+                                $topics .= '</span>';
+                            }
+                            echo $topics;
+                            ?>
                             <h6 class="m-0">
                                 <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
                                     <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
                                 </a>
-                                <br>
                             </h6>
 
                             <div class="text-muted mb-5">
@@ -103,10 +120,18 @@ $active = function ($field) use ($data_fields) {
                         <td>
                             <?= $infra['access'] ?? '' ?>
                         </td>
+                        <td>
+                            <?= implode(', ', DB::doc2Arr($infra['topics'] ?? [])) ?>
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
+
+        <?php if (!$Settings->hasPermission('infrastructures.view') && !$Settings->hasPermission('infrastructures.edit')) {
+            echo '<p class="text-muted">' . lang('You only have permission to view your own infrastructures.', 'Du hast nur die Berechtigung, deine eigenen Infrastrukturen zu sehen.') . '</p>';
+        } ?>
+
     </div>
 
     <div class="col-3 filter-wrapper">
@@ -189,6 +214,35 @@ $active = function ($field) use ($data_fields) {
                 </div>
             <?php } ?>
 
+
+
+            <?php if ($topicsEnabled && $active('topics')) { ?>
+                <h6>
+                    <?= $Settings->topicLabel() ?>
+                    <a class="float-right" onclick="filterInfra('#filter-topics .active', null, 4)"><i class="ph ph-x"></i></a>
+                </h6>
+
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $topic_id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $topic_id ?>" onclick="filterInfra(this, '<?= $topic_id ?>', 4)" class="item" id="<?= $topic_id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+
+                </div>
+            <?php } ?>
+
+
         </div>
     </div>
 </div>
@@ -212,6 +266,10 @@ $active = function ($field) use ($data_fields) {
         {
             key: 'access',
             title: 'Access'
+        },
+        {
+            key: 'topics',
+            title: '<?= $Settings->topicLabel() ?>'
         }
     ]
     const activeFilters = $('#active-filters')
@@ -223,7 +281,7 @@ $active = function ($field) use ($data_fields) {
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
             columnDefs: [{
-                targets: [1, 2, 3],
+                targets: [1, 2, 3, 4],
                 visible: false
             }, ],
             paging: true,
@@ -242,7 +300,7 @@ $active = function ($field) use ($data_fields) {
                 filterInfra(document.getElementById(hash.status + '-btn'), hash.status, 1)
             }
             if (hash.search !== undefined) {
-                dataTable.search(hash.search).draw();
+                dataTable.search(decodeURIComponent(hash.search)).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
@@ -254,7 +312,8 @@ $active = function ($field) use ($data_fields) {
             let all_filters = {
                 1: '#filter-category',
                 2: '#filter-type',
-                3: '#filter-access'
+                3: '#filter-access',
+                4: '#filter-topics'
             }
 
             for (const key in all_filters) {

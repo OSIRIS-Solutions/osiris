@@ -92,7 +92,7 @@ $filter = [];
     </a>
      -->
 
-    <?php if ($Settings->hasPermission('proposals.add') && $Project->canProposalsBeCreated()) { ?>
+    <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
             <i class="ph ph-plus"></i>
             <?= lang('Add new proposal', 'Neuen Antrag anlegen') ?>
@@ -201,6 +201,11 @@ $filter = [];
                             <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
                         </td>
                     </tr>
+                    <tr style="--highlight-color: var(--muted-color)">
+                        <td> 
+                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('withdrawn', 'zurückgezogen') ?></a>
+                        </td>
+                    </tr>
                 </table>
             </div>
 
@@ -292,9 +297,6 @@ $filter = [];
 </div>
 
 
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     var dataTable;
@@ -394,7 +396,7 @@ $filter = [];
 
     function renderFunder(row) {
         if (!row.funder && row.scholarship) return row.scholarship;
-        return row.funder;
+        return row.funder ?? '';
     }
 
     function renderRole(data) {
@@ -435,6 +437,8 @@ $filter = [];
                 return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
             case 'rejected':
                 return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
+            case 'withdrawn':
+                return `<span class='badge muted'>${lang('withdrawn', 'zurückgezogen')}</span>`;
             case 'expired':
                 return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
         }
@@ -553,9 +557,6 @@ $filter = [];
                         </div>
                     </div>
                         `
-                        // ${renderFunder(row)}
-                        // ${renderContact(row)}
-                        // ${renderRole(row.role)}
                     }
                 },
                 {
@@ -570,6 +571,7 @@ $filter = [];
                     data: 'funder',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     header: lang('Funder', 'Drittmmittelgeber'),
                     render: (data, type, row) => renderFunder(row)
                 },
@@ -689,7 +691,7 @@ $filter = [];
             }
 
             if (hash.search !== undefined) {
-                dataTable.search(hash.search).draw();
+                dataTable.search(decodeURIComponent(hash.search)).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');

@@ -58,8 +58,7 @@ foreach ($Categories->categories as $value) {
 }
 
 $timeline = [];
-$timelineGroups = [];
-
+//, 'editors.user' => $user
 $filter = ['authors.user' => $user];
 $filter['$or'] =   array(
     [
@@ -68,13 +67,9 @@ $filter['$or'] =   array(
             ['end.year' => array('$gte' => $YEAR)],
             [
                 'end' => null,
-                '$or' => array(
-                    ['type' => 'misc', 'subtype' => 'misc-annual'],
-                    ['type' => 'review', 'subtype' =>  'editorial'],
-                )
+                'subtype' => ['$in' => $Settings->continuousTypes]
             ]
         )
-        // 'type' => ['$in' => array()]
     ],
     ['year' => $YEAR]
 );
@@ -84,8 +79,6 @@ $options = [
     // 'projection' => ['file' => -1]
 ];
 $cursor = $osiris->activities->find($filter, $options);
-
-// dump($cursor->toArray(), true);
 
 
 $endOfYear = new DateTime("$YEAR-12-31");
@@ -103,21 +96,15 @@ foreach ($cursor as $doc) {
     if ($date < $startOfYear) $date = $startOfYear;
 
     $starttime = $date->getTimestamp();
-
     $event = [
         'starting_time' => $starttime,
         'type' => $doc['type'],
         'id' => strval($doc['_id']),
-        'title' => htmlspecialchars(strip_tags(trim($doc['title'] ?? $doc['journal']))),
-        // 'icon' => $icon
+        'title' => htmlspecialchars(strip_tags($doc['rendered']['title'])),
     ];
-    // $timeline[$doc['type']]['times'][] = $event;
     $timeline[] = $event;
-    if (!in_array($doc['type'], $timelineGroups)) $timelineGroups[] = $doc['type'];
 }
 
-// dump($timeline, true);
-// $showcoins = (!($scientist['hide_coins'] ?? true)  && !($USER['hide_coins'] ?? false));
 if (!$Settings->featureEnabled('coins')) {
     $showcoins = false;
 } else {
@@ -215,7 +202,7 @@ if (!$Settings->featureEnabled('coins')) {
                     <label for="year">
                         <?= lang('Change year and quarter', 'Ändere Jahr und Quartal') ?>:
                     </label>
-                    
+
 
                     <div class="btn-group">
                         <a href="?year=<?= $YEAR - 1 ?>&quarter=<?= $QUARTER ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Previous year', 'Vorheriges Jahr') ?>">
@@ -311,15 +298,15 @@ if (!$Settings->featureEnabled('coins')) {
         }
     </style>
 
-    <div id="timeline" class="box">
+    <div id="timeline-container" class="box">
         <div class="content my-0">
 
             <h2>
                 <?= lang('Activities in ', 'Aktivitäten in ') . $YEAR ?>
             </h2>
 
-
         </div>
+        <div id="timeline"></div>
     </div>
 
     <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
@@ -334,10 +321,9 @@ if (!$Settings->featureEnabled('coins')) {
         });
         let events = JSON.parse('<?= json_encode(array_values($timeline)) ?>');
         console.log(events);
-        var types = JSON.parse('<?= json_encode($timelineGroups) ?>');
         var year = <?= $YEAR ?>;
         var quarter = <?= $QUARTER ?>;
-        timeline(year, quarter, typeInfoNew, events, types);
+        timeline(year, quarter, typeInfoNew, events);
     </script>
 
 
@@ -398,7 +384,7 @@ if (!$Settings->featureEnabled('coins')) {
                                     if (!empty($q)) echo "$q";
                                     echo "</td>";
                                     echo "<td>";
-                                    echo "<div class='font-size-12 font-weight-bold text-$col'>".$Format->activity_subtype(). "</div>";
+                                    echo "<div class='font-size-12 font-weight-bold text-$col'>" . $Format->activity_subtype() . "</div>";
                                     // echo $doc['format'];
                                     if ($USER['display_activities'] == 'web') {
                                         echo $Format->formatShort();
@@ -486,9 +472,9 @@ if (!$Settings->featureEnabled('coins')) {
             <nav class="on-this-page-nav">
                 <div class="content">
                     <div class="title"><?= lang('Activities', 'Aktivitäten') ?></div>
-                    <?php foreach ($groups as $col => $data) { 
+                    <?php foreach ($groups as $col => $data) {
                         $type = $Settings->getActivities($col);
-                        ?>
+                    ?>
                         <a href="#<?= $col ?>" class="text-<?= $col ?>">
                             <i class="ph ph-fw ph-<?= $type['icon'] ?> mr-5"></i>
                             <?= lang($type['name'], $type['name_de'] ?? null) ?>

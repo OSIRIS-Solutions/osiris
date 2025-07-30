@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col">
                 <h3 class="title">
-                    News & Help
+                    <?= lang('News & Help', 'Neuigkeiten & Hilfe') ?>
                 </h3>
 
                 <a href="<?= ROOTPATH ?>/new-stuff" class="">
@@ -41,25 +41,30 @@
             </div>
             <div class="col">
                 <h3>OSIRIS v<?= OSIRIS_VERSION ?></h3>
-                <a href="<?= ROOTPATH ?>/about" class="">
-                    <?= lang('About OSIRIS', 'Über OSIRIS') ?>
-                </a>
                 <a href="https://osiris-app.de" target="_blank" class="">
-                    osiris-app.de
+                    <?= lang('About OSIRIS', 'Über OSIRIS') ?>
                     <i class="ph ph-arrow-square-out"></i>
                 </a>
+                <a href="<?= ROOTPATH ?>/license"><?= lang('License', 'Lizenz') ?></a>
                 <p>
-                    <?= lang('OSIRIS is developed with', 'OSIRIS wird mit') ?> <i class="ph ph-heart" title="Für Leonie"></i> in Helmstedt<?= lang('.', ' entwickelt.') ?>
+                    <?= lang('Developed with', 'Mit') ?> <i class="ph ph-heart text-danger" title="Für Leonie"></i> <?= lang('by', 'entwickelt durch') ?>
+                    <a href="https://osiris-solutions.de" target="_blank" rel="noopener noreferrer" class="colorless">&copy; OSIRIS Solutions GmbH <?= CURRENTYEAR ?></a>
                 </p>
             </div>
             <div class="col">
-                <h3>Imprint</h3>
-
+                <h3>Links</h3>
                 <a href="<?= ROOTPATH ?>/impress"><?= lang('Impress', 'Impressum') ?></a>
-                <a href="<?= ROOTPATH ?>/license"><?= lang('License', 'Lizenz') ?></a>
-                <p>
-                    <a href="https://osiris-solutions.de" target="_blank" rel="noopener noreferrer" class="colorless">&copy; OSIRIS Solutions GmbH <?=CURRENTYEAR?></a> 
-                </p>
+                <a href="<?= ROOTPATH ?>/privacy"><?= lang('Privacy Policy', 'Datenschutz') ?></a>
+                <?php
+                $links = $Settings->get('footer_links');
+                if (!empty($links)) {
+                    foreach ($links as $link) {
+                        if (isset($link['url']) && isset($link['name'])) {
+                            echo '<a href="' . $link['url'] . '" target="_blank" rel="noopener noreferrer">' . lang($link['name'], $link['name_de'] ?? null) . '<i class="ph ph-arrow-square-out"></i></a>';
+                        }
+                    }
+                }
+                ?>
             </div>
         </div>
     </div>

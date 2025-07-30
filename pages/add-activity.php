@@ -59,10 +59,7 @@ function val($index, $default = '')
     return $val;
 }
 ?>
-
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?=CSS_JS_VERSION?>"></script>
 
@@ -363,7 +360,7 @@ function val($index, $default = '')
             });
             if (empty($subtypes)) continue;
         ?>
-            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>')" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
+            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>', false)" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
                 <span>
                     <i class='ph ph-<?= $type['icon'] ?? 'circle' ?>'></i>
                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
@@ -422,7 +419,7 @@ function val($index, $default = '')
 
 
 
-<div class="box secondary add-form" style="display:none" id="publication-form">
+<div class="box add-form" style="display:none" id="publication-form">
     <div class="content">
         <button class="btn osiris small float-right" onclick="$('#publication-form').toggleClass('show-examples')"><?= lang('Examples', 'Beispiele') ?></button>
 
@@ -525,7 +522,7 @@ function val($index, $default = '')
                 </div>
             <?php } ?>
             <?php if (!$copy && !empty($form) && (count($form['authors']) > 1 || ($form['authors'][0]['user'] ?? '') != $_SESSION['username'])) { ?>
-                <div class="alert signal p-10 mb-10">
+                <div class="alert signal without-icon p-10 mb-10">
                     <div class="title">
                         <?= lang('Editorial area', 'Bearbeitungs-Bereich') ?>
                     </div>

@@ -139,7 +139,7 @@ if (!empty($form) && isset($form['id'])) {
 </form>
 
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script>
     function addValuesRow() {
         $('#possible-values').append(`

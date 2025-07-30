@@ -71,7 +71,9 @@ class Categories
 
     public function getName($id)
     {
-        return $this->getCategory($id)['name'];
+        $cat = $this->getCategory($id);
+        if (empty($cat)) return lang('Unknown Category', 'Unbekannte Kategorie');
+        return lang($cat['name'], $cat['name_de'] ?? null);
     }
 
     public function cssVar($id)

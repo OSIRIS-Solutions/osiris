@@ -101,7 +101,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
     $breadcrumb = [
@@ -125,7 +125,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
     $Project = new Project($project);
@@ -468,17 +468,20 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $persons = [];
     foreach (['contact', 'scholar', 'supervisor'] as $key) {
         if (!isset($values[$key]) || empty($values[$key])) continue;
+        $user = $values[$key];
         $persons[] = [
-            'user' => $values[$key],
+            'user' => $user,
             'role' => ($key == 'contact' ? 'applicant' : $key),
-            'name' => $DB->getNameFromId($values[$key])
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
         ];
     }
     if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
         $persons[] = [
             'user' => $user,
-            'role' => ($key == 'contact' ? 'applicant' : $key),
-            'name' => $DB->getNameFromId($user)
+            'role' => 'applicant',
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
         ];
     }
     if (!empty($persons)) {
@@ -508,6 +511,9 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $id = $insertOneResult->getInsertedId();
 
     if (isset($values['funding_number'])) {
+        if (is_integer($values['funding_number'])) {
+            $values['funding_number'] = strval($values['funding_number']);
+        }
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
 
@@ -568,6 +574,24 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
                     buildNotificationMail($title, $html, $linkText, $linkUrl)
                 );
             }
+        }
+    }
+
+    // send messages to applicants
+    $applicants = $values['applicants'] ?? [];
+    if (!empty($applicants)) {
+        foreach ($applicants as $applicant) {
+            if ($_SESSION['username'] == $applicant) continue; // do not send message to self
+            $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+            $tag = $collection == 'projects' ? 'project' : 'proposal';
+            $typeOfP = $collection == 'projects' ? lang('the project', 'das Projekt') : lang('the proposal', 'den Projektantrag');
+            $DB->addMessage(
+                $applicant,
+                $creator . ' has created ' . $typeOfP . ' <b>' . $values['name'] . '</b> for which you are entered as applicant.',
+                $creator . ' hat ' . $typeOfP . ' <b>' . $values['name'] . '</b> erstellt, bei dem du als Antragstellende Person angegeben wirst.',
+                $tag,
+                "/$collection/view/" . $id . '#section-history',
+            );
         }
     }
 
@@ -634,9 +658,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     include_once BASEPATH . "/php/Project.php";
     if (!isset($_POST['values'])) die("no values given");
 
-    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
         die;
     }
 
@@ -654,6 +678,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
     if (isset($values['funding_number'])) {
+        if (is_integer($values['funding_number'])) {
+            $values['funding_number'] = strval($values['funding_number']);
+        }
         $values['funding_number'] = explode(',', $values['funding_number']);
         $values['funding_number'] = array_map('trim', $values['funding_number']);
     }
@@ -664,17 +691,17 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     if (isset($values['university']) && DB::is_ObjectID($values['university'])) {
         $values['university'] = $DB->to_ObjectID($values['university']);
     }
-    // if (isset($values['countries']) && is_array($values['countries'])) {
-    //     $countries = [];
-    //     foreach ($value as $country) {
-    //         $country = explode(';', $country, 2);
-    //         $countries[] = [
-    //             'country' => $country[0],
-    //             'role' => $country[1] ?? ''
-    //         ];
-    //     }
-    //     $values[$key] = $countries;
-    // }
+    if (isset($values['research-countries']) && is_array($values['research-countries'])) {
+        $countries = [];
+        foreach ($values['research-countries'] as $country) {
+            $country = explode(';', $country, 2);
+            $countries[] = [
+                'iso' => $country[0],
+                'role' => $country[1] ?? ''
+            ];
+        }
+        $values['research-countries'] = $countries;
+    }
 
     if (isset($values['abstract'])) {
         $abstract_en = $values['abstract'];
@@ -736,6 +763,25 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
 
+    // send messages to applicants
+    $applicants = $project['applicants'] ?? [];
+    if (!empty($applicants)) {
+        foreach ($applicants as $applicant) {
+            if ($_SESSION['username'] == $applicant) continue; // do not send message to self
+            $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+            $tag = $collection == 'projects' ? 'project' : 'proposal';
+            $DB->addMessage(
+                $applicant,
+                'Your project <b>' . $values['name'] . '</b> has been changed by ' . $creator . '',
+                'Dein Projekt <b>' . $values['name'] . '</b> wurde aktualisiert von ' . $creator . '',
+                $tag,
+                "/$collection/view/" . $id . '#section-history',
+            );
+        }
+    }
+
+
+
     $id = $DB->to_ObjectID($id);
     include_once BASEPATH . "/php/Render.php";
     $values = renderProject($values, $id);
@@ -757,16 +803,16 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 });
 
 
-Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
 
-    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
 
     // check if user has permission to delete project
     $edit_perm = (
-        $Settings->hasPermission('projects.delete')
+        $Settings->hasPermission($collection . '.delete')
         ||
-        ($Settings->hasPermission('projects.delete-own') &&
+        ($Settings->hasPermission($collection . '.delete-own') &&
             (
                 $project['created_by'] == $_SESSION['username']
                 ||
@@ -776,23 +822,48 @@ Route::post('/crud/projects/delete/([A-Za-z0-9]*)', function ($id) {
 
     // if user has no permission: redirect to project view
     if (!$edit_perm) {
-        header("Location: " . ROOTPATH . "/projects/view/$id?msg=no-permission");
+        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
         die;
     }
 
-    // remove project name from activities
-    $osiris->activities->updateMany(
-        ['projects' => $project['name']],
-        ['$pull' => ['projects' => $project['name']]]
-    );
+    if ($collection == 'projects') {
+        // remove project name from activities
+        $osiris->activities->updateMany(
+            ['projects' => $project['name']],
+            ['$pull' => ['projects' => $project['name']]]
+        );
+    }
+
+    if ($collection == 'proposals') {
+        // check if a project with the same ID exists
+        $existing_project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+        if (!empty($existing_project)) {
+            $_SESSION['msg'] = lang("Project proposal cannot be deleted, because it is connected to a project. Delete the project first.", "Projektantrag kann nicht gelöscht werden, da er mit einem Projekt verbunden ist. Lösche das Projekt zuerst.");
+            header("Location: " . ROOTPATH . "/$collection/view/$id");
+            die;
+        }
+    }
+
+    // check if project has documents
+    $documents = $osiris->uploads->find(['type' => $collection, 'id' => $id])->toArray();
+    if (!empty($documents)) {
+        // delete all documents
+        foreach ($documents as $doc) {
+            $osiris->uploads->deleteOne(['_id' => $doc['_id']]);
+            // delete file from filesystem
+            if (file_exists(BASEPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'])) {
+                unlink(BASEPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension']);
+            }
+        }
+    }
 
     // remove project
-    $osiris->projects->deleteOne(
+    $osiris->$collection->deleteOne(
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang("Project has been deleted successfully.", "Projekt wurde erfolgreich gelöscht.");
-    header("Location: " . ROOTPATH . "/projects");
+    $_SESSION['msg'] = lang("Element has been deleted successfully.", "Element wurde erfolgreich gelöscht.");
+    header("Location: " . ROOTPATH . "/$collection");
 });
 
 
@@ -813,7 +884,7 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 
 
     $Project = new Project();
-    $type = $Project->getProjectType($values['type']);
+    $type = $Project->getProjectType($values['type'] ?? 'project');
 
     // get history of project
     $values = $Project->updateHistory($values, $id, $collection);

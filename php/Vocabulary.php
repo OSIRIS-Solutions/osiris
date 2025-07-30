@@ -98,6 +98,23 @@ class Vocabulary extends DB
     }
 
     /**
+     * Get values of a vocabulary by key
+     * 
+     * @param string $id
+     * @param string $key
+     * @return array
+     */
+    public function getValuesByKey($id, $key)
+    {
+        $values = $this->getValues($id, true);
+        // filter by key
+        $values = array_filter($values, function ($v) use ($key) {
+            return $v['id'] === $key;
+        });
+        return array_shift($values);
+    }
+
+    /**
      * Get value in a specific language
      * 
      * @param string $id

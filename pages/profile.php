@@ -32,6 +32,12 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+if (!isset($scientist['is_active'])){
+    $scientist['is_active'] = true; // default value if not set
+    // update in database because it leads to problems in the frontend otherwise
+    $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
+}
 ?>
 
 
@@ -355,7 +361,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <?php if ($currentuser) {
 
-    if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH') { ?>
+    if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH' && $scientist['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])) { ?>
         <!-- print message to change password -->
         <div class="alert danger mt-10">
             <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account'>
@@ -384,7 +390,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -460,7 +466,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <div class="btn-group btn-group-lg">
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             </div>
@@ -472,7 +478,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
             <?php } ?>
             <?php if (($scientist['is_active'] ?? true) && $Settings->hasPermission('user.inactive')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>">
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>">
+                    <i class="ph ph-user-circle-dashed ph-fw"></i>
+                </a>
+            <?php } ?>
+            <?php if ($Settings->hasPermission('user.delete')) { ?>
+                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Delete user', 'Nutzer:in löschen') ?>">
                     <i class="ph ph-trash ph-fw"></i>
                 </a>
             <?php } ?>
@@ -519,7 +530,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     $coauthors = $osiris->activities->aggregate([
         ['$match' => ['type' => 'publication', 'authors.user' => $user, 'year' => ['$gte' => CURRENTYEAR - 4]]],
         ['$unwind' => '$authors'],
-        ['$match' => ['authors.user' => ['$ne' => null]]],
+        ['$match' => ['authors.user' => ['$ne' => null], 'authors.aoi' => ['$ne' => null]]],
         [
             '$group' => [
                 '_id' => '$authors.user',
@@ -554,11 +565,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <?php
     $membership_filter = [
         'authors.user' => "$user",
-        // 'end' => null,
-        '$or' => array(
-            ['type' => 'misc', 'subtype' => 'misc-annual'],
-            ['type' => 'review', 'subtype' =>  'editorial'],
-        )
+        'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $count_memberships = $osiris->activities->count($membership_filter);
     if ($count_memberships > 0) { ?>
@@ -887,7 +894,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <td>
                                         <div class="d-flex justify-content-between">
                                             <h6 class="m-0">
-                                                <a href="<?= ROOTPATH ?>/conferences/<?= $c['_id'] ?>">
+                                                <a href="<?= ROOTPATH ?>/conferences/view/<?= $c['_id'] ?>">
                                                     <?= $c['title'] ?>
                                                 </a>
                                                 <?php if (!empty($c['url'] ?? null)) { ?>
@@ -922,7 +929,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                                     <small class="btn small cursor-default">
                                                         <?= $days ?>
                                                     </small>
-                                                    <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
+                                                    <a class="btn small" href="<?= ROOTPATH ?>/conferences/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
                                                         <i class="ph ph-calendar-plus"></i>
                                                     </a>
                                                 </div>

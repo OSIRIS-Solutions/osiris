@@ -188,7 +188,7 @@ function addCollabRow(data = {}) {
             <input name="values[location][]" type="text" class="form-control" value="${data.location ?? ''}">
         </td>
         <td>
-            <input name="values[country][]" type="text" maxlength="2" class="form-control w-50" required value="${data.country ?? ''}">
+            <input name="values[country][]" list="country-list" type="text" class="form-control w-100" required value="${data.country ?? ''}">
         </td>
         <td>
             <input name="values[lat][]" type="text" class="form-control w-100" value="${data.lat ?? ''}">

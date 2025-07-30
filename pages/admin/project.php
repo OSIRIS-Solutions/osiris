@@ -90,7 +90,7 @@ if ($process == 'project') {
 
 ?>
 
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js?v=1"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 
@@ -467,9 +467,9 @@ if ($process == 'project') {
                                 <i class="ph ph-asterisk text-danger"></i>
                                 <?= lang($field['en'], $field['de']) ?>
                                 <?php if ($kdsf) { ?>
-                                    <small class="kdsf"  data-toggle="tooltip" data-title="<?= $kdsf ?>">
-                                        <!-- <img src="<?=ROOTPATH?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
-                                         KDSF
+                                    <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
+                                        <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
+                                        KDSF
                                     </small>
                                 <?php } ?>
                             </div>
@@ -486,48 +486,61 @@ if ($process == 'project') {
                             <?= lang('You can mark a field as active by clicking on it and mark it as required by clicking again. Required fields are then marked in red with an asterisk (*).', 'Du kannst ein Feld als aktiv markieren, indem du darauf klickst, und es als erforderlich markieren, indem du erneut darauf klickst. Erforderliche Felder sind dann mit einem Sternchen (*) in rot gekennzeichnet.') ?>
                         </span>
                     </p>
+                    <?php if ($phase_id == 'project' && $Settings->featureEnabled('portal')) { ?>
+                        <p>
+                            <b class="text-danger"><i class="ph ph-globe"></i> Portfolio</b>:
+                            <?= lang('If you want this type of project to be visible to the public via Portfolio or the Portfolio API, you must activate the "Consent to public presentation" field. If the corresponding check mark is set in the form, the project becomes publicly visible.', 'Wenn du möchtest, dass diese Art von Projekt für die Öffentlichkeit über Portfolio oder die Portfolio-API sichtbar ist, musst du das Feld "Zustimmung zu Öffentlichen Präsentation" aktivieren. Wenn der entsprechende Haken im Formular gesetzt wird, wird das Projekt öffentlich sichtbar.') ?>
+                        </p>
+                    <?php } else { ?>
+                        <style>
+                            .ph.ph-globe.portfolio {
+                                display: none;
+                            }
+                        </style>
+                    <?php } ?>
+                <?php } ?>
 
-                    <?php
-                    $modules = DB::doc2Arr($phase['modules'] ?? []);
-                    $modules = array_column($modules, 'required', 'module');
-                    $custom = false;
-                    foreach ($optional_fields as $field) {
-                            $kdsf = $field['kdsf'] ?? false;
-                        $m = $field['id'];
-                        // if ($m['required'] ?? false) continue;
-                        $active = array_key_exists($m, $modules);
-                        $required = $active && $modules[$m];
-                        $value = $m . ($required ? '*' : '');
-                        // $field = $Project->FIELDS[$m] ?? null;
-                        if (empty($field)) $field = ['en' => $m, 'de' => null];
-                        if (($field['custom'] ?? false) && !$custom) {
-                            echo "<p>
+                <?php
+                $modules = DB::doc2Arr($phase['modules'] ?? []);
+                $modules = array_column($modules, 'required', 'module');
+                $custom = false;
+                foreach ($optional_fields as $field) {
+                    $kdsf = $field['kdsf'] ?? false;
+                    $m = $field['id'];
+                    // if ($m['required'] ?? false) continue;
+                    $active = array_key_exists($m, $modules);
+                    $required = $active && $modules[$m];
+                    $value = $m . ($required ? '*' : '');
+                    // $field = $Project->FIELDS[$m] ?? null;
+                    if (empty($field)) $field = ['en' => $m, 'de' => null];
+                    if (($field['custom'] ?? false) && !$custom) {
+                        echo "<p>
                             <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
                             <br>
                             <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
                             </p>";
-                            $custom = true;
-                        }
-                    ?>
-                        <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
-                            <input type="checkbox"
-                                id="module-<?= $phase_id ?>-<?= $m ?>"
-                                data-attribute="<?= $m ?>"
-                                value="<?= $value ?>"
-                                name="phase[<?= $phase_id ?>][modules][]"
-                                <?= $active ? 'checked' : '' ?>
-                                onclick="toggleCheckboxStates(this)">
-                            <label for="module-<?= $phase_id ?>-<?= $m ?>">
-                                <?= lang($field['en'], $field['de']) ?>
-                                <?php if ($kdsf) { ?>
-                                    <small class="kdsf"  data-toggle="tooltip" data-title="<?= $kdsf ?>">
-                                        <!-- <img src="<?=ROOTPATH?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
-                                         KDSF
-                                    </small>
-                                <?php } ?>
-                            </label>
-                        </div>
-                    <?php } ?>
+                        $custom = true;
+                    }
+                ?>
+                    <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
+                        <input type="checkbox"
+                            id="module-<?= $phase_id ?>-<?= $m ?>"
+                            data-attribute="<?= $m ?>"
+                            value="<?= $value ?>"
+                            name="phase[<?= $phase_id ?>][modules][]"
+                            <?= $active ? 'checked' : '' ?>
+                            onclick="toggleCheckboxStates(this)">
+                        <label for="module-<?= $phase_id ?>-<?= $m ?>">
+                            <?= lang($field['en'], $field['de']) ?>
+                            <?php if ($kdsf) { ?>
+                                <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
+                                    <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
+                                    KDSF
+                                </small>
+                            <?php } ?>
+                        </label>
+                    </div>
+                <?php } ?>
                 </div>
             </div>
         <?php } ?>
@@ -536,14 +549,14 @@ if ($process == 'project') {
             <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
             <i class="ph ph-arrow-fat-line-left"></i>
         </a>
-<!-- 
+        <!-- 
         <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
          -->
 
-         <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+        <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 
         <?php if ($stage <= $finished_stages) { ?>
             <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
@@ -575,72 +588,6 @@ if ($process == 'project') {
             }
         </script>
 
-
-    <?php } else if ($stage == '3') {
-        /**
-         * Third stage of this form: subprojects
-         */
-
-        $subprojects = $project['subprojects'] ?? false;
-
-        // get all active modules from project phase
-        $fields = $Project->getFields($type, 'project');
-        $fields = array_column($fields, 'module');
-    ?>
-
-
-        <div class="box">
-            <div class="content">
-                <h2 class="title">
-                    <?= lang('Subprojects', 'Teilprojekte') ?>
-                </h2>
-                <div class="custom-checkbox">
-                    <input type="checkbox" id="subprojects" value="true" name="values[subprojects]" <?= ($project['subprojects'] ?? false) ? 'checked' : '' ?>>
-                    <label for="subprojects">
-                        <?= lang('This type of project can have subprojects.', 'Diese Art von Projekt kann Teilprojekte haben.') ?>
-                    </label>
-                </div>
-                <span class="text-muted">
-                    <?= lang('Subprojects are projects that are linked to a main project and are displayed in the project overview.', 'Teilprojekte sind Projekte, die mit einem Hauptprojekt verknüpft sind und in der Projektübersicht angezeigt werden.') ?>
-                </span>
-
-
-                <h5>
-                    <?= lang('Inherited data fields from main project', 'Datenfelder, die vom Hauptprojekt übernommen werden') ?>
-                </h5>
-                <p>
-                    <?= lang('These data fields cannot be edited in the project itself but are always copied from the parent project.', 'Diese Datenfelder können nicht im Teilprojekt selbst bearbeitet werden, sondern werden immer aus dem übergeordneten Projekt übernommen.') ?>
-                </p>
-
-                <div class="">
-                    <?php
-                    foreach ($Project->FIELDS as $m) {
-                        // if ($m['required'] ?? false) continue;
-                        $inherits = DB::doc2Arr($project['inherits'] ?? []);
-                        if (!in_array($m['id'], $fields)) continue;
-                    ?>
-                        <div class="custom-checkbox checkbox-badge">
-                            <input type="checkbox" id="subprojects-<?= $m['id'] ?>" value="<?= $m['id'] ?>" name="values[inherits][]" <?= (in_array($m['id'], $inherits)) ? 'checked' : '' ?>>
-                            <label for="subprojects-<?= $m['id'] ?>">
-                                <?= lang($m['en'], $m['de']) ?>
-                            </label>
-                        </div>
-                    <?php } ?>
-                </div>
-
-            </div>
-        </div>
-
-
-        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/2/<?= $type ?>">
-            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
-            <i class="ph ph-arrow-fat-line-left"></i>
-        </a>
-
-        <button class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
-
-    <?php } ?>
-
 </form>
 
 
@@ -656,7 +603,7 @@ if ($process == 'project') {
         </div>
     <?php } else { ?>
         <div class="alert danger mt-20">
-            <?= lang("Can\'t delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
+            <?= lang("Can't delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
             <a href='<?= ROOTPATH ?>/projects/search#{"$and":[{"type":"<?= $type ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View projects', 'Projekte zeigen') ?>

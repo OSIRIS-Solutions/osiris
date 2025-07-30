@@ -50,7 +50,7 @@
         "id": "title_de",
         "en": "Full title (German)",
         "de": "Voller Titel (Deutsch)",
-        "kdsf": "KDSF-B-2-2",
+        "kdsf": null,
         "scope": {
             "project": false,
             "proposed": false,
@@ -398,8 +398,20 @@
     },
     {
         "id": "countries",
-        "en": "Countries of research",
-        "de": "Forschungsländer",
+        "en": "Countries of research (simple)",
+        "de": "Forschungsländer (einfach)",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 99
+    }, 
+    {
+        "id": "research-countries",
+        "en": "Research in/about countries",
+        "de": "Forschung in/über Länder",
         "kdsf": null,
         "scope": {
             "project": false,
@@ -447,8 +459,8 @@
     },
     {
         "id": "public",
-        "en": "Public presentation consent",
-        "de": "Zustimmung zur öffentlichen Präsentation",
+        "en": "Public presentation consent <i class='ph ph-globe portfolio'></i>",
+        "de": "Zustimmung zur öffentlichen Präsentation <i class='ph ph-globe portfolio'></i>",
         "kdsf": null,
         "scope": {
             "project": false

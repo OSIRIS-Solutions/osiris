@@ -16,8 +16,16 @@
 
 
 Route::get('/impress', function () {
+    include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/impressum.html";
+    include BASEPATH . "/pages/impressum.php";
+    include BASEPATH . "/footer.php";
+});
+
+Route::get('/privacy', function () {
+    include_once BASEPATH . "/php/init.php";
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/privacy.php";
     include BASEPATH . "/footer.php";
 });
 
@@ -43,16 +51,6 @@ Route::get('/new-stuff', function () {
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/news.php";
-    include BASEPATH . "/footer.php";
-});
-
-
-Route::get('/about', function () {
-    $breadcrumb = [
-        ['name' => lang('About OSIRIS', 'Über OSIRIS')]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/about.php";
     include BASEPATH . "/footer.php";
 });
 

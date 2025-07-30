@@ -13,13 +13,14 @@ const TYPES = {
     reviewer: "review",
     editor: "editorial",
     monograph: "book",
-    misc: "misc-annual",
+    misc: "misc",
     "edited-book": "book",
 };
 
 
 let SELECTED_CAT = null;
 let SELECTED_TYPE = null;
+let DOIDATA = null;
 
 function togglePubType(type, callback = () => { }) {
     type = type.trim().toLowerCase().replace(" ", "-");
@@ -48,7 +49,6 @@ function togglePubType(type, callback = () => { }) {
             SELECTED_TYPE = data.type;
 
             const SELECTED_MODULES = SELECTED_TYPE.modules;
-            console.log(SELECTED_TYPE);
 
             $("#type").val(SELECTED_CAT.id);
             $("#subtype").val(SELECTED_TYPE.id);
@@ -63,7 +63,6 @@ function togglePubType(type, callback = () => { }) {
             $("#type-description").html(descr);
 
             var examples = SELECTED_TYPE.example ?? "";
-            console.log(SELECTED_TYPE);
             $("#type-examples").html(examples);
 
             // show correct subtype buttons
@@ -98,17 +97,18 @@ function togglePubType(type, callback = () => { }) {
                     // if (SELECTED_MODULES.includes('title')) {
                     $(".title-editor").each(function (el) {
                         var element = this;
-                        // initQuill(element)
-
                         var authordiv = $(".author-list");
                         if (authordiv.length > 0) {
                             authordiv.sortable({});
                         }
                     });
-                    // }
-
-                    callback();
-                    console.log("TEST");
+                    // restore form data if not empty
+                        if (DOIDATA !== null) {
+                            fillForm(DOIDATA)
+                        } else if (typeof callback === "function") {
+                            callback();
+                        } 
+                
                     $("#data-modules")
                         .find(":input")
                         .on("change", function () {
@@ -282,7 +282,7 @@ function verifyForm(event, form) {
             // console.log(input);
             if (!$(this).val()) {
                 selector.removeClass('is-valid').addClass('is-invalid')
-                
+
                 var name = input.attr('name').replace('values[', '').replace(']', '')
                 if (name == 'journal_id') return;
                 correct = false;
@@ -924,22 +924,7 @@ function getDOI(doi) {
         success: function (data) {
             var pub = data.message
             console.log(pub);
-
-
             var date = getPublishingDate(pub)
-            // if (pub['journal-issue'] !== undefined) {
-            //     if (
-            //         (pub['journal-issue']['published-online'] !== undefined && pub['journal-issue']['published-online']['date-parts'] !== undefined)
-            //         ||
-            //         (pub['journal-issue']['published-print'] !== undefined && pub['journal-issue']['published-print']['date-parts'] !== undefined)
-            //     ) {
-            //         var date = getPublishingDate(pub['journal-issue'])
-            //         // console.log(date);
-            //     }
-            // }
-            // if (pub['issued'] !== undefined && pub['issued']['date-parts'] !== undefined) {
-            //     date = getPublishingDate(pub['issued'])
-            // }
             var authors = [];
             // var editors = [];
             var first = 1
@@ -950,9 +935,13 @@ function getDOI(doi) {
                 pub.author.forEach((a, i) => {
                     var aoi = false
                     a.affiliation.forEach(e => {
-                        if (e.name.includes(AFFILIATION)) {
+                        // check if AFFILIATION_REGEX matches the affiliation
+                        if (AFFILIATION_REGEX.test(e.name)) {
                             aoi = true
                         }
+                        // if (e.name.includes(AFFILIATION)) {
+                        //     aoi = true
+                        // }
                     })
                     if (a.sequence == "first") {
                         first = i + 1
@@ -1012,7 +1001,9 @@ function getDOI(doi) {
                 doi: pub.DOI,
                 // pubmed: null,
                 abstract: abstract,
-                // edition: pub.edition,
+                edition: pub['edition-number'] ?? null,
+                subtitle: pub.subtitle ?? null,
+                'pub-language': pub.language ?? null,
                 publisher: pub['publisher'] ?? pub['publisher-name'],
                 isbn: pub['ISBN'],
                 city: pub['publisher-location'],
@@ -1020,6 +1011,8 @@ function getDOI(doi) {
                 epub: (pub['published-print'] === undefined && pub['published-online'] === undefined),
                 funding: funder.join(',')
             }
+            // update form data in case of selecting another type
+            DOIDATA = pubdata
             toggleForm(pubdata)
             getOpenAccessStatus(doi)
             $('.loader').removeClass('show')
@@ -1077,7 +1070,11 @@ function getOpenAlexDOI(doi) {
                 pub.authorships.forEach((a, i) => {
                     var aoi = false
                     a.institutions.forEach(e => {
-                        if (e.display_name.includes(AFFILIATION)) {
+                        // if (e.display_name.includes(AFFILIATION)) {
+                        //     aoi = true
+                        // }
+                        // check if AFFILIATION_REGEX matches the affiliation
+                        if (AFFILIATION_REGEX.test(e.display_name)) {
                             aoi = true
                         }
                     })
@@ -1200,7 +1197,11 @@ function getDataciteDOI(doi) {
             pub.creators.forEach((a, i) => {
                 var aoi = false
                 a.affiliation.forEach(e => {
-                    if (e.includes(AFFILIATION)) {
+                    // if (e.includes(AFFILIATION)) {
+                    //     aoi = true
+                    // }
+                    // check if AFFILIATION_REGEX matches the affiliation
+                    if (AFFILIATION_REGEX.test(e)) {
                         aoi = true
                     }
                 })
@@ -1349,7 +1350,9 @@ function fillForm(pub) {
         'software_doi',
         'open_access',
         'abstract',
-        'funding'
+        'funding',
+        'subtitle',
+        'pub-language'
     ]
 
     elements.forEach(element => {
@@ -1455,7 +1458,7 @@ function getPublishingDate(pub) {
         date = getDate(pub['published'])
     } else if (pub['published-online']) {
         date = getDate(pub['published-online'])
-    } else if (pub['issued']){
+    } else if (pub['issued']) {
         date = getDate(pub['issued'])
     }
     return date
@@ -1487,7 +1490,7 @@ function selectEvent(id, event, start, end, location) {
     $('#location').val(location)
     $('#date_start').val(start)
     $('#date_end').val(end)
-    
+
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
 }
 
@@ -1518,7 +1521,7 @@ function addEvent() {
     if ($('#event-attended').is(':checked')) {
         data['participants'] = $('#event-attended').val()
     }
-    
+
     $.ajax({
         type: "POST",
         data: {

@@ -21,7 +21,7 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '1.0.6');
+define('CSS_JS_VERSION', '10');
 
 // error_reporting(E_ERROR);
 
@@ -130,6 +130,8 @@ Route::get('/set-preferences', function () {
     header("Location: " . $redirect);
 });
 
+// always include the static routes
+include_once BASEPATH . "/routes/static.php";
 
 if (
     isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
@@ -138,7 +140,6 @@ if (
 ) {
     include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
-    include_once BASEPATH . "/routes/controlling.php";
     include_once BASEPATH . "/routes/database.php";
     include_once BASEPATH . "/routes/docs.php";
     include_once BASEPATH . "/routes/groups.php";
@@ -148,7 +149,6 @@ if (
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
     include_once BASEPATH . "/routes/tags.php";
-    include_once BASEPATH . "/routes/static.php";
     include_once BASEPATH . "/routes/teaching.php";
     include_once BASEPATH . "/routes/users.php";
     include_once BASEPATH . "/routes/visualize.php";
@@ -156,7 +156,7 @@ if (
     include_once BASEPATH . "/routes/reports.php";
     include_once BASEPATH . "/routes/concepts.php";
     include_once BASEPATH . "/routes/admin.php";
-    include_once BASEPATH . "/routes/conferences.php";
+    include_once BASEPATH . "/routes/events.php";
     require_once BASEPATH . '/routes/guests.php';
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";

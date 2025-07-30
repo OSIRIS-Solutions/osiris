@@ -51,8 +51,9 @@ $active = function ($field) use ($data_fields) {
 <script>
     const selectedOrgIds = JSON.parse('<?= json_encode($depts) ?>');
 </script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
+
 <script src="<?= ROOTPATH ?>/js/user-editor.js"></script>
-<script src="<?= ROOTPATH ?>/js/quill.min.js"></script>
 
 <style>
     .form-control[readonly] {
@@ -613,13 +614,14 @@ $active = function ($field) use ($data_fields) {
             </div>
         <?php } ?>
 
-        <h5>
-            <?= lang('Change password', 'Passwort ändern') ?>
-        </h5>
         <?php if (
             USER_MANAGEMENT == 'AUTH' &&
             $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
         ) { ?>
+
+            <h5>
+                <?= lang('Change password', 'Passwort ändern') ?>
+            </h5>
 
             <div class="form-group">
                 <label for="old_password"><?= lang('Old password', 'Vorheriges Password') ?></label>
@@ -640,8 +642,9 @@ $active = function ($field) use ($data_fields) {
 
 
         <h5><?= lang('Roles', 'Rollen') ?></h5>
+        <!-- ensure that empty roles are saved too -->
+        <input type="hidden" name="values[roles][]" value="">
         <?php
-        // dump($data['roles']);
         foreach ($Settings->get('roles') as $role) {
             // everyone is user: no setting needed
             if ($role == 'user') continue;

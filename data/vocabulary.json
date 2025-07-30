@@ -58,61 +58,61 @@
         "description_de": "Die Rolle der Person im Projekt.",
         "values": [
             {
-              "id": "applicant",
-              "en": "Applicant",
-              "de": "Antragstellende"
+                "id": "applicant",
+                "en": "Applicant",
+                "de": "Antragstellende"
             },
             {
-              "id": "PI",
-              "en": "Project management",
-              "de": "Projektleitung"
+                "id": "PI",
+                "en": "Project management",
+                "de": "Projektleitung"
             },
             {
-              "id": "co-PI",
-              "en": "Deputy project management",
-              "de": "Stellvertretende Projektleitung"
+                "id": "co-PI",
+                "en": "Deputy project management",
+                "de": "Stellvertretende Projektleitung"
             },
             {
-              "id": "worker",
-              "en": "Scientific staff",
-              "de": "Wissenschaftliche Mitarbeitende"
+                "id": "worker",
+                "en": "Scientific staff",
+                "de": "Wissenschaftliche Mitarbeitende"
             },
             {
-              "id": "coordinator",
-              "en": "Project coordinator",
-              "de": "Projektkoordination"
+                "id": "coordinator",
+                "en": "Project coordinator",
+                "de": "Projektkoordination"
             },
             {
-              "id": "technical-staff",
-              "en": "Technical staff",
-              "de": "Technische Mitarbeitende"
+                "id": "technical-staff",
+                "en": "Technical staff",
+                "de": "Technische Mitarbeitende"
             },
             {
-              "id": "student-staff",
-              "en": "Student staff",
-              "de": "Studentische Mitarbeitende"
+                "id": "student-staff",
+                "en": "Student staff",
+                "de": "Studentische Mitarbeitende"
             },
             {
-              "id": "associate",
-              "en": "Associate",
-              "de": "Beteiligte"
+                "id": "associate",
+                "en": "Associate",
+                "de": "Beteiligte"
             },
             {
-              "id": "supervisor",
-              "en": "Supervisor",
-              "de": "Betreuung"
+                "id": "supervisor",
+                "en": "Supervisor",
+                "de": "Betreuung"
             },
             {
-              "id": "scholar",
-              "en": "Scholar",
-              "de": "Stipendiat:in"
+                "id": "scholar",
+                "en": "Scholar",
+                "de": "Stipendiat:in"
             },
             {
-              "id": "other",
-              "en": "Other",
-              "de": "Sonstiges"
+                "id": "other",
+                "en": "Other",
+                "de": "Sonstiges"
             }
-          ]
+        ]
     },
     {
         "id": "project-institute-role",
@@ -230,6 +230,91 @@
         ]
     },
     {
+        "id": "proposal-document-types",
+        "category": "Project",
+        "name": "Proposal Document Types",
+        "name_de": "Arten von Antragsdokumenten",
+        "description": "This controlled vocabulary defines standardized document types commonly associated with third-party funding proposals.",
+        "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen, die im Rahmen von Drittmittelanträgen häufig verwendet werden.",
+        "values": [
+            {
+                "id": "proposal",
+                "en": "Proposal",
+                "de": "Antrag"
+            },
+            {
+                "id": "proposal_final",
+                "en": "Final Proposal",
+                "de": "Antrag (finale Version)"
+            },
+            {
+                "id": "funding_notice",
+                "en": "Funding Approval",
+                "de": "Bewilligungsbescheid"
+            },
+            {
+                "id": "rejection_notice",
+                "en": "Rejection Notice",
+                "de": "Ablehnungsbescheid"
+            },
+            {
+                "id": "funds_request",
+                "en": "Funds Request",
+                "de": "Mittelabruf"
+            },
+            {
+                "id": "interim_report",
+                "en": "Interim Report",
+                "de": "Zwischenbericht"
+            },
+            {
+                "id": "financial_report",
+                "en": "Financial Report",
+                "de": "Verwendungsnachweis"
+            },
+            {
+                "id": "final_report",
+                "en": "Final Report",
+                "de": "Abschlussbericht"
+            },
+            {
+                "id": "contract",
+                "en": "Contract / Agreement",
+                "de": "Vertrag / Kooperationsvereinbarung"
+            },
+            {
+                "id": "budget",
+                "en": "Budget Overview",
+                "de": "Kalkulation / Budgetübersicht"
+            },
+            {
+                "id": "attachments",
+                "en": "Attachments",
+                "de": "Anlagen zum Antrag"
+            },
+            {
+                "id": "correspondence",
+                "en": "Correspondence",
+                "de": "Korrespondenz mit Fördergeber"
+            },
+            {
+                "id": "ethics",
+                "en": "Ethics Approval",
+                "de": "Ethikvotum / Datenschutzfreigabe"
+            },
+            {
+                "id": "reviews",
+                "en": "Reviews",
+                "de": "Gutachten / Reviews"
+            },
+            {
+                "id": "other",
+                "en": "Other",
+                "de": "Sonstiges"
+            }
+        ]
+    },
+    {
         "id": "infrastructure-category",
         "category": "Infrastructure",
         "name": "Category of an Infrastructure",
@@ -311,6 +396,31 @@
                 "id": "Sonstiges",
                 "en": "Other",
                 "de": "Sonstiges"
+            }
+        ]
+    },
+    {
+        "id": "event-type",
+        "category": "Event",
+        "name": "Event Type",
+        "name_de": "Eventtyp",
+        "description": "The type of an event.",
+        "description_de": "Der Typ eines Events.",
+        "values": [
+            {
+                "id": "local",
+                "en": "Local",
+                "de": "Lokal"
+            },
+            {
+                "id": "national",
+                "en": "National",
+                "de": "National"
+            },
+            {
+                "id": "international",
+                "en": "International",
+                "de": "International"
             }
         ]
     }
