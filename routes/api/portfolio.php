@@ -1012,8 +1012,14 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $result['img'] = $Settings->printProfilePicture(null, 'profile-img');
     }
     $result['id'] = strval($person['_id']);
-    if (!empty($person['depts'])) {
-        $hierarchy = $Groups->getPersonHierarchyTree($person['depts']);
+    if (!empty($person['units'])) {
+        $units = DB::doc2Arr($person['units'] ?? []);
+        // filter units from the past
+        $units = array_filter($units, function ($unit) {
+            return !isset($unit['end']) || strtotime($unit['end']) > time();
+        });
+        $unit_ids = array_column($units, 'unit');
+        $hierarchy = $Groups->getPersonHierarchyTree($unit_ids);
         $result['depts'] = $Groups->readableHierarchy($hierarchy);
     }
     if (isset($person['highlighted']) && !empty($person['highlighted'])) {
