@@ -53,7 +53,7 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
 
     // Call Portfolio API to get entity details
     $path = $_SERVER['HTTP_HOST'] . ROOTPATH . '/portfolio';
-    $total_path = $path . "/$type/$id";
+    $total_path = $path . '/' . urlencode($type) . '/' . urlencode($id);
     $ch = curl_init($total_path);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
