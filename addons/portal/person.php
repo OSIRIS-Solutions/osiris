@@ -235,7 +235,7 @@
                 <div class="col-sm-4">
                     <?php if (!empty($data['depts']) && empty($data['inactive'])): ?>
                         <h2><?= lang("Affiliation", "Zugehörigkeit"); ?></h2>
-                        <table class="table small">
+                        <table class="table small unit-table w-full">
                             <tbody>
                                 <?php foreach ($data['depts'] as $d): ?>
                                     <tr>
