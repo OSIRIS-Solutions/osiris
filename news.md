@@ -153,6 +153,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
 - Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
 - Es wurde ein Bug behoben, wodurch die Tabellensuche beim Neuladen einer Aktivität nicht mehr funktionierte, wenn Leerzeichen im Suchbegriff waren
+- Die Organisationseinheiten sollten jetzt überall in der korrekten Reihenfolge angezeigt werden, falls sie sortiert wurden
 
 ---
 

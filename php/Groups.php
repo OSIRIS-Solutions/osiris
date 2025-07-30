@@ -74,7 +74,7 @@ class Groups
 
         $groups = $this->DB->db->groups->find(
             [],
-            ['sort' => ['level' => 1, 'inactive' => 1]]
+            ['sort' => ['level' => 1, 'order' => 1, 'inactive' => 1]]
         )->toArray();
         foreach ($groups as $g) {
             $this->groups[$g['id']] = $g;
@@ -213,10 +213,8 @@ class Groups
 
     public function allPersonUnits($units)
     {
-        dump($units);
         $result = $units;
         foreach ($units as $d) {
-            dump($d);
             $p = $this->getParents($d, true);
             if ($p && $p[0] && !in_array($p[0], $result)) {
                 $result[] = $p[0];
