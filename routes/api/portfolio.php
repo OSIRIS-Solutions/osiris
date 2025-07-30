@@ -983,6 +983,12 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             $result['contact'][$key] = $person[$key];
         }
     }
+    if (isset($person['socials']) && !empty($person['socials'])) {
+        foreach ($person['socials'] as $key => $value) {
+            if (empty($value)) continue;
+            $result['contact'][$key] = $value;
+        }
+    }
 
 
     if ($person['research'] ?? false) {
