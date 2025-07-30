@@ -400,6 +400,42 @@
         ]
     },
     {
+        "id": "infrastructure-stats",
+        "category": "Infrastructure",
+        "name": "Infrastructure Statistics",
+        "name_de": "Infrastrukturstatistiken",
+        "description": "The statistics for the infrastructure. If more values are added here, they can be maintained in the annual statistics and evaluated in the statistics overview.",
+        "description_de": "Die Statistiken für die Infrastruktur. Wenn hier weitere Werte hinzugefügt werden, können diese in der Jahresstatistik gepflegt und in der Statistikübersicht ausgewertet werden.",
+        "values": [
+            {
+                "id": "internal",
+                "en": "Number of internal users",
+                "de": "Anzahl interner Nutzer/-innen"
+            },
+            {
+                "id": "national",
+                "en": "Number of national users",
+                "de": "Anzahl nationaler Nutzer/-innen"
+            },
+            {
+                "id": "international",
+                "en": "Number of international users",
+                "de": "Anzahl internationaler Nutzer/-innen"
+            },
+            {
+                "id": "hours",
+                "en": "Number of hours used",
+                "de": "Anzahl der genutzten Stunden"
+            },
+            {
+                "id": "accesses",
+                "en": "Number of accesses",
+                "de": "Anzahl der Nutzungszugriffe"
+            }
+            
+        ]
+    },
+    {
         "id": "event-type",
         "category": "Event",
         "name": "Event Type",

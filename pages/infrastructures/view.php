@@ -346,7 +346,63 @@ $active = function ($field) use ($data_fields) {
         <div class="alert primary my-20 w-md-half">
             <?= lang('No statistics found.', 'Keine Statistiken vorhanden.') ?>
         </div>
-    <?php } else { ?>
+    <?php } else {
+
+        $fields = $Vocabulary->getVocabulary('infrastructure-stats');
+        if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+            $fields = [
+                [
+                    "id" => "internal",
+                    "en" => "Number of internal users",
+                    "de" => "Anzahl interner Nutzer/-innen"
+                ],
+                [
+                    "id" => "national",
+                    "en" => "Number of national users",
+                    "de" => "Anzahl nationaler Nutzer/-innen"
+                ],
+                [
+                    "id" => "international",
+                    "en" => "Number of international users",
+                    "de" => "Anzahl internationaler Nutzer/-innen"
+                ],
+                [
+                    "id" => "hours",
+                    "en" => "Number of hours used",
+                    "de" => "Anzahl der genutzten Stunden"
+                ],
+                [
+                    "id" => "accesses",
+                    "en" => "Number of accesses",
+                    "de" => "Anzahl der Nutzungszugriffe"
+                ],
+            ];
+        } else {
+            $fields = $fields['values'] ?? [];
+        }
+    ?>
+        <!-- table with all yearly statistics ordered by year -->
+         <table class="table small my-20" id="yearly-statistics">
+            <thead>
+                <tr>
+                    <th><?= lang('Year', 'Jahr') ?></th>
+                    <?php foreach ($fields as $field) { ?>
+                        <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($statistics as $stat) { ?>
+                    <tr>
+                        <th><?= $stat['year'] ?></th>
+                        <?php foreach ($fields as $field) { ?>
+                            <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </tbody>
+         </table>
+
         <div class="box padded mb-0">
             <h5 class="title font-size-16">
                 <?= lang('Number of users by year', 'Anzahl der Nutzer/-innen nach Jahr') ?>

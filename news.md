@@ -40,6 +40,8 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Die Darstellung von Verbundinfrastrukturen und Kooperationspartnern wurde verbessert.
 - Der Begriff "Infrastrukturen" kann jetzt im Admin-Bereich angepasst werden.
 - Forschungsbereiche können jetzt auch bei Infrastrukturen hinzugefügt und zum Filtern verwendet werden.
+- Die Jahresstatistiken für Infrastrukturen sind jetzt konfigurierbar und können über das Vokabular angepasst werden.
+- Die Statistiken für Infrastrukturen wurden ebenfalls verbessert, lassen sich jetzt nach dem Jahr filtern und nehmen als Startdatum den 31.12. des Vorjahres an. Außerdem werden selbst definierte Statistikfelder unterstützt, die über das Vokabular definiert werden können.
 
 
 #### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
