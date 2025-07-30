@@ -69,28 +69,40 @@ editors-{Namensformat}-{Optionen}
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="code">last-f.</td>
+                        <td class="code">last f.</td>
                         <td>Koblitz J.</td>
                     </tr>
                     <tr>
-                        <td class="code">last-f</td>
+                        <td class="code">last f</td>
                         <td>Koblitz J</td>
                     </tr>
                     <tr>
-                        <td class="code">f-last</td>
+                        <td class="code">f last</td>
                         <td>J Koblitz</td>
                     </tr>
                     <tr>
-                        <td class="code">f.-last</td>
+                        <td class="code">f. last</td>
                         <td>J. Koblitz</td>
                     </tr>
                     <tr>
-                        <td class="code">last-first</td>
+                        <td class="code">last first</td>
                         <td>Koblitz, Julia</td>
                     </tr>
                     <tr>
-                        <td class="code">first-last</td>
+                        <td class="code">first last</td>
                         <td>Julia Koblitz</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, f.</td>
+                        <td>Koblitz, J.</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, f</td>
+                        <td>Koblitz, J</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, first</td>
+                        <td>Koblitz, Julia</td>
                     </tr>
                 </tbody>
             </table>
@@ -181,23 +193,23 @@ editors-{Namensformat}-{Optionen}
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="code">authors-last-f.</td>
+                        <td class="code">authors-last f.</td>
                         <td>Koblitz J., Stark T. and Miller L.</td>
                     </tr>
                     <tr>
-                        <td class="code">editors-first-last-amp-ed</td>
+                        <td class="code">editors-first last-amp-ed</td>
                         <td>Julia Koblitz, Tony Stark & Lois Miller (eds.)</td>
                     </tr>
                     <tr>
-                        <td class="code">authors-last-f-etal3</td>
-                        <td>Koblitz J, Stark T, Miller L et al.</td>
+                        <td class="code">authors-last, f-etal3</td>
+                        <td>Koblitz, J, Stark, T, Miller, L et al.</td>
                     </tr>
                     <tr>
-                        <td class="code">authors-last-first-amp+comma</td>
+                        <td class="code">authors-last first-amp+comma</td>
                         <td>Koblitz, Julia, Stark, Tony, & Miller, Lois</td>
                     </tr>
                     <tr>
-                        <td class="code">editors-f.-last-semicolon-Eds</td>
+                        <td class="code">editors-f. last-semicolon-Eds</td>
                         <td>J. Koblitz; T. Stark and L. Miller (Eds.)</td>
                     </tr>
                 </tbody>

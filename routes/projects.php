@@ -577,6 +577,24 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         }
     }
 
+    // send messages to applicants
+    $applicants = $values['applicants'] ?? [];
+    if (!empty($applicants)) {
+        foreach ($applicants as $applicant) {
+            if ($_SESSION['username'] == $applicant) continue; // do not send message to self
+            $creator = ($USER['first'] ?? '') . " " . $USER['last'];
+            $tag = $collection == 'projects' ? 'project' : 'proposal';
+            $typeOfP = $collection == 'projects' ? lang('the project', 'das Projekt') : lang('the proposal', 'den Projektantrag');
+            $DB->addMessage(
+                $applicant,
+                $creator . ' has created ' . $typeOfP . ' <b>' . $values['name'] . '</b> for which you are entered as applicant.',
+                $creator . ' hat ' . $typeOfP . ' <b>' . $values['name'] . '</b> erstellt, bei dem du als Antragstellende Person angegeben wirst.',
+                $tag,
+                "/$collection/view/" . $id . '#section-history',
+            );
+        }
+    }
+
     // update parent project if subproject
     if (isset($values['parent_id'])) {
         $osiris->projects->updateOne(
@@ -747,7 +765,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     // send messages to applicants
     $applicants = $project['applicants'] ?? [];
-    if (!empty($applicants)){
+    if (!empty($applicants)) {
         foreach ($applicants as $applicant) {
             if ($_SESSION['username'] == $applicant) continue; // do not send message to self
             $creator = ($USER['first'] ?? '') . " " . $USER['last'];
@@ -833,8 +851,8 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
         foreach ($documents as $doc) {
             $osiris->uploads->deleteOne(['_id' => $doc['_id']]);
             // delete file from filesystem
-            if (file_exists(BASEPATH . '/uploads/' . $doc['_id']. '.' . $doc['extension'])) {
-                unlink(BASEPATH . '/uploads/' . $doc['_id']. '.' . $doc['extension']);
+            if (file_exists(BASEPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'])) {
+                unlink(BASEPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension']);
             }
         }
     }
@@ -866,7 +884,7 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 
 
     $Project = new Project();
-    $type = $Project->getProjectType($values['type']);
+    $type = $Project->getProjectType($values['type'] ?? 'project');
 
     // get history of project
     $values = $Project->updateHistory($values, $id, $collection);

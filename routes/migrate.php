@@ -171,6 +171,9 @@ Route::get('/install', function () {
 
     echo "</p>";
 
+    // make sure to create an index
+    $osiris->activities->createIndex(['rendered.plain' => 'text']);
+
     // last step: write Version number to database
     $osiris->system->deleteMany(['key' => 'version']);
     $osiris->system->insertOne(
@@ -198,6 +201,9 @@ Route::get('/migrate', function () {
     echo "Please wait...<br>";
     flush();
     ob_flush();
+
+    // make sure that text index is created
+    $osiris->activities->createIndex(['rendered.plain' => 'text']);
 
     $DBversion = $osiris->system->findOne(['key' => 'version']);
 

@@ -48,8 +48,8 @@
             },
             {
                 "id": "conferences.edit",
-                "de": "Konferenzen hinzufügen und bearbeiten",
-                "en": "Add and edit conferences"
+                "de": "Events hinzufügen und bearbeiten",
+                "en": "Add and edit events"
             }
         ]
     },
@@ -119,6 +119,11 @@
                 "id": "user.inactive",
                 "de": "Nutzer als inaktiv markieren",
                 "en": "Set users to inactive"
+            },
+            {
+                "id": "user.delete",
+                "de": "Nutzer löschen",
+                "en": "Delete users"
             },
             {
                 "id": "user.synchronize",

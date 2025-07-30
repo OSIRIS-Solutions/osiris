@@ -187,7 +187,7 @@ class Project extends Vocabulary
         return $this->db->adminProjects->find($filter)->toArray();
     }
 
-    public function getFields($type_id, $phase)
+    public function getFields($type_id, $phase = 'all')
     {
         $type = $this->db->adminProjects->findOne(['id' => $type_id]);
         if (empty($type)) return [];
@@ -195,7 +195,7 @@ class Project extends Vocabulary
 
         $fields = [];
         foreach ($phases as $p) {
-            if ($p['id'] == $phase) {
+            if ($p['id'] == $phase || $phase == 'all') {
                 $fields = $p['modules'] ?? [];
                 break;
             }
@@ -622,7 +622,7 @@ class Project extends Vocabulary
 
     public function personRoleRaw($role)
     {
-        return $this->getValues('project-person-role', $role);
+        return $this->getValuesByKey('project-person-role', $role);
     }
 
     public function personRole($role)
@@ -636,6 +636,25 @@ class Project extends Vocabulary
         } else {
             return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
         }
+    }
+
+    public function getTimeline(){
+        $startDate = $this->project['start_date']; // ISO date string
+        $endDate = $this->project['end_date']; // ISO date string
+        $today = strtotime(date('Y-m-d'));
+        if ($startDate === null || $endDate === null) {
+            return 'unknown';
+        }
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+        if ($startTimestamp > $today) {
+            return 'future';
+        }
+        // check if end is in the past
+        if ($endTimestamp < $today) {
+            return 'past';
+        }
+        return 'ongoing';
     }
 
     public function widgetSmall()

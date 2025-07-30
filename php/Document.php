@@ -487,7 +487,8 @@ class Document extends Settings
                             $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
                     }
                 } else if (!$this->full) {
-                    $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
+                    if (isset($a['user']) && !empty($a['user']))
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
                 } else if ($this->highlight === true) {
                     if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
                 } else if ($this->highlight && $a['user'] == $this->highlight) {
@@ -799,7 +800,7 @@ class Document extends Settings
             $aoi_format = 'none';
         }
 
-        $nameparts = ['last-f.', 'last-f', 'f-last', 'f.-last', 'last-first', 'first-last'];
+        $nameparts = ['last f.', 'last f', 'f last', 'f. last', 'last first', 'first last', 'last, f.', 'last, f', 'last, first'];
         foreach ($nameparts as $part) {
             if (str_contains($module, $part)) {
                 $nameFormat = $part;
@@ -839,20 +840,29 @@ class Document extends Settings
             $initialDot = $initial ? $initial . '.' : '';
             $author = '';
             switch ($nameFormat) {
-                case 'last-f':
+                case 'last f':
                     $author = "$last $initial";
                     break;
-                case 'f-last':
+                case 'f last':
                     $author = "$initial $last";
                     break;
-                case 'f.-last':
+                case 'f. last':
                     $author = "$initialDot $last";
                     break;
-                case 'last-first':
+                case 'last first':
                     $author = "$last, $first";
                     break;
-                case 'first-last':
+                case 'first last':
                     $author = "$first $last";
+                    break;
+                case 'last, f.':
+                    $author = "$last, $initialDot";
+                    break;
+                case 'last, f':
+                    $author = "$last, $initial";
+                    break;
+                case 'last, first':
+                    $author = "$last, $first";
                     break;
                 default:
                     $author = "$last $initialDot";
@@ -864,9 +874,9 @@ class Document extends Settings
                 // do nothing
             } elseif (($this->highlight === true && ($person['aoi'] ?? false)) || ($person['user'] === $this->highlight)) {
                 if ($this->usecase == 'web') {
-                    $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
-                    // } else if (!in_array($this->usecase, ['print', 'word'])) {
-                    //     $author = "<u>$author</u>";
+                    if (isset($person['user']) && !empty($person['user'])) {
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
+                    }
                 } else if ($aoi_format == 'bold') {
                     $author = "<b>$author</b>";
                 } else if ($aoi_format == 'italic') {
@@ -883,6 +893,10 @@ class Document extends Settings
             }
 
             $formatted[] = $author;
+        }
+
+        if ($etalLimit === null && $this->usecase == 'web') {
+            $etalLimit = 12; // default limit for web use case
         }
 
         if ($etalLimit !== null  && $N > $etalLimit) {

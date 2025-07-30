@@ -885,6 +885,7 @@ $pageactive = function ($p) use ($page) {
         <div class="content-wrapper">
             <?php if ($pageactive('preview')) { ?>
                 <div class="title-bar text-danger text-center font-weight-bold d-block font-size-20">
+                    <i class="ph ph-globe"></i>
                     <b>PREVIEW</b>
                 </div>
             <?php } ?>

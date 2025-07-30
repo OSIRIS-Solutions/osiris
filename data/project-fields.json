@@ -459,8 +459,8 @@
     },
     {
         "id": "public",
-        "en": "Public presentation consent",
-        "de": "Zustimmung zur öffentlichen Präsentation",
+        "en": "Public presentation consent <i class='ph ph-globe portfolio'></i>",
+        "de": "Zustimmung zur öffentlichen Präsentation <i class='ph ph-globe portfolio'></i>",
         "kdsf": null,
         "scope": {
             "project": false

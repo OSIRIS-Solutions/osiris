@@ -266,7 +266,7 @@ Route::get('/api/all-activities', function () {
     }
     // $Format = new Document($highlight);
 
-    
+
     $filter = [];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -291,7 +291,7 @@ Route::get('/api/all-activities', function () {
             $filter = $Settings->getActivityFilter($filter);
         }
     }
-    if (isset($_GET['type']) ) {
+    if (isset($_GET['type'])) {
         $filter['type'] = $_GET['type'];
     }
 
@@ -541,6 +541,13 @@ Route::get('/api/users', function () {
         }
         // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
         $units = $Groups->getPersonDept($user['units'] ?? []);
+        if (empty(trim($user['last'])) && empty(trim($user['first']))) {
+            if (empty($user['username'])) {
+                // this should not happen, but if it does, we set a default name
+                $user['username'] = 'unknown_user';
+            }
+            $user['last'] = $user['username'];
+        }
         $table[] = [
             'id' => strval($user['_id']),
             'username' => $user['username'],
@@ -562,7 +569,7 @@ Route::get('/api/users', function () {
             'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
             'first' => $user['first'],
             'last' => $user['last'],
-            'position' => $user['position'] ?? '',
+            'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
             'mail' => $user['mail'] ?? '',
             'telephone' => $user['telephone'] ?? '',
             'orcid' => $user['orcid'] ?? '',
@@ -610,6 +617,37 @@ Route::get('/api/users/(.*)', function ($id) {
     }
 
     echo return_rest($user, 1);
+});
+
+Route::get('/api/user-units/(.*)', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+    if (DB::is_ObjectID($id)) {
+        $filter = ['_id' => DB::to_ObjectID($id)];
+    } else {
+        $filter = ['username' => $id];
+    }
+    $person = $osiris->persons->findOne($filter, ['units' => 1, 'last' => 1, 'first' => 1]);
+    if (empty($person)) {
+        echo return_rest(lang('User not found', 'Nutzer nicht gefunden'), 0, 404);
+        die;
+    }
+    $person_units = $person['units'] ?? [];
+    foreach ($person_units as &$unit) {
+        $unit['in_past'] =  isset($unit['end']) && date('Y-m-d') > $unit['end'];
+        $group = $Groups->getGroup($unit['unit']);
+        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+    }
+
+    echo return_rest([
+        'name' => $person['first'] . ' ' . $person['last'],
+        'units' => $person_units
+    ], 1);
 });
 
 Route::get('/api/reviews', function () {

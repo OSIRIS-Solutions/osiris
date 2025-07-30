@@ -145,7 +145,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
 
 
 
-Route::get('/user/delete/(.*)', function ($user) {
+Route::get('/user/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
     $data = $DB->getPerson($user);
@@ -161,11 +161,31 @@ Route::get('/user/delete/(.*)', function ($user) {
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/user-delete.php";
+    include BASEPATH . "/pages/user/inactivate.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
 
+
+Route::get('/user/delete/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    $data = $DB->getPerson($user);
+    $data = DB::doc2Arr($data);
+    if (empty($data)) {
+        header("Location: " . ROOTPATH . "/user/browse");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => $data['name'], 'path' => "/profile/$user"],
+        ['name' => lang("Delete", "Löschen")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/user/delete.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
 
 
 Route::get('/user/ldap-example', function () {
@@ -461,6 +481,40 @@ Route::post('/synchronize-attributes', function () {
 });
 
 
+Route::post('/synchronize-attributes-now', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . '/php/LDAPInterface.php';
+
+    if (!$Settings->hasPermission('user.synchronize')) {
+        echo "<p>Permission denied.</p>";
+        die();
+    }
+
+    include BASEPATH . "/header.php";
+    $settings = $osiris->adminGeneral->findOne(['key' => 'ldap_mappings']);
+    $ldapMappings = DB::doc2Arr($settings['value'] ?? []);
+
+    if (empty($ldapMappings)) {
+        echo "No LDAP mappings found.\n";
+        exit;
+    }
+    $LDAP = new LDAPInterface();
+    $success = $LDAP->synchronizeAttributes($ldapMappings, $osiris);
+    if ($success) {
+        echo "User attributes synchronized successfully.\n";
+
+        $osiris->system->updateOne(
+            ['key' => 'ldap-sync'],
+            ['$set' => ['value' => date('Y-m-d H:i:s')]],
+            ['upsert' => true]
+        );
+    } else {
+        echo "Failed to synchronize user attributes.\n";
+    }
+    include BASEPATH . "/footer.php";
+});
+
+
 Route::post('/switch-user', function () {
 
     if (isset($_POST['OSIRIS-SELECT-MAINTENANCE-USER'])) {
@@ -550,7 +604,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['is_active'] = boolval($values['is_active']);
     }
 
-    if (isset($values['roles'])){
+    if (isset($values['roles'])) {
         // remove empty roles
         $person['roles'] = array_filter($values['roles'], function ($role) {
             return !empty($role);
@@ -696,9 +750,14 @@ Route::post('/crud/users/units/(.*)', function ($user) {
 });
 
 
-Route::post('/crud/users/delete/(.*)', function ($user) {
+Route::post('/crud/users/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
+    // check permissions
+    if (!$Settings->hasPermission('user.inactivate')) {
+        echo "Permission denied.";
+        die();
+    }
 
     $data = $DB->getPerson($user);
 
@@ -738,6 +797,72 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
     }
 
     header("Location: " . ROOTPATH . "/profile/" . $user . "?msg=user-inactivated");
+    die();
+});
+
+
+Route::post('/crud/users/delete/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    // check permissions
+    if (!$Settings->hasPermission('user.delete')) {
+        echo "Permission denied.";
+        die();
+    }
+
+    $data = $DB->getPerson($user);
+    if (empty($data)) {
+        header("Location: " . ROOTPATH . "/user/browse?msg=user-does-not-exist");
+        die();
+    }
+
+    // delete username from all activities
+    $osiris->activities->updateMany(
+        ["authors.user" => $user],
+        ['$set' => ["authors.$[elem].user" => null]],
+        ['arrayFilters' => [["elem.user" => $user]]]
+    );
+
+    // delete user from all projects
+    $osiris->projects->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    );
+    // delete user from all proposals
+    $osiris->proposals->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    );
+
+    // delete user from infrastructures
+    $osiris->infrastructures->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    ); 
+
+    // remove user from teaching
+    $osiris->teaching->updateMany(
+        ['contact_person' => $user],
+        ['$set' => ['contact_person' => null]]
+    );
+
+    $osiris->accounts->deleteOne(
+        ['username' => $user]
+    );
+    $osiris->persons->deleteOne(
+        ['username' => $user]
+    );
+    $osiris->userImages->deleteOne(
+        ['user' => $user]
+    );
+
+    if (file_exists(BASEPATH . "/img/users/$user.jpg")) {
+        unlink(BASEPATH . "/img/users/$user.jpg");
+    }
+
+    $_SESSION['msg'] = lang("User deleted.", "Benutzer gelöscht.");
+    // redirect to user browse page
+    header("Location: " . ROOTPATH . "/user/browse");
     die();
 });
 

@@ -225,7 +225,7 @@ $count_wordcloud = 0;
                         ['contact' => ['$in' => $users]],
                         ['persons.user' => ['$in' => $users]]
                     ),
-                    "status" => ['$nin' => ["rejected", "applied"]]
+                    // "status" => ['$nin' => ["rejected", "applied"]]
                 ];
 
                 $count_projects = $osiris->projects->count($project_filter);

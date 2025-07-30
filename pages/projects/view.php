@@ -197,7 +197,7 @@ if ($topicsEnabled) {
 <nav class="pills mt-20 mb-0" id="project-nav">
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-        <?= lang('Project details', 'Projektdetails') ?>
+        <?= lang('Project', 'Projektdetails') ?>
     </a>
     <?php if ($subproject) {
         // collaborators are inherited from parent project
@@ -480,7 +480,7 @@ if ($topicsEnabled) {
             <table class="table unit-table w-full">
                 <tbody>
                     <?php
-                    $units = $project['units'] ?? [];
+                    $units = DB::doc2Arr($project['units'] ?? []);
                     // $tree =  $Groups->getPersonHierarchyTree($units);
                     if (!empty($units)) {
                         $hierarchy = $Groups->getPersonHierarchyTree($units);
@@ -495,8 +495,13 @@ if ($topicsEnabled) {
                                 </td>
                             </tr>
                     <?php }
-                    }
-                    ?>
+                    } else { ?>
+                        <tr>
+                            <td>
+                                <?= lang('No units connected.', 'Keine Einheiten verknüpft.') ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
 
@@ -545,6 +550,9 @@ if ($topicsEnabled) {
                         </tr>
                     <?php
                     } else foreach ($project['collaborators'] as $collab) {
+                        if (isset($collab['organization']) && is_array($collab['organization'])) {
+                            $collab['organization'] = $collab['organization']['_id'];
+                        }
                     ?>
                         <tr>
                             <td>

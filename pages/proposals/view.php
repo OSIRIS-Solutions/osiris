@@ -51,9 +51,14 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
     .badge.status.danger {
         border: 1px solid var(--danger-color);
     }
+
+    .badge.status.muted {
+        border: 1px solid var(--muted-color);
+    }
 </style>
 <script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
 
+<div class="proposal <?=$status?>">
 
 <div class="d-flex align-items-center justify-content-between">
     <div class="title">
@@ -65,6 +70,15 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
         <h2 class="subtitle">
             <?= $project['title'] ?>
         </h2>
+
+        <?php if ($status == 'withdrawn') { ?>
+            <p class="text-danger">
+                <?= lang('This proposal has been withdrawn with the following reason:', 'Dieser Antrag wurde zurückgezogen mit folgendem Grund:') ?>
+                <br>
+                <b><?= $project['withdrawn_reason'] ?? lang('No reason given', 'Kein Grund angegeben') ?></b>
+            </p>
+        <?php } ?>
+        
     </div>
     <div class="status">
         <?php if ($status_perm) { ?>
@@ -76,7 +90,8 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     </button>
                     <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                         <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                        <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></a>
                     </div>
                 </div>
             <?php } else if ($status == 'approved') { ?>
@@ -84,10 +99,15 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     <i class="ph ph-check-circle" aria-hidden="true"></i>
                     <?= lang('Approved', 'Bewilligt') ?>
                 </span>
-            <?php } else { ?>
+            <?php } else if ($status == 'rejected') { ?>
                 <span class="badge status danger">
                     <i class="ph ph-x-circle" aria-hidden="true"></i>
                     <?= lang('Rejected', 'Abgelehnt') ?>
+                </span>
+            <?php } else if ($status == 'withdrawn') { ?>
+                <span class="badge status muted">
+                    <i class="ph ph-x-circle" aria-hidden="true"></i>
+                    <?= lang('Withdrawn', 'Zurückgezogen') ?>
                 </span>
             <?php } ?>
 
@@ -204,7 +224,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
 <nav class="pills mt-20" id="nav-tabs">
     <button class="btn font-weight-bold active" id="general-btn" onclick="navigate('general')">
         <i class="ph ph-file-text"></i>
-        <?= lang('Proposaldetails', 'Antragsdetails') ?>
+        <?= lang('Proposal', 'Antragsdetails') ?>
     </button>
     <?php if (!empty($connected_project)) { ?>
         <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">
@@ -538,132 +558,11 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
             </h2>
 
             <?php if ($edit_perm) { ?>
-                <a href="#persons" class="btn small primary mb-5">
-                    <i class="ph ph-edit"></i>
-                    <?= lang('Edit persons', 'Personen bearbeiten') ?>
-                </a>
-                <div class="modal" id="persons" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                                <span aria-hidden="true">&times;</span>
-                            </a>
-                            <h5 class="modal-title">
-                                <?= lang('Connect persons', 'Personen verknüpfen') ?>
-                            </h5>
-                            <div>
-                                <form action="<?= ROOTPATH ?>/crud/proposals/update-persons/<?= $id ?>" method="post">
-
-                                    <table class="table simple">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <?= lang('Person', 'Person') ?>
-                                                </th>
-                                                <th>
-                                                    <?= lang('Role', 'Rolle') ?>
-                                                </th>
-                                                <th>
-                                                    <?= lang('Units', 'Einheiten') ?>
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="project-list">
-                                            <?php
-                                            $persons = $project['persons'] ?? array();
-                                            if (empty($persons)) {
-                                                $persons = [
-                                                    ['user' => '', 'role' => '']
-                                                ];
-                                            }
-                                            $all_users = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['last' => 1]])->toArray();
-                                            foreach ($persons as $i => $con) { ?>
-                                                <tr>
-                                                    <td>
-                                                        <select name="persons[<?= $i ?>][user]" id="persons-<?= $i ?>" class="form-control" required>
-                                                            <?php
-                                                            foreach ($all_users as $s) { ?>
-                                                                <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
-                                                                    <?= "$s[last], $s[first] ($s[username])" ?>
-                                                                </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select name="persons[<?= $i ?>][role]" id="persons-<?= $i ?>" class="form-control" required>
-                                                            <?php
-                                                            $role = $con['role'] ?? '';
-                                                            $vocab = $Vocabulary->getValues('project-person-role');
-                                                            foreach ($vocab as $v) { ?>
-                                                                <option value="<?= $v['id'] ?>" <?= $role == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        $selected = DB::doc2Arr($con['units'] ?? []);
-                                                        if (!is_array($selected)) $selected = [];
-                                                        $person_units = $osiris->persons->findOne(['username' => $con['user']], ['units' => 1]);
-                                                        $person_units = $person_units['units'] ?? [];
-                                                        if (empty($person_units)) {
-                                                            echo '<small class="text-danger">No units found</small>';
-                                                        } else {
-                                                            $person_units = array_column(DB::doc2Arr($person_units), 'unit');
-                                                        ?>
-                                                            <select class="form-control" name="persons[<?= $i ?>][units][]" id="units-<?= $i ?>" multiple style="height: <?= count($person_units) * 2 + 2 ?>rem" class="person-units">
-                                                                <?php foreach ($person_units as $unit) { ?>
-                                                                    <option value="<?= $unit ?>" <?= (in_array($unit, $selected) ? 'selected' : '') ?>><?= $unit ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        <?php } ?>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr id="last-row">
-                                                <td colspan="4">
-                                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-
-                                    </table>
-
-                                    <button class="btn primary mt-20">
-                                        <i class="ph ph-check"></i>
-                                        <?= lang('Submit', 'Bestätigen') ?>
-                                    </button>
-                                </form>
-
-                                <script>
-                                    var counter = <?= $i ?? 0 ?>;
-                                    const tr = $('#project-list tr').first()
-
-                                    function addProjectRow() {
-                                        counter++;
-                                        const row = tr.clone()
-                                        row.find('select').each(function() {
-                                            const name = $(this).attr('name')
-                                            const new_name = name.replace(/\d+/, counter)
-                                            $(this).attr('name', new_name)
-                                            $(this).val('')
-                                        })
-
-                                        //remove units 
-                                        row.find('select[id^="units"]').remove()
-
-                                        $('#project-list').append(row)
-                                    }
-                                </script>
-
-                            </div>
-                        </div>
-                    </div>
+                <div class="btn-toolbar mb-10">
+                    <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
+                        <i class="ph ph-edit"></i>
+                        <?= lang('Edit', 'Bearbeiten') ?>
+                    </a>
                 </div>
             <?php } ?>
 
@@ -710,7 +609,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
             <table class="table unit-table w-full">
                 <tbody>
                     <?php
-                    $units = $project['units'] ?? [];
+                    $units = DB::doc2Arr($project['units'] ?? []);
                     // $tree =  $Groups->getPersonHierarchyTree($units);
                     if (!empty($units)) {
                         $hierarchy = $Groups->getPersonHierarchyTree($units);
@@ -724,9 +623,14 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                                     </a>
                                 </td>
                             </tr>
-                    <?php }
-                    }
-                    ?>
+                        <?php }
+                    } else { ?>
+                        <tr>
+                            <td>
+                                <?= lang('No units connected.', 'Keine Einheiten verknüpft.') ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
 
@@ -837,3 +741,4 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
         </div>
     <?php } ?>
 </section>
+</div>

@@ -223,7 +223,7 @@ if ($is_subproject) {
                 <i class="ph ph-warning"></i>
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
             </p>
-        <?php } else if ($status == 'proposed' && $phase == 'rejected') {
+        <?php } else if ($status == 'proposed' && ($phase == 'rejected' || $phase == 'withdrawn')) {
             if (!$status_perm) {
                 echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('You do not have permission to edit this project.', 'Du hast keine Berechtigung, dieses Projekt zu bearbeiten.') . '</p>';
                 echo '</div>';
@@ -233,7 +233,11 @@ if ($is_subproject) {
             <?= lang('Status change', 'Statusänderung') ?>:
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
+            <?php if ($phase == 'rejected') { ?>
             <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
+            <?php } else if ($phase == 'withdrawn') { ?>
+                <span class="badge muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></span>
+            <?php } ?>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
@@ -254,6 +258,18 @@ if ($is_subproject) {
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
             <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
+
+            <?php if ($phase == 'withdrawn') { ?>
+                <div class="form-group">
+                    <label for="withdrawn_reason"><?= lang('Reason for withdrawal', 'Grund für die Zurückziehung') ?></label>
+                    <textarea name="values[withdrawn_reason]" id="withdrawn_reason" class="form-control" rows="4"><?= val('withdrawn_reason') ?></textarea>
+                </div>
+                <p>
+                    <i class="ph ph-warning text-danger"></i>
+                    <?= lang('You are about to withdraw this project proposal. This means that it will no longer be considered for approval.', 'Du bist dabei, diesen Projektantrag zurückzuziehen. Das bedeutet, dass er nicht mehr für eine Bewilligung in Betracht gezogen wird.') ?>
+                </p>
+            <?php } ?>
+            
 
             <?php if ($is_subproject && empty($form['_id'] ?? null)) { ?>
                 <input type="hidden" class="hidden" name="values[parent_id]" value="<?= $form['parent_id'] ?>">
