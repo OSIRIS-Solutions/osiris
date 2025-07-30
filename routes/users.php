@@ -374,6 +374,10 @@ Route::get('/synchronize-users', function () {
 
 Route::post('/synchronize-users', function () {
     include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) {
+        echo "<p>Permission denied.</p>";
+        die();
+    }
     include_once BASEPATH . "/php/_login.php";
     include BASEPATH . "/header.php";
 
