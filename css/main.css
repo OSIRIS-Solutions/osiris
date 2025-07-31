@@ -573,6 +573,12 @@ strong {
   font-weight: 900;
 }
 
+blockquote {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--primary-color);
+}
+
 .section-title {
   font-weight: bold;
   font-size: 2.5rem;
@@ -4861,6 +4867,7 @@ input[type=number] {
 
 .row.row-eq-spacing > [class^=col].floating-form > label {
   padding-left: 1.8rem;
+  left: unset;
 }
 
 select.form-control[multiple] option {
