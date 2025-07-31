@@ -192,7 +192,7 @@ function getRORid(ror, msg = true) {
         toastError('Please provide a ROR ID')
         return
     }
-    var url = 'https://api.ror.org/organizations/' + ror.trim()
+    var url = 'https://api.ror.org/v1/organizations/' + ror.trim()
     $.ajax({
         type: "GET",
         url: url,
@@ -254,7 +254,7 @@ function searchROR(name) {
         return;
     }
 
-    var url = 'https://api.ror.org/organizations'
+    var url = 'https://api.ror.org/v1/organizations'
     var data = {
         affiliation: name
     }
