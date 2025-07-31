@@ -408,6 +408,8 @@ if ($active('keywords')) {
         const field = headers[column]
         const hash = {}
         hash[field.key] = attr
+        // escape parentheses
+        attr = attr.replace(/[\(\)]/g, '\\$&')
 
         if (tr.hasClass('active') || attr === null) {
             hash[field.key] = null
