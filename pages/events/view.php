@@ -125,8 +125,13 @@ if ($topicsEnabled) {
             <tr>
                 <td>
                     <span class="key"><?= lang('URL', 'URL') ?></span>
-                    <?php if (!empty($conference['url'])) { ?>
-                        <a href="<?= $conference['url'] ?>" target="_blank"><i class="ph ph-link"></i></a>
+                    <?php if (!empty($conference['url'])) { 
+                        $short_url = str_replace('https://', '', $conference['url']);
+                        if (strlen($short_url) > 50) {
+                            $short_url = substr($short_url, 0, 50) . '...';
+                        }
+                        ?>
+                        <a href="<?= $conference['url'] ?>" target="_blank"><i class="ph ph-link"></i> <?= $short_url ?></a>
                     <?php } else { ?>
                         -
                     <?php } ?>
