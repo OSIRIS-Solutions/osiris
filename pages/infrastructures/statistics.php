@@ -19,7 +19,7 @@ include_once BASEPATH . '/php/Vocabulary.php';
 $Vocabulary = new Vocabulary();
 
 
-    $additionalFields = [];
+$additionalFields = [];
 $fields = $Vocabulary->getVocabulary('infrastructure-stats');
 if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
 } else {
@@ -34,7 +34,7 @@ if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
 
 // today is the default reportdate
 if (!isset($_GET['reportdate']) || empty($_GET['reportdate'])) {
-    $reportdate = (CURRENTYEAR-1) . '-12-31'; // default to the last day of the previous year
+    $reportdate = (CURRENTYEAR - 1) . '-12-31'; // default to the last day of the previous year
 } else {
     $reportdate = $_GET['reportdate'];
 }
@@ -51,7 +51,7 @@ $infrastructures  = $osiris->infrastructures->find($filter)->toArray();
 
 $all = $osiris->infrastructures->count();
 
-$year = intval($_GET['year'] ?? CURRENTYEAR-1);
+$year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 ?>
 
 <style>
@@ -248,7 +248,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR-1);
             </tr>
         </thead>
         <tbody>
-            <?php 
+            <?php
             $stats = [
                 'hours' => 0,
                 'accesses' => 0
@@ -374,7 +374,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR-1);
                         </a>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?= $fte ?>
@@ -475,7 +475,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR-1);
                         </a>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?php if (empty($infrastructure['coordinator_organization'])) {
@@ -548,7 +548,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR-1);
                         <?= $infrastructure['name'] ?>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?= $infrastructure['location'] ?? '-' ?>
