@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Login and User Management
@@ -16,7 +15,7 @@
  * @license     MIT
  */
 
-require_once 'LDAPInterface.php';
+require_once BASEPATH . '/php/LDAPInterface.php';
 require_once BASEPATH . '/php/Groups.php';
 
 function login($username, $password)

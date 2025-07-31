@@ -38,19 +38,23 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         <i class="ph ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
     </h1>
-    <!-- <a href="<?= ROOTPATH ?>/my-activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-student"></i>
-        <?= lang('Show only my own activities', "Zeige nur meine eigenen Aktivitäten") ?>
-    </a> -->
 
-    <div class="btn-toolbar">
+    <button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
+
+    <div class="btn-toolbar justify-between">
 
         <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
             <?= lang('Statistics', 'Statistiken') ?>
         </a>
+        <?php if ($Settings->hasPermission('activities.lock')) { ?>
+            <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
+                <i class="ph ph-lock"></i>
+                <?= lang('Locking', 'Sperren') ?>
+            </a>
+        <?php } ?>
         <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i> 
+            <i class="ph ph-plus"></i>
             <?= lang('Add activity', 'Aktivität hinzufügen') ?>
         </a>
 
@@ -76,8 +80,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         }
     }
 </style>
-
-<button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
 
 <div class="row row-eq-spacing">
     <div class="col order-last order-sm-first">
@@ -150,7 +152,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     ?>
                         <tr style="--highlight-color:  <?= $a['color'] ?>;">
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 1)" class="item" id="<?= $id ?>-btn">
+                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 9)" class="item" id="<?= $id ?>-btn">
                                     <span class="text-<?= $id ?>">
                                         <span class="mr-5"><?= $Settings->icon($id, null, false) ?> </span>
                                         <?= $Settings->title($id, null) ?>
@@ -166,7 +168,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                         foreach ($subtypes as $subtype) {
                                             $subid = $subtype['id'];
                                         ?>
-                                            <a data-type="<?= $subid ?>" onclick="filterSubtype(this, '<?= $subid ?>')" class="item" id="<?= $subid ?>-sub-btn">
+                                            <a data-type="<?= $subid ?>" onclick="filterSubtype(this, '<?= $subid ?>')" class="item subitem" id="<?= $subid ?>-sub-btn">
                                                 <span class="text-<?= $subid ?>">
                                                     <span class="mr-5"> <i class="ph ph-<?= $subtype['icon'] ?>"></i> </span>
                                                     <?= lang($subtype['name'], $subtype['name_de']) ?>
@@ -215,6 +217,29 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </table>
             </div>
 
+            <?php if ($topicsEnabled) { ?>
+                <h6><?= $Settings->topicLabel() ?></h6>
+
+                <div class="filter">
+                    <table id="filter-topics" class="table small simple">
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                            $id = $a['id'];
+                        ?>
+                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                                <td>
+                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
+                                        <span style="color: var(--highlight-color)">
+                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
@@ -224,7 +249,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <?php foreach ($Departments as $id => $dept) { ?>
                         <tr <?= $Groups->cssVar($id) ?>>
                             <td>
-                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 7)" class="item d-block colorless" id="<?= $id ?>-btn">
+                                <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 7)" class="item colorless" id="<?= $id ?>-btn">
                                     <span><?= $dept ?></span>
                                 </a>
                             </td>
@@ -251,29 +276,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div>
 
-            <?php if ($topicsEnabled) { ?>
-                <h6><?= $Settings->topicLabel() ?></h6>
-
-                <div class="filter">
-                    <table id="filter-type" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
-                            $id = $a['id'];
-                        ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
-                                <td>
-                                    <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
-                                        <span style="color: var(--highlight-color)">
-                                            <?= lang($a['name'], $a['name_en'] ?? null) ?>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </table>
-
-                </div>
-            <?php } ?>
-
 
             <h6><?= lang('More', 'Weiteres') ?></h6>
             <div class="custom-switch">
@@ -285,10 +287,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     </div>
 </div>
 <!-- </div> -->
-
-<script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
 
 <script>
     var dataTable;
@@ -565,7 +563,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     render: function(data, type, row) {
                         if (data.length == 0 || !topicsEnabled) return ''
                         return data.join(', ')
-                        return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
+                        // return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
                     }
 
                 },
@@ -654,12 +652,44 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
 
             if (hash.search !== undefined) {
-                dataTable.search(hash.search).draw();
+                dataTable.search(decodeURIComponent(hash.search)).draw();
             }
             if (hash.page !== undefined) {
                 dataTable.page(parseInt(hash.page) - 1).draw('page');
             }
             initializing = false;
+
+            // count data for the filter and add it to the filter
+            let all_filters = {
+                9: '#filter-type',
+                7: '#filter-unit',
+                15: '#filter-affiliated',
+                14: '#filter-topics',
+            }
+
+            for (const key in all_filters) {
+                if (Object.prototype.hasOwnProperty.call(all_filters, key)) {
+                    const element = all_filters[key];
+                    const filter = $(element).find('a:not(.subitem)');
+                    filter.each(function(i, el) {
+                        let type = $(el).data('type')
+                        // console.log(type);
+                        if (key == 15 && type == 'yes') {
+                            type = true
+                        } else if (key == 15 && type == 'no') {
+                            type = false
+                        }
+                        const count = dataTable.column(key).data().filter(function(d) {
+                            if ((key == 7 || key == 14) && d instanceof Array) {
+                                return d.includes(type)
+                            }
+                            return d == type
+                        }).length
+                        // console.log(count);
+                        $(el).append(` <em>${count}</em>`)
+                    })
+                }
+            }
         });
 
 

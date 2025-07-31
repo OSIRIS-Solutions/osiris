@@ -100,6 +100,10 @@ Route::get('/api/activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+        $filter = $Settings->getActivityFilter($filter);
+    }
+
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
         $group = $_GET['aggregate'];
@@ -262,6 +266,7 @@ Route::get('/api/all-activities', function () {
     }
     // $Format = new Document($highlight);
 
+
     $filter = [];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -270,14 +275,26 @@ Route::get('/api/all-activities', function () {
         $filter = json_decode($_GET['json'], true);
     }
 
+    if (isset($filter['projects'])) {
+        $filter['projects'] = DB::to_ObjectID($filter['projects']);
+    }
+
     $result = [];
     if ($page == "my-activities") {
-        // only own work
-        $filter = ['$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]];
+        // reduced filter for my activities
+        $filter = $Settings->getActivityFilter($filter, $user, true);
+        $filter = array_merge($filter, [
+            '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
+        ]);
+    } else {
+        if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+            $filter = $Settings->getActivityFilter($filter);
+        }
     }
     if (isset($_GET['type'])) {
         $filter['type'] = $_GET['type'];
     }
+
     $cursor = $osiris->activities->find($filter);
     $cart = readCart();
     foreach ($cursor as $doc) {
@@ -429,17 +446,17 @@ Route::get('/api/conferences', function () {
 
     include_once BASEPATH . "/php/Document.php";
 
-    $concepts = $osiris->conferences->find(
+    $events = $osiris->conferences->find(
         [],
         ['sort' => ['start' => -1]]
     )->toArray();
 
-    foreach ($concepts as $i => $row) {
-        $concepts[$i]['activities'] = $osiris->activities->count(['conference_id' => strval($row['_id'])]);
-        $concepts[$i]['id'] = strval($row['_id']);
+    foreach ($events as $i => $row) {
+        // $events[$i]['activities'] = $osiris->activities->count(['conference_id' => strval($row['_id'])]);
+        $events[$i]['id'] = strval($row['_id']);
     }
 
-    echo return_rest($concepts);
+    echo return_rest($events);
 });
 
 Route::get('/api/users', function () {
@@ -522,6 +539,15 @@ Route::get('/api/users', function () {
             }
             $topics .= '</span>';
         }
+        // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
+        $units = $Groups->getPersonDept($user['units'] ?? []);
+        if (empty(trim($user['last'])) && empty(trim($user['first']))) {
+            if (empty($user['username'])) {
+                // this should not happen, but if it does, we set a default name
+                $user['username'] = 'unknown_user';
+            }
+            $user['last'] = $user['username'];
+        }
         $table[] = [
             'id' => strval($user['_id']),
             'username' => $user['username'],
@@ -543,15 +569,16 @@ Route::get('/api/users', function () {
             'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
             'first' => $user['first'],
             'last' => $user['last'],
-            'position' => $user['position'] ?? '',
+            'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
             'mail' => $user['mail'] ?? '',
             'telephone' => $user['telephone'] ?? '',
             'orcid' => $user['orcid'] ?? '',
             'academic_title' => $user['academic_title'],
-            'dept' => $Groups->deptHierarchy($user['depts'] ?? [], 1)['id'],
+            'dept' => $units,
             'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
             'public_image' => $user['public_image'] ?? true,
-            'topics' => $user['topics'] ?? array()
+            'topics' => $user['topics'] ?? array(),
+            'keywords' => $user['keywords'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));
@@ -590,6 +617,37 @@ Route::get('/api/users/(.*)', function ($id) {
     }
 
     echo return_rest($user, 1);
+});
+
+Route::get('/api/user-units/(.*)', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+    if (DB::is_ObjectID($id)) {
+        $filter = ['_id' => DB::to_ObjectID($id)];
+    } else {
+        $filter = ['username' => $id];
+    }
+    $person = $osiris->persons->findOne($filter, ['units' => 1, 'last' => 1, 'first' => 1]);
+    if (empty($person)) {
+        echo return_rest(lang('User not found', 'Nutzer nicht gefunden'), 0, 404);
+        die;
+    }
+    $person_units = $person['units'] ?? [];
+    foreach ($person_units as &$unit) {
+        $unit['in_past'] =  isset($unit['end']) && date('Y-m-d') > $unit['end'];
+        $group = $Groups->getGroup($unit['unit']);
+        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+    }
+
+    echo return_rest([
+        'name' => $person['first'] . ' ' . $person['last'],
+        'units' => $person_units
+    ], 1);
 });
 
 Route::get('/api/reviews', function () {
@@ -685,13 +743,18 @@ Route::get('/api/teaching', function () {
 });
 
 
-Route::get('/api/projects', function () {
+Route::get('/api/(projects|proposals)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
+    }
+    if ($type == 'projects') {
+        $collection = $osiris->projects;
+    } else {
+        $collection = $osiris->proposals;
     }
 
     $filter = [];
@@ -705,12 +768,17 @@ Route::get('/api/projects', function () {
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['$or' =>  [
-            ['title' => ['$regex' => $j]],
-            ['id' => $_GET['search']]
-        ]];
+        $filter = ['title' => ['$regex' => $j]];
     }
-    $result = $osiris->projects->find($filter)->toArray();
+
+    if (!$Settings->hasPermission($type . '.view')) {
+        $filter['$or'] = [
+            ['persons.user' => $_SESSION['username']],
+            ['created_by' => $_SESSION['username']]
+        ];
+    }
+
+    $result = $collection->find($filter)->toArray();
 
     if (isset($_GET['formatted'])) {
         $data = [];
@@ -734,7 +802,8 @@ Route::get('/api/projects', function () {
                 'role' => $project['role'] ?? '',
                 'topics' => $project['topics'] ?? array(),
                 'units' => $Project->getUnits(true),
-                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name')
+                'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name'),
+                'subproject' => $doc['subproject'] ?? false,
             ];
         }
         $result = $data;
@@ -777,7 +846,10 @@ Route::get('/api/journals', function () {
     header("Expires: 0");
     $pipeline = [
         [
-            '$unwind' => '$impact'
+            '$unwind' => [
+                'path' => '$impact',
+                'preserveNullAndEmptyArrays' => true
+            ]
         ],
         [
             '$sort' => ['impact.year' => -1]

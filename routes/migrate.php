@@ -15,10 +15,10 @@
  */
 
 
- Route::get('/migrate/countries', function () {
+Route::get('/migrate/countries', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Country.php";
-    
+
     set_time_limit(6000);
     include BASEPATH . "/header.php";
     include_once BASEPATH . "/routes/migration/v1.4.2.php";
@@ -27,12 +27,11 @@
 
 Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Groups.php";
-    
+
     set_time_limit(6000);
-
-    
-
+    include BASEPATH . "/header.php";
+    include_once BASEPATH . "/routes/migration/v1.5.0.php";
+    include BASEPATH . "/footer.php";
 });
 
 
@@ -172,6 +171,9 @@ Route::get('/install', function () {
 
     echo "</p>";
 
+    // make sure to create an index
+    $osiris->activities->createIndex(['rendered.plain' => 'text']);
+
     // last step: write Version number to database
     $osiris->system->deleteMany(['key' => 'version']);
     $osiris->system->insertOne(
@@ -197,6 +199,11 @@ Route::get('/migrate', function () {
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
     echo "Please wait...<br>";
+    flush();
+    ob_flush();
+
+    // make sure that text index is created
+    $osiris->activities->createIndex(['rendered.plain' => 'text']);
 
     $DBversion = $osiris->system->findOne(['key' => 'version']);
 
@@ -219,54 +226,85 @@ Route::get('/migrate', function () {
 
     if (version_compare($DBversion, '1.2.0', '<')) {
         include BASEPATH . "/routes/migration/v1.2.0.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.2.1', '<')) {
         include BASEPATH . "/routes/migration/v1.2.1.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.0', '<')) {
         include BASEPATH . "/routes/migration/v1.3.0.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.3', '<')) {
         include BASEPATH . "/routes/migration/v1.3.3.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.4', '<')) {
         include BASEPATH . "/routes/migration/v1.3.4.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.6', '<')) {
         include BASEPATH . "/routes/migration/v1.3.6.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.7', '<')) {
         include BASEPATH . "/routes/migration/v1.3.7.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.3.8', '<')) {
         include BASEPATH . "/routes/migration/v1.3.8.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.4.0', '<')) {
         include BASEPATH . "/routes/migration/v1.4.0.php";
+        flush();
+        ob_flush();
     }
 
     if (version_compare($DBversion, '1.4.1', '<')) {
         include BASEPATH . "/routes/migration/v1.4.1.php";
-    }
-    
-    if (version_compare($DBversion, '1.4.2', '<')) {
-        include BASEPATH . "/routes/migration/v1.4.2.php";
+        flush();
+        ob_flush();
     }
 
-    echo "<p>Rerender activities</p>";
+    if (version_compare($DBversion, '1.4.2', '<')) {
+        include BASEPATH . "/routes/migration/v1.4.2.php";
+        flush();
+        ob_flush();
+    }
+
+    if (version_compare($DBversion, '1.5.0', '<')) {
+        include BASEPATH . "/routes/migration/v1.5.0.php";
+        flush();
+        ob_flush();
+    }
+
+    echo "<p>Rerender activities, please wait ...</p>";
+    flush();
+    ob_flush();
+
     include_once BASEPATH . "/php/Render.php";
     renderActivities();
 
-    echo '<p>Rerender projects</p>';
-    renderAuthorUnitsProjects();
+    // echo '<p>Rerender projects</p>';
+    // renderAuthorUnitsProjects();
 
     echo "<p>Done.</p>";
     $osiris->system->updateOne(

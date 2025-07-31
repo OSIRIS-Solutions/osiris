@@ -48,9 +48,9 @@ Route::get('/docs/([\w-]+)', function ($doc) {
     ];
     include BASEPATH . "/header.php";
     echo '<link href="' . ROOTPATH . '/css/documentation.css" rel="stylesheet">';
-    echo '<script src="' . ROOTPATH . '/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>';
-    echo '<script src="' . ROOTPATH . '/js/jquery-ui.min.js"></script>';
-    $path    = BASEPATH . '/pages/docs/'. $language;
+
+    include_once BASEPATH . '/header-editor.php';
+    $path    = BASEPATH . '/pages/docs/' . $language;
 
 
     if (file_exists("$path/$doc.html")) {
@@ -84,19 +84,19 @@ Route::get('/docs/([\w-]+)', function ($doc) {
     } else {
         echo "Doc not found.";
     }
-    ?>
+?>
 
-<style>
-pre {
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-  background-color: var(--gray-color-very-light);
-  width: 100%;
-  border: var(--border-width) solid #afafaf;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  overflow-y: auto;
-}
-</style>
+    <style>
+        pre {
+            box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
+            background-color: var(--gray-color-very-light);
+            width: 100%;
+            border: var(--border-width) solid #afafaf;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+    </style>
 <?php
     // include BASEPATH . "/pages/error.php";
     include BASEPATH . "/footer.php";

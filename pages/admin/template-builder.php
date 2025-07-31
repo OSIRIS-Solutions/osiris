@@ -37,6 +37,195 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 $Document->setDocument($form);
 ?>
 
+
+<div class="modal" id="modal-authors" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#close-modal" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h2 class="mt-0"><?= lang('Author templates', 'Autorentemplates') ?></h2>
+
+            <p>
+                So ziemlich alle Felder für die Templates sind strikt definiert, bis auf die Autoren und Editoren, da es hier zu viele unterschiedliche Formatierung gibt, um alle auf klassische Weise abzubilden.
+            </p>
+            <p>
+                Daher gibt es hier eine eigene Template-Sprache, die es erlaubt, die Autoren und Editoren flexibel zu formatieren.
+            </p>
+
+            <h3>🔤 Beispielhafte Formatierungscodes</h3>
+            <p>Diese Module können kombiniert werden, um Autoren- oder Editorlisten flexibel darzustellen. Die Struktur ist:</p>
+            <pre class="code"><code>authors-{Namensformat}-{Optionen}
+editors-{Namensformat}-{Optionen}
+</code></pre>
+
+            <h4>👤 Namensformate</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Ausgabe-Beispiel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="code">last f.</td>
+                        <td>Koblitz J.</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last f</td>
+                        <td>Koblitz J</td>
+                    </tr>
+                    <tr>
+                        <td class="code">f last</td>
+                        <td>J Koblitz</td>
+                    </tr>
+                    <tr>
+                        <td class="code">f. last</td>
+                        <td>J. Koblitz</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last first</td>
+                        <td>Koblitz, Julia</td>
+                    </tr>
+                    <tr>
+                        <td class="code">first last</td>
+                        <td>Julia Koblitz</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, f.</td>
+                        <td>Koblitz, J.</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, f</td>
+                        <td>Koblitz, J</td>
+                    </tr>
+                    <tr>
+                        <td class="code">last, first</td>
+                        <td>Koblitz, Julia</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>🔗 Trennzeichen</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Wirkung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="code font-italic">(kein Code)</td>
+                        <td>Komma + „and“ (z. B. A, B and C)</td>
+                    </tr>
+                    <tr>
+                        <td class="code">amp</td>
+                        <td>Ersetze „and“ durch „&“ (A, B & C)</td>
+                    </tr>
+                    <tr>
+                        <td class="code">amp+comma</td>
+                        <td>Letzter Trenner ist „, &“ (A, B, & C)</td>
+                    </tr>
+                    <tr>
+                        <td class="code">semicolon</td>
+                        <td>Nutze ; statt , als Trenner (A; B and C)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>👥 Personenlimit</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Bedeutung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="code font-italic">(kein Code)</td>
+                        <td>Alle Personen anzeigen</td>
+                    </tr>
+                    <tr>
+                        <td class="code">etal6</td>
+                        <td>Maximal 6 Personen anzeigen, danach „et al.“</td>
+                    </tr>
+                    <tr>
+                        <td class="code">ellipses5</td>
+                        <td>Bis zu 4 Personen und den Letztautor zeigen, dazwischen wird ggf. „...“ verwendet.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>📚 Editor-Suffix</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Wirkung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="code">eds</td>
+                        <td>Immer „(eds.)“ nach der Liste</td>
+                    </tr>
+                    <tr>
+                        <td class="code">ed</td>
+                        <td>„(ed.)“ bei 1 Person, sonst „(eds.)“</td>
+                    </tr>
+                    <tr>
+                        <td class="code">Eds / Ed</td>
+                        <td>Großgeschriebene Varianten</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>🧩 Beispielkombinationen</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Format</th>
+                        <th>Bedeutung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="code">authors-last f.</td>
+                        <td>Koblitz J., Stark T. and Miller L.</td>
+                    </tr>
+                    <tr>
+                        <td class="code">editors-first last-amp-ed</td>
+                        <td>Julia Koblitz, Tony Stark & Lois Miller (eds.)</td>
+                    </tr>
+                    <tr>
+                        <td class="code">authors-last, f-etal3</td>
+                        <td>Koblitz, J, Stark, T, Miller, L et al.</td>
+                    </tr>
+                    <tr>
+                        <td class="code">authors-last first-amp+comma</td>
+                        <td>Koblitz, Julia, Stark, Tony, & Miller, Lois</td>
+                    </tr>
+                    <tr>
+                        <td class="code">editors-f. last-semicolon-Eds</td>
+                        <td>J. Koblitz; T. Stark and L. Miller (Eds.)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>📝 <strong>Hinweis:</strong> Die Reihenfolge der Module ist flexibel, aber authors- oder editors- muss aber am Anfang stehen. Falls etwas fehlt, damit euer Zitationsstil abgebildet werden kann, gern ein Ticket im GitHub erstellen.</p>
+
+
+            <div class="text-right mt-20">
+                <a href="#close-modal" class="btn mr-5" role="button">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
 
     <h1>
@@ -52,7 +241,7 @@ $Document->setDocument($form);
                 <?php
                 $types = $osiris->adminTypes->find([], ['sort' => ['parent' => 1]]);
                 foreach ($types as $type) {
-                    echo '<option value="' . $type['id'] . '">' . ucfirst($type['parent']) . ' > '. $type['name'] . '</option>';
+                    echo '<option value="' . $type['id'] . '">' . ucfirst($type['parent']) . ' > ' . $type['name'] . '</option>';
                 }
                 ?>
             </select>
@@ -73,15 +262,19 @@ $Document->setDocument($form);
 
     <hr>
 
+    <a href="#modal-authors" class="btn primary" role="button">
+        <i class="ph ph-student"></i>
+        <?= lang('About authors', 'Über Autoren') ?>
+    </a>
     <p>
-        <?=lang('In the following, ', 'Im folgenden wird')?>
+        <?= lang('In the following, ', 'Im folgenden wird') ?>
         <?php if (DB::is_ObjectID($example)) { ?>
-            <a href="<?=ROOTPATH?>/activities/view/<?=$example?>"><?=lang('a real example', 'ein echtes Beispiel')?></a>
+            <a href="<?= ROOTPATH ?>/activities/view/<?= $example ?>"><?= lang('a real example', 'ein echtes Beispiel') ?></a>
         <?php } else { ?>
-            <?=lang('a dummy dataset', 'ein Dummy-Datensatz')?>
+            <?= lang('a dummy dataset', 'ein Dummy-Datensatz') ?>
         <?php } ?>
-        <?=lang('is used to show the template builder.', 'eingesetzt, um die Auswirkung des Template-Builders zu veranschaulichen.')?>
-        
+        <?= lang('is used to show the template builder.', 'eingesetzt, um die Auswirkung des Template-Builders zu veranschaulichen.') ?>
+
     </p>
 
 

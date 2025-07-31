@@ -21,6 +21,9 @@ define('USER_MANAGEMENT', 'AUTH');
 // define("LDAP_DOMAIN", "@domain.local");
 // define("LDAP_PASSWORD", "ldap_password");
 // define("LDAP_BASEDN", "OU=Users,OU=DSMZ,DC=dsmz,DC=local");
+// define("LDAP_FILTER", "(&(objectClass=user)(samaccountname=*))");
+// define('OPEN_LDAP', false);
+// define('LDAP_BIND_METHOD', 'username'); // <-- 'dn' or 'username' or 'userPrincipalName'
 
 // OAUTH user management:
 // define('OAUTH', 'Microsoft');

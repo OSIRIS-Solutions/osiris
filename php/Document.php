@@ -1,8 +1,16 @@
 <?php
+
+/**
+ * Document class
+ * 
+ * This class is responsible for formatting of activities
+ */
+
 require_once "Settings.php";
 require_once "DB.php";
 require_once "Schema.php";
 require_once "Country.php";
+require_once "Organization.php";
 
 class Document extends Settings
 {
@@ -20,13 +28,12 @@ class Document extends Settings
 
     public $title = "";
     public $subtitle = "";
-    public $usecase = "web";
+    public $usecase = "";
     public $full = false;
 
     private $schemaType = null;
     public $schema = [];
     private $DB = null;
-    private $id = null;
 
     public $custom_fields = [];
     public $custom_field_values = [];
@@ -41,6 +48,10 @@ class Document extends Settings
         "authors-f-last" => ["authors"],
         "authors-f.-last" => ["authors"],
         "authors-first-last" => ["authors"],
+        "editors-first-last-amp-ed"  => ["editors"],
+        "authors-last-f-etal6" => ["authors"],
+        "authors-last-first-amp+comma" => ["authors"],
+        "editors-f.-last-semicolon-Eds" => ["authors"],
         "book-series" => ["series"],
         "book-title" => ["book"],
         "category" => ["category"],
@@ -57,7 +68,10 @@ class Document extends Settings
         "details" => ["details"],
         "doctype" => ["doc_type"],
         "doi" => ["doi"],
+        "doi-link" => ["doi"],
+        "doi-text" => ["doi"],
         "edition" => ["edition"],
+        "edition-ed" => ["edition"],
         "editor" => ["editors"],
         "editorial" => ["editor_type"],
         "file-icons" => ["file-icons"],
@@ -78,7 +92,11 @@ class Document extends Settings
         "openaccess" => ["open_access"],
         "openaccess-text" => ["open_access"],
         "openaccess-status" => ["oa_status"],
+        "organization" => ["organization"],
+        "organization-location" => ["organization"],
+        "organizations" => ["organizations"],
         "pages" => ["pages"],
+        "pages-pp" => ["pages"],
         "person" => ["name", "affiliation", "academic_title"],
         "publisher" => ["publisher"],
         "pubmed" => ["pubmed"],
@@ -107,7 +125,7 @@ class Document extends Settings
     ];
 
 
-    function __construct($highlight = true, $usecase = 'web')
+    function __construct($highlight = true, $usecase = '')
     {
         parent::__construct();
         $this->highlight = $highlight;
@@ -425,7 +443,7 @@ class Document extends Settings
         return $fn . $space . $last;
     }
 
-    function formatAuthors($raw_authors, $format = 'last, f.')
+    function formatAuthors($raw_authors, $format = 'last, f.', $separator = 'and')
     {
         $this->appendix = '';
         if (empty($raw_authors)) return '';
@@ -471,7 +489,8 @@ class Document extends Settings
                             $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
                     }
                 } else if (!$this->full) {
-                    $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
+                    if (isset($a['user']) && !empty($a['user']))
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
                 } else if ($this->highlight === true) {
                     if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
                 } else if ($this->highlight && $a['user'] == $this->highlight) {
@@ -505,7 +524,6 @@ class Document extends Settings
             $this->appendix .= " <sup>§</sup> Corresponding author";
         }
         $append = "";
-        $separator = 'and';
         if (!$this->full && $n > 9) {
             $append = " et al.";
             $separator = ", ";
@@ -761,26 +779,168 @@ class Document extends Settings
         return $this->doc[$field] ?? $default;
     }
 
+    private function formatAuthorsNew($module)
+    {
+        $isEditors = str_starts_with($module, 'editors-');
+        $authorKey = $isEditors ? 'editors' : 'authors';
+
+        $authors = DB::doc2Arr($this->getVal($authorKey, []));
+        if (empty($authors)) return '';
+        $N = count($authors);
+
+        $formatParts = explode('-', str_replace(['authors-', 'editors-'], '', $module));
+
+        // Default-Werte
+        $nameFormat = 'last-f.'; // z. B. last-f, f.-last, etc.
+        $delimiter = ', ';
+        $lastSeparator = ' and ';
+        $etalLimit = null;
+        $ellipsesLimit = null;
+        $suffix = "";
+        $aoi_format = $this->get('affiliation_format', 'bold');
+        if ($this->highlight !== true) {
+            $aoi_format = 'none';
+        }
+
+        $nameparts = ['last f.', 'last f', 'f last', 'f. last', 'last first', 'first last', 'last, f.', 'last, f', 'last, first'];
+        foreach ($nameparts as $part) {
+            if (str_contains($module, $part)) {
+                $nameFormat = $part;
+                break;
+            }
+        }
+
+        // format the parts according to the module name
+        foreach ($formatParts as $part) {
+            if ($part === 'amp') {
+                $lastSeparator = ' & ';
+            } elseif ($part === 'amp+comma') {
+                $lastSeparator = ', & ';
+            } elseif ($part === 'semicolon') {
+                $delimiter = '; ';
+            } elseif (str_starts_with($part, 'etal')) {
+                $etalLimit = (int) str_replace('etal', '', $part);
+            } elseif (str_starts_with($part, 'ellipses')) {
+                $ellipsesLimit = (int) str_replace('ellipses', '', $part);
+            } else if (in_array($part, ['eds', 'ed', 'Eds', 'Ed'])) {
+                if ($part === 'Eds' || $part === 'eds') {
+                    $suffix = ' (' . $part . '.)';
+                } elseif ($N == 1) {
+                    $suffix = ' (' . $part . 's.)';
+                } else {
+                    $suffix = ' (' . $part . '.)';
+                }
+            }
+        }
+
+        // format the authors
+        $formatted = [];
+        foreach ($authors as $person) {
+            $first = $person['first'] ?? '';
+            $last = $person['last'] ?? '';
+            $initial = $first ? mb_substr($first, 0, 1) : '';
+            $initialDot = $initial ? $initial . '.' : '';
+            $author = '';
+            switch ($nameFormat) {
+                case 'last f':
+                    $author = "$last $initial";
+                    break;
+                case 'f last':
+                    $author = "$initial $last";
+                    break;
+                case 'f. last':
+                    $author = "$initialDot $last";
+                    break;
+                case 'last first':
+                    $author = "$last, $first";
+                    break;
+                case 'first last':
+                    $author = "$first $last";
+                    break;
+                case 'last, f.':
+                    $author = "$last, $initialDot";
+                    break;
+                case 'last, f':
+                    $author = "$last, $initial";
+                    break;
+                case 'last, first':
+                    $author = "$last, $first";
+                    break;
+                default:
+                    $author = "$last $initialDot";
+                    break;
+            }
+
+            // markup of affiliated authors
+            if ($aoi_format == 'none') {
+                // do nothing
+            } elseif (($this->highlight === true && ($person['aoi'] ?? false)) || ($person['user'] === $this->highlight)) {
+                if ($this->usecase == 'web') {
+                    if (isset($person['user']) && !empty($person['user'])) {
+                        $author = "<a href='" . ROOTPATH . "/profile/" . $person['user'] . "'>$author</a>";
+                    }
+                } else if ($aoi_format == 'bold') {
+                    $author = "<b>$author</b>";
+                } else if ($aoi_format == 'italic') {
+                    $author = "<i>$author</i>";
+                } else if ($aoi_format == 'bold-underline') {
+                    $author = "<b><u>$author</u></b>";
+                } else if ($aoi_format == 'italic-underline') {
+                    $author = "<i><u>$author</u></i>";
+                } else if ($aoi_format == 'underline') {
+                    $author = "<u>$author</u>";
+                } else if ($aoi_format == 'bold-italic') {
+                    $author = "<b><i>$author</i></b>";
+                }
+            }
+
+            $formatted[] = $author;
+        }
+
+        if ($etalLimit === null && $this->usecase == 'web') {
+            $etalLimit = 12; // default limit for web use case
+        }
+
+        if ($etalLimit !== null  && $N > $etalLimit) {
+            $formatted = array_slice($formatted, 0, $etalLimit);
+            $result = implode($delimiter, $formatted);
+            $result .=  ' et al.';
+            return $result . $suffix;
+        } else if ($ellipsesLimit !== null && $N > $ellipsesLimit) {
+            $lastAuthor = array_pop($formatted);
+            $formatted = array_slice($formatted, 0, $ellipsesLimit - 1);
+            $result = implode($delimiter, $formatted);
+            $result .= '&period;&period;&period;' . $lastAuthor;
+            return $result . $suffix;
+        }
+        $last = array_pop($formatted);
+        $result = $formatted ? implode($delimiter, $formatted) . $lastSeparator . $last : $last;
+        return $result . $suffix;
+    }
+
     public function get_field($module, $default = '')
     {
         if ($this->usecase == 'list') $default = '-';
+        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
+            return $this->formatAuthorsNew($module);
+        }
         switch ($module) {
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
             case "authors": // ["authors"],
             case "supervisor": // ["authors"],
             case "scientist": // ["authors"],
-                return $this->formatAuthors($this->getVal('authors', []));
-            case "authors-last-f":
-                return $this->formatAuthors($this->getVal('authors', []), $format = 'last, f');
-            case "authors-f-last":
-                return $this->formatAuthors($this->getVal('authors', []), $format = 'f last');
-            case "authors-f.-last":
-                return $this->formatAuthors($this->getVal('authors', []), $format = 'f. last');
-            case "authors-last-first":
-                return $this->formatAuthors($this->getVal('authors', []), $format = 'last, first');
-            case "authors-first-last":
-                return $this->formatAuthors($this->getVal('authors', []), $format = 'first last');
+                return $this->formatAuthorsNew('authors-last-f.');
+                // case "authors-last-f":
+                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'last, f');
+                // case "authors-f-last":
+                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'f last');
+                // case "authors-f.-last":
+                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'f. last');
+                // case "authors-last-first":
+                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'last, first');
+                // case "authors-first-last":
+                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'first last');
             case "book-series": // ["series"],
                 return $this->getVal('series');
             case "book-title": // ["book"],
@@ -828,23 +988,36 @@ class Document extends Settings
             case "doctype": // ["doc_type"],
                 return $this->getVal('doc_type');
             case "doi": // ["doi"],
+            case "doi-link": // ["doi"],
+            case "doi-text": // ["doi"],
                 $val = $this->getVal('doi');
                 if ($val == $default || empty($val)) return $default;
+                if ($module == 'doi-link') {
+                    return "<a target='_blank' href='https://doi.org/$val'>https://doi.org/$val</a>";
+                } elseif ($module == 'doi-text') {
+                    return $val;
+                }
                 return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
             case "edition": // ["edition"],
-                $val = $this->getVal('edition');
+            case "edition-ed": // ["edition"],
+                $val = $this->getVal('edition', $default);
                 if ($val != $default) {
                     if ($val == 1) $val .= "st";
                     elseif ($val == 2) $val .= "nd";
                     elseif ($val == 3) $val .= "rd";
                     else $val .= "th";
+                    if ($module == "edition-ed") {
+                        $val .= " ed.";
+                    }
                 }
                 return $val;
             case "editor": // ["editors"],
-                return $this->formatAuthors($this->getVal('editors', []));
+            case "editors": // ["editors"],
+                return $this->formatAuthorsNew('editors-last-f.');
             case "editorial": // ["editor_type"],
                 return $this->getVal('editor_type');
             case "file-icons":
+                if (!($this->typeArr['upload'] ?? true)) return '';
                 if ($this->usecase == 'portal') return '';
                 $files = '';
                 foreach ($this->getVal('files', array()) as $file) {
@@ -903,7 +1076,7 @@ class Document extends Settings
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
             case "openaccess": // ["open_access"],
-                case "open_access": // ["open_access"],
+            case "open_access": // ["open_access"],
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $oa = '<i class="icon-open-access text-success" title="Open Access (' . $status . ')"></i>';
@@ -915,14 +1088,67 @@ class Document extends Settings
             case "openaccess-text": // ["open_access"],
                 if ($this->getVal('open_access', false)) {
                     return 'Open Access';
-                } 
+                }
                 return '';
             case "oa_status": // ["oa_status"],
             case "openaccess-status": // ["oa_status"],
                 return $this->getVal('oa_status', 'Unknown Status');
 
+            case "organization": // ["organization"],
+                $value = $this->getVal('organization');
+                if (empty($value)) return $default;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return $value;
+                if ($this->usecase == 'web') {
+                    return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+                }
+                if ($this->usecase == 'list') {
+                    return '
+                        <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
+                            <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                            <ul class="horizontal mb-0">
+                                <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
+                            </ul>
+                        </a>';
+                }
+                return $org['name'];
+            case "organization-location":
+                $value = $this->getVal('organization');
+                if (empty($value)) return $default;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
+                if (empty($org)) return $value;
+                return $org['location'] ?? $default;
+            case 'organizations':
+                $value = $this->getVal('organizations', []);
+                if (empty($value)) return $default;
+                $orgs = [];
+                foreach ($value as $org_id) {
+                    $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
+                    if (empty($org)) continue;
+                    if ($this->usecase == 'web' || $this->usecase == 'list') {
+                        $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . htmlspecialchars($org['name']) . '</a>';
+                    } else {
+                        $orgs[] = htmlspecialchars($org['name']);
+                    }
+                }
+                return implode(', ', $orgs);
+            case "peer-reviewed":
+                $val = $this->getVal('peer_reviewed', false);
+                if ($this->usecase == 'list')
+                    return bool_icon($val);
+                if ($val != $default)
+                    return "<span style='color:#63a308;'>[Peer-reviewed]</span>";
+                else return '';
             case "pages": // ["pages"],
                 return $this->getVal('pages');
+            case "pages-pp": // ["pages"],
+                $val = $this->getVal('pages', $default);
+                if ($val == $default) return $val;
+                if (str_contains($val, '-')) {
+                    return  "pp. " . $val;
+                }
+                return "p. " . $val;
             case "person": // ["name", "affiliation", "academic_title"],
                 return $this->getVal('name');
             case "publisher":; // ["publisher"],
@@ -932,7 +1158,26 @@ class Document extends Settings
                 if ($val == $default) return $val;
                 return "<a target='_blank' href='https://pubmed.ncbi.nlm.nih.gov/$val'>$val</a>";
             case "pubtype": // ["pubtype"],
-                return $this->getVal('pubtype');
+                switch ($this->getVal('pubtype')) {
+                    case 'article':
+                        return "Journal article (refereed)";
+                    case 'book':
+                        return lang('Book', 'Buch');
+                    case 'chapter':
+                        return lang('Book chapter', 'Buchkapitel');
+                    case 'preprint':
+                        return "Preprint (non refereed)";
+                    case 'conference':
+                        return lang('Conference preceedings', 'Konferenzbeitrag');
+                    case 'magazine':
+                        return lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)');
+                    case 'dissertation':
+                        return lang('Thesis');
+                    case 'others':
+                        return lang('Others', 'Weiteres');
+                    default:
+                        return $this->getVal('pubtype');
+                }
             case "review-description": // ["title"],
                 return $this->getVal('title');
             case "review-type": // ["title"],
@@ -1002,6 +1247,13 @@ class Document extends Settings
             case "nationality":
                 $code = $this->getVal('country');
                 return $this->DB->getCountry($code, lang('name', 'name_de'));
+            case 'countries':
+                $countries = DB::doc2Arr($this->getVal('countries', []));
+                if (empty($countries)) return '';
+                $country_names = array_map(function ($code) {
+                    return $this->DB->getCountry($code, lang('name', 'name_de'));
+                }, $countries);
+                return implode(', ', $country_names);
             case "gender":
                 switch ($this->getVal('gender')) {
                     case 'f':
@@ -1037,7 +1289,7 @@ class Document extends Settings
                         if ($val == $field[0] ?? '') return lang(...$field);
                     }
                 }
-                if (isset($this->custom_fields[$module])){
+                if (isset($this->custom_fields[$module])) {
                     $val = $this->customVal($val, $this->custom_fields[$module]);
                 }
                 if (is_array($val)) return implode(", ", $val);
@@ -1045,11 +1297,12 @@ class Document extends Settings
         }
     }
 
-    public function customVal($val, $format){
+    public function customVal($val, $format)
+    {
         if ($format == 'date') {
             return Document::format_date($val);
         }
-        if ($format == 'url') {
+        if ($format == 'url' && !empty($val) && $val != '-') {
             return "<a href='$val' target='_blank' class='link'>$val</a>";
         }
         return $val;
@@ -1058,6 +1311,9 @@ class Document extends Settings
     public function format()
     {
         $this->full = true;
+        if (empty($this->usecase)) {
+            $this->usecase = 'print';
+        }
         $template = $this->subtypeArr['template']['print'] ?? '{title}';
 
         $line = $this->template($template);
@@ -1070,6 +1326,9 @@ class Document extends Settings
     public function formatShort($link = true)
     {
         $this->full = false;
+        if (empty($this->usecase)) {
+            $this->usecase = 'web';
+        }
         $line = "";
         $title = $this->getTitle();
 
@@ -1245,16 +1504,29 @@ class Document extends Settings
         return $ris;
     }
 
-    public function getTitle()
+    public function getTitle($temporary_usecase = null)
     {
+        $usecase = $this->usecase;
+        if (!empty($temporary_usecase)) {
+            $this->usecase = $temporary_usecase;
+        }
         $template = $this->subtypeArr['template']['title'] ?? '{title}';
-        return $this->template($template);
+        $result = $this->template($template);
+        $this->usecase = $usecase;
+        return $result;
     }
 
-    public function getSubtitle()
+    public function getSubtitle($temporary_usecase = null)
     {
+        $usecase = $this->usecase;
+        if (!empty($temporary_usecase)) {
+            $this->usecase = $temporary_usecase;
+        }
         $template = $this->subtypeArr['template']['subtitle'] ?? '{authors}';
-        return $this->template($template);
+        $result = $this->template($template);
+
+        $this->usecase = $usecase;
+        return $result;
     }
 
     public function formatPortal()
@@ -1307,6 +1579,7 @@ class Document extends Settings
         $line = preg_replace('/\s\./', '.', $line);
         $line = preg_replace('/\.+/', '.', $line);
         $line = preg_replace('/\(:\s*/', '(', $line);
+        $line = preg_replace('/\s*\(,?\s*\)/', '', $line);
         $line = preg_replace('/\s+/', ' ', $line);
         $line = preg_replace('/,\s*$/', '', $line);
         $line = preg_replace('/<br *\/?>,\s*/', '<br />', $line);

@@ -25,13 +25,13 @@ $organizations  = $osiris->organizations->find(
 
 <h1>
     <i class="ph ph-building-office" aria-hidden="true"></i>
-    <?= lang('Organizations', 'Organisationen') ?>
+    <?= lang('Organisations', 'Organisationen') ?>
 </h1>
 <div class="btn-toolbar">
     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
         <a href="<?= ROOTPATH ?>/organizations/new">
             <i class="ph ph-plus"></i>
-            <?= lang('Add new organization', 'Neue Organisation anlegen') ?>
+            <?= lang('Add new organisation', 'Neue Organisation anlegen') ?>
         </a>
     <?php } ?>
 </div>

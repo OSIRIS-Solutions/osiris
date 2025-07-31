@@ -2,6 +2,10 @@
 
 Route::get('/auth/new-user', function () {
     include_once BASEPATH . "/php/init.php";
+    if (!$Settings->get('auth-self-registration', true)) {
+        header("Location: " . ROOTPATH . "/user/login");
+        die;
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/addons/auth/add-user.php";
     include BASEPATH . "/footer.php";
@@ -170,6 +174,11 @@ Route::post('/auth/reset-password', function(){
 
 Route::post('/auth/new-user', function () {
     include_once BASEPATH . "/php/init.php";
+
+    if ((!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) && !$Settings->get('auth-self-registration', true)) {
+        header("Location: " . ROOTPATH . "/user/login");
+        die;
+    }
 
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
         $msg = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");

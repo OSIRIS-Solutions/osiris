@@ -16,30 +16,41 @@
 
 
 Route::get('/impress', function () {
+    include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/impressum.html";
+    include BASEPATH . "/pages/impressum.php";
+    include BASEPATH . "/footer.php";
+});
+
+Route::get('/privacy', function () {
+    include_once BASEPATH . "/php/init.php";
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/privacy.php";
     include BASEPATH . "/footer.php";
 });
 
 Route::get('/new-stuff', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/MyParsedown.php";
+
+    // update users last version if necessary
+    if (isset($USER) && !empty($USER)) {
+        if (!isset($USER['lastversion']) || $USER['lastversion'] !== OSIRIS_VERSION) {
+            $updateResult = $osiris->persons->updateOne(
+                ['username' => $_SESSION['username']],
+                ['$set' => ['lastversion' => OSIRIS_VERSION]]
+            );
+            // reset last notification check
+            $_SESSION['last_notification_check'] = 0;
+        }
+    }
 
     $breadcrumb = [
         ['name' => lang('News', 'Neuigkeiten')]
     ];
 
-    include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/MyParsedown.php";
-
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/news.php";
-    include BASEPATH . "/footer.php";
-});
-Route::get('/about', function () {
-    $breadcrumb = [
-        ['name' => lang('About OSIRIS', 'Über OSIRIS')]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/about.php";
     include BASEPATH . "/footer.php";
 });
 

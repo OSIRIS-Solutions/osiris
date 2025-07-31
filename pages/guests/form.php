@@ -1,7 +1,5 @@
-<script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
 
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/script.js"></script>
 
 
@@ -55,7 +53,7 @@
                     </label>
                     <select class="form-control" id="username" name="values[user]" autocomplete="off" required>
                         <?php
-                        foreach ($osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ["last" => 1]]) as $j) { ?>
+                        foreach ($osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]) as $j) { ?>
                             <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['supervisor']['user'] ?? $_SESSION['username']) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                         <?php } ?>
                     </select>

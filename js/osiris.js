@@ -776,6 +776,12 @@ function _approve(id, approval) {
         url: ROOTPATH + '/crud/activities/approve/' + id,
         success: function (response) {
             $('.loader').removeClass('show')
+            let n_notifications = parseInt($('span.notification').text()) - 1
+            console.log(n_notifications);
+            if (n_notifications >= 0) {
+                $('span.notification').text(n_notifications)
+            }
+            
             var loc = location.pathname.split('/')
             if (loc[loc.length - 1] == "issues") {
                 $('#tr-' + id).remove()
@@ -793,6 +799,7 @@ function _approve(id, approval) {
                 $('#tr-' + id).remove()
                 toastSuccess('Removed activity')
             }
+            
             // toastSuccess("Updated " + response.updated + " datasets.")
             // $('#result').html(response)
         },
@@ -835,13 +842,55 @@ function prependRow(trcontent) {
 
 
 function initActivities(selector, data = {}) {
-    $(selector).DataTable({
+    if ($(selector).length === 0) {
+        console.warn('No activities table found with selector:', selector);
+        return;
+    }
+    return $(selector).DataTable({
         "ajax": {
             "url": ROOTPATH + '/api/all-activities',
             "data": data,
             dataSrc: 'data'
         },
         deferRender: true,
+        buttons: [
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [3]
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-clipboard"></i> ${lang('Copy', 'Kopieren')}`,
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [5, 3, 4, 6, 7, 8, 9],
+                    format: {
+                        header: function (data, columnIdx) {
+                            // eigene Header-Texte definieren
+                            const customHeaders = {
+                                0: lang('Icon', 'Icon'),
+                                1: lang('Activity', 'Aktivität'),
+                                2: lang('Links', 'Links'),
+                                3: lang('Formatted text', 'Formatierter Text'),
+                                4: lang('Start date', 'Startdatum'),
+                                5: lang('Type', 'Typ'),
+                                6: lang('Subtype', 'Untertyp'),
+                                7: lang('Title', 'Titel'),
+                                8: lang('Authors', 'Autoren'),
+                                9: lang('Year', 'Jahr')
+                            };
+                            return customHeaders[columnIdx] || data;
+                        }
+                    }
+                },
+                className: 'btn small',
+                title: 'OSIRIS_activities',
+                text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            }
+        ],
+        dom: 'fBrtip',
         pageLength: 5,
         columnDefs: [
             {
@@ -863,10 +912,41 @@ function initActivities(selector, data = {}) {
                 data: 'search-text',
                 searchable: true,
                 visible: false,
+                header: 'Test'
             },
             {
                 targets: 4,
                 data: 'start',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 5,
+                data: 'raw_type',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 6,
+                data: 'raw_subtype',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 7,
+                data: 'title',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 8,
+                data: 'authors',
+                searchable: true,
+                visible: false,
+            },
+            {
+                targets: 9,
+                data: 'year',
                 searchable: true,
                 visible: false,
             },
@@ -942,54 +1022,26 @@ function initProjects(selector, data = {}) {
 
             }
         },
-        {
-            data: 'role', render: function (data) {
-                if (data == 'coordinator') {
-                    return `<span class="badge text-signal">
-                    <i class="ph ph-crown-simple"></i>
-                    ${lang('Coordinator', 'Koordinator')}
-                    </span>`
-                }
-                if (data == 'associated') {
-                    return `<span class="badge text-success">
-                    <i class="ph ph-address-book"></i>
-                    ${lang('Associated', 'Beteiligt')}
-                    </span>`
-                }
-                return `<span class="badge text-muted">
-                    <i class="ph ph-handshake"></i>
-                    ${lang('Partner')}
-                    </span>`
-            }
-        },
-        {
-            data: 'applicant',
-            render: function (data, type, row) {
-                if (!row.contact && row.supervisor)
-                    return `<a href="${ROOTPATH}/profile/${row.supervisor}">${data}</a>`;
-                if (!row.contact)
-                    return data;
-                return `<a href="${ROOTPATH}/profile/${row.contact}">${data}</a>`
-            }
-        },
-        {
-            data: 'status',
-            render: function (data) {
-                console.log(data);
-                switch (data) {
-                    case 'approved':
-                        return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
-                    case 'finished':
-                        return `<span class='badge success'>${lang('finished', 'abgeschlossen')}</span>`;
-                    case 'applied':
-                        return `<span class='badge signal'>${lang('applied', 'beantragt')}</span>`;
-                    case 'rejected':
-                        return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
-                    case 'expired':
-                        return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
-                }
-            }
-        }
+            // {
+            //     data: 'role', render: function (data) {
+            //         if (data == 'coordinator') {
+            //             return `<span class="badge text-signal">
+            //             <i class="ph ph-crown-simple"></i>
+            //             ${lang('Coordinator', 'Koordinator')}
+            //             </span>`
+            //         }
+            //         if (data == 'associated') {
+            //             return `<span class="badge text-success">
+            //             <i class="ph ph-address-book"></i>
+            //             ${lang('Associated', 'Beteiligt')}
+            //             </span>`
+            //         }
+            //         return `<span class="badge text-muted">
+            //             <i class="ph ph-handshake"></i>
+            //             ${lang('Partner')}
+            //             </span>`
+            //     }
+            // },
         ],
         order: [
             [4, 'desc']
@@ -1716,11 +1768,11 @@ function userTable(selector, data = {}) {
     });
 }
 
-function iconTest(icon){
-    $('#test-icon').attr('class', 'ph ph-'+icon);
+function iconTest(icon) {
+    $('#test-icon').attr('class', 'ph ph-' + icon);
 }
 
-function spark($selector, $filter){
+function spark($selector, $filter) {
     // TODO: unfinished
     $.ajax({
         type: "GET",
@@ -1739,7 +1791,7 @@ function spark($selector, $filter){
             // transform data
             var labels = data.map(item => item.activity);
             // labels are years. fill the gaps
-            labels = Array.from({length: labels[0] - labels[labels.length - 1] + 1}, (_, i) => labels[labels.length - 1] + i);
+            labels = Array.from({ length: labels[0] - labels[labels.length - 1] + 1 }, (_, i) => labels[labels.length - 1] + i);
 
             var y = data.map(item => item.count);
 
@@ -1786,4 +1838,100 @@ function spark($selector, $filter){
             console.log(response);
         }
     });
+}
+
+
+function timelineChart(filter = {}, props = {}) {
+    if (typeof timeline !== 'function') {
+        console.error('Timeline function is not defined. Please ensure the timeline.js script is included.');
+        return;
+    }
+
+    let selector = props.timelineSelector || '#timeline';
+    let eventSelector = props.eventSelector || '#event-selector';
+    let yearSelector = props.yearSelector || '#activity-year';
+
+    // check if selector exists
+    if (!$(selector).length || !$(yearSelector).length) {
+        console.error('Timeline selector or year selector not found.');
+        return;
+    }
+    if (eventSelector && !$(eventSelector).length) {
+        eventSelector = null; // if eventSelector is not found, set it to null
+    }
+
+    // current year and quarter
+    // let date = new Date();
+    let year = $(yearSelector).val();
+    let currentYear = new Date().getFullYear();
+    // check if year is a valid 4 digit number
+    if (!/^\d{4}$/.test(year)) {
+        toastError('Invalid year format. Please enter a valid 4-digit year.');
+        return;
+    }
+    if (year > currentYear) {
+        year = currentYear;
+        $(yearSelector).val(year);
+    }
+
+    $(selector).empty()
+    if (eventSelector) {
+        $(eventSelector).empty()
+    }
+
+    filter['start_date'] = {
+        '$gte': `${year}-01-01`,
+        '$lte': `${year}-12-31`
+    };
+    // let quarter = Math.ceil((date.getMonth() + 1) / 3);
+    $.ajax({
+        type: "GET",
+        url: ROOTPATH + "/api/dashboard/timeline",
+        data: {
+            filter: filter
+        },
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            let typeInfo = response.data.info;
+            let events = response.data.events;
+            if (events.length === 0) {
+                $(selector).html('<div class="content text-muted text-center">' + lang('No activities found for this year.', 'Keine Aktivitäten für dieses Jahr gefunden.') + '</div>');
+                return;
+            }
+            if (eventSelector) {
+                let types = response.data.types;
+                types.forEach(t => {
+                    let type = typeInfo[t];
+                    if (!type) return;
+                    let item = $('<small class="badge type-badge active ' + type.id + '" onclick="toggleTimelineActivity(\'' + type.id + '\')">' + lang(type.name, type.name_de ?? null) + '</small>');
+                    item.css('background-color', type.color);
+                    $(eventSelector).append(item);
+                });
+            }
+            timeline(year, 0, typeInfo, events);
+        },
+        error: function (response) {
+            console.log(response);
+        }
+    });
+}
+
+function toggleTimelineActivity(type) {
+    // check if type is active
+    let active = ($('.badge.' + type).hasClass('active'));
+
+    $('.badge.' + type).toggleClass('active');
+    $('.event-circle.' + type).toggle();
+
+    if (activitiesTable) {
+        // activitiesTable.columns(5).search(type, true, false, true).draw();
+        if (active) {
+            activeCategories.add(type);
+        } else {
+            activeCategories.delete(type);
+        }
+
+        activitiesTable.draw(); // Tabelle neu zeichnen
+    }
 }

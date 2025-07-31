@@ -6,7 +6,7 @@ require_once BASEPATH . '/php/_login.php';
 echo "<h1>" . lang('Synchronize users', 'Synchronisiere Nutzer:innen') . "</h1>";
 
 // link to synchronize attributes
-echo "<p><a href='" . ROOTPATH . "/synchronize-attributes' class='btn primary float-right'> " . lang('Synchronize attributes', 'Synchronisiere Attribute') . "</a></p>";
+echo "<p><a href='" . ROOTPATH . "/admin/persons#section-auth' class='btn primary float-right'> " . lang('Synchronize attributes', 'Synchronisiere Attribute') . "</a></p>";
 
 // get all users from LDAP
 $blacklist = [];
@@ -32,6 +32,11 @@ $users = getUsers();
 if (isset($users['msg'])) {
     echo "<div class='alert signal mb-10'>" . $users['msg'] . "</div>";
     unset($users['msg']);
+}
+
+if (empty($users)) {
+    echo "<p>" . lang('No users found', 'Keine Nutzer:innen gefunden') . "</p>";
+    return;
 }
 
 $removed = $osiris->persons->find(

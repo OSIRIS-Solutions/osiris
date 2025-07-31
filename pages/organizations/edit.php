@@ -35,10 +35,10 @@ function sel($index, $value)
 $form = $GLOBALS['form'] ?? [];
 
 if (empty($form) || !isset($form['_id'])) {
-    $formaction = ROOTPATH . "/crud/organization/create";
+    $formaction = ROOTPATH . "/crud/organizations/create";
     $url = ROOTPATH . "/organizations/view/*";
 } else {
-    $formaction = ROOTPATH . "/crud/organization/update/" . $form['_id'];
+    $formaction = ROOTPATH . "/crud/organizations/update/" . $form['_id'];
     $url = ROOTPATH . "/organizations/view/" . $form['_id'];
 }
 
@@ -49,13 +49,13 @@ if (empty($form) || !isset($form['_id'])) {
 
         <h1 class="title">
             <i class="ph ph-building-office" aria-hidden="true"></i>
-            <?= lang('New Organization', 'Neue Organisation') ?>
+            <?= lang('New Organisation', 'Neue Organisation') ?>
         </h1>
 
     <?php } else { ?>
         <h1 class="title">
             <i class="ph ph-building-office" aria-hidden="true"></i>
-            <?= lang('Edit Organization', 'Organisation bearbeiten') ?>
+            <?= lang('Edit Organisation', 'Organisation bearbeiten') ?>
         </h1>
     <?php } ?>
     <form action="<?= $formaction ?>" method="post" class="form">
@@ -77,7 +77,7 @@ if (empty($form) || !isset($form['_id'])) {
 
         <div class="form-group">
             <label for="name" class="required">
-                <?= lang('Name of the organization', 'Name der Organisation') ?>
+                <?= lang('Name of the organisation', 'Name der Organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-2</span>
             </label>
             <input type="text" class="form-control" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
@@ -85,7 +85,7 @@ if (empty($form) || !isset($form['_id'])) {
 
         <div class="form-group">
             <label for="type" class="required">
-                <?= lang('Type of organization', 'Art der Organisation') ?>
+                <?= lang('Type of organisation', 'Art der Organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-4</span>
             </label>
             <select name="values[type]" id="type" class="form-control" required>
@@ -180,7 +180,7 @@ if (empty($form) || !isset($form['_id'])) {
                     toastError('Please provide a ROR ID')
                     return
                 }
-                var url = 'https://api.ror.org/organizations/' + ror.trim()
+                var url = 'https://api.ror.org/v1/organizations/' + ror.trim()
                 $.ajax({
                     type: "GET",
                     url: url,
@@ -219,5 +219,3 @@ if (empty($form) || !isset($form['_id'])) {
         <button type="submit" class="btn secondary" id="submit"><?= lang('Save', 'Speichern') ?></button>
     </form>
 </div>
-
-<script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?= CSS_JS_VERSION ?>"></script>

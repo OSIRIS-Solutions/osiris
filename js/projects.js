@@ -1,18 +1,4 @@
-
-$.extend($.fn.DataTable.ext.classes, {
-    sPaging: "pagination mt-10 ",
-    sPageFirst: "direction ",
-    sPageLast: "direction ",
-    sPagePrevious: "direction ",
-    sPageNext: "direction ",
-    sPageButtonActive: "active ",
-    sFilterInput: "form-control sm d-inline w-auto ml-10 ",
-    sLengthSelect: "form-control sm d-inline w-auto",
-    sInfo: "float-right text-muted",
-    sLength: "float-right"
-});
-
-
+var activitiesTable = false
 
 function navigate(key) {
     $('section').hide()
@@ -24,8 +10,13 @@ function navigate(key) {
     switch (key) {
         case 'activities':
             if (activitiesTable) break;
-            initActivities()
-            // activitiesChart()
+            activitiesTable = initActivities('#activities-table', {
+                page: 'activities',
+                display_activities: 'web',
+                // user: CURRENT_USER,
+                filter: { 'projects': PROJECT }
+            });
+            timelineChart({ 'projects': PROJECT });
             break;
 
         case 'collabs':
@@ -36,20 +27,35 @@ function navigate(key) {
         default:
             break;
     }
+    // scroll to #project-nav 
+    $('html, body').animate({
+        scrollTop: $('#project-badges').offset().top
+    }, 200);
 
+    // save as hash
+    window.location.hash = 'section-' + key
 }
 
-var collabChart = false    
-function initCollabs (){
+$(document).ready(function () {
+    // get hash
+    var hash = window.location.hash
+    if (hash && hash.includes('#section-')) {
+        navigate(hash.replace('#section-', ''))
+    }
+});
+
+var collabChart = false
+function initCollabs() {
     collabChart = true
+    key = collaborator_id ?? PROJECT
     $.ajax({
         type: "GET",
         url: ROOTPATH + "/api/dashboard/collaborators",
         data: {
-            project: PROJECT
+            project: key
         },
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             console.log(response);
 
             var zoomlvl = 1;
@@ -78,60 +84,57 @@ function initCollabs (){
 
                 Plotly.newPlot('map', [data], layout);
         },
-        error: function(response) {
+        error: function (response) {
             console.log(response);
         }
     });
 }
 
-var activitiesTable;
-function initActivities() {
-    activitiesTable = $('#activities-table').DataTable({
-        "ajax": {
-            "url": ROOTPATH + '/api/all-activities',
-            "data": {
-                page: 'activities',
-                display_activities: 'web',
-                // user: CURRENT_USER,
-                filter: {'projects': PROJECT}
-            },
-            dataSrc: 'data'
-        },
-        deferRender: true,
-        pageLength: 5,
-        columnDefs: [
-            {
-                targets: 0,
-                data: 'icon',
-                // className: 'w-50'
-            },
-            {
-                targets: 1,
-                data: 'activity'
-            },
-            {
-                targets: 2,
-                data: 'links',
-                className: 'unbreakable'
-            },
-            {
-                targets: 3,
-                data: 'search-text',
-                searchable: true,
-                visible: false,
-            },
-            {
-                targets: 4,
-                data: 'start',
-                searchable: true,
-                visible: false,
-            },
-        ],
-        "order": [
-            [4, 'desc'],
-            // [0, 'asc']
-        ]
-    });
-}
+// var activitiesTable;
+// function initActivities() {
+    
+//     return;
+//     activitiesTable = $('#activities-table').DataTable({
+//         "ajax": {
+//             "url": ROOTPATH + '/api/all-activities',
+//             "data": data,
+//             dataSrc: 'data'
+//         },
+//         deferRender: true,
+//         pageLength: 5,
+//         columnDefs: [
+//             {
+//                 targets: 0,
+//                 data: 'icon',
+//                 // className: 'w-50'
+//             },
+//             {
+//                 targets: 1,
+//                 data: 'activity'
+//             },
+//             {
+//                 targets: 2,
+//                 data: 'links',
+//                 className: 'unbreakable'
+//             },
+//             {
+//                 targets: 3,
+//                 data: 'search-text',
+//                 searchable: true,
+//                 visible: false,
+//             },
+//             {
+//                 targets: 4,
+//                 data: 'start',
+//                 searchable: true,
+//                 visible: false,
+//             },
+//         ],
+//         "order": [
+//             [4, 'desc'],
+//             // [0, 'asc']
+//         ]
+//     });
+// }
 
 

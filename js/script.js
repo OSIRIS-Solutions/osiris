@@ -29,12 +29,9 @@ function initQuill(element) {
         theme: 'snow' // or 'bubble'
     });
 
-    quill.on('text-change', function (delta, oldDelta, source) {
-        // var delta = quill.getContents()
+    quill.on('text-change', function () {
         var str = $(element).find('.ql-editor p').html()
-        // var str = quill.getSemanticHTML()
         $(element).next().val(str)
-
         // TODO: add doubletCheck() with underscore
     });
 
@@ -42,7 +39,7 @@ function initQuill(element) {
     var additional = $('<span class="ql-formats">')
     var symbols = ['α', 'β', 'π', 'Δ']
     symbols.forEach(symbol => {
-        var btn = $('<button type="button" class="ql-symbol">')
+        var btn = $('<button type="button" class="ql-symbol additional">')
         btn.html(symbol)
         btn.on('click', function () {
             // $('.symbols').click(function(){
@@ -55,7 +52,7 @@ function initQuill(element) {
         additional.append(btn)
     });
 
-    $('.ql-toolbar').append(additional)
+    $(element).parent().find('.ql-toolbar').append(additional)
 }
 
 function quillEditor(selector) {
@@ -63,7 +60,7 @@ function quillEditor(selector) {
         modules: {
             toolbar: [
                 [{
-                    header: [1, 2, false]
+                    header: [1, 2, 3, false]
                 }],
                 ['bold', 'italic', 'underline'],
                 [{

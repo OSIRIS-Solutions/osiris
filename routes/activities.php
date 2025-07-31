@@ -228,6 +228,19 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
 }, 'login');
 
 
+Route::get('/activities/locking', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Locking", "Sperren")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/activities/locking.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, $id2) {
     include_once BASEPATH . "/php/init.php";
@@ -402,7 +415,7 @@ Route::post('/crud/activities/create', function () {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['name'])) $values['projects'][] = $project['name'];
+                if (isset($project['_id'])) $values['projects'][] = $project['_id'];
             }
         }
     }
@@ -645,6 +658,10 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
     } else {
         $values = $_POST['projects'];
         $values = array_values($values);
+        // convert values to ObjectID
+        $values = array_map(function ($v) use ($DB) {
+            return $DB->to_ObjectID($v);
+        }, $values);
 
         $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
@@ -758,6 +775,9 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
 
     $updateCount = $updateResult->getModifiedCount();
 
+    // force update of user notifications
+    $DB->notifications(true);
+
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=update-success");
         die();
@@ -830,6 +850,9 @@ Route::post('/crud/activities/approve-all', function () {
         ['$set' => ["authors.$.approved" => true]]
     );
 
+    // force update of user notifications
+    $DB->notifications(true);
+
     header("Location: " . ROOTPATH . "/issues?msg=update-success");
 });
 
@@ -878,4 +901,79 @@ Route::post('/crud/activities/hide', function () {
         ['_id' => $activity['_id']],
         ['$set' => ["hide" => !$hidden]]
     );
+}, 'login');
+
+
+Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+
+    // prepare id
+    $id = $DB->to_ObjectID($id);
+    $activity = $osiris->activities->findOne(['_id' => $id]);
+    if (empty($activity)) die('Error: No Activity found');
+
+    $locked = $activity['locked'] ?? false;
+
+    $osiris->activities->updateOne(
+        ['_id' => $id],
+        ['$set' => ['locked' => !$locked]]
+    );
+
+    $_SESSION['msg'] = $locked ? lang('Activity unlocked.', 'Aktivität entsperrt.') : lang('Activity locked.', 'Aktivität gesperrt.');
+
+    header("Location: " . ROOTPATH . "/activities/view/$id");
+});
+
+Route::post('/crud/activities/lock', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Locking", "Sperren")]
+    ];
+
+    include BASEPATH . "/header.php";
+
+    $changes = 0;
+    if (isset($_POST['action']) && isset($_POST['start']) && isset($_POST['end'])) {
+
+        $lock = ($_POST['action'] == 'lock');
+        // dump($lock);
+
+        $cursor = $DB->get_reportable_activities($_POST['start'], $_POST['end']);
+        foreach ($cursor as $doc) {
+            // dump($doc['title'] ?? 'REVIEW');
+
+            if ($lock) {
+                // in progress stuff is not locked
+                if (in_array($doc['subtype'], $Settings->continuousTypes) && is_null($doc['end'])) {
+                    continue;
+                }
+                if ($doc['type'] == "students" && isset($doc['status']) && $doc['status'] == 'in progress') {
+                    continue;
+                }
+            }
+
+            $updateResult = $osiris->activities->updateOne(
+                ['_id' => $doc['_id']],
+                ['$set' => ['locked' => $lock]]
+            );
+
+            $changes += $updateResult->getModifiedCount();
+        }
+        // construct output message
+        $header = $lock ? lang('Locked activities.', 'Aktivitäten gesperrt.') : lang('Unlocked activities.', 'Aktivitäten entsperrt.');
+        $text = lang(
+            "Successfully changed the status of $changes activities.",
+            "Es wurde erfolgreich der Status von $changes Aktivitäten geändert."
+        );
+        printMsg($text, 'success', $header);
+    } else {
+        echo 'Nothing to do.';
+    }
+
+    include BASEPATH . "/pages/activities/locking.php";
+    include BASEPATH . "/footer.php";
 }, 'login');

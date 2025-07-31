@@ -77,6 +77,10 @@ class DB
      */
     public static function to_ObjectID($id)
     {
+        if (empty($id)) return null;
+        if ($id instanceof ObjectId) {
+            return $id;
+        }
         if (DB::is_ObjectID($id)) {
             return new ObjectId($id);
         }
@@ -126,6 +130,229 @@ class DB
             return DB::doc2Arr($doc->toArray());
         }
         return $doc;
+    }
+    function notifications($force = false)
+    {
+        $notifications = [
+            'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
+            'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
+            'status' => lang('Expired status', 'Abgelaufener Status'),
+            'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
+            'project-open' => lang('Open project applications', 'Offene Projektanträge'),
+            'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
+            'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
+        ];
+
+        $now = time();
+        $user = $_SESSION['username'] ?? null;
+        $last = $_SESSION['last_notification_check'] ?? 0;
+        $issues = [];
+
+        if (empty($user)) return $issues;
+
+        // Immer: aktuelles Notifications-Dokument laden (falls vorhanden)
+        $existing = $this->db->notifications->findOne(['user' => $user]);
+        $messages = $existing['messages'] ?? []; // bestehende Nachrichten beibehalten
+        $messages = DB::doc2Arr($messages);
+        $messages = array_filter($messages, function ($msg) {
+            return !($msg['read'] ?? false);
+        });
+
+        if ($now - $last > 60 || $force) {
+            // ➤ Nur bei Bedarf: aufwendige Checks durchführen
+            $hasNotification = count($messages);
+
+            // Prüfe auf Probleme ("Issues")
+            $issues_raw = $this->getUserIssues($user);
+            if (!empty($issues_raw)) {
+                $issues['activity'] = [
+                    'name' => lang('Activities', 'Aktivitäten'),
+                    'count' => 0,
+                    'key' => 'activity',
+                    'values' => []
+                ];
+                foreach ($issues_raw as $key => $val) {
+                    $val = count($val);
+                    if ($val == 0) continue;
+                    $issues['activity']['values'][] = [
+                        'name' => $notifications[$key] ?? $key,
+                        'count' => $val,
+                        'key' => $key
+                    ];
+                    $issues['activity']['count'] += $val;
+                }
+                $hasNotification += $issues['activity']['count'];
+            }
+
+            // Prüfe auf Warteschlange
+            $queue = $this->db->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
+            if ($queue !== 0) {
+                $issues['queue'] = [
+                    'name' => lang('Queue', 'Warteschlange'),
+                    'count' => $queue,
+                    'key' => 'queue',
+                ];
+                $hasNotification += $queue;
+            }
+
+            // Prüfe auf neue OSIRIS-Version
+            $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
+            if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
+                $issues['version'] = [
+                    'name' => lang('New version available', 'Neue Version verfügbar'),
+                    'count' => 1,
+                    'key' => 'version',
+                ];
+                $hasNotification += 1;
+            }
+
+            // Prüfe auf Quartalsfreigabe
+            $reportingEnabled = $this->db->adminFeatures->findOne(['feature' => 'quarterly-reporting']);
+            $reportingEnabled = $reportingEnabled['enabled'] ?? true;
+            if ($reportingEnabled) {
+                $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
+                $roles = DB::doc2Arr($scientist['roles'] ?? []);
+                $lastquarter = $this->getLastQuarter();
+                if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
+                    $issues['approval'] = [
+                        'name' => lang('Approval of the quarter', 'Freigabe des Quartals'),
+                        'count' => 1,
+                        'key' => $lastquarter,
+                    ];
+                    $hasNotification += 1;
+                }
+            }
+
+            // ➤ Jetzt: Speichern in der Datenbank
+            if ($hasNotification > 0) {
+                $this->db->notifications->updateOne(
+                    ['user' => $user],
+                    ['$set' => [
+                        'issues' => $issues,
+                        'last_update' => time()
+                    ]],
+                    ['upsert' => true]
+                );
+            } else {
+                // keine aktuellen Issues → nur Issues leeren, Nachrichten bleiben erhalten
+                $this->db->notifications->updateOne(
+                    ['user' => $user],
+                    ['$set' => [
+                        'issues' => [],
+                        'last_update' => time()
+                    ]],
+                    ['upsert' => true]
+                );
+            }
+
+            // Session aktualisieren
+            $_SESSION['last_notification_check'] = $now;
+            $_SESSION['has_notifications'] = $hasNotification;
+        } else {
+            // ➤ kein Check notwendig: aktuelle Issues aus DB holen
+            // check if user has notifications in DB
+            $doc = $this->db->notifications->findOne(['user' => $user]);
+            if (!empty($doc)) {
+                $issues = DB::doc2Arr($doc['issues'] ?? []);
+                $messages = DB::doc2Arr($doc['messages'] ?? []);
+                $messages = array_filter($messages, function ($msg) {
+                    return !($msg['read'] ?? false);
+                });
+                // $hasNotification = array_sum(array_map("count", $issues));
+            } else {
+                // $hasNotification = false;
+            }
+        }
+        if (!empty($messages)) {
+            $issues['messages'] = $messages;
+        }
+
+        return $issues;
+    }
+
+    function addMessage($user, $en, $de = null, $type = 'general', $link = null)
+    {
+        if (empty($user) || empty($en)) return false;
+
+        $message = [
+            'id' => uniqid(),
+            'en' => $en,
+            'de' => $de ?? $en,
+            'created_at' => time(),
+            'read' => false,
+            'type' => $type,
+            'link' => $link
+        ];
+
+        $this->db->notifications->updateOne(
+            ['user' => $user],
+            ['$push' => ['messages' => $message]],
+            ['upsert' => true]
+        );
+
+        return true;
+    }
+
+    function addMessages($group, $en, $de = null, $type = 'general', $link = null)
+    {
+        if (empty($group) || empty($en)) return false;
+
+        $users = $this->getMessageGroup($group);
+        // do not send messages if user is current user
+        $users = array_filter($users, function ($user) {
+            return $user != $_SESSION['username'];
+        });
+        if (empty($users)) return false;
+        foreach ($users as $user) {
+            $this->addMessage($user, $en, $de, $type, $link);
+        }
+        return true;
+    }
+
+    function getMessageGroup($group, $key = 'username')
+    {
+        $users = [];
+        if (str_starts_with($group, 'role:')) {
+            $role = substr($group, 5);
+            $users = $this->db->persons->find(
+                ['roles' => $role, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
+        } else if (str_starts_with($group, 'user:')) {
+            $user = substr($group, 5);
+            $users = $this->db->persons->find(
+                ['username' => $user, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
+        }
+        $users = array_column($users, $key);
+        // do not send messages if user is current user
+        // $users = array_filter($users, function ($user) {
+        //     return $user != $_SESSION['username'];
+        // });
+        return $users;
+    }
+
+    function getMessages($user = null, $type = null)
+    {
+        if ($user === null) $user = $_SESSION['username'];
+        if (empty($user)) return array();
+        $filter = ['user' => $user];
+        if (!empty($type)) $filter['type'] = $type;
+        $doc = $this->db->notifications->findOne($filter, ['projection' => ['messages' => 1], 'sort' => ['created_at' => -1]]);
+        if (empty($doc)) return array();
+        return DB::doc2Arr($doc['messages']);
+    }
+
+    function getLastQuarter()
+    {
+        $Q = CURRENTQUARTER - 1;
+        $Y = CURRENTYEAR;
+        if ($Q < 1) {
+            $Q = 4;
+            $Y -= 1;
+        }
+        return $Y . "Q" . $Q;
     }
 
     function printProfilePicture($user, $class = "")
@@ -226,6 +453,7 @@ class DB
     public function getPerson($user = null)
     {
         if ($user === null) $user = $_SESSION['username'];
+        if ($user == '') return array();
         $person = $this->db->persons->findOne(['username' => $user]);
         if (empty($person)) return array();
         $person['name'] = $person['first'] . " " . $person['last'];
@@ -545,6 +773,7 @@ class DB
      */
     public function get_reportable_activities($start, $end)
     {
+        $Settings = new Settings;
         $result = [];
 
         $startyear = intval(explode('-', $start, 2)[0]);
@@ -559,15 +788,9 @@ class DB
         $filter['$or'] =   array(
             [
                 "start.year" => array('$lte' => $startyear),
-                '$and' => array(
-                    ['$or' => array(
-                        ['end.year' => array('$gte' => $endyear)],
-                        ['end' => null]
-                    )],
-                    ['$or' => array(
-                        ['type' => 'misc', 'subtype' => 'misc-annual'],
-                        ['type' => 'review', 'subtype' =>  'editorial'],
-                    )]
+                '$or' => array(
+                    ['end.year' => array('$gte' => $endyear)],
+                    ['end' => null, 'subtype' => ['$in' => $Settings->continuousTypes]]
                 )
             ],
             [
@@ -581,7 +804,7 @@ class DB
             // check if time of activity ist in the correct time range
             $ds = getDateTime($doc['start'] ?? $doc);
             if (isset($doc['end']) && !empty($doc['end'])) $de = getDateTime($doc['end'] ?? $doc);
-            elseif (in_array($doc['subtype'], ['misc-annual', 'editorial']) && is_null($doc['end'])) {
+            elseif (in_array($doc['subtype'], $Settings->continuousTypes) && is_null($doc['end'])) {
                 $de = $endtime;
             } else
                 $de = $ds;
@@ -665,7 +888,7 @@ class DB
                 ]
             ],
             [
-                'projection' => ['status'=>1]
+                'projection' => ['status' => 1]
             ]
         );
         foreach ($docs as $doc) {
@@ -701,23 +924,23 @@ class DB
         }
 
         // find all projects that need attention
-        $projects = $this->db->projects->find([
-            'persons.user' => $user,
-            'status' => 'applied'
-        ]);
-        foreach ($projects as $project) {
-            if (isset($project['end-delay']) && $now < new DateTime($project['end-delay'])) continue;
-            $issues['project-open'][] = strval($project['_id']);
-        }
-        $projects = $this->db->projects->find([
-            'persons.user' => $user,
-            'status' => 'approved',
-            'end.year' => ['$lte' => CURRENTYEAR]
-        ]);
-        foreach ($projects as $project) {
-            if ($now < getDateTime($project['end'])) continue;
-            $issues['project-end'][] = strval($project['_id']);
-        }
+        // $projects = $this->db->projects->find([
+        //     'persons.user' => $user,
+        //     'status' => 'proposed'
+        // ]);
+        // foreach ($projects as $project) {
+        //     if (isset($project['end-delay']) && $now < new DateTime($project['end-delay'])) continue;
+        //     $issues['project-open'][] = strval($project['_id']);
+        // }
+        // $projects = $this->db->projects->find([
+        //     'persons.user' => $user,
+        //     'status' => 'approved',
+        //     'end.year' => ['$lte' => CURRENTYEAR]
+        // ]);
+        // foreach ($projects as $project) {
+        //     if ($now < getDateTime($project['end'])) continue;
+        //     $issues['project-end'][] = strval($project['_id']);
+        // }
 
         $y = CURRENTYEAR - 1;
         $infrastructures = $this->db->infrastructures->find([
@@ -770,7 +993,7 @@ class DB
     public static function convert4humans($doc)
     {
 
-        $omit_fields = ['_id', 'history', 'rendered', 'comment', 'editor-comment', 'journal_id', 'impact'];
+        $omit_fields = ['_id', 'history', 'rendered', 'comment', 'editor-comment', 'journal_id', 'impact', 'cooperative', 'files', 'affiliated_positions', 'affiliated', 'projects'];
 
         $result = [];
 
@@ -784,7 +1007,13 @@ class DB
             if ($val instanceof BSONArray || $val instanceof BSONDocument) {
                 $val = DB::doc2Arr($val);
             }
-            if (is_array($val)) $val = json_encode($val);
+            if (is_array($val)) {
+                if (is_string($val[0])) {
+                    $val = implode(', ', $val);
+                } else {
+                    $val = json_encode($val);
+                }
+            }
             $val = strip_tags($val);
             $result[$key] = $val;
         }
@@ -797,7 +1026,6 @@ class DB
      */
     public function updateHistory($new_doc, $id)
     {
-        $Format = new Document();
         $old_doc = $this->getActivity($id);
         $hist = [
             'date' => date('Y-m-d'),
@@ -828,7 +1056,8 @@ class DB
         return $new_doc;
     }
 
-    function getCountry($iso, $key = null){
+    function getCountry($iso, $key = null)
+    {
         if (empty($iso)) return null;
         $country = $this->db->countries->findOne(['iso' => $iso]);
         if (empty($country)) return null;
@@ -838,12 +1067,15 @@ class DB
         }
         return $this->doc2Arr($country);
     }
-    function getCountries($key='name'){
+    function getCountries($key = 'name')
+    {
         $countries = $this->db->countries->find();
         $result = [];
         foreach ($countries as $country) {
             $result[$country['iso']] = $country[$key];
         }
+        // sort by name
+        asort($result);
         return $result;
     }
 }

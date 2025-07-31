@@ -30,8 +30,7 @@ function val($index, $default = '')
 }
 
 ?>
-<!-- <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script> -->
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 
 
@@ -87,7 +86,7 @@ function val($index, $default = '')
                         </label>
                         <select class="form-control" id="username" name="values[contact_person]" required autocomplete="off">
                             <?php
-                            $userlist = $osiris->persons->find([], ['sort' => ["last" => 1]]);
+                            $userlist = $osiris->persons->find([], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['user'] ?? $_SESSION['username']) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>

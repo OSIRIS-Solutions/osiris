@@ -294,7 +294,7 @@ if (array_sum($a) === 0) {
 
                             <?php
                             if (isset($h['comment']) && !empty($h['comment'])) { ?>
-                                <blockquote class="alert signal">
+                                <blockquote class="alert signal without-icon">
                                     <div class="title">
                                         <?= lang('Comment', 'Kommentar') ?>
                                     </div>
@@ -378,7 +378,7 @@ if (array_sum($a) === 0) {
                 <td class="w-50"><?= $doc['rendered']['icon'] ?></td>
                 <td>
                     <?= $doc['rendered']['web'] ?>
-                    <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+                    <div class='' id="approve-<?= $id ?>">
                         <?= lang(
                             'This publication is marked as <q>Online ahead of print</q>. Is it still not officially published?',
                             'Diese Aktivität ist markiert als <q>Online ahead of print</q>. Ist sie noch nicht offiziell publiziert?'
@@ -397,15 +397,6 @@ if (array_sum($a) === 0) {
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>?epub=true" class="btn small">
                             <?= lang('No longer <q>Online ahead of print</q> (Review)', 'Nicht länger <q>Online ahead of print</q> (Review)') ?>
                         </a>
-                        <!-- <div class="input-group sm w-500 d-inline-flex">
-                            <input type="date" class="form-control" value="<?= valueFromDateArray(["year" => $doc['year'], "month" => $doc['month'], "day" => $doc['day'] ?? 1]) ?>">
-                            <div class="input-group-append">
-                                <button class="btn" type="button" onclick="todo()">
-                                    <i class="ph ph-x"></i>
-                                    <?= lang('No longer <q>Online ahead of print</q> and officially issued under this date.', 'Kein <q>Online ahead of print</q> mehr und unter diesem Datum offiziell veröffentlicht.') ?>
-                                </button>
-                            </div>
-                        </div> -->
                     </div>
                 </td>
             </tr>
@@ -438,7 +429,7 @@ if (array_sum($a) === 0) {
                 <td class="w-50"><?= $doc['rendered']['icon'] ?></td>
                 <td>
                     <?= $doc['rendered']['web'] ?>
-                    <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+                    <div class='' id="approve-<?= $id ?>">
 
                     <?php if ($doc['status'] == 'in progress') { ?>
                         <?= lang(
@@ -512,14 +503,14 @@ if (array_sum($a) === 0) {
                 <td class="w-50"><?= $doc['rendered']['icon'] ?></td>
                 <td>
                     <?= $doc['rendered']['web'] ?>
-                    <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+                    <div class='' id="approve-<?= $id ?>">
 
                         <form action="<?= ROOTPATH ?>/crud/activities/update/<?= $id ?>" method="post" class="d-inline mt-5">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <input type="hidden" name="values[end-delay]" value="<?= endOfCurrentQuarter(true) ?>" class="hidden">
                             <button class="btn small text-success">
                                 <i class="ph ph-check"></i>
-                                <?= lang('Yes', 'Ja') ?>
+                                <?= lang('Yes, still running', 'Ja, noch laufend') ?>
                             </button>
                         </form>
 
@@ -558,7 +549,7 @@ if (array_sum($a) === 0) {
                         <?= lang('The project', 'Das Projekt') ?>
                         <b><?= $doc['name'] ?></b>
                         <?= lang('still has the status <q>applied</q>. Is this correct? ', 'hat noch immer den Status <q>beantragt</q>. Ist das noch immer so?') ?>
-                        <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+                        <div class='' id="approve-<?= $id ?>">
 
                             <form action="<?= ROOTPATH ?>/crud/projects/update/<?= $id ?>" method="post" class="d-inline mt-5">
                                 <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
@@ -589,7 +580,7 @@ if (array_sum($a) === 0) {
                         <?= lang('The project', 'Das Projekt') ?>
                         <b><?= $doc['name'] ?></b>
                         <?= lang('has ended. You can either prolong it or end it:', 'ist zu Ende. Du kannst es entweder verlängern oder als beendet markieren:') ?>
-                        <div class='alert mt-10 signal' id="approve-<?= $id ?>">
+                        <div class='' id="approve-<?= $id ?>">
 
 
                             <form action="<?= ROOTPATH ?>/crud/projects/update/<?= $id ?>" method="post" class="form-inline mt-5">

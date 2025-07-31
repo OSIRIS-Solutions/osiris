@@ -145,7 +145,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
 
 
 
-Route::get('/user/delete/(.*)', function ($user) {
+Route::get('/user/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
     $data = $DB->getPerson($user);
@@ -161,11 +161,31 @@ Route::get('/user/delete/(.*)', function ($user) {
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/user-delete.php";
+    include BASEPATH . "/pages/user/inactivate.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
 
+
+Route::get('/user/delete/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    $data = $DB->getPerson($user);
+    $data = DB::doc2Arr($data);
+    if (empty($data)) {
+        header("Location: " . ROOTPATH . "/user/browse");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => $data['name'], 'path' => "/profile/$user"],
+        ['name' => lang("Delete", "Löschen")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/user/delete.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
 
 
 Route::get('/user/ldap-example', function () {
@@ -259,12 +279,32 @@ Route::get('/issues', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/messages', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
 
-Route::get('/expertise', function () {
+    $breadcrumb = [
+        ['name' => lang('Messages', 'Benachrichtigungen')]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/messages.php";
+    include BASEPATH . "/footer.php";
+});
+
+Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Expertise search', 'Experten-Suche')]
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"]
     ];
+    if ($collection == 'keywords') {
+        $breadcrumb[] = ['name' => lang('Keywords', 'Schlagwörter')];
+    } else if ($collection == 'expertise') {
+        $breadcrumb[] = ['name' => lang('Expertise search', 'Experten-Suche')];
+    } else {
+        header("Location: " . ROOTPATH . "/user/browse?msg=invalid-collection");
+        die;
+    }
     // include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/expertise.php";
@@ -334,6 +374,10 @@ Route::get('/synchronize-users', function () {
 
 Route::post('/synchronize-users', function () {
     include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) {
+        echo "<p>Permission denied.</p>";
+        die();
+    }
     include_once BASEPATH . "/php/_login.php";
     include BASEPATH . "/header.php";
 
@@ -403,7 +447,7 @@ Route::post('/synchronize-users', function () {
                 continue;
             }
             $osiris->persons->insertOne($new_user);
-            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='".ROOTPATH."/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
+            echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='" . ROOTPATH . "/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
         }
     }
     if (isset($_POST['blacklist'])) {
@@ -438,6 +482,67 @@ Route::post('/synchronize-attributes', function () {
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/synchronize-attributes-preview.php";
     include BASEPATH . "/footer.php";
+});
+
+
+Route::post('/synchronize-attributes-now', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . '/php/LDAPInterface.php';
+
+    if (!$Settings->hasPermission('user.synchronize')) {
+        echo "<p>Permission denied.</p>";
+        die();
+    }
+
+    include BASEPATH . "/header.php";
+    $settings = $osiris->adminGeneral->findOne(['key' => 'ldap_mappings']);
+    $ldapMappings = DB::doc2Arr($settings['value'] ?? []);
+
+    if (empty($ldapMappings)) {
+        echo "No LDAP mappings found.\n";
+        exit;
+    }
+    $LDAP = new LDAPInterface();
+    $success = $LDAP->synchronizeAttributes($ldapMappings, $osiris);
+    if ($success) {
+        echo "User attributes synchronized successfully.\n";
+
+        $osiris->system->updateOne(
+            ['key' => 'ldap-sync'],
+            ['$set' => ['value' => date('Y-m-d H:i:s')]],
+            ['upsert' => true]
+        );
+    } else {
+        echo "Failed to synchronize user attributes.\n";
+    }
+    include BASEPATH . "/footer.php";
+});
+
+
+Route::post('/switch-user', function () {
+
+    if (isset($_POST['OSIRIS-SELECT-MAINTENANCE-USER'])) {
+        // someone tries to switch users
+        include_once BASEPATH . "/php/init.php";
+        $realusername = ($_SESSION['realuser'] ?? $_SESSION['username']);
+        $username = ($_POST['OSIRIS-SELECT-MAINTENANCE-USER']);
+
+        // check if the user is allowed to do that
+        $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
+        // change username if user is allowed
+        if ($allowed == 1 || $realusername == $username) {
+            $_SESSION['msg'] = lang("You are now logged in as", "Du bist jetzt angemeldet als") . " $username";
+            $_SESSION['realuser'] = $realusername;
+            $_SESSION['username'] = $username;
+            // reset notifications
+            $_SESSION['last_notification_check'] = 0;
+            header("Location: " . ROOTPATH . "/profile/$username");
+            die;
+        }
+
+        // do nothing if user is not allowed
+        header("Location: " . ROOTPATH . "/profile/" . $_SESSION['username'] . "?msg=not-allowed");
+    }
 });
 
 /** 
@@ -499,11 +604,23 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['cv'] = $cv;
     }
 
+    if (isset($values['is_active'])) {
+        $person['is_active'] = boolval($values['is_active']);
+    }
+
+    if (isset($values['roles'])) {
+        // remove empty roles
+        $person['roles'] = array_filter($values['roles'], function ($role) {
+            return !empty($role);
+        });
+        $person['roles'] = array_values($person['roles']);
+    }
+
     // if new password is set, update password
-    if (isset($_POST['password']) && !empty($_POST['password'])) {
+    if (isset($_POST['password']) && !empty($_POST['password']) && $user == $_SESSION['username']) {
         // check if old password matches
         $account = $osiris->accounts->findOne(['username' => $user]);
-        if (!password_verify($_POST['old_password'], $account['password'])) {
+        if (!empty($account['password'] ?? null) && !password_verify($_POST['old_password'], $account['password'])) {
             $_SESSION['msg'] = lang("Old password is incorrect.", "Vorheriges Passwort ist falsch.");
         } else if ($_POST['password'] != $_POST['password2']) {
             $_SESSION['msg'] = lang("Passwords do not match.", "Passwörter stimmen nicht überein.");
@@ -637,9 +754,14 @@ Route::post('/crud/users/units/(.*)', function ($user) {
 });
 
 
-Route::post('/crud/users/delete/(.*)', function ($user) {
+Route::post('/crud/users/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
+    // check permissions
+    if (!$Settings->hasPermission('user.inactivate')) {
+        echo "Permission denied.";
+        die();
+    }
 
     $data = $DB->getPerson($user);
 
@@ -679,6 +801,72 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
     }
 
     header("Location: " . ROOTPATH . "/profile/" . $user . "?msg=user-inactivated");
+    die();
+});
+
+
+Route::post('/crud/users/delete/(.*)', function ($user) {
+    include_once BASEPATH . "/php/init.php";
+
+    // check permissions
+    if (!$Settings->hasPermission('user.delete')) {
+        echo "Permission denied.";
+        die();
+    }
+
+    $data = $DB->getPerson($user);
+    if (empty($data)) {
+        header("Location: " . ROOTPATH . "/user/browse?msg=user-does-not-exist");
+        die();
+    }
+
+    // delete username from all activities
+    $osiris->activities->updateMany(
+        ["authors.user" => $user],
+        ['$set' => ["authors.$[elem].user" => null]],
+        ['arrayFilters' => [["elem.user" => $user]]]
+    );
+
+    // delete user from all projects
+    $osiris->projects->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    );
+    // delete user from all proposals
+    $osiris->proposals->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    );
+
+    // delete user from infrastructures
+    $osiris->infrastructures->updateMany(
+        ["persons.user" => $user],
+        ['$pull' => ["persons" => ["user" => $user]]]
+    ); 
+
+    // remove user from teaching
+    $osiris->teaching->updateMany(
+        ['contact_person' => $user],
+        ['$set' => ['contact_person' => null]]
+    );
+
+    $osiris->accounts->deleteOne(
+        ['username' => $user]
+    );
+    $osiris->persons->deleteOne(
+        ['username' => $user]
+    );
+    $osiris->userImages->deleteOne(
+        ['user' => $user]
+    );
+
+    if (file_exists(BASEPATH . "/img/users/$user.jpg")) {
+        unlink(BASEPATH . "/img/users/$user.jpg");
+    }
+
+    $_SESSION['msg'] = lang("User deleted.", "Benutzer gelöscht.");
+    // redirect to user browse page
+    header("Location: " . ROOTPATH . "/user/browse");
     die();
 });
 
@@ -750,7 +938,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
         } else {
             $target_dir = BASEPATH . "/img/users/";
             if (!is_writable($target_dir)) {
-                 $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
+                $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
             } else if (!unlink($target_dir . $filename)) {
                 // get error message
                 $error = error_get_last();
@@ -765,26 +953,26 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
 });
 
 
-Route::post('/crud/users/update-expertise/(.*)', function ($user) {
-    include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+// Route::post('/crud/users/update-expertise/(.*)', function ($user) {
+//     include_once BASEPATH . "/php/init.php";
+//     if (!isset($_POST['values'])) die("no values given");
 
-    $values = $_POST['values'];
-    $values = validateValues($values, $DB);
+//     $values = $_POST['values'];
+//     $values = validateValues($values, $DB);
 
-    $updateResult = $osiris->persons->updateOne(
-        ['username' => $user],
-        ['$set' => $values]
-    );
+//     $updateResult = $osiris->persons->updateOne(
+//         ['username' => $user],
+//         ['$set' => $values]
+//     );
 
-    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
-        die();
-    }
-    echo json_encode([
-        'updated' => $updateResult->getModifiedCount()
-    ]);
-});
+//     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+//         header("Location: " . $_POST['redirect'] . "?msg=update-success");
+//         die();
+//     }
+//     echo json_encode([
+//         'updated' => $updateResult->getModifiedCount()
+//     ]);
+// });
 
 
 Route::post('/crud/users/approve', function () {
@@ -800,6 +988,8 @@ Route::post('/crud/users/approve', function () {
         ['username' => $user],
         ['$push' => ["approved" => $q]]
     );
+
+    $_SESSION['last_notification_check'] = 0;
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect'] . "?msg=approved");
@@ -891,4 +1081,81 @@ Route::post('/claim/?(.*)', function ($user) {
 
     $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
     header("Location: " . ROOTPATH . "/profile/$user");
+}, 'login');
+
+
+
+Route::post('/crud/messages/mark-as-read/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages.$[elem].read' => true]],
+        ['arrayFilters' => [['elem.id' => $id]]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+
+Route::post('/crud/messages/mark-all-as-read', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages.$[].read' => true]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+
+Route::post('/crud/messages/delete/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$pull' => ['messages' => ['id' => $id]]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
+}, 'login');
+
+Route::post('/crud/messages/delete-all', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $user = $_SESSION['username'];
+    $updateResult = $osiris->notifications->updateOne(
+        ['user' => $user],
+        ['$set' => ['messages' => []]]
+    );
+    $updated = $updateResult->getModifiedCount();
+    if ($updated > 0) {
+        $_SESSION['last_notification_check'] = 0;
+    }
+    echo json_encode([
+        'updated' => $updated,
+        'success' => $updated > 0
+    ]);
 }, 'login');

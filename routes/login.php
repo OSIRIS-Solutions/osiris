@@ -172,15 +172,15 @@ Route::post('/user/login', function () {
                     $USER = $DB->getPerson($user);
 
                     // try to connect the user with existing authors
-                    $updateResult = $osiris->activities->updateMany(
-                        [
-                            'authors.last' => $USER['last'],
-                            'authors.first' => new MongoDB\BSON\Regex('^' . $USER['first'][0] . '.*')
-                        ],
-                        ['$set' => ["authors.$.user" => ($user)]]
-                    );
-                    $n = $updateResult->getModifiedCount();
-                    $msg .= "&new=$n";
+                    // $updateResult = $osiris->activities->updateMany(
+                    //     [
+                    //         'authors.last' => $USER['last'],
+                    //         'authors.first' => new MongoDB\BSON\Regex('^' . $USER['first'][0] . '.*')
+                    //     ],
+                    //     ['$set' => ["authors.$.user" => ($user)]]
+                    // );
+                    // $n = $updateResult->getModifiedCount();
+                    // $msg .= "&new=$n";
                 }
             } else {
                 // user exists in our database

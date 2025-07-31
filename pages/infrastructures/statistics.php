@@ -15,9 +15,26 @@
  * @license     MIT
  */
 
+include_once BASEPATH . '/php/Vocabulary.php';
+$Vocabulary = new Vocabulary();
+
+
+$additionalFields = [];
+$fields = $Vocabulary->getVocabulary('infrastructure-stats');
+if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+} else {
+    $fields = $fields['values'];
+    foreach ($fields as $field) {
+        if ($field['id'] == 'internal' || $field['id'] == 'national' || $field['id'] == 'international' || $field['id'] == 'hours' || $field['id'] == 'accesses') {
+            continue; // skip the default fields
+        }
+        $additionalFields[] = $field;
+    }
+}
+
 // today is the default reportdate
 if (!isset($_GET['reportdate']) || empty($_GET['reportdate'])) {
-    $reportdate = date('Y-m-d');
+    $reportdate = (CURRENTYEAR - 1) . '-12-31'; // default to the last day of the previous year
 } else {
     $reportdate = $_GET['reportdate'];
 }
@@ -33,6 +50,8 @@ $filter = [
 $infrastructures  = $osiris->infrastructures->find($filter)->toArray();
 
 $all = $osiris->infrastructures->count();
+
+$year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 ?>
 
 <style>
@@ -50,6 +69,10 @@ $all = $osiris->infrastructures->count();
     tfoot th:last-child {
         border-bottom-right-radius: var(--border-radius);
     }
+
+    .description p {
+        margin: 0;
+    }
 </style>
 
 <h1>
@@ -66,12 +89,13 @@ $all = $osiris->infrastructures->count();
 
 
 <div class="alert signal">
-    <i class="ph ph-warning text-signal"></i>
     <?= lang('All of the following statistics are based on the reporting date.', 'Alle unten aufgeführten Statistiken basieren auf dem angegebenen Stichtag.') ?>
 
     <form action="<?= ROOTPATH ?>/infrastructures/statistics" method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
         <h6 class="mb-0 mt-5"><?= lang('Change Reporting Date', 'Stichtag ändern') ?>:</h6>
         <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" />
+        <h6 class="mb-0 mt-5"><?= lang('Change Year for Statistics', 'Jahr für Statistik ändern') ?>:</h6>
+        <input type="number" name="year" value="<?= $year ?>" class="form-control w-100 d-inline-block" />
         <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
     </form>
 </div>
@@ -91,9 +115,9 @@ $all = $osiris->infrastructures->count();
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('Category', 'Kategorie') ?></th>
                 <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
-                <th><?= lang('Infrastructure Type', 'Art der Infrastruktur') ?></th>
+                <th><?= lang('Type', 'Art') ?></th>
                 <th><?= lang('Description', 'Beschreibung') ?></th>
             </tr>
         </thead>
@@ -106,15 +130,15 @@ $all = $osiris->infrastructures->count();
                         </a>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
-                        <?= $infrastructure['access'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?>
                     </td>
                     <td>
-                        <?= $infrastructure['infrastructure_type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
                     </td>
-                    <td>
+                    <td class="font-size-12 description">
                         <?= $infrastructure['description'] ?? '-' ?>
                     </td>
                 </tr>
@@ -123,23 +147,14 @@ $all = $osiris->infrastructures->count();
     </table>
 
     <h3>
-        <?= lang('Users by year', 'Anzahl der Nutzer:innen nach Jahr') ?>
+        <?= lang('Users in', 'Anzahl der Nutzer:innen in') ?> <?= $year ?>
     </h3>
-
-
-    <!-- Filter by Year -->
-    <div class="d-flex align-items-center mb-5">
-        <i class="ph ph-funnel text-primary"></i>
-        <span class="px-5"><?= lang('Year', 'Jahr') ?>:</span>
-        <input type="number" class="form-control w-100" placeholder="2021" onchange="filterByYear(this.value, '#user-stats')" />
-    </div>
 
     <table class="table" id="user-stats">
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
                 <th><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Year', 'Jahr') ?></th>
                 <th class="text-right"><?= lang('Internal', 'Intern') ?></th>
                 <th class="text-right"><?= lang('National', 'National') ?></th>
                 <th class="text-right"><?= lang('International', 'International') ?></th>
@@ -148,14 +163,23 @@ $all = $osiris->infrastructures->count();
         </thead>
         <tbody>
             <?php
+            $stats = [
+                'internal' => 0,
+                'national' => 0,
+                'international' => 0
+            ];
             foreach ($infrastructures as $infrastructure) {
                 $statistics = DB::doc2Arr($infrastructure['statistics'] ?? []);
                 if (!empty($statistics)) {
-                    usort($statistics, function ($a, $b) {
-                        return $a['year'] <=> $b['year'];
+                    // filter statistics by year
+                    $statistics = array_filter($statistics, function ($stat) use ($year) {
+                        return $stat['year'] == $year;
                     });
                 }
                 foreach ($statistics as $yearstats) {
+                    $stats['internal'] += $yearstats['internal'] ?? 0;
+                    $stats['national'] += $yearstats['national'] ?? 0;
+                    $stats['international'] += $yearstats['international'] ?? 0;
             ?>
                     <tr>
                         <td>
@@ -164,10 +188,7 @@ $all = $osiris->infrastructures->count();
                             </a>
                         </td>
                         <td>
-                            <?= $infrastructure['type'] ?? '-' ?>
-                        </td>
-                        <td>
-                            <?= $yearstats['year'] ?? $reportdate ?>
+                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                         </td>
                         <td class="text-right">
                             <?= $yearstats['internal'] ?? 0 ?>
@@ -186,32 +207,56 @@ $all = $osiris->infrastructures->count();
                 }
             } ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <th><?= lang('Total', 'Gesamt') ?></th>
+                <th>-</th>
+                <th class="text-right">
+                    <?= $stats['internal'] ?>
+                </th>
+                <th class="text-right">
+                    <?= $stats['national'] ?>
+                </th>
+                <th class="text-right">
+                    <?= $stats['international'] ?>
+                </th>
+                <th class="text-right">
+                    <?= $stats['internal'] + $stats['national'] + $stats['international'] ?>
+                </th>
+            </tr>
+        </tfoot>
     </table>
 
 
     <h3>
-        <?= lang('Usage statistics by year', 'Nutzungsstatistiken nach Jahr') ?>
+        <?= lang('Usage statistics in', 'Nutzungsstatistiken in') ?> <?= $year ?>
     </h3>
 
-    <!-- Filter by Year -->
-    <div class="d-flex align-items-center mb-5">
-        <i class="ph ph-funnel text-primary"></i>
-        <span class="px-5"><?= lang('Year', 'Jahr') ?>:</span>
-        <input type="number" class="form-control w-100" placeholder="2021" onchange="filterByYear(this.value, '#action-stats')" />
-    </div>
 
     <table class="table" id="action-stats">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Typ</th>
-                <th>Jahr</th>
                 <th class="text-right">Genutzte Stunden</th>
                 <th class="text-right">Zugriffe</th>
+                <?php foreach ($additionalFields as $f) { ?>
+                    <th class="text-right">
+                        <?= lang($f['en'], $f['de'] ?? null) ?>
+                    </th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($infrastructures as $infrastructure) {
+            <?php
+            $stats = [
+                'hours' => 0,
+                'accesses' => 0
+            ];
+            foreach ($additionalFields as $f) {
+                $stats[$f['id']] = 0;
+            }
+            foreach ($infrastructures as $infrastructure) {
                 $statistics = DB::doc2Arr($infrastructure['statistics'] ?? []);
                 if (!empty($statistics)) {
                     usort($statistics, function ($a, $b) {
@@ -219,6 +264,14 @@ $all = $osiris->infrastructures->count();
                     });
                 }
                 foreach ($statistics as $yearstats) {
+                    if ($yearstats['year'] != $year) {
+                        continue; // only show statistics for the selected year
+                    }
+                    $stats['hours'] += $yearstats['hours'] ?? 0;
+                    $stats['accesses'] += $yearstats['accesses'] ?? 0;
+                    foreach ($additionalFields as $f) {
+                        $stats[$f['id']] += $yearstats[$f['id']] ?? 0;
+                    }
             ?>
                     <tr>
                         <td>
@@ -227,10 +280,7 @@ $all = $osiris->infrastructures->count();
                             </a>
                         </td>
                         <td>
-                            <?= $infrastructure['type'] ?? '-' ?>
-                        </td>
-                        <td>
-                            <?= $yearstats['year'] ?? $reportdate ?>
+                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                         </td>
                         <td class="text-right">
                             <?= $yearstats['hours'] ?? 0 ?>
@@ -238,11 +288,33 @@ $all = $osiris->infrastructures->count();
                         <td class="text-right">
                             <?= $yearstats['accesses'] ?? 0 ?>
                         </td>
+                        <?php foreach ($additionalFields as $f) { ?>
+                            <td class="text-right">
+                                <?= $yearstats[$f['id']] ?? 0 ?>
+                            </td>
+                        <?php } ?>
                     </tr>
             <?php
                 }
             } ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <th><?= lang('Total', 'Gesamt') ?></th>
+                <th>-</th>
+                <th class="text-right">
+                    <?= $stats['hours'] ?>
+                </th>
+                <th class="text-right">
+                    <?= $stats['accesses'] ?>
+                </th>
+                <?php foreach ($additionalFields as $f) { ?>
+                    <th class="text-right">
+                        <?= $stats[$f['id']] ?>
+                    </th>
+                <?php } ?>
+            </tr>
+        </tfoot>
     </table>
 
 
@@ -302,7 +374,7 @@ $all = $osiris->infrastructures->count();
                         </a>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?= $fte ?>
@@ -403,7 +475,7 @@ $all = $osiris->infrastructures->count();
                         </a>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?php if (empty($infrastructure['coordinator_organization'])) {
@@ -457,7 +529,7 @@ $all = $osiris->infrastructures->count();
 
     <h5>
         <?= lang('Cooperation partners', 'Kooperationspartner') ?>
-        (<?= count($infrastructures) ?>)
+        (<?= count($collaborations) ?>)
     </h5>
 
     <table class="table" id="collaborative-partners">
@@ -476,7 +548,7 @@ $all = $osiris->infrastructures->count();
                         <?= $infrastructure['name'] ?>
                     </td>
                     <td>
-                        <?= $infrastructure['type'] ?? '-' ?>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                     </td>
                     <td>
                         <?= $infrastructure['location'] ?? '-' ?>

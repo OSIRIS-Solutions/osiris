@@ -29,6 +29,9 @@ class Country
 
     public static function get($code)
     {
+        if (!is_string($code) || strlen($code) != 2) {
+            return 'unknown';
+        }
         return Country::COUNTRIES[$code] ?? 'unknown';
     }
 

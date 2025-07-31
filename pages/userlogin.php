@@ -17,12 +17,12 @@
  */
 
 
-if (isset($_GET['redirect'])) {?>
+if (isset($_GET['redirect'])) { ?>
 
-<div class="alert danger">
-    <h3 class="title"><?= lang('Access denied', 'Zugriff verweigert') ?></h3>
-    <?= lang('You need to log in to access this page.', 'Du musst dich einloggen, um auf diese Seite zuzugreifen.') ?>
-</div>
+    <div class="alert danger">
+        <h3 class="title"><?= lang('Access denied', 'Zugriff verweigert') ?></h3>
+        <?= lang('You need to log in to access this page.', 'Du musst dich einloggen, um auf diese Seite zuzugreifen.') ?>
+    </div>
 
 <?php
 }
@@ -64,7 +64,7 @@ $UM = strtoupper(USER_MANAGEMENT);
         die('OAUTH not correctly defined in CONFIG.php');
     }
 ?>
-    <a href="<?=ROOTPATH?>/user/oauth" class="btn primary">
+    <a href="<?= ROOTPATH ?>/user/oauth" class="btn primary">
         <?= lang('Log-in with your ' . OAUTH . ' account', 'Mit deinem ' . OAUTH . '-Konto einloggen') ?>
     </a>
 
@@ -95,10 +95,13 @@ $UM = strtoupper(USER_MANAGEMENT);
         <hr>
 
         <a class='link d-block' href='<?= ROOTPATH ?>/auth/forgot-password'>
-            <?= lang('Forgot password?', 'Password vergessen?') ?></a>
-        <a class='link' href='<?= ROOTPATH ?>/auth/new-user'>
-            <?= lang('No account? Register now', 'Noch keinen Account? Jetzt registrieren') ?>
+            <?= lang('Forgot password?', 'Password vergessen?') ?>
         </a>
+        <?php if ($Settings->get('auth-self-registration', true)) { ?>
+            <a class='link' href='<?= ROOTPATH ?>/auth/new-user'>
+                <?= lang('No account? Register now', 'Noch keinen Account? Jetzt registrieren') ?>
+            </a>
+        <?php } ?>
 
         <?php if ($Settings->get('affiliation') === 'LISI') { ?>
             <div class="alert signal mt-20">

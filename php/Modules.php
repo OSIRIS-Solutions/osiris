@@ -198,15 +198,16 @@ class Modules
                 ]
             ]],
             "name" => "Editors",
-            "name_de" => "Editoren",
+            "name_de" => "Herausgeber",
             "description" => "A compressed module for editors, with 'tag-like' input fields for editors. Supports multiple editors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
-            "description_de" => "Ein komprimiertes Modul für Editoren, mit 'tag-ähnlichen' Eingabefeldern für Editoren. Unterstützt mehrere Editoren, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
+            "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
         ],
         "editorial" => [
             "fields" => ["editor_type" => 'Guest Editor'],
             "name" => "Editorial",
-            "name_de" => "Editorenschaft",
+            "name_de" => "Herausgeberschaft",
             "description" => "A field for the editorial type, e.g. for a special issue.",
+            "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe."
         ],
         "event-select" => [
             "fields" => [],
@@ -214,7 +215,6 @@ class Modules
             "name_de" => "Veranstaltungsauswahl",
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt."
-
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -243,6 +243,13 @@ class Modules
             "name_de" => "Land",
             "description" => "A field for a country, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird."
+        ],
+        "countries" => [
+            "fields" => ["countries" => ['DE', 'AT', 'CH']],
+            "name" => "Countries",
+            "name_de" => "Länder",
+            "description" => "A field for a list of countries, that can be selected from a list and is saved as a two-letter ISO country code.",
+            "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden."
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
@@ -517,6 +524,13 @@ class Modules
             "description" => "A field for the title of an activity, e.g. for a journal article. Always mandatory.",
             "description_de" => "Ein Feld für den Titel einer Aktivität, z.B. für einen Zeitschriftenartikel. Immer erforderlich."
         ],
+        "subtitle" => [
+            "fields" => ["subtitle" => 'A new way to manage research information'],
+            "name" => "Subtitle",
+            "name_de" => "Untertitel",
+            "description" => "A field for the subtitle of an activity.",
+            "description_de" => "Ein Feld für den Untertitel einer Aktivität."
+        ],
         "university" => [
             "fields" => ["publisher" => 'Technische Universität Braunschweig'],
             "name" => "University",
@@ -552,6 +566,20 @@ class Modules
             "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
             "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung."
         ],
+        "organization" => [
+            "fields" => ["organization" => 'Technische Universität Braunschweig'],
+            "name" => "Organisation",
+            "name_de" => "Organisation",
+            "description" => "A field for an organisation that is connected to an activity, e.g. a university or a company. This field is used to identify the organisation that is responsible for the activity.",
+            "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist."
+        ],
+        "organizations" => [
+            "fields" => ["organizations" => ['Technische Universität Braunschweig', 'Deutsche Forschungsgemeinschaft']],
+            "name" => "Organisations",
+            "name_de" => "Organisationen",
+            "description" => "A field for a list of organisations that are connected to an activity, e.g. a university or a company. This field is used to identify the organisations that are responsible for the activity.",
+            "description_de" => "Ein Feld für eine Liste von Organisationen, die mit einer Aktivität verbunden sind, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisationen zu identifizieren, die für die Aktivität verantwortlich sind."
+        ],
     );
 
     private $DB;
@@ -568,7 +596,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if (empty($this->preset) || count($this->preset) === 0)
+        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -597,7 +625,7 @@ class Modules
             $this->editors .= $this->authorForm($a, true);
         }
 
-        $this->userlist = $this->DB->db->persons->find([], ['sort' => ["last" => 1]])->toArray();
+        $this->userlist = $this->DB->db->persons->find([], ['sort' => ['is_active' => -1, 'last' => 1]])->toArray();
 
         if (!empty($conference)) {
             $conf = $this->DB->db->conferences->findOne(['_id' => DB::to_ObjectID($conference)]);
@@ -728,7 +756,7 @@ class Modules
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea placeholder="custom-field">';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
                 break;
             case 'int':
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
@@ -823,6 +851,62 @@ class Modules
                 </div>
             <?php
                 break;
+            case 'countries':
+                $countries = $this->val('countries', []);
+            ?>
+
+                <div class="data-module floating-form col-sm-6" data-module="teaching-gender">
+                    <b>
+                        <?= lang('Countries:', 'Länder:') ?>
+                    </b>
+                    <div class="author-widget">
+                        <div class="author-list p-10" id="country-list">
+                            <?php
+                            foreach ($countries as $k) { ?>
+                                <div class='author'>
+                                    <?= $this->DB->getCountry($k, lang('name', 'name_de')) ?>
+                                    <input type='hidden' name='values[countries][]' value='<?= $k ?>'>
+                                    <a onclick='$(this).parent().remove()'>&times;</a>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="footer">
+                            <div class="input-group small d-inline-flex w-auto">
+                                <select class="form-control" id="country-select">
+                                    <option value="" disabled selected><?= lang("Add country ...", "Füge Land hinzu ...") ?></option>
+                                    <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                        <option value="<?= $iso ?>"><?= $name ?></option>
+                                    <?php } ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn secondary h-full" type="button" onclick="addCountry(event);">
+                                        <i class="ph ph-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function addCountry(event) {
+                            var el = $('#country-select')
+                            var iso = el.val()
+                            var name = el.find('option:selected').text()
+                            if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                                event.preventDefault();
+                                if (iso) {
+                                    var html = `<div class='author'>${name} <input type='hidden' name='values[countries][]' value='${iso}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                                    $('#country-list').append(html)
+                                }
+                                $(el).val('')
+                                return false;
+                            }
+                        }
+                    </script>
+
+                </div>
+
+            <?php
+                break;
             case 'abstract':
             ?>
                 <div class="data-module floating-form col-sm-12" data-module="abstract">
@@ -850,6 +934,17 @@ class Modules
             <?php
                 break;
 
+            case "subtitle":
+            ?>
+                <div class="data-module floating-form col-sm-12" data-module="subtitle">
+                    <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $required ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
+                    <label for="subtitle" class="<?= $required ?>">
+                        <?= lang('Subtitle', 'Untertitel') ?>
+                    </label>
+                </div>
+            <?php
+                break;
+
             case "pubtype":
             ?>
                 <div class="data-module col-12" data-module="pubtype">
@@ -859,7 +954,7 @@ class Modules
                         <option value="book"><?= lang('Book', 'Buch') ?></option>
                         <option value="chapter"><?= lang('Book chapter', 'Buchkapitel') ?></option>
                         <option value="preprint">Preprint (non refereed)</option>
-                        <option value="conference"><?= lang('Conference preceedings', 'Konfrenzbeitrag') ?></option>
+                        <option value="conference"><?= lang('Conference preceedings', 'Konferenzbeitrag') ?></option>
                         <option value="magazine"><?= lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)') ?></option>
                         <option value="dissertation"><?= lang('Thesis') ?></option>
                         <option value="others"><?= lang('Others', 'Weiteres') ?></option>
@@ -1270,7 +1365,7 @@ class Modules
                         </div>
                         <div class="footer">
 
-                            <div class="input-group sm d-inline-flex w-auto">
+                            <div class="input-group small d-inline-flex w-auto">
                                 <input type="text" placeholder="<?= lang('Add author ...', 'Füge Autor hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
@@ -1291,9 +1386,8 @@ class Modules
                     <small class="text-muted">
                         <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
                     </small>
-                    <div class="alert danger mb-20 affiliation-warning" style="display: none;">
+                    <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <i class="ph ph-warning-circle"></i>
                             <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affilierten Autoren angegeben.') ?>
                         </h5>
                         <?= lang(
@@ -1312,7 +1406,7 @@ class Modules
                 </h6>
                 <div class="data-module col-12 row" data-module="person">
                     <div class="col-sm-5 floating-form">
-                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name">
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $required ?> element-other">
                             <?= lang('Name of the person', 'Name der Person') ?>
                             <?= lang('(last name, given name)', '(Nachname, Vorname)') ?>
@@ -1362,27 +1456,28 @@ class Modules
                 break;
 
             case "status":
+                $status = $this->val('status') ?? 'preparation';
             ?>
                 <div class="data-module col-sm-6" data-module="status" style="align-self: center;">
                     <label for="status" class="<?= $required ?> floating-title">Status</label>
                     <div id="end-question">
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-preparation" value="preparation" checked="checked" value="1">
+                            <input type="radio" name="values[status]" id="status-preparation" value="preparation" value="1" <?= $status == 'preparation' ? 'checked' : '' ?>>
                             <label for="status-preparation"><?= lang('In preparation', 'In Vorbereitung') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-in-progress" value="in progress" checked="checked" value="1">
+                            <input type="radio" name="values[status]" id="status-in-progress" value="in progress" value="1" <?= $status == 'in progress' ? 'checked' : '' ?>>
                             <label for="status-in-progress"><?= lang('In progress', 'In Progress') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-completed" value="completed" value="1">
+                            <input type="radio" name="values[status]" id="status-completed" value="completed" value="1" <?= $status == 'completed' ? 'checked' : '' ?>>
                             <label for="status-completed"><?= lang('Completed', 'Abgeschlossen') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
-                            <input type="radio" name="values[status]" id="status-aborted" value="aborted" value="1">
+                            <input type="radio" name="values[status]" id="status-aborted" value="aborted" value="1" <?= $status == 'aborted' ? 'checked' : '' ?>>
                             <label for="status-aborted"><?= lang('Aborted', 'Abgebrochen') ?></label>
                         </div>
                     </div>
@@ -1760,13 +1855,13 @@ class Modules
             case "peer-reviewed":
             ?>
                 <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="icon-closed-access text-danger"></i> Non-refereed</label>
+                    <div class="custom-radio d-inline-block mr-20" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
                     </div>
-                    <div class="custom-radio d-inline-block ml-20" id="peer_reviewed-div">
-                        <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', false) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="icon-open-access text-success"></i> Peer-Reviewed</label>
+                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
+                        <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> Non peer reviewed</label>
                     </div>
                 </div>
             <?php
@@ -1794,7 +1889,7 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-6" data-module="city">
                     <input type="text" class="form-control" <?= $required ?> name="values[city]" value="<?= $this->val('city') ?>" id="city" placeholder="city">
-                    <label for="city" class="element-other <?= $required ?>"><?= lang('Location (City, Country)', 'Ort (Stadt, Land)') ?></label>
+                    <label for="city" class="element-other <?= $required ?>"><?= lang('City', 'Stadt') ?></label>
                 </div>
             <?php
                 break;
@@ -1808,7 +1903,7 @@ class Modules
                             <?= $this->editors ?>
                         </div>
                         <div class="footer">
-                            <div class="input-group sm d-inline-flex w-auto">
+                            <div class="input-group small d-inline-flex w-auto">
                                 <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Editor hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">
@@ -2035,6 +2130,134 @@ class Modules
                     </label>
                 </div>
             <?php
+                break;
+
+            case "organization":
+                $org_id = $form['organization'] ?? '';
+                $rand_id = rand(1000, 9999);
+            ?>
+                <div class="data-module" data-module="organization">
+                    <label for="organization" class="floating-title <?= $required ?>">
+                        <?= lang('Organisation', 'Organisation') ?>
+                    </label>
+                    <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
+                        <i class="ph ph-edit float-right"></i>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $required ?> readonly id="org-<?= $rand_id ?>-organization" />
+
+                        <div id="org-<?= $rand_id ?>-value">
+                            <?php if (empty($org_id)) { ?>
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php } else {
+                                $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                if (!empty($collab)) { ?>
+                                    <b><?= $collab['name'] ?></b>
+                                    <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                <?php } else { ?>
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <br><small class="text-muted"><?= $org_id ?></small>
+                            <?php }
+                            } ?>
+                        </div>
+                    </a>
+
+                    <div class="modal" id="organization-modal-<?= $rand_id ?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                                <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                                <p id="org-<?= $rand_id ?>-search-comment"></p>
+                                <table class="table simple">
+                                    <tbody id="org-<?= $rand_id ?>-suggest">
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            <?php
+                break;
+
+            case "organizations":
+                $organizations = $this->val('organizations', []);
+            ?>
+                <div class="data-module col-12" data-module="organizations">
+                    <label for="organization" class="floating-title <?= $required ?>">
+                        <?= lang('Organisations', 'Organisationen') ?>
+                    </label>
+                    <table class="table">
+                        <tbody id="collaborators">
+                            <?php
+                            foreach ($organizations as $org_id) {
+                                $collab = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
+                                if (empty($collab)) continue;
+                            ?>
+                                <tr data-row="<?= $org_id ?>">
+                                    <td>
+                                        <?= $collab['name'] ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= $collab['location'] ?? null ?>
+                                        </small>
+                                        <input type="hidden" name="values[organizations][]" value="<?= $org_id ?>" class="form-control">
+                                    </td>
+                                    <td><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">
+                                    <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                                        </div>
+                                    </div>
+                                    <p id="search-comment"></p>
+                                    <table class="table simple mb-0">
+                                        <tbody id="organization-suggest">
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                    <script>
+                                        $(document).ready(function() {
+                                            SUGGEST = $('#organization-suggest')
+                                            INPUT = $('#organization-search')
+                                            SELECTED = $('#collaborators')
+                                            COMMENT = $('#search-comment')
+                                            USE_RADIO = false;
+                                            DATAFIELD = 'organizations'
+                                        });
+
+                                        function handleKeyDown(event) {
+                                            if (event.key === 'Enter') {
+                                                event.preventDefault();
+                                                getOrganization($('#organization-search').val());
+                                            }
+                                        }
+                                    </script>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            <?php
+                break;
+
+            case "project":
                 break;
 
             default:
