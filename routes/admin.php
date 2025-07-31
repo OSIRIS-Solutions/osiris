@@ -16,7 +16,7 @@
 
 Route::get('/admin', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
         ['name' => lang("Admin Panel")]
