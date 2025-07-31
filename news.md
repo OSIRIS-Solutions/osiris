@@ -11,8 +11,9 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 
 Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Außerdem gibt es Links zu Helfertools, wie der Liste mit den Datenfeldern und den Templates. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
 
-Der Bereich "Funktionen" wurde in die allgemeinen Einstellungen verschoben. Hier gibt es jetzt auch deutlich mehr Einstellungsmöglichkeiten, zum Beispiel kann das quartalsweise Controlling deaktiviert, die automatische Abfrage von Journal-Metriken unterbunden, der Kalender und die Lehrveranstaltungen aus der Navigation verbannt und auch der Import von OpenAlex oder GoogleScholar deaktiviert werden.
+Der Bereich **Funktionen** wurde in die allgemeinen Einstellungen verschoben. Hier gibt es jetzt auch deutlich mehr Einstellungsmöglichkeiten, zum Beispiel kann das quartalsweise Controlling deaktiviert, die automatische Abfrage von Journal-Metriken unterbunden, der Kalender und die Lehrveranstaltungen aus der Navigation verbannt und auch der Import von OpenAlex oder GoogleScholar deaktiviert werden.
 
+Es wurde eine Möglichkeit hinzugefügt, den **Footer** der Seite anzupassen. Die Inhalte von Impressum und Datenschutzerklärung können (und sollten!) bearbeitet werden und Links zu externen Ressourcen (z.B. Betriebsvereinbarungen) können hinzugefügt werden.
 
 
 #### <i class="ph ph-chat-circle-dots"></i> Benachrichtigungen und Nachrichten
