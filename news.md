@@ -1,10 +1,9 @@
 # Neuigkeiten
 
-
-<span class="badge float-right">04.05.2025</span>
+<span class="badge float-right">31.07.2025</span>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
-## Version 1.5.0 (Beta)
+## Version 1.5.0
 
 In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibler gestaltet. Datenfelder können nun sowohl bei Projekten als auch bei Personen vollständig definiert werden. Auch Custom Fields sind jetzt bei Projekten, Personen und Infrastrukturen möglich.
 
@@ -18,7 +17,6 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Eingegangene Nachrichten können als gelesen markiert oder gelöscht werden.
 - Die Darstellung der Nachrichten wurde verbessert und das Styling modernisiert.
 - OSIRIS verschickt jetzt optional **E-Mail-Benachrichtigungen**, z.B. bei Erstellung oder Bearbeitung von Projekten. Im Admin-Interface kann dies konfiguriert werden.
-
 
 
 #### <i class="ph ph-users-three"></i> Personen-Einstellungen
@@ -154,6 +152,7 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
 - Es wurde ein Bug behoben, wodurch die Tabellensuche beim Neuladen einer Aktivität nicht mehr funktionierte, wenn Leerzeichen im Suchbegriff waren
 - Die Organisationseinheiten sollten jetzt überall in der korrekten Reihenfolge angezeigt werden, falls sie sortiert wurden
+- Es wurde ein Fehler behoben, durch den gewisse DOIs von DataCite nicht korrekt verarbeitet wurden
 
 ---
 
@@ -420,6 +419,7 @@ Die Nutzereinstellungen sind in den letzten Monaten gewachsen und sehr unübersi
 - Im Reiter "Account" kann jetzt zudem das Password geändert werden (nur bei Auth-Addon)
 - Es wurden neue Felder hinzugefügt, zum Beispiel eine Biographie, Forschungsinteressen (Freitext), Raumnummer, und eine interne ID
 - Die Position einer Person kann nun entweder wie zuvor ein Freitext sein oder aus einer Liste ausgewählt werden. Die Liste kann im Admin-Bereich definiert werden.
+- Personen können jetzt gelöscht werden. Dazu wurden neue Rechte im Admin-Bereich hinzugefügt. Bitte beachte, dass das Löschen von Personen nicht rückgängig gemacht werden kann und alle Daten der Person gelöscht werden, genau wie die Verknüpfung zu allen Aktivitäten, Projekten, Infrastrukturen, etc. Es gibt keine Möglichkeit, die Person wiederherzustellen.
 
 #### <i class="ph ph-presentation-chart"></i> Events
 

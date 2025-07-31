@@ -13991,9 +13991,9 @@ table img {
 
 .ql-editor.is-valid {
   border-color: var(--success-color);
-  -moz-box-shadow: 0 0.2rem 0 var(--success-box-shadow-color);
-  -webkit-box-shadow: 0 0.2rem 0 var(--success-box-shadow-color);
-  box-shadow: 0 0.2rem 0 var(--success-box-shadow-color);
+  -moz-box-shadow: 0 0.4rem 0 var(--success-color-30);
+  -webkit-box-shadow: 0 0.4rem 0 var(--success-color-30);
+  box-shadow: 0 0.4rem 0 var(--success-color-30);
 }
 
 #data-modules .ql-snow.ql-toolbar::after,
