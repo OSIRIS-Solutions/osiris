@@ -68,6 +68,8 @@ class Document extends Settings
         "details" => ["details"],
         "doctype" => ["doc_type"],
         "doi" => ["doi"],
+        "doi-link" => ["doi"],
+        "doi-text" => ["doi"],
         "edition" => ["edition"],
         "edition-ed" => ["edition"],
         "editor" => ["editors"],
@@ -986,8 +988,15 @@ class Document extends Settings
             case "doctype": // ["doc_type"],
                 return $this->getVal('doc_type');
             case "doi": // ["doi"],
+            case "doi-link": // ["doi"],
+            case "doi-text": // ["doi"],
                 $val = $this->getVal('doi');
                 if ($val == $default || empty($val)) return $default;
+                if ($module == 'doi-link') {
+                    return "<a target='_blank' href='https://doi.org/$val'>https://doi.org/$val</a>";
+                } elseif ($module == 'doi-text') {
+                    return $val;
+                }
                 return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
             case "edition": // ["edition"],
             case "edition-ed": // ["edition"],

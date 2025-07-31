@@ -1181,9 +1181,9 @@ function getDataciteDOI(doi) {
             var pub = data.data.attributes
             // console.log(pub);
 
-            var date = pub.dates[0].date
-            if (date !== undefined) {
-                dateSplit = getDate(date.split('-'))
+            var date = ''
+            if (pub.dates[0] !== undefined) {
+                dateSplit = getDate(pub.dates[0].date.split('-'))
                 date = strDate(dateSplit)
             } else {
                 dateSplit = [pub.publicationYear, 1, null]
@@ -1220,22 +1220,41 @@ function getDataciteDOI(doi) {
                 }
                 authors.push(name)
             });
-            var type = pub.types.resourceTypeGeneral.toLowerCase()
-            type = dataCiteTypes[type]
+            var type = ''
+            if (pub.types.resourceTypeGeneral !== undefined) {
+                type = pub.types.resourceTypeGeneral.toLowerCase()
+            }
+            type = dataCiteTypes[type] ?? type;
 
             var resType = pub.types.resourceType
             if (resType !== undefined && dataCiteTypes[resType.toLowerCase()] !== undefined) {
                 type = dataCiteTypes[resType.toLowerCase()]
             }
             console.info(type);
+            let title = pub.titles[0].title
+            if (title === undefined) {
+                title = ''
+            }
+            let subtitle = ''
+            if (pub.titles.length > 1) {
+                subtitle = pub.titles[1].title
+            }
+            let abstract = pub.descriptions.find(d => d.descriptionType === 'Abstract')
+            if (abstract !== undefined) {
+                abstract = abstract.description
+            }
 
             var pubdata = {
                 type: type,
-                title: pub.titles[0].title,
+                title: title,
+                subtitle: subtitle,
+                abstract: abstract ?? '',
                 first_authors: first,
                 authors: authors,
                 doi: pub.doi,
-                date_start: date
+                link: pub.url,
+                date_start: date,
+                doctype: pub.types.resourceTypeGeneral,
             }
 
             if (type == 'software' || type == 'dataset') {
@@ -1352,7 +1371,10 @@ function fillForm(pub) {
         'abstract',
         'funding',
         'subtitle',
-        'pub-language'
+        'pub-language',
+        'language',
+        'doctype',
+        'link'
     ]
 
     elements.forEach(element => {

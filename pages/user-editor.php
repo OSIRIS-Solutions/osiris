@@ -780,6 +780,7 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('keywords')) {
             $kw_name = $Settings->get('staff-keyword-name', 'Keywords');
             $all_kw = DB::doc2Arr($Settings->get('staff-keywords', []));
+            sort($all_kw);
             $selected_kw = DB::doc2Arr($data['keywords'] ?? []);
         ?>
             <h2 class="title">
@@ -804,7 +805,7 @@ $active = function ($field) use ($data_fields) {
                             <option value="" disabled selected><?= lang("Add $kw_name ...", "Füge $kw_name hinzu ...") ?></option>
                             <?php
                             foreach ($all_kw as $kw) {
-                                if (in_array($kw, $selected_kw)) continue;
+                                // if (in_array($kw, $selected_kw)) continue;
                             ?>
                                 <option><?= $kw ?></option>
                             <?php } ?>
@@ -821,9 +822,12 @@ $active = function ($field) use ($data_fields) {
                 function addKeyword() {
                     var kw = $('#keyword-select').val();
                     console.log(kw);
-                    if (kw == '') return;
+                    if (kw.length === 0) return;
                     // check if already exists
-                    // if ($('#keyword-list').find('span:contains("' + kw + '")').length > 0) return;
+                    if ($('#keyword-list').find(`input[value="${kw}"]`).length > 0) {
+                        toastError('<?= lang('Keyword already exists', 'Schlagwort existiert bereits') ?>');
+                        return;
+                    }
                     var html = `<div class='author'>${kw} <input type='hidden' name='values[keywords][]' value='${kw}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
                     $('#keyword-list').append(html);
                     // add hidden input to form

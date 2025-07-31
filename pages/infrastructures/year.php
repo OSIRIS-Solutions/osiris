@@ -15,6 +15,42 @@
  * @license     MIT
  */
 
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
+
+$fields = $Vocabulary->getVocabulary('infrastructure-stats');
+if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+    $fields = [
+        [
+            "id"=> "internal",
+            "en"=> "Number of internal users",
+            "de"=> "Anzahl interner Nutzer/-innen"
+        ],
+        [
+            "id"=> "national",
+            "en"=> "Number of national users",
+            "de"=> "Anzahl nationaler Nutzer/-innen"
+        ],
+        [
+            "id"=> "international",
+            "en"=> "Number of international users",
+            "de"=> "Anzahl internationaler Nutzer/-innen"
+        ],
+        [
+            "id"=> "hours",
+            "en"=> "Number of hours used",
+            "de"=> "Anzahl der genutzten Stunden"
+        ],
+        [
+            "id"=> "accesses",
+            "en"=> "Number of accesses",
+            "de"=> "Anzahl der Nutzungszugriffe"
+        ],
+    ];
+} else {
+    $fields = $fields['values'] ?? [];
+}
+
 $year = intval($_GET['year'] ?? CURRENTYEAR);
 
 $statistics = DB::doc2Arr($form['statistics'] ?? []);
@@ -38,6 +74,14 @@ if (empty($yearstats)) {
     $yearstats = $yearstats[0];
 }
 
+$kdsf_mapping = [
+    'internal' => 'KDSF-B-13-8-B',
+    'national' => 'KDSF-B-13-8-C',
+    'international' => 'KDSF-B-13-8-D',
+    'hours' => 'KDSF-B-13-9-B',
+    'accesses' => 'KDSF-B-13-10-B',
+];
+
 ?>
 
 <h1>
@@ -49,39 +93,16 @@ if (empty($yearstats)) {
     <input type="hidden" name="values[year]" value="<?= $year ?>" />
     <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/infrastructures/view/<?= $id ?>" />
 
-    <div class="form-group">
-        <label for="internal"><?= lang('Number of internal users', 'Anzahl interner Nutzer/-innen') ?>
-            <span class="badge kdsf">KDSF-B-13-8-B</span>
-        </label>
-        <input type="number" class="form-control w-auto" name="values[internal]" id="internal" value="<?= $yearstats['internal'] ?>" />
-    </div>
-    <div class="form-group">
-        <label for="national"><?= lang('Number of national users', 'Anzahl nationaler Nutzer/-innen') ?>
-            <span class="badge kdsf">KDSF-B-13-8-C</span>
-        </label>
-        <input type="number" class="form-control w-auto" name="values[national]" id="national" value="<?= $yearstats['national'] ?>" />
-    </div>
-    <div class="form-group">
-        <label for="international"><?= lang('Number of international users', 'Anzahl internationaler Nutzer/-innen') ?>
-            <span class="badge kdsf">KDSF-B-13-8-D</span>
-        </label>
-        <input type="number" class="form-control w-auto" name="values[international]" id="international" value="<?= $yearstats['international'] ?>" />
-    </div>
-
-    <div class="form-group">
-        <?= lang('Number of hours used', 'Anzahl der genutzten Stunden') ?>
-        <span class="badge kdsf">KDSF-B-13-9-B</span>
-        </label>
-        <input type="number" class="form-control w-auto" name="values[hours]" id="hours" value="<?= $yearstats['hours'] ?>" />
-    </div>
-
-    <div class="form-group">
-        <label for="accesses">
-            <?= lang('Number of accesses', 'Anzahl der Nutzungszugriffe') ?>
-            <span class="badge kdsf">KDSF-B-13-10-B</span>
-        </label>
-        <input type="number" class="form-control w-auto" name="values[accesses]" id="accesses" value="<?= $yearstats['accesses'] ?>" />
-    </div>
+    <?php foreach ($fields as $key) { ?>
+        <div class="form-group">
+            <label for="<?= $key['id'] ?>"><?= lang($key['en'], $key['de']) ?>
+            <?php if (!empty($kdsf_mapping[$key['id']])): ?>
+                <span class="badge kdsf"><?= $kdsf_mapping[$key['id']] ?? '' ?></span>
+            <?php endif; ?>
+            </label>
+            <input type="number" class="form-control w-auto" name="values[<?= $key['id'] ?>]" id="<?= $key['id'] ?>" value="<?= $yearstats[$key['id']] ?? 0 ?>" />
+        </div>
+    <?php } ?>
 
 
     <button class="btn btn-primary">

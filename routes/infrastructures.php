@@ -204,7 +204,7 @@ Route::get('/infrastructures/year/(.*)', function ($id) {
         // check if person is part of the infrastructure and is set as reporter
         $permission = false;
         foreach ($form['persons'] ?? [] as $person) {
-            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false )|| $Settings->hasPermission('infrastructures.edit-own'))) {
+            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
                 $permission = true;
                 break;
             }
@@ -355,6 +355,14 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
 
 Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+    $fields = $Vocabulary->getVocabulary('infrastructure-stats');
+    if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+        $fields = ['internal', 'national', 'international', 'hours', 'accesses'];
+    } else {
+        $fields = array_column(DB::doc2Arr($fields['values']), 'id');
+    }
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
         // check if person is part of the infrastructure and is set as reporter
@@ -379,14 +387,16 @@ Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
 
     $year = intval($_POST['values']['year']);
 
-    $values = [
+    $stats = [
         'year' => $year,
-        'internal' => $values['internal'] ?? 0,
-        'national' => $values['national'] ?? 0,
-        'international' => $values['international'] ?? 0,
-        'hours' => $values['hours'] ?? 0,
-        'accesses' => $values['accesses'] ?? 0
     ];
+    foreach ($fields as $field) {
+        if (isset($values[$field]) && is_numeric($values[$field])) {
+            $stats[$field] = intval($values[$field]);
+        } else {
+            $stats[$field] = 0;
+        }
+    }
 
     $id = $DB->to_ObjectID($id);
 
@@ -399,7 +409,7 @@ Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
     // add year
     $updateResult = $collection->updateOne(
         ['_id' => $id],
-        ['$push' => ['statistics' => $values]]
+        ['$push' => ['statistics' => $stats]]
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {

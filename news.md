@@ -1,14 +1,19 @@
 # Neuigkeiten
 
-
-<span class="badge float-right">04.05.2025</span>
+<span class="badge float-right">31.07.2025</span>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
-## Version 1.5.0 (Beta)
+## Version 1.5.0
 
 In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibler gestaltet. Datenfelder können nun sowohl bei Projekten als auch bei Personen vollständig definiert werden. Auch Custom Fields sind jetzt bei Projekten, Personen und Infrastrukturen möglich.
 
-<i class="ph ph-gear"></i> Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Außerdem gibt es einen Link zu Helfertools, wie der Liste mit den Datenfeldern und den Templates. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
+#### <i class="ph ph-stack"></i> Verbesserung im Admin-Bereich
+
+Es gibt eine neue Seite im Admin-Bereich **"Inhalte"**, in der alle bearbeitbaren Inhalte von OSIRIS aufgelistet sind. Hier findet ihr jetzt die Personen-, Aktivitäts-, Projekt- und Infrastrukturkategorien, die Custom Fields und das Vokabular. Außerdem gibt es Links zu Helfertools, wie der Liste mit den Datenfeldern und den Templates. Bitte beachtet, dass einige Features aus den Generellen Einstellungen und Funktionen hierher verschoben wurden.
+
+Der Bereich **Funktionen** wurde in die allgemeinen Einstellungen verschoben. Hier gibt es jetzt auch deutlich mehr Einstellungsmöglichkeiten, zum Beispiel kann das quartalsweise Controlling deaktiviert, die automatische Abfrage von Journal-Metriken unterbunden, der Kalender und die Lehrveranstaltungen aus der Navigation verbannt und auch der Import von OpenAlex oder GoogleScholar deaktiviert werden.
+
+Es wurde eine Möglichkeit hinzugefügt, den **Footer** der Seite anzupassen. Die Inhalte von Impressum und Datenschutzerklärung können (und sollten!) bearbeitet werden und Links zu externen Ressourcen (z.B. Betriebsvereinbarungen) können hinzugefügt werden.
 
 
 #### <i class="ph ph-chat-circle-dots"></i> Benachrichtigungen und Nachrichten
@@ -18,7 +23,6 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Eingegangene Nachrichten können als gelesen markiert oder gelöscht werden.
 - Die Darstellung der Nachrichten wurde verbessert und das Styling modernisiert.
 - OSIRIS verschickt jetzt optional **E-Mail-Benachrichtigungen**, z.B. bei Erstellung oder Bearbeitung von Projekten. Im Admin-Interface kann dies konfiguriert werden.
-
 
 
 #### <i class="ph ph-users-three"></i> Personen-Einstellungen
@@ -40,6 +44,8 @@ In diesem Update wurden die Projekte komplett überarbeitet und deutlich flexibl
 - Die Darstellung von Verbundinfrastrukturen und Kooperationspartnern wurde verbessert.
 - Der Begriff "Infrastrukturen" kann jetzt im Admin-Bereich angepasst werden.
 - Forschungsbereiche können jetzt auch bei Infrastrukturen hinzugefügt und zum Filtern verwendet werden.
+- Die Jahresstatistiken für Infrastrukturen sind jetzt konfigurierbar und können über das Vokabular angepasst werden.
+- Die Statistiken für Infrastrukturen wurden ebenfalls verbessert, lassen sich jetzt nach dem Jahr filtern und nehmen als Startdatum den 31.12. des Vorjahres an. Außerdem werden selbst definierte Statistikfelder unterstützt, die über das Vokabular definiert werden können.
 
 
 #### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
@@ -71,23 +77,21 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Viele Filter- und Statistikfunktionen (z.B. Suche nach Projekttypen, Förderstatus) wurden erweitert.
 - Es gibt die Möglichkeit, bei Erstellung oder Bearbeitung eines Projektes bestimmte Nutzer oder Rollen zu benachrichtigen, entweder direkt in OSIRIS über das neue Benachrichtigungssystem oder per E-Mail.
 
-
-#### <i class="ph ph-clipboard-text"></i> Neue Datenfelder für Aktivitäten
-Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
-- Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
-- Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
-
 <!-- - Projekte: Hier können mehrere Projekte ausgewählt werden, die mit der Aktivität verknüpft sind.
 - KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
 
-
-
 #### <i class="ph ph-book-bookmark"></i> Darstellung und Sichtbarkeit von Aktivitäten
-- Neue Templates: Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+- Neue **Templates**: 
+  - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+  - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
 - Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
 - Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
 - Es ist nun möglich, den Upload von Dokumenten für einzelne Aktivitäts-Kategorien zu deaktivieren. Diese Einstellung findet ihr ebenfalls unter Inhalte > Aktivitäten, wenn ihr eine Kategorie bearbeitet. Standardmäßig ist der Upload für alle Kategorien aktiviert. Wenn er deaktiviert ist, wird der Upload-Button in der Detailansicht der Aktivität nicht mehr angezeigt und es können keine Dokumente hochgeladen werden. Vorhandene Dokumente werden nicht gelöscht, werden aber auch nicht mehr angezeigt.
 - Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
+- Es wurde ein neuer Knopf hinzugefügt, mit dem der formattierte Eintrag der Aktivität in die Zwischenablage kopiert werden kann. Dies ist besonders nützlich, um schnell Informationen zu teilen.
+- Des Weiteren wurden weitere Datenfelder für Aktivitäten hinzugefügt:
+  - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
+  - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
@@ -151,6 +155,8 @@ Es wurden weitere Datenfelder für Aktivitäten hinzugefügt:
 - Wenn Organisationseinheiten keine Farbe (bzw. schwarz) zugewiesen wurde, wird für Abb. jetzt eine Auswahl an Standardfarben verwendet
 - Ein Bug wurde behoben, durch den man die Leitung einer Organisationseinheit nicht löschen konnte
 - Es wurde ein Bug behoben, wodurch die Tabellensuche beim Neuladen einer Aktivität nicht mehr funktionierte, wenn Leerzeichen im Suchbegriff waren
+- Die Organisationseinheiten sollten jetzt überall in der korrekten Reihenfolge angezeigt werden, falls sie sortiert wurden
+- Es wurde ein Fehler behoben, durch den gewisse DOIs von DataCite nicht korrekt verarbeitet wurden
 
 ---
 
@@ -417,6 +423,7 @@ Die Nutzereinstellungen sind in den letzten Monaten gewachsen und sehr unübersi
 - Im Reiter "Account" kann jetzt zudem das Password geändert werden (nur bei Auth-Addon)
 - Es wurden neue Felder hinzugefügt, zum Beispiel eine Biographie, Forschungsinteressen (Freitext), Raumnummer, und eine interne ID
 - Die Position einer Person kann nun entweder wie zuvor ein Freitext sein oder aus einer Liste ausgewählt werden. Die Liste kann im Admin-Bereich definiert werden.
+- Personen können jetzt gelöscht werden. Dazu wurden neue Rechte im Admin-Bereich hinzugefügt. Bitte beachte, dass das Löschen von Personen nicht rückgängig gemacht werden kann und alle Daten der Person gelöscht werden, genau wie die Verknüpfung zu allen Aktivitäten, Projekten, Infrastrukturen, etc. Es gibt keine Möglichkeit, die Person wiederherzustellen.
 
 #### <i class="ph ph-presentation-chart"></i> Events
 

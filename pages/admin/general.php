@@ -1069,6 +1069,52 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
 
+                <div class="box px-20">
+                    <h3 id="imports">
+                        <?= lang('Imports', 'Importe') ?>
+                    </h3>
+                    <div class="form-group">
+                        <label for="">
+                            <?= lang('Allow user import from Google Scholar', 'Import von Nutzerdaten aus Google Scholar erlauben') ?>
+                        </label>
+                        <?php
+                        $googlescholar = $Settings->featureEnabled('googlescholar', true);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="googlescholar-true" value="1" name="values[googlescholar]" <?= $googlescholar ? 'checked' : '' ?>>
+                            <label for="googlescholar-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="googlescholar-false" value="0" name="values[googlescholar]" <?= $googlescholar ? '' : 'checked' ?>>
+                            <label for="googlescholar-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="">
+                            <?= lang('Allow user import from OpenAlex', 'Import von Nutzerdaten aus OpenAlex erlauben') ?>
+                        </label>
+                        <?php
+                        $openalex = $Settings->featureEnabled('openalex', true);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="openalex-true" value="1" name="values[openalex]" <?= $openalex ? 'checked' : '' ?>>
+                            <label for="openalex-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="openalex-false" value="0" name="values[openalex]" <?= $openalex ? '' : 'checked' ?>>
+                            <label for="openalex-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
             <div class="col-lg-3 d-none d-lg-block">
                 <nav class="on-this-page-nav">
@@ -1114,7 +1160,9 @@ $affiliation = $Settings->get('affiliation_details');
                         <a href="#trips">
                             <?= lang('Research Trips', 'Forschungsreisen') ?>
                         </a>
-                        </ul>
+                        <a href="#imports">
+                            <?= lang('Imports', 'Importe') ?>
+                        </a>
                     </div>
 
                     <button class="btn success large">
@@ -1201,7 +1249,17 @@ $affiliation = $Settings->get('affiliation_details');
 </section>
 
 <style>
-    #custom-footer .ql-editor p, #custom-footer .ql-editor ol, #custom-footer .ql-editor ul, #custom-footer .ql-editor pre, #custom-footer .ql-editor blockquote, #custom-footer .ql-editor h1, #custom-footer .ql-editor h2, #custom-footer .ql-editor h3, #custom-footer .ql-editor h4, #custom-footer .ql-editor h5, #custom-footer .ql-editor h6 {
+    #custom-footer .ql-editor p,
+    #custom-footer .ql-editor ol,
+    #custom-footer .ql-editor ul,
+    #custom-footer .ql-editor pre,
+    #custom-footer .ql-editor blockquote,
+    #custom-footer .ql-editor h1,
+    #custom-footer .ql-editor h2,
+    #custom-footer .ql-editor h3,
+    #custom-footer .ql-editor h4,
+    #custom-footer .ql-editor h5,
+    #custom-footer .ql-editor h6 {
         margin-bottom: 1rem;
     }
 </style>
