@@ -180,7 +180,7 @@ if (empty($form) || !isset($form['_id'])) {
                     toastError('Please provide a ROR ID')
                     return
                 }
-                var url = 'https://api.ror.org/organizations/' + ror.trim()
+                var url = 'https://api.ror.org/v1/organizations/' + ror.trim()
                 $.ajax({
                     type: "GET",
                     url: url,

@@ -82,16 +82,16 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 #### <i class="ph ph-book-bookmark"></i> Darstellung und Sichtbarkeit von Aktivitäten
 - Neue **Templates**: 
-  - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
-  - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
+    - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+    - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
 - Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
 - Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
 - Es ist nun möglich, den Upload von Dokumenten für einzelne Aktivitäts-Kategorien zu deaktivieren. Diese Einstellung findet ihr ebenfalls unter Inhalte > Aktivitäten, wenn ihr eine Kategorie bearbeitet. Standardmäßig ist der Upload für alle Kategorien aktiviert. Wenn er deaktiviert ist, wird der Upload-Button in der Detailansicht der Aktivität nicht mehr angezeigt und es können keine Dokumente hochgeladen werden. Vorhandene Dokumente werden nicht gelöscht, werden aber auch nicht mehr angezeigt.
 - Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
 - Es wurde ein neuer Knopf hinzugefügt, mit dem der formattierte Eintrag der Aktivität in die Zwischenablage kopiert werden kann. Dies ist besonders nützlich, um schnell Informationen zu teilen.
 - Des Weiteren wurden weitere Datenfelder für Aktivitäten hinzugefügt:
-  - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
-  - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
+    - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
+    - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
 
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
@@ -113,18 +113,18 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 #### <i class="ph ph-map"></i> Forschungsreisen
 - Es wurde ein neues Addon hinzugefügt, das es ermöglicht, Forschungsreisen zu analysieren.
 - Um dieses Addon zu aktivieren, müsst ihr folgende Schritte durchführen:
-  1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
-  2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
-     - `date-range`
-     - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
-     - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
-  3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
+    1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
+    2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
+        - `date-range`
+        - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
+        - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
+    3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
 
 #### <i class="ph ph-code"></i> Weitere Verbesserungen und Bugfixes
 - Es wurde eine neue Seite zu den Einstellungen hinzugefügt, die es ermöglicht, den Footer der Seite anzupassen. Hier können Impressum, Datenschutzerklärung und Links zu externen Ressourcen hinzugefügt werden.
 - Sperren von Aktivitäten wurde verbessert:
-  - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
-  - Du kannst jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
+    - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
+    - Du kannst jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
 - Die Vorschau für Portfolios wurde überarbeitet und spiegelt jetzt mehr wieder, wie die Portfolio-Seite tatsächlich aussehen würde. Außerdem greift die Vorschau jetzt auf die tatsächlich von der Portfolio-API ausgelieferten Daten zurück, weshalb sie nun genauer ist und nicht mehr Dinge zeigt, die nicht dargestellt werden sollen.
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - die Controlling-Seite wurde entfernt, da sie teilweise veraltete Informationen enthielt
