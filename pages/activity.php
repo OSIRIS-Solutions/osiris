@@ -622,12 +622,23 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
             <h2 class="mt-0">Details</h2>
 
+            <script>
+                function copyToClipboard() {
+                    var text = $('#formatted').text()
+                    navigator.clipboard.writeText(text)
+                    toastSuccess('Query copied to clipboard.')
+                }
+            </script>
             <table class="table" id="detail-table">
 
                 <tr>
                     <td>
+                        <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                            <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
+                        </button>
+
                         <span class="key"><?= lang('Formatted entry', 'Formatierter Eintrag') ?></span>
-                        <?= $Format->format() ?>
+                        <div id="formatted"><?= $Format->format() ?></div>
                     </td>
                 </tr>
                 <?php
