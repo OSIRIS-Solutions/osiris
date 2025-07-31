@@ -280,7 +280,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR-1);
                             </a>
                         </td>
                         <td>
-                            <?= $infrastructure['type'] ?? '-' ?>
+                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                         </td>
                         <td class="text-right">
                             <?= $yearstats['hours'] ?? 0 ?>
