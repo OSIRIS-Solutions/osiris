@@ -423,6 +423,38 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $values['end-delay'] = endOfCurrentQuarter(true);
     $values['created_by'] = $_SESSION['username'];
 
+    // add persons
+    $persons = [];
+    foreach (['contact', 'scholar', 'supervisor'] as $key) {
+        if (!isset($values[$key]) || empty($values[$key])) continue;
+        $user = $values[$key];
+        $persons[] = [
+            'user' => $user,
+            'role' => ($key == 'contact' ? 'applicant' : $key),
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
+        ];
+    }
+    if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
+        $persons[] = [
+            'user' => $user,
+            'role' => 'applicant',
+            'name' => $DB->getNameFromId($user),
+            'units' => $Groups->getPersonUnit($user)
+        ];
+    }
+    if (!empty($persons)) {
+        $values['persons'] = $persons;
+    } else {
+        // add current user as applicant
+        $values['persons'] = [
+            [
+                'user' => $_SESSION['username'],
+                'role' => 'applicant',
+                'name' => $DB->getNameFromId($_SESSION['username'])
+            ]
+        ];
+    }
     if (isset($values['parent_id'])) {
         $values['parent_id'] = $DB->to_ObjectID($values['parent_id']);
         $values['subproject'] = true;
@@ -464,38 +496,6 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
-    // add persons
-    $persons = [];
-    foreach (['contact', 'scholar', 'supervisor'] as $key) {
-        if (!isset($values[$key]) || empty($values[$key])) continue;
-        $user = $values[$key];
-        $persons[] = [
-            'user' => $user,
-            'role' => ($key == 'contact' ? 'applicant' : $key),
-            'name' => $DB->getNameFromId($user),
-            'units' => $Groups->getPersonUnit($user)
-        ];
-    }
-    if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
-        $persons[] = [
-            'user' => $user,
-            'role' => 'applicant',
-            'name' => $DB->getNameFromId($user),
-            'units' => $Groups->getPersonUnit($user)
-        ];
-    }
-    if (!empty($persons)) {
-        $values['persons'] = $persons;
-    } else {
-        // add current user as applicant
-        $values['persons'] = [
-            [
-                'user' => $_SESSION['username'],
-                'role' => 'applicant',
-                'name' => $DB->getNameFromId($_SESSION['username'])
-            ]
-        ];
-    }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
