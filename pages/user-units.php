@@ -240,7 +240,7 @@ function printTree($tree, $level = 0)
         </div>
     </div>
 </div>
-
+<!-- 
 <style>
     .bar {
         fill: var(--secondary-color-60);
@@ -392,4 +392,4 @@ function printTree($tree, $level = 0)
                 behavior: "smooth"
             });
         });
-</script>
+</script> -->
