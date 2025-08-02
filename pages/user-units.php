@@ -147,8 +147,10 @@ $units = DB::doc2Arr($data['units'] ?? []);
                         <button class="btn link text-danger" data-toggle="dropdown" type="button" id="remove-unit-<?= $unit['id'] ?>" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-trash"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="remove-unit-<?= $unit['id'] ?>">
+                        <div class="dropdown-menu dropdown-menu-right w-400 border-danger" aria-labelledby="remove-unit-<?= $unit['id'] ?>">
                             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
+                                <i class="ph ph-warning text-danger"></i>
+                                <?= lang('You are in the process of deleting the unit from the person profile. If the unit has changed, it can often be better to end the period instead in order to continue to show former participation.', 'Du bist dabei die Einheit aus dem Personenprofil zu löschen. Wenn sich die Einheit geändert hat, kann es oftmals besser sein stattdessen den Zeitraum zu beenden, um ehemalige Beteiligung weiterhin abzubilden.') ?>
                                 <input type="hidden" name="id" value="<?= $unit['id'] ?>">
                                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
                                 <button class="btn block danger" type="submit"><i class="ph ph-trash"></i> <?= lang('Remove unit', 'Einheit löschen') ?></button>
