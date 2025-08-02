@@ -85,6 +85,7 @@ class Document extends Settings
         "lecture-invited" => ["invited_lecture"],
         "lecture-type" => ["lecture_type"],
         "link" => ["link"],
+        "link-full" => ["link"],
         "software-link" => ["link"],
         "location" => ["location"],
         "magazine" => ["magazine"],
@@ -1062,9 +1063,18 @@ class Document extends Settings
             case "lecture-type": // ["lecture_type"],
                 return $this->getVal('lecture_type');
             case "link": // ["link"],
+            case "link-full":
             case "software-link": // ["link"],
                 $val = $this->getVal('link');
-                return "<a target='_blank' href='$val'>$val</a>";
+                if (empty($val) || $val == $default) return $default;
+                if ($module == 'link-full') {
+                    return "<a target='_blank' href='$val'>$val</a>";
+                }
+                $short_url = str_replace(['https://', 'http://'], '', $val);
+                if (strlen($short_url) > 50) {
+                    $short_url = substr($short_url, 0, 50) . '...';
+                }
+                return "<a target='_blank' href='$val'>$short_url</a>";
             case "location": // ["location"],
                 return $this->getVal('location');
             case "magazine": // ["magazine"],
