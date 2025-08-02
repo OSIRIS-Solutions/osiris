@@ -24,7 +24,10 @@ let DOIDATA = null;
 
 function togglePubType(type, callback = () => { }) {
     type = type.trim().toLowerCase().replace(" ", "-");
-    type = TYPES[type] ?? type;
+    // check if type exists:
+    if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
+        type = TYPES[type] ?? type;
+    }
     console.log(type);
 
     $("#type").val(type);
