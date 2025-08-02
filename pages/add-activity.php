@@ -537,8 +537,8 @@ function val($index, $default = '')
                         </div>
                         <small class="text-muted">
                             <?= lang(
-                                'Please note that changes to the author list are ignored if this checkmark is set.',
-                                'Bitte beachte, dass Änderungen an den Autoren ignoriert werden, wenn dieser Haken gesetzt ist.'
+                                'Please note that changes to the authors and editors are ignored if this checkmark is set.',
+                                'Bitte beachte, dass Änderungen an den Autoren und Herausgebern ignoriert werden, wenn dieser Haken gesetzt ist.'
                             ) ?>
                         </small>
                     </div>
