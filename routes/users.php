@@ -758,7 +758,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
     // check permissions
-    if (!$Settings->hasPermission('user.inactivate')) {
+    if (!$Settings->hasPermission('user.inactive')) {
         echo "Permission denied.";
         die();
     }
