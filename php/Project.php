@@ -550,6 +550,10 @@ class Project extends Vocabulary
 
     function inPast()
     {
+        if ($this->project['end'] === null || !isset($this->project['end']['year'])) {
+            // no end date set, so project is probably ongoing
+            return false;
+        }
         $end = new DateTime();
         $end->setDate(
             $this->project['end']['year'],
@@ -575,6 +579,10 @@ class Project extends Vocabulary
         if (!isset($this->project['end']) && isset($this->project['end_proposed'])){
             // end proposed is in ISO
             return Document::format_date($this->project['end_proposed']);
+        }
+        if (!isset($this->project['end']) || !isset($this->project['end']['year'])) {
+            // no end date set
+            return lang('unknown', 'unbekannt');
         }
         return sprintf('%02d', $this->project['end']['month']) . "/" . $this->project['end']['year'];
     }
