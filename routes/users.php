@@ -398,6 +398,7 @@ Route::post('/synchronize-users', function () {
             "username",
             "created",
             "created_by",
+            'uniqueid',
         ];
         foreach ($_POST['inactivate'] as $username) {
             $data = $DB->getPerson($username);
@@ -781,6 +782,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         "username",
         "created",
         "created_by",
+        'uniqueid',
     ];
     $arr = [];
     foreach ($data as $key => $value) {
