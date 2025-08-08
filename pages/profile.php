@@ -1076,7 +1076,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Room', 'Raum') ?></span>
-                                    <a href="tel:<?= $scientist['room'] ?>"><?= $scientist['room'] ?></a>
+                                    <?= $scientist['room'] ?>
                                 </td>
                             </tr>
                         <?php } ?>
