@@ -814,7 +814,11 @@ foreach ($osiris->adminFields->find() as $field) {
         'custom' => true
     ];
 
-    if ($field['format'] == 'bool') {
+    if ($field['format'] == 'float') {
+        $f['type'] = 'double';
+    }
+
+    if ($field['format'] == 'bool' || $field['format'] == 'bool-check') {
         $f['type'] = 'boolean';
     }
 
@@ -830,5 +834,13 @@ foreach ($osiris->adminFields->find() as $field) {
 }
 
 $FIELDS = array_values($FIELDS);
+// Sort fields by name
+usort($FIELDS, function ($a, $b) {
+    if (isset($a['label']) && !isset($b['label'])) return -1;
+    if (!isset($a['label']) && isset($b['label'])) return 1;
+    if (!isset($a['label']) && !isset($b['label'])) return 0;
+    return strnatcmp($a['label'], $b['label']);
+});
+
 
 // dump($FIELDS);
