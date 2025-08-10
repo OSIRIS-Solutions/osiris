@@ -577,6 +577,23 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 </nav>
 
 
+
+<section id="raw" style="display:none">
+
+    <h2 class="title">
+        <?= lang('Raw data', 'Rohdaten') ?>
+    </h2>
+
+    <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
+
+    <div class="box overflow-x-scroll">
+        <?php
+        dump($doc, true);
+        ?>
+    </div>
+
+</section>
+
 <section id="general">
     <div class="row row-eq-spacing-lg">
         <div class="col-lg-6">
@@ -1747,20 +1764,3 @@ if ($upload_possible):
 
     </section>
 <?php } ?>
-
-
-<section id="raw" style="display:none">
-
-    <h2 class="title">
-        <?= lang('Raw data', 'Rohdaten') ?>
-    </h2>
-
-    <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
-
-    <div class="box overflow-x-scroll">
-        <?php
-        dump($doc, true);
-        ?>
-    </div>
-
-</section>
