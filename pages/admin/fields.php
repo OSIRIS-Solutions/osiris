@@ -18,6 +18,7 @@
 
 $fields = $osiris->adminFields->find()->toArray();
 ?>
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
     <i class="ph ph-textbox"></i>
@@ -31,20 +32,20 @@ $fields = $osiris->adminFields->find()->toArray();
     </a>
 </div>
 
-<?php if (!empty($fields)) { ?>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Format</th>
-                <th>Name</th>
-                <th></th>
-            </tr>
-        </thead>
+<table class="table" id="field-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Format</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php foreach ($fields as $field) { ?>
             <tr>
                 <td>
-                    <?= $field['id'] ?>
+                    <code class="code"><?= $field['id'] ?></code>
                 </td>
                 <td>
                     <?= $field['format'] ?>
@@ -62,9 +63,29 @@ $fields = $osiris->adminFields->find()->toArray();
                 </td>
             </tr>
         <?php } ?>
-    </table>
-<?php } else { ?>
-    <div class="alert signal mt-20">
-        <?= lang('No custom fields defined yet.', 'Es wurden noch keine benutzerdefinierten Felder definiert.') ?>
-    </div>
-<?php } ?>
+    </tbody>
+</table>
+
+<!-- <script src="<?=ROOTPATH?>/js/datatables/dataTables.scroller.js"></script> -->
+<!-- <script src="<?=ROOTPATH?>/js/datatables/scroller.dataTables.js"></script> -->
+
+<script>
+    $(document).ready(function() {
+        // Initialize sortable for the table
+        $('#field-table').DataTable({
+            "order": [
+                [0, "asc"]
+            ],
+    //         scrollCollapse: true,
+    // scroller: true,
+    // scrollY: 500,
+            // "columnDefs": [{
+            //     "targets": [0, 1],
+            //     "orderable": false
+            // }],
+            "language": {
+                "emptyTable": "<?= lang('No custom fields defined yet.', 'Es wurden noch keine benutzerdefinierten Felder definiert.') ?>"
+            }
+        });
+    });
+</script>
