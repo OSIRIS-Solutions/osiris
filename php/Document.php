@@ -134,7 +134,7 @@ class Document extends Settings
         $this->DB = new DB;
 
         $fields = $this->DB->db->adminFields->find()->toArray();
-        $this->custom_fields = array_column($fields, 'format', 'id');
+        $this->custom_fields = array_column($fields, null, 'id');
         $this->custom_field_values = array_column($fields, 'values', 'id');
     }
 
@@ -921,6 +921,8 @@ class Document extends Settings
 
     public function get_field($module, $default = '')
     {
+        // dump($module);
+        // dump($this->getVal($module, $default));
         if ($this->usecase == 'list') $default = '-';
         if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
             return $this->formatAuthorsNew($module);
@@ -932,16 +934,6 @@ class Document extends Settings
             case "supervisor": // ["authors"],
             case "scientist": // ["authors"],
                 return $this->formatAuthorsNew('authors-last-f.');
-                // case "authors-last-f":
-                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'last, f');
-                // case "authors-f-last":
-                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'f last');
-                // case "authors-f.-last":
-                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'f. last');
-                // case "authors-last-first":
-                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'last, first');
-                // case "authors-first-last":
-                //     return $this->formatAuthors($this->getVal('authors', []), $format = 'first last');
             case "book-series": // ["series"],
                 return $this->getVal('series');
             case "book-title": // ["book"],
@@ -1031,8 +1023,8 @@ class Document extends Settings
             case "isbn": // ["isbn"],
                 return $this->getVal('isbn');
             case "issn": // ["issn"],
-                $issn = $this->getVal('issn');
-                if (empty($issn)) return '';
+                $issn = $this->getVal('issn', null);
+                if (empty($issn)) return $default;
                 return implode(', ', DB::doc2Arr($issn));
             case "issue": // ["issue"],
                 return $this->getVal('issue');
@@ -1302,13 +1294,23 @@ class Document extends Settings
                 if (isset($this->custom_fields[$module])) {
                     $val = $this->customVal($val, $this->custom_fields[$module]);
                 }
+                if ($val === true || $val === false) {
+                    if ($this->usecase == 'list') return bool_icon($val);
+                    $field = $this->custom_fields[$module];
+                    if (!isset($field['name'])) {
+                        $field['name'] = $module;
+                    }
+                    $label = '[' . lang($field['name'], $field['name_de'] ?? null) . ']';
+                    return $val ? $label : '';
+                }
                 if (is_array($val)) return implode(", ", $val);
                 return $val;
         }
     }
 
-    public function customVal($val, $format)
+    public function customVal($val, $field)
     {
+        $format = $field['format'] ?? '';
         if ($format == 'date') {
             return Document::format_date($val);
         }
