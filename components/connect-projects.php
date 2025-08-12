@@ -22,7 +22,10 @@ if (!$full_permission) {
     // make sure to include currently selected projects
     $filter = ['$or' => [['persons.user' => $_SESSION['username']], ['_id' => ['$in' => $activity['projects'] ?? []]]]];
 }
-$project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, 'name' => 1]])->toArray();
+$project_list = $osiris->projects->find($filter, [
+    'projection' => ['_id' => 1, 'name' => 1, 'title'=>1, 'title_de'=>1, 'internal_number'=>1], 
+    'sort' => ['name' => 1]
+])->toArray();
 ?>
 
 <form action="<?= ROOTPATH ?>/crud/activities/update-project-data/<?= $id ?>" method="post">
@@ -64,7 +67,7 @@ $project_list = $osiris->projects->find($filter, ['projection' => ['_id' => 1, '
             <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
             <?php
             foreach ($project_list as $s) { ?>
-                <option value="<?= $s['_id'] ?>"><?= $s['name'] ?></option>
+                <option value="<?= $s['_id'] ?>"><?= $s['name'] ?> <?=lang($s['title'], $s['title_de'] ?? null)?> <?=isset($s['internal_number']) ? ('(ID '.$s['internal_number'].')') : '' ?></option>
             <?php } ?>
         </select>
         <div class="input-group-append">

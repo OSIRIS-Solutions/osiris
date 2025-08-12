@@ -88,6 +88,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
 <?php } ?>
 
+<?php include_once BASEPATH . '/header-editor.php'; ?>
 <style>
     [class^="col-"] .box {
         margin: 0;
