@@ -21,7 +21,7 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '11');
+define('CSS_JS_VERSION', '12');
 
 // error_reporting(E_ERROR);
 
@@ -29,6 +29,7 @@ session_start();
 
 define('BASEPATH', $_SERVER['DOCUMENT_ROOT'] . ROOTPATH);
 define('OSIRIS_VERSION', '1.5.0');
+define('OSIRIS_BUILD', '250812');
 
 // set time constants
 $year = date("Y");
