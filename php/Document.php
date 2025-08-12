@@ -534,6 +534,9 @@ class Document extends Settings
 
     public function getAffiliationTypes()
     {
+        if (!isset($this->doc['authors']) || empty($this->doc['authors'])) {
+            return ['unspecified'];
+        }
         $authors = DB::doc2Arr($this->doc['authors']);
         $aoi_authors = array_filter($authors, function ($a) {
             return $a['aoi'] ?? false;

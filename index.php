@@ -48,6 +48,10 @@ function lang($en, $de = null)
     return $en;
 }
 
+// $_SESSION['loggedin'] = true;
+// $_SESSION['username'] = 'jko'; // default user for testing purposes
+
+
 include_once BASEPATH . "/php/Route.php";
 
 Route::get('/', function () {

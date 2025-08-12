@@ -27,9 +27,8 @@ $sws = false;
 $typeArr = $Format->typeArr;
 $upload_possible = $typeArr['upload'] ?? true;
 $subtypeArr = $Format->subtypeArr;
-
-$M = $subtypeArr['modules'] ?? array();
-foreach ($M as $m) {
+$typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
+foreach ($typeModules as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
     if ($m == 'date-range-ongoing') $ongoing = true;
     if ($m == 'supervisor') $sws = true;
@@ -265,6 +264,49 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
     <p class="lead"><?= $Format->getSubtitle('web') ?></p>
 
 </div>
+
+<!-- check for basic things -->
+<?php
+if (!isset($doc['authors']) || empty($doc['authors'])) {
+    $doc['authors'] = [];
+    if (!isset($doc['editors']) || empty($doc['editors'])) {
+?>
+        <div class="alert danger mb-20">
+            <h3 class="title">
+                <?= lang('No authors or editors', 'Keine Autoren oder Herausgeber') ?>
+            </h3>
+            <p>
+                <?= lang(
+                    'This activity has no authors or editors assigned. Please add at least one author or editor to this activity, otherwise it cannot be linked to persons.',
+                    'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor oder Herausgeber zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
+                ) ?>
+            </p>
+        </div>
+<?php
+    }
+}
+?>
+
+<!-- check for date, at least month and year must be given -->
+<?php
+if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empty($doc['month'])) {
+    // if no date is given, show an error
+?>
+    <div class="alert danger mb-20">
+        <h3 class="title">
+            <?= lang('No time specified', 'Keine Zeitangabe') ?>
+        </h3>
+        <p>
+            <?= lang(
+                'This activity has no time specified. Please add at least month and year to this activity, otherwise it cannot be properly assigned to a quarter and will be falsely sorted and shown.',
+                'Diese Aktivität hat keine Zeitangabe. Bitte füge mindestens Monat und Jahr zu dieser Aktivität hinzu, ansonsten kann sie nicht richtig einem Quartal zugeordnet werden und wird falsch sortiert und angezeigt.'
+            ) ?>
+        </p>
+    </div>
+<?php
+}
+?>
+
 
 
 <!-- show research topics -->
@@ -659,11 +701,10 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
                     </td>
                 </tr>
                 <?php
-                $selected = $Format->subtypeArr['modules'] ?? array();
                 $Modules = new Modules($doc);
                 $Format->usecase = "list";
 
-                foreach ($selected as $module) {
+                foreach ($typeModules as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
                     if (in_array($module, ["semester-select", "event-select"])) continue;
                 ?>
@@ -868,7 +909,9 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
             </div>
 
             <?php foreach (['authors', 'editors'] as $role) {
-                if (!isset($activity[$role])) continue;
+                // if (!isset($activity[$role])) continue;
+                // check if the module is active
+                if (!in_array($role, $typeModules) && !in_array($role . '*', $typeModules)) continue;
             ?>
 
                 <div class="btn-toolbar mb-10 float-sm-right">

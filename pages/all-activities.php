@@ -457,6 +457,12 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             })
                             text += '</span>' + data
                         }
+                        if (row.start == ''){
+                            text += ' <i class="ph ph-warning text-danger" title="' + lang('no date', 'kein Datum') + '"></i>';
+                        }
+                        if (row.authors == '' && row.editors == '') {
+                            text += ' <i class="ph ph-warning text-danger" title="' + lang('no persons', 'keine Personen') + '"></i>';
+                        }
                         return text;
                     }
                 },
