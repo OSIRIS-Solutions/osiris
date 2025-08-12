@@ -142,6 +142,10 @@ Route::get('/admin/categories/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     $category = $osiris->adminCategories->findOne(['id' => $id]);
+    if (empty($category) && is_numeric($id)) {
+        // try if it id is saved as integer
+        $category = $osiris->adminCategories->findOne(['id' => intval($id)]);
+    }
     if (empty($category)) {
         header("Location: " . ROOTPATH . "/admin/categories?msg=not-found");
         die;

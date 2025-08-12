@@ -59,7 +59,8 @@ if (!empty($form) && isset($form['id'])) {
                         <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>>Float</option>
                         <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>>List</option>
                         <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>>Date</option>
-                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>>Boolean</option>
+                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>>Boolean (Ja/Nein)</option>
+                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>>Boolean (Checkbox)</option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
                         <!-- <option value="user">User</option> -->
                     </select>

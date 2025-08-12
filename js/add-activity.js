@@ -106,12 +106,12 @@ function togglePubType(type, callback = () => { }) {
                         }
                     });
                     // restore form data if not empty
-                        if (DOIDATA !== null) {
-                            fillForm(DOIDATA)
-                        } else if (typeof callback === "function") {
-                            callback();
-                        } 
-                
+                    if (DOIDATA !== null) {
+                        fillForm(DOIDATA)
+                    } else if (typeof callback === "function") {
+                        callback();
+                    }
+
                     $("#data-modules")
                         .find(":input")
                         .on("change", function () {
@@ -961,6 +961,24 @@ function getDOI(doi) {
                     authors.push(name)
                 });
             }
+            let editors = [];
+            if (pub.editor !== undefined) {
+                pub.editor.forEach((a, i) => {
+                    var aoi = false
+                    a.affiliation.forEach(e => {
+                        // check if AFFILIATION_REGEX matches the affiliation
+                        if (AFFILIATION_REGEX.test(e.name)) {
+                            aoi = true
+                        }
+                    })
+                    var name = {
+                        family: a.family ?? a.name,
+                        given: a.given,
+                        affiliation: aoi
+                    }
+                    editors.push(name)
+                });
+            }
             var issue = null
             if (pub['journal-issue'] !== undefined) issue = pub['journal-issue'].issue
 
@@ -992,6 +1010,7 @@ function getDOI(doi) {
                 title: pub.title[0],
                 first_authors: first,
                 authors: authors,
+                editors: editors,
                 year: date[0],
                 month: date[1],
                 day: date[2],
@@ -1377,7 +1396,8 @@ function fillForm(pub) {
         'pub-language',
         'language',
         'doctype',
-        'link'
+        'link',
+        'editors'
     ]
 
     elements.forEach(element => {
@@ -1421,18 +1441,36 @@ function fillForm(pub) {
         })
     }
 
+    // if ($('#editors').length > 0) {
+    //     $('#editors').find('tr').remove()
+    //     $('#editors').closest('.module').addClass('is-valid')
+    //     if (pub.editors !== undefined) {
+    //         pub.editors.forEach(function (d, i) {
+    //             if (d.affiliation === undefined) {
+    //                 aff_undef = true
+    //             }
+    //             addAuthorRow({ last: d.family, first: d.given, aoi: d.affiliation ?? false, position: 'editor' })
+    //         })
+    //     }
+    // }
+
     if ($('.author-list').length > 0) {
 
-        $('.author-list').addClass('is-valid').find('.author').remove()
+        $('.author-widget').addClass('is-valid').find('.author').remove()
 
-        pub.authors.forEach(function (d, i) {
-            if (d.affiliation === undefined) {
-                aff_undef = true
-            }
-            addAuthorDiv(d.family, d.given, d.affiliation ?? false)
-        })
+        if (pub.authors !== undefined) {
+            pub.authors.forEach(function (d, i) {
+                if (d.affiliation === undefined) {
+                    aff_undef = true
+                }
+                addAuthorDiv(d.family, d.given, d.affiliation ?? false)
+            })
+        }
         if (pub.editors !== undefined) {
             pub.editors.forEach(function (d, i) {
+                if (d.affiliation === undefined) {
+                    aff_undef = true
+                }
                 addAuthorDiv(d.family, d.given, d.affiliation ?? false, true)
             })
         }

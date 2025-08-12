@@ -12181,7 +12181,7 @@ img.profile-img.small {
 
 .title-editor.is-invalid,
 .author-list.is-invalid,
-#author-widget.is-invalid {
+.author-widget.is-invalid {
   border-color: var(--danger-color) !important;
   -moz-box-shadow: 0 0.2rem 0 var(--danger-color-30);
   -webkit-box-shadow: 0 0.2rem 0 var(--danger-color-30);
@@ -12190,7 +12190,7 @@ img.profile-img.small {
 
 .title-editor.is-valid,
 .author-list.is-valid,
-#author-widget.is-valid {
+.author-widget.is-valid {
   border-color: var(--success-color) !important;
   -moz-box-shadow: 0 0.2rem 0 var(--success-color-30);
   -webkit-box-shadow: 0 0.2rem 0 var(--success-color-30);
