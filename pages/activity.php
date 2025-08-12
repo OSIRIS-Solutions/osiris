@@ -909,9 +909,20 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             </div>
 
             <?php foreach (['authors', 'editors'] as $role) {
-                // if (!isset($activity[$role])) continue;
                 // check if the module is active
-                if (!in_array($role, $typeModules) && !in_array($role . '*', $typeModules)) continue;
+                if ($role == 'editors' && !in_array('editor', $typeModules) && !in_array('editor' . '*', $typeModules)) continue;
+                // authors can have many modules, i.e. authors, author-table, scientist, supervisor
+                if ($role == 'authors') {
+                    $active = false;
+                    foreach ($typeModules as $module) {
+                        if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
+                        if (in_array($module, ['authors', 'author-table', 'scientist', 'supervisor'])) {
+                            $active = true;
+                            break;
+                        }
+                    }
+                    if (!$active) continue;
+                }
             ?>
 
                 <div class="btn-toolbar mb-10 float-sm-right">
@@ -925,14 +936,14 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                 <h2 class="mt-0">
                     <?php if ($role == 'authors') {
-                        echo lang('Authors', 'Autoren');
+                        echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
                     } else {
-                        echo lang('Editors', 'Editoren');
+                        echo lang('Editor(s)', 'Herausgeber');
                     } ?>
                 </h2>
 
 
-                <table class="table">
+                <table class="table mb-20">
                     <thead>
                         <tr>
                             <th><?= lang('Last', 'Nachname') ?></th>
@@ -948,7 +959,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                         </tr>
                     </thead>
                     <tbody id="<?= $role ?>">
-                        <?php foreach ($activity[$role] as $i => $author) {
+                        <?php foreach ($activity[$role] ?? [] as $i => $author) {
                         ?>
                             <tr>
                                 <td class="<?= (($author['aoi'] ?? 0) == '1' ? 'font-weight-bold' : '') ?>">

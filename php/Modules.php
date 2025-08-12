@@ -746,8 +746,7 @@ class Modules
                 </div>';
             echo '</div>';
             return;
-        }
-        elseif ($field['format'] == 'bool-check'){
+        } elseif ($field['format'] == 'bool-check') {
             echo '<div class="data-module col-sm-6" data-module="' . $module . '">';
             echo '<input type="hidden" name="values[' . $module . ']" value="false">';
             echo '<div class="custom-checkbox">';
@@ -1900,6 +1899,7 @@ class Modules
                 break;
 
             case "editor":
+            case "editors":
             ?>
                 <div class="data-module col-12" data-module="editor">
                     <label for="editor" class="<?= $required ?> floating-title"><?= lang('Editor(s) (in correct order)', 'Herausgeber (in korrekter Reihenfolge)') ?></label>
