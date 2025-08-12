@@ -361,7 +361,7 @@ if (!empty($form) && isset($form['_id'])) {
 
         <div class="alert danger mt-20">
             <?= lang("Can't delete type: $member activities associated.", "Kann Typ nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
-            <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
+            <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"subtype":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
                 <?= lang('View activities', 'Aktivitäten zeigen') ?>
             </a>
