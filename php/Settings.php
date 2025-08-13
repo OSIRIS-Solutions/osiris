@@ -467,8 +467,12 @@ class Settings
                 <?php
                 foreach ($topics as $topic) {
                     $checked = in_array($topic['id'], $selected);
+                    $subtitle = '';
+                    if (!empty($topic['subtitle'])) {
+                        $subtitle = 'data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '"';
+                    }
                 ?>
-                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>">
+                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?=$subtitle?>>
                         <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>

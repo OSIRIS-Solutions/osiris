@@ -320,6 +320,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
     <h3>
         <?= lang('Personnel statistics', 'Personalstatistiken') ?>
+        <?=lang('on the reporting date', 'am Stichtag')?>
     </h3>
 
     <table class="table" id="person-stats">
