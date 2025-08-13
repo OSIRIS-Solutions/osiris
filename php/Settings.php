@@ -494,7 +494,14 @@ class Settings
             $html .= '<h5 class="m-0">' . $this->topicLabel() . '</h5>';
         }
         foreach ($topics as $topic) {
-            $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $subtitle = '';
+            if (!empty($topic['subtitle'])) {
+                $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
+            }
+            $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            if (!empty($topic['subtitle'])) {
+                $html .= '</span>';
+            }
         }
         $html .= '</div>';
         return $html;
