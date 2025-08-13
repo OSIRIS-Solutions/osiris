@@ -29,7 +29,7 @@ session_start();
 
 define('BASEPATH', $_SERVER['DOCUMENT_ROOT'] . ROOTPATH);
 define('OSIRIS_VERSION', '1.5.0');
-define('OSIRIS_BUILD', '250812');
+define('OSIRIS_BUILD', '250813');
 
 // set time constants
 $year = date("Y");
