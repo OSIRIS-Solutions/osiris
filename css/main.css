@@ -12582,6 +12582,7 @@ a.concept:hover {
   padding: 0.25rem 0.5rem;
   animation: ease 0.5s;
   color: var(--primary-color);
+  cursor: pointer;
 }
 
 .pill-checkbox input {
@@ -12620,7 +12621,7 @@ a.concept:hover {
 }
 .topic-pill:hover {
   color: white;
-  opacity: 0.8;
+  filter: brightness(0.9);
 }
 .topic-pill::before {
   /* white circle */
