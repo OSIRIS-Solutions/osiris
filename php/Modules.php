@@ -2138,7 +2138,7 @@ class Modules
                 break;
 
             case "organization":
-                $org_id = $form['organization'] ?? '';
+                $org_id = $this->val('organization', null);
                 $rand_id = rand(1000, 9999);
             ?>
                 <div class="data-module" data-module="organization">
@@ -2150,9 +2150,10 @@ class Modules
                         <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $required ?> readonly id="org-<?= $rand_id ?>-organization" />
 
                         <div id="org-<?= $rand_id ?>-value">
-                            <?php if (empty($org_id)) { ?>
+                            <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
                                 <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
                                 <?php } else {
+                                $org_id = DB::to_ObjectID($org_id);
                                 $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
@@ -2216,7 +2217,7 @@ class Modules
                                         </small>
                                         <input type="hidden" name="values[organizations][]" value="<?= $org_id ?>" class="form-control">
                                     </td>
-                                    <td><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
+                                    <td class="w-50"><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
