@@ -1587,6 +1587,25 @@ class Modules
                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($this->val('end')) ?>">
                     </div>
                 </div>
+                <script>
+                    // make sure the end date is always after the start date
+                    document.getElementById('date_start').addEventListener('change', function() {
+                        var startDate = new Date(this.value);
+                        var endDate = new Date(document.getElementById('date_end').value);
+                        if (endDate < startDate) {
+                            document.getElementById('date_end').value = this.value;
+                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                        }
+                    });
+                    document.getElementById('date_end').addEventListener('change', function() {
+                        var startDate = new Date(document.getElementById('date_start').value);
+                        var endDate = new Date(this.value);
+                        if (endDate < startDate) {
+                            this.value = document.getElementById('date_start').value;
+                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                        }
+                    });
+                </script>
             <?php
                 break;
 
