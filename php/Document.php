@@ -1131,11 +1131,24 @@ class Document extends Settings
                 foreach ($value as $org_id) {
                     $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
                     if (empty($org)) continue;
-                    if ($this->usecase == 'web' || $this->usecase == 'list') {
+                    if ($this->usecase == 'list') {
+                        $orgs[] = '
+                            <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
+                                <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                                <ul class="horizontal mb-0">
+                                    <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                    <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
+                                </ul>
+                            </a>';
+                    } elseif ($this->usecase == 'web') {
                         $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . htmlspecialchars($org['name']) . '</a>';
                     } else {
                         $orgs[] = htmlspecialchars($org['name']);
                     }
+                }
+                if (empty($orgs)) return $default;
+                if ($this->usecase == 'list') {
+                    return implode('', $orgs);
                 }
                 return implode(', ', $orgs);
             case "peer-reviewed":
