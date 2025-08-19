@@ -396,12 +396,14 @@ class Project extends Vocabulary
             case 'approved':
             case 'accepted':
                 if ($this->inPast())
-                    return "<span class='badge dark'>" . lang('expired', 'abgelaufen') . "</span>";
+                    return "<span class='badge success'>" . lang('ended', 'beendet') . "</span>";
                 return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
             case 'rejected':
                 return "<span class='badge danger'>" . lang('rejected', 'abgelehnt') . "</span>";
             case 'finished':
                 return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
+            case 'withdrawn':
+                return "<span class='badge muted'>" . lang('withdrawn', 'zurückgezogen') . "</span>";
             case 'project':
                 if ($this->inPast())
                     return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
