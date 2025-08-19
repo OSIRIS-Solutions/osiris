@@ -2,29 +2,6 @@
 include_once "_config.php";
 include_once "init.php";
 
-$defaultauthors = [
-    [
-        "last" => "Koblitz",
-        "first" => "Julia",
-        "aoi" => true,
-        "position" => "first",
-        "user" => "jkoblitz",
-        "approved" => true,
-        "sws" => 2
-    ],
-    [
-        "last" => "Koblitz",
-        "first" => "Dominic",
-        "aoi" => true,
-        "position" => "last",
-        "user" => "dkoblitz",
-        "approved" => true,
-        "sws" => 0.3
-    ]
-];
-$defaultstart = ["year" => 2022, "month" => 9, "day" => 6];
-$defaultend = ["year" => 2022, "month" => 9, "day" => 8];
-
 class Modules
 {
     public $form = array();
@@ -63,8 +40,12 @@ class Modules
             ]],
             "name" => "Authors",
             "name_de" => "Autoren",
+            "label" => "Author(s) / Responsible person",
+            "label_de" => "Autor(en) / Verantwortliche Person",
             "description" => "A compressed module for authors, with 'tag-like' input fields for authors. Supports multiple authors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
-            "description_de" => "Ein komprimiertes Modul für Autoren, mit 'tag-ähnlichen' Eingabefeldern für Autoren. Unterstützt mehrere Autoren, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
+            "description_de" => "Ein komprimiertes Modul für Autoren, mit 'tag-ähnlichen' Eingabefeldern für Autoren. Unterstützt mehrere Autoren, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick.",
+            "width" => 0,
+            "tags" => ['authors']
         ],
         "author-table" => [
             "fields" => ["authors" => [
@@ -87,94 +68,146 @@ class Modules
                     "sws" => 0.3
                 ]
             ]],
-            "name" => "Authors",
-            "name_de" => "Autoren",
+            "name" => "Author Table",
+            "name_de" => "Autoren-Tabelle",
+            "label" => "Author(s) / Responsible person",
+            "label_de" => "Autor(en) / Verantwortliche Person",
             "description" => "A comprehensive table for authors, with individual input fields for authors, including first an last name, position, username and an affiliation checkbox. Supports multiple authors, drag-and-drop, and auto-suggest on username field.",
-            "description_de" => "Eine umfassende Tabelle für Autoren, mit individuellen Eingabefeldern für Autoren, einschließlich Vor- und Nachname, Position, Benutzername und einem Affiliation-Checkbox. Unterstützt mehrere Autoren, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld."
+            "description_de" => "Eine umfassende Tabelle für Autoren, mit individuellen Eingabefeldern für Autoren, einschließlich Vor- und Nachname, Position, Benutzername und einem Affiliation-Checkbox. Unterstützt mehrere Autoren, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld.",
+            "width" => 0,
+            "tags" => ['authors']
         ],
         "book-series" => [
             "fields" => ["series" => 'Book Series on Open Source Systems'],
             "name" => "Book-Series",
             "name_de" => "Bücherreihe",
+            "label" => "Series",
+            "label_de" => "Bücherreihe",
             "description" => "A field for the book series, where the publication is part of.",
-            "description_de" => "Ein Feld für die Buchreihe, zu der die Publikation gehört."
+            "description_de" => "Ein Feld für die Buchreihe, zu der die Publikation gehört.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "book-title" => [
             "fields" => ["book" => 'Research Information Systems'],
             "name" => "Book Title",
             "name_de" => "Buchtitel",
+            "label" => "Book Title",
+            "label_de" => "Buchtitel",
             "description" => "A field for the book title, where the publication is part of.",
-            "description_de" => "Ein Feld für den Buchtitel, zu dem die Publikation gehört."
+            "description_de" => "Ein Feld für den Buchtitel, zu dem die Publikation gehört.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "city" => [
             "fields" => ["city" => 'Helmstedt, Deutschland'],
             "name" => "City",
             "name_de" => "Stadt",
+            "label" => "City",
+            "label_de" => "Stadt",
             "description" => "A field for a city, e.g for the publisher of a book or for a conference location.",
-            "description_de" => "Ein Feld für eine Stadt, z.B. für den Verlag eines Buches oder für einen Konferenzort."
+            "description_de" => "Ein Feld für eine Stadt, z.B. für den Verlag eines Buches oder für einen Konferenzort.",
+            "width" => 2,
+            "tags" => ['general', 'location']
         ],
         "conference" => [
             "fields" => ["conference" => '1st CRIS Conference'],
             "name" => "Conference",
             "name_de" => "Konferenz",
+            "label" => "Event",
+            "label_de" => "Veranstaltung",
             "description" => "A field for the name of a conference/event.",
-            "description_de" => "Ein Feld für den Namen einer Konferenz/Veranstaltung."
+            "description_de" => "Ein Feld für den Namen einer Konferenz/Veranstaltung.",
+            "width" => 2,
+            "tags" => ['event']
         ],
         "correction" => [
             "fields" => ["correction" => true],
             "name" => "Correction",
             "name_de" => "Correction",
+            "label" => "Correction",
+            "label_de" => "Correction",
             "description" => "Checkbox for a correction flag.",
-            "description_de" => "Checkbox für eine Korrekturmarkierung."
+            "description_de" => "Checkbox für eine Korrekturmarkierung.",
+            "width" => 1,
+            "tags" => ['publication']
         ],
         "date-range" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => ["year" => 2022, "month" => 9, "day" => 8]],
             "name" => "Date Range",
             "name_de" => "Zeitspanne",
+            "label" => "Date Range",
+            "label_de" => "Zeitspanne",
             "description" => "A field for a date range, e.g. for a event. <b>Important</b>: If the end date is not set, the date is assumed to be only one day! If you want an ongoing event, please use the 'date-range-ongoing' module.",
-            "description_de" => "Ein Feld für einen Zeitraum, z.B. für eine Konferenz. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als nur ein Tag angenommen! Wenn Sie ein laufendes Ereignis möchten, verwenden Sie bitte das Modul 'date-range-ongoing'."
+            "description_de" => "Ein Feld für einen Zeitraum, z.B. für eine Konferenz. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als nur ein Tag angenommen! Wenn Sie ein laufendes Ereignis möchten, verwenden Sie bitte das Modul 'date-range-ongoing'.",
+            "width" => 2,
+            "tags" => ['date', 'important']
         ],
         "date-range-ongoing" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => null],
-            "name" => "Date Range",
-            "name_de" => "Zeitspanne",
+            "name" => "Date Range Ongoing",
+            "name_de" => "Zeitspanne laufend",
+            "label" => "Date Range",
+            "label_de" => "Zeitspanne",
             "description" => "A field for a possibly ongoing date range, e.g. for a membership. <b>Important</b>: If the end date is not set, the date is assumed to be ongoing! If you want a fixed date range, please use the 'date-range' module.",
-            "description_de" => "Ein Feld für einen möglicherweise laufenden Zeitraum, z.B. für eine Mitgliedschaft. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als laufend angenommen! Wenn Sie einen festen Zeitraum möchten, verwenden Sie bitte das Modul 'date-range'."
+            "description_de" => "Ein Feld für einen möglicherweise laufenden Zeitraum, z.B. für eine Mitgliedschaft. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als laufend angenommen! Wenn Sie einen festen Zeitraum möchten, verwenden Sie bitte das Modul 'date-range'.",
+            "width" => 2,
+            "tags" => ['date', 'important']
         ],
         "date" => [
             "fields" => ["year" => 2023, "month" => 5, "day" => 4],
             "name" => "Date",
             "name_de" => "Datum",
+            "label" => null,
+            "label_de" => null,
             "description" => "A field for a date, divided into year, month and day. A shortcut button for today's date is available.",
-            "description_de" => "Ein Feld für ein Datum, aufgeteilt in Jahr, Monat und Tag. Ein Shortcut-Button für das heutige Datum ist verfügbar."
+            "description_de" => "Ein Feld für ein Datum, aufgeteilt in Jahr, Monat und Tag. Ein Shortcut-Button für das heutige Datum ist verfügbar.",
+            "width" => 1,
+            "tags" => ['date', 'important']
         ],
         "details" => [
             "fields" => ["details" => "Weitere Details"],
             "name" => "Details",
             "name_de" => "Details",
+            "label" => "Details",
+            "label_de" => "Details",
             "description" => "A field for additional details, e.g. for a grant.",
-            "description_de" => "Ein Feld für weitere Details, z.B. für ein Stipendium."
+            "description_de" => "Ein Feld für weitere Details, z.B. für ein Stipendium.",
+            "width" => 2,
+            "tags" => ['general']
         ],
         "doctype" => [
             "fields" => ["doc_type" => 'White Paper'],
-            "name" => "Doctype",
-            "name_de" => "Doctype",
+            "name" => "Document type",
+            "name_de" => "Dokumententyp",
+            "label" => "Document type",
+            "label_de" => "Dokumententyp",
             "description" => "A field for the document type, e.g. for a report.",
-            "description_de" => "Ein Feld für den Dokumententyp, z.B. für einen Bericht."
+            "description_de" => "Ein Feld für den Dokumententyp, z.B. für einen Bericht.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "doi" => [
             "fields" => ["doi" => '10.1234/idk/invalid'],
             "name" => "DOI",
             "name_de" => "DOI",
+            "label" => "DOI",
+            "label_de" => "DOI",
             "description" => "A field for the Digital Object Identifier (DOI) of a publication. This field is used to uniquely identify a publication.",
-            "description_de" => "Ein Feld für den Digital Object Identifier (DOI) einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren."
+            "description_de" => "Ein Feld für den Digital Object Identifier (DOI) einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
+            "width" => 2,
+            "tags" => ['important', 'publication']
         ],
         "edition" => [
             "fields" => ["edition" => 2],
             "name" => "Edition",
             "name_de" => "Edition",
+            "label" => "Edition",
+            "label_de" => "Edition",
             "description" => "A field for the edition of a publication, e.g. for a book.",
-            "description_de" => "Ein Feld für die Auflage einer Publikation, z.B. für ein Buch."
+            "description_de" => "Ein Feld für die Auflage einer Publikation, z.B. für ein Buch.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "editor" => [
             "fields" => ["editors" => [
@@ -199,218 +232,342 @@ class Modules
             ]],
             "name" => "Editors",
             "name_de" => "Herausgeber",
+            "label" => "Editor(s)",
+            "label_de" => "Herausgeber",
             "description" => "A compressed module for editors, with 'tag-like' input fields for editors. Supports multiple editors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
-            "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick."
+            "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick.",
+            "width" => 1,
+            "tags" => ['authors', 'publication']
         ],
         "editorial" => [
             "fields" => ["editor_type" => 'Guest Editor'],
-            "name" => "Editorial",
-            "name_de" => "Herausgeberschaft",
+            "name" => "Editor Type",
+            "name_de" => "Art der Herausgabe",
+            "label" => "Type of Editorial",
+            "label_de" => "Art der Herausgabe",
             "description" => "A field for the editorial type, e.g. for a special issue.",
-            "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe."
+            "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "event-select" => [
             "fields" => [],
             "name" => "Event Selector",
             "name_de" => "Veranstaltungsauswahl",
+            "label" => "Select an event",
+            "label_de" => "Wähle ein Event",
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
-            "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt."
+            "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
+            "width" => 0,
+            "tags" => ['event', 'modificator']
         ],
-        "guest" => [
+        "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
-            "name" => "Category",
-            "name_de" => "Kategorie",
+            "name" => "Guest Category",
+            "name_de" => "Gäste-Kategorie",
+            "label" => "Category of the guest",
+            "label_de" => "Art des Gastes",
             "description" => "A field for the category of a guest, can be one of the following: guest scientist, lecture internship, student internship, other.",
-            "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges."
+            "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
+            "width" => 2,
+            "tags" => ['people']
         ],
         "gender" => [
             "fields" => ["gender" => 'f'],
             "name" => "Gender",
             "name_de" => "Geschlecht",
+            "label" => "Gender",
+            "label_de" => "Geschlecht",
             "description" => "A field to select the gender of a person. Can be one of the following: male, female, non-binary, not specified.",
-            "description_de" => "Ein Feld zur Auswahl des Geschlechts einer Person. Kann eines der folgenden sein: männlich, weiblich, divers, nicht spezifiziert."
+            "description_de" => "Ein Feld zur Auswahl des Geschlechts einer Person. Kann eines der folgenden sein: männlich, weiblich, divers, nicht spezifiziert.",
+            "width" => 2,
+            "tags" => ['people']
         ],
         "nationality" => [
             "fields" => ["country" => 'DE'],
             "name" => "Nationality",
             "name_de" => "Nationalität",
+            "label" => "Nationality",
+            "label_de" => "Nationalität",
             "description" => "A synonym for the 'country' field, used for persons.",
-            "description_de" => "Ein Synonym für das Feld 'Land', das für Personen verwendet wird."
+            "description_de" => "Ein Synonym für das Feld 'Land', das für Personen verwendet wird.",
+            "width" => 2,
+            "tags" => ['people', 'location']
         ],
         "country" => [
             "fields" => ["country" => 'DE'],
             "name" => "Country",
             "name_de" => "Land",
+            "label" => "Country",
+            "label_de" => "Land",
             "description" => "A field for a country, that can be selected from a list and is saved as a two-letter ISO country code.",
-            "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird."
+            "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird.",
+            "width" => 2,
+            "tags" => ['location']
         ],
         "countries" => [
             "fields" => ["countries" => ['DE', 'AT', 'CH']],
             "name" => "Countries",
             "name_de" => "Länder",
+            "label" => "Countries",
+            "label_de" => "Länder",
             "description" => "A field for a list of countries, that can be selected from a list and is saved as a two-letter ISO country code.",
-            "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden."
+            "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden.",
+            "width" => 2,
+            "tags" => ['location']
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
             "name" => "Abstract",
             "name_de" => "Zusammenfassung",
+            "label" => "Abstract",
+            "label_de" => "Zusammenfassung",
             "description" => "A field for the abstract, summarizing an activity.",
-            "description_de" => "Ein Feld für die Zusammenfassung, die eine Aktivität zusammenfasst."
+            "description_de" => "Ein Feld für die Zusammenfassung, die eine Aktivität zusammenfasst.",
+            "width" => 1,
+            "tags" => ['publication', 'important']
         ],
         "isbn" => [
             "fields" => ["isbn" => '979-8716615502'],
             "name" => "ISBN",
             "name_de" => "ISBN",
+            "label" => "ISBN",
+            "label_de" => "ISBN",
             "description" => "A field for the International Standard Book Number (ISBN) of a publication. This field is used to uniquely identify a book.",
-            "description_de" => "Ein Feld für die Internationale Standardbuchnummer (ISBN) einer Publikation. Dieses Feld wird verwendet, um ein Buch eindeutig zu identifizieren."
+            "description_de" => "Ein Feld für die Internationale Standardbuchnummer (ISBN) einer Publikation. Dieses Feld wird verwendet, um ein Buch eindeutig zu identifizieren.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "issn" => [
             "fields" => ["issn" => ["1362-4962", "0305-1048"]],
             "name" => "ISSN",
             "name_de" => "ISSN",
+            "label" => "ISSN",
+            "label_de" => "ISSN",
             "description" => "A field for the International Standard Serial Number (ISSN) of a publication. This field is used to uniquely identify a journal. May contain multiple ISSNs, separated by comma.",
-            "description_de" => "Ein Feld für die Internationale Standardnummer für fortlaufende Sammelwerke (ISSN) einer Publikation. Dieses Feld wird verwendet, um eine Zeitschrift eindeutig zu identifizieren. Kann mehrere ISSNs enthalten, die durch Komma getrennt sind."
+            "description_de" => "Ein Feld für die Internationale Standardnummer für fortlaufende Sammelwerke (ISSN) einer Publikation. Dieses Feld wird verwendet, um eine Zeitschrift eindeutig zu identifizieren. Kann mehrere ISSNs enthalten, die durch Komma getrennt sind.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "issue" => [
             "fields" => ["issue" => "D1"],
             "name" => "Issue",
             "name_de" => "Issue",
+            "label" => "Issue",
+            "label_de" => "Issue",
             "description" => "A field for the issue of a publication, e.g. for a journal.",
-            "description_de" => "Ein Feld für das Heft einer Publikation, z.B. für eine Zeitschrift."
+            "description_de" => "Ein Feld für das Heft einer Publikation, z.B. für eine Zeitschrift.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "iteration" => [
             "fields" => ["iteration" => "annual"],
             "name" => "Iteration",
             "name_de" => "Häufigkeit",
+            "label" => "Iteration",
+            "label_de" => "Häufigkeit",
             "description" => "A field for the iteration of an event, e.g. for a conference. Possible values are: continously or once.",
-            "description_de" => "Ein Feld für die Häufigkeit einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: kontinuierlich oder einmalig."
+            "description_de" => "Ein Feld für die Häufigkeit einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: kontinuierlich oder einmalig.",
+            "width" => 2,
+            "tags" => ['event']
         ],
         "journal" => [
             "fields" => ["journal" => 'Information Systems Research', "journal_id" => null],
             "name" => "Journal",
             "name_de" => "Journal",
+            "label" => "Journal",
+            "label_de" => "Zeitschrift",
             "description" => "A field for selecting a journal from the database. If the journal does not exist yet, the user will be prompted to select one from an online catalogue that will be then saved into the database.",
-            "description_de" => "Ein Feld zum Auswählen eines Journals (Zeitschrift) aus der Datenbank. Wenn das Journal noch nicht existiert, wird der Benutzer aufgefordert, eines aus einem Online-Katalog auszuwählen, das dann in die Datenbank gespeichert wird."
+            "description_de" => "Ein Feld zum Auswählen eines Journals (Zeitschrift) aus der Datenbank. Wenn das Journal noch nicht existiert, wird der Benutzer aufgefordert, eines aus einem Online-Katalog auszuwählen, das dann in die Datenbank gespeichert wird.",
+            "width" => 1,
+            "tags" => ['publication', 'journal']
         ],
         "lecture-invited" => [
             "fields" => ["invited_lecture" => true],
             "name" => "Invited lecture",
             "name_de" => "Eingeladener Vortrag",
+            "label" => "Invited lecture",
+            "label_de" => "Eingeladener Vortrag",
             "description" => "Checkbox for an invited lecture flag.",
-            "description_de" => "Checkbox für eine eingeladene Vortragsmarkierung."
+            "description_de" => "Checkbox für eine eingeladene Vortragsmarkierung.",
+            "width" => 2,
+            "tags" => ['event']
         ],
         "lecture-type" => [
             "fields" => ["lecture_type" => 'short'],
-            "name" => "Lecture-Length",
-            "name_de" => "Länge des Vortrags",
+            "name" => "Lecture Length",
+            "name_de" => "Vortragslänge",
+            "label" => "Length of the lecture",
+            "label_de" => "Länge des Vortrags",
             "description" => "A field for the length of a lecture, e.g. for a conference. Possible values are: short, medium, long.",
-            "description_de" => "Ein Feld für die Länge eines Vortrags, z.B. für eine Konferenz. Mögliche Werte sind: kurz, mittel, lang."
+            "description_de" => "Ein Feld für die Länge eines Vortrags, z.B. für eine Konferenz. Mögliche Werte sind: kurz, mittel, lang.",
+            "width" => 2,
+            "tags" => ['event']
         ],
         "license" => [
             "fields" => ["license" => 'MIT'],
             "name" => "License",
             "name_de" => "Lizenz",
+            "label" => "License",
+            "label_de" => "Lizenz",
             "description" => "A field for the license, e.g. for software.",
-            "description_de" => "Ein Feld für die Lizenz, z.B. für Software."
+            "description_de" => "Ein Feld für die Lizenz, z.B. für Software.",
+            "width" => 2,
+            "tags" => ['software', 'publication']
         ],
         "link" => [
             "fields" => ["link" => 'https://osiris-app.de'],
             "name" => "Link",
             "name_de" => "Link",
+            "label" => "Link",
+            "label_de" => "Link",
             "description" => "A field for a link, e.g. for an event.",
-            "description_de" => "Ein Feld für einen Link, z.B. für eine Veranstaltung."
+            "description_de" => "Ein Feld für einen Link, z.B. für eine Veranstaltung.",
+            "width" => 2,
+            "tags" => ['general', 'important']
         ],
         "location" => [
             "fields" => ["location" => 'Braunschweig, Germany'],
             "name" => "Location",
             "name_de" => "Ort",
+            "label" => "Location",
+            "label_de" => "Ort",
             "description" => "A field for the more general location, e.g. for an event. If you want to specify a city an country, please use the 'city' and 'country' modules.",
-            "description_de" => "Ein Feld für den allgemeineren Ort, z.B. für eine Veranstaltung. Wenn Sie eine Stadt und ein Land angeben möchten, verwenden Sie bitte die Module 'city' und 'country'."
+            "description_de" => "Ein Feld für den allgemeineren Ort, z.B. für eine Veranstaltung. Wenn Sie eine Stadt und ein Land angeben möchten, verwenden Sie bitte die Module 'city' und 'country'.",
+            "width" => 2,
+            "tags" => ['location']
         ],
         "magazine" => [
             "fields" => ["magazine" => 'Apothekenumschau'],
             "name" => "Magazine",
             "name_de" => "Magazin",
+            "label" => "Magazine / Venue",
+            "label_de" => "Zeitschrift / Veröffentlichungsort",
             "description" => "A field for the magazine or publication venue, where the publication is part of. Not standardized and typically used if no journal is given.",
-            "description_de" => "Ein Feld für das Magazin oder den Veröffentlichungsort, zu dem die Publikation gehört. Nicht standardisiert und typischerweise verwendet, wenn keine Zeitschrift angegeben ist."
+            "description_de" => "Ein Feld für das Magazin oder den Veröffentlichungsort, zu dem die Publikation gehört. Nicht standardisiert und typischerweise verwendet, wenn keine Zeitschrift angegeben ist.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
             "name" => "Online Ahead Of Print",
             "name_de" => "Online Ahead Of Print",
+            "label" => "Online Ahead Of Print",
+            "label_de" => "Online Ahead Of Print",
             "description" => "Checkbox for an online ahead of print flag. This flag is used to indicate that a publication is available online before it is published in a journal. Checking will lead to a frequent reminder to update the publication status.",
-            "description_de" => "Checkbox für eine Online Ahead Of Print-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation online verfügbar ist, bevor sie in einer Zeitschrift veröffentlicht wird. Das Ankreuzen führt zu einer gelegentlichen Erinnerung, den Publikationsstatus zu überprüfen."
+            "description_de" => "Checkbox für eine Online Ahead Of Print-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation online verfügbar ist, bevor sie in einer Zeitschrift veröffentlicht wird. Das Ankreuzen führt zu einer gelegentlichen Erinnerung, den Publikationsstatus zu überprüfen.",
+            "width" => 1,
+            "tags" => ['publication', 'important']
         ],
         "openaccess" => [
             "fields" => ["open_access" => true],
-            "name" => "Open-Access",
-            "name_de" => "Open-Access",
+            "name" => "Open Access",
+            "name_de" => "Open Access",
+            "label" => null,
+            "label_de" => null,
             "description" => "Checkbox for an open access flag. This flag is used to indicate that a publication is freely available online. Important: If the actual open access status is important, please use the 'openaccess-status' module.",
-            "description_de" => "Checkbox für eine Open-Access-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation frei online verfügbar ist. Wichtig: Wenn der tatsächliche Open-Access-Status wichtig ist, verwenden Sie bitte das Modul 'openaccess-status'."
+            "description_de" => "Checkbox für eine Open-Access-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation frei online verfügbar ist. Wichtig: Wenn der tatsächliche Open-Access-Status wichtig ist, verwenden Sie bitte das Modul 'openaccess-status'.",
+            "width" => 1,
+            "tags" => ['publication', 'important']
         ],
         "openaccess-status" => [
             "fields" => ["open_access" => true, "oa_status" => 'gold'],
-            "name" => "Open-Access",
-            "name_de" => "Open-Access",
+            "name" => "Open Access Status",
+            "name_de" => "Open Access Status",
+            "label" => "Open Access Status",
+            "label_de" => "Open Access Status",
             "description" => "A field for the open access status of a publication. Possible values are: gold, green, hybrid, bronze, closed.",
-            "description_de" => "Ein Feld für den Open-Access-Status einer Publikation. Mögliche Werte sind: gold, green, hybrid, bronze, closed."
+            "description_de" => "Ein Feld für den Open-Access-Status einer Publikation. Mögliche Werte sind: gold, green, hybrid, bronze, closed.",
+            "width" => 2,
+            "tags" => ['publication', 'important']
         ],
         "pages" => [
             "fields" => ["pages" => 'D1531-8'],
             "name" => "Pages",
             "name_de" => "Seiten",
+            "label" => "Pages",
+            "label_de" => "Seiten",
             "description" => "A field for the pages of a publication, e.g. for a journal.",
-            "description_de" => "Ein Feld für die Seiten einer Publikation, z.B. für eine Zeitschrift."
+            "description_de" => "Ein Feld für die Seiten einer Publikation, z.B. für eine Zeitschrift.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "peer-reviewed" => [
             "fields" => ["peer-reviewed" => true],
             "name" => "Peer-Reviewed",
             "name_de" => "Peer-Reviewed",
+            "label" => "Peer-Reviewed",
+            "label_de" => "Peer-Reviewed",
             "description" => "Checkbox for a peer-reviewed flag. This flag is used to indicate that a publication has been peer-reviewed.",
-            "description_de" => "Checkbox für eine Peer-Reviewed-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation peer-reviewed wurde."
+            "description_de" => "Checkbox für eine Peer-Reviewed-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation peer-reviewed wurde.",
+            "width" => 2,
+            "tags" => ['publication', 'important']
         ],
         "person" => [
             "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
             "name" => "Person",
             "name_de" => "Person",
+            "label" => "Name of the person (last name, given name)",
+            "label_de" => "Name der Person (Nachname, Vorname)",
             "description" => "A fieldset for a person, including name, affiliation and academic title.",
-            "description_de" => "Ein Feldset für eine Person, einschließlich Name, Affiliation und akademischem Titel."
+            "description_de" => "Ein Feldset für eine Person, einschließlich Name, Affiliation und akademischem Titel.",
+            "width" => 0,
+            "tags" => ['people']
         ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
             "name" => "Publisher",
             "name_de" => "Verlag",
+            "label" => "Publisher",
+            "label_de" => "Verlag",
             "description" => "A field for the publisher of a publication, e.g. for a book.",
-            "description_de" => "Ein Feld für den Verlag einer Publikation, z.B. für ein Buch."
+            "description_de" => "Ein Feld für den Verlag einer Publikation, z.B. für ein Buch.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "pubmed" => [
             "fields" => ["pubmed" => 1234567],
             "name" => "Pubmed-ID",
             "name_de" => "Pubmed-ID",
+            "label" => "Pubmed-ID",
+            "label_de" => "Pubmed-ID",
             "description" => "A field for the PubMed ID of a publication. This field is used to uniquely identify a publication.",
-            "description_de" => "Ein Feld für die PubMed-ID einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren."
+            "description_de" => "Ein Feld für die PubMed-ID einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
+            "width" => 2,
+            "tags" => ['publication', 'identifier', 'important']
         ],
         "pubtype" => [
             "fields" => ["pubtype" => "article"],
-            "name" => "Pubtype",
-            "name_de" => "Pubtype",
+            "name" => "Publication Type",
+            "name_de" => "Publikationstyp",
+            "label" => "Publication Type",
+            "label_de" => "Publikationstyp",
             "description" => "A field for the publication type, e.g. for a journal article. Only to be used if the publication type is not defined by the subtype.",
-            "description_de" => "Ein Feld für den Publikationstyp, z.B. für einen Zeitschriftenartikel. Nur zu nutzen, wenn der Publikationstyp nicht durch den Subtyp festgelegt wird."
+            "description_de" => "Ein Feld für den Publikationstyp, z.B. für einen Zeitschriftenartikel. Nur zu nutzen, wenn der Publikationstyp nicht durch den Subtyp festgelegt wird.",
+            "width" => 2,
+            "tags" => ['publication']
         ],
         "review-type" => [
             "fields" => ["review-type" => "Begutachtung eines Forschungsantrages"],
             "name" => "Review Type",
             "name_de" => "Review-Art",
+            "label" => "Type of review",
+            "label_de" => "Art der Begutachtung",
             "description" => "A field for the type of review, e.g. for a grant.",
-            "description_de" => "Ein Feld für die Art der Begutachtung, z.B. für ein Stipendium."
+            "description_de" => "Ein Feld für die Art der Begutachtung, z.B. für ein Stipendium.",
+            "width" => 2,
+            "tags" => ['review', 'publication']
         ],
         "role" => [
             "fields" => ["role" => "Organisator:in"],
             "name" => "Role/Function",
             "name_de" => "Rolle/Funktion",
+            "label" => "Role/Function",
+            "label_de" => "Rolle/Funktion",
             "description" => "A field for the role or function of a person, e.g. for an event.",
-            "description_de" => "Ein Feld für die Rolle oder Funktion einer Person, z.B. für eine Veranstaltung."
+            "description_de" => "Ein Feld für die Rolle oder Funktion einer Person, z.B. für eine Veranstaltung.",
+            "width" => 2,
+            "tags" => ['people', 'event']
         ],
         "scientist" => [
             "fields" => ["authors" =>
@@ -426,65 +583,100 @@ class Modules
             ]],],
             "name" => "Scientist",
             "name_de" => "Wissenschaftler:in",
+            "label" => "Scientist",
+            "label_de" => "Wissenschaftler:in",
             "description" => "A selection field for an author from the institute. Limited to the persons in the database and supports only one author.",
-            "description_de" => "Ein Auswahlfeld für einen Autor aus dem Institut. Beschränkt auf die Personen in der Datenbank und unterstützt nur einen Autor."
+            "description_de" => "Ein Auswahlfeld für einen Autor aus dem Institut. Beschränkt auf die Personen in der Datenbank und unterstützt nur einen Autor.",
+            "width" => 2,
+            "tags" => ['authors', 'people', 'important']
         ],
         "semester-select" => [
             "fields" => [],
             "name" => "Semester Selector",
             "name_de" => "Semesterauswahl",
+            "label" => "Select a semester",
+            "label_de" => "Wähle ein Semester",
             "description" => "A field for preselecting a semester, e.g. the next Summer Semester. If the user clicks on a semester, the date range is automatically adjusted.",
-            "description_de" => "Ein Feld zur Vorauswahl eines Semesters, z.B. des nächsten Sommersemesters. Wenn ein:e Benutzer:in auf ein Semester klickt, wird der Zeitraum automatisch angepasst."
+            "description_de" => "Ein Feld zur Vorauswahl eines Semesters, z.B. des nächsten Sommersemesters. Wenn ein:e Benutzer:in auf ein Semester klickt, wird der Zeitraum automatisch angepasst.",
+            "width" => 2,
+            "tags" => ['teaching', 'modificator']
         ],
         "scope" => [
             "fields" => ["scope" => "national"],
             "name" => "Scope",
             "name_de" => "Reichweite",
+            "label" => "Scope",
+            "label_de" => "Reichweite",
             "description" => "A field for the scope of an event, e.g. for a conference. Possible values are: local, regional, national, international.",
-            "description_de" => "Ein Feld für den Geltungsbereich einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: lokal, regional, national, international."
+            "description_de" => "Ein Feld für den Geltungsbereich einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: lokal, regional, national, international.",
+            "width" => 2,
+            "tags" => ['event']
         ],
         "software-link" => [
             "fields" => ["link" => "https://osiris-app.de"],
-            "name" => "Link",
-            "name_de" => "Link",
+            "name" => "Link (Software)",
+            "name_de" => "Link (Software)",
+            "label" => "Complete link to the software/database",
+            "label_de" => "Kompletter Link zur Software/Datenbank",
             "description" => "Synonym for a link used for software.",
-            "description_de" => "Synonym für einen Link, der für Software verwendet wird."
+            "description_de" => "Synonym für einen Link, der für Software verwendet wird.",
+            "width" => 2,
+            "tags" => ['software']
         ],
         "software-type" => [
             "fields" => ["software_type" => "Database"],
             "name" => "Type of Software",
             "name_de" => "Software-Type",
+            "label" => "Type of software",
+            "label_de" => "Art der Software",
             "description" => "A field for the type of software, possible vales are software, database, dataset, webtool, report.",
-            "description_de" => "Ein Feld für den Typ der Software, mögliche Werte sind Software, Datenbank, Datensatz, Webtool, Bericht."
-
+            "description_de" => "Ein Feld für den Typ der Software, mögliche Werte sind Software, Datenbank, Datensatz, Webtool, Bericht.",
+            "width" => 2,
+            "tags" => ['software']
         ],
         "software-venue" => [
             "fields" => ["software_venue" => "GitHub"],
             "name" => "Venue (Software)",
             "name_de" => "Veröffentlichungsort (Software)",
+            "label" => "Place of Publication, e.g. GitHub, Zenodo ...",
+            "label_de" => "Veröffentlichungsort, z.B. GitHub, Zenodo ...",
             "description" => "A field for the venue of a software, e.g. for a repository.",
-            "description_de" => "Ein Feld für den Veröffentlichungsort einer Software, z.B. für ein Repository."
+            "description_de" => "Ein Feld für den Veröffentlichungsort einer Software, z.B. für ein Repository.",
+            "width" => 2,
+            "tags" => ['software']
         ],
         "status" => [
             "fields" => ["status" => 'completed'],
             "name" => "Status",
             "name_de" => "Status",
+            "label" => "Status",
+            "label_de" => "Status",
             "description" => "A field for the status of an activity, e.g. for a thesis supervision. Possible values are: in progress, completed, aborted.",
-            "description_de" => "Ein Feld für den Status einer Aktivität, z.B. für eine Betreuung einer Abschlussarbeit. Mögliche Werte sind: in Bearbeitung, abgeschlossen, abgebrochen."
+            "description_de" => "Ein Feld für den Status einer Aktivität, z.B. für eine Betreuung einer Abschlussarbeit. Mögliche Werte sind: in Bearbeitung, abgeschlossen, abgebrochen.",
+            "width" => 1,
+            "tags" => ['general', 'important']
         ],
         "student-category" => [
-            "fields" => ["category" => "doctoral thesis"],
-            "name" => "Category of a thesis",
-            "name_de" => "Kategorie einer Abschlussarbeit",
+            "fields" => ["category" => 'doctoral thesis'],
+            "name" => "Student Category",
+            "name_de" => "Studierenden-Kategorie",
+            "label" => "Category of a student",
+            "label_de" => "Kategorie eines Studierenden",
             "description" => "A field for the category of a student, can be one of the following: bachelor thesis, master thesis, doctoral thesis, internship, other.",
-            "description_de" => "Ein Feld für die Kategorie eines Studierenden, kann eine der folgenden sein: Bachelorarbeit, Masterarbeit, Doktorarbeit, Praktikum, Sonstiges."
+            "description_de" => "Ein Feld für die Kategorie eines Studierenden, kann eine der folgenden sein: Bachelorarbeit, Masterarbeit, Doktorarbeit, Praktikum, Sonstiges.",
+            "width" => 2,
+            "tags" => ['people', 'publication']
         ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
-            "name" => "Category",
-            "name_de" => "Kategorie",
+            "name" => "Thesis Category",
+            "name_de" => "Abschlussarbeit-Kategorie",
+            "label" => "Thesis type",
+            "label_de" => "Art der Abschlussarbeit",
             "description" => "A field for the category of a thesis, can be one of the following: bachelor, master, diploma, doctoral, habilitation.",
-            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation."
+            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation.",
+            "width" => 2,
+            "tags" => ['publication', 'people']
         ],
         "supervisor" => [
             "fields" => ["authors" => [
@@ -498,87 +690,146 @@ class Modules
                     "sws" => 2
                 ],
             ]],
-            "name" => "Supervisor",
-            "name_de" => "Betreuer:in",
+            "name" => "Supervisor (with weekly hours)",
+            "name_de" => "Betreuer:in (mit SWS)",
+            "label" => "Supervisor",
+            "label_de" => "Betreuende",
             "description" => "A comprehensive table for supervisors, with individual input fields for supervisors, including first an last name, position, username, an affiliation checkbox and semester week hours (sws). Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but with SWS.",
-            "description_de" => "Eine umfassende Tabelle für Betreuer:innen, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox und Semesterwochenstunden (SWS). Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber mit SWS."
+            "description_de" => "Eine umfassende Tabelle für Betreuer:innen, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox und Semesterwochenstunden (SWS). Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber mit SWS.",
+            "width" => 0,
+            "tags" => ['authors', 'people']
+        ],
+        "supervisor-thesis" => [
+            "fields" => ["authors"],
+            "name" => "Supervisor (Thesis)",
+            "name_de" => "Betreuer:in (Abschlussarbeit)",
+            "label" => "Supervisor of the thesis",
+            "label_de" => "Betreuende der Abschlussarbeit",
+            "description" => "A comprehensive table for supervisors of a thesis, with individual input fields for supervisors, including first and last name, position, username, an affiliation checkbox and the role. Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but for theses.",
+            "description_de" => "Eine umfassende Tabelle für Betreuer:innen einer Abschlussarbeit, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox und der Rolle. Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber für Abschlussarbeiten.",
+            "width" => 0,
+            "tags" => ['authors', 'people', 'publication']
         ],
         "teaching-category" => [
             "fields" => ["category" => 'practical-lecture'],
-            "name" => "Category",
-            "name_de" => "Category",
+            "name" => "Teaching Category",
+            "name_de" => "Lehr-Kategorie",
+            "label" => "Category of the teaching activity",
+            "label_de" => "Kategorie der Lehrveranstaltung",
             "description" => "A field for the category of a teaching activity, e.g. for a lecture. Possible values are: lecture, practical-lecture, seminar, project, other.",
-            "description_de" => "Ein Feld für die Kategorie einer Lehrveranstaltung, z.B. für eine Vorlesung. Mögliche Werte sind: Vorlesung, Praktikum, Seminar, Projekt, Sonstiges."
+            "description_de" => "Ein Feld für die Kategorie einer Lehrveranstaltung, z.B. für eine Vorlesung. Mögliche Werte sind: Vorlesung, Praktikum, Seminar, Projekt, Sonstiges.",
+            "width" => 2,
+            "tags" => ['teaching']
         ],
         "teaching-course" => [
             "fields" => ["title" => "Einführung in die Forschungsinformation", "module" => null, "module_id" => null],
             "name" => "Course",
             "name_de" => "Modul",
+            "label" => "Course for the following module",
+            "label_de" => "Veranstaltung zu folgendem Modul",
             "description" => "A field for selecting a teaching course from the database. If the course does not exist yet, the user will be prompted to add a new one that will be then saved into the database.",
-            "description_de" => "Ein Feld zum Auswählen eines Lehrmoduls aus der Datenbank. Wenn das Modul noch nicht existiert, wird der Benutzer aufgefordert, ein neues hinzuzufügen, das dann in die Datenbank gespeichert wird."
+            "description_de" => "Ein Feld zum Auswählen eines Lehrmoduls aus der Datenbank. Wenn das Modul noch nicht existiert, wird der Benutzer aufgefordert, ein neues hinzuzufügen, das dann in die Datenbank gespeichert wird.",
+            "width" => 1,
+            "tags" => ['teaching']
         ],
         "title" => [
-            "fields" => ["title" => "OSIRIS - the Open, Smart, and Intuitive Research Information System"],
+            "fields" => ["title" => 'OSIRIS - Open Source Research Information System'],
             "name" => "Title",
             "name_de" => "Titel",
+            "label" => "Title / Topic / Description",
+            "label_de" => "Titel / Thema / Beschreibung",
             "description" => "A field for the title of an activity, e.g. for a journal article. Always mandatory.",
-            "description_de" => "Ein Feld für den Titel einer Aktivität, z.B. für einen Zeitschriftenartikel. Immer erforderlich."
+            "description_de" => "Ein Feld für den Titel einer Aktivität, z.B. für einen Zeitschriftenartikel. Immer erforderlich.",
+            "width" => 0,
+            "tags" => ['general', 'important']
         ],
         "subtitle" => [
-            "fields" => ["subtitle" => 'A new way to manage research information'],
+            "fields" => ["subtitle" => 'A subtitle for the activity, e.g. for a journal article.'],
             "name" => "Subtitle",
             "name_de" => "Untertitel",
+            "label" => "Subtitle",
+            "label_de" => "Untertitel",
             "description" => "A field for the subtitle of an activity.",
-            "description_de" => "Ein Feld für den Untertitel einer Aktivität."
+            "description_de" => "Ein Feld für den Untertitel einer Aktivität.",
+            "width" => 1,
+            "tags" => ['general']
         ],
         "university" => [
-            "fields" => ["publisher" => 'Technische Universität Braunschweig'],
+            "fields" => ["publisher" => 'Springer Nature'],
             "name" => "University",
             "name_de" => "Universität",
+            "label" => "University",
+            "label_de" => "Universität",
             "description" => "A field for the university of a publication, e.g. for a thesis.",
-            "description_de" => "Ein Feld für die Universität einer Publikation, z.B. für eine Abschlussarbeit."
+            "description_de" => "Ein Feld für die Universität einer Publikation, z.B. für eine Abschlussarbeit.",
+            "width" => 2,
+            "tags" => ['teaching', 'people']
         ],
         "version" => [
             "fields" => ["version" => OSIRIS_VERSION],
             "name" => "Version",
             "name_de" => "Version",
+            "label" => "Version",
+            "label_de" => "Version",
             "description" => "A field for the version of a software, e.g. for a release.",
-            "description_de" => "Ein Feld für die Version einer Software, z.B. für ein Release."
+            "description_de" => "Ein Feld für die Version einer Software, z.B. für ein Release.",
+            "width" => 2,
+            "tags" => ['software']
         ],
         "venue" => [
-            "fields" => ["venue" => 'ARD'],
-            "name" => 'Publisher / Place of publication',
-            "name_de" => 'Herausgeber / Ort der Veröffentlichung',
+            "fields" => ["venue"],
+            "name" => 'Place of publication',
+            "name_de" => 'Veröffentlichungsort',
+            "label" => 'Place of publication',
+            "label_de" => 'Ort der Veröffentlichung',
             "description" => "A field for the publisher or place of publication, e.g. for a report.",
-            "description_de" => "Ein Feld für den Herausgeber oder den Ort der Veröffentlichung, z.B. für einen Bericht."
+            "description_de" => "Ein Feld für den Herausgeber oder den Ort der Veröffentlichung, z.B. für einen Bericht.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "volume" => [
             "fields" => ["volume" => 51],
             "name" => "Volume",
             "name_de" => "Volume",
+            "label" => "Volume",
+            "label_de" => "Volume",
             "description" => "A field for the volume of a publication, e.g. for a journal.",
-            "description_de" => "Ein Feld für den Band einer Publikation, z.B. für eine Zeitschrift."
+            "description_de" => "Ein Feld für den Band einer Publikation, z.B. für eine Zeitschrift.",
+            "width" => 2,
+            "tags" => ['publication', 'journal']
         ],
         "political_consultation" => [
             "fields" => ["political_consultation" => 'Gutachten'],
-            "name" => "Contribution to political and social consulting",
-            "name_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
+            "name" => "Political Consultation",
+            "name_de" => "Politik- und Gesellschaftsberatung",
+            "label" => "Contribution to political and social consulting",
+            "label_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
             "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
-            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung."
+            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
+            "width" => 2,
+            "tags" => ['event', 'publication']
         ],
         "organization" => [
             "fields" => ["organization" => 'Technische Universität Braunschweig'],
             "name" => "Organisation",
             "name_de" => "Organisation",
+            "label" => "Organisation",
+            "label_de" => "Organisation",
             "description" => "A field for an organisation that is connected to an activity, e.g. a university or a company. This field is used to identify the organisation that is responsible for the activity.",
-            "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist."
+            "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist.",
+            "width" => 1,
+            "tags" => ['organizations', 'people']
         ],
         "organizations" => [
             "fields" => ["organizations" => ['Technische Universität Braunschweig', 'Deutsche Forschungsgemeinschaft']],
             "name" => "Organisations",
             "name_de" => "Organisationen",
+            "label" => "Organisations",
+            "label_de" => "Organisationen",
             "description" => "A field for a list of organisations that are connected to an activity, e.g. a university or a company. This field is used to identify the organisations that are responsible for the activity.",
-            "description_de" => "Ein Feld für eine Liste von Organisationen, die mit einer Aktivität verbunden sind, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisationen zu identifizieren, die für die Aktivität verantwortlich sind."
+            "description_de" => "Ein Feld für eine Liste von Organisationen, die mit einer Aktivität verbunden sind, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisationen zu identifizieren, die für die Aktivität verantwortlich sind.",
+            "width" => 0,
+            "tags" => ['organizations', 'people']
         ],
     );
 
@@ -709,30 +960,97 @@ class Modules
     function print_all_modules()
     {
         foreach ($this->all_modules as $module => $def) {
-            $this->print_module($module);
+            $this->print_module($module, false);
         }
     }
 
     function print_modules($modules)
     {
         foreach ($modules as $module) {
-            $this->print_module($module);
+            $req = false;
+            if (str_ends_with($module, '*')) {
+                $module = str_replace('*', '', $module);
+                $req = true;
+            }
+            $this->print_module($module, $req);
+        }
+    }
+
+    function print_form($type)
+    {
+        $typeArr = $this->DB->db->adminTypes->findOne(['id' => $type]);
+        if (!isset($typeArr)) {
+            echo '<b>Type <code>' . $type . '</code> is not defined. </b>';
+            return;
+        }
+
+        $fields = $typeArr['fields'] ?? [];
+        if (empty($fields) && !empty($typeArr['modules'])) {
+            $this->print_modules($typeArr['modules']);
+            return;
+        }
+        foreach ($fields as $f) {
+            $props = $f['props'] ?? [];
+            switch ($f['type'] ?? 'field') {
+                case 'field':
+                    $this->print_module($f['id'], $props['required'] ?? false, $props);
+                    break;
+                case 'custom';
+                    $this->custom_field($f['id'], $props['required'] ?? false, $props);
+                    break;
+                case 'heading':
+                    echo '<div class="data-module col-sm-12 pb-0" data-module="heading">';
+                    echo '<h5 class="m-0">' . lang($props['text'] ?? null, $props['text_de'] ?? null) . '</h5>';
+                    echo '</div>';
+                    break;
+                case 'paragraph':
+                    echo '<div class="data-module col-sm-12 py-0" data-module="paragraph">';
+                    echo '<p class="m-0">' . lang($props['text'] ?? null, $props['text_de'] ?? null) . '</p>';
+                    echo '</div>';
+                    break;
+                case 'hr':
+                    echo '<div class="data-module col-sm-12 py-0" data-module="hr">';
+                    echo '<hr class="my-5" />';
+                    echo '</div>';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
         }
     }
 
 
-    function custom_field($module, $req = false)
+    function custom_field($module, $req = false, $props = [])
     {
         $field = $this->DB->db->adminFields->findOne(['id' => $module]);
         if (!isset($field)) {
             echo '<b>Module <code>' . $module . '</code> is not defined. </b>';
             return;
         }
-        $required = ($req ? "required" : "");
-        $label = lang($field['name'], $field['name_de'] ?? $field['name']);
+        $width = $field['width'] ?? 2;
+        $width = 12 / $width;
+        $labelClass = ($req ? "required" : "");
+        $label = lang($field['label'] ?? $field['name'], $field['label_de'] ?? null);
+        $help = '';
+
+        if (isset($props['label'])) {
+            $label = lang($props['label'], $props['label_de'] ?? null);
+        }
+        if (isset($props['width']) && $props['width'] > 0 && $props['width'] <= 12) {
+            $width = 12 / $props['width'];
+        }
+        if (isset($props['required']) && $props['required'] == true) {
+            $labelClass = "required";
+        }
+        if (isset($props['help'])) {
+            $help = lang($props['help'], $props['help_de'] ?? null);
+            $labelClass .= " has-help";
+        }
+
         if ($field['format'] == 'bool') {
-            echo '<div class="data-module col-sm-6" data-module="' . $module . '">';
-            echo '<label for="' . $module . '" class="' . $required . ' floating-title">' . $label . '</label>';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '">';
+            echo '<label for="' . $module . '" class="' . $labelClass . ' floating-title">' . $label . '</label>';
 
             $val = boolval($this->val($module, $field['default'] ?? ''));
             echo '<br>
@@ -747,7 +1065,7 @@ class Modules
             echo '</div>';
             return;
         } elseif ($field['format'] == 'bool-check') {
-            echo '<div class="data-module col-sm-6" data-module="' . $module . '">';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '">';
             echo '<input type="hidden" name="values[' . $module . ']" value="false">';
             echo '<div class="custom-checkbox">';
             echo '<input type="checkbox" id="' . $module . '" name="values[' . $module . ']" value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
@@ -757,25 +1075,25 @@ class Modules
             return;
         }
 
-        echo '<div class="data-module floating-form col-sm-12" data-module="' . $module . '">';
+        echo '<div class="data-module floating-form col-sm-' . $width . '" data-module="' . $module . '">';
 
         switch ($field['format']) {
             case 'string':
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $required . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $labelClass . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
                 break;
             case 'int':
-                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
-                echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $required . ' ' . ($multiple ? 'multiple' : '') . '>';
+                echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
                 $val = $this->val($module, $field['default'] ?? '');
                 if (!$req) {
                     '<option value="" ' . (empty($val) ? 'selected' : '') . '>-</option>';
@@ -793,48 +1111,75 @@ class Modules
                 echo '</select>';
                 break;
             case 'date':
-                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . valueFromDateArray($this->val($module, $field['default'] ?? '')) . '" placeholder="custom-field">';
+                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . valueFromDateArray($this->val($module, $field['default'] ?? '')) . '" placeholder="custom-field">';
                 break;
             case 'url':
-                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
                 break;
             default:
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
                 break;
         }
 
-        echo '<label for="' . $module . '" class="' . $required . '">' . $label . '</label>';
+        echo '<label for="' . $module . '" class="' . $labelClass . '">' . $label . '</label>';
+        echo $this->render_help($help);
         echo '</div>';
     }
 
-    function print_module($module, $req = false)
+    function render_help(?string $text): string
     {
-        if (str_ends_with($module, '*')) {
-            $module = str_replace('*', '', $module);
-            $req = true;
-        }
+        if (!$text) return '';
+        // $hid = 'help-'.preg_replace('/[^a-z0-9_-]+/i','-',$inputId);
+        return '<div class="form-help" role="note">' . $text . '</div>';
+    }
+
+    function print_module($module, $req = false, $props = [])
+    {
         if (!array_key_exists($module, $this->all_modules)) {
-            return $this->custom_field($module, $req);
+            return $this->custom_field($module, $req, $props);
         }
 
-        $required = ($req ? "required" : "");
-
+        $labelClass = ($req ? "required" : "");
 
         $m = $this->all_modules[$module] ?? [];
         $label = lang($m['name'], $m['name_de'] ?? $m['name']);
+
+        $width = 1;
+        if ($m['width'] ?? 2 > 0) {
+            $width = $m['width'] ?? 2;
+        }
+        $width = 12 / $width;
+
+        $help = '';
+
+        if (isset($props['width']) && $props['width'] > 0 && $props['width'] <= 12) {
+            $width = 12 / $props['width'];
+        }
+        if (isset($props['required']) && $props['required'] == true) {
+            $labelClass = "required";
+        }
+        if (isset($props['label'])) {
+            $label = lang($props['label'], $props['label_de'] ?? null);
+        }
+        if (isset($props['help'])) {
+            $help = lang($props['help'], $props['help_de'] ?? null);
+            $labelClass .= ' has-help';
+        }
+
         switch ($module) {
             case 'gender':
                 $val = $this->val('gender');
 ?>
-                <div class="data-module floating-form col-sm-6" data-module="teaching-gender">
-                    <select name="values[gender]" id="teaching-cat" class="form-control" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
+                    <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
                         <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('female', 'weiblich') ?></option>
                         <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('male', 'männlich') ?></option>
                         <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('non-binary', 'divers') ?></option>
                         <option value="-" <?= $val == '-' ? 'selected' : '' ?>><?= lang('not specified', 'keine Angabe') ?></option>
                     </select>
-                    <label for="teaching-cat" class="<?= $required ?>"><?= $label ?></label>
+                    <label for="gender" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -842,16 +1187,17 @@ class Modules
             case 'country':
                 $val = $this->val('country');
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="country">
-                    <select name="values[country]" id="country" class="form-control" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country">
+                    <select name="values[country]" id="country" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
                         <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
                             <option value="<?= $code ?>" <?= $val == $code ? 'selected' : '' ?>><?= $country ?></option>
                         <?php } ?>
                     </select>
-                    <label for="country" class="<?= $required ?> element-cat">
+                    <label for="country" class="<?= $labelClass ?> ">
                         <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -859,9 +1205,9 @@ class Modules
                 $countries = $this->val('countries', []);
             ?>
 
-                <div class="data-module floating-form col-sm-6" data-module="teaching-gender">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="countries">
                     <b>
-                        <?= lang('Countries:', 'Länder:') ?>
+                        <?= $label ?>
                     </b>
                     <div class="author-widget">
                         <div class="author-list p-10" id="country-list">
@@ -913,24 +1259,26 @@ class Modules
                 break;
             case 'abstract':
             ?>
-                <div class="data-module floating-form col-sm-12" data-module="abstract">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="abstract">
                     <textarea name="values[abstract]" id="abstract" cols="30" rows="5" class="form-control" placeholder="abstract"><?= $this->val('abstract') ?></textarea>
-                    <label for="abstract" class="<?= $required ?> "><?= lang('Abstract', 'Abstract') ?></label>
+                    <label for="abstract" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
             case "title":
                 $id = rand(1000, 9999);
             ?>
-                <div class="data-module col-12" data-module="title">
+                <div class="data-module col-sm-<?= $width ?>" data-module="title">
                     <div class="lang-<?= lang('en', 'de') ?>">
-                        <label for="title" class="<?= $required ?> floating-title">
-                            <?= lang('Title / Topic / Description', 'Titel / Thema / Beschreibung') ?>
+                        <label for="title" class="<?= $labelClass ?> floating-title">
+                            <?= $label ?>
                         </label>
 
                         <div class="form-group title-editor" id="title-editor-<?= $id ?>"><?= $this->form['title'] ?? '' ?></div>
-                        <input type="text" class="form-control hidden" name="values[title]" id="title" <?= $required ?> value="<?= $this->val('title') ?>">
+                        <input type="text" class="form-control hidden" name="values[title]" id="title" <?= $labelClass ?> value="<?= $this->val('title') ?>">
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
                 <script>
                     initQuill(document.getElementById('title-editor-<?= $id ?>'));
@@ -940,20 +1288,20 @@ class Modules
 
             case "subtitle":
             ?>
-                <div class="data-module floating-form col-sm-12" data-module="subtitle">
-                    <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $required ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
-                    <label for="subtitle" class="<?= $required ?>">
-                        <?= lang('Subtitle', 'Untertitel') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="subtitle">
+                    <input type="text" class="form-control" name="values[subtitle]" id="subtitle" <?= $labelClass ?> value="<?= $this->val('subtitle') ?>" placeholder="subtitle">
+                    <label for="subtitle" class="<?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "pubtype":
             ?>
-                <div class="data-module col-12" data-module="pubtype">
-                    <!-- not visible, is selected via subtype buttons -->
-                    <select class="form-control" name="values[pubtype]" id="pubtype" readonly <?= $required ?>>
+                <div class="data-module col-sm-<?= $width ?>" data-module="pubtype">
+                    <select class="form-control" name="values[pubtype]" id="pubtype" <?= $labelClass ?>>
                         <option value="article">Journal article (refereed)</option>
                         <option value="book"><?= lang('Book', 'Buch') ?></option>
                         <option value="chapter"><?= lang('Book chapter', 'Buchkapitel') ?></option>
@@ -963,15 +1311,19 @@ class Modules
                         <option value="dissertation"><?= lang('Thesis') ?></option>
                         <option value="others"><?= lang('Others', 'Weiteres') ?></option>
                     </select>
+                    <label for="pubtype" class="<?= $labelClass ?> floating-title">
+                        <?= $label ?>
+                    </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "teaching-course":
             ?>
-                <div class="data-module col-12" data-module="teaching-course">
-                    <label for="teaching" class="floating-title <?= $required ?>">
-                        <?= lang('Course for the following module', 'Veranstaltung zu folgendem Modul') ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="teaching-course">
+                    <label for="teaching" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
                     <a href="#teaching-select" id="teaching-field" class="module">
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
@@ -988,17 +1340,17 @@ class Modules
                             <?php endif; ?>
                         </div>
 
-                        <input type="hidden" class="form-control hidden" name="values[title]" value="<?= $this->val('title') ?>" id="module-title" <?= $required ?> readonly>
-                        <input type="hidden" class="form-control hidden" name="values[module]" value="<?= $this->val('module') ?>" id="module" <?= $required ?> readonly>
-                        <input type="hidden" class="form-control hidden" name="values[module_id]" value="<?= $this->val('module_id') ?>" id="module_id" <?= $required ?> readonly>
+                        <input type="hidden" class="form-control hidden" name="values[module]" value="<?= $this->val('module') ?>" id="module" <?= $labelClass ?> readonly>
+                        <input type="hidden" class="form-control hidden" name="values[module_id]" value="<?= $this->val('module_id') ?>" id="module_id" <?= $labelClass ?> readonly>
                     </a>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
             case "author-table":
             ?>
-                <div class="data-module col-12" data-module="author-table">
-                    <label for="authors" class="<?= $required ?> floating-title"><?= lang('Author(s)', 'Autor(en)') ?></label>
+                <div class="data-module col-sm-<?= $width ?>" data-module="author-table">
+                    <label for="authors" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1053,6 +1405,7 @@ class Modules
                                 </tr>
                             </tfoot>
                         </table>
+                        <?= $this->render_help($help) ?>
                     </div>
                     <script>
                         function removeAuthorRow(el) {
@@ -1126,14 +1479,15 @@ class Modules
                         <?php } ?>
                     </datalist>
 
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "supervisor":
             ?>
-                <div class="data-module col-12" data-module="supervisor">
-                    <label for="supervisor" class="<?= $required ?> floating-title"><?= lang('Supervisor', 'Betreuer_in') ?></label>
+                <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
+                    <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1184,6 +1538,7 @@ class Modules
                                 </tr>
                             </tfoot>
                         </table>
+                        <?= $this->render_help($help) ?>
                     </div>
                     <script>
                         function removeSupervisorRow(el) {
@@ -1224,10 +1579,130 @@ class Modules
             <?php
                 break;
 
+
+            case "supervisor-thesis":
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
+                    <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div class="module p-0">
+                        <table class="table simple small">
+                            <thead>
+                                <tr>
+                                    <th><?= lang('Last name', 'Nachname') ?></th>
+                                    <th><?= lang('First name', 'Vorname') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                                    <th>Username</th>
+                                    <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
+                                    <th>
+                                        <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="supervisors">
+                                <?php foreach ($this->preset ?? [] as $i => $author) {
+                                    $role = $author['role'] ?? 'supervisor';
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                        </td>
+                                        <td>
+                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                        </td>
+                                        <td>
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <label for="checkbox-<?= $i ?>" class="blank"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>">
+                                        </td>
+
+                                        <td>
+                                            <select name="values[authors][<?= $i ?>][role]" class="form-control">
+                                                <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
+                                                <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
+                                                <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
+                                                <option value="third-reviewer" <?= ($role == 'third-reviewer' ? 'selected' : '') ?>><?= lang('Third reviewer', 'Dritter Gutachter') ?></option>
+                                                <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
+                                                <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
+                                                <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
+                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <script>
+                        function removeSupervisorRow(el) {
+                            // check if row is the only one left
+                            if ($(el).closest('tbody').find('tr').length > 1) {
+                                $(el).closest('tr').remove()
+                            } else {
+                                toastError(lang('At least one supervisor is needed.', 'Mindestens ein Betreuer muss angegeben werden.'))
+                            }
+                        }
+
+                        var counter = <?= $i ?>;
+
+                        function addSupervisorRow() {
+                            counter++;
+                            var tr = $('<tr>')
+                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis"></td>')
+                            var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
+                            var roles = {
+                                'supervisor': lang('Supervisor', 'Betreuer'),
+                                'first-reviewer': lang('First reviewer', 'Erster Gutachter'),
+                                'second-reviewer': lang('Second reviewer', 'Zweiter Gutachter'),
+                                'third-reviewer': lang('Third reviewer', 'Dritter Gutachter'),
+                                'committee-member': lang('Committee member', 'Ausschussmitglied'),
+                                'chair': lang('Chair', 'Vorsitzender'),
+                                'mentor': lang('Mentor', 'Mentor'),
+                                'other': lang('Other', 'Sonstiges')
+                            }
+                            for (const [key, value] of Object.entries(roles)) {
+                                select.append('<option value="' + key + '">' + value + '</option>')
+                            }
+                            tr.append($('<td>').append(select))
+                            var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                                $(this).closest('tr').remove();
+                            });
+                            tr.append($('<td>').append(btn))
+                            $('#supervisors').append(tr)
+                        }
+                    </script>
+
+                    <datalist id="user-list-thesis">
+                        <?php
+                        foreach ($this->userlist as $s) { ?>
+                            <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+                        <?php } ?>
+                    </datalist>
+
+                </div>
+            <?php
+                break;
+
             case "teaching-category":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="teaching-category">
-                    <select name="values[category]" id="teaching-cat" class="form-control" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-category">
+                    <select name="values[category]" id="teaching-cat" class="form-control" <?= $labelClass ?>>
                         <option value="lecture" <?= $this->val('category') == 'lecture' ? 'selected' : '' ?>><?= lang('Lecture', 'Vorlesung') ?></option>
                         <option value="practical" <?= $this->val('category') == 'practical' ? 'selected' : '' ?>><?= lang('Practical course', 'Praktikum') ?></option>
                         <option value="practical-lecture" <?= $this->val('category') == 'practical-lecture' ? 'selected' : '' ?>><?= lang('Lecture and practical course', 'Vorlesung und Praktikum') ?></option>
@@ -1237,14 +1712,15 @@ class Modules
                         <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('Seminar') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
-                    <label for="teaching-cat" class="<?= $required ?> element-cat"><?= lang('Category', 'Kategorie') ?></label>
+                    <label for="teaching-cat" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "semester-select":
             ?>
-                <div class="data-module col-sm-6" data-module="semester-select">
+                <div class="data-module col-sm-<?= $width ?>" data-module="semester-select">
                     <label for="teaching-cat" class="floating-title"><?= lang('Fast select time', 'Schnellwahl Zeit') ?></label>
 
                     <div class="btn-group d-flex">
@@ -1265,6 +1741,7 @@ class Modules
                             $('#date_end').val(end)
                         }
                     </script>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1276,8 +1753,8 @@ class Modules
                 );
             ?>
 
-                <div class="data-module col-sm-6" data-module="event-select">
-                    <label class="floating-title"><?= lang('Select an event', 'Wähle ein Event') ?></label>
+                <div class="data-module col-sm-<?= $width ?>" data-module="event-select">
+                    <label class="floating-title"><?= $label ?></label>
 
                     <div id="event-select-container w-full">
                         <div class="btn-group d-flex" id="event-select-btns">
@@ -1349,17 +1826,17 @@ class Modules
                             color: var(--muted-color);
                         }
                     </style>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "authors":
             ?>
-                <div class="data-module col-12" data-module="authors">
+                <div class="data-module col-sm-<?= $width ?>" data-module="authors">
                     <a class="float-right" href="#author-help"><i class="ph ph-question" style="line-height:0;"></i> <?= lang('Help', 'Hilfe') ?></a>
-                    <label for="author" class="floating-title <?= $required ?>">
-                        <!-- <span data-visible="students,guests"><?= lang('Responsible scientist', 'Verantwortliche Person') ?></span> -->
-                        <?= lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person') ?>
+                    <label for="author" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
 
@@ -1386,6 +1863,7 @@ class Modules
                             </div>
                         </div>
 
+                        <?= $this->render_help($help) ?>
                     </div>
                     <small class="text-muted">
                         <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
@@ -1405,56 +1883,58 @@ class Modules
 
             case "person":
             ?>
-                <h6 class="col-12 m-0 floating-title <?= $required ?>">
+                <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
                     <?= lang('Details about the person', 'Angaben zu der Person') ?>
                 </h6>
-                <div class="data-module col-12 row" data-module="person">
+                <div class="data-module col-sm-<?= $width ?> row" data-module="person">
                     <div class="col-sm-5 floating-form">
-                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $required ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
-                        <label for="guest-name" class="<?= $required ?> element-other">
-                            <?= lang('Name of the person', 'Name der Person') ?>
-                            <?= lang('(last name, given name)', '(Nachname, Vorname)') ?>
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
+                        <label for="guest-name" class="<?= $labelClass ?> element-other">
+                            <?= $label ?>
                         </label>
                     </div>
                     <div class="col-sm-5 floating-form">
-                        <input type="text" class="form-control" name="values[affiliation]" id="guest-affiliation" <?= $required ?> value="<?= $this->val('affiliation') ?>" placeholder="affiliation">
-                        <label for="guest-affiliation" class="<?= $required ?> element-other"><?= lang('Affiliation (Name, City, Country)', 'Einrichtung (Name, Ort, Land)') ?></label>
+                        <input type="text" class="form-control" name="values[affiliation]" id="guest-affiliation" <?= $labelClass ?> value="<?= $this->val('affiliation') ?>" placeholder="affiliation">
+                        <label for="guest-affiliation" class="<?= $labelClass ?> element-other"><?= lang('Affiliation (Name, City, Country)', 'Einrichtung (Name, Ort, Land)') ?></label>
                     </div>
                     <div class="col-sm-2 floating-form">
                         <input type="text" class="form-control" name="values[academic_title]" id="guest-academic_title" value="<?= $this->val('academic_title') ?>" placeholder="academic_title">
                         <label for="guest-academic_title"><?= lang('Academ. title', 'Akadem. Titel') ?></label>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "student-category":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="student-category">
-                    <select name="values[category]" id="category-students" class="form-control" <?= $required ?>>
-                        <option value="doctoral thesis" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorand:in') ?></option>
-                        <option value="master thesis" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Masterarbeit') ?></option>
-                        <option value="bachelor thesis" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelorarbeit') ?></option>
-                        <option value="internship" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Internship', 'Praktikum') ?></option>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="student-category">
+                    <select name="values[category]" id="category-students" class="form-control" <?= $labelClass ?>>
+                        <option value="doctoral student" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Student', 'Doktorand:in') ?></option>
+                        <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
+                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelostudent') ?></option>
+                        <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
-                    <label for="category-students" class="<?= $required ?>"><?= lang('Category', 'Kategorie') ?></label>
+                    <label for="category-students" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "thesis":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="thesis">
-                    <select name="values[thesis]" id="thesis" class="form-control" <?= $required ?>>
-                        <option value=""><?= lang('Thesis', 'Abschlussarbeit') ?></option>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="thesis">
+                    <select name="values[thesis]" id="thesis" class="form-control" <?= $labelClass ?>>
+                        <option value="thesis"><?= lang('Thesis', 'Abschlussarbeit') ?></option>
                         <option value="doctor" <?= $this->val('thesis') == 'doctor' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorarbeit') ?></option>
                         <option value="diploma" <?= $this->val('thesis') == 'diploma' ? 'selected' : '' ?>><?= lang('Diploma Thesis', 'Diplomarbeit') ?></option>
                         <option value="master" <?= $this->val('thesis') == 'master' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Masterarbeit') ?></option>
                         <option value="bachelor" <?= $this->val('thesis') == 'bachelor' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelorarbeit') ?></option>
                         <option value="habilitation" <?= $this->val('thesis') == 'habilitation' ? 'selected' : '' ?>><?= lang('Habilitation', 'Habilitation') ?></option>
                     </select>
-                    <label for="thesis" class="<?= $required ?> element-cat"><?= lang('Thesis type', 'Art der Abschlussarbeit') ?></label>
+                    <label for="thesis" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1462,8 +1942,8 @@ class Modules
             case "status":
                 $status = $this->val('status') ?? 'preparation';
             ?>
-                <div class="data-module col-sm-6" data-module="status" style="align-self: center;">
-                    <label for="status" class="<?= $required ?> floating-title">Status</label>
+                <div class="data-module col-sm-<?= $width ?>" data-module="status" style="align-self: center;">
+                    <label for="status" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                     <div id="end-question">
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-preparation" value="preparation" value="1" <?= $status == 'preparation' ? 'checked' : '' ?>>
@@ -1485,50 +1965,54 @@ class Modules
                             <label for="status-aborted"><?= lang('Aborted', 'Abgebrochen') ?></label>
                         </div>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "guest":
+            case "guest-category":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="guest">
-                    <select name="values[category]" id="category-guest" class="form-control" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="guest">
+                    <select name="values[category]" id="category-guest" class="form-control" <?= $labelClass ?>>
                         <option value="guest scientist" <?= $this->val('category') == 'guest scientist' ? 'selected' : '' ?>><?= lang('Guest Scientist', 'Gastwissenschaftler:in') ?></option>
                         <option value="lecture internship" <?= $this->val('category') == 'lecture internship' ? 'selected' : '' ?>><?= lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium') ?></option>
                         <option value="student internship" <?= $this->val('category') == 'student internship' ? 'selected' : '' ?>><?= lang('Student Internship', 'Schülerpraktikum') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
-                    <label for="category-guest" class="<?= $required ?> element-cat"><?= lang('Category', 'Kategorie') ?></label>
+                    <label for="category-guest" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "details":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="details">
-                    <input type="text" class="form-control" name="values[details]" id="details" <?= $required ?> value="<?= $this->val('details') ?>" placeholder="details">
-                    <label for="details" class="<?= $required ?>">
-                        <?= lang('Details') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="details">
+                    <input type="text" class="form-control" name="values[details]" id="details" <?= $labelClass ?> value="<?= $this->val('details') ?>" placeholder="details">
+                    <label for="details" class="<?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "date":
             ?>
-
-                <div class="data-module floating-form col-12 row" data-module="date">
+                <div class="data-module floating-form col-sm-<?= $width ?> row" data-module="date">
                     <div class="col-sm floating-form">
-                        <input type="number" min="1901" max="2155" step="1" class="form-control" name="values[year]" id="year" <?= $required ?> value="<?= $this->val('year') ?>" placeholder="2024">
-                        <label for="year" class="<?= $required ?> element-time">Year</label>
+                        <input type="number" min="1901" max="2155" step="1" class="form-control" name="values[year]" id="year" <?= $labelClass ?> value="<?= $this->val('year') ?>" placeholder="2024">
+                        <label for="year" class="<?= $labelClass ?> element-time"><?= lang('Year', 'Jahr') ?></label>
                     </div>
                     <div class="col-sm floating-form">
-                        <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="month" <?= $required ?> value="<?= $this->val('month') ?>" placeholder="12">
-                        <label for="month" class="<?= $required ?> element-time">Month</label>
+                        <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="month" <?= $labelClass ?> value="<?= $this->val('month') ?>" placeholder="12">
+                        <label for="month" class="<?= $labelClass ?> element-time"><?= lang('Month', 'Monat') ?></label>
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="31" step="1" class="form-control" name="values[day]" id="day" value="<?= $this->val('day') ?>" placeholder="24">
-                        <label for="day" class="element-time">Day</label>
+                        <label for="day" class="element-time"><?= lang('Day', 'Tag') ?></label>
+                        <?= $this->render_help($help) ?>
                     </div>
                     <div class="col flex-grow-0">
                         <button class="btn primary" type="button" onclick="dateToday()" style="height: calc(4rem + 1px); font-size:small; line-height:0">
@@ -1550,26 +2034,28 @@ class Modules
 
             case "lecture-type":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="lecture-type">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="lecture-type">
                     <select name="values[lecture_type]" id="lecture_type" class="form-control" autocomplete="off">
                         <option value="short" <?= $this->val('lecture_type') == 'short' ? 'selected' : '' ?>><?= lang('short', 'kurz') ?> (5-15 min.)</option>
                         <option value="medium" <?= $this->val('lecture_type') == 'medium' ? 'selected' : '' ?>><?= lang('medium', 'mittel') ?> (15-30 min.)</option>
                         <option value="long" <?= $this->val('lecture_type') == 'long' ? 'selected' : '' ?>><?= lang('long', 'lang') ?> (> 30 min.)</option>
                         <option value="repetition" <?= $this->val('lecture_type') == 'repetition' || $this->copy === true ? 'selected' : '' ?>><?= lang('repetition', 'Wiederholung') ?></option>
                     </select>
-                    <label class="<?= $required ?> " for="lecture_type"><?= lang('Type of lecture', 'Art des Vortrages') ?></label>
+                    <label class="<?= $labelClass ?> " for="lecture_type"><?= lang('Type of lecture', 'Art des Vortrages') ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "lecture-invited":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="lecture-invited">
-                    <select name="values[invited_lecture]" id="invited_lecture" class="form-control" autocomplete="off" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="lecture-invited">
+                    <select name="values[invited_lecture]" id="invited_lecture" class="form-control" autocomplete="off" <?= $labelClass ?>>
                         <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('No', 'Nein') ?></option>
                         <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('Yes', 'Ja') ?></option>
                     </select>
-                    <label class="<?= $required ?>" for="lecture_type"><?= lang('Invited lecture') ?></label>
+                    <label class="<?= $labelClass ?>" for="lecture_type"><?= lang('Invited lecture') ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1577,30 +2063,51 @@ class Modules
             case "date-range":
             ?>
                 <div class="data-module col-sm-8 col-md-6" data-module="date-range">
-                    <label class="<?= $required ?> floating-title" for="date_start">
-                        <?= lang('Date range', "Zeitspanne") ?>
+                    <label class="<?= $labelClass ?> floating-title" for="date_start">
+                        <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty if only one day', 'Ende leer lassen, falls es nur ein Tag ist') ?>"><i class="ph ph-question" style="line-height:0;"></i></span>
                         <!-- <button class="btn small" id="daterange-toggle-btn" type="button" onclick="rebuild_datepicker(this);"><?= lang('Multiple days', 'Mehrtägig') ?></button> -->
                     </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $required ?> value="<?= valueFromDateArray($this->val('start')) ?>">
+                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= valueFromDateArray($this->val('start')) ?>">
                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($this->val('end')) ?>">
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
+                <script>
+                    // make sure the end date is always after the start date
+                    document.getElementById('date_start').addEventListener('change', function() {
+                        var startDate = new Date(this.value);
+                        var endDate = new Date(document.getElementById('date_end').value);
+                        if (endDate < startDate) {
+                            document.getElementById('date_end').value = this.value;
+                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                        }
+                    });
+                    document.getElementById('date_end').addEventListener('change', function() {
+                        var startDate = new Date(document.getElementById('date_start').value);
+                        var endDate = new Date(this.value);
+                        if (endDate < startDate) {
+                            this.value = document.getElementById('date_start').value;
+                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                        }
+                    });
+                </script>
             <?php
                 break;
 
             case "date-range-ongoing":
             ?>
                 <div class="data-module col-sm-8 col-md-6" data-module="date-range-ongoing">
-                    <label class="<?= $required ?> element-time floating-title" for="date_start">
-                        <?= lang('Date range', "Zeitspanne") ?>
+                    <label class="<?= $labelClass ?> element-time floating-title" for="date_start">
+                        <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty ongoing activity', 'Ende leer lassen, falls es eine zurzeit laufende Aktivität ist') ?>"><i class="ph ph-question"></i></span>
                     </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $required ?> value="<?= valueFromDateArray($this->val('start')) ?>">
+                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= valueFromDateArray($this->val('start')) ?>">
                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($this->val('end')) ?>">
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1608,28 +2115,29 @@ class Modules
 
             case "software-venue":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="software-venue">
-                    <input type="text" class="form-control" <?= $required ?> name="values[software_venue]" id="software_venue" value="<?= $this->val('software_venue') ?>" placeholder="software_venue">
-                    <label class="element-other <?= $required ?>" for="software_venue"><?= lang('Publication venue', 'Ort der Veröffentlichung') ?><small><?= lang(', e.g. GitHub, Zenodo ...', ', z.B. GitHub, Zenodo ...') ?></small>
-                    </label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-venue">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[software_venue]" id="software_venue" value="<?= $this->val('software_venue') ?>" placeholder="software_venue">
+                    <label class="<?= $labelClass ?>" for="software_venue"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "venue":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="software-venue">
-                    <input type="text" class="form-control" <?= $required ?> name="values[venue]" id="venue" value="<?= $this->val('venue') ?>" placeholder="venue">
-                    <label class="element-other <?= $required ?>" for="venue"><?= lang('Publisher / Place of publication', 'Herausgeber / Ort der Veröffentlichung') ?>
-                    </label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-venue">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[venue]" id="venue" value="<?= $this->val('venue') ?>" placeholder="venue">
+                    <label class="<?= $labelClass ?>" for="venue"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
             case "software-link":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="software-link">
-                    <input type="text" class="form-control" <?= $required ?> name="values[link]" id="software_link" value="<?= $this->val('link') ?>" placeholder="link">
-                    <label class="element-link <?= $required ?>" for="software_link"><?= lang('Complete link to the software/database', 'Kompletter Link zur Software/Datenbank') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-link">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[link]" id="software_link" value="<?= $this->val('link') ?>" placeholder="link">
+                    <label class="element-link <?= $labelClass ?>" for="software_link"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1637,16 +2145,17 @@ class Modules
             case "version":
             ?>
                 <div class="data-module floating-form col-sm-2" data-module="version">
-                    <input type="text" class="form-control" <?= $required ?> name="values[version]" id="software_version" value="<?= $this->val('version') ?>" placeholder="version">
-                    <label class="element-other <?= $required ?>" for="software_version"><?= lang('Version') ?></label>
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[version]" id="software_version" value="<?= $this->val('version') ?>" placeholder="version">
+                    <label class="<?= $labelClass ?>" for="software_version"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "software-type":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="software-type">
-                    <select name="values[software_type]" id="software_type" class="form-control" <?= $required ?>>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-type">
+                    <select name="values[software_type]" id="software_type" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($this->val('software_type')) ? 'selected' : '' ?>>Not specified</option>
                         <option value="software" <?= $this->val('software_type') == 'software' ? 'selected' : '' ?>>Computer Software</option>
                         <option value="database" <?= $this->val('software_type') == 'database' ? 'selected' : '' ?>>Database</option>
@@ -1654,29 +2163,31 @@ class Modules
                         <option value="webtool" <?= $this->val('software_type') == 'webtool' ? 'selected' : '' ?>>Website</option>
                         <option value="report" <?= $this->val('software_type') == 'report' ? 'selected' : '' ?>>Report</option>
                     </select>
-                    <label class="element-cat <?= $required ?>" for="software_type"><?= lang('Type of software', 'Art der Software') ?></label>
+                    <label class="<?= $labelClass ?>" for="software_type"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "iteration":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="misc">
-                    <select name="values[iteration]" id="iteration" class="form-control" <?= $required ?> value="<?= $this->val('iteration') ?>" onchange="togglePubType('misc-'+this.value)">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="misc">
+                    <select name="values[iteration]" id="iteration" class="form-control" <?= $labelClass ?> value="<?= $this->val('iteration') ?>">
                         <option value="once"><?= lang('once', 'einmalig') ?></option>
                         <option value="annual"><?= lang('continously', 'stetig') ?></option>
                     </select>
-                    <label class="<?= $required ?>" for="iteration"><?= lang('Iteration', 'Häufigkeit') ?></label>
+                    <label class="<?= $labelClass ?>" for="iteration"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "conference":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="conference">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="conference">
                     <input type="hidden" class="hidden" name="values[conference_id]" id="conference_id" value="<?= $this->val('conference_id', null) ?>">
-                    <input type="text" class="form-control" <?= $required ?> name="values[conference]" id="conference" list="conference-list" placeholder="VAAM 2022" value="<?= $this->val('conference') ?>" oninput="resetConference()">
-                    <label for="conference" class="element-other <?= $required ?>"><?= lang('Event', 'Event') ?></label>
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[conference]" id="conference" list="conference-list" placeholder="VAAM 2022" value="<?= $this->val('conference') ?>" oninput="resetConference()">
+                    <label for="conference" class="<?= $labelClass ?>"><?= $label ?></label>
                     <p class="m-0 font-size-12 position-absolute text-primary" id="connected-conference">
                         <?php
                         if (!empty($this->form) && isset($this->form['conference_id'])) {
@@ -1712,6 +2223,7 @@ class Modules
                             $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + el.innerHTML)
                         }
                     </script>
+                    <?= $this->render_help($help) ?>
                 </div>
 
                 <datalist id="conference-list">
@@ -1720,21 +2232,15 @@ class Modules
                         <option><?= $c ?></option>
                     <?php } ?>
                 </datalist>
-                <!-- TODO:<datalist id="conference-list">
-                    <?php
-                    foreach ($this->DB->db->conferences->find() as $c) { ?>
-                        <option data-id="<?= $c['_id'] ?>"><?= $c['title'] . ': ' . $c['title_full'] ?></option>
-                    <?php } ?>
-                </datalist> -->
-
             <?php
                 break;
 
             case "location":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="location">
-                    <input type="text" class="form-control" <?= $required ?> name="values[location]" id="location" placeholder="Berlin, Germany" value="<?= $this->val('location') ?>" placeholder="location">
-                    <label for="location" class="element-other <?= $required ?>"><?= lang('Location', 'Ort') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="location">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[location]" id="location" placeholder="Berlin, Germany" value="<?= $this->val('location') ?>" placeholder="location">
+                    <label for="location" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1745,20 +2251,21 @@ class Modules
                     $issn = implode(', ', $issn);
                 }
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="issn">
-                    <input type="text" class="form-control" <?= $required ?> name="values[issn]" id="issn" value="<?= $issn ?>" placeholder="issn">
-                    <label for="issn" class="element-other <?= $required ?>"><?= lang('ISSN') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="issn">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[issn]" id="issn" value="<?= $issn ?>" placeholder="issn">
+                    <label for="issn" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "journal":
             ?>
-                <div class="data-module col-12" data-module="journal">
-                    <a href="<?= ROOTPATH ?>/docs/add-activities#das-journal-bearbeiten" target="_blank" class="<?= $required ?> float-right">
+                <div class="data-module col-sm-<?= $width ?>" data-module="journal">
+                    <a href="<?= ROOTPATH ?>/docs/add-activities#das-journal-bearbeiten" target="_blank" class="<?= $labelClass ?> float-right">
                         <i class="ph ph-question"></i> <?= lang('Help', 'Hilfe') ?>
                     </a>
-                    <label for="journal" class="floating-title <?= $required ?>">Journal</label>
+                    <label for="journal" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <a href="#journal-select" id="journal-field" class="module">
                         <!-- <a class="btn link" ><i class="ph ph-edit"></i> <?= lang('Edit Journal', 'Journal bearbeiten') ?></a> -->
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
@@ -1775,28 +2282,31 @@ class Modules
                             <?php endif; ?>
                         </div>
 
-                        <input type="hidden" class="form-control hidden" name="values[journal]" value="<?= $this->val('journal') ?>" id="journal" list="journal-list" <?= $required ?> readonly>
-                        <input type="hidden" class="form-control hidden" name="values[journal_id]" value="<?= $this->val('journal_id') ?>" id="journal_id" <?= $required ?> readonly>
+                        <input type="hidden" class="form-control hidden" name="values[journal]" value="<?= $this->val('journal') ?>" id="journal" list="journal-list" <?= $labelClass ?> readonly>
+                        <input type="hidden" class="form-control hidden" name="values[journal_id]" value="<?= $this->val('journal_id') ?>" id="journal_id" <?= $labelClass ?> readonly>
 
                     </a>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "magazine":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="magazine">
-                    <input type="text" class="form-control" <?= $required ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine">
-                    <label for="magazine" class="element-cat <?= $required ?>"><?= lang('Magazine / Venue', 'Zeitschrift / Veröffentlichungsort') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="magazine">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine">
+                    <label for="magazine" class=" <?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "link":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="link">
-                    <input type="text" class="form-control" <?= $required ?> name="values[link]" value="<?= $this->val('link') ?>" id="link" placeholder="link">
-                    <label for="link" class="element-link <?= $required ?>">Link</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="link">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[link]" value="<?= $this->val('link') ?>" id="link" placeholder="link">
+                    <label for="link" class="element-link <?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1804,8 +2314,9 @@ class Modules
             case "book-title":
             ?>
                 <div class="data-module floating-form col-6" data-module="book-title">
-                    <input type="text" class="form-control" name="values[book]" value="<?= $this->val('book') ?>" id="book" <?= $required ?> placeholder="book-title">
-                    <label for="book" class="<?= $required ?> element-cat"><?= lang('Book title', 'Buchtitel') ?></label>
+                    <input type="text" class="form-control" name="values[book]" value="<?= $this->val('book') ?>" id="book" <?= $labelClass ?> placeholder="book-title">
+                    <label for="book" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1813,44 +2324,49 @@ class Modules
             case "book-series":
             ?>
                 <div class="data-module floating-form col-6" data-module="book-series">
-                    <input type="text" class="form-control" <?= $required ?> name="values[series]" value="<?= $this->val('series') ?>" id="series" placeholder="series">
-                    <label for="series" class="element-other <?= $required ?>"><?= lang('Series', 'Buchreihe') ?></label>
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[series]" value="<?= $this->val('series') ?>" id="series" placeholder="series">
+                    <label for="series" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "edition":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="edition">
-                    <input type="number" class="form-control" <?= $required ?> name="values[edition]" value="<?= $this->val('edition') ?>" id="edition" placeholder="edition">
-                    <label for="edition" class="element-other <?= $required ?>">Edition</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="edition">
+                    <input type="number" class="form-control" <?= $labelClass ?> name="values[edition]" value="<?= $this->val('edition') ?>" id="edition" placeholder="edition">
+                    <label for="edition" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "issue":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="issue">
-                    <input type="text" class="form-control" <?= $required ?> name="values[issue]" value="<?= $this->val('issue') ?>" id="issue" placeholder="issue">
-                    <label for="issue" class="element-other <?= $required ?>">Issue</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="issue">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[issue]" value="<?= $this->val('issue') ?>" id="issue" placeholder="issue">
+                    <label for="issue" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "volume":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="volume">
-                    <input type="text" class="form-control" <?= $required ?> name="values[volume]" value="<?= $this->val('volume') ?>" id="volume" placeholder="volume">
-                    <label for="volume" class="element-other <?= $required ?>">Volume</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="volume">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[volume]" value="<?= $this->val('volume') ?>" id="volume" placeholder="volume">
+                    <label for="volume" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "pages":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="pages">
-                    <input type="text" class="form-control" <?= $required ?> name="values[pages]" value="<?= $this->val('pages') ?>" id="pages" placeholder="pages">
-                    <label for="pages" class="element-other <?= $required ?>">Pages</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pages">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[pages]" value="<?= $this->val('pages') ?>" id="pages" placeholder="pages">
+                    <label for="pages" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1858,42 +2374,47 @@ class Modules
 
             case "peer-reviewed":
             ?>
-                <div class="data-module col-sm-12" data-module="pages">
-                    <div class="custom-radio d-inline-block mr-20" id="peer_reviewed-div">
+                <div class="data-module col-sm-<?= $width ?> d-flex" data-module="pages" style="gap: 2rem;">
+                    <label for="peer_reviewed" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> Peer-Reviewed</label>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> <?= lang('Yes', 'Ja') ?></label>
                     </div>
-                    <div class="custom-radio d-inline-block" id="peer_reviewed-div">
+                    <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> Non peer reviewed</label>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> <?= lang('No', 'Nein') ?></label>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "publisher":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="publisher">
-                    <input type="text" class="form-control" <?= $required ?> name="values[publisher]" value="<?= $this->val('publisher') ?>" id="publisher" placeholder="publisher">
-                    <label for="publisher" class="element-other <?= $required ?>"><?= lang('Publisher', 'Verlag') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="publisher">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[publisher]" value="<?= $this->val('publisher') ?>" id="publisher" placeholder="publisher">
+                    <label for="publisher" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "university":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="university">
-                    <input type="text" class="form-control" <?= $required ?> name="values[publisher]" value="<?= $this->val('publisher') ?>" id="publisher" placeholder="publisher">
-                    <label for="publisher" class="element-other <?= $required ?>"><?= lang('University', 'Universität') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="university">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[publisher]" value="<?= $this->val('publisher') ?>" id="publisher" placeholder="publisher">
+                    <label for="publisher" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "city":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="city">
-                    <input type="text" class="form-control" <?= $required ?> name="values[city]" value="<?= $this->val('city') ?>" id="city" placeholder="city">
-                    <label for="city" class="element-other <?= $required ?>"><?= lang('City', 'Stadt') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="city">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[city]" value="<?= $this->val('city') ?>" id="city" placeholder="city">
+                    <label for="city" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1901,15 +2422,18 @@ class Modules
             case "editor":
             case "editors":
             ?>
-                <div class="data-module col-12" data-module="editor">
-                    <label for="editor" class="<?= $required ?> floating-title"><?= lang('Editor(s) (in correct order)', 'Herausgeber (in korrekter Reihenfolge)') ?></label>
+                <div class="data-module col-sm-<?= $width ?>" data-module="editor">
+                    <label for="editor" class="<?= $labelClass ?> floating-title">
+                        <?= $label ?>
+                        <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
+                    </label>
                     <div class="author-widget" id="editor-widget">
                         <div class="author-list p-10" id="editor-list">
                             <?= $this->editors ?>
                         </div>
                         <div class="footer">
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Editor hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Herausgeber hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">
                                         <i class="ph ph-plus"></i>
@@ -1918,6 +2442,7 @@ class Modules
                             </div>
                         </div>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1925,16 +2450,17 @@ class Modules
             case "doi":
             ?>
                 <?php if (empty($this->form)) { ?>
-                    <div class="data-module floating-form col-sm-6" data-module="doi">
-                        <input type="text" class="form-control" <?= $required ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
-                        <label for="doi" class="element-link <?= $required ?>">DOI</label>
+                    <div class="data-module floating-form col-sm-<?= $width ?>" data-module="doi">
+                        <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
+                        <label for="doi" class="element-link <?= $labelClass ?>"><?= $label ?></label>
+                        <?= $this->render_help($help) ?>
                     </div>
                 <?php } else { ?>
-                    <div class="data-module col-sm-6" data-module="doi">
-                        <label for="doi" class="floating-title <?= $required ?>">DOI</label>
+                    <div class="data-module col-sm-<?= $width ?>" data-module="doi">
+                        <label for="doi" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
 
                         <div class="input-group ">
-                            <input type="text" class="form-control" <?= $required ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
+                            <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
                             <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('Retreive updated information via DOI', 'Aktualisiere die Daten via DOI') ?>">
                                 <button class="btn" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i></button>
                                 <span class="sr-only">
@@ -1942,6 +2468,7 @@ class Modules
                                 </span>
                             </div>
                         </div>
+                        <?= $this->render_help($help) ?>
                     </div>
                 <?php } ?>
             <?php
@@ -1949,34 +2476,37 @@ class Modules
 
             case "pubmed":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="pubmed">
-                    <input type="number" class="form-control" <?= $required ?> name="values[pubmed]" value="<?= $this->val('pubmed') ?>" id="pubmed" placeholder="pubmed">
-                    <label for="pubmed" class="<?= $required ?>">Pubmed</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pubmed">
+                    <input type="number" class="form-control" <?= $labelClass ?> name="values[pubmed]" value="<?= $this->val('pubmed') ?>" id="pubmed" placeholder="pubmed">
+                    <label for="pubmed" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "isbn":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="isbn">
-                    <input type="text" class="form-control" <?= $required ?> name="values[isbn]" value="<?= $this->val('isbn') ?>" id="isbn" placeholder="isbn">
-                    <label for="isbn" class="<?= $required ?>">ISBN</label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="isbn">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[isbn]" value="<?= $this->val('isbn') ?>" id="isbn" placeholder="isbn">
+                    <label for="isbn" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "doctype":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="doctype">
-                    <input type="text" class="form-control" <?= $required ?> name="values[doc_type]" value="<?= $this->val('doc_type') ?>" id="doctype" placeholder="Report" placeholder="doc_type">
-                    <label for="doc_type" class="<?= $required ?>"><?= lang('Document type', 'Dokumententyp') ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="doctype">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[doc_type]" value="<?= $this->val('doc_type') ?>" id="doctype" placeholder="Report" placeholder="doc_type">
+                    <label for="doc_type" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "openaccess":
             ?>
-                <div class="data-module col-12" data-module="openaccess">
+                <div class="data-module col-sm-<?= $width ?>" data-module="openaccess">
                     <div class="custom-radio d-inline-block" id="open_access-div">
                         <input type="radio" id="open_access-0" value="false" name="values[open_access]" <?= $this->val('open_access', false) ? '' : 'checked' ?>>
                         <label for="open_access-0"><i class="icon-closed-access text-danger"></i> Closed access</label>
@@ -1985,6 +2515,7 @@ class Modules
                         <input type="radio" id="open_access" value="true" name="values[open_access]" <?= $this->val('open_access', false) ? 'checked' : '' ?>>
                         <label for="open_access"><i class="icon-open-access text-success"></i> Open access</label>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -1995,7 +2526,7 @@ class Modules
             ?>
                 <!-- oa_status -->
                 <div class="data-module floating-form col-3" data-module="openaccess-status">
-                    <select class="form-control" id="oa_status" name="values[oa_status]" <?= $required ?> autocomplete="off">
+                    <select class="form-control" id="oa_status" name="values[oa_status]" <?= $labelClass ?> autocomplete="off">
                         <option value="closed" <?= $status == 'closed' ? 'selected' : '' ?>>Closed Access</option>
                         <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('unknown status', 'Unbekannter Status') ?>)</option>
                         <option value="diamond" <?= $status == 'diamond' ? 'selected' : '' ?>>Open Access (Diamond)</option>
@@ -2004,45 +2535,49 @@ class Modules
                         <option value="hybrid" <?= $status == 'hybrid' ? 'selected' : '' ?>>Open Access (Hybrid)</option>
                         <option value="bronze" <?= $status == 'bronze' ? 'selected' : '' ?>>Open Access (Bronze)</option>
                     </select>
-                    <label for="oa_status" class="<?= $required ?>"><?= lang('Open Access Status', 'Open Access Status') ?></label>
+                    <label for="oa_status" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "online-ahead-of-print":
             ?>
-                <div class="data-module col-12" data-module="online-ahead-of-print">
+                <div class="data-module col-sm-<?= $width ?>" data-module="online-ahead-of-print">
                     <div class="custom-checkbox <?= isset($_GET['epub']) ? 'text-danger' : '' ?>" id="epub-div">
                         <input type="checkbox" id="epub" value="1" name="values[epub]" <?= (!isset($_GET['epub']) && $this->val('epub', false)) ? 'checked' : '' ?>>
-                        <label for="epub">Online ahead of print</label>
+                        <label for="epub"><?= $label ?></label>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "correction":
             ?>
-                <div class="data-module col-12" data-module="correction">
+                <div class="data-module col-sm-<?= $width ?>" data-module="correction">
                     <div class="custom-checkbox" id="correction-div">
                         <input type="checkbox" id="correction" value="1" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
-                        <label for="correction"><?= lang('Correction') ?></label>
+                        <label for="correction"><?= $label ?></label>
                     </div>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "scientist":
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="scientist">
-                    <select class="form-control" id="username" name="values[user]" <?= $required ?> autocomplete="off">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scientist">
+                    <select class="form-control" id="username" name="values[user]" <?= $labelClass ?> autocomplete="off">
                         <?php
                         foreach ($this->userlist as $j) { ?>
                             <option value="<?= $j['username'] ?>" <?= $j['username'] == ($this->form['user'] ?? $this->user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                         <?php } ?>
                     </select>
-                    <label class="<?= $required ?> element-author" for="username">
-                        <?= lang('Scientist', 'Wissenschaftler:in') ?>
+                    <label class="<?= $labelClass ?> element-author" for="username">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -2050,37 +2585,39 @@ class Modules
             case "scope":
                 $scope = $this->val('scope', false);
             ?>
-                <div class="data-module floating-form col-sm-4" data-module="scope">
-                    <select class="form-control" id="scope" name="values[scope]" <?= $required ?> autocomplete="off">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
+                    <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
                         <option <?= $scope == 'local' ? 'selected' : '' ?>>local</option>
                         <option <?= $scope == 'regional' ? 'selected' : '' ?>>regional</option>
                         <option <?= $scope == 'national' ? 'selected' : '' ?>>national</option>
                         <option <?= $scope == 'international' ? 'selected' : '' ?>>international</option>
                     </select>
-                    <label class="<?= $required ?>" for="scope">
-                        <?= lang('Scope', 'Reichweite') ?>
+                    <label class="<?= $labelClass ?>" for="scope">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "role":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="role">
-                    <input type="text" class="form-control" id="role" value="<?= $this->val('role') ?>" name="values[role]" <?= $required ?> placeholder="role">
-                    <label class="<?= $required ?>" for="role">
-                        <?= lang('Role/Function', 'Rolle/Funktion') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="role">
+                    <input type="text" class="form-control" id="role" value="<?= $this->val('role') ?>" name="values[role]" <?= $labelClass ?> placeholder="role">
+                    <label class="<?= $labelClass ?>" for="role">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "license":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="license">
-                    <input type="text" class="form-control" id="license" value="<?= $this->val('license') ?>" name="values[license]" <?= $required ?> placeholder="license">
-                    <label class="<?= $required ?>" for="license">
-                        <?= lang('License', 'Lizenz') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="license">
+                    <input type="text" class="form-control" id="license" value="<?= $this->val('license') ?>" name="values[license]" <?= $labelClass ?> placeholder="license">
+                    <label class="<?= $labelClass ?>" for="license">
+                        <?= $label ?>
                     </label>
 
                     <small class="help-text">
@@ -2090,38 +2627,41 @@ class Modules
                         <a href="https://creativecommons.org/share-your-work/cclicenses/" target="_blank" rel="noopener noreferrer">Creative Commons</a>.
                         <?= lang('', 'angeben') ?>.
                     </small>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "review-type":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="review-type">
-                    <input type="text" class="form-control" id="review-type" value="<?= $this->val('review-type', 'Begutachtung eines Forschungsantrages') ?>" name="values[review-type]" <?= $required ?> placeholder="review-type">
-                    <label class="element-cat <?= $required ?>" for="review-type">
-                        <?= lang('Type of review', 'Art der Begutachtung') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="review-type">
+                    <input type="text" class="form-control" id="review-type" value="<?= $this->val('review-type', 'Begutachtung eines Forschungsantrages') ?>" name="values[review-type]" <?= $labelClass ?> placeholder="review-type">
+                    <label class=" <?= $labelClass ?>" for="review-type">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "editorial":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="editorial">
-                    <input type="text" class="form-control" <?= $required ?> name="values[editor_type]" id="editor_type" value="<?= $this->val('editor_type') ?>" placeholder="Guest Editor for Research Topic 'XY'" placeholder="editor_type">
-                    <label for="editor_type" class="element-cat <?= $required ?>">
-                        <?= lang('Details', 'Details') ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="editorial">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[editor_type]" id="editor_type" value="<?= $this->val('editor_type') ?>" placeholder="Guest Editor for Research Topic 'XY'" placeholder="editor_type">
+                    <label for="editor_type" class=" <?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "political_consultation":
             ?>
-                <div class="data-module floating-form col-sm-6" data-module="political_consultation">
-                    <select type="text" class="form-control" <?= $required ?> name="values[political_consultation]" id="political_consultation">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="political_consultation">
+                    <select type="text" class="form-control" <?= $labelClass ?> name="values[political_consultation]" id="political_consultation">
                         <!-- Gutachten,Positionspapier,Studie,Sonstiges -->
-                        <?php if (!$required) { ?>
+                        <?php if (!$labelClass) { ?>
                             <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('No political consultation', 'Keine politische Beratung') ?></option>
                         <?php } ?>
                         <option value="Gutachten" <?= $this->val('political_consultation') == 'Gutachten' ? 'selected' : '' ?>><?= lang('Review', 'Gutachten') ?></option>
@@ -2130,29 +2670,32 @@ class Modules
                         <option value="Sonstiges" <?= $this->val('political_consultation') == 'Sonstiges' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
 
-                    <label for="political_consultation" class="<?= $required ?>">
-                        <?= lang('Contribution to political and social consulting', 'Beitrag zur Politik- und Gesellschaftsberatung') ?>
+                    <label for="political_consultation" class="<?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
             case "organization":
-                $org_id = $form['organization'] ?? '';
+                $org_id = $this->val('organization', null);
                 $rand_id = rand(1000, 9999);
             ?>
                 <div class="data-module" data-module="organization">
-                    <label for="organization" class="floating-title <?= $required ?>">
-                        <?= lang('Organisation', 'Organisation') ?>
+                    <label for="organization" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
-                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $required ?> readonly id="org-<?= $rand_id ?>-organization" />
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
 
                         <div id="org-<?= $rand_id ?>-value">
-                            <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                            <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
+                                <b><?= $org_id ?></b>
+                                <br><small class="text-muted"><?= lang('No organization connected', 'Keine Organisation verknüpft') ?></small>
                                 <?php } else {
+                                $org_id = DB::to_ObjectID($org_id);
                                 $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
@@ -2188,6 +2731,7 @@ class Modules
                         </div>
                     </div>
 
+                    <?= $this->render_help($help) ?>
                 </div>
 
             <?php
@@ -2196,27 +2740,27 @@ class Modules
             case "organizations":
                 $organizations = $this->val('organizations', []);
             ?>
-                <div class="data-module col-12" data-module="organizations">
-                    <label for="organization" class="floating-title <?= $required ?>">
-                        <?= lang('Organisations', 'Organisationen') ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="organizations">
+                    <label for="organization" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
                     </label>
                     <table class="table">
                         <tbody id="collaborators">
                             <?php
                             foreach ($organizations as $org_id) {
                                 $collab = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
-                                if (empty($collab)) continue;
+                                // if (empty($collab)) continue;
                             ?>
                                 <tr data-row="<?= $org_id ?>">
                                     <td>
-                                        <?= $collab['name'] ?>
+                                        <?= $collab['name'] ?? $org_id ?>
                                         <br>
                                         <small class="text-muted">
                                             <?= $collab['location'] ?? null ?>
                                         </small>
                                         <input type="hidden" name="values[organizations][]" value="<?= $org_id ?>" class="form-control">
                                     </td>
-                                    <td><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
+                                    <td class="w-50"><button type="button" class="btn danger remove-collab" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -2258,6 +2802,7 @@ class Modules
                         </tfoot>
                     </table>
 
+                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -2267,7 +2812,7 @@ class Modules
 
             default:
             ?>
-                <div class="data-module alert danger col-12">
+                <div class="data-module alert danger col-sm-<?= $width ?>">
                     <?= lang('Module ' . $module . ' is not defined.', 'Modul ' . $module . ' existiert nicht.') ?>
                 </div>
 <?php

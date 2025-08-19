@@ -772,9 +772,35 @@ class Document extends Settings
                 return lang('Seminar');
             case 'other':
                 return lang('Other', 'Sonstiges');
+            case "doctoral student":
+                return lang('Doctoral Student', 'Doktorand:in');
+            case "master student":
+                return lang('Master Student', 'Masterstudent');
+            case "bachelor student":
+                return lang('Bachelor Student', 'Bachelostudent');
+            case "intern":
+                return lang('Intern', 'Praktikant');
             default:
                 return $cat;
         }
+    }
+
+    public function getSupervisorRole($role)
+    {
+        $roles = [
+            'supervisor' => lang('Supervisor', 'Betreuer'),
+            'first-reviewer' => lang('First reviewer', 'Erster Gutachter'),
+            'second-reviewer' => lang('Second reviewer', 'Zweiter Gutachter'),
+            'third-reviewer' => lang('Third reviewer', 'Dritter Gutachter'),
+            'committee-member' => lang('Committee member', 'Ausschussmitglied'),
+            'chair' => lang('Chair', 'Vorsitzender'),
+            'mentor' => lang('Mentor', 'Mentor'),
+            'other' => lang('Other', 'Sonstiges')
+        ];
+        if (isset($roles[$role])) {
+            return $roles[$role];
+        }
+        return $role;
     }
 
     private function getVal($field, $default = '')
@@ -1131,11 +1157,24 @@ class Document extends Settings
                 foreach ($value as $org_id) {
                     $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($org_id)]);
                     if (empty($org)) continue;
-                    if ($this->usecase == 'web' || $this->usecase == 'list') {
+                    if ($this->usecase == 'list') {
+                        $orgs[] = '
+                            <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
+                                <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                                <ul class="horizontal mb-0">
+                                    <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                    <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
+                                </ul>
+                            </a>';
+                    } elseif ($this->usecase == 'web') {
                         $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . htmlspecialchars($org['name']) . '</a>';
                     } else {
                         $orgs[] = htmlspecialchars($org['name']);
                     }
+                }
+                if (empty($orgs)) return $default;
+                if ($this->usecase == 'list') {
+                    return implode('', $orgs);
                 }
                 return implode(', ', $orgs);
             case "peer-reviewed":
@@ -1219,6 +1258,12 @@ class Document extends Settings
                         return lang('Master Thesis', 'Masterarbeit');
                     case 'bachelor':
                         return lang('Bachelor Thesis', 'Bachelorarbeit');
+                    case 'thesis': // ["category"],
+                        return lang('Thesis', 'Abschlussarbeit');
+                    case 'diploma':
+                        return lang('Diploma Thesis', 'Diplomarbeit');
+                    case 'habilitation':
+                        return lang('Habilitation Thesis', 'Habilitationsschrift');
                     default:
                         return lang('Thesis', 'Abschlussarbeit');
                 }

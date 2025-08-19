@@ -23,6 +23,7 @@ include_once BASEPATH . "/php/Modules.php";
 // check if this is an ongoing activity type
 $ongoing = false;
 $sws = false;
+$supervisorThesis = false;
 
 $typeArr = $Format->typeArr;
 $upload_possible = $typeArr['upload'] ?? true;
@@ -32,6 +33,7 @@ foreach ($typeModules as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
     if ($m == 'date-range-ongoing') $ongoing = true;
     if ($m == 'supervisor') $sws = true;
+    if ($m == 'supervisor-thesis') $supervisorThesis = true;
 }
 
 $projects = [];
@@ -910,19 +912,21 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             </div>
 
             <?php foreach (['authors', 'editors'] as $role) {
-                // check if the module is active
-                if ($role == 'editors' && !in_array('editor', $typeModules) && !in_array('editor' . '*', $typeModules)) continue;
-                // authors can have many modules, i.e. authors, author-table, scientist, supervisor
-                if ($role == 'authors') {
-                    $active = false;
-                    foreach ($typeModules as $module) {
-                        if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-                        if (in_array($module, ['authors', 'author-table', 'scientist', 'supervisor'])) {
-                            $active = true;
-                            break;
+                if (!isset($activity[$role]) || empty($activity[$role])) {
+                    // check if the module is active
+                    if ($role == 'editors' && !in_array('editor', $typeModules) && !in_array('editor' . '*', $typeModules)) continue;
+                    // authors can have many modules, i.e. authors, author-table, scientist, supervisor
+                    if ($role == 'authors') {
+                        $active = false;
+                        foreach ($typeModules as $module) {
+                            if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
+                            if (in_array($module, ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis'])) {
+                                $active = true;
+                                break;
+                            }
                         }
+                        if (!$active) continue;
                     }
-                    if (!$active) continue;
                 }
             ?>
 
@@ -952,6 +956,8 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                             <?php if ($sws) : ?>
                                 <th>SWS</th>
+                            <?php elseif ($supervisorThesis) : ?>
+                                <th><?= lang('Role', 'Rolle') ?></th>
                             <?php elseif ($role == 'authors') : ?>
                                 <th>Position</th>
                             <?php endif; ?>
@@ -975,15 +981,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <td>
                                     <?= $author['first'] ?? '' ?>
                                 </td>
-                                <?php if ($sws) : ?>
-                                    <td>
-                                        <?= $author['sws'] ?? 0 ?>
-                                    </td>
-                                <?php elseif ($role == 'authors') : ?>
-                                    <td>
-                                        <?= $author['position'] ?? '' ?>
-                                    </td>
-                                <?php endif; ?>
+                                    <?php if ($sws) : ?>
+                                        <td><?= $author['sws'] ?? 0 ?></td>
+                                    <?php elseif ($supervisorThesis) : ?>
+                                        <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
+                                    <?php elseif ($role == 'authors') : ?>
+                                        <td><?= $author['position'] ?? '' ?></td>
+                                    <?php endif; ?>
                                 <td>
                                     <?php
                                     if (isset($author['units']) && !empty($author['units'])) {

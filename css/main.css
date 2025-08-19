@@ -3099,6 +3099,35 @@ ul.horizontal li:last-child::after {
   border: none;
 }
 
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: var(--border-radius);
+}
+.list-group li {
+  position: relative;
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  background-color: #fff;
+  border: var(--border-width) solid var(--border-color);
+  margin: 0;
+}
+.list-group li:first-child {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+.list-group li:last-child {
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+}
+.list-group li + li {
+  border-top-width: 0;
+}
+
 /*
 -------------------------------------------------------------------------------
 Code
@@ -5676,7 +5705,6 @@ Alerts
 .card a:not(.btn, .link) {
   cursor: pointer;
   color: inherit;
-  text-decoration: underline;
 }
 .card a:not(.btn, .link):hover {
   color: inherit;
