@@ -225,6 +225,11 @@
                 "id": "projects.delete-own",
                 "de": "Eigene Projekte löschen",
                 "en": "Delete own projects"
+            },
+            {
+                "id": "projects.add-subprojects",
+                "de": "Teilprojekte anlegen",
+                "en": "Add subprojects"
             }
         ]
     },

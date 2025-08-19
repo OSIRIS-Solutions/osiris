@@ -30,6 +30,7 @@
     height: 3.2rem;
     padding-left: 0.8rem;
     padding-right: 0.8rem;
+    overflow: hidden;
     color: var(--text-color);
     background-color: white;
     border: var(--border-width) solid var(--border-color);
@@ -37,3 +38,4 @@
 .selectize-dropdown {
     height: 20.2rem;
 }
+

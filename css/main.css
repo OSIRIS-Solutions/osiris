@@ -79,51 +79,51 @@ CSS variables (CSS custom properties)
   --osiris-color: #f78104;
   --secondary-color: #f78104;
   --secondary-color-light: #faab36;
-  --secondary-color-very-light: #fde6cd;
+  --secondary-color-very-light: rgb(253.4, 229.8, 204.8);
   --secondary-color-dark: #e95709;
-  --secondary-color-very-dark: #311a01;
+  --secondary-color-very-dark: rgb(49.4, 25.8, 0.8);
   --secondary-color-20: rgba(247, 129, 4, 0.2);
   --secondary-color-30: rgba(247, 129, 4, 0.3);
   --secondary-color-60: rgba(247, 129, 4, 0.6);
   --primary-color: #008083;
   --primary-color-light: #249ea0;
-  --primary-color-very-light: #cce6e6;
+  --primary-color-very-light: rgb(204, 229.6, 230.2);
   --primary-color-dark: #005f60;
-  --primary-color-very-dark: #001a1a;
+  --primary-color-very-dark: rgb(0, 25.6, 26.2);
   --primary-color-20: rgba(0, 128, 131, 0.2);
   --primary-color-30: rgba(0, 128, 131, 0.3);
   --primary-color-60: rgba(0, 128, 131, 0.6);
   --link-color: var(--primary-color);
   --link-color-hover: var(--primary-color-light);
   --success-color: #63a308;
-  --success-color-light: #6faa1c;
-  --success-color-very-light: #e0edce;
-  --success-color-dark: #5b9607;
-  --success-color-very-dark: #142102;
+  --success-color-light: rgb(111.48, 170.36, 27.76);
+  --success-color-very-light: rgb(223.8, 236.6, 205.6);
+  --success-color-dark: rgb(91.08, 149.96, 7.36);
+  --success-color-very-dark: rgb(19.8, 32.6, 1.6);
   --success-color-20: rgba(99, 163, 8, 0.2);
   --success-color-30: rgba(99, 163, 8, 0.3);
   --success-color-60: rgba(99, 163, 8, 0.6);
   --danger-color: #B61F29;
-  --danger-color-light: #bc313a;
-  --danger-color-very-light: #f0d2d4;
-  --danger-color-dark: #a71d26;
-  --danger-color-very-dark: #240608;
+  --danger-color-light: rgb(187.84, 48.92, 58.12);
+  --danger-color-very-light: rgb(240.4, 210.2, 212.2);
+  --danger-color-dark: rgb(167.44, 28.52, 37.72);
+  --danger-color-very-dark: rgb(36.4, 6.2, 8.2);
   --danger-color-20: rgba(182, 31, 41, 0.2);
   --danger-color-30: rgba(182, 31, 41, 0.3);
   --danger-color-60: rgba(182, 31, 41, 0.6);
   --muted-color: #878787;
-  --muted-color-light: #919191;
+  --muted-color-light: rgb(144.6, 144.6, 144.6);
   --muted-color-very-light: #e7e7e7;
-  --muted-color-dark: #7c7c7c;
+  --muted-color-dark: rgb(124.2, 124.2, 124.2);
   --muted-color-very-dark: #1b1b1b;
   --muted-color-20: rgba(135, 135, 135, 0.2);
   --muted-color-30: rgba(135, 135, 135, 0.3);
   --muted-color-60: rgba(135, 135, 135, 0.6);
   --signal-color: #ECAF00;
-  --signal-color-light: #eeb514;
-  --signal-color-very-light: #fbefcc;
-  --signal-color-dark: #d9a100;
-  --signal-color-very-dark: #2f2300;
+  --signal-color-light: rgb(237.52, 181.4, 20.4);
+  --signal-color-very-light: rgb(251.2, 239, 204);
+  --signal-color-dark: rgb(217.12, 161, 0);
+  --signal-color-very-dark: rgb(47.2, 35, 0);
   --signal-color-20: rgba(236, 175, 0, 0.2);
   --signal-color-30: rgba(236, 175, 0, 0.3);
   --signal-color-60: rgba(236, 175, 0, 0.6);
@@ -4675,7 +4675,7 @@ input[type=number] {
 }
 .input-group-prepend > .btn.muted:hover,
 .input-group-append > .btn.muted:hover {
-  border-color: #919191;
+  border-color: rgb(144.6, 144.6, 144.6);
 }
 .input-group-prepend > .btn.muted:focus, .input-group-prepend > .btn.muted.active,
 .input-group-append > .btn.muted:focus,
@@ -7081,7 +7081,7 @@ Boxes, tiles, and title bar
   font-size: 2.4rem;
 }
 .pagination a.direction:hover, .pagination button.direction:hover {
-  background-color: #f2f2f2;
+  background-color: rgb(242.25, 242.25, 242.25);
 }
 .pagination a.active, .pagination a:not(.direction):hover, .pagination button.active, .pagination button:not(.direction):hover {
   color: white;
@@ -12053,7 +12053,7 @@ Notes:
 }
 
 img.profile-img {
-  max-width: 10rem;
+  max-width: 15rem;
   max-height: 15rem;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
@@ -12063,7 +12063,7 @@ img.profile-img {
 }
 
 img.profile-img.small {
-  max-width: 5rem;
+  max-width: 9rem;
   max-height: 7rem;
   border: none;
   box-shadow: none;
@@ -12181,7 +12181,7 @@ img.profile-img.small {
 
 .title-editor.is-invalid,
 .author-list.is-invalid,
-#author-widget.is-invalid {
+.author-widget.is-invalid {
   border-color: var(--danger-color) !important;
   -moz-box-shadow: 0 0.2rem 0 var(--danger-color-30);
   -webkit-box-shadow: 0 0.2rem 0 var(--danger-color-30);
@@ -12190,7 +12190,7 @@ img.profile-img.small {
 
 .title-editor.is-valid,
 .author-list.is-valid,
-#author-widget.is-valid {
+.author-widget.is-valid {
   border-color: var(--success-color) !important;
   -moz-box-shadow: 0 0.2rem 0 var(--success-color-30);
   -webkit-box-shadow: 0 0.2rem 0 var(--success-color-30);
@@ -12582,6 +12582,7 @@ a.concept:hover {
   padding: 0.25rem 0.5rem;
   animation: ease 0.5s;
   color: var(--primary-color);
+  cursor: pointer;
 }
 
 .pill-checkbox input {
@@ -12620,7 +12621,7 @@ a.concept:hover {
 }
 .topic-pill:hover {
   color: white;
-  opacity: 0.8;
+  filter: brightness(0.9);
 }
 .topic-pill::before {
   /* white circle */

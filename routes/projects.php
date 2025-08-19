@@ -213,6 +213,10 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
+    if (!$Settings->hasPermission('projects.add-subprojects')) {
+        header("Location: " . ROOTPATH . "/projects?msg=no-permission");
+        die;
+    }
     // get project
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);

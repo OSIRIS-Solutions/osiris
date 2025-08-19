@@ -398,6 +398,7 @@ Route::post('/synchronize-users', function () {
             "username",
             "created",
             "created_by",
+            'uniqueid',
         ];
         foreach ($_POST['inactivate'] as $username) {
             $data = $DB->getPerson($username);
@@ -758,7 +759,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
     // check permissions
-    if (!$Settings->hasPermission('user.inactivate')) {
+    if (!$Settings->hasPermission('user.inactive')) {
         echo "Permission denied.";
         die();
     }
@@ -781,6 +782,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         "username",
         "created",
         "created_by",
+        'uniqueid',
     ];
     $arr = [];
     foreach ($data as $key => $value) {

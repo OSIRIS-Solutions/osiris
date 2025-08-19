@@ -730,7 +730,6 @@ class Modules
         }
         $required = ($req ? "required" : "");
         $label = lang($field['name'], $field['name_de'] ?? $field['name']);
-
         if ($field['format'] == 'bool') {
             echo '<div class="data-module col-sm-6" data-module="' . $module . '">';
             echo '<label for="' . $module . '" class="' . $required . ' floating-title">' . $label . '</label>';
@@ -739,12 +738,21 @@ class Modules
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('True', 'Wahr') . '</label>
+                    <label for="' . $module . '-true">' . lang('Yes', 'Ja') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('False', 'Falsch') . '</label>
+                    <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
                 </div>';
+            echo '</div>';
+            return;
+        } elseif ($field['format'] == 'bool-check') {
+            echo '<div class="data-module col-sm-6" data-module="' . $module . '">';
+            echo '<input type="hidden" name="values[' . $module . ']" value="false">';
+            echo '<div class="custom-checkbox">';
+            echo '<input type="checkbox" id="' . $module . '" name="values[' . $module . ']" value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
+            echo '<label for="' . $module . '">' . $label . '</label>';
+            echo '</div>';
             echo '</div>';
             return;
         }
@@ -789,10 +797,6 @@ class Modules
                 break;
             case 'url':
                 echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
-                break;
-            case 'bool':
-                echo '<input type="hidden" name="values[' . $module . ']" value="false">';
-                echo '<input type="checkbox" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
                 break;
             default:
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $required . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
@@ -1895,6 +1899,7 @@ class Modules
                 break;
 
             case "editor":
+            case "editors":
             ?>
                 <div class="data-module col-12" data-module="editor">
                     <label for="editor" class="<?= $required ?> floating-title"><?= lang('Editor(s) (in correct order)', 'Herausgeber (in korrekter Reihenfolge)') ?></label>

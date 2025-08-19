@@ -360,11 +360,15 @@ if ($topicsEnabled) {
                                         echo $Subproject->widgetSubproject();
                                     }
                                 } ?>
-                                <?php if ($edit_perm && ($project_type['subprojects'] ?? false)) { ?>
+                                <?php if ($Settings->hasPermission('projects.add-subprojects')) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
                                         <i class="ph ph-plus-circle" aria-hidden="true"></i>
                                         <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
                                     </a>
+                                <?php } else { ?>
+                                    <small class="text-muted">
+                                        <?= lang('You do not have permission to add subprojects.', 'Du hast keine Berechtigung, Teilprojekte anzulegen.') ?>
+                                    </small>
                                 <?php } ?>
                             </td>
                         </tr>

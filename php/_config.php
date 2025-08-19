@@ -30,7 +30,10 @@ function validateValues($values, $DB)
     unset($values['last_authors']);
 
     foreach ($values as $key => $value) {
-        if ($key == 'doi') {
+        if ($key == 'id'){
+            // do not validate id, it is set by the database
+            continue;
+        } else if ($key == 'doi') {
             if (!str_contains($value, '10.')) $value = null;
             elseif (!str_starts_with($value, '10.')) {
                 $value = explode('10.', $value, 2);

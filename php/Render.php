@@ -16,7 +16,7 @@ function renderActivities($filter = [])
         $id = $doc['_id'];
         $Format->setDocument($doc);
         $Format->usecase = 'web';
-        $doc['authors'] = DB::doc2Arr($doc['authors']);
+        $doc['authors'] = DB::doc2Arr($doc['authors'] ?? []);
 
         // $depts = $Groups->getDeptFromAuthors($doc['authors']);
 
@@ -38,6 +38,7 @@ function renderActivities($filter = [])
             'subtype' => $Format->activity_subtype(),
             'title' => $Format->getTitle(),
             'authors' => $Format->getAuthors('authors'),
+            'editors' => $Format->getAuthors('editors'),
         ];
         $values = ['rendered' => $rendered];
 

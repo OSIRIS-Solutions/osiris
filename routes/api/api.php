@@ -361,6 +361,7 @@ Route::get('/api/all-activities', function () {
             'subtype' => $rendered['subtype'],
             'year' => $doc['year'] ?? 0,
             'authors' => $rendered['authors'] ?? '',
+            'editors' => $rendered['editors'] ?? '',
             'title' => $rendered['title'] ?? '',
             'topics' => $doc['topics'] ?? [],
             'raw_type' => $doc['type'],

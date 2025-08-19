@@ -36,15 +36,25 @@
         <tbody>
             <?php foreach ($data as $key => $value) {
                 if (empty($value)) continue;
-                if (in_array($key, ['_id', 'displayname', 'formalname', 'first_abbr', 'updated', 'updated_by'])) continue;
+                if (in_array($key, ['_id', 'displayname', 'formalname', 'first_abbr', 'updated', 'updated_by', 'is_active'])) continue;
                 $delete = true;
                 if (in_array($key, [
+                    '_id',
+                    'displayname',
+                    'formalname',
+                    'first_abbr',
+                    'updated',
+                    'updated_by',
                     "academic_title",
                     "first",
                     "last",
                     "name",
+                    // "depts",
                     "units",
-                    "username"
+                    "username",
+                    "created",
+                    "created_by",
+                    'uniqueid',
                 ])) {
                     $delete = false;
                 }
@@ -52,7 +62,7 @@
                 <tr>
                     <th><?= $key ?></th>
                     <td>
-                        <?php 
+                        <?php
                         if ($key == 'units') {
                             $value = array_column(DB::doc2Arr($value), 'unit');
                         }
