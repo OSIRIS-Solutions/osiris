@@ -772,9 +772,35 @@ class Document extends Settings
                 return lang('Seminar');
             case 'other':
                 return lang('Other', 'Sonstiges');
+            case "doctoral student":
+                return lang('Doctoral Student', 'Doktorand:in');
+            case "master student":
+                return lang('Master Student', 'Masterstudent');
+            case "bachelor student":
+                return lang('Bachelor Student', 'Bachelostudent');
+            case "intern":
+                return lang('Intern', 'Praktikant');
             default:
                 return $cat;
         }
+    }
+
+    public function getSupervisorRole($role)
+    {
+        $roles = [
+            'supervisor' => lang('Supervisor', 'Betreuer'),
+            'first-reviewer' => lang('First reviewer', 'Erster Gutachter'),
+            'second-reviewer' => lang('Second reviewer', 'Zweiter Gutachter'),
+            'third-reviewer' => lang('Third reviewer', 'Dritter Gutachter'),
+            'committee-member' => lang('Committee member', 'Ausschussmitglied'),
+            'chair' => lang('Chair', 'Vorsitzender'),
+            'mentor' => lang('Mentor', 'Mentor'),
+            'other' => lang('Other', 'Sonstiges')
+        ];
+        if (isset($roles[$role])) {
+            return $roles[$role];
+        }
+        return $role;
     }
 
     private function getVal($field, $default = '')
@@ -1232,6 +1258,12 @@ class Document extends Settings
                         return lang('Master Thesis', 'Masterarbeit');
                     case 'bachelor':
                         return lang('Bachelor Thesis', 'Bachelorarbeit');
+                    case 'thesis': // ["category"],
+                        return lang('Thesis', 'Abschlussarbeit');
+                    case 'diploma':
+                        return lang('Diploma Thesis', 'Diplomarbeit');
+                    case 'habilitation':
+                        return lang('Habilitation Thesis', 'Habilitationsschrift');
                     default:
                         return lang('Thesis', 'Abschlussarbeit');
                 }

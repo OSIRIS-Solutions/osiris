@@ -92,6 +92,7 @@ function togglePubType(type, callback = () => { }) {
                     modules: SELECTED_MODULES,
                     copy: COPY ?? false,
                     conference: CONFERENCE ?? false,
+                    type: SELECTED_TYPE.id,
                 },
                 dataType: "html",
                 success: function (response) {

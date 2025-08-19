@@ -52,7 +52,6 @@
         ?>
             <tr>
                 <td>
-
                     <div class="search-text">
                         <h4 class="mt-0">
                             <?= lang($vals['name'], $vals['name_de']) ?>
@@ -62,19 +61,17 @@
                             <?= lang($vals['description'] ?? '', $vals['description_de'] ?? null) ?>
                         </p>
                         <p>
+                            <?= lang('Saved fields', 'Gespeicherte Felder') ?>:
                             <?php foreach ($vals['fields'] as $f => $_) { ?>
-                                <?= lang('Saved fields', 'Gespeicherte Felder') ?>:
-                                <span class="badge primary"><?= $f ?></span>
+                                <code class="badge primary"><?= $f ?></code>
                             <?php } ?>
                         </p>
                     </div>
-
                     <div class="<?= $key == 'event-select' ? 'w-800' : '' ?> my-10 border p-10 rounded bg-light">
                         <?php
                         $Modules->print_module($key);
                         ?>
                     </div>
-
                 </td>
             </tr>
         <?php } ?>

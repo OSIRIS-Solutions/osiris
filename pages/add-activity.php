@@ -33,6 +33,70 @@
         color: var(--secondary-color);
         font-style: italic;
     }
+
+   
+    .form-help {
+        display: none;
+        position: absolute;
+        right: 2rem;
+        /* in d-flex row sitzt es angenehm rechts */
+        top: 100%;
+        margin-top: -.75rem;
+        max-width: 28rem;
+        z-index: 10;
+        background: var(--signal-color-very-light);
+        border: 1px solid var(--signal-color);
+        border-radius: .5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+        padding: .5rem .75rem;
+        font-size: 1rem;
+        color: #374151;
+    }
+
+    .data-module:focus-within .form-help {
+        display: block;
+    }
+
+    /* kleine Pfeilspitze */
+    .form-help::before {
+        content: "";
+        position: absolute;
+        right: .75rem;
+        top: -13px;
+        border: 6px solid transparent;
+        border-bottom-color: var(--signal-color);
+    }
+
+    .form-help::after {
+        content: "";
+        position: absolute;
+        right: .75rem;
+        top: -11px;
+        border: 6px solid transparent;
+        border-bottom-color: var(--signal-color-very-light);
+    }
+
+    label.has-help::before {
+        content: "\E2CE";
+        font-family: "Phosphor";
+        font-size: .85em;
+        margin-right: .4rem;
+        color: var(--signal-color);
+        cursor: help;
+    }
+
+    /* Mobile: Hilfe unter das Feld in den Fluss setzen */
+    @media (max-width: 576px) {
+        .form-help {
+            position: static;
+            display: none;
+            margin-top: .25rem;
+        }
+
+        .data-module:focus-within .form-help {
+            display: block;
+        }
+    }
 </style>
 <?php
 
@@ -61,7 +125,7 @@ function val($index, $default = '')
 ?>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
-<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
 <div class="modal" id="add-event" tabindex="-1" role="dialog">
@@ -652,7 +716,7 @@ function val($index, $default = '')
 <?php } ?>
 
 <!-- for selecting organisations -->
- 
+
 
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
 <script>
@@ -682,4 +746,4 @@ function val($index, $default = '')
     }
 </script>
 
-<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?=CSS_JS_VERSION?>"></script> -->
+<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script> -->

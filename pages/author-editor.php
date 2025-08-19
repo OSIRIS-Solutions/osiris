@@ -16,6 +16,24 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$ongoing = false;
+$sws = false;
+$supervisorThesis = false;
+
+
+$Format = new Document;
+$Format->setDocument($form);
+$typeArr = $Format->typeArr;
+$upload_possible = $typeArr['upload'] ?? true;
+$subtypeArr = $Format->subtypeArr;
+$typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
+foreach ($typeModules as $m) {
+    if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
+    if ($m == 'date-range-ongoing') $ongoing = true;
+    if ($m == 'supervisor') $sws = true;
+    if ($m == 'supervisor-thesis') $supervisorThesis = true;
+}
 ?>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -35,7 +53,7 @@
             <?= lang('Edit editors', 'Bearbeite die Editoren') ?>
         <?php } ?>
     </h1>
-    <form action="<?= ROOTPATH ?>/crud/activities/update-authors/<?= $id ?>" method="post">
+    <form action="<?= ROOTPATH ?>/crud/activities/update-<?= $role ?>/<?= $id ?>" method="post">
 
         <table class="table">
             <thead>
@@ -43,7 +61,13 @@
                     <th></th>
                     <th><?= lang('Last name', 'Nachname') ?> <span class="text-danger">*</span></th>
                     <th><?= lang('First name', 'Vorname') ?></th>
-                    <th>Position</th>
+                    <?php if ($sws) : ?>
+                        <th>SWS</th>
+                    <?php elseif ($supervisorThesis) : ?>
+                        <th><?= lang('Role', 'Rolle') ?></th>
+                    <?php elseif ($role == 'authors') : ?>
+                        <th>Position</th>
+                    <?php endif; ?>
                     <th><?= $Settings->get('affiliation') ?></th>
                     <th><?= lang('Units', 'Einheiten') ?> *</th>
                     <th>Username</th>
@@ -51,7 +75,9 @@
                 </tr>
             </thead>
             <tbody id="authors">
-                <?php foreach ($form[$role] as $i => $author) { ?>
+                <?php foreach ($form[$role] as $i => $author) {
+                    $thesisRole = $author['role'] ?? 'supervisor';
+                ?>
                     <tr data-attr="<?= $i ?>">
                         <td>
                             <i class="ph ph-dots-six-vertical text-muted handle"></i>
@@ -62,18 +88,33 @@
                         <td>
                             <input name="authors[<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                         </td>
-                        <td>
-                            <?php if (isset($author['position'])) { ?>
+                        <?php if ($sws) : ?>
+                            <td>
+                                <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
+                            </td>
+                        <?php elseif ($supervisorThesis) : ?>
+                            <td>
+                                <select name="authors[<?= $i ?>][role]" class="form-control">
+                                    <option value="supervisor" <?= ($thesisRole == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
+                                    <option value="first-reviewer" <?= ($thesisRole == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
+                                    <option value="second-reviewer" <?= ($thesisRole == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
+                                    <option value="third-reviewer" <?= ($thesisRole == 'third-reviewer' ? 'selected' : '') ?>><?= lang('Third reviewer', 'Dritter Gutachter') ?></option>
+                                    <option value="committee-member" <?= ($thesisRole == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
+                                    <option value="chair" <?= ($thesisRole == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
+                                    <option value="mentor" <?= ($thesisRole == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
+                                    <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                </select>
+                            </td>
+                        <?php elseif ($role == 'authors') : ?>
+                            <td>
                                 <select name="authors[<?= $i ?>][position]" class="form-control">
                                     <option value="first" <?= ($author['position'] == 'first' ? 'selected' : '') ?>>first</option>
                                     <option value="middle" <?= ($author['position'] == 'middle' ? 'selected' : '') ?>>middle</option>
                                     <option value="corresponding" <?= ($author['position'] == 'corresponding' ? 'selected' : '') ?>>corresponding</option>
                                     <option value="last" <?= ($author['position'] == 'last' ? 'selected' : '') ?>>last</option>
                                 </select>
-                            <?php } else { ?>
-                                NA
-                            <?php } ?>
-                        </td>
+                            </td>
+                        <?php endif; ?>
                         <td>
                             <div class="custom-checkbox">
                                 <input type="checkbox" id="checkbox-<?= $i ?>" name="authors[<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
@@ -159,7 +200,7 @@
 
 
 <script>
-    var counter = <?= $i ?>;
+    var counter = <?= $i ?? 0 ?>;
 
     function addAuthorRow() {
         counter++;
@@ -168,10 +209,17 @@
         tr.append('<td><i class="ph ph-dots-six-vertical text-muted handle"></i></td>')
         tr.append('<td><input name="authors[' + counter + '][last]" type="text" class="form-control" required></td>')
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
-        tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle" selected>middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
+
+        <?php if ($sws) : ?>
+            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws"></td>')
+        <?php elseif ($supervisorThesis) : ?>
+            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('Other', 'Sonstiges') ?></option></select></td>')
+        <?php elseif ($role == 'authors') : ?>
+            tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
+        <?php endif; ?>
         tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
         tr.append('<td class="units"><small>' + <?= json_encode(lang('Not applicable', 'Nicht zutreffend')) ?> + '</small></td>')
-        tr.append('<td> <input name="authors[' + counter + '][user]" type="text" class="form-control" list="user-list"></td>')
+        tr.append('<td> <input name="authors[' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="updateUnits(this)"></td>')
         var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
             $(this).closest('tr').remove();
         });

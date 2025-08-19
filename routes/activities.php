@@ -692,7 +692,7 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
 });
 
 
-Route::post('/crud/activities/update-authors/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function ($type, $id) {
     include_once BASEPATH . "/php/init.php";
     // prepare id
     if (!isset($_POST['authors']) || empty($_POST['authors'])) {
@@ -707,10 +707,9 @@ Route::post('/crud/activities/update-authors/([A-Za-z0-9]*)', function ($id) {
         if (isset($a['units']) && !empty($a['units']) && is_array($a['units'])) {
             $units = array_merge($units, $a['units']);
         }
-        $authors[] = [
+        $author = [
             'last' => $a['last'],
             'first' => $a['first'],
-            'position' => $a['position'] ?? 'middle',
             'aoi' => (boolval($a['aoi'] ?? false)),
             //|| ($_SESSION['username'] == $a['user'] ?? '')
             'user' => empty($a['user']) ? null : $a['user'],
@@ -719,18 +718,31 @@ Route::post('/crud/activities/update-authors/([A-Za-z0-9]*)', function ($id) {
             'units' => $a['units'] ?? null,
             'manually' => true
         ];
+        if (isset($a['position']) && !empty($a['position'])) {
+            $author['position'] = $a['position'];
+        } elseif (isset($a['role'])) {
+            $author['role'] = $a['role'];
+        } elseif (isset($a['sws'])) {
+            $author['sws'] = $a['sws'];
+        } 
+        $authors[] = $author;
     }
 
-    $units = array_unique($units);
-    foreach ($units as $unit) {
-        $units = array_merge($units, $Groups->getParents($unit, true));
-    }
-    $units = array_unique($units);
+    // prepare values for update
+    $type = strtolower($type);
+    $values = [$type => $authors];
+    
+    // update History
+    $values = $DB->updateHistory($values, $id);
 
     $osiris->activities->updateOne(
         ['_id' => $id],
-        ['$set' => ["authors" => $authors, "units" => $units]]
+        ['$set' => $values]
     );
+    
+    // update units array
+    include_once BASEPATH . "/php/Render.php";
+    renderAuthorUnitsMany(['_id' => $id]);
 
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
 });
@@ -741,39 +753,78 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $collection = $osiris->activities;
-    // prepare id
-    $id = $DB->to_ObjectID($id);
-    $approval = intval($_POST['approval'] ?? 0);
-    $filter = ['_id' => $id, "authors.user" => $_SESSION['username']];
 
+    $id = $DB->to_ObjectID($id);
+    $user = $_SESSION['username'] ?? null;
+    $approval = intval($_POST['approval'] ?? 0);
+    
+    // Filter: nur das Dokument + optional absichern, dass der User irgendwo vorkommt
+    $filter = [
+        '_id' => $id,
+        '$or' => [
+            ['authors.user' => $user],
+            ['editors.user' => $user],
+        ],
+    ];
+    
+    $update = [];
+    $options = [
+        'arrayFilters' => [
+            ['a.user' => $user], // für authors
+            ['e.user' => $user], // für editors
+        ],
+    ];
+    
     switch ($approval) {
         case 1:
-            # Yes, this is me and I was affiliated to the AFFILIATION
-            $updateResult = $collection->updateOne(
-                $filter,
-                ['$set' => ["authors.$.approved" => true, 'authors.$.aoi' => true]]
-            );
+            // Ja, ich war affiliiert
+            $update = [
+                '$set' => [
+                    'authors.$[a].approved' => true,
+                    'authors.$[a].aoi'      => true,
+                    'editors.$[e].approved' => true,
+                    'editors.$[e].aoi'      => true,
+                ],
+            ];
             break;
+    
         case 2:
-            # Yes, but I was not affiliated to the AFFILIATION
-            $updateResult = $collection->updateOne(
-                $filter,
-                ['$set' => ["authors.$.approved" => true, 'authors.$.aoi' => false]]
-            );
+            // Ja, aber nicht affiliiert
+            $update = [
+                '$set' => [
+                    'authors.$[a].approved' => true,
+                    'authors.$[a].aoi'      => false,
+                    'editors.$[e].approved' => true,
+                    'editors.$[e].aoi'      => false,
+                ],
+            ];
             break;
+    
         case 3:
-            # No, this is not me
-            $updateResult = $collection->updateOne(
-                $filter,
-                ['$set' => ["authors.$.user" => null, 'authors.$.aoi' => false]]
-            );
+            // Nein, das bin ich nicht
+            $update = [
+                '$set' => [
+                    'authors.$[a].user' => null,
+                    'authors.$[a].aoi'  => false,
+                    'authors.$[a].units' => null,
+                    'editors.$[e].user' => null,
+                    'editors.$[e].aoi'  => false,
+                    'editors.$[e].units' => null,
+                ],
+            ];
             break;
+    
         default:
-            # code...
-            break;
+            // nichts tun
+            $update = [];
     }
-
-    $updateCount = $updateResult->getModifiedCount();
+    
+    if ($update) {
+        $updateResult = $collection->updateOne($filter, $update, $options);
+        $updateCount  = $updateResult->getModifiedCount();
+    } else {
+        $updateCount = 0;
+    }
 
     // force update of user notifications
     $DB->notifications(true);

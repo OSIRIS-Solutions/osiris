@@ -874,7 +874,10 @@ class DB
         // check if new activity was added for user
         $docs = $this->db->activities->distinct(
             '_id',
-            ['authors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]]
+            ['$or' => [
+                ['authors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
+                ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]]
+            ]]
         );
         if (!empty($docs)) $issues['approval'] = array_map('strval', $docs);
 
