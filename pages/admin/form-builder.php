@@ -18,6 +18,7 @@ include_once BASEPATH . '/php/Modules.php';
 
 $Modules = new Modules();
 $all = [];
+$tags = [];
 foreach ($Modules->all_modules as $key => $value) {
     $all[$key] = [
         'name' => $value['name'] ?? $key,
@@ -27,7 +28,13 @@ foreach ($Modules->all_modules as $key => $value) {
         'width' => $value['width'] ?? '1',
         'fields' => array_keys($value['fields'] ?? []),
         'type' => 'field',
+        'tags' => implode(',', $value['tags'] ?? []),
     ];
+    foreach ($value['tags'] ?? [] as $tag) {
+        if (!in_array($tag, $tags)) {
+            $tags[] = $tag;
+        }
+    }
 }
 
 $custom_fields = $osiris->adminFields->find()->toArray();
@@ -79,6 +86,25 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
         }
     }
 }
+
+// remove important tag from tags
+if (($key = array_search('important', $tags)) !== false) {
+    unset($tags[$key]);
+}
+
+$tagLabels = [
+    'publication' => ['en' => 'Publication', 'de' => 'Publikation'],
+    'general' => ['en' => 'General', 'de' => 'Allgemein'],
+    'authors' => ['en' => 'Users', 'de' => 'Nutzende'],
+    'layout' => ['en' => 'Layout', 'de' => 'Layout'],
+    'location' => ['en' => 'Location', 'de' => 'Ort'],
+    'event' => ['en' => 'Event', 'de' => 'Ereignis'],
+    'date' => ['en' => 'Date', 'de' => 'Datum'],
+    // 'important' => ['en' => 'Important', 'de' => 'Wichtig'],
+    'teaching' => ['en' => 'Teaching', 'de' => 'Lehre'],
+    'organizations' => ['en' => 'Organisations', 'de' => 'Organisationen'],
+    'people' => ['en' => 'People', 'de' => 'Personen'],
+];
 
 ?>
 
@@ -209,9 +235,13 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
         padding: .5rem 0;
     }
 
-    .pillbar .badge {
+    a.tag {
         cursor: pointer;
         font-size: .75rem
+    }
+
+    a.tag.active {
+        background-color: var(--primary-color-30);
     }
 
     a {
@@ -419,28 +449,31 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
                 </div>
 
                 <!-- Layout-Sektion -->
-                <!-- <div class="pillbar">
-                    <a class="badge">Alle</a>
-                    <a class="badge">Layout</a>
+                <div class="pillbar">
+                    <a class="badge tag" data-tag="all"><?= lang('All', 'Alle') ?></a>
+                    <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
                     <?php foreach ($tags as $tag): ?>
-                        <a class="badge"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
+                        <a class="badge tag" data-tag="<?= $tag ?>"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
                     <?php endforeach; ?>
-                </div> -->
+                </div>
 
                 <!-- -->
                 <div class="card-body py-10" style="max-height: 50rem; overflow-y:auto;overflow-x:hidden;">
                     <div class="font-size-12 text-muted">Layout</div>
                     <ul id="catalog-layout" class="list-group mb-10">
                         <li class="drag-item"
+                            data-tag="layout"
                             data-type="layout-heading" data-label="Überschrift">
                             <span>Überschrift</span>
                             <!-- <span class="badge bg-light ">H2–H4</span> -->
                         </li>
                         <li class="drag-item"
+                            data-tag="layout"
                             data-type="layout-hr" data-label="Trennlinie">
                             <span>Trennlinie</span>
                         </li>
                         <li class="drag-item"
+                            data-tag="layout"
                             data-type="layout-paragraph" data-label="Absatz">
                             <span>Absatz</span>
                         </li>
@@ -476,7 +509,8 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
                                 data-type="field"
                                 data-id="<?= htmlspecialchars($id) ?>"
                                 data-label="<?= $def['label'] ?? $def['name'] ?>"
-                                data-label-de="<?= $def['label_de'] ?? null ?>">
+                                data-label-de="<?= $def['label_de'] ?? null ?>"
+                                data-tags="<?= htmlspecialchars(implode(',', $def['tags'] ?? [])) ?>">
                                 <div class="d-flex justify-content-between">
                                     <span><?= lang($def['name'] ?? $id, $def['name_de'] ?? null) ?></span>
                                     <a class="preview" href="#preview"><i class="ph ph-question"></i></a>
@@ -984,10 +1018,12 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
             let label = item.find('.title').text() || '—';
 
             if (type == 'field') {
+                let module = ALL[item.data('id')] || {};
                 $('#catalog-list').prepend(
                     $('<li class="drag-item">')
                     .data('type', 'field')
                     .data('id', item.data('id'))
+                    .data('tags', module.tags ?? '' )
                     .append(`
                         <div class="d-flex justify-content-between">
                             <span>${label}</span>
@@ -1043,11 +1079,83 @@ if (isset($_GET['copy']) && !empty($_GET['copy'])) {
             });
         });
 
+        function searchByTag(tag) {
+            // Filter the catalog by tag
+            $('.catalog .list-group li').each(function() {
+                var tags = $(this).data('tags') ? $(this).data('tags').split(',') : [];
+                $(this).toggle(tags.includes(tag));
+            });
+        }
+        // Tag-Filter in der Katalog-Sektion
+        $('.pillbar .tag').on('click', function() {
+            // highlight the selected tag
+            var tag = $(this).data('tag');
+
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+                tag = 'all'; // Reset to show all
+            }
+            $('.pillbar .tag').removeClass('active');
+            if (tag === 'all') {
+                // Zeige alle Elemente
+                $('.catalog .list-group li').show();
+            } else {
+                $(this).addClass('active');
+                searchByTag(tag);
+            }
+        });
+
         // --- 6) Serialisierung beim Speichern ---
         $('#activity-form').on('submit', function() {
             var schema = readSchemaFromDOM();
             $('#schema').val(JSON.stringify(schema));
-            // PHP empfängt $_POST['schema'], validiert Whitelist, speichert.
+        });
+
+        // --- 7) Validierung vor dem Speichern ---
+        $('#saveBtn').on('click', function(e) {
+            e.preventDefault();
+            var schema = readSchemaFromDOM();
+            console.log(schema);
+            // check if schema is empty
+            if (schema.items.length === 0) {
+                toastError('Das Formular enthält keine Felder. Bitte füge mindestens ein Feld hinzu.');
+                return;
+            }
+
+            // check if there are duplicate IDs
+            var ids = schema.items.map(item => item.id);
+            ids = ids.filter(id => id); // remove empty IDs
+            var duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+            if (duplicates.length > 0) {
+                toastError('Das Formular enthält doppelte IDs: ' + duplicates.join(', '));
+                return;
+            }
+
+            // check if an author field is present
+            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis"];
+            let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
+            if (!hasAuthorField) {
+                toastError('Das Formular muss mindestens ein User-Feld enthalten.');
+                // filter by authors tag
+                $('.pillbar .tag').removeClass('active');
+                searchByTag('authors');
+                $('.pillbar .tag[data-tag="authors"]').addClass('active');
+                return;
+            }
+
+            // check if a date field is present
+            let dateFields = ["date", "date-range", "date-range-ongoing"];
+            let hasDateField = schema.items.some(item => item.type === 'field' && dateFields.includes(item.id));
+            if (!hasDateField) {
+                toastError('Das Formular muss mindestens ein Datumsfeld enthalten.');
+                // filter by date tag
+                $('.pillbar .tag').removeClass('active');
+                searchByTag('date');
+                $('.pillbar .tag[data-tag="date"]').addClass('active');
+                return;
+            }
+            // Alles ok, Formular absenden
+            $('#activity-form').submit();
         });
 
         // ---- Helpers ----
