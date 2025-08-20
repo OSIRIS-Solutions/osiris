@@ -534,7 +534,7 @@ class Modules
             "description" => "A field for the PubMed ID of a publication. This field is used to uniquely identify a publication.",
             "description_de" => "Ein Feld für die PubMed-ID einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
             "width" => 2,
-            "tags" => ['publication', 'identifier', 'important']
+            "tags" => ['publication']
         ],
         "pubtype" => [
             "fields" => ["pubtype" => "article"],
@@ -556,7 +556,7 @@ class Modules
             "description" => "A field for the type of review, e.g. for a grant.",
             "description_de" => "Ein Feld für die Art der Begutachtung, z.B. für ein Stipendium.",
             "width" => 2,
-            "tags" => ['review', 'publication']
+            "tags" => ['publication']
         ],
         "role" => [
             "fields" => ["role" => "Organisator:in"],
@@ -588,7 +588,7 @@ class Modules
             "description" => "A selection field for an author from the institute. Limited to the persons in the database and supports only one author.",
             "description_de" => "Ein Auswahlfeld für einen Autor aus dem Institut. Beschränkt auf die Personen in der Datenbank und unterstützt nur einen Autor.",
             "width" => 2,
-            "tags" => ['authors', 'people', 'important']
+            "tags" => ['authors', 'important']
         ],
         "semester-select" => [
             "fields" => [],
