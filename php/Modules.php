@@ -1031,7 +1031,7 @@ class Modules
         $width = $field['width'] ?? 2;
         $width = 12 / $width;
         $labelClass = ($req ? "required" : "");
-        $label = lang($field['label'] ?? $field['name'], $field['label_de'] ?? null);
+        $label = lang($field['name'] ?? $field['id'], $field['name_de'] ?? null);
         $help = '';
 
         if (isset($props['label'])) {
