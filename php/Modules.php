@@ -2062,7 +2062,7 @@ class Modules
 
             case "date-range":
             ?>
-                <div class="data-module col-sm-8 col-md-6" data-module="date-range">
+                <div class="data-module col-sm-<?= $width ?>" data-module="date-range">
                     <label class="<?= $labelClass ?> floating-title" for="date_start">
                         <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty if only one day', 'Ende leer lassen, falls es nur ein Tag ist') ?>"><i class="ph ph-question" style="line-height:0;"></i></span>
@@ -2098,7 +2098,7 @@ class Modules
 
             case "date-range-ongoing":
             ?>
-                <div class="data-module col-sm-8 col-md-6" data-module="date-range-ongoing">
+                <div class="data-module col-sm-<?= $width ?>" data-module="date-range-ongoing">
                     <label class="<?= $labelClass ?> element-time floating-title" for="date_start">
                         <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty ongoing activity', 'Ende leer lassen, falls es eine zurzeit laufende Aktivität ist') ?>"><i class="ph ph-question"></i></span>
