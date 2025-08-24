@@ -12844,6 +12844,111 @@ table img {
   opacity: 1;
 }
 
+.multi-select-container {
+  position: relative;
+}
+
+.multi-select-menu {
+  position: absolute;
+  left: 0;
+  top: 1.6rem;
+  z-index: 1;
+  float: left;
+  min-width: 100%;
+  background: #fff;
+  margin: 1em 0;
+  border: var(--border-width) solid var(--border-color);
+  -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  display: none;
+  border-radius: var(--border-radius);
+}
+
+.multi-select-menuitem {
+  display: block;
+  font-size: 0.875em;
+  padding: 0.6em 1em 0.6em 30px;
+  white-space: nowrap;
+}
+
+.multi-select-legend {
+  font-size: 0.875em;
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.multi-select-legend + .multi-select-menuitem {
+  padding-top: 0.25rem;
+}
+
+.multi-select-menuitem + .multi-select-menuitem {
+  padding-top: 0;
+}
+
+.multi-select-presets {
+  border-bottom: 1px solid #ddd;
+}
+
+.multi-select-menuitem input {
+  position: absolute;
+  margin-top: 0.25em;
+  margin-left: -20px;
+}
+
+.multi-select-button {
+  display: block;
+  width: 100%;
+  height: 3.2rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  color: var(--text-color);
+  background-color: white;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  line-height: 3.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multi-select-button:after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.4em 0.4em 0 0.4em;
+  border-color: #999 transparent transparent transparent;
+  margin-left: 0.4em;
+  vertical-align: 0.1em;
+}
+
+.multi-select-container--open .multi-select-menu {
+  display: block;
+}
+
+.multi-select-container--open .multi-select-button:after {
+  border-width: 0 0.4em 0.4em 0.4em;
+  border-color: transparent transparent #999 transparent;
+}
+
+.multi-select-container--positioned .multi-select-menu {
+  /* Avoid border/padding on menu messing with JavaScript width calculation */
+  box-sizing: border-box;
+}
+
+.multi-select-container--positioned .multi-select-menu label {
+  /* Allow labels to line wrap when menu is artificially narrowed */
+  white-space: normal;
+}
+
 /*!
  * Quill Editor v1.3.6
  * https://quilljs.com/

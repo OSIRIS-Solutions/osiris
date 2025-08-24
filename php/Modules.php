@@ -1028,7 +1028,7 @@ class Modules
             echo '<b>Module <code>' . $module . '</code> is not defined. </b>';
             return;
         }
-        $width = $field['width'] ?? 2;
+        $width = $field['width'] ?? 12;
         // $width = 12 / $width;
         $labelClass = ($req ? "required" : "");
         $label = lang($field['name'] ?? $field['id'], $field['name_de'] ?? null);
@@ -1074,29 +1074,73 @@ class Modules
             echo '</div>';
             return;
         }
+        $value = ($this->val($module, $field['default'] ?? ''));
+
+        if ($field['format'] == 'list' && $field['multiple'] ?? false) {
+?>
+            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
+                <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                <select class="form-control" name="values[<?= $module ?>][]" id="<?= $module ?>" <?= $labelClass ?> multiple <?= $labelClass ?>>
+                    <?php
+                    if ($value instanceof MongoDB\Model\BSONArray) {
+                        $value = DB::doc2Arr($value);
+                    }
+                    foreach ($field['values'] as $opt) {
+                        // if is type MongoDB\Model\BSONArray, convert to array
+                        if ($opt instanceof MongoDB\Model\BSONArray) $opt = DB::doc2Arr($opt);
+                        $val = $opt;
+                        if (is_array($opt)) {
+                            $val = $opt[0];
+                            $opt = lang(...$opt);
+                        }
+                        $selected = false;
+                        if (is_array($value)) {
+                            $selected = in_array($val, $value);
+                        } else {
+                            $selected = ($value == $val);
+                        }
+                    ?>
+                        <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $opt ?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+            </div>
+            <script>
+                $('#<?= $module ?>').multiSelect({
+                    // containerHTML: '<div class="btn-group">',
+                    // menuHTML: '<div class="dropdown-menu">',
+                    // buttonHTML: '<div class="form-control">',
+                    // menuItemHTML: '<label>',
+                    // noneText: '-- Choisir --',
+                    // allText: 'Tout le monde',
+                });
+            </script>
+            <?php
+            return;
+        }
 
         echo '<div class="data-module floating-form col-sm-' . $width . '" data-module="' . $module . '">';
 
         switch ($field['format']) {
             case 'string':
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $labelClass . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $labelClass . '>' . $value . '</textarea>';
                 break;
             case 'int':
-                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
                 echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
-                $val = $this->val($module, $field['default'] ?? '');
                 if (!$req) {
-                    '<option value="" ' . (empty($val) ? 'selected' : '') . '>-</option>';
+                    '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
                 }
                 foreach ($field['values'] as $opt) {
                     // if is type MongoDB\Model\BSONArray, convert to array
@@ -1106,18 +1150,18 @@ class Modules
                     if (is_array($opt)) {
                         $opt = lang(...$opt);
                     }
-                    echo '<option ' . ($val == $opt ? 'selected' : '') . ' value="' . $opt . '">' . $opt . '</option>';
+                    echo '<option ' . ($value == $opt ? 'selected' : '') . ' value="' . $opt . '">' . $opt . '</option>';
                 }
                 echo '</select>';
                 break;
             case 'date':
-                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . valueFromDateArray($this->val($module, $field['default'] ?? '')) . '" placeholder="custom-field">';
+                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . valueFromDateArray($value) . '" placeholder="custom-field">';
                 break;
             case 'url':
-                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             default:
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '">';
                 break;
         }
 
@@ -1168,7 +1212,7 @@ class Modules
         switch ($module) {
             case 'gender':
                 $val = $this->val('gender');
-?>
+            ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
@@ -2524,7 +2568,7 @@ class Modules
                 if (!$status) $status = $this->val('open_access', false) ? 'open' : 'closed';
             ?>
                 <!-- oa_status -->
-                <div class="data-module floating-form col-sm-<?=$width?>" data-module="openaccess-status">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="openaccess-status">
                     <select class="form-control" id="oa_status" name="values[oa_status]" <?= $labelClass ?> autocomplete="off">
                         <option value="closed" <?= $status == 'closed' ? 'selected' : '' ?>>Closed Access</option>
                         <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('unknown status', 'Unbekannter Status') ?>)</option>

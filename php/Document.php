@@ -1335,8 +1335,23 @@ class Document extends Settings
                 $val = $this->getVal($module, '-');
                 // only in german because standard is always english
                 if (lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
-                    foreach ($this->custom_field_values[$module] as $field) {
-                        if ($val == $field[0] ?? '') return lang(...$field);
+                    if (is_array($val)) {
+                        $values = [];
+                        foreach ($val as $v) {
+                            // check if the value is in the custom field values
+                            foreach ($this->custom_field_values[$module] as $field) {
+                                if ($v == $field[0] ?? '') {
+                                    $values[] = lang(...$field);
+                                    continue 2;
+                                }
+                            }
+                            $values[] = $v;
+                        }
+                        return implode(", ", $values);
+                    } else {
+                        foreach ($this->custom_field_values[$module] as $field) {
+                            if ($val == $field[0] ?? '') return lang(...$field);
+                        }
                     }
                 }
                 if (isset($this->custom_fields[$module])) {
