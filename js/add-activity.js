@@ -302,7 +302,7 @@ function verifyForm(event, form) {
             }
         }
     });
-    console.log(correct);
+
 
     // check if authors are defined
     if ($('#author-widget').length > 0) {
