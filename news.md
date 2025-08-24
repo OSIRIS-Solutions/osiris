@@ -17,6 +17,8 @@ Mit dem neuen Formbuilder kannst du Formulare für Aktivitäten noch flexibler g
 
 👉 Damit wird die Konfiguration von Aktivitätsformularen so einfach wie nie!
 
+*Vielen Dank an Jochen Knaus, der dieses Feature auf Herz und Nieren getestet hat und uns wertvolles Feedback gegeben hat! 🙏*
+
 #### <i class="ph ph-selection-background"></i> Verbesserte Auswahlfelder (Multi-Select)
 
 - Auswahlfelder mit mehreren Optionen funktionieren jetzt viel intuitiver: statt gedrückter Strg-Taste gibt es einfache Checkboxen.
