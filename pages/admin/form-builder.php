@@ -25,7 +25,7 @@ foreach ($Modules->all_modules as $key => $value) {
         'name_de' => $value['name_de'] ?? null,
         'label' => $value['label'] ?? $value['name'] ?? $key,
         'label_de' => $value['label_de'] ?? null,
-        'width' => $value['width'] ?? '1',
+        'width' => $value['width'] ?? '12',
         'fields' => array_keys($value['fields'] ?? []),
         'type' => 'field',
         'tags' => implode(',', $value['tags'] ?? []),
@@ -44,7 +44,7 @@ foreach ($custom_fields as $f) {
         'name_de' => $f['name_de'] ?? null,
         'label' => $f['name'] ?? $key,
         'label_de' => $f['name_de'] ?? null,
-        'width' => $f['width'] ?? '1',
+        'width' => $f['width'] ?? '12',
         'fields' => [$f['id']],
         'type' => 'custom',
     ];
