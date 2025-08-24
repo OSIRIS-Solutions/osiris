@@ -43,6 +43,10 @@ Mit dem neuen Formbuilder kannst du Formulare für Aktivitäten noch flexibler g
 - Verbesserte Darstellung von gruppierten Listen mit neuem CSS
 - Neue Tooltip-Hilfen in Aktivitäts-Formularen
 
+
+---
+
+
 <span class="badge float-right">31.07.2025</span>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
