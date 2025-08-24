@@ -149,26 +149,10 @@ $tagLabels = [
         padding: .75rem;
         background: #fff;
         margin-bottom: .75rem;
-        display: inline-flex;
+        display: flex;
         gap: .75rem;
         align-items: center;
         width: 100%;
-    }
-
-    .canvas-item.w-1 {
-        width: 100%;
-    }
-
-    .canvas-item.w-2 {
-        width: calc(50% - 2px);
-    }
-
-    .canvas-item.w-3 {
-        width: calc(33.333% - 2px);
-    }
-
-    .canvas-item.w-4 {
-        width: calc(25% - 2px);
     }
 
     .canvas-item .handle {
@@ -244,10 +228,22 @@ $tagLabels = [
         background-color: var(--primary-color-30);
     }
 
-    a {
-        text-decoration: none;
+    .sticky-panel {
+        position: sticky;
+        top: 8rem;
+        max-height: calc(100vh - 10rem);
+        overflow-y: auto;
     }
 
+    #catalog-search-header {
+            position: sticky;
+            top: 0rem;
+            z-index: 1000;
+            background: white;
+            margin: 0rem -2rem;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+    }
 
 
     .form-help {
@@ -443,22 +439,22 @@ $tagLabels = [
     <div class="row row-eq-spacing">
         <!-- KATALOG (links) -->
         <div class="col-4" id="catalog-panel">
-            <div class="panel card catalog">
-                <div class="card-header">
+            <div class="panel card catalog sticky-panel pt-0">
+                <div class="card-header" id="catalog-search-header">
                     <input id="catalog-search" type="search" class="form-control" placeholder="Felder durchsuchen …">
-                </div>
 
-                <!-- Layout-Sektion -->
-                <div class="pillbar">
-                    <a class="badge tag" data-tag="all"><?= lang('All', 'Alle') ?></a>
-                    <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
-                    <?php foreach ($tags as $tag): ?>
-                        <a class="badge tag" data-tag="<?= $tag ?>"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
-                    <?php endforeach; ?>
+                    <!-- Layout-Sektion -->
+                    <div class="pillbar">
+                        <a class="badge tag" data-tag="all"><?= lang('All', 'Alle') ?></a>
+                        <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
+                        <?php foreach ($tags as $tag): ?>
+                            <a class="badge tag" data-tag="<?= $tag ?>"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
 
                 <!-- -->
-                <div class="card-body py-10" style="max-height: 50rem; overflow-y:auto;overflow-x:hidden;">
+                <div class="card-body py-10">
                     <div class="font-size-12 text-muted">Layout</div>
                     <ul id="catalog-layout" class="list-group mb-10">
                         <li class="drag-item"
@@ -525,7 +521,7 @@ $tagLabels = [
 
         <!-- PROPERTIES -->
         <div class="col-4 d-none" id="properties-panel">
-            <div class="panel card">
+            <div class="panel card sticky-panel">
                 <div class="title">Eigenschaften</div>
                 <div class="card-body">
 
@@ -581,13 +577,15 @@ $tagLabels = [
 
 
                         <div class="mb-10">
-                            <label class="form-label">Breite</label>
+                            <label class="form-label"><?= lang('Width', 'Breite') ?></label>
                             <select class="form-control w-auto d-inline" id="prop-width">
                                 <option value="" selected>Default</option>
-                                <option value="1">Vollbreite</option>
-                                <option value="2">1/2 Breite</option>
-                                <option value="3">1/3 Breite</option>
-                                <option value="4">1/4 Breite</option>
+                                <option value="12">Vollbreite</option>
+                                <option value="9">3/4</option>
+                                <option value="8">2/3</option>
+                                <option value="6">1/2</option>
+                                <option value="4">1/3</option>
+                                <option value="3">1/4</option>
                             </select>
                             <small>
                                 Default: <span id="default-width"></span>
@@ -642,7 +640,7 @@ $tagLabels = [
                 </div>
                 <div class="card-body">
                     <div class="droparea">
-                        <ul id="canvas-list" class="list-unstyled mb-0">
+                        <ul id="canvas-list" class="row row-eq-spacing m-0">
                             <?php if (!empty($fields)): ?>
                                 <?php foreach ($fields as $it):
                                     $field_type = $it['type'] ?? 'field';
@@ -650,7 +648,7 @@ $tagLabels = [
                                     if ($field_type === 'field' || $field_type === 'custom'):
                                         $module = $all[$it['id']] ?? [];
                                 ?>
-                                        <li class="canvas-item w-<?= $props['width'] ?? $module['width'] ?>"
+                                        <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?>"
                                             data-type="field"
                                             data-id="<?= htmlspecialchars($it['id']) ?>"
                                             data-props='<?= json_encode($props ?? []) ?>'>
@@ -904,9 +902,9 @@ $tagLabels = [
                     $('#prop-width').prop('disabled', true);
                     $('#default-width').text('Disabled'); // No default width
                 } else {
-                    $('#prop-width').val(defaults.width || '1'); // Set default width
+                    $('#prop-width').val(defaults.width || '12'); // Set default width
                     $('#prop-width').prop('disabled', false);
-                    $('#default-width').text(defaults.width == '1' ? 'Voll' : '1/' + defaults.width);
+                    $('#default-width').text(translateWidth(defaults.width || '12'));
                 }
                 var props = $(this).data('props') || {};
                 console.log('Feld-Eigenschaften:', props);
@@ -969,12 +967,12 @@ $tagLabels = [
                 if ($('#prop-width').val()) {
                     props.width = $('#prop-width').val();
                     $width = $('#prop-width').val();
-                    $selected.removeClass('w-1 w-2 w-3 w-4');
-                    $selected.addClass('w-' + $width);
+                    $selected.removeClass('col-sm-1 col-sm-2 col-sm-3 col-sm-4 col-sm-6 col-sm-8 col-sm-9 col-sm-12');
+                    $selected.addClass('col-sm-' + $width);
                     $subtitle.append(` <span class="badge primary"><i class="ph ph-ruler m-0"></i></span>`);
                 } else {
-                    $selected.removeClass('w-1 w-2 w-3 w-4');
-                    $selected.addClass('w-' + defaults.width ?? '1');
+                    $selected.removeClass('col-sm-1 col-sm-2 col-sm-3 col-sm-4 col-sm-6 col-sm-8 col-sm-9 col-sm-12');
+                    $selected.addClass('col-sm-' + defaults.width ?? '12');
                 }
                 if ($('#prop-portfolio').is(':checked')) {
                     props.portfolio = true;
@@ -1023,7 +1021,7 @@ $tagLabels = [
                     $('<li class="drag-item">')
                     .data('type', 'field')
                     .data('id', item.data('id'))
-                    .data('tags', module.tags ?? '' )
+                    .data('tags', module.tags ?? '')
                     .append(`
                         <div class="d-flex justify-content-between">
                             <span>${label}</span>
@@ -1158,13 +1156,40 @@ $tagLabels = [
             $('#activity-form').submit();
         });
 
+        function translateWidth(width) {
+            // Übersetzt die Breite in einen lesbaren Text
+            console.log(width);
+            switch (width) {
+                case '12':
+                case 12:
+                    return 'Vollbreite';
+                case '9':
+                case 9:
+                    return '3/4';
+                case '8':
+                case 8:
+                    return '2/3';
+                case '6':
+                case 6:
+                    return '1/2';
+                case '4':
+                case 4:
+                    return '1/3';
+                case '3':
+                case 3:
+                    return '1/4';
+                default:
+                    return width;
+            }
+        }
+
         // ---- Helpers ----
         function buildCanvasItem(type, id, label) {
             // Erzeugt ein Canvas-Item basierend auf Typ und ID
             let defaults = ALL[id] || {};
-            let width = defaults.width || '1'; // Default width is full width
+            let width = defaults.width || '12'; // Default width is full width
             if (type === 'field') {
-                return $('<li class="canvas-item w-' + width + '" data-type="field">')
+                return $('<li class="canvas-item col-sm-' + width + '" data-type="field">')
                     .attr('data-id', id)
                     // .attr('data-label', props.label || label)
                     // .attr('data-label-de', props.label_de || label)
@@ -1174,7 +1199,7 @@ $tagLabels = [
                 // .append('<div class="actions ms-auto"><button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button></div>')
             }
             if (type === 'custom') {
-                return $('<li class="canvas-item w-' + width + '" data-type="custom">')
+                return $('<li class="canvas-item col-sm-' + width + '" data-type="custom">')
                     .attr('data-id', id)
                     // .attr('data-label', props.label || label)
                     // .attr('data-label-de', props.label_de || label)
@@ -1184,27 +1209,27 @@ $tagLabels = [
                 // .append('<div class="actions ms-auto"><button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button></div>')
             }
             if (type === 'layout-heading') {
-                return $('<li class="canvas-item" data-type="layout-heading">')
+                return $('<li class="canvas-item col-sm-12" data-type="layout-heading">')
                     .append('<div class="handle"></div>')
                     .append('<div class="icon"><i class="ph ph-text-h"></i></div>')
                     .append('<div class="flex-fill"><div class="title">Überschrift</div><div class="subtitle">Heading</div></div>')
                 // .append('<div class="actions ms-auto"><button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button></div>')
             }
             if (type === 'layout-hr') {
-                return $('<li class="canvas-item" data-type="layout-hr">')
+                return $('<li class="canvas-item col-sm-12" data-type="layout-hr">')
                     .append('<div class="handle"></div>')
                     .append('<div class="icon"><i class="ph ph-minus"></i></div>')
                     .append('<div class="flex-fill"><div class="title">Trennlinie</div></div>')
                 // .append('<div class="actions ms-auto"><button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button></div>')
             }
             if (type === 'layout-paragraph') {
-                return $('<li class="canvas-item" data-type="layout-paragraph">')
+                return $('<li class="canvas-item col-sm-12" data-type="layout-paragraph">')
                     .append('<div class="handle"></div>')
                     .append('<div class="icon"><i class="ph ph-paragraph"></i></div>')
                     .append('<div class="flex-fill"><div class="title">Absatz</div><div class="subtitle">Platzhaltertext</div></div>')
                 // .append('<div class="actions ms-auto"><button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button></div>')
             }
-            return $('<li class="canvas-item" data-type="unknown"><div class="handle"></div><div>Unbekannt</div></li>');
+            return $('<li class="canvas-item col-sm-12" data-type="unknown"><div class="handle"></div><div>Unbekannt</div></li>');
         }
 
         function readSchemaFromDOM() {
