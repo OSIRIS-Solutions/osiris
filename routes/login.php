@@ -142,6 +142,19 @@ Route::post('/user/login', function () {
 
     if (isset($_POST['username']) && isset($_POST['password'])) {
 
+        // check if user is on the blacklist
+        if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
+            $blacklist = $Settings->get('ldap-sync-blacklist');
+            if (!empty($blacklist)) {
+                $blacklist = explode(',', $blacklist);
+                $blacklist = array_filter(array_map('trim', $blacklist));
+                if (in_array($_POST['username'], $blacklist)) {
+                    $_SESSION['msg'] = lang("You are not allowed to login, please contact the system administrator!", 'Du bist nicht berechtigt, dich einzuloggen, bitte kontaktiere den Systemadministrator!');
+                    header("Location: " . ROOTPATH . "/user/login");
+                    die();
+                }
+            }
+        }
         // check if user is allowed to login
         $auth = login($_POST['username'], $_POST['password']);
         if (isset($auth["success"]) && $auth["success"] == false) {

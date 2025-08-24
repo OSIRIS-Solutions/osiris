@@ -19,7 +19,7 @@ Route::get('/admin', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang("Admin Panel")]
+        ['name' => lang("Manage Content", "Inhalte verwalten")],
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/content.php";
@@ -36,7 +36,7 @@ Route::get('/admin/users', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen")]
     ];
     $page = 'users';
@@ -69,7 +69,7 @@ Route::get('/admin/(general|roles|features)', function ($page) {
 Route::get('/admin/templates', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Activity Types", "Aktivitäts-Typen"), 'path' => "/admin/categories"],
+        ['name' => lang("Activities", "Aktivitäts-Typen"), 'path' => "/admin/categories"],
     ];
 
     $type = null;
@@ -95,7 +95,7 @@ Route::get('/admin/module-helper', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Modules.php";
     $breadcrumb = [
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")],
         ['name' => lang("Data fields", "Datenfelder")]
     ];
@@ -105,14 +105,46 @@ Route::get('/admin/module-helper', function () {
 }, 'login');
 
 
+Route::get('/admin/types/(.*)/fields', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $type = $osiris->adminTypes->findOne(['id' => $id]);
+    if (empty($type)) {
+        header("Location: " . ROOTPATH . "/admin/categories?msg=not-found");
+        die;
+    }
+    $name = lang($type['name'], $type['name_de']);
+
+    $t = $type['parent'];
+    $parent = $osiris->adminCategories->findOne(['id' => $t]);
+    $color = $parent['color'] ?? '#000000';
+    $st = $type['id'];
+    $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
+
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
+        ['name' => $name, 'path' => "/admin/types/" . $id],
+        ['name' => lang("Data fields", "Datenfelder")]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($type);
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/form-builder.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien")]
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten")]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/categories.php";
@@ -125,8 +157,8 @@ Route::get('/admin/categories/new', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -152,8 +184,8 @@ Route::get('/admin/categories/(.*)', function ($id) {
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
 
@@ -174,8 +206,8 @@ Route::get('/admin/types/new', function () {
     $user = $_SESSION['username'];
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
         ['name' => lang("New Type", "Neuer Typ")]
     ];
     $t = $_GET['parent'] ?? '';
@@ -228,8 +260,8 @@ Route::get('/admin/types/(.*)', function ($id) {
     $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
-        ['name' => lang("Activity Types", "Aktivitäts-Kategorien"), 'path' => "/admin/categories"],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
@@ -269,7 +301,7 @@ Route::get('/admin/vocabulary', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Vocabulary", "Vokabular")]
     ];
     include BASEPATH . "/header.php";
@@ -280,8 +312,8 @@ Route::get('/admin/vocabulary', function () {
 
 Route::get('/settings/modules', function () {
     include_once BASEPATH . "/php/init.php";
-
     include_once BASEPATH . "/php/Modules.php";
+
     $form = array();
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         $mongoid = $DB->to_ObjectID($_GET['id']);
@@ -289,10 +321,11 @@ Route::get('/settings/modules', function () {
     }
     $Modules = new Modules($form, $_GET['copy'] ?? false, $_GET['conference'] ?? false);
 
-    if (isset($_GET['modules'])) {
+    if (isset($_GET['type']) && !empty($_GET['type'])) {
+        // new in 1.5.1
+        $Modules->print_form($_GET['type']);
+    } else if (isset($_GET['modules'])) {
         $Modules->print_modules($_GET['modules']);
-    } else {
-        $Modules->print_all_modules();
     }
 });
 
@@ -303,7 +336,7 @@ Route::get('/admin/persons', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Persons", "Personen")]
     ];
     include BASEPATH . "/header.php";
@@ -316,7 +349,7 @@ Route::get('/admin/infrastructures', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Infrastructures", "Infrastrukturen")]
     ];
     include BASEPATH . "/header.php";
@@ -331,7 +364,7 @@ Route::get('/admin/projects', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Projects", "Projekte")]
     ];
     include BASEPATH . "/header.php";
@@ -358,7 +391,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     $type = $project['id'];
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
         ['name' => $type . ' - ' . $stage . '/2']
     ];
@@ -378,7 +411,7 @@ Route::get('/admin/projects/new', function () {
     $type = null;
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
         ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
     ];
@@ -596,7 +629,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     if (!isset($_POST['values'])) die("no values given");
 
     $values = validateValues($_POST['values'], $DB);
-    
+
     // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
@@ -638,7 +671,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
 
     if (!isset($_POST['values'])) die("no values given");
     $values = validateValues($_POST['values'], $DB);
-    
+
     // if (isset($values['upload'])) $values
 
     if ($col == 'categories') {
@@ -768,7 +801,47 @@ Route::post('/crud/(categories|types)/update-order', function ($col) {
     }
 });
 
+Route::post('/crud/admin/activity-fields', function () {
+    include_once BASEPATH . "/php/init.php";
 
+    $type = $_POST['activityType'] ?? null;
+    if (empty($type)) {
+        die("No activity type given.");
+    }
+    $schema = $_POST['schema'] ?? null;
+    if (empty($schema)) {
+        die("No schema given.");
+    }
+
+    $schema = json_decode($schema, true);
+    $fields = $schema['items'];
+    if (empty($fields)) {
+        die("No fields given.");
+    }
+    $modules = [];
+    foreach ($fields as $field) {
+        if ($field['type'] != 'field' && $field['type'] != 'custom') {
+            // skip non-field types
+            continue;
+        }
+        $f = $field['id'];
+        if (isset($field['overrides']) && isset($field['overrides']['required']) && $field['overrides']['required']) {
+            $f .= '*';
+        }
+        $modules[] = $f;
+    }
+
+    $osiris->adminTypes->updateOne(
+        ['id' => $type],
+        ['$set' => [
+            'modules' => $modules,
+            'fields' => $fields
+        ]]
+    );
+    // redirect back
+    header("Location: " . ROOTPATH . "/admin/types/$type/fields?msg=activity-fields-updated");
+    die();
+});
 
 // <!-- Test Email Settings by sending a test mail -->
 // // /crud/admin/mail-test
@@ -977,7 +1050,6 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     }
     dump($values, true);
     die;
-
 });
 
 

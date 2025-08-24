@@ -1,6 +1,8 @@
 <!-- Editor scripts -->
 <!-- jQuery UI for Drag & Drop -->
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
+<!-- Multiselect plugin for jQuery for improved usability -->
+<script src="<?= ROOTPATH ?>/js/jquery.multi-select.min.js"></script>
 <!-- Moment.js for date manipulation -->
 <script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
 <!-- Quill for rich text editing -->

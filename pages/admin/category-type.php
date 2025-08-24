@@ -1,5 +1,8 @@
 <?php
 
+include_once BASEPATH . '/php/Modules.php';
+$Modules = new Modules();
+
 $color = $color ?? '#000000';
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id'])) {
@@ -57,10 +60,20 @@ if (!empty($form) && isset($form['_id'])) {
             $type['id'] = $parent['id'];
         }
     }
-    
 }
 
 ?>
+
+<style>
+    #data-fields .badge {
+        border: 1px solid var(--text-color);
+        margin: .25rem;
+    }
+    #data-fields .badge i {
+        color: var(--primary-color);
+        margin: 0;
+    }
+</style>
 
 <div class="modal" id="unique" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -205,76 +218,87 @@ if (!empty($form) && isset($form['_id'])) {
         <hr>
 
         <div class="content">
-            <label for="module" class="font-weight-bold"><?=lang('Data fields', 'Datenfelder')?>:</label>
-            
-            <a href="<?=ROOTPATH?>/admin/module-helper?type=<?=$st?>" target="_blank" rel="noopener noreferrer" class="ml-10">
-                <?=lang('Field overview', 'Datenfelder-Übersicht')?> <i class="ph ph-arrow-square-out ml-5"></i>
+            <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
+
+            <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
+                    <i class="ph ph-edit"></i>
+                    <?= lang('Edit', 'Bearbeiten') ?>
+                </a>
+
+            <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
+                <?= lang('Field overview', 'Datenfelder-Übersicht') ?> <i class="ph ph-arrow-square-out ml-5"></i>
             </a>
-            <div class="author-widget">
-                <div class="author-list p-10">
-                    <?php
-                    $module_lst = [];
+
+            <div id="data-fields">
+                <?php
+                if (isset($type['fields'])) {
+                    foreach ($type['fields'] as $field) {
+                        $field_type = $field['type'] ?? 'field';
+                        $props = $field['props'] ?? array();
+                        $icon = '';
+                        $name = '';
+                        $tooltip = '';
+                        switch ($field_type) {
+                            case 'field':
+                                $f = $Modules->all_modules[$field['id']] ?? array();
+                                $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
+                                $icon = 'ph-database';
+                                break;
+                            case 'custom':
+                                $f = $osiris->adminFields->findOne(['id' => $field['id']]);
+                                $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
+                                $icon = 'ph-textbox';
+                                break;
+                            case 'paragraph':
+                                $tooltip = lang($props['text'] ?? 'Paragraph', $props['text_de'] ?? 'Absatz') ;
+                                $icon = 'ph-paragraph';
+                                break;
+                            case 'hr':
+                                $tooltip = lang('Divider', 'Trennlinie');
+                                $icon = 'ph-minus';
+                                break;
+                            case 'heading':
+                                $tooltip = lang($props['text'] ?? 'Heading', $props['text_de'] ?? 'Überschrift') ;
+                                $icon = 'ph-text-h';
+                                break;
+                            default:
+                                $name = '';
+                                $icon = 'ph-placeholder';
+                        }
+                        if ($tooltip) {
+                            $tooltip = get_preview($tooltip, 30);
+                            $tooltip = "data-toggle='tooltip' data-title='$tooltip'";
+                        }
+                        echo "<span class='badge' $tooltip><i class='ph $icon'></i> $name</span>";
+                    }
+                } else {
                     foreach ($type['modules'] ?? array() as $module) {
-                        $req = '';
                         $name = trim($module);
                         if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
                             $name = str_replace('*', '', $name);
-                            $module = $name . "*";
-                            $req = 'required';
                         }
-                        $module_lst[] = $name;
-                    ?>
-                        <div class='author <?= $req ?>' ondblclick="toggleRequired(this)">
-                            <?= $name ?>
-                            <input type='hidden' name='values[modules][]' value='<?= $module ?>'>
-                            <a onclick='$(this).parent().remove()'>&times;</a>
-                        </div>
-                    <?php } ?>
+                        $f = $Modules->all_modules[$name] ?? array();
+                        if (!empty($f)) {
+                            echo "<span class='badge'><i class='ph ph-database'></i> " . lang($f['name'], $f['name_de'] ?? null) . "</span>";
+                        } else {
+                            echo "<span class='badge'><i class='ph ph-textbox'></i> " . lang($name) . "</span>";
+                        }
+                    }
+                }
 
-                </div>
-                <div class=" footer">
-                    <div class="input-group small d-inline-flex w-auto">
-                        <select class="module-input form-control">
-                            <option value="" disabled selected><?= lang('Add module ...', 'Füge Module hinzu ...') ?></option>
-                            <?php
-                            // read custom modules first
-                            $custom_modules = $osiris->adminFields->distinct('id');
-                            if (!empty($custom_modules)) {
-                                foreach ($custom_modules as $m) {
-                                    if (in_array($m, $module_lst)) continue;
-                            ?>
-                                    <option><?= $m ?></option>
-                                <?php } ?>
-                                <option disabled>---</option>
-                            <?php
-                            }
-                            include_once BASEPATH . "/php/Modules.php";
-                            $Modules = new Modules();
-                            $all_modules = array_keys($Modules->all_modules);
-                            sort($all_modules);
-                            foreach ($all_modules as $m) {
-                                if (in_array($m, $module_lst)) continue;
-                            ?>
-                                <option><?= $m ?></option>
-                            <?php } ?>
-                        </select>
-                        <div class="input-group-append">
-                            <button class="btn secondary h-full" type="button" onclick="addModule('<?= $t ?>', '<?= $st ?>');">
-                                <i class="ph ph-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                ?>
+
             </div>
+
         </div>
 
         <hr>
 
         <div class="content">
-            <label for="format" class="font-weight-bold">Templates:</label> 
+            <label for="format" class="font-weight-bold">Templates:</label>
 
-            <a href="<?=ROOTPATH?>/admin/templates?type=<?=$st?>" target="_blank" rel="noopener noreferrer" class="ml-10">
-                <?=lang('Template builder', 'Template-Baukasten')?> <i class="ph ph-arrow-square-out ml-5"></i>
+            <a href="<?= ROOTPATH ?>/admin/templates?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10">
+                <?= lang('Template builder', 'Template-Baukasten') ?> <i class="ph ph-arrow-square-out ml-5"></i>
             </a>
 
             <div class="input-group mb-10">

@@ -439,7 +439,6 @@
         "de": "Nagoya Protocol Compliance",
         "kdsf": null,
         "scope": {
-            "project": false,
             "proposed": false,
             "approved": false
         },

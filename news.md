@@ -1,5 +1,52 @@
 # Neuigkeiten
 
+<span class="badge float-right">24.08.2025</span>
+<a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>
+
+## Version 1.5.1
+
+#### <i class="ph ph-toolbox"></i> Neuer Formular-Baukasten
+
+Mit dem neuen Formbuilder kannst du Formulare für Aktivitäten noch flexibler gestalten:
+
+- Freie Gestaltung mit Überschriften, Textabsätzen und Trennlinien
+- Eigene Bezeichnungen für Felder, Hilfetexte und individuelle Feldbreiten
+- Vorschau von einzelnen Feldern und des gesamten Formulars direkt beim Bearbeiten
+- Möglichkeit, ein bestehendes Formular zu kopieren und als Vorlage zu verwenden
+- Im Bereich der Aktivitäts-Typen werden Datenfelder jetzt als Badges mit Icons dargestellt und es gibt Direkt-Links zum neuen Formbuilder
+
+👉 Damit wird die Konfiguration von Aktivitätsformularen so einfach wie nie!
+
+*Vielen Dank an Jochen Knaus, der dieses Feature auf Herz und Nieren getestet hat und uns wertvolles Feedback gegeben hat! 🙏*
+
+#### <i class="ph ph-selection-background"></i> Verbesserte Auswahlfelder (Multi-Select)
+
+- Auswahlfelder mit mehreren Optionen funktionieren jetzt viel intuitiver: statt gedrückter Strg-Taste gibt es einfache Checkboxen.
+- Das Feld verbraucht jetzt auch deutlich weniger Platz
+- Es wurde ein Bug behoben, durch den die Spracheinstellungen des Interfaces zu unterschiedlichen Werten in der Datenbank führten. Es wird jetzt korrekt immer der englische Wert gespeichert. Außerdem werden Multiselect-Felder im deutschen Interface jetzt korrekt übersetzt und angezeigt.
+
+#### <i class="ph ph-graduation-cap"></i> Bessere Unterstützung für Abschlussarbeiten
+
+- Es gibt jetzt ein neues Modul `supervisor-thesis`, das als Autorenfeld dient (speichert in Autoren). Es ist komplementär zum `supervisor`-Feld, das Semesterwochenstunden benötigt. Das neue Feld speichert stattdessen die Rolle des Betreuenden.
+- Auch im Autoren-/Editor-Interface werden Betreuende korrekt angezeigt.
+
+
+#### <i class="ph ph-highlighter"></i> Herausgeber-Probleme behoben
+
+- Der Autoren-Editor (Aktivität > Autoren bearbeiten) funktionierte bislang nicht bei Herausgebern. Stattdessen wurden die Autoren überschrieben! Das wurde jetzt behoben.
+- Herausgeber konnten zuvor ihre Aktivitäten nicht bestätigen. Das Problem ist jetzt behoben, sodass sie ihre Aktivitäten in den Benachrichtigungen korrekt gezeigt bekommen und bestätigen können.
+- Sie werden nun korrekt bei Aktivitäten und Einheiten mitgerechnet.
+- Semesterwochenstunden (SWS) und Betreuer-Rollen lassen sich nun auch im Autoreneditor-Interface anpassen.
+
+#### <i class="ph ph-paint-brush"></i> UI/UX-Optimierungen
+
+- Verbesserte Darstellung von gruppierten Listen mit neuem CSS
+- Neue Tooltip-Hilfen in Aktivitäts-Formularen
+
+
+---
+
+
 <span class="badge float-right">31.07.2025</span>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
@@ -15,7 +62,6 @@ Der Bereich **Funktionen** wurde in die allgemeinen Einstellungen verschoben. Hi
 
 Es wurde eine Möglichkeit hinzugefügt, den **Footer** der Seite anzupassen. Die Inhalte von Impressum und Datenschutzerklärung können (und sollten!) bearbeitet werden und Links zu externen Ressourcen (z.B. Betriebsvereinbarungen) können hinzugefügt werden.
 
-
 #### <i class="ph ph-chat-circle-dots"></i> Benachrichtigungen und Nachrichten
 
 - Die Navigation wurde überarbeitet: Die Benachrichtigungen sind jetzt im Header und nicht mehr auf der Startseite.
@@ -24,17 +70,15 @@ Es wurde eine Möglichkeit hinzugefügt, den **Footer** der Seite anzupassen. Di
 - Die Darstellung der Nachrichten wurde verbessert und das Styling modernisiert.
 - OSIRIS verschickt jetzt optional **E-Mail-Benachrichtigungen**, z.B. bei Erstellung oder Bearbeitung von Projekten. Im Admin-Interface kann dies konfiguriert werden.
 
-
 #### <i class="ph ph-users-three"></i> Personen-Einstellungen
 
 - Die Personeneinstellungen sind jetzt unter "Inhalte" zu finden.
 - Datenfelder für Personen können angepasst und Custom Fields hinzugefügt werden.
-- Positionen werden nun ebenfalls in diesem neuen Bereich verwaltet (zuvor in Generelle Einstellungen), genau wie die Einstellungen zu Coins und Achievements (zuvor in Funktionen) 
+- Positionen werden nun ebenfalls in diesem neuen Bereich verwaltet (zuvor in Generelle Einstellungen), genau wie die Einstellungen zu Coins und Achievements (zuvor in Funktionen)
 - Es wurde ein neues Datenfeld "Schlagworte" hinzugefügt, das ähnlich wie Expertise verwendet werden kann, allerdings mit einem definierten Vokabular arbeitet. Wie genau dieses Datenfeld heißen soll, kann ebenfalls im Admin-Bereich definiert werden.
 - Es kann festgelegt werden, ob sich Nutzer:innen selbst registrieren dürfen oder ob dies nur Admins möglich ist.
 - Die Auswahl von Organisationseinheiten bei der Zuordnung von Personen wurde verbessert.
 - Beim Anlegen einer Person wird jetzt nicht mehr nach dem Passwort gefragt, wenn als User-Management nicht das `AUTH`-Addon ausgewählt ist, z.B. wenn LDAP oder OAUTH2 verwendet wird.
-
 
 #### <i class="ph ph-cube-transparent"></i> Forschungsinfrastrukturen
 
@@ -46,7 +90,6 @@ Es wurde eine Möglichkeit hinzugefügt, den **Footer** der Seite anzupassen. Di
 - Forschungsbereiche können jetzt auch bei Infrastrukturen hinzugefügt und zum Filtern verwendet werden.
 - Die Jahresstatistiken für Infrastrukturen sind jetzt konfigurierbar und können über das Vokabular angepasst werden.
 - Die Statistiken für Infrastrukturen wurden ebenfalls verbessert, lassen sich jetzt nach dem Jahr filtern und nehmen als Startdatum den 31.12. des Vorjahres an. Außerdem werden selbst definierte Statistikfelder unterstützt, die über das Vokabular definiert werden können.
-
 
 #### <i class="ph ph-tree-structure"></i> Projekte und Projektanträge
 
@@ -81,20 +124,21 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - KDSF-FKK: Hier kann die KDSF-Forschungsfeldklassifikation ausgewählt werden, die mit der Aktivität verknüpft ist. -->
 
 #### <i class="ph ph-book-bookmark"></i> Darstellung und Sichtbarkeit von Aktivitäten
-- Neue **Templates**: 
-    - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
-    - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
+
+- Neue **Templates**:
+  - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
+  - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
 - Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
 - Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
 - Es ist nun möglich, den Upload von Dokumenten für einzelne Aktivitäts-Kategorien zu deaktivieren. Diese Einstellung findet ihr ebenfalls unter Inhalte > Aktivitäten, wenn ihr eine Kategorie bearbeitet. Standardmäßig ist der Upload für alle Kategorien aktiviert. Wenn er deaktiviert ist, wird der Upload-Button in der Detailansicht der Aktivität nicht mehr angezeigt und es können keine Dokumente hochgeladen werden. Vorhandene Dokumente werden nicht gelöscht, werden aber auch nicht mehr angezeigt.
 - Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
 - Es wurde ein neuer Knopf hinzugefügt, mit dem der formattierte Eintrag der Aktivität in die Zwischenablage kopiert werden kann. Dies ist besonders nützlich, um schnell Informationen zu teilen.
 - Des Weiteren wurden weitere Datenfelder für Aktivitäten hinzugefügt:
-    - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
-    - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
-
+  - Organisation: Hier kann via ROR eine Organisation ausgewählt werden, die an der Aktivität beteiligt ist. Es gibt auch eine Möglichkeit, nur den Ort der Organisation als Template auszulesen.
+  - Organisationen: Das gleiche wie oben, aber hier können mehrere Organisationen ausgewählt werden.
 
 #### <i class="ph ph-calendar"></i> Verbessertes Event-Management
+
 - Es wurde eine Möglichkeit hinzugefügt, Events zu bearbeiten.
 - Das User Interface bei der Anzeige von Events wurde verbessert.
 - Es gibt nun eine Möglichkeit, direkt auf der Event-Seite eine neue Aktivität anzulegen
@@ -103,28 +147,30 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Es gibt jetzt einen Filter für das Jahr, in dem das Event stattfindet.
 - Über den Events gibt es jetzt eine neue Visualisierung, die eine Timeline der Events anzeigt. Diese kann nach Jahr gefiltert werden. Die Timeline ist interaktiv und ermöglicht es, direkt zu den Events zu springen.
 
+#### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche
 
-#### <i class="ph ph-puzzle-piece"></i> Forschungsbereiche 
 - Forschungsbereiche können jetzt auch zu Organisationseinheiten hinzugefügt werden.
 - Das Web-Interface für die Darstellung von Forschungsbereichen wurde verbessert und folgt jetzt dem Tab-basierten Ansatz, der auch an vielen anderen Stellen verwendet wird.
 - Bei den Forschungsbereichen wurden neue Abbildungen hinzugefügt: es gibt jetzt eine Netzwerkansicht mit allen verknüpften Autor:innen, eine Wordmap und eine Konfetti-Timeline.
 - Bei den mit Bereichen verknüpften Entitäten (z.B. Aktivitäten): Wenn keine Forschungsbereiche existieren, wird das Forschungsbereich-Filterwidget nicht mehr angezeigt.
 
 #### <i class="ph ph-map"></i> Forschungsreisen
+
 - Es wurde ein neues Addon hinzugefügt, das es ermöglicht, Forschungsreisen zu analysieren.
 - Um dieses Addon zu aktivieren, müsst ihr folgende Schritte durchführen:
-    1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
-    2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
-        - `date-range`
-        - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
-        - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
-    3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
+  1. Im Admin-Bereich "Inhalte" einen Aktivitätstyp anlegen, der die ID `travel` hat. Dieser Typ wird dann für die Forschungsreisen verwendet. Der Name des Aktivitätstyps kann frei gewählt werden und bestimmt auch, wie die Visualisierung in der Seitennavigation heißt.
+  2. Diesem Typen müssen die folgenden Felder zugeordnet werden:
+     - `date-range`
+     - `countries` oder `country` (je nachdem, ob ihr mehrere Länder oder nur ein Land pro Reise haben wollt)
+     - natürlich `authors` oder `scientist`, je nachdem ob eine Person oder eine Gruppe von Personen die Reisen unternimmt
+  3. In den generellen Einstellungen unter "Features" das Addon "Forschungsreisen" aktivieren.
 
 #### <i class="ph ph-code"></i> Weitere Verbesserungen und Bugfixes
+
 - Es wurde eine neue Seite zu den Einstellungen hinzugefügt, die es ermöglicht, den Footer der Seite anzupassen. Hier können Impressum, Datenschutzerklärung und Links zu externen Ressourcen hinzugefügt werden.
 - Sperren von Aktivitäten wurde verbessert:
-    - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
-    - Du kannst jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
+  - das Sperren von Aktivitäten ist jetzt einfacher zu finden (alle Aktivitäten > Sperren)
+  - Du kannst jetzt eine einzelne Aktivität sperren und entsperren (auf der Aktivitätsseite; nur Benutzer mit dem Recht, Aktivitäten zu sperren)
 - Die Vorschau für Portfolios wurde überarbeitet und spiegelt jetzt mehr wieder, wie die Portfolio-Seite tatsächlich aussehen würde. Außerdem greift die Vorschau jetzt auf die tatsächlich von der Portfolio-API ausgelieferten Daten zurück, weshalb sie nun genauer ist und nicht mehr Dinge zeigt, die nicht dargestellt werden sollen.
 - Wenn man eine Aktivität über eine DOI abgerufen hat und den Typ ändert, werden die Daten aus der DOI jetzt korrekt übernommen.
 - die Controlling-Seite wurde entfernt, da sie teilweise veraltete Informationen enthielt
@@ -170,7 +216,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Die automatische Synchronisation der Metriken kann nun deaktiviert werden. Ihr findet eine Einstellung im Admin-Bereich unter "Features".
 - Es wurde eine neue Seite hinzugefügt, auf der die Metriken eines Jahres für alle Journale aktualisiert werden können. Ihr findet sie mit den Bearbeitsrechten der Journale in der Übersicht der Journale.
 - Die Metriken für das Jahr 2024 sind nun über unsere OSIRIS-API verfügbar und können automatisch aktualisiert werden.
-- Die Quartile können nun auch manuell hinzugefügt werden, für den Fall, dass ihr sie nicht über die API aktualisieren wollt. 
+- Die Quartile können nun auch manuell hinzugefügt werden, für den Fall, dass ihr sie nicht über die API aktualisieren wollt.
 - Es wurde ein Graph hinzugefügt, der die Quartile der letzten Jahre anzeigt. Dieser ist in der Detailansicht des Journals zu finden.
 - Die Kategorien der Journale können nun ebenfalls manuell bearbeitet werden. Dies kann in der Detailansicht des Journals gefunden werden.
 
@@ -181,29 +227,32 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 ## Version 1.4.2
 
-####  <i class="ph ph-chart-line-up"></i> Statistiken
+#### <i class="ph ph-chart-line-up"></i> Statistiken
 
 Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infrastrukturen funktionieren. Statistiken wurden für Aktivitäten und Publikationen, Projekte, und Lehrveranstaltungen hinzugefügt
+
 - Die Statistiken sind in den jeweiligen Übersichtseiten zu finden
 - Eine ganze Reihe vorgefertigter Statistiken sind bereits vorhanden, inklusive einiger cooler Abbildungen
 
-
 #### <i class="ph ph-lock-key-open"></i> Module: Open Access und politische Beratung
+
 - Dem Open Access-Modul wurde "Diamond" als weitere Option hinzugefügt
   - Diamond wird auch über de DOI ausgeliefert und somit automatisch ausgefüllt
 - Außerdem wurde ein neues Feld für politische und soziale Beratungsbeiträge hinzugefügt
   - Dieses Feld ist für die Paktabfrage der GWK relevant
 
 #### <i class="ph ph-globe"></i> Länder
+
 - Länder können jetzt semi-automatisch aktualisiert werden
 - Dafür wird eine aktuelle Liste der Länder [heruntergeladen](https://stefangabos.github.io/world_countries/) und in OSIRIS importiert
 - Um die Liste zu aktualisieren und einen Überblick über die aktuell vorhandenen Länder zu bekommen, gibt es eine neue Seite im Admin-Bereich "Generelle Einstellungen"
 
 #### <i class="ph ph-code"></i> Bug Fixes und Verbesserungen
+
 - Es wurde ein seltsames Verhalten mit dem Login beim Auth-Addon behoben
 - In der Autorenliste wird jetzt kein Link mehr gezeigt, wenn kein Nutzer verknüpft ist
 
-----
+---
 
 <span class="badge float-right">03.04.2025</span>
 <a class="anchor" href="#version-1.4.1" id="version-1.4.1"></a>
@@ -251,6 +300,7 @@ Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infr
 - Die Rolle "Admin" wird im Rollen und Rechte-Bereich jetzt immer als letzte Spalte angezeigt
 
 #### <i class="ph ph-bug"></i> Bug Fixes
+
 - Es wurde ein Fehler behoben, durch den man eine Person nicht mehr inaktiv setzen konnte
 - Die Darstellung von Forschungsbereichen wurde im Profil und in der Aktivitätsübersicht verbessert
 - Es wurde ein Bug in der Portfolio-API behoben, durch den die Daten nicht korrekt ausgeliefert wurden
@@ -262,7 +312,6 @@ Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infr
 - Die Liste von Aktivitäten im Download-Bereich passt sich jetzt euren Einstellungen an
 - Beim Klick auf den dunklen Hintergrund hinter einem Popup scrollt die Seite nicht mehr nach oben
 - In der Hierarchie-Ansicht der Organisationseinheiten wird jetzt im englischen Interface auch der englische Name der Einheit angezeigt
-
 
 ### Für Administrator:innen und Systembetreiber:innen
 
@@ -281,21 +330,18 @@ Diese können nur in der PHP-Konfiguration gesetzt werden und sind nicht im Admi
 - Es wurde ein Skript hinzugefügt, das die Synchronisation von Nutzern mit LDAP ermöglicht. Es kann manuell ausgeführt oder als CRON-Job gestartet werden. Im Adminbereich kann der Zeitstempel der letzten Synchronisation eingesehen werden.
 - Außerdem wurde ein Problem (vorläufig) behoben, durch das beim Ändern des Usernamens in LDAP ein neuer Nutzeraccount angelegt wurde. Die einzigartige Nutzer-ID wird jetzt ebenfalls gespeichert und verwendet, um den Nutzer zu identifizieren. Im Moment wird in OSIRIS so getan, als ob der Nutzername noch immer der alte Nutzername ist. Das wird in einer späteren Version behoben, indem der Nutzername in OSIRIS ebenfalls geändert wird. Zurzeit ist dies schwierig, da der Nutzername in vielen Stellen verwendet wird.
 
-
 #### <i class="ph ph-code"></i> Admin-Einstellungen für den Betrieb und LDAP
 
 - <code class="code">LIVE</code>: true/false (default: false) - Wenn LIVE auf false gesetzt wird, wird unterhalb des OSIRIS-Logos ein Hinweis angezeigt, dass es sich um ein Testsystem handelt. Dies ist wichtig, damit Nutzer:innen nicht versehentlich ihre Daten in einem Testsystem eingeben.
 - <code class="code">MAINTENANCE</code>: true/false (default: false) - Wenn MAINTENANCE auf true gesetzt wird, wird anstelle der Brotkrumen im Header ein Hinweis angezeigt, dass sich das System in Wartung befindet und keine Daten eingegeben werden sollen.
 - <code class="code">OPEN_LDAP</code>: true/false (default: false) - Falls ihr statt Microsoft AD einen OpenLDAP-Server verwendet, könnt ihr hier das System auf OpenLDAP umstellen. Dies ist wichtig, da viele Felder anders benannt sind und die Authentifizierung wie bei über Microsoft AD funktioniert.
-- <code class="code">LDAP_USE_SSL</code>: true/false (default: false) - Wenn ihr LDAP_USE_SSL auf true setzt, wird die Verbindung zu LDAP über SSL hergestellt. 
+- <code class="code">LDAP_USE_SSL</code>: true/false (default: false) - Wenn ihr LDAP_USE_SSL auf true setzt, wird die Verbindung zu LDAP über SSL hergestellt.
 - <code class="code">LDAP_USE_TLS</code>: true/false (default: false) - Wenn ihr LDAP_USE_TLS auf true setzt, wird die Verbindung zu LDAP über TLS hergestellt.
-
 
 #### <i class="ph ph-shipping-container"></i> Docker Support
 
 - Danke an unseren Contributor, Paul Gaida, der OSIRIS in Docker verpackt hat
 - Eine komplette Anleitung zum Einrichten von OSIRIS in Docker findet ihr [hier](https://github.com/OSIRIS-Solutions/osiris/blob/master/docker.md)
-
 
 ---
 

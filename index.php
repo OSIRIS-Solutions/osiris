@@ -28,8 +28,8 @@ define('CSS_JS_VERSION', '12');
 session_start();
 
 define('BASEPATH', $_SERVER['DOCUMENT_ROOT'] . ROOTPATH);
-define('OSIRIS_VERSION', '1.5.0');
-define('OSIRIS_BUILD', '250813');
+
+include_once BASEPATH . "/version.php";
 
 // set time constants
 $year = date("Y");

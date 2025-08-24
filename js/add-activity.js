@@ -92,6 +92,7 @@ function togglePubType(type, callback = () => { }) {
                     modules: SELECTED_MODULES,
                     copy: COPY ?? false,
                     conference: CONFERENCE ?? false,
+                    type: SELECTED_TYPE.id,
                 },
                 dataType: "html",
                 success: function (response) {
@@ -281,12 +282,18 @@ function verifyForm(event, form) {
             selector = $('.title-editor')
         }
         if ((input.prop('required') && !input.prop('disabled'))) {
-
-            // console.log(input);
-            if (!$(this).val()) {
+            console.log($(this).val());
+            if (!$(this).val() || $(this).val().length === 0) {
                 selector.removeClass('is-valid').addClass('is-invalid')
 
-                var name = input.attr('name').replace('values[', '').replace(']', '')
+                var name = input.attr('name').replace(/^values\[(.+?)\](?:\[\])?$/, '$1');
+                // try to get name of the label if available
+                if (input.attr('id')){
+                    let label = $('label[for="' + input.attr('id') + '"]');
+                    if (label.length > 0) {
+                        name = label.text().trim();
+                    } 
+                }
                 if (name == 'journal_id') return;
                 correct = false;
                 errors.push(name)
@@ -295,6 +302,7 @@ function verifyForm(event, form) {
             }
         }
     });
+
 
     // check if authors are defined
     if ($('#author-widget').length > 0) {

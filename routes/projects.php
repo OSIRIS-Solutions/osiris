@@ -193,15 +193,15 @@ Route::get('/nagoya', function () {
         ['name' => 'Nagoya Protocol']
     ];
 
-    $nagoya_proposals = $osiris->proposals->find(
+    $nagoya = $osiris->proposals->find(
         ['nagoya' => 'yes']
     )->toArray();
 
-    $nagoya_projects = $osiris->proposals->find(
-        ['nagoya' => 'yes']
-    )->toArray();
+    // $nagoya_projects = $osiris->proposals->find(
+    //     ['nagoya' => 'yes']
+    // )->toArray();
 
-    $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
+    // $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/nagoya.php";
