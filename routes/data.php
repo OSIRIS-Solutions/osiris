@@ -66,6 +66,61 @@ Route::get('/get-form', function () {
 });
 
 
+Route::get('/get-form-preview', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Modules.php";
+
+    if (!isset($_GET['schema']) || empty($_GET['schema'])) {
+        http_response_code(400);
+        echo 'Schema parameter is required';
+        return;
+    }
+
+    $schema = $_GET['schema'];
+    if (is_string($schema)) {
+        $schema = json_decode($schema, true);
+    }
+    $form = array();
+    $Modules = new Modules($form);
+
+    $fields = $schema['items'];
+    if (empty($fields)) {
+        die("No fields given.");
+    }
+    
+    foreach ($fields as $f) {
+        $props = $f['props'] ?? [];
+        switch ($f['type'] ?? 'field') {
+            case 'field':
+                $Modules->print_module($f['id'], $props['required'] ?? false, $props);
+                break;
+            case 'custom';
+                $Modules->custom_field($f['id'], $props['required'] ?? false, $props);
+                break;
+            case 'heading':
+                echo '<div class="data-module col-sm-12 pb-0" data-module="heading">';
+                echo '<h5 class="m-0">' . lang($props['text'] ?? null, $props['text_de'] ?? null) . '</h5>';
+                echo '</div>';
+                break;
+            case 'paragraph':
+                echo '<div class="data-module col-sm-12 py-0" data-module="paragraph">';
+                echo '<p class="m-0">' . lang($props['text'] ?? null, $props['text_de'] ?? null) . '</p>';
+                echo '</div>';
+                break;
+            case 'hr':
+                echo '<div class="data-module col-sm-12 py-0" data-module="hr">';
+                echo '<hr class="my-5" />';
+                echo '</div>';
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
+    // $Modules->print_form($type);
+});
+
+
 Route::get('/get-module/(.*)', function ($key) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Modules.php";

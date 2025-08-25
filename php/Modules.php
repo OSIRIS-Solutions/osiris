@@ -1076,7 +1076,7 @@ class Modules
         }
         $value = ($this->val($module, $field['default'] ?? ''));
 
-        if ($field['format'] == 'list' && $field['multiple'] ?? false) {
+        if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
 ?>
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
                 <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>

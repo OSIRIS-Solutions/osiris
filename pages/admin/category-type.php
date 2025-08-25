@@ -69,6 +69,7 @@ if (!empty($form) && isset($form['_id'])) {
         border: 1px solid var(--text-color);
         margin: .25rem;
     }
+
     #data-fields .badge i {
         color: var(--primary-color);
         margin: 0;
@@ -220,10 +221,16 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="content">
             <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
 
-            <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
+            <?php if ($new) { ?>
+                <div class="text-signal">
+                    <?= lang('Data fields can only be edited after saving the type.', 'Datenfelder können erst nach dem erstmaligen Speichern des Typs bearbeitet werden.') ?>
+                </div>
+            <?php } else { ?>
+                <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
                     <?= lang('Edit', 'Bearbeiten') ?>
                 </a>
+            <?php } ?>
 
             <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
                 <?= lang('Field overview', 'Datenfelder-Übersicht') ?> <i class="ph ph-arrow-square-out ml-5"></i>
@@ -250,7 +257,7 @@ if (!empty($form) && isset($form['_id'])) {
                                 $icon = 'ph-textbox';
                                 break;
                             case 'paragraph':
-                                $tooltip = lang($props['text'] ?? 'Paragraph', $props['text_de'] ?? 'Absatz') ;
+                                $tooltip = lang($props['text'] ?? 'Paragraph', $props['text_de'] ?? 'Absatz');
                                 $icon = 'ph-paragraph';
                                 break;
                             case 'hr':
@@ -258,7 +265,7 @@ if (!empty($form) && isset($form['_id'])) {
                                 $icon = 'ph-minus';
                                 break;
                             case 'heading':
-                                $tooltip = lang($props['text'] ?? 'Heading', $props['text_de'] ?? 'Überschrift') ;
+                                $tooltip = lang($props['text'] ?? 'Heading', $props['text_de'] ?? 'Überschrift');
                                 $icon = 'ph-text-h';
                                 break;
                             default:

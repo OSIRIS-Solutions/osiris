@@ -640,27 +640,28 @@ $active = function ($field) use ($data_fields) {
             </div>
         <?php } ?>
 
+        <?php if ($Settings->hasPermission('user.roles')) { ?>
 
-        <h5><?= lang('Roles', 'Rollen') ?></h5>
-        <!-- ensure that empty roles are saved too -->
-        <input type="hidden" name="values[roles][]" value="">
-        <?php
-        foreach ($Settings->get('roles') as $role) {
-            // everyone is user: no setting needed
-            if ($role == 'user') continue;
+            <h5><?= lang('Roles', 'Rollen') ?></h5>
+            <!-- ensure that empty roles are saved too -->
+            <input type="hidden" name="values[roles][]" value="">
+            <?php
+            foreach ($Settings->get('roles') as $role) {
+                // everyone is user: no setting needed
+                if ($role == 'user') continue;
 
-            // check if user has role
-            $has_role = in_array($role, DB::doc2Arr($data['roles'] ?? array()));
+                // check if user has role
+                $has_role = in_array($role, DB::doc2Arr($data['roles'] ?? array()));
 
-            $disable = false;
-            if (!$Settings->hasPermission('user.roles')) $disable = true;
-            // only admin can make others admins
-            if ($role == 'admin' && !$Settings->hasPermission('admin.give-right')) $disable = true;
-        ?>
-            <div class="form-group custom-checkbox d-inline-block ml-10 mb-10 <?= $disable ? 'text-muted' : '' ?>">
-                <input type="checkbox" id="role-<?= $role ?>" value="<?= $role ?>" name="values[roles][]" <?= ($has_role) ? 'checked' : '' ?> <?= $disable ? 'onclick="return false;"' : '' ?>>
-                <label for="role-<?= $role ?>"><?= strtoupper($role) ?></label>
-            </div>
+                $disable = false;
+                // only admin can make others admins
+                if ($role == 'admin' && !$Settings->hasPermission('admin.give-right')) $disable = true;
+            ?>
+                <div class="form-group custom-checkbox d-inline-block ml-10 mb-10 <?= $disable ? 'text-muted' : '' ?>">
+                    <input type="checkbox" id="role-<?= $role ?>" value="<?= $role ?>" name="values[roles][]" <?= ($has_role) ? 'checked' : '' ?> <?= $disable ? 'onclick="return false;"' : '' ?>>
+                    <label for="role-<?= $role ?>"><?= strtoupper($role) ?></label>
+                </div>
+            <?php } ?>
         <?php } ?>
 
         <h5>

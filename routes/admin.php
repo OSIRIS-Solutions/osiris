@@ -649,6 +649,13 @@ Route::post('/crud/(categories|types)/create', function ($col) {
         die();
     }
 
+    // add fields
+    $values['modules'] = [
+        "title*",
+        "authors*",
+        "date*"
+    ];
+
     $insertOneResult  = $collection->insertOne($values);
     // $id = $insertOneResult->getInsertedId();
     $id = $values['id'];
