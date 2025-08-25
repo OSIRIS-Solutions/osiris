@@ -15,6 +15,7 @@ class Modules
     private $user = '';
     private $userlist = array();
     private $conference = array();
+    private $fields = array(); 
 
     public $all_modules = array(
         "authors" => [
@@ -867,6 +868,18 @@ class Modules
             }
             $this->authorcount = count($form['authors']);
         }
+
+        if (!empty($form) && !empty($form['type'])) {
+            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['type']]);
+            if (!empty($typeArr) && !empty($typeArr['fields'])) {
+                $fields = DB::doc2Arr($typeArr['fields']);
+                $fields = array_filter($fields, function ($f) {
+                    return ($f['type'] ?? 'field') === 'field' || ($f['type'] ?? 'field') === 'custom';
+                });
+                $this->fields = array_column($fields, 'props', 'id');
+            }
+        }
+
         foreach ($this->preset as $a) {
             $this->authors .= $this->authorForm($a, false);
         }
@@ -934,8 +947,10 @@ class Modules
 
     function get_name($module)
     {
+        if (!empty($this->fields) && !empty($this->fields[$module]) && isset($this->fields[$module]['label'])) {
+            return lang($this->fields[$module]['label'], $this->fields[$module]['label_de'] ?? null);
+        }
         if (!isset($this->all_modules[$module]['name'])) {
-
             $field = $this->DB->db->adminFields->findOne(['id' => $module]);
             if (!empty($field)) return lang($field['name'], $field['name_de'] ?? $field['name']);
             return ucfirst($module);
