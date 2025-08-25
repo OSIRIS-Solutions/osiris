@@ -821,7 +821,7 @@ class Document extends Settings
         $formatParts = explode('-', str_replace(['authors-', 'editors-'], '', $module));
 
         // Default-Werte
-        $nameFormat = 'last-f.'; // z. B. last-f, f.-last, etc.
+        $nameFormat = 'last f.'; // z. B. last-f, f.-last, etc.
         $delimiter = ', ';
         $lastSeparator = ' and ';
         $etalLimit = null;
@@ -833,8 +833,8 @@ class Document extends Settings
         }
 
         $nameparts = ['last f.', 'last f', 'f last', 'f. last', 'last first', 'first last', 'last, f.', 'last, f', 'last, first'];
-        foreach ($nameparts as $part) {
-            if (str_contains($module, $part)) {
+        foreach ($formatParts as $part) {
+            if (in_array($part, $nameparts)) {
                 $nameFormat = $part;
                 break;
             }
