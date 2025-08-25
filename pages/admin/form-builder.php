@@ -140,10 +140,29 @@ $tagLabels = [
         border: 2px dashed #e5e7eb;
         border-radius: .5rem;
         background: #fff;
-        padding: 1rem
     }
 
-    .canvas-item {
+    .row.row-eq-spacing.droparea {
+        padding: 1rem 1rem 4rem;
+        margin: 0;
+        position: relative;
+    }
+
+    .row.row-eq-spacing.droparea::after {
+        content: "<?= lang('Select fields on the left and place them here.', 'Felder links auswählen und hier platzieren.') ?>";
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: var(--muted-color);
+        font-size: 1rem;
+
+    }
+
+
+    .canvas-item,
+    #canvas-list .drag-item {
         border: 1px solid var(--border-color);
         border-radius: .5rem;
         padding: .75rem;
@@ -161,7 +180,8 @@ $tagLabels = [
         border-right: 1px dashed var(--border-color)
     }
 
-    .canvas-item .title {
+    .canvas-item .title,
+    #canvas-list .drag-item span {
         font-weight: 600;
         font-size: 1.4rem;
     }
@@ -181,6 +201,16 @@ $tagLabels = [
         opacity: 0.7;
         font-size: 1.6rem;
         /* height: 2rem; */
+    }
+
+    #canvas-list .drag-item::before {
+        content: "\E3D6";
+        font-family: "Phosphor";
+        font-size: 1.6rem;
+        color: var(--primary-color);
+        /* opacity: 0.3; */
+        margin-right: .5rem;
+        margin-left: .2rem;
     }
 
     .is-selected {
@@ -236,13 +266,13 @@ $tagLabels = [
     }
 
     #catalog-search-header {
-            position: sticky;
-            top: 0rem;
-            z-index: 1000;
-            background: white;
-            margin: 0rem -2rem;
-            padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0rem;
+        z-index: 1000;
+        background: white;
+        margin: 0rem -2rem;
+        padding: 2rem 2rem 1rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
 
@@ -518,6 +548,10 @@ $tagLabels = [
         <!-- PROPERTIES -->
         <div class="col-4 d-none" id="properties-panel">
             <div class="panel card sticky-panel">
+
+                <button type="button" class="close" role="button" aria-label="Close" id="close-properties-btn">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <div class="title">Eigenschaften</div>
                 <div class="card-body">
 
@@ -635,103 +669,103 @@ $tagLabels = [
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="droparea">
-                        <ul id="canvas-list" class="row row-eq-spacing m-0">
-                            <?php if (!empty($fields)): ?>
-                                <?php foreach ($fields as $it):
-                                    $field_type = $it['type'] ?? 'field';
-                                    $props = $it['props'] ?? [];
-                                    if ($field_type === 'field' || $field_type === 'custom'):
-                                        $module = $all[$it['id']] ?? [];
-                                ?>
-                                        <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?>"
-                                            data-type="field"
-                                            data-id="<?= htmlspecialchars($it['id']) ?>"
-                                            data-props='<?= json_encode($props ?? []) ?>'>
-                                            <div class="handle"></div>
-                                            <div class="icon">
-                                                <?php if ($field_type === 'field') { ?>
-                                                    <i class="ph ph-database"></i>
-                                                <?php } else { ?>
-                                                    <i class="ph ph-textbox"></i>
-                                                <?php } ?>
+                    <ul id="canvas-list" class="row row-eq-spacing droparea">
+                        <?php if (!empty($fields)): ?>
+                            <?php foreach ($fields as $it):
+                                $field_type = $it['type'] ?? 'field';
+                                $props = $it['props'] ?? [];
+                                if ($field_type === 'field' || $field_type === 'custom'):
+                                    $module = $all[$it['id']] ?? [];
+                            ?>
+                                    <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?>"
+                                        data-type="field"
+                                        data-id="<?= htmlspecialchars($it['id']) ?>"
+                                        data-props='<?= json_encode($props ?? []) ?>'>
+                                        <div class="handle"></div>
+                                        <div class="icon">
+                                            <?php if ($field_type === 'field') { ?>
+                                                <i class="ph ph-database"></i>
+                                            <?php } else { ?>
+                                                <i class="ph ph-textbox"></i>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <div class="title"><?= htmlspecialchars($all[$it['id']]['name_de'] ?? $all[$it['id']]['name'] ?? $it['id']) ?></div>
+                                            <div class="subtitle">
+                                                <code class="badge"><?= $it['id'] ?></code>
+                                                <?php if (!empty($props['required'])): ?>
+                                                    <span class="badge danger"><i class="ph ph-asterisk m-0"></i></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($props['label'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-tag m-0"></i></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($props['help'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-question m-0"></i></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($props['width'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-ruler m-0"></i></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($props['portfolio'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-globe m-0"></i></span>
+                                                <?php endif; ?>
                                             </div>
-                                            <div class="flex-fill">
-                                                <div class="title"><?= htmlspecialchars($all[$it['id']]['name_de'] ?? $all[$it['id']]['name'] ?? $it['id']) ?></div>
-                                                <div class="subtitle">
-                                                    <code class="badge"><?= $it['id'] ?></code>
-                                                    <?php if (!empty($props['required'])): ?>
-                                                        <span class="badge danger"><i class="ph ph-asterisk m-0"></i></span>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($props['label'])): ?>
-                                                        <span class="badge primary"><i class="ph ph-tag m-0"></i></span>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($props['help'])): ?>
-                                                        <span class="badge primary"><i class="ph ph-question m-0"></i></span>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($props['width'])): ?>
-                                                        <span class="badge primary"><i class="ph ph-ruler m-0"></i></span>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($props['portfolio'])): ?>
-                                                        <span class="badge primary"><i class="ph ph-globe m-0"></i></span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                            <!-- <div class="actions ms-auto">
+                                        </div>
+                                        <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn link small text-danger js-del"><i class="ph ph-trash"></i></button>
                                             </div> -->
-                                        </li>
-                                    <?php elseif ($field_type === 'heading'): ?>
-                                        <li class="canvas-item" data-type="layout-heading" data-props='<?= json_encode($it['props'] ?? []) ?>'>
-                                            <div class="handle"></div>
-                                            <div class="icon">
-                                                <i class="ph ph-text-h"></i>
-                                            </div>
-                                            <div class="flex-fill">
-                                                <div class="title"><?= lang('Header', 'Überschrift') ?></div>
-                                                <div class="subtitle"><?= strtoupper(htmlspecialchars($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
-                                            </div>
-                                            <!-- <div class="actions ms-auto">
+                                    </li>
+                                <?php elseif ($field_type === 'heading'): ?>
+                                    <li class="canvas-item" data-type="layout-heading" data-props='<?= json_encode($it['props'] ?? []) ?>'>
+                                        <div class="handle"></div>
+                                        <div class="icon">
+                                            <i class="ph ph-text-h"></i>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <div class="title"><?= lang('Header', 'Überschrift') ?></div>
+                                            <div class="subtitle"><?= strtoupper(htmlspecialchars($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                        </div>
+                                        <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
                                             </div> -->
-                                        </li>
-                                    <?php elseif ($field_type === 'paragraph'): ?>
-                                        <li class="canvas-item" data-type="layout-paragraph" data-props='<?= json_encode($it['props'] ?? []) ?>'>
-                                            <div class="handle"></div>
-                                            <div class="icon">
-                                                <i class="ph ph-paragraph"></i>
-                                            </div>
-                                            <div class="flex-fill">
-                                                <div class="title">Absatz</div>
-                                                <div class="subtitle"><?= htmlspecialchars(($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
-                                            </div>
-                                            <!-- <div class="actions ms-auto">
+                                    </li>
+                                <?php elseif ($field_type === 'paragraph'): ?>
+                                    <li class="canvas-item" data-type="layout-paragraph" data-props='<?= json_encode($it['props'] ?? []) ?>'>
+                                        <div class="handle"></div>
+                                        <div class="icon">
+                                            <i class="ph ph-paragraph"></i>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <div class="title">Absatz</div>
+                                            <div class="subtitle"><?= htmlspecialchars(($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                        </div>
+                                        <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
                                             </div> -->
-                                        </li>
-                                    <?php elseif ($field_type === 'hr'): ?>
-                                        <li class="canvas-item" data-type="layout-hr">
-                                            <div class="handle"></div>
-                                            <div class="icon">
-                                                <i class="ph ph-minus"></i>
-                                            </div>
-                                            <div class="flex-fill">
-                                                <div class="title">Trennlinie</div>
-                                            </div>
-                                            <!-- <div class="actions ms-auto">
+                                    </li>
+                                <?php elseif ($field_type === 'hr'): ?>
+                                    <li class="canvas-item" data-type="layout-hr">
+                                        <div class="handle"></div>
+                                        <div class="icon">
+                                            <i class="ph ph-minus"></i>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <div class="title">Trennlinie</div>
+                                        </div>
+                                        <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
                                             </div> -->
-                                        </li>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <!-- leerer Canvas -->
-                            <?php endif; ?>
-                        </ul>
-                        <?php if (empty($form['items'])): ?>
-                            <div class="text-center text-muted small py-4">Felder links auswählen und hier platzieren.</div>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <!-- leerer Canvas -->
                         <?php endif; ?>
-                    </div>
+                    </ul>
+                    <!-- <?php if (empty($fields)): ?>
+                        <div class="droparea">
+                            <div class="text-center text-muted small py-4">Felder links auswählen und hier platzieren.</div>
+                        </div>
+                    <?php endif; ?> -->
                 </div>
                 <div class="sticky-footer text-end">
                     <button class="btn primary" type="submit" id="saveBtn">
@@ -855,6 +889,15 @@ $tagLabels = [
             $('#props-field, #props-heading, #props-paragraph').hide();
             $('#canvas-list .canvas-item').removeClass('is-selected');
         }
+
+        // close properties panel
+        $('#close-properties-btn').on('click', function(e) {
+            // Deselect
+            $('.is-selected').removeClass('is-selected');
+            $('#properties-panel').addClass('d-none');
+            $('#catalog-panel').removeClass('d-none');
+            clearSelection();
+        });
 
         // --- 3) Auswahl (Markierung) ---
         $('#canvas-list').on('click', '.canvas-item', function(e) {
