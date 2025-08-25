@@ -333,10 +333,6 @@ $tagLabels = [
             <h2 class="title">
                 <?= lang('Form preview', 'Vorschau des Formulars') ?>: <?= lang($type['name'] ?? $type['id'], $type['name_de'] ?? null) ?>
             </h2>
-            <p class="text-danger">
-                <i class="ph ph-warning"></i>
-                <?= lang('This preview can only show the current state when the form is saved! ', 'Diese Vorschau kann nur den aktuellen Stand anzeigen, nachdem das Formular gespeichert wurde!') ?>
-            </p>
             <div id="data-modules" class="row row-eq-spacing">
             </div>
             <div class="text-right mt-20">
@@ -829,11 +825,12 @@ $tagLabels = [
 
         $('#preview-button').click(function(e) {
             e.preventDefault();
+            var schema = readSchemaFromDOM();
             $('#data-modules').empty();
             $.ajax({
-                url: ROOTPATH + '/get-form',
+                url: ROOTPATH + '/get-form-preview',
                 data: {
-                    type: '<?= $type['id'] ?>',
+                    schema: JSON.stringify(schema)
                 },
                 success: function(data) {
                     $('#data-modules').html(data);
