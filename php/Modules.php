@@ -1561,7 +1561,9 @@ class Modules
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php foreach ($this->preset ?? [] as $i => $author) { ?>
+                                <?php 
+                                $i = 0;
+                                foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
                                         <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
@@ -1652,12 +1654,13 @@ class Modules
                                     <th>Username</th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th>
-                                        <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php foreach ($this->preset ?? [] as $i => $author) {
+                                <?php 
+                                $i = 0;
+                                foreach ($this->preset ?? [] as $i => $author) {
                                     $role = $author['role'] ?? 'supervisor';
                                 ?>
                                     <tr>
@@ -1704,6 +1707,7 @@ class Modules
                             </tfoot>
                         </table>
                     </div>
+                    <?= $this->render_help($help) ?>
                     <script>
                         function removeSupervisorRow(el) {
                             // check if row is the only one left
