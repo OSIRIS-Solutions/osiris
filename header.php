@@ -158,47 +158,75 @@ $pageactive = function ($p) use ($page) {
 
         <!-- Navbar start -->
         <div class="navbar navbar-top">
-            <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
-                <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
-                <?php if (defined('LIVE') && LIVE === false) { ?>
-                    <span class=" position-absolute bottom-0 left-0 secondary" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
-                <?php } ?>
-            </a>
+            <?php if (defined('MAINTENANCE') && MAINTENANCE) { ?>
+                <style>
+                    .maintenance-msg {
+                        background: var(--signal-color-20);
+                        color: #856404;
+                        width: 100%;
+                        height: 6.5rem;
+                        text-align: center;
+                        vertical-align: middle;
+                        margin: 1rem 0rem 1rem 1rem;
+                        padding: 1rem;
+                        border-radius: var(--border-radius);
+                        border: 1px solid var(--signal-color);
+                    }
 
-            <a href="<?= $Settings->get('affiliation_details')['link'] ?? '#' ?>" class="navbar-brand ml-auto" target="_blank">
-                <?= $Settings->printLogo("") ?>
-            </a>
+                    .maintenance-msg .title {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                    }
+
+                    .page-wrapper>.navbar.navbar-top {
+                        position: sticky;
+                        top: 0;
+                        z-index: 1000;
+                    }
+                </style>
+                <div class="maintenance-msg">
+                    <div class="title">
+                        <i class="ph ph-barricade"></i>
+                        <?= lang('System maintenance', 'Wartungsarbeiten') ?>.
+                    </div>
+                    <?= lang('Please do not add, edit or remove data. Changes might be overwritten.', 'Bitte keine Daten hinzufügen, bearbeiten oder löschen. Änderungen werden evtl. überschrieben.') ?>
+                </div>
+            <?php } else { ?>
+                <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
+                    <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
+                    <?php if (defined('LIVE') && LIVE === false) { ?>
+                        <span class=" position-absolute bottom-0 left-0 secondary" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
+                    <?php } ?>
+                </a>
+
+                <a href="<?= $Settings->get('affiliation_details')['link'] ?? '#' ?>" class="navbar-brand ml-auto" target="_blank">
+                    <?= $Settings->printLogo("") ?>
+                </a>
+            <?php } ?>
         </div>
         <nav class="navbar navbar-bottom">
             <!-- Button to toggle sidebar -->
             <button class="btn btn-action active" type="button" onclick="osirisJS.toggleSidebar(this);" aria-label="Toggle sidebar"></button>
             <ul class="navbar-nav">
-                <?php if (defined('MAINTENANCE') && MAINTENANCE) { ?>
-                    <!-- set to true during maintenance -->
-                    <div class="alert danger">
-                        <b><?= lang('System maintenance', 'Wartungsarbeiten') ?>.</b>
-                        <?= lang('Please do not add, edit or remove data. Changes might be overwritten.', 'Bitte keine Daten hinzufügen, bearbeiten oder löschen. Änderungen werden evtl. überschrieben.') ?>
-                    </div>
-                <?php } else { ?>
-                    <nav aria-label="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <?php
-                            $breadcrumb = $breadcrumb ?? [];
-                            if (!empty($breadcrumb)) {
-                                echo '<li class=""><a href="' . ROOTPATH . '/"><i class="ph ph-house" aria-label="Home"></i></a></li>';
-                                foreach ($breadcrumb as $crumb) {
-                                    $displayName = shortenName($crumb['name'] ?? '');
-                                    if (!isset($crumb['path'])) {
-                                        echo '<li class="active" aria-current="page"><a href="#">' . $displayName . '</a></li>';
-                                    } else {
-                                        echo '<li class=""><a href="' . ROOTPATH . $crumb['path'] . '">' . $displayName . '</a></li>';
-                                    }
+
+                <nav aria-label="breadcrumbs">
+                    <ul class="breadcrumb">
+                        <?php
+                        $breadcrumb = $breadcrumb ?? [];
+                        if (!empty($breadcrumb)) {
+                            echo '<li class=""><a href="' . ROOTPATH . '/"><i class="ph ph-house" aria-label="Home"></i></a></li>';
+                            foreach ($breadcrumb as $crumb) {
+                                $displayName = shortenName($crumb['name'] ?? '');
+                                if (!isset($crumb['path'])) {
+                                    echo '<li class="active" aria-current="page"><a href="#">' . $displayName . '</a></li>';
+                                } else {
+                                    echo '<li class=""><a href="' . ROOTPATH . $crumb['path'] . '">' . $displayName . '</a></li>';
                                 }
                             }
-                            ?>
-                        </ul>
-                    </nav>
-                <?php } ?>
+                        }
+                        ?>
+                    </ul>
+                </nav>
 
             </ul>
 

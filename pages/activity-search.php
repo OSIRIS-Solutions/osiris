@@ -436,7 +436,6 @@ $filters = array_map(function ($f) {
 
         // get fields
         var fields = <?= json_encode($fields) ?>;
-        // console.log(fields);
 
         // clean up if fields is an object
         if (fields.constructor === Object) {
@@ -458,14 +457,6 @@ $filters = array_map(function ($f) {
         });
 
         var dataTable;
-
-        // filters.forEach(el => {
-        //     // console.log(el);
-        //     if (el.type == 'string') {
-        //         $('#aggregate').append(`<option value="${el.id}">${el.label}</option>`)
-        //     }
-        // });
-
 
         function initializeTable(data) {
             // destroy existing table
@@ -525,8 +516,6 @@ $filters = array_map(function ($f) {
                     selected_columns.push(id)
                 })
 
-                console.log(array_columns);
-
                 // add dynamic column heads
                 selected_columns.forEach(field => {
                     const th = document.createElement('th');
@@ -539,8 +528,6 @@ $filters = array_map(function ($f) {
                     // remove from selected columns
                     selected_columns = selected_columns.filter(column => column !== field);
                     // get name from `fields`
-                    console.log(field);
-
                     const filter = fields.find(f => f.id == field);
                     var r = {
                         data: field,
@@ -553,10 +540,7 @@ $filters = array_map(function ($f) {
                         }
                     } else if (array_columns[field]) {
                         var array_column = array_columns[field]
-                        console.log(array_column);
                         r.render = function(data, type, row, meta) {
-                            // if array:
-                                console.log(data);
                             if (Array.isArray(data)) {
                                 data = data[0]
                             }
@@ -570,10 +554,6 @@ $filters = array_map(function ($f) {
                 }
 
             }
-
-            console.log(thead);
-            console.log(columns);
-            console.log(data);
 
             // Initialisiere Datatables
             $('#activity-table').DataTable({
@@ -641,7 +621,6 @@ $filters = array_map(function ($f) {
             })
             data.columns = columns
 
-            console.log(data);
             window.location.hash = rules
 
             $('#result').html(rules)
@@ -660,7 +639,7 @@ $filters = array_map(function ($f) {
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Fehler beim Abrufen der API:', error);
+                    toastError('Fehler beim Abrufen der API:', error);
                 }
             });
         }
@@ -720,7 +699,6 @@ $filters = array_map(function ($f) {
         }
 
         function applyFilter(id, aggregate, columns) {
-            // console.log((id));
             if (EXPERT) {
                 applyFilterExpert(id, aggregate, columns)
                 return
@@ -757,7 +735,6 @@ $filters = array_map(function ($f) {
         }
 
         function applyFilterExpert(id, aggregate) {
-            // console.log((id));
             var filter = queries[id];
             if (!filter) {
                 toastError('Query not found.')

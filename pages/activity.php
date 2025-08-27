@@ -313,7 +313,9 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
 
 <!-- show research topics -->
-<?= $Settings->printTopics($doc['topics'] ?? [], 'mb-20') ?>
+<?php if ($Settings->featureEnabled('topics')) {
+    echo $Settings->printTopics($doc['topics'] ?? [], 'mb-20');
+} ?>
 
 
 <div class="d-flex">
@@ -707,12 +709,18 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 $Modules = new Modules($doc);
                 $Format->usecase = "list";
 
+                $emptyModules = [];
+
                 foreach ($typeModules as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
                     if (in_array($module, ["semester-select", "event-select"])) continue;
                 ?>
                     <?php if ($module == 'teaching-course' && isset($doc['module_id'])) :
                         $module = $DB->getConnected('teaching', $doc['module_id']);
+                        if (empty($module)) {
+                            $emptyModules[] = 'teaching-course';
+                            continue;
+                        }
                     ?>
                         <tr>
                             <td>
@@ -727,6 +735,10 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                     <?php elseif ($module == 'journal' && isset($doc['journal_id'])) :
                         $journal = $DB->getConnected('journal', $doc['journal_id']);
+                        if (empty($journal)) {
+                            $emptyModules[] = 'journal';
+                            continue;
+                        }
                     ?>
 
                         <tr>
@@ -753,6 +765,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                             <td>
                                 <span class="key">Event</span>
                                 <?php if (empty($conference)) { ?>
+                                    <div><?=$doc['conference'] ?? ''?></div>
                                     <span class="text-danger">
                                         <?= lang('This event has been deleted.', 'Diese Veranstaltung wurde gelöscht.') ?>
                                     </span>
@@ -783,7 +796,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <?php } ?>
                             </td>
                         </tr>
-                    <?php else : ?>
+                    <?php else : 
+                        $val = $Format->get_field($module);
+                        if (empty($val) || $val == '-') {
+                            $emptyModules[] = $module;
+                            continue;
+                        }
+                        ?>
 
                         <tr>
                             <td>
@@ -795,6 +814,23 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                     <?php endif; ?>
 
                 <?php } ?>
+
+                <?php
+                // check for empty modules and show a short info
+                if (count($emptyModules)) {
+                    $emptyModules = array_unique($emptyModules);
+                ?>
+                <tr>
+                    <td>
+                        <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
+                       <?php foreach ($emptyModules as $key) { ?>
+                            <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
+                       <?php } ?>
+                       
+                    </td>
+                </tr>
+                <?php } ?>
+
 
 
                 <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && isset($doc['comment'])) : ?>
@@ -981,13 +1017,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <td>
                                     <?= $author['first'] ?? '' ?>
                                 </td>
-                                    <?php if ($sws) : ?>
-                                        <td><?= $author['sws'] ?? 0 ?></td>
-                                    <?php elseif ($supervisorThesis) : ?>
-                                        <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
-                                    <?php elseif ($role == 'authors') : ?>
-                                        <td><?= $author['position'] ?? '' ?></td>
-                                    <?php endif; ?>
+                                <?php if ($sws) : ?>
+                                    <td><?= $author['sws'] ?? 0 ?></td>
+                                <?php elseif ($supervisorThesis) : ?>
+                                    <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
+                                <?php elseif ($role == 'authors') : ?>
+                                    <td><?= $author['position'] ?? '' ?></td>
+                                <?php endif; ?>
                                 <td>
                                     <?php
                                     if (isset($author['units']) && !empty($author['units'])) {
