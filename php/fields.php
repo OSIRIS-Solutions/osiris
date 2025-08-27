@@ -801,6 +801,19 @@ if ($Settings->featureEnabled('topics')) {
     ];
 }
 
+function typeConvert($type)
+{
+    return match ($type) {
+        'int' => 'integer',
+        'float' => 'double',
+        'bool', 'bool-check' => 'boolean',
+        'list' => 'list',
+        'url' => 'string',
+        'text' => 'string',
+        default => 'string',
+    };
+}
+
 foreach ($osiris->adminFields->find() as $field) {
     $f = [
         'id' => $field['id'],
@@ -810,24 +823,13 @@ foreach ($osiris->adminFields->find() as $field) {
             'columns'
         ],
         'label' => lang($field['name'], $field['name_de'] ?? null),
-        'type' => $field['format'] == 'int' ? 'integer' : $field['format'],
+        'type' => typeConvert($field['format'] ?? 'string'),
         'custom' => true
     ];
-
-    if ($field['format'] == 'float') {
-        $f['type'] = 'double';
-    }
-
-    if ($field['format'] == 'bool' || $field['format'] == 'bool-check') {
-        $f['type'] = 'boolean';
-    }
 
     if ($field['format'] == 'list') {
         $f['values'] =  DB::doc2Arr($field['values']);
         $f['input'] = 'select';
-    }
-    if ($field['format'] == 'url') {
-        $f['type'] = 'string';
     }
 
     $FIELDS[] = $f;
