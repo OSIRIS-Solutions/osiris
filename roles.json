@@ -116,6 +116,11 @@
                 "en": "Give users roles (except admin)"
             },
             {
+                "id": "user.password-reset",
+                "de": "Nutzerpasswörter zurücksetzen",
+                "en": "Reset user passwords"
+            },
+            {
                 "id": "user.inactive",
                 "de": "Nutzer als inaktiv markieren",
                 "en": "Set users to inactive"
