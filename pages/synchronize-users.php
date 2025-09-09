@@ -40,21 +40,31 @@ if (empty($users)) {
 }
 
 $usernames = array_column($users, 'username');
+$uniqueids = array_column($users, 'uniqueid');
 
 $removed = $osiris->persons->find(
-    ['username' => ['$nin' => $usernames], 'is_active' => ['$in' => [1, true, '1']]],
+    ['username' => ['$nin' => $usernames], 'uniqueid' => ['$nin' => $uniqueids], 'is_active' => ['$in' => [1, true, '1']]],
     ['projection' => ['username' => 1, 'is_active' => 1, 'displayname' => 1]]
-);
-$removed = array_column(iterator_to_array($removed), 'displayname', 'username');
+)->toArray();
 
 $actions = [
     'blacklisted' => [],
     'inactivate' => [],
     'reactivate' => [],
     'add' => [],
-    'delete' => $removed ?? [],
     'unchanged' => []
 ];
+
+foreach ($removed as $del) {
+    $username = $del['username'];
+    $name = $del['displayname'] ?? $username;
+    if (in_array($username, $blacklist)) {
+        $actions['blacklisted'][$username] = $name;
+    } else {
+        $actions['inactivate'][$username] = $name;
+    }
+}
+
 foreach ($users as $user) {
     $username = $user['username'];
     $uniqueid = $user['uniqueid'] ?? null;
@@ -65,7 +75,7 @@ foreach ($users as $user) {
     // first: check if user is in database
     if (!empty($uniqueid)) {
         $USER = $DB->getPersonByUniqueID($uniqueid);
-    } 
+    }
     if (empty($USER)) {
         $USER = $DB->getPerson($username);
     }
@@ -115,6 +125,8 @@ foreach ($users as $user) {
         <?php } ?>
     <?php
     }
+
+    // deleted users
 
     if (!empty($actions['reactivate'])) {
         // interface to reactivate users
