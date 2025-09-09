@@ -273,7 +273,7 @@ class Achievement
 
             <span class="thumb-sm" data-toggle="tooltip" data-title="<?= $title ?>">
                 <?php
-                include BASEPATH . "/img/achievements/ac_$ac[icon].svg";
+                echo file_get_contents(BASEPATH . "/img/achievements/ac_{$ac['icon']}.svg");
                 ?>
             </span>
 
@@ -342,7 +342,7 @@ class Achievement
             <div class="row">
                 <div class="col flex-grow-0 thumb">
                     <?php
-                    include BASEPATH . "/img/achievements/ac_$ac[icon].svg";
+                    echo file_get_contents(BASEPATH . "/img/achievements/ac_{$ac['icon']}.svg");
                     ?>
                 </div>
                 <div class="col">
@@ -387,3 +387,4 @@ class Achievement
         $this->osiris->achieved->insertMany($values);
     }
 }
+
