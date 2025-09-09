@@ -39,8 +39,10 @@ if (empty($users)) {
     return;
 }
 
+$usernames = array_column($users, 'username');
+
 $removed = $osiris->persons->find(
-    ['username' => ['$nin' => array_keys($users)], 'is_active' => ['$in' => [1, true, '1']]],
+    ['username' => ['$nin' => $usernames], 'is_active' => ['$in' => [1, true, '1']]],
     ['projection' => ['username' => 1, 'is_active' => 1, 'displayname' => 1]]
 );
 $removed = array_column(iterator_to_array($removed), 'displayname', 'username');
@@ -53,12 +55,20 @@ $actions = [
     'delete' => $removed ?? [],
     'unchanged' => []
 ];
-foreach ($users as $username => $active) {
+foreach ($users as $user) {
+    $username = $user['username'];
+    $uniqueid = $user['uniqueid'] ?? null;
+    $active = $user['is_active'] ?? false;
     $exists = false;
     $dbactive = false;
 
     // first: check if user is in database
-    $USER = $DB->getPerson($username);
+    if (!empty($uniqueid)) {
+        $USER = $DB->getPersonByUniqueID($uniqueid);
+    } 
+    if (empty($USER)) {
+        $USER = $DB->getPerson($username);
+    }
     if (!empty($USER)) {
         if ($USER['is_active'])
             $dbactive = 'active';

@@ -235,9 +235,11 @@ class LDAPInterface
             if ($this->uniqueid == 'objectguid') {
                 $uniqueid = $this->convertObjectGUID($uniqueid);
             }
-            dump($username, true);
-            dump($uniqueid, true);
-            $res[$entry[$this->userkey][0]] = $active;
+            $res[] = [
+                'username' => $username,
+                'uniqueid' => $uniqueid,
+                'is_active' => $active
+            ];
         }
 
         return $res;
