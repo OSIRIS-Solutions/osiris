@@ -144,7 +144,7 @@ $active = function ($field) use ($data_fields) {
                     <option value="PD" <?= $data['academic_title'] == 'PD' ? 'selected' : '' ?>>PD</option>
                     <option value="Dipl.-Ing." <?= $data['academic_title'] == 'Dipl.-Ing.' ? 'selected' : '' ?>>Dipl.-Ing.</option>
                 </select>
-                <?php if (in_array('first', $ldap_fields)) {
+                <?php if (in_array('title', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
             </div>
