@@ -155,6 +155,13 @@ foreach ($osiris->adminRights->find([]) as $row) {
     <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
 </h1>
 
+<div class="mb-5">
+    <a href="<?=ROOTPATH?>/admin/distribute-roles">
+        <i class="ph ph-user-gear" aria-hidden="true"></i>
+        <?= lang('Distribute roles', 'Rollen verteilen') ?>
+    </a>
+</div>
+
 <style>
     .description {
         color: var(--muted-color);
