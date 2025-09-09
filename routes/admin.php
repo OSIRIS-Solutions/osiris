@@ -66,6 +66,22 @@ Route::get('/admin/(general|roles|features)', function ($page) {
 }, 'login');
 
 
+Route::get('/admin/roles/distribute', function () {
+    include_once BASEPATH . "/php/init.php";
+    $page = 'admin/roles';
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Roles", "Rollen"), 'path' => '/admin/roles'],
+        ['name' => lang("Distribute roles", "Rollen verteilen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/distribute-roles.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/templates', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
@@ -583,6 +599,29 @@ Route::post('/crud/admin/roles', function () {
     $msg = 'settings-saved';
 
     header("Location: " . ROOTPATH . "/admin/roles?msg=" . $msg);
+}, 'login');
+
+
+Route::post('/crud/admin/update-user-roles', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $roles = $_POST['roles'] ?? [];
+    if (empty($roles) || !is_array($roles)) {
+        header("Location: " . ROOTPATH . "/admin/roles/distribute?msg=no-roles");
+        die;
+    }
+    foreach ($roles as $user => $r) {
+        if (!is_array($r)) $r = [];
+        $osiris->persons->updateOne(
+            ['username' => $user],
+            ['$set' => ['roles' => array_map('strtolower', $r)]]
+        );
+    }
+    $_SESSION['msg'] = lang('Roles updated successfully.', 'Rollen erfolgreich aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/roles/distribute");
+    die;
 }, 'login');
 
 

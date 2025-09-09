@@ -240,6 +240,10 @@ function printMsg($msg = null, $type = 'info', $header = "default")
         $msg = $_SESSION['msg'];
         unset($_SESSION["msg"]);
     }
+    if (isset($_SESSION['msg_type'])) {
+        $type = $_SESSION['msg_type'];
+        unset($_SESSION["msg_type"]);
+    }
     if ($msg === null && isset($_GET['error'])) {
         $msg = $_GET['error'];
         $type = 'error';

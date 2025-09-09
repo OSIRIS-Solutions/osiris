@@ -262,7 +262,7 @@ if ($topicsEnabled) {
                     <td class="w-50"><?= $rend['icon'] ?? '' ?></td>
                     <td><?= $rend['web'] ?? '' ?></td>
                     <td class="w-50">
-                        <a href="<?= ROOTPATH ?>/activities/<?= $activity['_id'] ?>">
+                        <a href="<?= ROOTPATH ?>/activities/view/<?= $activity['_id'] ?>">
                             <i class="ph ph-arrow-fat-line-right"></i>
                         </a>
                     </td>
