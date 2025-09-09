@@ -156,7 +156,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 </h1>
 
 <div class="mb-5">
-    <a href="<?=ROOTPATH?>/admin/distribute-roles">
+    <a href="<?=ROOTPATH?>/admin/roles/distribute">
         <i class="ph ph-user-gear" aria-hidden="true"></i>
         <?= lang('Distribute roles', 'Rollen verteilen') ?>
     </a>

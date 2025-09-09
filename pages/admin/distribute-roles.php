@@ -26,7 +26,17 @@ $users = DB::doc2Arr($osiris->persons->find(['is_active' => ['$in' => [1, true, 
 ?>
 <form action="<?= ROOTPATH ?>/crud/admin/update-user-roles" method="post">
 
-    <table class="table small striped w-auto">
+        <style>
+            .table.sticky-head thead {
+                position: sticky;
+                top: 0;
+                background: white;
+                z-index: 1;
+                top: 6rem;
+            }
+        </style>
+
+    <table class="table small striped w-auto sticky-head">
         <thead>
             <th><?= lang('User', 'Benutzer') ?></th>
             <?php foreach ($roles as $role) { ?>

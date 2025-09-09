@@ -66,8 +66,9 @@ Route::get('/admin/(general|roles|features)', function ($page) {
 }, 'login');
 
 
-Route::get('/admin/distribute-roles', function () {
+Route::get('/admin/roles/distribute', function () {
     include_once BASEPATH . "/php/init.php";
+    $page = 'admin/roles';
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
@@ -607,7 +608,7 @@ Route::post('/crud/admin/update-user-roles', function () {
 
     $roles = $_POST['roles'] ?? [];
     if (empty($roles) || !is_array($roles)) {
-        header("Location: " . ROOTPATH . "/admin/distribute-roles?msg=no-roles");
+        header("Location: " . ROOTPATH . "/admin/roles/distribute?msg=no-roles");
         die;
     }
     foreach ($roles as $user => $r) {
@@ -619,7 +620,7 @@ Route::post('/crud/admin/update-user-roles', function () {
     }
     $_SESSION['msg'] = lang('Roles updated successfully.', 'Rollen erfolgreich aktualisiert.');
     $_SESSION['msg_type'] = 'success';
-    header("Location: " . ROOTPATH . "/admin/distribute-roles");
+    header("Location: " . ROOTPATH . "/admin/roles/distribute");
     die;
 }, 'login');
 
