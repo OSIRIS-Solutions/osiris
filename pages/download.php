@@ -65,7 +65,6 @@
                     <select name="filter[dept]" id="dept" class="form-control">
                         <option value=""><?= lang('All departments', 'Alle Abteilungen') ?></option>
                         <?php
-
                         foreach ($Departments as $d => $dept) { ?>
                             <option value="<?= $d ?>"><?= $dept ?></option>
                         <?php } ?>
