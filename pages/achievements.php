@@ -89,8 +89,7 @@
                                 <?php foreach ($ac['levels'] ?? [] as $lvl) {
                                     $descr = $lvl[$Achievement->lang];
                                     if ($user == $_SESSION['username']) {
-                                        $descr = str_replace(lang('have', 'hat'), lang('has', 'hast'), $descr);
-                                        $descr = str_replace('*', 'Du', $descr);
+                                        $descr = $lvl[$Achievement->lang . '_single'] ?? $descr;
                                     } else {
                                         $descr = str_replace('*', $firstname, $descr);
                                     }
