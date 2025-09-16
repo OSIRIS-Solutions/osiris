@@ -329,7 +329,7 @@ if (!$Settings->featureEnabled('coins')) {
 
 
     <div class="alert signal">
-        <?= lang('The entire year is shown here. Activities in the selected quarter <b class="Q">' . $q . '</b> are highlighted. ', 'Das gesamte Jahr ist hier gezeigt. Aktivitäten innerhalb des gewählten Quartals <b class="Q">' . $q . '</b> sind farblich hinterlegt.') ?>
+        <?= lang('The entire year is shown here. Activities in the selected quarter <b class="Q">' . $q . '</b> are highlighted. ', 'Das gesamte Jahr ist hier gezeigt. Aktivitäten innerhalb des gewählten Quartals <b class="Q">' . $q . '</b> sind farbig hinterlegt.') ?>
 
     </div>
 

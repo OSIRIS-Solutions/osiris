@@ -112,7 +112,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 </div>
 
 <p class="text-muted">
-    <?= lang('Only affiliated activities are counted (at least one author is affiliated with the institute).', 'Es werden nur affilierte Aktivitäten gezählt (mind. ein:e Autor:in ist mit dem Institut affiliert).') ?>
+    <?= lang('Only affiliated activities are counted (at least one author is affiliated with the institute).', 'Es werden nur affiliierte Aktivitäten gezählt (mind. ein:e Autor:in ist mit dem Institut affiliiert).') ?>
 </p>
 
 <div class="row row-eq-spacing">
@@ -134,7 +134,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <?= lang('Activities', 'Aktivitäten') ?> <?= $phrase ?>:
     </h2>
     <p class="text-muted">
-        <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affilierten Autor/Autorin gezählt.') ?>
+        <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
     </p>
 
     <?php
@@ -250,7 +250,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
     </h2>
 
     <p class="text-muted">
-        <?= lang('Only publications with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Publikationen mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affilierten Autor/Autorin gezählt.') ?>
+        <?= lang('Only publications with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Publikationen mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
     </p>
 
     <?php
@@ -294,7 +294,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <tr>
                 <th><?= lang('Type of publication', 'Art der Publikation') ?></th>
                 <th><?= lang('Count', 'Gesamt') ?></th>
-                <th><?= lang('Count of affiliated', 'davon Affiliert') ?></th>
+                <th><?= lang('Count of affiliated', 'davon Affiliiert') ?></th>
                 <th><?= lang('Count of Online', 'davon Online') ?><sup>1</sup></th>
                 <th><?= lang('Without external', 'ohne Externe') ?><sup>2</sup></th>
                 <th><?= lang('Peer-reviewed') ?><sup>3</sup></th>

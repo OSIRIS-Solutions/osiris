@@ -332,14 +332,14 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
         <?php
 
         if ($doc['affiliated'] ?? true) { ?>
-            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliert.') ?>">
+            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-handshake m-0"></i> -->
-                <?= lang('Affiliated', 'Affiliert') ?>
+                <?= lang('Affiliated', 'Affiliiert') ?>
             </div>
         <?php } else { ?>
-            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliert.') ?>">
+            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-hand-x m-0"></i> -->
-                <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                <?= lang('Not affiliated', 'Nicht affiliiert') ?>
             </div>
         <?php } ?>
     </div>
@@ -381,7 +381,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php
                 break;
             default: ?>
-                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliert') ?>">
+                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
                     <?= lang('None', 'Keine') ?>
                 </span>
         <?php
@@ -1068,7 +1068,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php } ?>
 
             <h3>
-                <?= lang('Affiliated positions', 'Affilierte Positionen') ?>
+                <?= lang('Affiliated positions', 'Affiliierte Positionen') ?>
             </h3>
 
             <?php
@@ -1079,8 +1079,8 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
                 'middle' => lang('Middle author', 'Mittelautor:in'),
                 'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-                'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
+                'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
                 'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
                 'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
                 'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),

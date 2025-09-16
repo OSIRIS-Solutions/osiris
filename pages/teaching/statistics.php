@@ -122,7 +122,7 @@ $all = $osiris->activities->count(
                 <th><?= lang('Type', 'Art') ?></th>
                 <th><?= lang('Start date', 'Beginn') ?></th>
                 <th><?= lang('End date', 'Ende') ?></th>
-                <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                 <th><?= lang('SWS (total)', 'SWS (gesamt)') ?></th>
                 <th><?= lang('SWS', 'SWS') ?> (<?= $Settings->get('affiliation') ?>)</th>
             </tr>
@@ -304,7 +304,7 @@ $unique_number = count($uniques);
                 ${d.name ?? 'No name available'}<br>
                 <b>${lang('Start date', 'Beginn')}: </b>${d.start}<br>
                 <b>${lang('End date', 'Ende')}: </b>${d.end}<br>
-                <b>${lang('Affiliated', 'Affiliert')}: </b>
+                <b>${lang('Affiliated', 'Affiliiert')}: </b>
                 ${d.hasAoi ? '<i class="ph ph-check-circle text-primary"></i>' : '<i class="ph ph-x-circle text-secondary"></i>'}
                 `
             }

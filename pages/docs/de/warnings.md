@@ -137,7 +137,7 @@ Die Warnmeldung sieht folgendermaßen aus:
 
 Wie man sehen kann, befinden sich unter der Aktivität fünf Knöpfe: die ersten drei führen eine Aktion aus, die anderen beiden sind Links zu anderen Seiten. Bei allen Aktionen wird die Warnung gelöst und verschwindet somit von der Warnungs-Seite. Die Knöpfe tun im Detail folgendes:
 
-<i class="ph ph-check ph-fw text-success mr-10"></i> Hier kannst du die Aktivität bestätigen, wenn das tatsächlich deine Aktivität ist und du dabei Autor mit dem Institut affiliert warst. Du erhältst Coins für die Aktivität und wirst im Reporting berücksichtigt.
+<i class="ph ph-check ph-fw text-success mr-10"></i> Hier kannst du die Aktivität bestätigen, wenn das tatsächlich deine Aktivität ist und du dabei Autor mit dem Institut affiliiert warst. Du erhältst Coins für die Aktivität und wirst im Reporting berücksichtigt.
 
 <i class="ph ph-push-pin-slash ph-fw text-signal mr-10"></i> Hiermit bestätigst du, dass es sich zwar um deine Aktivität handelt, du aber nicht Autor des Instituts warst. Die Aktivität taucht in deinem Profil auf, du bekommst aber keine Coins dafür. 
 

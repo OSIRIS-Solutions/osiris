@@ -1417,7 +1417,7 @@ class Modules
                                     <th><label for="last" class="required"><?= lang('Last name', 'Nachname') ?></label></th>
                                     <th><label for="first" class="required"><?= lang('First name', 'Vorname') ?></label></th>
                                     <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
-                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliert') ?></label></th>
+                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliiert') ?></label></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1552,7 +1552,7 @@ class Modules
                                 <tr>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th>Username</th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
@@ -1650,7 +1650,7 @@ class Modules
                                 <tr>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th>Username</th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th>
@@ -1932,11 +1932,11 @@ class Modules
                     </small>
                     <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affilierten Autoren angegeben.') ?>
+                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affiliierten Autoren angegeben.') ?>
                         </h5>
                         <?= lang(
                             'Please double click on every affiliated author in the list above, to mark them as affiliated. Only affiliated authors will receive points and are shown in reports.',
-                            'Bitte doppelklicken Sie auf jeden affilierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
+                            'Bitte doppelklicken Sie auf jeden affiliierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
                         ) ?>
                     </div>
                 </div>
