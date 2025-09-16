@@ -34,28 +34,31 @@
 
     <table class="table">
         <tbody>
-            <?php foreach ($data as $key => $value) {
+            <?php
+            $keep = [
+                '_id',
+                'displayname',
+                'formalname',
+                'first_abbr',
+                'updated',
+                'updated_by',
+                "academic_title",
+                "first",
+                "last",
+                "name",
+                "orcid",
+                "units",
+                "username",
+                "created",
+                "created_by",
+                'uniqueid',
+            ];
+
+            foreach ($data as $key => $value) {
                 if (empty($value)) continue;
                 if (in_array($key, ['_id', 'displayname', 'formalname', 'first_abbr', 'updated', 'updated_by', 'is_active'])) continue;
                 $delete = true;
-                if (in_array($key, [
-                    '_id',
-                    'displayname',
-                    'formalname',
-                    'first_abbr',
-                    'updated',
-                    'updated_by',
-                    "academic_title",
-                    "first",
-                    "last",
-                    "name",
-                    // "depts",
-                    "units",
-                    "username",
-                    "created",
-                    "created_by",
-                    'uniqueid',
-                ])) {
+                if (in_array($key, $keep)) {
                     $delete = false;
                 }
             ?>
