@@ -66,10 +66,17 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         <i class="ph ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
     </h1>
-    <a href="<?= ROOTPATH ?>/activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-book-open"></i>
-        <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
-    </a>
+
+    <div class="btn-toolbar justify-between">
+        <a href="<?= ROOTPATH ?>/activities" class="btn" id="user-btn">
+            <i class="ph ph-book-open"></i>
+            <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
+        </a>
+        <a href="<?= ROOTPATH ?>/add-activity">
+            <i class="ph ph-plus"></i>
+            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+        </a>
+    </div>
 <?php } ?>
 
 <style>
@@ -143,7 +150,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 .filter tr td .submenu a.active {
                     font-weight: bold;
                 }
-
             </style>
             <div class="filter" style="max-height: 22rem;">
                 <table id="filter-type" class="table small simple">
@@ -457,7 +463,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             })
                             text += '</span>' + data
                         }
-                        if (row.start == ''){
+                        if (row.start == '') {
                             text += ' <i class="ph ph-warning text-danger" title="' + lang('no date', 'kein Datum') + '"></i>';
                         }
                         if (row.authors == '' && row.editors == '') {
