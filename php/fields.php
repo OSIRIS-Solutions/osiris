@@ -232,7 +232,7 @@ $FIELDS = [
             'filter',
             'columns'
         ],
-        'label' => lang('Affiliated', 'Affiliert'),
+        'label' => lang('Affiliated', 'Affiliiert'),
         'type' => 'boolean',
     ],
     [
@@ -252,8 +252,8 @@ $FIELDS = [
             'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
             'middle' => lang('Middle author', 'Mittelautor:in'),
             'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-            'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-            'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+            'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
+            'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
             'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
             'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
             'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
@@ -277,7 +277,7 @@ $FIELDS = [
             'institutional' => lang('Institutional (cooperation between departments of the same institute)', 'Institutionell (Kooperation zwischen Abteilungen des gleichen Instituts)'),
             'contributing' => lang('Contributing (cooperation with other institutes with middle authorships)', 'Beitragend (Kooperation mit anderen Instituten mit Mittelautorenschaft)'),
             'leading' => lang('Leading (cooperation with other institutes with a corresponding role, first or last authorship)', 'Führend (Kooperation mit anderen Instituten mit einer korrespondierenden Rolle, Erst- oder Letztautorenschaft)'),
-            'none' => lang('None (no author affiliated)', 'Kein:e Autor:in affiliert')
+            'none' => lang('None (no author affiliated)', 'Kein:e Autor:in affiliiert')
         ],
         'input' => 'select'
     ],
@@ -801,6 +801,19 @@ if ($Settings->featureEnabled('topics')) {
     ];
 }
 
+function typeConvert($type)
+{
+    return match ($type) {
+        'int' => 'integer',
+        'float' => 'double',
+        'bool', 'bool-check' => 'boolean',
+        'list' => 'list',
+        'url' => 'string',
+        'text' => 'string',
+        default => 'string',
+    };
+}
+
 foreach ($osiris->adminFields->find() as $field) {
     $f = [
         'id' => $field['id'],
@@ -810,24 +823,13 @@ foreach ($osiris->adminFields->find() as $field) {
             'columns'
         ],
         'label' => lang($field['name'], $field['name_de'] ?? null),
-        'type' => $field['format'] == 'int' ? 'integer' : $field['format'],
+        'type' => typeConvert($field['format'] ?? 'string'),
         'custom' => true
     ];
-
-    if ($field['format'] == 'float') {
-        $f['type'] = 'double';
-    }
-
-    if ($field['format'] == 'bool' || $field['format'] == 'bool-check') {
-        $f['type'] = 'boolean';
-    }
 
     if ($field['format'] == 'list') {
         $f['values'] =  DB::doc2Arr($field['values']);
         $f['input'] = 'select';
-    }
-    if ($field['format'] == 'url') {
-        $f['type'] = 'string';
     }
 
     $FIELDS[] = $f;

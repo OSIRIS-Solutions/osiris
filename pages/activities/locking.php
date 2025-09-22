@@ -65,7 +65,7 @@
 
 
     <p>
-        <?= lang('Activities that are not report-worthy (e.g. Online ahead of print, Activities without affiliated authors) will not be locked.', 'Aktivitäten, die nicht report-würdig sind (z.B. Online ahead of print, Akt. ohne affilierte Autoren) werden nicht gesperrt.') ?>
+        <?= lang('Activities that are not report-worthy (e.g. Online ahead of print, Activities without affiliated authors) will not be locked.', 'Aktivitäten, die nicht report-würdig sind (z.B. Online ahead of print, Akt. ohne affiliierte Autoren) werden nicht gesperrt.') ?>
     </p>
 
     <div class="box padded">

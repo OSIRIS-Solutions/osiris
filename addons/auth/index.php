@@ -78,6 +78,70 @@ Route::post('/auth/forgot-password', function () {
     }
 });
 
+
+Route::get('/user/password-reset/(.*)', function ($user_id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.password-reset')){
+        header("Location: " . ROOTPATH . "/?msg=no-permission");
+        die;
+    } 
+    $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($user_id)]);
+    $person = DB::doc2Arr($person);
+    if (empty($person)) {
+        header("Location: " . ROOTPATH . "/user/browse");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => $person['displayname'], 'path' => "/profile/$person[_id]"],
+        ['name' => lang('Reset password', 'Passwort zurücksetzen')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/addons/auth/admin-reset-password.php";
+    include BASEPATH . "/footer.php";
+});
+
+
+Route::post('/auth/admin-reset-password', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.password-reset')){
+        header("Location: " . ROOTPATH . "/?msg=no-permission");
+        die;
+    } 
+    if (!isset($_POST['id'])) {
+        header("Location: " . ROOTPATH . "/user/browse");
+        die;
+    }
+    $id = DB::to_ObjectID($_POST['id']);
+    $hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
+    $osiris->accounts->updateOne(
+        ['username' => $osiris->persons->findOne(['_id' => $id])['username']],
+        ['$set' => ['reset' => time(), 'hash' => $hash]]
+    );
+    
+    $link = $_SERVER['HTTP_HOST'] . ROOTPATH . "/auth/reset-password?hash=$hash";
+
+    // return the link to the admin to share it with the user
+    include BASEPATH . "/header.php";
+    ?>
+    <div class="msg success">
+        <?= lang('A password reset link has been created. Please share the following link with the user:', 'Ein Link zum Zurücksetzen des Passworts wurde erstellt. Bitte teile den folgenden Link mit dem Nutzer:') ?>
+        <br>
+        <pre class="code box p-20"><?= $link ?></pre>
+        <button class="btn primary">
+            <span onclick="navigator.clipboard.writeText('<?= $link ?>')"><?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?></span>
+        </button>
+    </div>
+
+    <p class="text-muted">
+        <?=lang('Please note that the link does not work when you are already logged-in.', 'Bitte beachte, dass der Link nicht funktioniert, wenn du bereits eingeloggt bist.')?>
+    </p>
+
+    <?php
+    include BASEPATH . "/footer.php";
+});
+
+
 Route::get('/auth/reset-password', function(){
     include_once BASEPATH . "/php/init.php";
 

@@ -15,6 +15,7 @@ class Modules
     private $user = '';
     private $userlist = array();
     private $conference = array();
+    private $fields = array(); 
 
     public $all_modules = array(
         "authors" => [
@@ -85,7 +86,7 @@ class Modules
             "label_de" => "Bücherreihe",
             "description" => "A field for the book series, where the publication is part of.",
             "description_de" => "Ein Feld für die Buchreihe, zu der die Publikation gehört.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "book-title" => [
@@ -96,7 +97,7 @@ class Modules
             "label_de" => "Buchtitel",
             "description" => "A field for the book title, where the publication is part of.",
             "description_de" => "Ein Feld für den Buchtitel, zu dem die Publikation gehört.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "city" => [
@@ -107,7 +108,7 @@ class Modules
             "label_de" => "Stadt",
             "description" => "A field for a city, e.g for the publisher of a book or for a conference location.",
             "description_de" => "Ein Feld für eine Stadt, z.B. für den Verlag eines Buches oder für einen Konferenzort.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['general', 'location']
         ],
         "conference" => [
@@ -118,7 +119,7 @@ class Modules
             "label_de" => "Veranstaltung",
             "description" => "A field for the name of a conference/event.",
             "description_de" => "Ein Feld für den Namen einer Konferenz/Veranstaltung.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event']
         ],
         "correction" => [
@@ -129,7 +130,7 @@ class Modules
             "label_de" => "Correction",
             "description" => "Checkbox for a correction flag.",
             "description_de" => "Checkbox für eine Korrekturmarkierung.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['publication']
         ],
         "date-range" => [
@@ -140,7 +141,7 @@ class Modules
             "label_de" => "Zeitspanne",
             "description" => "A field for a date range, e.g. for a event. <b>Important</b>: If the end date is not set, the date is assumed to be only one day! If you want an ongoing event, please use the 'date-range-ongoing' module.",
             "description_de" => "Ein Feld für einen Zeitraum, z.B. für eine Konferenz. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als nur ein Tag angenommen! Wenn Sie ein laufendes Ereignis möchten, verwenden Sie bitte das Modul 'date-range-ongoing'.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['date', 'important']
         ],
         "date-range-ongoing" => [
@@ -151,7 +152,7 @@ class Modules
             "label_de" => "Zeitspanne",
             "description" => "A field for a possibly ongoing date range, e.g. for a membership. <b>Important</b>: If the end date is not set, the date is assumed to be ongoing! If you want a fixed date range, please use the 'date-range' module.",
             "description_de" => "Ein Feld für einen möglicherweise laufenden Zeitraum, z.B. für eine Mitgliedschaft. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als laufend angenommen! Wenn Sie einen festen Zeitraum möchten, verwenden Sie bitte das Modul 'date-range'.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['date', 'important']
         ],
         "date" => [
@@ -162,7 +163,7 @@ class Modules
             "label_de" => null,
             "description" => "A field for a date, divided into year, month and day. A shortcut button for today's date is available.",
             "description_de" => "Ein Feld für ein Datum, aufgeteilt in Jahr, Monat und Tag. Ein Shortcut-Button für das heutige Datum ist verfügbar.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['date', 'important']
         ],
         "details" => [
@@ -173,7 +174,7 @@ class Modules
             "label_de" => "Details",
             "description" => "A field for additional details, e.g. for a grant.",
             "description_de" => "Ein Feld für weitere Details, z.B. für ein Stipendium.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['general']
         ],
         "doctype" => [
@@ -184,7 +185,7 @@ class Modules
             "label_de" => "Dokumententyp",
             "description" => "A field for the document type, e.g. for a report.",
             "description_de" => "Ein Feld für den Dokumententyp, z.B. für einen Bericht.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "doi" => [
@@ -195,7 +196,7 @@ class Modules
             "label_de" => "DOI",
             "description" => "A field for the Digital Object Identifier (DOI) of a publication. This field is used to uniquely identify a publication.",
             "description_de" => "Ein Feld für den Digital Object Identifier (DOI) einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['important', 'publication']
         ],
         "edition" => [
@@ -206,7 +207,7 @@ class Modules
             "label_de" => "Edition",
             "description" => "A field for the edition of a publication, e.g. for a book.",
             "description_de" => "Ein Feld für die Auflage einer Publikation, z.B. für ein Buch.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "editor" => [
@@ -236,7 +237,7 @@ class Modules
             "label_de" => "Herausgeber",
             "description" => "A compressed module for editors, with 'tag-like' input fields for editors. Supports multiple editors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
             "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['authors', 'publication']
         ],
         "editorial" => [
@@ -247,7 +248,7 @@ class Modules
             "label_de" => "Art der Herausgabe",
             "description" => "A field for the editorial type, e.g. for a special issue.",
             "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "event-select" => [
@@ -269,7 +270,7 @@ class Modules
             "label_de" => "Art des Gastes",
             "description" => "A field for the category of a guest, can be one of the following: guest scientist, lecture internship, student internship, other.",
             "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['people']
         ],
         "gender" => [
@@ -280,7 +281,7 @@ class Modules
             "label_de" => "Geschlecht",
             "description" => "A field to select the gender of a person. Can be one of the following: male, female, non-binary, not specified.",
             "description_de" => "Ein Feld zur Auswahl des Geschlechts einer Person. Kann eines der folgenden sein: männlich, weiblich, divers, nicht spezifiziert.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['people']
         ],
         "nationality" => [
@@ -291,7 +292,7 @@ class Modules
             "label_de" => "Nationalität",
             "description" => "A synonym for the 'country' field, used for persons.",
             "description_de" => "Ein Synonym für das Feld 'Land', das für Personen verwendet wird.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['people', 'location']
         ],
         "country" => [
@@ -302,7 +303,7 @@ class Modules
             "label_de" => "Land",
             "description" => "A field for a country, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['location']
         ],
         "countries" => [
@@ -313,7 +314,7 @@ class Modules
             "label_de" => "Länder",
             "description" => "A field for a list of countries, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['location']
         ],
         "abstract" => [
@@ -324,7 +325,7 @@ class Modules
             "label_de" => "Zusammenfassung",
             "description" => "A field for the abstract, summarizing an activity.",
             "description_de" => "Ein Feld für die Zusammenfassung, die eine Aktivität zusammenfasst.",
-            "width" => 1,
+            "width" => 0,
             "tags" => ['publication', 'important']
         ],
         "isbn" => [
@@ -335,7 +336,7 @@ class Modules
             "label_de" => "ISBN",
             "description" => "A field for the International Standard Book Number (ISBN) of a publication. This field is used to uniquely identify a book.",
             "description_de" => "Ein Feld für die Internationale Standardbuchnummer (ISBN) einer Publikation. Dieses Feld wird verwendet, um ein Buch eindeutig zu identifizieren.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "issn" => [
@@ -346,7 +347,7 @@ class Modules
             "label_de" => "ISSN",
             "description" => "A field for the International Standard Serial Number (ISSN) of a publication. This field is used to uniquely identify a journal. May contain multiple ISSNs, separated by comma.",
             "description_de" => "Ein Feld für die Internationale Standardnummer für fortlaufende Sammelwerke (ISSN) einer Publikation. Dieses Feld wird verwendet, um eine Zeitschrift eindeutig zu identifizieren. Kann mehrere ISSNs enthalten, die durch Komma getrennt sind.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "issue" => [
@@ -357,7 +358,7 @@ class Modules
             "label_de" => "Issue",
             "description" => "A field for the issue of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für das Heft einer Publikation, z.B. für eine Zeitschrift.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "iteration" => [
@@ -368,7 +369,7 @@ class Modules
             "label_de" => "Häufigkeit",
             "description" => "A field for the iteration of an event, e.g. for a conference. Possible values are: continously or once.",
             "description_de" => "Ein Feld für die Häufigkeit einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: kontinuierlich oder einmalig.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event']
         ],
         "journal" => [
@@ -379,7 +380,7 @@ class Modules
             "label_de" => "Zeitschrift",
             "description" => "A field for selecting a journal from the database. If the journal does not exist yet, the user will be prompted to select one from an online catalogue that will be then saved into the database.",
             "description_de" => "Ein Feld zum Auswählen eines Journals (Zeitschrift) aus der Datenbank. Wenn das Journal noch nicht existiert, wird der Benutzer aufgefordert, eines aus einem Online-Katalog auszuwählen, das dann in die Datenbank gespeichert wird.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['publication', 'journal']
         ],
         "lecture-invited" => [
@@ -390,7 +391,7 @@ class Modules
             "label_de" => "Eingeladener Vortrag",
             "description" => "Checkbox for an invited lecture flag.",
             "description_de" => "Checkbox für eine eingeladene Vortragsmarkierung.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event']
         ],
         "lecture-type" => [
@@ -401,7 +402,7 @@ class Modules
             "label_de" => "Länge des Vortrags",
             "description" => "A field for the length of a lecture, e.g. for a conference. Possible values are: short, medium, long.",
             "description_de" => "Ein Feld für die Länge eines Vortrags, z.B. für eine Konferenz. Mögliche Werte sind: kurz, mittel, lang.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event']
         ],
         "license" => [
@@ -412,7 +413,7 @@ class Modules
             "label_de" => "Lizenz",
             "description" => "A field for the license, e.g. for software.",
             "description_de" => "Ein Feld für die Lizenz, z.B. für Software.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['software', 'publication']
         ],
         "link" => [
@@ -423,7 +424,7 @@ class Modules
             "label_de" => "Link",
             "description" => "A field for a link, e.g. for an event.",
             "description_de" => "Ein Feld für einen Link, z.B. für eine Veranstaltung.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['general', 'important']
         ],
         "location" => [
@@ -434,7 +435,7 @@ class Modules
             "label_de" => "Ort",
             "description" => "A field for the more general location, e.g. for an event. If you want to specify a city an country, please use the 'city' and 'country' modules.",
             "description_de" => "Ein Feld für den allgemeineren Ort, z.B. für eine Veranstaltung. Wenn Sie eine Stadt und ein Land angeben möchten, verwenden Sie bitte die Module 'city' und 'country'.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['location']
         ],
         "magazine" => [
@@ -445,7 +446,7 @@ class Modules
             "label_de" => "Zeitschrift / Veröffentlichungsort",
             "description" => "A field for the magazine or publication venue, where the publication is part of. Not standardized and typically used if no journal is given.",
             "description_de" => "Ein Feld für das Magazin oder den Veröffentlichungsort, zu dem die Publikation gehört. Nicht standardisiert und typischerweise verwendet, wenn keine Zeitschrift angegeben ist.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "online-ahead-of-print" => [
@@ -456,7 +457,7 @@ class Modules
             "label_de" => "Online Ahead Of Print",
             "description" => "Checkbox for an online ahead of print flag. This flag is used to indicate that a publication is available online before it is published in a journal. Checking will lead to a frequent reminder to update the publication status.",
             "description_de" => "Checkbox für eine Online Ahead Of Print-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation online verfügbar ist, bevor sie in einer Zeitschrift veröffentlicht wird. Das Ankreuzen führt zu einer gelegentlichen Erinnerung, den Publikationsstatus zu überprüfen.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['publication', 'important']
         ],
         "openaccess" => [
@@ -467,7 +468,7 @@ class Modules
             "label_de" => null,
             "description" => "Checkbox for an open access flag. This flag is used to indicate that a publication is freely available online. Important: If the actual open access status is important, please use the 'openaccess-status' module.",
             "description_de" => "Checkbox für eine Open-Access-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation frei online verfügbar ist. Wichtig: Wenn der tatsächliche Open-Access-Status wichtig ist, verwenden Sie bitte das Modul 'openaccess-status'.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['publication', 'important']
         ],
         "openaccess-status" => [
@@ -478,7 +479,7 @@ class Modules
             "label_de" => "Open Access Status",
             "description" => "A field for the open access status of a publication. Possible values are: gold, green, hybrid, bronze, closed.",
             "description_de" => "Ein Feld für den Open-Access-Status einer Publikation. Mögliche Werte sind: gold, green, hybrid, bronze, closed.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'important']
         ],
         "pages" => [
@@ -489,7 +490,7 @@ class Modules
             "label_de" => "Seiten",
             "description" => "A field for the pages of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für die Seiten einer Publikation, z.B. für eine Zeitschrift.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "peer-reviewed" => [
@@ -500,7 +501,7 @@ class Modules
             "label_de" => "Peer-Reviewed",
             "description" => "Checkbox for a peer-reviewed flag. This flag is used to indicate that a publication has been peer-reviewed.",
             "description_de" => "Checkbox für eine Peer-Reviewed-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation peer-reviewed wurde.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'important']
         ],
         "person" => [
@@ -522,7 +523,7 @@ class Modules
             "label_de" => "Verlag",
             "description" => "A field for the publisher of a publication, e.g. for a book.",
             "description_de" => "Ein Feld für den Verlag einer Publikation, z.B. für ein Buch.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "pubmed" => [
@@ -533,7 +534,7 @@ class Modules
             "label_de" => "Pubmed-ID",
             "description" => "A field for the PubMed ID of a publication. This field is used to uniquely identify a publication.",
             "description_de" => "Ein Feld für die PubMed-ID einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "pubtype" => [
@@ -544,7 +545,7 @@ class Modules
             "label_de" => "Publikationstyp",
             "description" => "A field for the publication type, e.g. for a journal article. Only to be used if the publication type is not defined by the subtype.",
             "description_de" => "Ein Feld für den Publikationstyp, z.B. für einen Zeitschriftenartikel. Nur zu nutzen, wenn der Publikationstyp nicht durch den Subtyp festgelegt wird.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "review-type" => [
@@ -555,7 +556,7 @@ class Modules
             "label_de" => "Art der Begutachtung",
             "description" => "A field for the type of review, e.g. for a grant.",
             "description_de" => "Ein Feld für die Art der Begutachtung, z.B. für ein Stipendium.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication']
         ],
         "role" => [
@@ -566,7 +567,7 @@ class Modules
             "label_de" => "Rolle/Funktion",
             "description" => "A field for the role or function of a person, e.g. for an event.",
             "description_de" => "Ein Feld für die Rolle oder Funktion einer Person, z.B. für eine Veranstaltung.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['people', 'event']
         ],
         "scientist" => [
@@ -587,7 +588,7 @@ class Modules
             "label_de" => "Wissenschaftler:in",
             "description" => "A selection field for an author from the institute. Limited to the persons in the database and supports only one author.",
             "description_de" => "Ein Auswahlfeld für einen Autor aus dem Institut. Beschränkt auf die Personen in der Datenbank und unterstützt nur einen Autor.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['authors', 'important']
         ],
         "semester-select" => [
@@ -598,7 +599,7 @@ class Modules
             "label_de" => "Wähle ein Semester",
             "description" => "A field for preselecting a semester, e.g. the next Summer Semester. If the user clicks on a semester, the date range is automatically adjusted.",
             "description_de" => "Ein Feld zur Vorauswahl eines Semesters, z.B. des nächsten Sommersemesters. Wenn ein:e Benutzer:in auf ein Semester klickt, wird der Zeitraum automatisch angepasst.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['teaching', 'modificator']
         ],
         "scope" => [
@@ -609,7 +610,7 @@ class Modules
             "label_de" => "Reichweite",
             "description" => "A field for the scope of an event, e.g. for a conference. Possible values are: local, regional, national, international.",
             "description_de" => "Ein Feld für den Geltungsbereich einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: lokal, regional, national, international.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event']
         ],
         "software-link" => [
@@ -620,7 +621,7 @@ class Modules
             "label_de" => "Kompletter Link zur Software/Datenbank",
             "description" => "Synonym for a link used for software.",
             "description_de" => "Synonym für einen Link, der für Software verwendet wird.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['software']
         ],
         "software-type" => [
@@ -631,7 +632,7 @@ class Modules
             "label_de" => "Art der Software",
             "description" => "A field for the type of software, possible vales are software, database, dataset, webtool, report.",
             "description_de" => "Ein Feld für den Typ der Software, mögliche Werte sind Software, Datenbank, Datensatz, Webtool, Bericht.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['software']
         ],
         "software-venue" => [
@@ -642,7 +643,7 @@ class Modules
             "label_de" => "Veröffentlichungsort, z.B. GitHub, Zenodo ...",
             "description" => "A field for the venue of a software, e.g. for a repository.",
             "description_de" => "Ein Feld für den Veröffentlichungsort einer Software, z.B. für ein Repository.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['software']
         ],
         "status" => [
@@ -653,7 +654,7 @@ class Modules
             "label_de" => "Status",
             "description" => "A field for the status of an activity, e.g. for a thesis supervision. Possible values are: in progress, completed, aborted.",
             "description_de" => "Ein Feld für den Status einer Aktivität, z.B. für eine Betreuung einer Abschlussarbeit. Mögliche Werte sind: in Bearbeitung, abgeschlossen, abgebrochen.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['general', 'important']
         ],
         "student-category" => [
@@ -664,7 +665,7 @@ class Modules
             "label_de" => "Kategorie eines Studierenden",
             "description" => "A field for the category of a student, can be one of the following: bachelor thesis, master thesis, doctoral thesis, internship, other.",
             "description_de" => "Ein Feld für die Kategorie eines Studierenden, kann eine der folgenden sein: Bachelorarbeit, Masterarbeit, Doktorarbeit, Praktikum, Sonstiges.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['people', 'publication']
         ],
         "thesis" => [
@@ -675,7 +676,7 @@ class Modules
             "label_de" => "Art der Abschlussarbeit",
             "description" => "A field for the category of a thesis, can be one of the following: bachelor, master, diploma, doctoral, habilitation.",
             "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'people']
         ],
         "supervisor" => [
@@ -718,7 +719,7 @@ class Modules
             "label_de" => "Kategorie der Lehrveranstaltung",
             "description" => "A field for the category of a teaching activity, e.g. for a lecture. Possible values are: lecture, practical-lecture, seminar, project, other.",
             "description_de" => "Ein Feld für die Kategorie einer Lehrveranstaltung, z.B. für eine Vorlesung. Mögliche Werte sind: Vorlesung, Praktikum, Seminar, Projekt, Sonstiges.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['teaching']
         ],
         "teaching-course" => [
@@ -729,7 +730,7 @@ class Modules
             "label_de" => "Veranstaltung zu folgendem Modul",
             "description" => "A field for selecting a teaching course from the database. If the course does not exist yet, the user will be prompted to add a new one that will be then saved into the database.",
             "description_de" => "Ein Feld zum Auswählen eines Lehrmoduls aus der Datenbank. Wenn das Modul noch nicht existiert, wird der Benutzer aufgefordert, ein neues hinzuzufügen, das dann in die Datenbank gespeichert wird.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['teaching']
         ],
         "title" => [
@@ -751,7 +752,7 @@ class Modules
             "label_de" => "Untertitel",
             "description" => "A field for the subtitle of an activity.",
             "description_de" => "Ein Feld für den Untertitel einer Aktivität.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['general']
         ],
         "university" => [
@@ -762,7 +763,7 @@ class Modules
             "label_de" => "Universität",
             "description" => "A field for the university of a publication, e.g. for a thesis.",
             "description_de" => "Ein Feld für die Universität einer Publikation, z.B. für eine Abschlussarbeit.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['teaching', 'people']
         ],
         "version" => [
@@ -773,7 +774,7 @@ class Modules
             "label_de" => "Version",
             "description" => "A field for the version of a software, e.g. for a release.",
             "description_de" => "Ein Feld für die Version einer Software, z.B. für ein Release.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['software']
         ],
         "venue" => [
@@ -784,7 +785,7 @@ class Modules
             "label_de" => 'Ort der Veröffentlichung',
             "description" => "A field for the publisher or place of publication, e.g. for a report.",
             "description_de" => "Ein Feld für den Herausgeber oder den Ort der Veröffentlichung, z.B. für einen Bericht.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "volume" => [
@@ -795,7 +796,7 @@ class Modules
             "label_de" => "Volume",
             "description" => "A field for the volume of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für den Band einer Publikation, z.B. für eine Zeitschrift.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['publication', 'journal']
         ],
         "political_consultation" => [
@@ -806,7 +807,7 @@ class Modules
             "label_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
             "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
             "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
-            "width" => 2,
+            "width" => 6,
             "tags" => ['event', 'publication']
         ],
         "organization" => [
@@ -817,7 +818,7 @@ class Modules
             "label_de" => "Organisation",
             "description" => "A field for an organisation that is connected to an activity, e.g. a university or a company. This field is used to identify the organisation that is responsible for the activity.",
             "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist.",
-            "width" => 1,
+            "width" => 12,
             "tags" => ['organizations', 'people']
         ],
         "organizations" => [
@@ -867,6 +868,18 @@ class Modules
             }
             $this->authorcount = count($form['authors']);
         }
+
+        if (!empty($form) && !empty($form['type'])) {
+            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['type']]);
+            if (!empty($typeArr) && !empty($typeArr['fields'])) {
+                $fields = DB::doc2Arr($typeArr['fields']);
+                $fields = array_filter($fields, function ($f) {
+                    return ($f['type'] ?? 'field') === 'field' || ($f['type'] ?? 'field') === 'custom';
+                });
+                $this->fields = array_column($fields, 'props', 'id');
+            }
+        }
+
         foreach ($this->preset as $a) {
             $this->authors .= $this->authorForm($a, false);
         }
@@ -934,8 +947,10 @@ class Modules
 
     function get_name($module)
     {
+        if (!empty($this->fields) && !empty($this->fields[$module]) && isset($this->fields[$module]['label'])) {
+            return lang($this->fields[$module]['label'], $this->fields[$module]['label_de'] ?? null);
+        }
         if (!isset($this->all_modules[$module]['name'])) {
-
             $field = $this->DB->db->adminFields->findOne(['id' => $module]);
             if (!empty($field)) return lang($field['name'], $field['name_de'] ?? $field['name']);
             return ucfirst($module);
@@ -1028,17 +1043,17 @@ class Modules
             echo '<b>Module <code>' . $module . '</code> is not defined. </b>';
             return;
         }
-        $width = $field['width'] ?? 2;
-        $width = 12 / $width;
+        $width = $field['width'] ?? 12;
+        // $width = 12 / $width;
         $labelClass = ($req ? "required" : "");
-        $label = lang($field['label'] ?? $field['name'], $field['label_de'] ?? null);
+        $label = lang($field['name'] ?? $field['id'], $field['name_de'] ?? null);
         $help = '';
 
         if (isset($props['label'])) {
             $label = lang($props['label'], $props['label_de'] ?? null);
         }
         if (isset($props['width']) && $props['width'] > 0 && $props['width'] <= 12) {
-            $width = 12 / $props['width'];
+            $width = $props['width'];
         }
         if (isset($props['required']) && $props['required'] == true) {
             $labelClass = "required";
@@ -1074,29 +1089,73 @@ class Modules
             echo '</div>';
             return;
         }
+        $value = ($this->val($module, $field['default'] ?? ''));
+
+        if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
+?>
+            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
+                <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                <select class="form-control" name="values[<?= $module ?>][]" id="<?= $module ?>" <?= $labelClass ?> multiple <?= $labelClass ?>>
+                    <?php
+                    if ($value instanceof MongoDB\Model\BSONArray) {
+                        $value = DB::doc2Arr($value);
+                    }
+                    foreach ($field['values'] as $opt) {
+                        // if is type MongoDB\Model\BSONArray, convert to array
+                        if ($opt instanceof MongoDB\Model\BSONArray) $opt = DB::doc2Arr($opt);
+                        $val = $opt;
+                        if (is_array($opt)) {
+                            $val = $opt[0];
+                            $opt = lang(...$opt);
+                        }
+                        $selected = false;
+                        if (is_array($value)) {
+                            $selected = in_array($val, $value);
+                        } else {
+                            $selected = ($value == $val);
+                        }
+                    ?>
+                        <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $opt ?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+            </div>
+            <script>
+                $('#<?= $module ?>').multiSelect({
+                    // containerHTML: '<div class="btn-group">',
+                    // menuHTML: '<div class="dropdown-menu">',
+                    // buttonHTML: '<div class="form-control">',
+                    // menuItemHTML: '<label>',
+                    // noneText: '-- Choisir --',
+                    // allText: 'Tout le monde',
+                });
+            </script>
+            <?php
+            return;
+        }
 
         echo '<div class="data-module floating-form col-sm-' . $width . '" data-module="' . $module . '">';
 
         switch ($field['format']) {
             case 'string':
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
-                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $labelClass . '>' . $this->val($module, $field['default'] ?? '') . '</textarea>';
+                echo '<textarea name="values[' . $module . ']" id="' . $module . '" cols="30" rows="5" class="form-control" placeholder="custom-field" ' . $labelClass . '>' . $value . '</textarea>';
                 break;
             case 'int':
-                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
                 echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
-                $val = $this->val($module, $field['default'] ?? '');
                 if (!$req) {
-                    '<option value="" ' . (empty($val) ? 'selected' : '') . '>-</option>';
+                    '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
                 }
                 foreach ($field['values'] as $opt) {
                     // if is type MongoDB\Model\BSONArray, convert to array
@@ -1106,18 +1165,18 @@ class Modules
                     if (is_array($opt)) {
                         $opt = lang(...$opt);
                     }
-                    echo '<option ' . ($val == $opt ? 'selected' : '') . ' value="' . $opt . '">' . $opt . '</option>';
+                    echo '<option ' . ($value == $opt ? 'selected' : '') . ' value="' . $opt . '">' . $opt . '</option>';
                 }
                 echo '</select>';
                 break;
             case 'date':
-                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . valueFromDateArray($this->val($module, $field['default'] ?? '')) . '" placeholder="custom-field">';
+                echo '<input type="date" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . valueFromDateArray($value) . '" placeholder="custom-field">';
                 break;
             case 'url':
-                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '" placeholder="custom-field">';
+                echo '<input type="url" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             default:
-                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $this->val($module, $field['default'] ?? '') . '">';
+                echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '">';
                 break;
         }
 
@@ -1144,16 +1203,15 @@ class Modules
         $m = $this->all_modules[$module] ?? [];
         $label = lang($m['name'], $m['name_de'] ?? $m['name']);
 
-        $width = 1;
-        if ($m['width'] ?? 2 > 0) {
+        $width = 12;
+        if ($m['width'] ?? 6 > 0) {
             $width = $m['width'] ?? 2;
         }
-        $width = 12 / $width;
 
         $help = '';
 
         if (isset($props['width']) && $props['width'] > 0 && $props['width'] <= 12) {
-            $width = 12 / $props['width'];
+            $width = $props['width'];
         }
         if (isset($props['required']) && $props['required'] == true) {
             $labelClass = "required";
@@ -1169,7 +1227,7 @@ class Modules
         switch ($module) {
             case 'gender':
                 $val = $this->val('gender');
-?>
+            ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
@@ -1359,7 +1417,7 @@ class Modules
                                     <th><label for="last" class="required"><?= lang('Last name', 'Nachname') ?></label></th>
                                     <th><label for="first" class="required"><?= lang('First name', 'Vorname') ?></label></th>
                                     <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
-                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliert') ?></label></th>
+                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliiert') ?></label></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1494,7 +1552,7 @@ class Modules
                                 <tr>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th>Username</th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
@@ -1503,7 +1561,9 @@ class Modules
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php foreach ($this->preset ?? [] as $i => $author) { ?>
+                                <?php 
+                                $i = 0;
+                                foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
                                         <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
@@ -1590,16 +1650,17 @@ class Modules
                                 <tr>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th>Username</th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th>
-                                        <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php foreach ($this->preset ?? [] as $i => $author) {
+                                <?php 
+                                $i = 0;
+                                foreach ($this->preset ?? [] as $i => $author) {
                                     $role = $author['role'] ?? 'supervisor';
                                 ?>
                                     <tr>
@@ -1646,6 +1707,7 @@ class Modules
                             </tfoot>
                         </table>
                     </div>
+                    <?= $this->render_help($help) ?>
                     <script>
                         function removeSupervisorRow(el) {
                             // check if row is the only one left
@@ -1870,11 +1932,11 @@ class Modules
                     </small>
                     <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affilierten Autoren angegeben.') ?>
+                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affiliierten Autoren angegeben.') ?>
                         </h5>
                         <?= lang(
                             'Please double click on every affiliated author in the list above, to mark them as affiliated. Only affiliated authors will receive points and are shown in reports.',
-                            'Bitte doppelklicken Sie auf jeden affilierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
+                            'Bitte doppelklicken Sie auf jeden affiliierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
                         ) ?>
                     </div>
                 </div>
@@ -2062,7 +2124,7 @@ class Modules
 
             case "date-range":
             ?>
-                <div class="data-module col-sm-8 col-md-6" data-module="date-range">
+                <div class="data-module col-sm-<?= $width ?>" data-module="date-range">
                     <label class="<?= $labelClass ?> floating-title" for="date_start">
                         <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty if only one day', 'Ende leer lassen, falls es nur ein Tag ist') ?>"><i class="ph ph-question" style="line-height:0;"></i></span>
@@ -2098,7 +2160,7 @@ class Modules
 
             case "date-range-ongoing":
             ?>
-                <div class="data-module col-sm-8 col-md-6" data-module="date-range-ongoing">
+                <div class="data-module col-sm-<?= $width ?>" data-module="date-range-ongoing">
                     <label class="<?= $labelClass ?> element-time floating-title" for="date_start">
                         <?= $label ?>
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty ongoing activity', 'Ende leer lassen, falls es eine zurzeit laufende Aktivität ist') ?>"><i class="ph ph-question"></i></span>
@@ -2525,7 +2587,7 @@ class Modules
                 if (!$status) $status = $this->val('open_access', false) ? 'open' : 'closed';
             ?>
                 <!-- oa_status -->
-                <div class="data-module floating-form col-3" data-module="openaccess-status">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="openaccess-status">
                     <select class="form-control" id="oa_status" name="values[oa_status]" <?= $labelClass ?> autocomplete="off">
                         <option value="closed" <?= $status == 'closed' ? 'selected' : '' ?>>Closed Access</option>
                         <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('unknown status', 'Unbekannter Status') ?>)</option>

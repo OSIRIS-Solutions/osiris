@@ -112,11 +112,12 @@ $all = $osiris->activities->count(['affiliated' => true]);
 </div>
 
 <p class="text-muted">
-    <?= lang('Only affiliated activities are counted (at least one author is affiliated with the institute).', 'Es werden nur affilierte Aktivitäten gezählt (mind. ein:e Autor:in ist mit dem Institut affiliert).') ?>
+    <?= lang('Only affiliated activities are counted (at least one author is affiliated with the institute).', 'Es werden nur affiliierte Aktivitäten gezählt (mind. ein:e Autor:in ist mit dem Institut affiliiert).') ?>
 </p>
 
-<br>
-<div id="statistics">
+<div class="row row-eq-spacing">
+
+<div id="statistics" class="col-md-12 col-lg-8 col-xl-9">
 
     <h2 class="text-decoration-underline">
         <?= $time_frame ?>
@@ -129,11 +130,11 @@ $all = $osiris->activities->count(['affiliated' => true]);
     </p>
 
 
-    <h2>
+    <h2 id="activities-by-type">
         <?= lang('Activities', 'Aktivitäten') ?> <?= $phrase ?>:
     </h2>
     <p class="text-muted">
-        <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affilierten Autor/Autorin gezählt.') ?>
+        <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
     </p>
 
     <?php
@@ -182,7 +183,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
     </table>
 
 
-    <h3>
+    <h3 id="activities-started-before">
         <?= lang('Activities that have started before the time frame', 'Aktivitäten, die vor dem Zeitraum gestartet sind') ?>
     </h3>
     <p class="text-muted">
@@ -244,12 +245,12 @@ $all = $osiris->activities->count(['affiliated' => true]);
     <br>
     <hr>
 
-    <h2>
+    <h2 id="statistics-on-publications">
         <?= lang('Statistics on publications', 'Statistiken zu Publikationen') ?>
     </h2>
 
     <p class="text-muted">
-        <?= lang('Only publications with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Publikationen mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affilierten Autor/Autorin gezählt.') ?>
+        <?= lang('Only publications with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Publikationen mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
     </p>
 
     <?php
@@ -293,7 +294,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <tr>
                 <th><?= lang('Type of publication', 'Art der Publikation') ?></th>
                 <th><?= lang('Count', 'Gesamt') ?></th>
-                <th><?= lang('Count of affiliated', 'davon Affiliert') ?></th>
+                <th><?= lang('Count of affiliated', 'davon Affiliiert') ?></th>
                 <th><?= lang('Count of Online', 'davon Online') ?><sup>1</sup></th>
                 <th><?= lang('Without external', 'ohne Externe') ?><sup>2</sup></th>
                 <th><?= lang('Peer-reviewed') ?><sup>3</sup></th>
@@ -352,7 +353,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <sup>3</sup><?= lang('Peer-reviewed = Only if the <code>peer-reviewed</code> module is used.', 'Peer-reviewed = Nur gefüllt, wenn das <code>peer-reviewed</code>-Modul verwendet wird.') ?>
     </p>
 
-    <h3>
+    <h3 id="oa-publications">
         <?= lang('Number of Open Access publications', 'Anzahl der Open Access-Pubikationen') ?>
     </h3>
 
@@ -435,6 +436,31 @@ $all = $osiris->activities->count(['affiliated' => true]);
         </tfoot>
     </table>
 
+</div>
+
+
+            <div class="col-lg-3 d-none d-lg-block">
+                <nav class="on-this-page-nav">
+                    <div class="content">
+                        <div href="#statistics" class="title"><?= lang('Statistics', 'Statistiken') ?></div>
+
+                        <a href="#activities-by-type">
+                            <?= lang('Activities by type', 'Aktivitäten nach Typ') ?>
+                        </a>
+                        <a href="#activities-started-before">
+                            <?= lang('Activities started before', 'Aktivitäten gestartet vor') ?>
+                        </a>
+                        <a href="#statistics-on-publications">
+                            <?= lang('Statistics on publications', 'Statistiken zu Publikationen') ?>
+                        </a>
+                        <a href="#oa-publications">
+                            <?= lang('Open Access publications', 'Open Access Publikationen') ?>
+                        </a>
+                    </div>
+
+                </nav>
+
+            </div>
 </div>
 
 

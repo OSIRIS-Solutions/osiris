@@ -821,7 +821,7 @@ class Document extends Settings
         $formatParts = explode('-', str_replace(['authors-', 'editors-'], '', $module));
 
         // Default-Werte
-        $nameFormat = 'last-f.'; // z. B. last-f, f.-last, etc.
+        $nameFormat = 'last f.'; // z. B. last-f, f.-last, etc.
         $delimiter = ', ';
         $lastSeparator = ' and ';
         $etalLimit = null;
@@ -833,8 +833,8 @@ class Document extends Settings
         }
 
         $nameparts = ['last f.', 'last f', 'f last', 'f. last', 'last first', 'first last', 'last, f.', 'last, f', 'last, first'];
-        foreach ($nameparts as $part) {
-            if (str_contains($module, $part)) {
+        foreach ($formatParts as $part) {
+            if (in_array($part, $nameparts)) {
                 $nameFormat = $part;
                 break;
             }
@@ -1335,8 +1335,23 @@ class Document extends Settings
                 $val = $this->getVal($module, '-');
                 // only in german because standard is always english
                 if (lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
-                    foreach ($this->custom_field_values[$module] as $field) {
-                        if ($val == $field[0] ?? '') return lang(...$field);
+                    if (is_array($val)) {
+                        $values = [];
+                        foreach ($val as $v) {
+                            // check if the value is in the custom field values
+                            foreach ($this->custom_field_values[$module] as $field) {
+                                if ($v == $field[0] ?? '') {
+                                    $values[] = lang(...$field);
+                                    continue 2;
+                                }
+                            }
+                            $values[] = $v;
+                        }
+                        return implode(", ", $values);
+                    } else {
+                        foreach ($this->custom_field_values[$module] as $field) {
+                            if ($val == $field[0] ?? '') return lang(...$field);
+                        }
                     }
                 }
                 if (isset($this->custom_fields[$module])) {

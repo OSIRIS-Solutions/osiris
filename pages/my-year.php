@@ -165,6 +165,7 @@ if (!$Settings->featureEnabled('coins')) {
             <?php } ?>
 
             <?php
+            $quarter_in_past = false;
             if ($currentuser && $Settings->featureEnabled('quarterly-reporting', true)) {
                 $approved = isset($USER['approved']) && in_array($q, DB::doc2Arr($USER['approved']));
                 $approval_needed = array();
@@ -328,7 +329,7 @@ if (!$Settings->featureEnabled('coins')) {
 
 
     <div class="alert signal">
-        <?= lang('The entire year is shown here. Activities in the selected quarter <b class="Q">' . $q . '</b> are highlighted. ', 'Das gesamte Jahr ist hier gezeigt. Aktivitäten innerhalb des gewählten Quartals <b class="Q">' . $q . '</b> sind farblich hinterlegt.') ?>
+        <?= lang('The entire year is shown here. Activities in the selected quarter <b class="Q">' . $q . '</b> are highlighted. ', 'Das gesamte Jahr ist hier gezeigt. Aktivitäten innerhalb des gewählten Quartals <b class="Q">' . $q . '</b> sind farbig hinterlegt.') ?>
 
     </div>
 
@@ -488,9 +489,7 @@ if (!$Settings->featureEnabled('coins')) {
 
 
 
-    <?php if ($currentuser) { ?>
-
-
+    <?php if ($currentuser && $Settings->featureEnabled('quarterly-reporting', true)) { ?>
         <div class="modal modal-lg" id="approve" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content w-600 mw-full" style="border: 2px solid var(--success-color);">

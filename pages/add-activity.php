@@ -585,7 +585,7 @@ function val($index, $default = '')
                                                                                                             } ?></textarea>
                 </div>
             <?php } ?>
-            <?php if (!$copy && !empty($form) && (count($form['authors']) > 1 || ($form['authors'][0]['user'] ?? '') != $_SESSION['username'])) { ?>
+            <?php if (!$copy && !empty($form) && isset($form['authors']) && (count($form['authors']) > 1 || ($form['authors'][0]['user'] ?? '') != $_SESSION['username'])) { ?>
                 <div class="alert signal without-icon p-10 mb-10">
                     <div class="title">
                         <?= lang('Editorial area', 'Bearbeitungs-Bereich') ?>

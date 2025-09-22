@@ -617,7 +617,7 @@ $count_wordcloud = 0;
             <h3><?= lang('Graph', 'Graph') ?></h3>
 
             <p class="text-muted m-0">
-                <?= lang('Based on publications with associated affiliations.', 'Basierend auf affilierten Publikationen.') ?>
+                <?= lang('Based on publications with associated affiliations.', 'Basierend auf affiliierten Publikationen.') ?>
             </p>
             <div id="collabGraph" class="mw-full w-800"></div>
 

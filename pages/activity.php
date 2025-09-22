@@ -349,7 +349,9 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
 
 <!-- show research topics -->
-<?= $Settings->printTopics($doc['topics'] ?? [], 'mb-20') ?>
+<?php if ($Settings->featureEnabled('topics')) {
+    echo $Settings->printTopics($doc['topics'] ?? [], 'mb-20');
+} ?>
 
 
 <div class="d-flex">
@@ -366,14 +368,14 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
         <?php
 
         if ($doc['affiliated'] ?? true) { ?>
-            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliert.') ?>">
+            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-handshake m-0"></i> -->
-                <?= lang('Affiliated', 'Affiliert') ?>
+                <?= lang('Affiliated', 'Affiliiert') ?>
             </div>
         <?php } else { ?>
-            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliert.') ?>">
+            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-hand-x m-0"></i> -->
-                <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                <?= lang('Not affiliated', 'Nicht affiliiert') ?>
             </div>
         <?php } ?>
     </div>
@@ -415,7 +417,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php
                 break;
             default: ?>
-                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliert') ?>">
+                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
                     <?= lang('None', 'Keine') ?>
                 </span>
         <?php
@@ -743,12 +745,18 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 $Modules = new Modules($doc);
                 $Format->usecase = "list";
 
+                $emptyModules = [];
+
                 foreach ($typeModules as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
                     if (in_array($module, ["semester-select", "event-select"])) continue;
                 ?>
                     <?php if ($module == 'teaching-course' && isset($doc['module_id'])) :
                         $module = $DB->getConnected('teaching', $doc['module_id']);
+                        if (empty($module)) {
+                            $emptyModules[] = 'teaching-course';
+                            continue;
+                        }
                     ?>
                         <tr>
                             <td>
@@ -763,6 +771,10 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                     <?php elseif ($module == 'journal' && isset($doc['journal_id'])) :
                         $journal = $DB->getConnected('journal', $doc['journal_id']);
+                        if (empty($journal)) {
+                            $emptyModules[] = 'journal';
+                            continue;
+                        }
                     ?>
 
                         <tr>
@@ -789,6 +801,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                             <td>
                                 <span class="key">Event</span>
                                 <?php if (empty($conference)) { ?>
+                                    <div><?=$doc['conference'] ?? ''?></div>
                                     <span class="text-danger">
                                         <?= lang('This event has been deleted.', 'Diese Veranstaltung wurde gelöscht.') ?>
                                     </span>
@@ -819,7 +832,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <?php } ?>
                             </td>
                         </tr>
-                    <?php else : ?>
+                    <?php else : 
+                        $val = $Format->get_field($module);
+                        if (empty($val) || $val == '-') {
+                            $emptyModules[] = $module;
+                            continue;
+                        }
+                        ?>
 
                         <tr>
                             <td>
@@ -831,6 +850,23 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                     <?php endif; ?>
 
                 <?php } ?>
+
+                <?php
+                // check for empty modules and show a short info
+                if (count($emptyModules)) {
+                    $emptyModules = array_unique($emptyModules);
+                ?>
+                <tr>
+                    <td>
+                        <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
+                       <?php foreach ($emptyModules as $key) { ?>
+                            <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
+                       <?php } ?>
+                       
+                    </td>
+                </tr>
+                <?php } ?>
+
 
 
                 <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && isset($doc['comment'])) : ?>
@@ -1017,13 +1053,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <td>
                                     <?= $author['first'] ?? '' ?>
                                 </td>
-                                    <?php if ($sws) : ?>
-                                        <td><?= $author['sws'] ?? 0 ?></td>
-                                    <?php elseif ($supervisorThesis) : ?>
-                                        <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
-                                    <?php elseif ($role == 'authors') : ?>
-                                        <td><?= $author['position'] ?? '' ?></td>
-                                    <?php endif; ?>
+                                <?php if ($sws) : ?>
+                                    <td><?= $author['sws'] ?? 0 ?></td>
+                                <?php elseif ($supervisorThesis) : ?>
+                                    <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
+                                <?php elseif ($role == 'authors') : ?>
+                                    <td><?= $author['position'] ?? '' ?></td>
+                                <?php endif; ?>
                                 <td>
                                     <?php
                                     if (isset($author['units']) && !empty($author['units'])) {
@@ -1068,7 +1104,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php } ?>
 
             <h3>
-                <?= lang('Affiliated positions', 'Affilierte Positionen') ?>
+                <?= lang('Affiliated positions', 'Affiliierte Positionen') ?>
             </h3>
 
             <?php
@@ -1079,8 +1115,8 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
                 'middle' => lang('Middle author', 'Mittelautor:in'),
                 'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-                'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
+                'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
                 'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
                 'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
                 'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),

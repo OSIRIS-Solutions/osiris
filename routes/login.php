@@ -161,40 +161,33 @@ Route::post('/user/login', function () {
             $msg = "?msg=" . $auth["msg"];
         } else if (isset($auth["success"]) && $auth["success"] == true) {
             // check if user exists in our database
-            $USER = $DB->getPerson($_SESSION['username']);
+            $USER = null;
 
             //get uniqueid from LDAP
             $uniqueid = $auth['uniqueid'] ?? null;
+            $username = $_SESSION['username'];
 
+            // try to get user by uniqueid first
+            if (!empty($uniqueid)) {
+                $USER = $DB->getPersonByUniqueID($uniqueid);
+            }
+            // then try to get user by username
+            if (empty($USER) && !empty($username)) {
+                $USER = $DB->getPerson($username);
+            }
+
+            // create user if not exists
             if (empty($USER)) {
-                // user does not exist in our database
-                // if possible, check for the uniqueid
-                if (!empty($uniqueid)) {
-                    $USER = $DB->getPersonByUniqueID($uniqueid);
+                // create user from LDAP
+                $new_user = newUser($username);
+                if (empty($new_user)) {
+                    $_SESSION['msg'] = lang("Sorry, the user does not exist. Please contact system administrator!", 'Leider existiert der Nutzer nicht. Bitte kontaktiere den Systemadministrator!');
+                    $_SESSION['loggedin'] = false;
+                    die('Sorry, the user does not exist. Please contact system administrator!');
                 }
-                if (empty($USER)) {
-                    // create user from LDAP
-                    $new_user = newUser($_SESSION['username']);
-                    if (empty($new_user)) {
-                        die('Sorry, the user does not exist. Please contact system administrator!');
-                    }
-                    $osiris->persons->insertOne($new_user);
-
-                    $user = $new_user['username'];
-
-                    $USER = $DB->getPerson($user);
-
-                    // try to connect the user with existing authors
-                    // $updateResult = $osiris->activities->updateMany(
-                    //     [
-                    //         'authors.last' => $USER['last'],
-                    //         'authors.first' => new MongoDB\BSON\Regex('^' . $USER['first'][0] . '.*')
-                    //     ],
-                    //     ['$set' => ["authors.$.user" => ($user)]]
-                    // );
-                    // $n = $updateResult->getModifiedCount();
-                    // $msg .= "&new=$n";
-                }
+                $osiris->persons->insertOne($new_user);
+                $user = $new_user['username'];
+                $USER = $DB->getPerson($user);
             } else {
                 // user exists in our database
                 $set = ["lastlogin" => date('Y-m-d')];
@@ -206,7 +199,6 @@ Route::post('/user/login', function () {
                     ['$set' => $set]
                 );
             }
-
 
             $_SESSION['username'] = $USER['username'];
             $_SESSION['name'] = $USER['displayname'];

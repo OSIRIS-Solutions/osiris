@@ -142,7 +142,7 @@ $affiliation = $Settings->get('affiliation_details');
                     $format = $Settings->get('affiliation_format', 'bold');
                     ?>
 
-                    <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affilierten Autor:innen') ?></label>
+                    <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affiliierten Autor:innen') ?></label>
                     <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
                         <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('Bold (default)', 'Fett (Standard)') ?></option>
                         <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('Italic', 'Kursiv') ?></option>

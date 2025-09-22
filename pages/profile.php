@@ -33,7 +33,7 @@ $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
 
-if (!isset($scientist['is_active'])){
+if (!isset($scientist['is_active'])) {
     $scientist['is_active'] = true; // default value if not set
     // update in database because it leads to problems in the frontend otherwise
     $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
@@ -454,41 +454,70 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
                 <i class="ph ph-folder-user ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/visualize/coauthors?scientist=<?= $user ?>" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('Coauthor Network of ', 'Koautoren-Netzwerk von ') . $scientist['first'] ?>">
-                <i class="ph ph-graph ph-fw"></i>
-            </a>
             <?php if ($show_achievements) { ?>
                 <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
                     <i class="ph ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
-
-        </div>
-        <?php if ($Settings->featureEnabled('portal')) { ?>
-            <div class="btn-group btn-group-lg">
+            <?php if ($Settings->featureEnabled('portal')) { ?>
                 <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
+            <?php } ?>
+        </div>
+
+        <?php if ($Settings->hasPermission('user.edit')) { ?>
+            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+                <i class="ph ph-edit ph-fw"></i>
+            </a>
+        <?php } ?>
+
+        <?php
+        $is_admin = $Settings->hasPermission('user.inactive') || $Settings->hasPermission('user.delete') || $Settings->hasPermission('user.password-reset');
+        if ($is_admin) {
+        ?>
+            <div class="dropdown with-arrow">
+                <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
+                    <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
+                    <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                        <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" class="item">
+                            <i class="ph ph-users-three ph-fw text-primary"></i>
+                            <?= lang('Edit org. units', 'Einheiten bearbeiten') ?>
+                        </a>
+                    <?php } ?>
+                    <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH' && $Settings->hasPermission('user.password-reset')) { ?>
+                        <a class="item" href="<?= ROOTPATH ?>/user/password-reset/<?= $scientist['_id'] ?>">
+                            <i class="ph ph-key ph-fw text-primary"></i>
+                            <?= lang('Reset password', 'Passwort zurücksetzen') ?>
+                        </a>
+                    <?php } ?>
+                    <?php if ($Settings->hasPermission('user.inactive')) { ?>
+                        <?php if (($scientist['is_active'] ?? true)) { ?>
+                            <a class="item" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>">
+                                <i class="ph ph-user-circle-dashed ph-fw text-danger"></i>
+                                <?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>
+                            </a>
+                        <?php } elseif ($Settings->hasPermission('user.edit')) { ?>
+                            <a class="item" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account">
+                                <i class="ph ph-user-circle-plus ph-fw text-success"></i>
+                                <?= lang('Re-activate user', 'Nutzer:in reaktivieren') ?>
+                            </a>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if ($Settings->hasPermission('user.delete')) { ?>
+                        <a class="item" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>">
+                            <i class="ph ph-trash ph-fw text-danger"></i>
+                            <?= lang('Delete user', 'Nutzer:in löschen') ?>
+                        </a>
+                    <?php } ?>
+
+                </div>
             </div>
         <?php } ?>
-        <div class="btn-group btn-group-lg">
-            <?php if ($Settings->hasPermission('user.edit')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
-                    <i class="ph ph-edit ph-fw"></i>
-                </a>
-            <?php } ?>
-            <?php if (($scientist['is_active'] ?? true) && $Settings->hasPermission('user.inactive')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>">
-                    <i class="ph ph-user-circle-dashed ph-fw"></i>
-                </a>
-            <?php } ?>
-            <?php if ($Settings->hasPermission('user.delete')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Delete user', 'Nutzer:in löschen') ?>">
-                    <i class="ph ph-trash ph-fw"></i>
-                </a>
-            <?php } ?>
 
-        </div>
+
     </div>
 
 <?php } ?>

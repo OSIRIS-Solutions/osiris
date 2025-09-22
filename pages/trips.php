@@ -18,7 +18,7 @@
 
 $user = $user ?? $_SESSION['username'];
 
-// - Wer (Gantt von Teaching), farblich markiert nach status
+// - Wer (Gantt von Teaching), farbig markiert nach status
 // - Anzahl der Tage/der Reisen/personen pro Land, filterbar nach status
 // - Anzahl Tage pro Topic, filterbar nach status
 

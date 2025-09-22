@@ -102,7 +102,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('Year', 'Jahr') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
-                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -199,7 +199,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
                                 <span class="text-success">
                                     <span class="mr-5"><i class="ph ph-push-pin"></i></span>
-                                    <?= lang('Affiliated', 'Affiliert') ?>
+                                    <?= lang('Affiliated', 'Affiliiert') ?>
                                 </span>
                             </a>
                         </td>
@@ -209,7 +209,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             <a data-type="no" onclick="filterActivities(this, 'no', 15)" class="item" id="no-affiliated-btn">
                                 <span class="text-danger">
                                     <span class="mr-5"><i class="ph ph-push-pin-slash"></i></span>
-                                    <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                                    <?= lang('Not affiliated', 'Nicht affiliiert') ?>
                                 </span>
                             </a>
                         </td>
@@ -357,7 +357,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             'key': 'topics'
         },
         {
-            title: lang('Affiliated', 'Affiliert'),
+            title: lang('Affiliated', 'Affiliiert'),
             'key': 'affiliated'
         }
     ]

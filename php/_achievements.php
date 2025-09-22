@@ -83,7 +83,7 @@ class Achievement
         }
 
         // save gender for correct title formatting
-        if (($this->userdata['gender'] ?? 'n') == 'f') {
+        if (($this->userdata['gender'] ?? 'n') == 'f' && $this->lang == 'de') {
             $this->lang_g .= "_f";
         }
     }

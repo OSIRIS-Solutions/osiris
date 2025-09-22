@@ -230,7 +230,16 @@ class LDAPInterface
 
             $active = !$isDisabled && !$isExpired;
 
-            $res[$entry[$this->userkey][0]] = $active;
+            $username = $entry[$this->userkey][0] ?? null;
+            $uniqueid = $entry[$this->uniqueid][0] ?? null;
+            if ($this->uniqueid == 'objectguid') {
+                $uniqueid = $this->convertObjectGUID($uniqueid);
+            }
+            $res[] = [
+                'username' => $username,
+                'uniqueid' => $uniqueid,
+                'is_active' => $active
+            ];
         }
 
         return $res;
@@ -396,21 +405,19 @@ class LDAPInterface
                 if ($this->uniqueid == 'objectguid') {
                     $uniqueid = $this->convertObjectGUID($uniqueid);
                 }
-                $user = $osiris->persons->findOne(['uniqueid' => $uniqueid], ['projection' => ['_id' => 1, 'username' => 1]]);
+                if (!empty($uniqueid)) {
+                    $user = $osiris->persons->findOne(['uniqueid' => $uniqueid], ['projection' => ['_id' => 1, 'username' => 1]]);
+                }
                 if (!empty($user)) {
                     // user exists, but username is different
                     $username = $user['username'];
                 }
             }
             if (empty($user)) {
+                // if ($verbose) {
+                    echo "Skipping user: " . $username . "<br>";
+                // }
                 continue;
-                //     // user does not exist, create new user
-                //     $userData = $this->newUser($username);
-                //     if (empty($userData)) {
-                //         echo "Fehler beim Erstellen des Benutzers: " . $username . "\n";
-                //         continue;
-                //     }
-                //     $osiris->persons->insertOne($userData);
             }
 
             echo $username .' ';
