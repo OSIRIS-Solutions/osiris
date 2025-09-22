@@ -15,7 +15,7 @@ class Modules
     private $user = '';
     private $userlist = array();
     private $conference = array();
-    private $fields = array(); 
+    private $fields = array();
 
     public $all_modules = array(
         "authors" => [
@@ -1077,6 +1077,7 @@ class Modules
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
                     <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
                 </div>';
+            echo $this->render_help($help);
             echo '</div>';
             return;
         } elseif ($field['format'] == 'bool-check') {
@@ -1086,6 +1087,7 @@ class Modules
             echo '<input type="checkbox" id="' . $module . '" name="values[' . $module . ']" value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
             echo '<label for="' . $module . '">' . $label . '</label>';
             echo '</div>';
+            echo $this->render_help($help);
             echo '</div>';
             return;
         }
@@ -1094,7 +1096,10 @@ class Modules
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
 ?>
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
-                <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?>
+
+                    <?= $this->render_help($help) ?>
+                </label>
                 <select class="form-control" name="values[<?= $module ?>][]" id="<?= $module ?>" <?= $labelClass ?> multiple <?= $labelClass ?>>
                     <?php
                     if ($value instanceof MongoDB\Model\BSONArray) {
@@ -1157,16 +1162,26 @@ class Modules
                 if (!$req) {
                     '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
                 }
+                if ($value instanceof MongoDB\Model\BSONArray) {
+                    $value = DB::doc2Arr($value);
+                }
                 foreach ($field['values'] as $opt) {
                     // if is type MongoDB\Model\BSONArray, convert to array
-                    if ($opt instanceof MongoDB\Model\BSONArray) {
-                        $opt = DB::doc2Arr($opt);
-                    }
+                    if ($opt instanceof MongoDB\Model\BSONArray) $opt = DB::doc2Arr($opt);
+                    $val = $opt;
                     if (is_array($opt)) {
+                        $val = $opt[0];
                         $opt = lang(...$opt);
                     }
-                    echo '<option ' . ($value == $opt ? 'selected' : '') . ' value="' . $opt . '">' . $opt . '</option>';
+                    $selected = false;
+                    if (is_array($value)) {
+                        $selected = in_array($val, $value);
+                    } else {
+                        $selected = ($value == $val);
+                    }
+                    echo '<option ' . ($selected ? 'selected' : '') . ' value="' . $val . '">' . $opt . '</option>';
                 }
+
                 echo '</select>';
                 break;
             case 'date':
@@ -1561,7 +1576,7 @@ class Modules
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php 
+                                <?php
                                 $i = 0;
                                 foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
@@ -1658,7 +1673,7 @@ class Modules
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
-                                <?php 
+                                <?php
                                 $i = 0;
                                 foreach ($this->preset ?? [] as $i => $author) {
                                     $role = $author['role'] ?? 'supervisor';
