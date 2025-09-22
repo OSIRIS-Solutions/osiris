@@ -227,7 +227,7 @@ if ($process == 'project') {
                 <div class="row row-eq-spacing">
                     <div class="col-sm">
                         <label for="id" class="required">ID</label>
-                        <input type="text" class="form-control" name="values[id]" required value="<?= $type == 'new' ? '' : $type ?>" oninput="sanitizeID(this)">
+                        <input type="text" class="form-control" name="values[id]" required value="<?= $type == 'new' ? '' : $type ?>" data-value="<?= $type == 'new' ? '' : $type ?>" oninput="sanitizeID(this)">
                         <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
                     </div>
                     <div class="col-sm">
