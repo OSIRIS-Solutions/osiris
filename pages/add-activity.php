@@ -423,8 +423,9 @@ function val($index, $default = '')
                 return !($s['disabled'] ?? false);
             });
             if (empty($subtypes)) continue;
+            $st = array_values($subtypes)[0]['id'] ?? $t;
         ?>
-            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>', false)" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
+            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $st ?>', false)" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
                 <span>
                     <i class='ph ph-<?= $type['icon'] ?? 'circle' ?>'></i>
                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
@@ -468,8 +469,9 @@ function val($index, $default = '')
                 return !($s['disabled'] ?? false);
             });
             if (empty($subtypes)) continue;
+            $st = array_values($subtypes)[0]['id'] ?? $t;
         ?>
-            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $t ?>')" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
+            <button data-type="<?= $t ?>" onclick="togglePubType('<?= $st ?>')" class="btn select" id="<?= $t ?>-btn" <?= $Categories->cssVar($t) ?>>
                 <span>
                     <i class='ph ph-<?= $type['icon'] ?? 'circle' ?>'></i>
                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
