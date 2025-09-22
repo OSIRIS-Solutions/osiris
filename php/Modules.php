@@ -1165,6 +1165,9 @@ class Modules
                 if ($value instanceof MongoDB\Model\BSONArray) {
                     $value = DB::doc2Arr($value);
                 }
+                // keep track if any field was selected
+                $any = empty($value) || $value == ($field['default'] ?? ''); // empty value is also a selection
+
                 foreach ($field['values'] as $opt) {
                     // if is type MongoDB\Model\BSONArray, convert to array
                     if ($opt instanceof MongoDB\Model\BSONArray) $opt = DB::doc2Arr($opt);
@@ -1179,9 +1182,16 @@ class Modules
                     } else {
                         $selected = ($value == $val);
                     }
+                    if ($selected) $any = true;
                     echo '<option ' . ($selected ? 'selected' : '') . ' value="' . $val . '">' . $opt . '</option>';
                 }
-
+                if ($field['others'] ?? false) {
+                    // if nothing was selected but value is not empty, select others
+                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('Others (please specify)', 'Sonstiges (bitte angeben)') . ':</option>';
+                    // echo '</select>';
+            ?>
+            <?php
+                }
                 echo '</select>';
                 break;
             case 'date':
@@ -1197,6 +1207,35 @@ class Modules
 
         echo '<label for="' . $module . '" class="' . $labelClass . '">' . $label . '</label>';
         echo $this->render_help($help);
+
+        if ($field['format'] == 'list' && ($field['others'] ?? false)) {
+            $any = $any ?? true;
+            echo '<input type="text" class="other-input ' . ($any ? 'hidden" disabled' : '"') . ' name="values[' . $module . ']" id="' . $module . '-others" ' . $labelClass . ' value="' . $value . '">';
+            ?>
+            <script>
+                $('#<?= $module ?>').on('change', function() {
+                    if ($(this).val() == 'others') {
+                        $('#<?= $module ?>-others').removeClass('hidden').attr('disabled', false);
+                    } else {
+                        $('#<?= $module ?>-others').addClass('hidden').attr('disabled', true);
+                    }
+                });
+            </script>
+            <style>
+                .other-input {
+                    color: var(--text-color);
+                    background-color: white;
+                    border: var(--border-width) solid var(--border-color);
+                    border-radius: var(--border-radius);
+                }
+
+                .other-input::before {
+                    content: '<?= lang('Other', 'Weiteres') ?>';
+                    display: inline-block;
+                }
+            </style>
+            <?php
+        }
         echo '</div>';
     }
 

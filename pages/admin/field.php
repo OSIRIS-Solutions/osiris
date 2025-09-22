@@ -120,16 +120,30 @@ if (!empty($form) && isset($form['id'])) {
                 </table>
                 <button class="btn" type="button" onclick="addValuesRow()"><i class="ph ph-plus-circle"></i></button>
 
+                <p class="text-muted">
+                    Hint: changing the values will likely conflict with language support. 
+                </p>
+
                 <!-- multiple? -->
                 <div class="form-group mt-20">
-                    <label for="multiple"><?=lang('Multiple Select?', 'Mehrfachauswahl möglich?')?></label>
-                    <select class="form-control" name="values[multiple]" id="multiple">
-                        <option value="0" <?= ($form['multiple'] ?? 0) == 0 ? 'selected' : '' ?>>No</option>
-                        <option value="1" <?= ($form['multiple'] ?? 0) == 1 ? 'selected' : '' ?>>Yes</option>
-                    </select>
+                    <div class="custom-checkbox">
+                        <input type="hidden" name="values[multiple]" value="0">
+                        <input type="checkbox" name="values[multiple]" id="multiple" value="1" <?= ($form['multiple'] ?? 0) == 1 ? 'checked' : '' ?>>
+                        <label for="multiple"><?= lang('Multiple Select', 'Mehrfachauswahl möglich') ?></label>
+                    </div>
+                </div>
+
+                <div class="form-group mt-20">
+                    <div class="custom-checkbox">
+                        <input type="hidden" name="values[others]" value="0">
+                        <input type="checkbox" name="values[others]" id="others" value="1" <?= ($form['others'] ?? 0) == 1 ? 'checked' : '' ?>>
+                        <label for="others"><?= lang('Allow text input as <em>Others</em>', 'Erlaube Text-Input als <em>Sonstiges</em>') ?></label>
+                    </div>
+                    <small class="text-muted">
+                        <?=lang('Currently not supported in combination with multiple select.', 'Zurzeit noch nicht mit Mehrfachauswahl unterstützt.')?>
+                    </small>
                 </div>
             </fieldset>
-
 
             <button type="submit" class="btn success" id="submitBtn"><?= $btntext ?></button>
 

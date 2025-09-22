@@ -1,5 +1,36 @@
 # Neuigkeiten
 
+<span class="badge float-right">22.09.2025</span>
+<a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
+
+## Version 1.5.2
+
+- **Neue Conditional Templates**: mit `%field text%` wird der Text jetzt nur noch gezeigt, wenn das entsprechende Feld nicht leer ist. Beispiel: `%details Details:%` rendert "Details:" nur, wenn das Details-Feld nicht leer ist.
+- **Weiteres bei Listen**: Custom Fields mit dem Typ "Liste" können jetzt so eingestellt werden, dass man "Weiteres" auswählen und spezifizieren kann (über Freitextfeld). Dies funktioniert im Moment noch nicht in Kombination mit Mehrfachauswahl.
+- **Distribute Roles**: die Vergabe von Rollen ist jetzt viel einfacher geworden
+- **Password zurücksetzen**: bei der OSIRIS Auth Nutzerverwaltung ist es ist jetzt für Admins mit entsprechenden Rechten möglich, zentral ein Passwort zurückzusetzen und der Person dann einen erhaltenen Link zuzuschicken
+- **Verbesserte ID-Bereinigung**: OSIRIS ersetzt verbotene Zeichen in IDs (zum Beispiel Leerzeichen und Punkte) jetzt automatisch
+- **Formularbaukasten** wurde weiter verbessert:
+  - Für die Vorschau muss nicht mehr gespeichert werden
+  - Die überschriebenen Labels werden auch in der Detail-Tabelle der Aktivität für die Überschriften verwendet
+- In Aktivitäten: **leere Felder** werden jetzt nicht mehr in der Tabelle sondern als Liste am Fuß der Tabelle dargestellt, um übersichtlicher zu sein
+- Die Maintenance-Message wurde verbessert
+- Der "Aktivität hinzuf."-Knopf ist jetzt auch bei Meine Aktivitäten zu finden
+- Die Printdarstellung wird jetzt auch über die Portfolio-API ausgeliefert
+
+#### Fehlerbehebungen:
+- Ein Fehler wurde behoben, durch den Aktivitäten nicht bestätigt werden konnten
+- Ein Fehler wurde behoben, durch den beim Synchronisieren von LDAP-Attributen diese einem zufälligen Nutzer zugeschrieben wurden
+- Aktivität hinzufügen: eine Kategorie auszuwählen wählt jetzt korrekt den ersten Typ aus
+- Emails können jetzt auch ohne SMTP Authentifikation verschickt werden
+- Der Link zu Aktivitäten in Events wurde gefixt
+- Der SWS-Rechner wurde aus dem `supervisor-thesis`-Modul entfernt
+- Die Erweiterte Suche wurde verbessert und sollte nicht mehr so fehleranfällig sein
+- Es wurden ein paar Probleme mit den neuen Autoren-Templates behoben
+- Einige Achievement-Texte wurden verbessert oder auf englisch korrigiert
+- Ein paar weitere Übersetzungs- und Textfehler wurden korrigiert
+
+
 <span class="badge float-right">24.08.2025</span>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>
 
