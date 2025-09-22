@@ -49,6 +49,42 @@ $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
 //     $guests = $osiris->guests->find(['activity' => $id])->toArray();
 
+?>
+
+<style>
+    .quality-control {
+        position: sticky;
+        top: 6rem;
+        z-index: 20;
+        margin-bottom: 2rem;
+        background-color: white;
+        margin: -2rem -2rem 2rem -2rem;
+        padding: .5rem 2rem;
+        border: 1px solid var(--border-color);
+    }
+    .quality-control.negative {
+        border-color: var(--danger-color);
+        background-color: var(--danger-color-very-light);
+    }
+    .quality-control.positive {
+        border-color: var(--success-color);
+        background-color: var(--success-color-very-light);
+    }
+</style>
+
+<?php if ($Settings->featureEnabled('quality-control', false)) { ?>
+    <div class="quality-control <?= ($doc['quality_control'] ?? false) ? 'positive' : 'negative' ?>">
+        <h5 class="mt-0"><?= lang('Quality control', 'Qualitätskontrolle') ?></h5>
+            <?= lang(
+                'This activity is part of the quality control process. Please check the details and confirm the information.',
+                'Diese Aktivität ist Teil des Qualitätskontrollprozesses. Bitte überprüfe die Details und bestätige die Informationen.'
+            ) ?>
+    </div>
+<?php } ?>
+
+<?php
+
+
 if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
 

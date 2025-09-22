@@ -574,6 +574,38 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
 
+
+<!-- 
+                <div class="box px-20">
+                    <h3 id="quality-control">
+                        <?= lang('Quality control of activities', 'Qualitätsprüfung von Aktivitäten') ?>
+                    </h3>
+                    <div class="form-group">
+
+                        <p>
+
+                        </p>
+
+                        <?php
+                        $quality = $Settings->featureEnabled('quality-control', false);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="quality-control-true" value="1" name="values[quality-control]" <?= $quality ? 'checked' : '' ?>>
+                            <label for="quality-control-true">
+                                <?= lang('Enabled', 'Aktiviert') ?>
+                            </label>
+                        </div>
+                        <div class="custom-radio">
+                            <input type="radio" id="quality-control-false" value="0" name="values[quality-control]" <?= $quality ? '' : 'checked' ?>>
+                            <label for="quality-control-false">
+                                <?= lang('Disabled', 'Deaktiviert') ?>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+
+
                 <div class="box px-20">
                     <h3 id="guest-forms">
                         <?= lang('Guests', 'Gäste') ?>
@@ -1126,6 +1158,9 @@ $affiliation = $Settings->get('affiliation_details');
                         </a>
                         <a href="#journal-metrics">
                             <?= lang('Journals', 'Journale') ?>
+                        </a>
+                        <a href="#quality-control">
+                            <?= lang('Quality control', 'Qualitätskontrolle') ?>
                         </a>
                         <a href="#guest-forms">
                             <?= lang('Guests', 'Gäste') ?>
