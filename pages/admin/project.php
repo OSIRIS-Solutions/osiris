@@ -498,95 +498,96 @@ if ($process == 'project') {
                             }
                         </style>
                     <?php } ?>
-                <?php } ?>
 
-                <?php
-                $modules = DB::doc2Arr($phase['modules'] ?? []);
-                $modules = array_column($modules, 'required', 'module');
-                $custom = false;
-                foreach ($optional_fields as $field) {
-                    $kdsf = $field['kdsf'] ?? false;
-                    $m = $field['id'];
-                    // if ($m['required'] ?? false) continue;
-                    $active = array_key_exists($m, $modules);
-                    $required = $active && $modules[$m];
-                    $value = $m . ($required ? '*' : '');
-                    // $field = $Project->FIELDS[$m] ?? null;
-                    if (empty($field)) $field = ['en' => $m, 'de' => null];
-                    if (($field['custom'] ?? false) && !$custom) {
-                        echo "<p>
+
+                    <?php
+                    $modules = DB::doc2Arr($phase['modules'] ?? []);
+                    $modules = array_column($modules, 'required', 'module');
+                    $custom = false;
+                    foreach ($optional_fields as $field) {
+                        $kdsf = $field['kdsf'] ?? false;
+                        $m = $field['id'];
+                        // if ($m['required'] ?? false) continue;
+                        $active = array_key_exists($m, $modules);
+                        $required = $active && $modules[$m];
+                        $value = $m . ($required ? '*' : '');
+                        // $field = $Project->FIELDS[$m] ?? null;
+                        if (empty($field)) $field = ['en' => $m, 'de' => null];
+                        if (($field['custom'] ?? false) && !$custom) {
+                            echo "<p>
                             <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
                             <br>
                             <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
                             </p>";
-                        $custom = true;
-                    }
-                ?>
-                    <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
-                        <input type="checkbox"
-                            id="module-<?= $phase_id ?>-<?= $m ?>"
-                            data-attribute="<?= $m ?>"
-                            value="<?= $value ?>"
-                            name="phase[<?= $phase_id ?>][modules][]"
-                            <?= $active ? 'checked' : '' ?>
-                            onclick="toggleCheckboxStates(this)">
-                        <label for="module-<?= $phase_id ?>-<?= $m ?>">
-                            <?= lang($field['en'], $field['de']) ?>
-                            <?php if ($kdsf) { ?>
-                                <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
-                                    <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
-                                    KDSF
-                                </small>
-                            <?php } ?>
-                        </label>
-                    </div>
-                <?php } ?>
+                            $custom = true;
+                        }
+                    ?>
+                        <div class="custom-checkbox checkbox-badge <?= $required ? 'required-state' : '' ?>">
+                            <input type="checkbox"
+                                id="module-<?= $phase_id ?>-<?= $m ?>"
+                                data-attribute="<?= $m ?>"
+                                value="<?= $value ?>"
+                                name="phase[<?= $phase_id ?>][modules][]"
+                                <?= $active ? 'checked' : '' ?>
+                                onclick="toggleCheckboxStates(this)">
+                            <label for="module-<?= $phase_id ?>-<?= $m ?>">
+                                <?= lang($field['en'], $field['de']) ?>
+                                <?php if ($kdsf) { ?>
+                                    <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
+                                        <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
+                                        KDSF
+                                    </small>
+                                <?php } ?>
+                            </label>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>
+    <?php } ?>
 
-        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
-            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
-            <i class="ph ph-arrow-fat-line-left"></i>
-        </a>
-        <!-- 
+    <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
+        <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
+        <i class="ph ph-arrow-fat-line-left"></i>
+    </a>
+    <!-- 
         <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
          -->
 
-        <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+    <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
 
-        <?php if ($stage <= $finished_stages) { ?>
-            <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
-                <?= lang('Skip', 'Überspringen') ?>
-            </a>
-        <?php } ?>
+    <?php if ($stage <= $finished_stages) { ?>
+        <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
+            <?= lang('Skip', 'Überspringen') ?>
+        </a>
+    <?php } ?>
 
 
-        <script>
-            function toggleCheckboxStates(el) {
-                // if is checked but not .required-state, check still and set required state
-                // else just uncheck and remove required state
-                let parent = el.closest('.checkbox-badge');
-                let val = el.getAttribute('data-attribute');
-                console.log(el.checked);
-                if (!el.checked && !parent.classList.contains('required-state')) {
-                    parent.classList.add('required-state');
-                    el.checked = true;
-                    el.value = val + '*';
-                } else if (el.checked) {
-                    // parent.classList.add('required-state');
-                    el.checked = true;
-                    el.value = val;
-                } else {
-                    parent.classList.remove('required-state');
-                    el.checked = false;
-                    el.value = val;
-                }
+    <script>
+        function toggleCheckboxStates(el) {
+            // if is checked but not .required-state, check still and set required state
+            // else just uncheck and remove required state
+            let parent = el.closest('.checkbox-badge');
+            let val = el.getAttribute('data-attribute');
+            console.log(el.checked);
+            if (!el.checked && !parent.classList.contains('required-state')) {
+                parent.classList.add('required-state');
+                el.checked = true;
+                el.value = val + '*';
+            } else if (el.checked) {
+                // parent.classList.add('required-state');
+                el.checked = true;
+                el.value = val;
+            } else {
+                parent.classList.remove('required-state');
+                el.checked = false;
+                el.value = val;
             }
-        </script>
+        }
+    </script>
 
 </form>
 
