@@ -305,7 +305,7 @@ function getTemplatePlaceholders($templatePath)
 
 
 // projects/download/:id
-Route::post('/projects/download/(.*)', function ($id) {
+Route::post('/proposals/download/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     error_reporting(E_ERROR | E_PARSE);
