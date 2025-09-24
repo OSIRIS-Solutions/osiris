@@ -25,7 +25,7 @@ $organizations  = $osiris->organizations->find(
 
 <h1>
     <i class="ph ph-building-office" aria-hidden="true"></i>
-    <?= lang('Organisations', 'Organisationen') ?>
+    <?= lang('External Organisations', 'Externe Organisationen') ?>
 </h1>
 <div class="btn-toolbar">
     <?php if ($Settings->hasPermission('organizations.edit')) { ?>

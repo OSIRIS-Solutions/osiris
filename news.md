@@ -9,7 +9,7 @@
 - **Weiteres bei Listen**: Custom Fields mit dem Typ "Liste" können jetzt so eingestellt werden, dass man "Weiteres" auswählen und spezifizieren kann (über Freitextfeld). Dies funktioniert im Moment noch nicht in Kombination mit Mehrfachauswahl.
 - **Distribute Roles**: die Vergabe von Rollen ist jetzt viel einfacher geworden
 - **Password zurücksetzen**: bei der OSIRIS Auth Nutzerverwaltung ist es ist jetzt für Admins mit entsprechenden Rechten möglich, zentral ein Passwort zurückzusetzen und der Person dann einen erhaltenen Link zuzuschicken
-- **Verbesserte ID-Bereinigung**: OSIRIS ersetzt verbotene Zeichen in IDs (zum Beispiel Leerzeichen und Punkte) jetzt automatisch
+- **Verbesserte ID-Bereinigung**: OSIRIS ersetzt verbotene Zeichen in IDs (zum Beispiel Leerzeichen und Punkte) jetzt automatisch bei der EIngabe
 - **Formularbaukasten** wurde weiter verbessert:
   - Für die Vorschau muss nicht mehr gespeichert werden
   - Die überschriebenen Labels werden auch in der Detail-Tabelle der Aktivität für die Überschriften verwendet
