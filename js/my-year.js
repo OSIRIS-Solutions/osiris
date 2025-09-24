@@ -165,7 +165,8 @@ function timeline(year, quarter, typeInfo, events, clickEvent = false) {
 
     var circle = dots.append('circle')
         .style("fill", function (d, i) {
-            if (d.ending_time !== undefined) return 'transparent'
+            if (d.ending_time !== undefined) return 'transparent';
+            if (typeInfo[d.type] === undefined) return 'gray';
             return typeInfo[d.type]['color'] ?? 'gray';
         })
         .attr("r", radius)
@@ -175,7 +176,8 @@ function timeline(year, quarter, typeInfo, events, clickEvent = false) {
 
     var lines = dots.append('rect')
         .style("fill", function (d, i) {
-            if (d.ending_time === undefined) return 'transparent'
+            if (d.ending_time === undefined) return 'transparent';
+            if (typeInfo[d.type] === undefined) return 'gray';
             return typeInfo[d.type]['color'] ?? 'gray';
         })
         .attr('height', radius * 2)
