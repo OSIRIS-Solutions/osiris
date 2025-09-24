@@ -345,12 +345,22 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $persons = implode(', ', $persons);
     // dump($project['abstract']);
+    $funding_organization = $project['funding_organization'] ?? $project['funder'] ?? null;
+    if (DB::is_ObjectID($funding_organization)) {
+        $org = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($funding_organization)]);
+        if (!empty($org)) {
+            $funding_organization = $org['name'];
+        } else {
+            $funding_organization = 'NA';
+        }
+    }
+
     $projectValues = [
         "contact" => $DB->getNameFromId($project['contact']),
         "name" => $project['name'],
         "title" => $project['title'],
         "funder" => $project['funder'],
-        "funding_organization" => $project['funding_organization'] ?? $project['funder'] ?? null,
+        "funding_organization" => $funding_organization,
         "role" => $Project->getRoleRaw(),
         "duration" => $Project->getDuration() . lang(" months", " Monate"),
         "start" => $Project->getStartDate(),
