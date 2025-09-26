@@ -892,7 +892,9 @@ Route::post('/crud/admin/activity-fields', function () {
         ]]
     );
     // redirect back
-    header("Location: " . ROOTPATH . "/admin/types/$type/fields?msg=activity-fields-updated");
+    $_SESSION['msg'] = lang("Activity form has been updated", "Aktivitätsformular wurde aktualisiert");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/types/$type/fields");
     die();
 });
 
