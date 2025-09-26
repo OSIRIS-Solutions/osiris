@@ -222,6 +222,13 @@
                 "en": "Edit own projects"
             },
             {
+                "id": "projects.connect",
+                "de": "Projekte mit Aktivitäten verknüpfen",
+                "en": "Connect projects with activities",
+                "comment_de": "Wenn diese Berechtigung nicht gesetzt ist, können Nutzer*innen nur Projekte auswählen, die sie selbst angelegt haben. Diese Berechtigung wird von 'projects.edit' implizit mitgegeben.",
+                "comment_en": "If this permission is not set, users can only select projects they have created themselves. This permission is implicitly granted by 'projects.edit'."
+            },
+            {
                 "id": "projects.delete",
                 "de": "Projekte löschen",
                 "en": "Delete projects"

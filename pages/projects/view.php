@@ -233,7 +233,7 @@ if ($topicsEnabled) {
             <?= lang('Activities', 'Aktivitäten') ?>
             <span class="index"><?= $N ?></span>
         </a>
-    <?php } elseif ($edit_perm) { ?>
+    <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
         <a id="btn-activities" class="btn" href="#add-activity">
             <i class="ph ph-plus-circle" aria-hidden="true"></i>
             <?= lang('Connect Activities', 'Aktivitäten verknüpfen') ?>
@@ -628,7 +628,7 @@ if ($topicsEnabled) {
     </h2>
 
     <div class="btn-toolbar mb-10">
-        <?php if ($edit_perm) { ?>
+        <?php if ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
             <a href="#add-activity" class="btn primary">
                 <i class="ph ph-plus"></i>
                 <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
@@ -766,8 +766,9 @@ if ($topicsEnabled) {
             </div>
         </div>
     </div>
+<?php } ?>
 
-
+<?php if ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
     <!-- Modal for connecting activities -->
     <div class="modal" id="add-activity" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

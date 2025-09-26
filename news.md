@@ -17,6 +17,7 @@
 - Die Maintenance-Message wurde verbessert
 - Der "Aktivität hinzuf."-Knopf ist jetzt auch bei Meine Aktivitäten zu finden
 - Die Printdarstellung wird jetzt auch über die Portfolio-API ausgeliefert
+- Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können. Dieses wird automatisch mit dem Recht zum Bearbeiten von Projekten mitgegeben.
 
 #### Fehlerbehebungen:
 - Ein Fehler wurde behoben, durch den Aktivitäten nicht bestätigt werden konnten
