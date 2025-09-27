@@ -749,7 +749,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                 foreach ($typeModules as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-                    if (in_array($module, ["semester-select", "event-select"])) continue;
+                    if (in_array($module, ["semester-select", "event-select", "projects"])) continue;
                 ?>
                     <?php if ($module == 'teaching-course' && isset($doc['module_id'])) :
                         $module = $DB->getConnected('teaching', $doc['module_id']);

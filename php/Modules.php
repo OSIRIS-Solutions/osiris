@@ -515,6 +515,17 @@ class Modules
             "width" => 0,
             "tags" => ['people']
         ],
+        "projects" => [
+            "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
+            "name" => "Projects",
+            "name_de" => "Projekte",
+            "label" => "Projects",
+            "label_de" => "Projekte",
+            "description" => "A field for a list of projects, that can be selected from a list of existing projects in the database.",
+            "description_de" => "Ein Feld für eine Liste von Projekten, die aus einer Liste von bestehenden Projekten in der Datenbank ausgewählt werden können.",
+            "width" => 12,
+            "tags" => ['general', 'important']
+        ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
             "name" => "Publisher",
@@ -2923,7 +2934,118 @@ class Modules
             <?php
                 break;
 
-            case "project":
+            case "projects":
+                $projects = $this->val('projects', []);
+                $projects = DB::doc2Arr($projects);
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="projects">
+                    <label for="project" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
+                    <?php
+                    global $Settings;
+                    $full_permission = $Settings->hasPermission('projects.edit') || $Settings->hasPermission('projects.connect');
+                    $filter = [];
+                    if (!$full_permission) {
+                        // make sure to include currently selected projects
+                        $filter = ['$or' => [['persons.user' => $_SESSION['username']], ['_id' => ['$in' => $projects ?? []]]]];
+                    }
+                    $project_list = $this->DB->db->projects->find($filter, [
+                        'projection' => ['_id' => 1, 'name' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
+                        'sort' => ['name' => 1]
+                    ])->toArray();
+                    ?>
+
+                    <!-- make sure that empty projects are saved as well -->
+                    <input type="hidden" name="values[projects]" value="">
+                    <table class="table">
+                        <tbody id="project-list"><?php
+                                                    foreach ($projects ?? [] as $i => $con) {
+                                                        if (empty($con)) continue;
+                                                        $p = $this->DB->db->projects->findOne(['_id' => $con]);
+                                                        if (empty($p)) continue;
+                                                    ?>
+                                <tr id="project-<?= $con ?>">
+                                    <td class="w-full">
+                                        <input type="hidden" name="values[projects][]" value="<?= $p['_id'] ?>">
+                                        <b><?= $p['name'] ?></b>
+                                        <br>
+                                        <span class="text-muted">
+                                            <?= $p['title'] ?? '' ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">
+                                    <b>
+                                        <?= lang('Connect a project', 'Verknüpfe ein Projekt') ?>:
+                                    </b>
+                                    <div class="input-group">
+                                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
+                                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                                            <?php
+                                            foreach ($project_list as $s) { ?>
+                                                <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('Add project', 'Projekt hinzuf.') ?></button>
+                                        </div>
+                                    </div>
+                                    <?php if ($full_permission) { ?>
+                                        <small class="text-muted">
+                                            <i class="ph ph-info"></i>
+                                            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                                        </small>
+                                    <?php } else { ?>
+                                        <small class="text-muted">
+                                            <i class="ph ph-info"></i>
+                                            <?= lang('Note: only your own projects are shown here. You cannot connect proposals.', 'Bemerkung: nur deine eigenen Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                                        </small>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+
+                    <script>
+                        function addProjectRow(projectId = null, projectName = null) {
+                            const row = $('<tr>')
+                            if (!projectId) projectId = $('#project-select').val();
+                            if (!projectName) projectName = $('#project-select option:selected').text();
+
+                            if (!projectId) {
+                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                return;
+                            }
+                            // check if project already exists
+                            if ($('#project-list').find(`#project-${projectId}`).length > 0) {
+                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                return;
+                            }
+                            row.append(`<td class="w-full">
+            <input type="hidden" name="values[projects][]" value="${projectId}">
+            <b>${projectName}</b>
+            </td>
+            `);
+                            row.append(`<td>
+            <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+        </td>`);
+                            row.attr('id', `project-${projectId}`);
+                            $('#project-list').append(row)
+                        }
+
+                        $("#project-select").selectize();
+                    </script>
+
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
                 break;
 
             default:

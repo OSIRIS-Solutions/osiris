@@ -411,11 +411,23 @@ Route::post('/crud/activities/create', function () {
 
     // add projects if possible
     if ($Settings->featureEnabled('projects')) {
-        if (isset($values['funding'])) {
+        $values['projects'] = [];
+        if (isset($values['projects']) && !empty($values['projects'])) {
+            $values['projects'] = array_values($values['projects']);
+            // convert values to ObjectID
+            $values['projects'] = array_map(function ($v) use ($DB) {
+                return $DB->to_ObjectID($v);
+            }, $values['projects']);
+            // make sure that there are no duplicates
+            $values['projects'] = array_values(array_unique($values['projects'], SORT_REGULAR));
+        }
+        if (isset($values['funding']) && !empty($values['funding'])) {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['_id'])) $values['projects'][] = $project['_id'];
+                if (isset($project['_id']) && !in_array($project['_id'], $values['projects'])) {
+                    $values['projects'][] = $project['_id'];
+                }
             }
         }
     }
@@ -423,7 +435,6 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['authors'])) {
         $values = renderAuthorUnits($values);
     }
-
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
 
@@ -483,6 +494,19 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         $values = renderAuthorUnits($values, $old);
+    }
+    if ($Settings->featureEnabled('projects') && isset($values['projects'])) {
+        $projects = [];
+        if (!empty($values['projects'])) {
+            $projects = array_values($values['projects']);
+            // convert values to ObjectID
+            $projects = array_map(function ($v) use ($DB) {
+                return $DB->to_ObjectID($v);
+            }, $projects);
+            // make sure that there are no duplicates
+            $projects = array_values(array_unique($projects, SORT_REGULAR));
+        }
+        $values['projects'] = $projects;
     }
 
     // add information on updating process

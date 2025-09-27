@@ -382,7 +382,13 @@ class DB
     public function getConnected(string $type, $id)
     {
         $con = [];
-        $id = $this->to_ObjectID($id);
+        if (empty($id)) return $con;
+        if (!($id instanceof ObjectId)) {
+            if (!DB::is_ObjectID($id)) {
+                return $con;
+            }
+            $id = $this->to_ObjectID($id);
+        }
         if ($type == 'journal') {
             $con = $this->db->journals->findOne(['_id' => $id]);
         } elseif ($type == 'teaching') {

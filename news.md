@@ -13,6 +13,11 @@
 - **Formularbaukasten** wurde weiter verbessert:
   - Für die Vorschau muss nicht mehr gespeichert werden
   - Die überschriebenen Labels werden auch in der Detail-Tabelle der Aktivität für die Überschriften verwendet
+- Neues Datenfeld **Projekte**: hier können Projekte jetzt direkt im Aktivitätsformular verknüpft werden
+  - Es können mehrere Projekte ausgewählt werden
+  - Die über die DOI zur Verfügung gestellten Funding-Nummern werden automatisch mit den Projekten abgeglichen und verknüpft
+  - Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können
+  - Ihr könnt das neue Datenfeld im Formularbaukasten zu euren Aktivitäts-Typen hinzufügen
 - In Aktivitäten: **leere Felder** werden jetzt nicht mehr in der Tabelle sondern als Liste am Fuß der Tabelle dargestellt, um übersichtlicher zu sein
 - Die Maintenance-Message wurde verbessert
 - Der "Aktivität hinzuf."-Knopf ist jetzt auch bei Meine Aktivitäten zu finden
@@ -30,6 +35,7 @@
 - Es wurden ein paar Probleme mit den neuen Autoren-Templates behoben
 - Einige Achievement-Texte wurden verbessert oder auf englisch korrigiert
 - Ein paar weitere Übersetzungs- und Textfehler wurden korrigiert
+- NPM JSCDN wurde entfernt, um die Sicherheit zu verbessern
 
 
 <span class="badge float-right">24.08.2025</span>
