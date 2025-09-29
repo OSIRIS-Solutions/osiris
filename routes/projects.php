@@ -355,8 +355,17 @@ Route::post('/proposals/download/(.*)', function ($id) {
         }
     }
 
+    $contacts = [];
+    foreach ($project['applicants'] ?? [] as $applicant) {
+        $contacts[] = $DB->getNameFromId($applicant);
+    }
+    $contacts = implode(', ', $contacts);
+
+    
+
     $projectValues = [
-        "contact" => $DB->getNameFromId($project['contact']),
+        "contact" => $contacts,
+        "applicants" => $contacts,
         "name" => $project['name'],
         "title" => $project['title'],
         "funder" => $project['funder'],
