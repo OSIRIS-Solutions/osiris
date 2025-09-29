@@ -33,7 +33,6 @@ include_once BASEPATH . "/routes/admin.fields.php";
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],

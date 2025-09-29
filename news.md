@@ -36,6 +36,7 @@
 - Einige Achievement-Texte wurden verbessert oder auf englisch korrigiert
 - Ein paar weitere Übersetzungs- und Textfehler wurden korrigiert
 - NPM JSCDN wurde entfernt, um die Sicherheit zu verbessern
+- Es werden jetzt nicht zusätzlich volle Adminrechte benötigt, um Nutzer zu synchronisieren
 
 
 <span class="badge float-right">24.08.2025</span>
