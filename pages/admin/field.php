@@ -20,6 +20,34 @@ if (!empty($form) && isset($form['id'])) {
     }
 </style>
 
+<div class="modal" id="unique" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            
+            <p>
+                <?=lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt.') ?>
+            </p>
+            <p>
+                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+            </p>
+            <ul class="list" id="used-ids">
+                  <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
+                    <li><?= $k ?></li>
+                <?php } ?>
+                <li>new</li>
+            </ul>
+            <div class="text-right mt-20">
+                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <form action="<?= $formaction ?>" method="post" id="group-form">
 
     <div class="box">
@@ -31,11 +59,14 @@ if (!empty($form) && isset($form['id'])) {
 
             <div class="form-group">
                 <label for="id">ID</label>
-                <input type="text" class="form-control" name="values[id]" id="id" value="<?= $form['id'] ?? '' ?>" <?= !empty($form) ? 'disabled' : '' ?>>
-                <small class="form-text">
-                    <?= lang('Important! The ID will be used in the module list and in templates. Choose sth precise, unique and without spaces.', 'Wichtig! Die ID wird in der Modulliste gezeigt, wähle also etwas genaues, einzigartiges und nutze kein Leerzeichen!') ?>
-                </small>
-            </div>
+                <input type="text" class="form-control" name="values[id]" id="id" value="<?= $form['id'] ?? '' ?>" <?= !empty($form) ? 'disabled' : '' ?> oninput="sanitizeID(this, '#used-ids li')" required>
+                
+            <small>
+                <a href="#unique"><i class="ph ph-info"></i> 
+                    <?= lang('Important! Must be unique.', 'Wichtig! Die ID muss einzigartig sein.') ?>
+                </a>
+            </small>
+        </div>
 
 
             <div class="row row-eq-spacing">
@@ -121,7 +152,7 @@ if (!empty($form) && isset($form['id'])) {
                 <button class="btn" type="button" onclick="addValuesRow()"><i class="ph ph-plus-circle"></i></button>
 
                 <p class="text-muted">
-                    Hint: changing the values will likely conflict with language support. 
+                    Hint: changing the values will likely conflict with language support.
                 </p>
 
                 <!-- multiple? -->
@@ -140,7 +171,7 @@ if (!empty($form) && isset($form['id'])) {
                         <label for="others"><?= lang('Allow text input as <em>Others</em>', 'Erlaube Text-Input als <em>Sonstiges</em>') ?></label>
                     </div>
                     <small class="text-muted">
-                        <?=lang('Currently not supported in combination with multiple select.', 'Zurzeit noch nicht mit Mehrfachauswahl unterstützt.')?>
+                        <?= lang('Currently not supported in combination with multiple select.', 'Zurzeit noch nicht mit Mehrfachauswahl unterstützt.') ?>
                     </small>
                 </div>
             </fieldset>
