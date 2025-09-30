@@ -317,7 +317,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
         die;
     }
     $project = DB::doc2Arr($project);
