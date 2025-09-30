@@ -825,9 +825,10 @@ Route::get('/api/projects-by-funding-number', function () {
         echo return_rest('No funding number provided', 0, 400);
         die;
     }
-    $number = urldecode($_GET['number']);
-    if (!is_array($number)) {
-        $number = explode(',', $number);
+    if (is_array($_GET['number'])) {
+        $number = array_map('urldecode', $_GET['number']);
+    } else {
+        $number = explode(',', urldecode($_GET['number']));
     }
     $filter = ['funding_number' => ['$in' => $number]];
     $result = $osiris->projects->find(
