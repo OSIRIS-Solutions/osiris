@@ -1631,16 +1631,26 @@ class Document extends Settings
 
         $pattern = "/{([^}]*)}/";
         preg_match_all($pattern, $template, $matches);
-        // dump($matches[1], true);
 
-        foreach ($matches[1] as $module) {
-            $m = explode('|', $module, 2);
+        foreach ($matches[1] as $match) {
+            $m = explode('|', $match, 2);
             $value = $this->get_field($m[0]);
 
             if (empty($value) && count($m) == 2) {
                 $value = $m[1];
             }
-            $vars['{' . $module . '}'] = ($value);
+            $vars['{' . $match . '}'] = ($value);
+        }
+
+        $pattern = "/%([^%]*)%/";
+        preg_match_all($pattern, $template, $matches);
+
+        foreach ($matches[1] as $match) {
+            $m = explode(' ', $match, 2);
+            $value = $this->get_field($m[0]);
+            $text = $m[1];
+            if (empty($value)) $text = '';
+            $vars['%' . $match . '%'] = $text;
         }
 
         $line = strtr($template, $vars);

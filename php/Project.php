@@ -590,7 +590,7 @@ class Project extends Vocabulary
     }
     public function getDuration()
     {
-        if (!isset($this->project['start']) || !isset($this->project['end']))
+        if (!isset($this->project['start_date']) || !isset($this->project['end_date']))
             return '-';
 
         $start = $this->project['start_date']; // in format yyyy-mm-dd

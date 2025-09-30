@@ -16,7 +16,7 @@
  * @license     MIT
  */
 
-$full_permission = $Settings->hasPermission('projects.edit');
+$full_permission = $Settings->hasPermission('projects.edit') || $Settings->hasPermission('projects.connect');
 $filter = [];
 if (!$full_permission) {
     // make sure to include currently selected projects

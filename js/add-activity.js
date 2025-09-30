@@ -1399,13 +1399,13 @@ function fillForm(pub) {
         'software_doi',
         'open_access',
         'abstract',
-        'funding',
         'subtitle',
         'pub-language',
         'language',
         'doctype',
         'link',
-        'editors'
+        'editors',
+        'funding',
     ]
 
     elements.forEach(element => {
@@ -1415,6 +1415,22 @@ function fillForm(pub) {
         // console.log(pub[element]);
         // console.log($('#' + element));
     });
+
+    if (pub.funding !== undefined){
+        // first: check if module projects exists
+        if ($('[data-module="projects"]').length > 0){
+            $.get(ROOTPATH + '/api/projects-by-funding-number', { number: pub.funding }, function(data){
+                if (data.data.length === 0){
+                    toastWarning('No project found for funding number ' + pub.funding)
+                    return;
+                }
+               // populate projects dropdown
+               data.data.forEach(proj => {
+                    addProjectRow(proj._id['$oid'], proj.name);
+               })
+            })
+        }
+    }
 
     if (pub.epub !== undefined && (!UPDATE || !pub.epub || !pub.epub.length))
         $('#epub').attr('checked', pub.epub).addClass('is-valid')

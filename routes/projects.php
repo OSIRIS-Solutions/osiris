@@ -305,7 +305,7 @@ function getTemplatePlaceholders($templatePath)
 
 
 // projects/download/:id
-Route::post('/projects/download/(.*)', function ($id) {
+Route::post('/proposals/download/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     error_reporting(E_ERROR | E_PARSE);
@@ -315,9 +315,9 @@ Route::post('/projects/download/(.*)', function ($id) {
     $format = $_POST['format'] ?? 'word';
 
     $mongo_id = $DB->to_ObjectID($id);
-    $project = $osiris->projects->findOne(['_id' => $mongo_id]);
+    $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
         die;
     }
     $project = DB::doc2Arr($project);
@@ -345,12 +345,31 @@ Route::post('/projects/download/(.*)', function ($id) {
     }
     $persons = implode(', ', $persons);
     // dump($project['abstract']);
+    $funding_organization = $project['funding_organization'] ?? $project['funder'] ?? null;
+    if (DB::is_ObjectID($funding_organization)) {
+        $org = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($funding_organization)]);
+        if (!empty($org)) {
+            $funding_organization = $org['name'];
+        } else {
+            $funding_organization = 'NA';
+        }
+    }
+
+    $contacts = [];
+    foreach ($project['applicants'] ?? [] as $applicant) {
+        $contacts[] = $DB->getNameFromId($applicant);
+    }
+    $contacts = implode(', ', $contacts);
+
+    
+
     $projectValues = [
-        "contact" => $DB->getNameFromId($project['contact']),
+        "contact" => $contacts,
+        "applicants" => $contacts,
         "name" => $project['name'],
         "title" => $project['title'],
         "funder" => $project['funder'],
-        "funding_organization" => $project['funding_organization'] ?? $project['funder'] ?? null,
+        "funding_organization" => $funding_organization,
         "role" => $Project->getRoleRaw(),
         "duration" => $Project->getDuration() . lang(" months", " Monate"),
         "start" => $Project->getStartDate(),

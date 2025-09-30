@@ -33,7 +33,6 @@ include_once BASEPATH . "/routes/admin.fields.php";
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
@@ -892,7 +891,9 @@ Route::post('/crud/admin/activity-fields', function () {
         ]]
     );
     // redirect back
-    header("Location: " . ROOTPATH . "/admin/types/$type/fields?msg=activity-fields-updated");
+    $_SESSION['msg'] = lang("Activity form has been updated", "Aktivitätsformular wurde aktualisiert");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/types/$type/fields");
     die();
 });
 
