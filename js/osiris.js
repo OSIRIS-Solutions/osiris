@@ -1943,7 +1943,7 @@ function sanitizeID(element, idlist = '#IDLIST li') {
     var original_val = $(element).data('value')
     console.log(original_val);
     // remove forbitten chars
-    val = val.replace('.', '-').replace(' ', '_')
+    val = val.replace(/\./g, '-').replace(/ /g, '_')
     $(element).val(val)
 
     var list = []
