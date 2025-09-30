@@ -783,8 +783,8 @@ $tagLabels = [
     </div>
 </form>
 <!-- sortable -->
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+<script src="<?= ROOTPATH ?>/js/Sortable.min.js"></script>
+<script src="<?= ROOTPATH ?>/js/jquery-sortable.min.js"></script>
 <script>
     const ALL = <?= json_encode($all) ?>;
     console.log(ALL);

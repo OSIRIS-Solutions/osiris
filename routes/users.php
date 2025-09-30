@@ -228,7 +228,9 @@ Route::get('/profile/?(.*)', function ($user) {
     $Format = new Document($user);
 
     if (empty($scientist)) {
-        header("Location: " . ROOTPATH . "/user/browse?msg=user-does-not-exist");
+        $_SESSION['msg'] = lang("User not found.", "Benutzer nicht gefunden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/user/browse");
         die;
     }
     $name = $scientist['displayname'];
@@ -393,6 +395,7 @@ Route::post('/synchronize-users', function () {
             "first",
             "last",
             "name",
+            "orcid",
             // "depts",
             "units",
             "username",
@@ -777,6 +780,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         "first",
         "last",
         "name",
+        "orcid",
         // "depts",
         "units",
         "username",
@@ -818,7 +822,9 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
 
     $data = $DB->getPerson($user);
     if (empty($data)) {
-        header("Location: " . ROOTPATH . "/user/browse?msg=user-does-not-exist");
+        $_SESSION['msg'] = lang("User not found.", "Benutzer nicht gefunden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/user/browse");
         die();
     }
 

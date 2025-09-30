@@ -232,7 +232,7 @@ $FIELDS = [
             'filter',
             'columns'
         ],
-        'label' => lang('Affiliated', 'Affiliert'),
+        'label' => lang('Affiliated', 'Affiliiert'),
         'type' => 'boolean',
     ],
     [
@@ -252,8 +252,8 @@ $FIELDS = [
             'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
             'middle' => lang('Middle author', 'Mittelautor:in'),
             'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-            'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-            'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+            'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
+            'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
             'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
             'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
             'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
@@ -277,7 +277,7 @@ $FIELDS = [
             'institutional' => lang('Institutional (cooperation between departments of the same institute)', 'Institutionell (Kooperation zwischen Abteilungen des gleichen Instituts)'),
             'contributing' => lang('Contributing (cooperation with other institutes with middle authorships)', 'Beitragend (Kooperation mit anderen Instituten mit Mittelautorenschaft)'),
             'leading' => lang('Leading (cooperation with other institutes with a corresponding role, first or last authorship)', 'Führend (Kooperation mit anderen Instituten mit einer korrespondierenden Rolle, Erst- oder Letztautorenschaft)'),
-            'none' => lang('None (no author affiliated)', 'Kein:e Autor:in affiliert')
+            'none' => lang('None (no author affiliated)', 'Kein:e Autor:in affiliiert')
         ],
         'input' => 'select'
     ],

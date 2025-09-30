@@ -224,9 +224,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
     echo $Groups->getHierarchy();
 } else if ($style == 'organigramm') { ?>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
+    <script src="<?= ROOTPATH ?>/js/d3.v7.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/d3-org-chart3.js"></script>
+    <script src="<?= ROOTPATH ?>/js/d3-flextree.min.js"></script>
+
 
 
     <div class="btn-group float-left">

@@ -177,7 +177,7 @@ $member = $osiris->activities->count(['type' => $t]);
 
                 <div class="col-sm">
                     <label for="id" class="required">ID</label>
-                    <input type="text" class="form-control" name="values[id]" required value="<?= $type['id'] ?? '' ?>" oninput="sanitizeID(this)">
+                    <input type="text" class="form-control" name="values[id]" required value="<?= $type['id'] ?? '' ?>" data-value="<?= $type['id'] ?? '' ?>" oninput="sanitizeID(this)">
                     <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
                 </div>
                 <div class="col-sm">

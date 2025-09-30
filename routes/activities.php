@@ -411,11 +411,23 @@ Route::post('/crud/activities/create', function () {
 
     // add projects if possible
     if ($Settings->featureEnabled('projects')) {
-        if (isset($values['funding'])) {
+        $values['projects'] = [];
+        if (isset($values['projects']) && !empty($values['projects'])) {
+            $values['projects'] = array_values($values['projects']);
+            // convert values to ObjectID
+            $values['projects'] = array_map(function ($v) use ($DB) {
+                return $DB->to_ObjectID($v);
+            }, $values['projects']);
+            // make sure that there are no duplicates
+            $values['projects'] = array_values(array_unique($values['projects'], SORT_REGULAR));
+        }
+        if (isset($values['funding']) && !empty($values['funding'])) {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['_id'])) $values['projects'][] = $project['_id'];
+                if (isset($project['_id']) && !in_array($project['_id'], $values['projects'])) {
+                    $values['projects'][] = $project['_id'];
+                }
             }
         }
     }
@@ -423,7 +435,6 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['authors'])) {
         $values = renderAuthorUnits($values);
     }
-
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
 
@@ -483,6 +494,19 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         $values = renderAuthorUnits($values, $old);
+    }
+    if ($Settings->featureEnabled('projects') && isset($values['projects'])) {
+        $projects = [];
+        if (!empty($values['projects'])) {
+            $projects = array_values($values['projects']);
+            // convert values to ObjectID
+            $projects = array_map(function ($v) use ($DB) {
+                return $DB->to_ObjectID($v);
+            }, $projects);
+            // make sure that there are no duplicates
+            $projects = array_values(array_unique($projects, SORT_REGULAR));
+        }
+        $values['projects'] = $projects;
     }
 
     // add information on updating process
@@ -724,14 +748,14 @@ Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function
             $author['role'] = $a['role'];
         } elseif (isset($a['sws'])) {
             $author['sws'] = $a['sws'];
-        } 
+        }
         $authors[] = $author;
     }
 
     // prepare values for update
     $type = strtolower($type);
     $values = [$type => $authors];
-    
+
     // update History
     $values = $DB->updateHistory($values, $id);
 
@@ -739,7 +763,7 @@ Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function
         ['_id' => $id],
         ['$set' => $values]
     );
-    
+
     // update units array
     include_once BASEPATH . "/php/Render.php";
     renderAuthorUnitsMany(['_id' => $id]);
@@ -757,74 +781,60 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $user = $_SESSION['username'] ?? null;
     $approval = intval($_POST['approval'] ?? 0);
-    
-    // Filter: nur das Dokument + optional absichern, dass der User irgendwo vorkommt
-    $filter = [
-        '_id' => $id,
-        '$or' => [
-            ['authors.user' => $user],
-            ['editors.user' => $user],
-        ],
-    ];
-    
-    $update = [];
-    $options = [
-        'arrayFilters' => [
-            ['a.user' => $user], // für authors
-            ['e.user' => $user], // für editors
-        ],
-    ];
-    
-    switch ($approval) {
-        case 1:
-            // Ja, ich war affiliiert
-            $update = [
-                '$set' => [
-                    'authors.$[a].approved' => true,
-                    'authors.$[a].aoi'      => true,
-                    'editors.$[e].approved' => true,
-                    'editors.$[e].aoi'      => true,
-                ],
-            ];
-            break;
-    
-        case 2:
-            // Ja, aber nicht affiliiert
-            $update = [
-                '$set' => [
-                    'authors.$[a].approved' => true,
-                    'authors.$[a].aoi'      => false,
-                    'editors.$[e].approved' => true,
-                    'editors.$[e].aoi'      => false,
-                ],
-            ];
-            break;
-    
-        case 3:
-            // Nein, das bin ich nicht
-            $update = [
-                '$set' => [
-                    'authors.$[a].user' => null,
-                    'authors.$[a].aoi'  => false,
-                    'authors.$[a].units' => null,
-                    'editors.$[e].user' => null,
-                    'editors.$[e].aoi'  => false,
-                    'editors.$[e].units' => null,
-                ],
-            ];
-            break;
-    
-        default:
-            // nichts tun
-            $update = [];
+    $updateCount = 0;
+
+    function buildUpdate(int $approval)
+    {
+        switch ($approval) {
+            case 1: // ja + affiliiert
+                return ['$set' => ['$.approved' => true, '$.aoi' => true]];
+            case 2: // ja, aber nicht affiliiert
+                return ['$set' => ['$.approved' => true, '$.aoi' => false]];
+            case 3: // nein, das bin ich nicht
+                return ['$set' => ['$.user' => null, '$.aoi' => false, '$.approved' => false]];
+            default:
+                return null;
+        }
     }
-    
-    if ($update) {
-        $updateResult = $collection->updateOne($filter, $update, $options);
-        $updateCount  = $updateResult->getModifiedCount();
-    } else {
-        $updateCount = 0;
+
+    $u = buildUpdate($approval);
+    if (!$u) {
+        $updateCount = 0; /* nothing to do */
+        return;
     }
+
+    // Autoren-Update
+    $updateAuthors = [
+        str_replace('$.', 'authors.$[a].', array_key_first($u)) => current($u),
+    ];
+    $updateAuthors = key($u) === '$set'
+        ? ['$set' => array_combine(
+            array_map(fn($k) => str_replace('$.', 'authors.$[a].', $k), array_keys($u['$set'])),
+            array_values($u['$set'])
+        )]
+        : $u; // (falls du später $unset nutzen willst)
+
+    $resA = $collection->updateOne(
+        ['_id' => $id, 'authors.user' => $user],
+        $updateAuthors,
+        ['arrayFilters' => [['a.user' => $user]]]
+    );
+
+    // Editoren-Update
+    $updateEditors = key($u) === '$set'
+        ? ['$set' => array_combine(
+            array_map(fn($k) => str_replace('$.', 'editors.$[e].', $k), array_keys($u['$set'])),
+            array_values($u['$set'])
+        )]
+        : $u;
+
+    $resE = $collection->updateOne(
+        ['_id' => $id, 'editors.user' => $user],
+        $updateEditors,
+        ['arrayFilters' => [['e.user' => $user]]]
+    );
+
+    $updateCount = ($resA->getModifiedCount() ?? 0) + ($resE->getModifiedCount() ?? 0);
 
     // force update of user notifications
     $DB->notifications(true);

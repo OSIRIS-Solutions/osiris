@@ -244,10 +244,10 @@ if (array_sum($a) === 0) {
                             <br>
 
                             <div class="btn-group mr-10">
-                                <button class="btn small text-success" onclick="_approve('<?= $id ?>', 1)" data-toggle="tooltip" data-title="<?= lang('Yes, and I was affiliated to the' . $Settings->get('affiliation'), 'Ja, und ich war der ' . $Settings->get('affiliation') . ' angehörig') ?>">
+                                <button class="btn small text-success" onclick="_approve('<?= $id ?>', 1)" data-toggle="tooltip" data-title="<?= lang('Yes, and I was affiliated to the' . $Settings->get('affiliation'), 'Ja, und ich war affiliiert mit ' . $Settings->get('affiliation')) ?>">
                                     <i class="ph ph-check ph-fw"></i>
                                 </button>
-                                <button class="btn small text-signal" onclick="_approve('<?= $id ?>', 2)" data-toggle="tooltip" data-title="<?= lang('Yes, but I was not affiliated to the ' . $Settings->get('affiliation'), 'Ja, aber ich war nicht der ' . $Settings->get('affiliation') . ' angehörig') ?>">
+                                <button class="btn small text-signal" onclick="_approve('<?= $id ?>', 2)" data-toggle="tooltip" data-title="<?= lang('Yes, but I was not affiliated to the ' . $Settings->get('affiliation'), 'Ja, aber ich war nicht affiliiert mit ' . $Settings->get('affiliation')) ?>">
                                     <i class="ph ph-push-pin-slash ph-fw"></i>
                                 </button>
                                 <button class="btn small text-danger" onclick="_approve('<?= $id ?>', 3)" data-toggle="tooltip" data-title="<?= lang('No, this is not me', 'Nein, das bin ich nicht') ?>">

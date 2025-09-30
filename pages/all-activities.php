@@ -66,10 +66,17 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         <i class="ph ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
     </h1>
-    <a href="<?= ROOTPATH ?>/activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-book-open"></i>
-        <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
-    </a>
+
+    <div class="btn-toolbar justify-between">
+        <a href="<?= ROOTPATH ?>/activities" class="btn" id="user-btn">
+            <i class="ph ph-book-open"></i>
+            <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
+        </a>
+        <a href="<?= ROOTPATH ?>/add-activity">
+            <i class="ph ph-plus"></i>
+            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+        </a>
+    </div>
 <?php } ?>
 
 <style>
@@ -102,7 +109,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('Year', 'Jahr') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
-                    <th><?= lang('Affiliated', 'Affiliert') ?></th>
+                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -143,7 +150,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 .filter tr td .submenu a.active {
                     font-weight: bold;
                 }
-
             </style>
             <div class="filter" style="max-height: 22rem;">
                 <table id="filter-type" class="table small simple">
@@ -199,7 +205,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
                                 <span class="text-success">
                                     <span class="mr-5"><i class="ph ph-push-pin"></i></span>
-                                    <?= lang('Affiliated', 'Affiliert') ?>
+                                    <?= lang('Affiliated', 'Affiliiert') ?>
                                 </span>
                             </a>
                         </td>
@@ -209,7 +215,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             <a data-type="no" onclick="filterActivities(this, 'no', 15)" class="item" id="no-affiliated-btn">
                                 <span class="text-danger">
                                     <span class="mr-5"><i class="ph ph-push-pin-slash"></i></span>
-                                    <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                                    <?= lang('Not affiliated', 'Nicht affiliiert') ?>
                                 </span>
                             </a>
                         </td>
@@ -357,7 +363,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             'key': 'topics'
         },
         {
-            title: lang('Affiliated', 'Affiliert'),
+            title: lang('Affiliated', 'Affiliiert'),
             'key': 'affiliated'
         }
     ]
@@ -457,7 +463,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             })
                             text += '</span>' + data
                         }
-                        if (row.start == ''){
+                        if (row.start == '') {
                             text += ' <i class="ph ph-warning text-danger" title="' + lang('no date', 'kein Datum') + '"></i>';
                         }
                         if (row.authors == '' && row.editors == '') {

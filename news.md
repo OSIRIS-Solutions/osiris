@@ -1,5 +1,45 @@
 # Neuigkeiten
 
+<span class="badge float-right">30.09.2025</span>
+<a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
+
+## Version 1.5.2
+
+- **Neue Conditional Templates**: mit `%field text%` wird der Text jetzt nur noch gezeigt, wenn das entsprechende Feld nicht leer ist. Beispiel: `%details Details:%` rendert "Details:" nur, wenn das Details-Feld nicht leer ist.
+- **Weiteres bei Listen**: Custom Fields mit dem Typ "Liste" können jetzt so eingestellt werden, dass man "Weiteres" auswählen und spezifizieren kann (über Freitextfeld). Dies funktioniert im Moment noch nicht in Kombination mit Mehrfachauswahl.
+- **Distribute Roles**: die Vergabe von Rollen ist jetzt viel einfacher geworden
+- **Password zurücksetzen**: bei der OSIRIS Auth Nutzerverwaltung ist es ist jetzt für Admins mit entsprechenden Rechten möglich, zentral ein Passwort zurückzusetzen und der Person dann einen erhaltenen Link zuzuschicken
+- **Verbesserte ID-Bereinigung**: OSIRIS ersetzt verbotene Zeichen in IDs (zum Beispiel Leerzeichen und Punkte) jetzt automatisch bei der Eingabe. Dies gilt jetzt auch für Custom Fields, da es hier zuvor zu Problemen kommen konnte, insbesondere wenn diese IDs Leerzeichen oder Punkte enthielten. Besonders Punkte haben in der verwendeten MongoDB-Datenbank zu Problemen geführt.
+- **Formularbaukasten** wurde weiter verbessert:
+  - Für die Vorschau muss nicht mehr gespeichert werden
+  - Die überschriebenen Labels werden auch in der Detail-Tabelle der Aktivität für die Überschriften verwendet
+- Neues Datenfeld **Projekte**: hier können Projekte jetzt direkt im Aktivitätsformular verknüpft werden
+  - Es können mehrere Projekte ausgewählt werden
+  - Die über die DOI zur Verfügung gestellten Funding-Nummern werden automatisch mit den Projekten abgeglichen und verknüpft
+  - Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können
+  - Ihr könnt das neue Datenfeld im Formularbaukasten zu euren Aktivitäts-Typen hinzufügen
+- In Aktivitäten: **leere Felder** werden jetzt nicht mehr in der Tabelle sondern als Liste am Fuß der Tabelle dargestellt, um übersichtlicher zu sein
+- Die Maintenance-Message wurde verbessert
+- Der "Aktivität hinzuf."-Knopf ist jetzt auch bei Meine Aktivitäten zu finden
+- Die Printdarstellung wird jetzt auch über die Portfolio-API ausgeliefert
+- Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können. Dieses wird automatisch mit dem Recht zum Bearbeiten von Projekten mitgegeben.
+
+#### Fehlerbehebungen:
+- Ein Fehler wurde behoben, durch den Aktivitäten nicht bestätigt werden konnten
+- Ein Fehler wurde behoben, durch den beim Synchronisieren von LDAP-Attributen diese einem zufälligen Nutzer zugeschrieben wurden
+- Aktivität hinzufügen: eine Kategorie auszuwählen wählt jetzt korrekt den ersten Typ aus
+- Emails können jetzt auch ohne SMTP Authentifikation verschickt werden
+- Der Link zu Aktivitäten in Events wurde gefixt
+- Der SWS-Rechner wurde aus dem `supervisor-thesis`-Modul entfernt
+- Die Erweiterte Suche wurde verbessert und sollte nicht mehr so fehleranfällig sein
+- Es wurden ein paar Probleme mit den neuen Autoren-Templates behoben
+- Einige Achievement-Texte wurden verbessert oder auf englisch korrigiert
+- Ein paar weitere Übersetzungs- und Textfehler wurden korrigiert
+- NPM JSCDN wurde entfernt, um die Sicherheit zu verbessern
+- Es werden jetzt nicht zusätzlich volle Adminrechte benötigt, um Nutzer zu synchronisieren
+- Die Karte der Kooperationspartner wurde nicht geladen, wenn Latitude und Longitude des Instituts nicht gesetzt waren. Jetzt wird eine Standard-Position verwendet, um dem vorzubeugen.
+
+
 <span class="badge float-right">24.08.2025</span>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>
 
@@ -128,7 +168,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 - Neue **Templates**:
   - Es wurden neue Templates für die Formatierung von Aktivitäten hinzugefügt, insbesondere für Autor:innen und Herausgeberschaften. Dadurch lassen sich auch Autorenschaften im APA-Format und andere Stile einfacher darstellen. Im Bereich Inhalte > Template-Baukasten findet ihr eine Anleitung.
   - Es wurden auch weitere Möglichkeiten hinzugefügt, DOIs auszugeben, z.B. als Link oder nur als Text. Diese können ebenfalls im Template-Baukasten gefunden werden.
-- Es ist nun möglich, die Formatierung der affilierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affilierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
+- Es ist nun möglich, die Formatierung der affiliierten Autor:innen anzupassen. In den allgemeinen Einstellungen gibt es dazu ein Dropdown-Menü, mit dem ihr anpassen könnt, ob affiliierte Autor:innen fett, kursiv oder unterstrichen dargestellt werden sollen, oder eine Mischung davon.
 - Es ist nun möglich, die Sichtbarkeit einzelner Aktivitätskategorien anzupassen. Dazu geht ihr auf Inhalte > Aktivitäten, wählt eine Kategorie (z.B. Publikationen) und klickt auf "Bearbeiten". Dort könnt ihr die Rolle einstellen, die Aktivitäten dieser Kategorie sehen darf. Standardmäßig ist dies auf "Alle" gesetzt, sodass alle Aktivitäten dieser Kategorie für alle Nutzer:innen sichtbar sind. Bitte beachtet, dass Nutzende ihre eigenen Aktivitäten immer sehen können, unabhängig von der Sichtbarkeitseinstellung. Diese Einstellung ist nur auf Kategorie-Ebene möglich, nicht auf Typen-Ebene.
 - Es ist nun möglich, den Upload von Dokumenten für einzelne Aktivitäts-Kategorien zu deaktivieren. Diese Einstellung findet ihr ebenfalls unter Inhalte > Aktivitäten, wenn ihr eine Kategorie bearbeitet. Standardmäßig ist der Upload für alle Kategorien aktiviert. Wenn er deaktiviert ist, wird der Upload-Button in der Detailansicht der Aktivität nicht mehr angezeigt und es können keine Dokumente hochgeladen werden. Vorhandene Dokumente werden nicht gelöscht, werden aber auch nicht mehr angezeigt.
 - Neues Widget für die Auswertung von Aktivitäten: **Konfetti-Timeline**. Das Widget ist im Moment bei Forschungsbereichen und Organisationseinheiten verfügbar, wird aber in Zukunft auch bei anderen Entitäten verfügbar sein. Es zeigt die Aktivitäten in einer Zeitachse an und ermöglicht es, nach Kategorien zu filtern. Der Filter wirkt sich auch auf die darunter liegende Tabelle mit den Aktivitäten aus.
@@ -1137,7 +1177,7 @@ Dadurch sieht die Seite auf den ersten Blick vielleicht etwas ungewohnt aus, ihr
 
 - Lehrveranstaltungen sind jetzt standardisiert
 - Jedes Modul hat eine einzigartige Modulnummer, über die es leicht gefunden werden kann
-- Es kann für jede Person einzeln der Anteil der SWS angegeben werden (nur bei affilierten Personen notwendig)
+- Es kann für jede Person einzeln der Anteil der SWS angegeben werden (nur bei affiliierten Personen notwendig)
 - Ein SWS-Rechner wurde hinzugefügt
 - Einem Modul können Lehrveranstaltungen (z.B. Praktika, Vorlesungen, Seminare) hinzugefügt werden
 - Gäste, die wegen einer Lehrveranstaltung hier sind (i.e. Studenten), können ebenfalls mit dem Modul verknüpft werden
@@ -1311,7 +1351,7 @@ OSIRIS geht damit in die Version 1.0 über und verlässt die Betaphase. Wir werd
 
 **24.11.22**
 
-- Das Menü wurde umstrukturiert und farblich etwas einfacher gehalten
+- Das Menü wurde umstrukturiert und farbig etwas einfacher gehalten
 - Neue Icons für Aktivitäten wurden eingeführt
 - Der Knopf zum Hinzufügen von Aktivitäten war anscheinend zu fancy, um ihn wahrzunehmen. Er wurde vereinfacht.
 - Die neue Primärfarbe ist "Osiris"-Orange
@@ -1359,7 +1399,7 @@ Ich habe sehr viel User-Feedback aus der Beta-Phase eingearbeitet, u.a. folgende
 
 - Das Hinzufügen von Aktivitäten wurde verbessert:
   - Die Aktivitäten Publikation, Reviews, Misc und Studierende haben jetzt Unterkategorien, die ausgewählt werden können, nachdem eine Kategorie ausgewählt wurde. Dadurch sollten viele offene Fragen geklärt werden, da die Datenfelder nun etwas flexibler reagieren.
-  - Beispiele wurden hinzugefügt. Wenn man nun auf Beispiele klickt, werden ausgewählte Aktivitäten oberhalb des Formulars angezeigt. Dabei sind Datenfelder farblich gekennzeichnet und beim Hovern wird der Name des Datenfelds angezeigt. Die Datenfelder im Formular sind in der gleichen Farbe gekennzeichnet.
+  - Beispiele wurden hinzugefügt. Wenn man nun auf Beispiele klickt, werden ausgewählte Aktivitäten oberhalb des Formulars angezeigt. Dabei sind Datenfelder farbig gekennzeichnet und beim Hovern wird der Name des Datenfelds angezeigt. Die Datenfelder im Formular sind in der gleichen Farbe gekennzeichnet.
   - Eine Hilfe-Funktion erklärt nun, wie der Autoreneditor funktioniert.
   - Lectures: Es kann jetzt angegeben werden, ob es sich um eine _Invited lecture_ handelt
 

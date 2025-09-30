@@ -17,6 +17,12 @@
  */
 
 $institute = $Settings->get('affiliation_details');
+$lat = $institute['lat'] ?? 52;
+$lng = $institute['lng'] ?? 10;
+if (empty($lat) || empty($lng)) {
+    $lat = 52;
+    $lng = 10;
+}
 ?>
 
  <script src="<?=ROOTPATH?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
@@ -27,8 +33,8 @@ $institute = $Settings->get('affiliation_details');
         mapbox: {
             style: "open-street-map",
             center: {
-                lat: <?=$institute['lat']??52?>,
-                lon: <?=$institute['lng']??10?>
+                lat: <?=($lat)?>,
+                lon: <?=($lng)?>
             },
             zoom: 1
         },
@@ -64,8 +70,7 @@ $institute = $Settings->get('affiliation_details');
         </div>
         <div class="col-md-4">
             <?= $Project->widgetSmall() ?>
-
-
+            
             <h2>
                 <?= lang('Collaborators', 'Kooperationspartner') ?>
             </h2>

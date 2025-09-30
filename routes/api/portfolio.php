@@ -309,6 +309,7 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
         'sort' => ['year' => -1, 'month' => -1, 'day' => -1],
         'projection' => [
             'html' => '$rendered.portfolio',
+            'print' => '$rendered.print',
             'search' => '$rendered.plain',
             'type' => 1,
             'subtype' => 1,

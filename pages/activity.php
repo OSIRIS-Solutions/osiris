@@ -49,6 +49,42 @@ $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
 //     $guests = $osiris->guests->find(['activity' => $id])->toArray();
 
+?>
+
+<style>
+    .quality-control {
+        position: sticky;
+        top: 6rem;
+        z-index: 20;
+        margin-bottom: 2rem;
+        background-color: white;
+        margin: -2rem -2rem 2rem -2rem;
+        padding: .5rem 2rem;
+        border: 1px solid var(--border-color);
+    }
+    .quality-control.negative {
+        border-color: var(--danger-color);
+        background-color: var(--danger-color-very-light);
+    }
+    .quality-control.positive {
+        border-color: var(--success-color);
+        background-color: var(--success-color-very-light);
+    }
+</style>
+
+<?php if ($Settings->featureEnabled('quality-control', false)) { ?>
+    <div class="quality-control <?= ($doc['quality_control'] ?? false) ? 'positive' : 'negative' ?>">
+        <h5 class="mt-0"><?= lang('Quality control', 'Qualitätskontrolle') ?></h5>
+            <?= lang(
+                'This activity is part of the quality control process. Please check the details and confirm the information.',
+                'Diese Aktivität ist Teil des Qualitätskontrollprozesses. Bitte überprüfe die Details und bestätige die Informationen.'
+            ) ?>
+    </div>
+<?php } ?>
+
+<?php
+
+
 if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 
 
@@ -332,14 +368,14 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
         <?php
 
         if ($doc['affiliated'] ?? true) { ?>
-            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliert.') ?>">
+            <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-handshake m-0"></i> -->
-                <?= lang('Affiliated', 'Affiliert') ?>
+                <?= lang('Affiliated', 'Affiliiert') ?>
             </div>
         <?php } else { ?>
-            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliert.') ?>">
+            <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
                 <!-- <i class="ph ph-hand-x m-0"></i> -->
-                <?= lang('Not affiliated', 'Nicht affiliert') ?>
+                <?= lang('Not affiliated', 'Nicht affiliiert') ?>
             </div>
         <?php } ?>
     </div>
@@ -381,7 +417,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php
                 break;
             default: ?>
-                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliert') ?>">
+                <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
                     <?= lang('None', 'Keine') ?>
                 </span>
         <?php
@@ -713,7 +749,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
 
                 foreach ($typeModules as $module) {
                     if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-                    if (in_array($module, ["semester-select", "event-select"])) continue;
+                    if (in_array($module, ["semester-select", "event-select", "projects"])) continue;
                 ?>
                     <?php if ($module == 'teaching-course' && isset($doc['module_id'])) :
                         $module = $DB->getConnected('teaching', $doc['module_id']);
@@ -1068,7 +1104,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
             <?php } ?>
 
             <h3>
-                <?= lang('Affiliated positions', 'Affilierte Positionen') ?>
+                <?= lang('Affiliated positions', 'Affiliierte Positionen') ?>
             </h3>
 
             <?php
@@ -1079,8 +1115,8 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
                 'middle' => lang('Middle author', 'Mittelautor:in'),
                 'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliert'),
-                'all' => lang('All authors affiliated', 'Alle Autoren affiliert'),
+                'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
+                'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
                 'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
                 'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
                 'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),

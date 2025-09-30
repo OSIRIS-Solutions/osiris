@@ -1935,3 +1935,44 @@ function toggleTimelineActivity(type) {
         activitiesTable.draw(); // Tabelle neu zeichnen
     }
 }
+
+
+function sanitizeID(element, idlist = '#IDLIST li') {
+    // read input value and make sure its lowercase
+    var val = element.value.toLowerCase();
+    var original_val = $(element).data('value')
+    console.log(original_val);
+    // remove forbitten chars
+    val = val.replace(/\./g, '-').replace(/ /g, '_')
+    $(element).val(val)
+
+    var list = []
+
+    // get existing IDs from list
+    if ( typeof idlist === 'string' ) {
+        list = $(idlist).map(function (i, v) {
+            return $(this).text().trim();
+        }).toArray();
+    } else {
+        list = idlist
+    }
+    // check if selected ID is in list
+    if (val == '') {
+        $(element).addClass('is-invalid').removeClass('is-valid')
+        toastError(lang('ID cannot be empty.', 'ID darf nicht leer sein.'))
+        $('#submitBtn').attr('disabled', true)
+    } else if (list.includes(val) && val != original_val) {
+        // give negative feedback to user and disable submit button
+        $(element).addClass('is-invalid').removeClass('is-valid')
+        if (val == 'new') {
+            toastError(lang('NEW is a reserved keyword.', 'NEW ist ein reserviertes Schlüsselwort.'))
+        } else {
+            toastError(lang('ID does already exist.', 'ID existiert bereits.'))
+        }
+        $('#submitBtn').attr('disabled', true)
+    } else {
+        // give positive feedback to user and enable submit button
+        $(element).addClass('is-valid').removeClass('is-invalid')
+        $('#submitBtn').attr('disabled', false)
+    }
+}

@@ -812,6 +812,32 @@ Route::get('/api/(projects|proposals)', function ($type) {
     echo return_rest($result, count($result));
 });
 
+// get projects by funding number
+Route::get('/api/projects-by-funding-number', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!isset($_GET['number'])) {
+        echo return_rest('No funding number provided', 0, 400);
+        die;
+    }
+    if (is_array($_GET['number'])) {
+        $number = array_map('urldecode', $_GET['number']);
+    } else {
+        $number = explode(',', urldecode($_GET['number']));
+    }
+    $filter = ['funding_number' => ['$in' => $number]];
+    $result = $osiris->projects->find(
+        $filter,
+        ['projection' => ['name' => 1, 'title' => 1, '_id' => 1]]
+    )->toArray();
+    echo return_rest($result, count($result));
+});
+
 Route::get('/api/journal', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";

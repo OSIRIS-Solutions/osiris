@@ -33,7 +33,6 @@ include_once BASEPATH . "/routes/admin.fields.php";
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
@@ -611,8 +610,15 @@ Route::post('/crud/admin/update-user-roles', function () {
         header("Location: " . ROOTPATH . "/admin/roles/distribute?msg=no-roles");
         die;
     }
+    // get all admins to not remove admin role
+    $admins = $osiris->persons->find(['roles' => 'admin'])->toArray();
+    $admin_users = array_map(fn($a) => $a['username'], $admins);
     foreach ($roles as $user => $r) {
         if (!is_array($r)) $r = [];
+        // check if user is admin
+        if (in_array($user, $admin_users) && !in_array('admin', $r)) {
+            $r[] = 'admin';
+        }
         $osiris->persons->updateOne(
             ['username' => $user],
             ['$set' => ['roles' => array_map('strtolower', $r)]]
@@ -885,7 +891,9 @@ Route::post('/crud/admin/activity-fields', function () {
         ]]
     );
     // redirect back
-    header("Location: " . ROOTPATH . "/admin/types/$type/fields?msg=activity-fields-updated");
+    $_SESSION['msg'] = lang("Activity form has been updated", "Aktivitätsformular wurde aktualisiert");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/types/$type/fields");
     die();
 });
 

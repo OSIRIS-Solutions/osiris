@@ -11,25 +11,33 @@
       "level": 1,
       "step": 1,
       "de": "* hat das erste Mal eine Aktivität eingetragen.",
-      "en": "* has created an activity for the first time."
+      "en": "* has created an activity for the first time.",
+      "de_single": "Du hast das erste Mal eine Aktivität eingetragen.",
+      "en_single": "You have created an activity for the first time."
     },
     {
       "level": 2,
       "step": 50,
       "de": "* hat mehr als 50 Aktivitäten eingetragen.",
-      "en": "* has created more than 50 activities."
+      "en": "* has created more than 50 activities.",
+      "de_single": "Du hast mehr als 50 Aktivitäten eingetragen.",
+      "en_single": "You have created more than 50 activities."
     },
     {
       "level": 3,
       "step": 200,
       "de": "* hat mehr als 200 Aktivitäten eingetragen.",
-      "en": "* has created more than 200 activities."
+      "en": "* has created more than 200 activities.",
+      "de_single": "Du hast mehr als 200 Aktivitäten eingetragen.",
+      "en_single": "You have created more than 200 activities."
     },
     {
       "level": 4,
       "step": 500,
       "de": "* hat mehr als 500 Aktivitäten eingetragen.",
-      "en": "* has created more than 500 activities."
+      "en": "* has created more than 500 activities.",
+      "de_single": "Du hast mehr als 500 Aktivitäten eingetragen.",
+      "en_single": "You have created more than 500 activities."
     }
   ],
   "maxlvl": 4
@@ -47,25 +55,33 @@
       "level": 1,
       "step": 5,
       "de": "* hat 5 oder mehr Publikationen in OSIRIS.",
-      "en": "* has 5 or more publications in OSIRIS."
+      "en": "* has 5 or more publications in OSIRIS.",
+      "de_single": "Du hast 5 oder mehr Publikationen in OSIRIS.",
+      "en_single": "You have 5 or more publications in OSIRIS."
     },
     {
       "level": 2,
       "step": 10,
       "de": "* hat 10 oder mehr Publikationen in OSIRIS.",
-      "en": "* has 10 or more publications in OSIRIS."
+      "en": "* has 10 or more publications in OSIRIS.",
+      "de_single": "Du hast 10 oder mehr Publikationen in OSIRIS.",
+      "en_single": "You have 10 or more publications in OSIRIS."
     },
     {
       "level": 3,
       "step": 50,
       "de": "* hat 50 oder mehr Publikationen in OSIRIS.",
-      "en": "* has 50 or more publications in OSIRIS."
+      "en": "* has 50 or more publications in OSIRIS.",
+      "de_single": "Du hast 50 oder mehr Publikationen in OSIRIS.",
+      "en_single": "You have 50 or more publications in OSIRIS."
     },
     {
       "level": 4,
       "step": 200,
       "de": "* hat 200 oder mehr Publikationen in OSIRIS.",
-      "en": "* has 200 or more publications in OSIRIS."
+      "en": "* has 200 or more publications in OSIRIS.",
+      "de_single": "Du hast 200 oder mehr Publikationen in OSIRIS.",
+      "en_single": "You have 200 or more publications in OSIRIS."
     }
   ],
   "maxlvl": 4
@@ -83,25 +99,33 @@
       "level": 1,
       "step": 1,
       "de": "* hat mindestens ein Poster in OSIRIS.",
-      "en": "* has at least one poster in OSIRIS."
+      "en": "* has at least one poster in OSIRIS.",
+      "de_single": "Du hast mindestens ein Poster in OSIRIS.",
+      "en_single": "You have at least one poster in OSIRIS."
     },
     {
       "level": 2,
       "step": 5,
       "de": "* hat 5 oder mehr Poster in OSIRIS.",
-      "en": "* has 5 or more posters in OSIRIS."
+      "en": "* has 5 or more posters in OSIRIS.",
+      "de_single": "Du hast 5 oder mehr Poster in OSIRIS.",
+      "en_single": "You have 5 or more posters in OSIRIS."
     },
     {
       "level": 3,
       "step": 20,
       "de": "* hat 20 oder mehr Poster in OSIRIS.",
-      "en": "* has 20 or more posters in OSIRIS."
+      "en": "* has 20 or more posters in OSIRIS.",
+      "de_single": "Du hast 20 oder mehr Poster in OSIRIS.",
+      "en_single": "You have 20 or more posters in OSIRIS."
     },
     {
       "level": 4,
       "step": 50,
       "de": "* hat 50 oder mehr Poster in OSIRIS.",
-      "en": "* has 50 or more posters in OSIRIS."
+      "en": "* has 50 or more posters in OSIRIS.",
+      "de_single": "Du hast 50 oder mehr Poster in OSIRIS.",
+      "en_single": "You have 50 or more posters in OSIRIS."
     }
   ],
   "maxlvl": 4
@@ -119,25 +143,33 @@
       "level": 1,
       "step": 1,
       "de": "* hat mindestens einen Vortrag in OSIRIS.",
-      "en": "* has at least one lecture in OSIRIS."
+      "en": "* has at least one lecture in OSIRIS.",
+      "de_single": "Du hast mindestens einen Vortrag in OSIRIS.",
+      "en_single": "You have at least one lecture in OSIRIS."
     },
     {
       "level": 2,
       "step": 5,
       "de": "* hat 5 oder mehr Vorträge in OSIRIS.",
-      "en": "* has 5 or more lectures in OSIRIS."
+      "en": "* has 5 or more lectures in OSIRIS.",
+      "de_single": "Du hast 5 oder mehr Vorträge in OSIRIS.",
+      "en_single": "You have 5 or more lectures in OSIRIS."
     },
     {
       "level": 3,
       "step": 20,
       "de": "* hat 20 oder mehr Vorträge in OSIRIS.",
-      "en": "* has 20 or more lectures in OSIRIS."
+      "en": "* has 20 or more lectures in OSIRIS.",
+      "de_single": "Du hast 20 oder mehr Vorträge in OSIRIS.",
+      "en_single": "You have 20 or more lectures in OSIRIS."
     },
     {
       "level": 4,
       "step": 50,
       "de": "* hat 50 oder mehr Vorträge in OSIRIS.",
-      "en": "* has 50 or more lectures in OSIRIS."
+      "en": "* has 50 or more lectures in OSIRIS.",
+      "de_single": "Du hast 50 oder mehr Vorträge in OSIRIS.",
+      "en_single": "You have 50 or more lectures in OSIRIS."
     }
   ],
   "maxlvl": 4
@@ -155,7 +187,9 @@
       "level": 1,
       "step": 1,
       "de": "* hat das erste Mal eine Koautorenschaft bestätigt.",
-      "en": "* has confirmed a co-authorship for the first time."
+      "en": "* has confirmed a co-authorship for the first time.",
+      "de_single": "Du hast das erste Mal eine Koautorenschaft bestätigt.",
+      "en_single": "You have confirmed a co-authorship for the first time."
     }
   ],
   "maxlvl": 1
@@ -173,25 +207,33 @@
       "level": 1,
       "step": 50,
       "de": "* hat eine Publikation mit mehr als 50 Coins.",
-      "en": "* has a publication with more than 50 coins."
+      "en": "* has a publication with more than 50 coins.",
+      "de_single": "Du hast eine Publikation mit mehr als 50 Coins.",
+      "en_single": "You have a publication with more than 50 coins."
     },
     {
       "level": 2,
       "step": 100,
       "de": "* hat eine Publikation mit mehr als 100 Coins.",
-      "en": "* has a publication with more than 100 coins."
+      "en": "* has a publication with more than 100 coins.",
+      "de_single": "Du hast eine Publikation mit mehr als 100 Coins.",
+      "en_single": "You have a publication with more than 100 coins."
     },
     {
       "level": 3,
       "step": 200,
       "de": "* hat eine Publikation mit mehr als 200 Coins.",
-      "en": "* has a publication with more than 200 coins."
+      "en": "* has a publication with more than 200 coins.",
+      "de_single": "Du hast eine Publikation mit mehr als 200 Coins.",
+      "en_single": "You have a publication with more than 200 coins."
     },
     {
       "level": 4,
       "step": 300,
       "de": "* hat eine Publikation mit mehr als 300 Coins.",
-      "en": "* has a publication with more than 300 coins."
+      "en": "* has a publication with more than 300 coins.",
+      "de_single": "Du hast eine Publikation mit mehr als 300 Coins.",
+      "en_single": "You have a publication with more than 300 coins."
     }
   ],
   "maxlvl": 4
@@ -209,25 +251,33 @@
       "level": 1,
       "step": 3,
       "de": "* hat eine Publikation mit einem Impact von mehr als 3.",
-      "en": "* a publication with an impact of more than 3."
+      "en": "* a publication with an impact of more than 3.",
+      "de_single": "Du hast eine Publikation mit einem Impact von mehr als 3.",
+      "en_single": "You have a publication with an impact of more than 3."
     },
     {
       "level": 2,
       "step": 5,
       "de": "* hat eine Publikation mit einem Impact von mehr als 5.",
-      "en": "* a publication with an impact of more than 5."
+      "en": "* a publication with an impact of more than 5.",
+      "de_single": "Du hast eine Publikation mit einem Impact von mehr als 5.",
+      "en_single": "You have a publication with an impact of more than 5."
     },
     {
       "level": 3,
       "step": 10,
       "de": "* hat eine Publikation mit einem Impact von mehr als 10.",
-      "en": "* a publication with an impact of more than 10."
+      "en": "* a publication with an impact of more than 10.",
+      "de_single": "Du hast eine Publikation mit einem Impact von mehr als 10.",
+      "en_single": "You have a publication with an impact of more than 10."
     },
     {
       "level": 4,
       "step": 20,
       "de": "* hat eine Publikation mit einem Impact von mehr als 20.",
-      "en": "* a publication with an impact of more than 20."
+      "en": "* a publication with an impact of more than 20.",
+      "de_single": "Du hast eine Publikation mit einem Impact von mehr als 20.",
+      "en_single": "You have a publication with an impact of more than 20."
     }
   ],
   "maxlvl": 4
@@ -245,25 +295,33 @@
       "level": 1,
       "step": 100,
       "de": "* hat mehr als 100 coins in einem Jahr erlangt.",
-      "en": "* has reached more than 100 coins in one year."
+      "en": "* has reached more than 100 coins in one year.",
+      "de_single": "Du hast mehr als 100 coins in einem Jahr erlangt.",
+      "en_single": "You have reached more than 100 coins in one year."
     },
     {
       "level": 2,
       "step": 250,
       "de": "* hat mehr als 250 coins in einem Jahr erlangt.",
-      "en": "* has reached more than 250 coins in one year."
+      "en": "* has reached more than 250 coins in one year.",
+      "de_single": "Du hast mehr als 250 coins in einem Jahr erlangt.",
+      "en_single": "You have reached more than 250 coins in one year."
     },
     {
       "level": 3,
       "step": 500,
       "de": "* hat mehr als 500 coins in einem Jahr erlangt.",
-      "en": "* has reached more than 500 coins in one year."
+      "en": "* has reached more than 500 coins in one year.",
+      "de_single": "Du hast mehr als 500 coins in einem Jahr erlangt.",
+      "en_single": "You have reached more than 500 coins in one year."
     },
     {
       "level": 4,
       "step": 1000,
       "de": "* hat mehr als 1000 coins in einem Jahr erlangt.",
-      "en": "* has reached more than 1000 coins in one year."
+      "en": "* has reached more than 1000 coins in one year.",
+      "de_single": "Du hast mehr als 1000 coins in einem Jahr erlangt.",
+      "en_single": "You have reached more than 1000 coins in one year."
     }
   ],
   "maxlvl": 4
@@ -281,25 +339,33 @@
       "level": 1,
       "step": 200,
       "de": "* hat mehr als 200 Coins angesammelt.",
-      "en": "* has collected more than 200 coins."
+      "en": "* has collected more than 200 coins.",
+      "de_single": "Du hast mehr als 200 Coins angesammelt.",
+      "en_single": "You have collected more than 200 coins."
     },
     {
       "level": 2,
       "step": 1000,
       "de": "* hat mehr als 1000 Coins angesammelt.",
-      "en": "* has collected more than 1000 coins."
+      "en": "* has collected more than 1000 coins.",
+      "de_single": "Du hast mehr als 1000 Coins angesammelt.",
+      "en_single": "You have collected more than 1000 coins."
     },
     {
       "level": 3,
       "step": 5000,
       "de": "* hat mehr als 5000 Coins angesammelt.",
-      "en": "* has collected more than 5000 coins."
+      "en": "* has collected more than 5000 coins.",
+      "de_single": "Du hast mehr als 5000 Coins angesammelt.",
+      "en_single": "You have collected more than 5000 coins."
     },
     {
       "level": 4,
       "step": 10000,
       "de": "* hat mehr als 10.000 Coins angesammelt.",
-      "en": "* has collected more than 10,000 coins."
+      "en": "* has collected more than 10,000 coins.",
+      "de_single": "Du hast mehr als 10.000 Coins angesammelt.",
+      "en_single": "You have collected more than 10,000 coins."
     }
   ],
   "maxlvl": 4
@@ -317,13 +383,17 @@
       "level": 1,
       "step": 1,
       "de": "* hat das erste Mal ein Quartal freigegeben.",
-      "en": "* has approved a quarter for the first time."
+      "en": "* has approved a quarter for the first time.",
+      "de_single": "Du hast das erste Mal ein Quartal freigegeben.",
+      "en_single": "You have approved a quarter for the first time."
     },
     {
       "level": 2,
       "step": 4,
       "de": "* hat alle Quartale eines Jahres freigegeben.",
-      "en": "* has approved all quarter of one year."
+      "en": "* has approved all quarter of one year.",
+      "de_single": "Du hast alle Quartale eines Jahres freigegeben.",
+      "en_single": "You have approved all quarter of one year."
     }
   ],
   "maxlvl": 2
@@ -341,25 +411,33 @@
       "level": 1,
       "step": 2,
       "de": "* hat zwei unterschiedliche Aktivitäten eingetragen.",
-      "en": "* has created two different types of activities."
+      "en": "* has created two different types of activities.",
+      "de_single": "Du hast zwei unterschiedliche Aktivitäten eingetragen.",
+      "en_single": "You have created two different types of activities."
     },
     {
       "level": 2,
       "step": 3,
       "de": "* hat bereits 3 unterschiedliche Arten von Aktivitäten eingetragen.",
-      "en": "* has created three different types of activities."
+      "en": "* has created three different types of activities.",
+      "de_single": "Du hast bereits 3 unterschiedliche Arten von Aktivitäten eingetragen.",
+      "en_single": "You have created three different types of activities."
     },
     {
       "level": 3,
       "step": 5,
       "de": "* hat bereits 5 unterschiedliche Arten von Aktivitäten eingetragen.",
-      "en": "* has created three different types of activities."
+      "en": "* has created 5 different types of activities.",
+      "de_single": "Du hast bereits 5 unterschiedliche Arten von Aktivitäten eingetragen.",
+      "en_single": "You have created 5 different types of activities."
     },
     {
       "level": 4,
       "step": 8,
       "de": "* hat eine Aktivität jeder Art eingetragen.",
-      "en": "* has created an activity of each type."
+      "en": "* has created an activity of each type.",
+      "de_single": "Du hast eine Aktivität jeder Art eingetragen.",
+      "en_single": "You have created an activity of each type."
     }
   ],
   "maxlvl": 4
@@ -377,25 +455,33 @@
       "level": 1,
       "step": 5,
       "de": "* hat 5 oder mehr Reviews in OSIRIS.",
-      "en": "* has 5 or more reviews in OSIRIS."
+      "en": "* has 5 or more reviews in OSIRIS.",
+      "de_single": "Du hast 5 oder mehr Reviews in OSIRIS.",
+      "en_single": "You have 5 or more reviews in OSIRIS."
     },
     {
       "level": 2,
       "step": 10,
       "de": "* hat 10 oder mehr Reviews in OSIRIS.",
-      "en": "* has 10 or more reviews in OSIRIS."
+      "en": "* has 10 or more reviews in OSIRIS.",
+      "de_single": "Du hast 10 oder mehr Reviews in OSIRIS.",
+      "en_single": "You have 10 or more reviews in OSIRIS."
     },
     {
       "level": 3,
       "step": 50,
       "de": "* hat 50 oder mehr Reviews in OSIRIS.",
-      "en": "* has 50 or more reviews in OSIRIS."
+      "en": "* has 50 or more reviews in OSIRIS.",
+      "de_single": "Du hast 50 oder mehr Reviews in OSIRIS.",
+      "en_single": "You have 50 or more reviews in OSIRIS."
     },
     {
       "level": 4,
       "step": 200,
       "de": "* hat 200 oder mehr Reviews in OSIRIS.",
-      "en": "* has 200 or more reviews in OSIRIS."
+      "en": "* has 200 or more reviews in OSIRIS.",
+      "de_single": "Du hast 200 oder mehr Reviews in OSIRIS.",
+      "en_single": "You have 200 or more reviews in OSIRIS."
     }
   ],
   "maxlvl": 4
@@ -413,25 +499,33 @@
       "level": 1,
       "step": 1,
       "de": "* hat mindestens eine Software/Datensatz in OSIRIS.",
-      "en": "* has at least one software/dataset in OSIRIS."
+      "en": "* has at least one software/dataset in OSIRIS.",
+      "de_single": "Du hast mindestens eine Software/Datensatz in OSIRIS.",
+      "en_single": "You have at least one software/dataset in OSIRIS."
     },
     {
       "level": 2,
       "step": 5,
       "de": "* hat 5 oder mehr eine Software/Datensätze in OSIRIS.",
-      "en": "* has 5 or more software/datasets in OSIRIS."
+      "en": "* has 5 or more software/datasets in OSIRIS.",
+      "de_single": "Du hast 5 oder mehr Software/Datensätze in OSIRIS.",
+      "en_single": "You have 5 or more software/datasets in OSIRIS."
     },
     {
       "level": 3,
       "step": 20,
       "de": "* hat 20 oder mehr Software/Datensätze in OSIRIS.",
-      "en": "* has 20 or more software/datasets in OSIRIS."
+      "en": "* has 20 or more software/datasets in OSIRIS.",
+      "de_single": "Du hast 20 oder mehr Software/Datensätze in OSIRIS.",
+      "en_single": "You have 20 or more software/datasets in OSIRIS."
     },
     {
       "level": 4,
       "step": 50,
       "de": "* hat 50 oder mehr Software/Datensätze in OSIRIS.",
-      "en": "* has 50 or more software/datasets in OSIRIS."
+      "en": "* has 50 or more software/datasets in OSIRIS.",
+      "de_single": "Du hast 50 oder mehr Software/Datensätze in OSIRIS.",
+      "en_single": "You have 50 or more software/datasets in OSIRIS."
     }
   ],
   "maxlvl": 4
@@ -449,25 +543,33 @@
       "level": 1,
       "step": 1,
       "de": "* hat erfolgreich eine Abschlussarbeit betreut.",
-      "en": "* has successfully supervised a thesis."
+      "en": "* has successfully supervised a thesis.",
+      "de_single": "Du hast erfolgreich eine Abschlussarbeit betreut.",
+      "en_single": "You have successfully supervised a thesis."
     },
     {
       "level": 2,
       "step": 3,
       "de": "* hat bereits 3 abgeschlossene Abschlussarbeiten betreut.",
-      "en": "* has supervised 3 successful theses."
+      "en": "* has supervised 3 successful theses.",
+      "de_single": "Du hast bereits 3 abgeschlossene Abschlussarbeiten betreut.",
+      "en_single": "You have supervised 3 successful theses."
     },
     {
       "level": 3,
       "step": 10,
       "de": "* hat bereits 10 abgeschlossene Abschlussarbeiten betreut.",
-      "en": "* has supervised 10 successful theses."
+      "en": "* has supervised 10 successful theses.",
+      "de_single": "Du hast bereits 10 abgeschlossene Abschlussarbeiten betreut.",
+      "en_single": "You have supervised 10 successful theses."
     },
     {
       "level": 4,
       "step": 20,
       "de": "* hat mindestens 20 abgeschlossene Abschlussarbeiten betreut.",
-      "en": "* has supervised at least 20 successful theses."
+      "en": "* has supervised at least 20 successful theses.",
+      "de_single": "Du hast mindestens 20 abgeschlossene Abschlussarbeiten betreut.",
+      "en_single": "You have supervised at least 20 successful theses."
     }
   ],
   "maxlvl": 4
@@ -485,7 +587,9 @@
       "level": 1,
       "step": 1,
       "de": "* hat die eigenen Profildetails aktualisiert und die Daten auf den aktuellen Stand gebracht.",
-      "en": "* has update his/her profile kept the data up to date."
+      "en": "* has updated their profile and kept the data up to date.",
+      "de_single": "Du hast die eigenen Profildetails aktualisiert und die Daten auf den aktuellen Stand gebracht.",
+      "en_single": "You have updated your profile and kept the data up to date."
     }
   ],
   "maxlvl": 1
@@ -503,25 +607,33 @@
       "level": 1,
       "step": 10,
       "de": "* hat mindestens 10 verschiedene Koautoren.",
-      "en": "* has at least 10 different coauthors."
+      "en": "* has at least 10 different coauthors.",
+      "de_single": "Du hast mindestens 10 verschiedene Koautoren.",
+      "en_single": "You have at least 10 different coauthors."
     },
     {
       "level": 2,
       "step": 50,
       "de": "* hat mindestens 50 verschiedene Koautoren.",
-      "en": "* has at least 50 different coauthors."
+      "en": "* has at least 50 different coauthors.",
+      "de_single": "Du hast mindestens 50 verschiedene Koautoren.",
+      "en_single": "You have at least 50 different coauthors."
     },
     {
       "level": 3,
       "step": 100,
       "de": "* hat mindestens 100 verschiedene Koautoren.",
-      "en": "* has at least 100 different coauthors"
+      "en": "* has at least 100 different coauthors",
+      "de_single": "Du hast mindestens 100 verschiedene Koautoren.",
+      "en_single": "You have at least 100 different coauthors."
     },
     {
       "level": 4,
       "step": 250,
       "de": "* hat mehr als 250 verschiedene Koautoren.",
-      "en": "* has more than 250 different coauthors."
+      "en": "* has more than 250 different coauthors.",
+      "de_single": "Du hast mehr als 250 verschiedene Koautoren.",
+      "en_single": "You have more than 250 different coauthors."
     }
   ],
   "maxlvl": 4
@@ -540,7 +652,9 @@
       "level": 1,
       "step": 1,
       "de": "* hat am Betatest für OSIRIS teilgenommen. Danke.",
-      "en": "* has enganged in the beta-testing for OSIRIS."
+      "en": "* has engaged in the beta-testing for OSIRIS.",
+      "de_single": "Du hast am Betatest für OSIRIS teilgenommen. Danke.",
+      "en_single": "You have engaged in the beta-testing for OSIRIS. Thank you."
     }
   ],
   "maxlvl": 1
