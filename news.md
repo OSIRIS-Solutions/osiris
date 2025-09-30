@@ -1,6 +1,6 @@
 # Neuigkeiten
 
-<span class="badge float-right">22.09.2025</span>
+<span class="badge float-right">30.09.2025</span>
 <a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
 
 ## Version 1.5.2
@@ -37,6 +37,7 @@
 - Ein paar weitere Übersetzungs- und Textfehler wurden korrigiert
 - NPM JSCDN wurde entfernt, um die Sicherheit zu verbessern
 - Es werden jetzt nicht zusätzlich volle Adminrechte benötigt, um Nutzer zu synchronisieren
+- Die Karte der Kooperationspartner wurde nicht geladen, wenn Latitude und Longitude des Instituts nicht gesetzt waren. Jetzt wird eine Standard-Position verwendet, um dem vorzubeugen.
 
 
 <span class="badge float-right">24.08.2025</span>
