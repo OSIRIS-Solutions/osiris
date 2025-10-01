@@ -868,8 +868,22 @@ class Document extends Settings
         foreach ($authors as $person) {
             $first = $person['first'] ?? '';
             $last = $person['last'] ?? '';
-            $initial = $first ? mb_substr($first, 0, 1) : '';
-            $initialDot = $initial ? $initial . '.' : '';
+            // $initial = $first ? mb_substr($first, 0, 1) : '';
+            $initial = '';
+            $initialDot = '';
+            if ($first) :
+                foreach (preg_split("/(\s+| |-|\.)/u", $first, -1, PREG_SPLIT_DELIM_CAPTURE) as $name) {
+                    if (empty(trim($name)) || $name == '.' || $name == ' ') continue;
+                    if ($name == '-') {
+                        $initial .= '-';
+                        $initialDot .= '-';
+                    } else {
+                        $name = mb_substr($name, 0, 1);
+                        $initial .= "" . $name;
+                        $initialDot .= "" . $name . '.';
+                    }
+                }
+            endif;
             $author = '';
             switch ($nameFormat) {
                 case 'last f':
