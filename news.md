@@ -7,7 +7,6 @@
 ## Version 1.5.3 beta
 
 #### Bug Fixes und Verbesserungen
-
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
 
