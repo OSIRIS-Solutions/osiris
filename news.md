@@ -1,5 +1,17 @@
 # Neuigkeiten
 
+
+<span class="badge float-right">01.10.2025</span>
+<a class="anchor" href="#version-1.5.3" id="version-1.5.3"></a>
+
+## Version 1.5.3 beta
+
+#### Bug Fixes und Verbesserungen
+
+- Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
+- Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
+
+
 <span class="badge float-right">30.09.2025</span>
 <a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
 
