@@ -4,7 +4,7 @@
 <span class="badge float-right">01.10.2025</span>
 <a class="anchor" href="#version-1.5.3" id="version-1.5.3"></a>
 
-## Version 1.5.3 beta
+## Build 20251001
 
 #### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
