@@ -622,7 +622,10 @@ Route::get('/api/dashboard/department-network', function () {
 
     if (!empty($dept)) {
         $filter['units'] = $dept;
+    } else {
+        $filter['units'] = ['$in' => $dept_ids];
     }
+
 
     $pipeline = [
         [
