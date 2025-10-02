@@ -856,9 +856,9 @@ class Document extends Settings
                 if ($part === 'Eds' || $part === 'eds') {
                     $suffix = ' (' . $part . '.)';
                 } elseif ($N == 1) {
-                    $suffix = ' (' . $part . 's.)';
-                } else {
                     $suffix = ' (' . $part . '.)';
+                } else {
+                    $suffix = ' (' . $part . 's.)';
                 }
             }
         }
