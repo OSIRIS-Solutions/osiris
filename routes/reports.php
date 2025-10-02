@@ -297,8 +297,7 @@ Route::post('/reports', function () {
     // Save file
     if ($_POST['format'] == 'html') {
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
-        $objWriter->save('.data/report.html');
-        include_once '.data/report.html';
+        $objWriter->save('php://output');
         die;
     }
 
