@@ -89,7 +89,7 @@ function renderDates($doc)
 function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
 {
     global $Groups;
-    if ($author_key == 'authors' || $author_key == 'editors'){
+    if ($author_key == 'authors' || $author_key == 'editors') {
         // check both authors and editors
         if (!isset($doc['authors']) && !isset($doc['editors'])) {
             return $doc; // no authors or editors to process
@@ -122,19 +122,26 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
     }
 
     // add user as key to authors
-    $old = array_column($old, 'units', 'user');
+    // $old = array_column($old, 'units', 'user');
 
     foreach ($authors as $i => $author) {
         if ($author_key == 'authors' && (!($author['aoi'] ?? false) || !isset($author['user']))) continue;
         $user = $author['user'];
 
         // check if author has been manually set, if so, do not update units
-        $old_author = $old[$user] ?? [];
-        if (!empty($old_author) && $old_author['manually']) {
-            $authors[$i]['units'] = $old_author['units'] ?? [];
-            $units = array_merge($units, $authors[$i]['units']);
+        if ($author['manually'] ?? false) {
+            $units = array_merge($units, DB::doc2Arr($authors[$i]['units']));
             continue;
         }
+        // $old_author = $old[$user] ?? [];
+        // if (isset($author['manually']) && $author['manually']) {
+        //     $old_author = DB::doc2Arr($author);
+        // }
+        // if (!empty($old_author) && $author['manually']) {
+        //     $authors[$i]['units'] = $old_author['units'] ?? [];
+        //     $units = array_merge($units, $authors[$i]['units']);
+        //     continue;
+        // }
         $person = $DB->getPerson($user);
         if (isset($person['units']) && !empty($person['units'])) {
             $u = DB::doc2Arr($person['units']);
@@ -158,7 +165,7 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
             $user = $editor['user'];
             $person = $DB->getPerson($user);
 
-            if ($editor['manually']) {
+            if ($editor['manually'] ?? false) {
                 $units = array_merge($units, DB::doc2Arr($editors[$i]['units']));
                 continue;
             }
