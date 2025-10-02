@@ -950,9 +950,6 @@ function getDOI(doi) {
                         if (AFFILIATION_REGEX.test(e.name)) {
                             aoi = true
                         }
-                        // if (e.name.includes(AFFILIATION)) {
-                        //     aoi = true
-                        // }
                     })
                     if (a.sequence == "first") {
                         first = i + 1
@@ -1165,7 +1162,7 @@ function getDataciteDOI(doi) {
 
     var dataCiteTypes = {
         'book': 'book',
-        'bookchapter': 'bookchapter',
+        'bookchapter': 'chapter',
         'journal': 'article',
         'journalarticle': 'article',
         'conferencepaper': 'article',
