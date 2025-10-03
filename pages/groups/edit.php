@@ -529,7 +529,7 @@ function sel($index, $value)
                                 <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
                             <?php } else { ?>
                                 <input type="hidden" name="action" value="add">
-                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
+                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?>*</button>
                             <?php } ?>
                         </form>
 
@@ -539,6 +539,9 @@ function sel($index, $value)
         </tbody>
     </table>
 
+    <small class="text-muted">
+        * <?= lang('Persons with editor rights can edit the group details, and add/remove other persons.', 'Personen mit Editor-Rechten können die Gruppendetails bearbeiten und andere Personen hinzufügen/entfernen.') ?>
+    </small>
 
 </section>
 
