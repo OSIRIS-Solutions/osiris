@@ -329,7 +329,7 @@ $active = function ($field) use ($data_fields) {
                                 $en = $pos[0] ?? '-';
                                 $de = $pos[1] ?? '-';
                             ?>
-                                <option value="<?= $en ?>;;<?= $de ?>" <?= $data['position'] == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
+                                <option value="<?= $en ?>;;<?= $de ?>" <?= ($data['position'] ?? '') == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
                             <?php } ?>
                         </select>
                     <?php } ?>
