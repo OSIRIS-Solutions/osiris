@@ -482,6 +482,11 @@ function sel($index, $value)
         </thead>
         <tbody>
             <?php
+
+            // get all roles that can edit units
+            $roles = $osiris->adminRights->find(['right' => 'units.add', 'value' => true], ['projection' => ['role' => 1]])->toArray();
+            $roles = array_column($roles, 'role');
+
             $persons = $Groups->getAllPersons($id);
             foreach ($persons as $p) {
                 $is_head = in_array($p['username'], $heads);
@@ -494,6 +499,17 @@ function sel($index, $value)
                     if (!empty($units))
                         $unit = array_values($units)[0];
                 }
+                // check if person has editor rights
+                $has_editor_rights = false;
+                if (!empty($p['roles'] ?? null)) {
+                    foreach ($p['roles'] as $r) {
+                        if (in_array($r, $roles)) {
+                            $has_editor_rights = true;
+                            break;
+                        }
+                    }
+                }
+
             ?>
                 <tr>
                     <td><?= $p['last'] ?>, <?= $p['first'] ?></td>
@@ -524,7 +540,10 @@ function sel($index, $value)
                         <!-- delegate editing rights -->
                         <form action="<?= ROOTPATH ?>/crud/groups/editorperson/<?= $id ?>" method="post" class="d-inline">
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
-                            <?php if ($unit['editor'] ?? false) { ?>
+                            <?php if ($has_editor_rights) { ?>
+
+                                <button class="btn muted small" disabled><i class="ph ph-shield-check"></i> <?= lang('Has admin rights', 'Hat Admin-Rechte') ?></button>
+                            <?php } elseif ($unit['editor'] ?? false) { ?>
                                 <input type="hidden" name="action" value="remove">
                                 <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
                             <?php } else { ?>
@@ -532,7 +551,6 @@ function sel($index, $value)
                                 <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?>*</button>
                             <?php } ?>
                         </form>
-
                     </td>
                 </tr>
             <?php } ?>
