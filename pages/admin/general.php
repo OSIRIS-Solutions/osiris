@@ -575,9 +575,9 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
 
-<!-- 
+
                 <div class="box px-20">
-                    <h3 id="quality-control">
+                    <h3 id="quality-workflow">
                         <?= lang('Quality control of activities', 'Qualitätsprüfung von Aktivitäten') ?>
                     </h3>
                     <div class="form-group">
@@ -587,23 +587,23 @@ $affiliation = $Settings->get('affiliation_details');
                         </p>
 
                         <?php
-                        $quality = $Settings->featureEnabled('quality-control', false);
+                        $quality = $Settings->featureEnabled('quality-workflow', false);
                         ?>
 
                         <div class="custom-radio">
-                            <input type="radio" id="quality-control-true" value="1" name="values[quality-control]" <?= $quality ? 'checked' : '' ?>>
-                            <label for="quality-control-true">
+                            <input type="radio" id="quality-workflow-true" value="1" name="values[quality-workflow]" <?= $quality ? 'checked' : '' ?>>
+                            <label for="quality-workflow-true">
                                 <?= lang('Enabled', 'Aktiviert') ?>
                             </label>
                         </div>
                         <div class="custom-radio">
-                            <input type="radio" id="quality-control-false" value="0" name="values[quality-control]" <?= $quality ? '' : 'checked' ?>>
-                            <label for="quality-control-false">
+                            <input type="radio" id="quality-workflow-false" value="0" name="values[quality-workflow]" <?= $quality ? '' : 'checked' ?>>
+                            <label for="quality-workflow-false">
                                 <?= lang('Disabled', 'Deaktiviert') ?>
                             </label>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
 
                 <div class="box px-20">
@@ -1159,7 +1159,7 @@ $affiliation = $Settings->get('affiliation_details');
                         <a href="#journal-metrics">
                             <?= lang('Journals', 'Journale') ?>
                         </a>
-                        <a href="#quality-control">
+                        <a href="#quality-workflow">
                             <?= lang('Quality control', 'Qualitätskontrolle') ?>
                         </a>
                         <a href="#guest-forms">

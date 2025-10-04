@@ -366,7 +366,7 @@ Route::post('/crud/activities/create', function () {
     // die();
     $collection = $osiris->activities;
     $required = [];
-    $col = $_POST['values']['type'];
+    $activityType = $_POST['values']['type'];
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -435,6 +435,21 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['authors'])) {
         $values = renderAuthorUnits($values);
     }
+
+    // check if workflows are enabled
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $typeArr = $osiris->adminCategories->findOne(['id' => $activityType]);
+        // check if workflow is defined for this type
+        if (isset($typeArr['workflow']) && !empty($typeArr['workflow'])) {
+            include_once BASEPATH . "/php/Workflows.php";
+            $template = $osiris->adminWorkflows->findOne(['id' => $typeArr['workflow']]);
+            if ($template && !empty($template['steps'])) {
+                $template = DB::doc2Arr($template);
+                $values['workflow'] = Workflows::buildSnapshot($template);
+            }
+        }
+    }
+
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
 

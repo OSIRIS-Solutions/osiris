@@ -19,6 +19,7 @@
 use chillerlan\QRCode\{QRCode, QROptions};
 
 include_once BASEPATH . "/php/Modules.php";
+include_once BASEPATH . "/php/Workflows.php";
 
 // check if this is an ongoing activity type
 $ongoing = false;
@@ -62,24 +63,210 @@ $guests = $doc['guests'] ?? [];
         padding: .5rem 2rem;
         border: 1px solid var(--border-color);
     }
-    .quality-control.negative {
+
+    /* .quality-control.negative {
         border-color: var(--danger-color);
         background-color: var(--danger-color-very-light);
     }
+
     .quality-control.positive {
         border-color: var(--success-color);
         background-color: var(--success-color-very-light);
-    }
+    } */
 </style>
 
-<?php if ($Settings->featureEnabled('quality-control', false)) { ?>
-    <div class="quality-control <?= ($doc['quality_control'] ?? false) ? 'positive' : 'negative' ?>">
-        <h5 class="mt-0"><?= lang('Quality control', 'Qualitätskontrolle') ?></h5>
-            <?= lang(
-                'This activity is part of the quality control process. Please check the details and confirm the information.',
-                'Diese Aktivität ist Teil des Qualitätskontrollprozesses. Bitte überprüfe die Details und bestätige die Informationen.'
-            ) ?>
+<?php if ($Settings->featureEnabled('quality-workflow', false)) { ?>
+    <?php
+    $wf = $activity['workflow'] ?? null;
+    if ($wf) $wf = DB::doc2Arr($wf);
+
+    $units = DB::doc2Arr($USER['units'] ?? []);
+    if (!empty($units)) {
+        $units = array_column($units, 'unit');
+    }
+    $userCtx = [
+        'username' => $_SESSION['username'] ?? null,
+        'roles'    => $Settings->roles ?? [],
+        'units'   => $units
+    ];
+
+    $progress = $wf ? Workflows::getProgress($wf) : [];
+    // dump($progress);
+    $actionable = $wf ? Workflows::getActionableStep($doc, $userCtx) : null;
+    $currentId  = $actionable['step_id'] ?? null;
+    ?>
+    <style>
+        .wf-bar {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 15px 40px 30px;
+        }
+
+        .wf-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: default;
+        }
+
+        .wf-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+
+        .wf-circle.approved {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: #fff;
+        }
+
+        .wf-circle.current {
+            border-color: var(--primary-color);
+            background: #fff;
+        }
+
+        .wf-circle.future {
+            border-color: #ccc;
+            background: #eee;
+        }
+
+        .wf-step-label {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #333;
+            position: absolute;
+            top: 24px;
+            color: var(--muted-color);
+            max-width: 100px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            /* display: none; */
+        }
+
+        
+        .wf-step.current .wf-step-label {
+            display: block;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .wf-bar .wf-line {
+            flex: 1;
+            height: 2px;
+            background: #ccc;
+            /* margin-top: 14px; */
+        }
+
+        .wf-circle .icon {
+            font-size: 16px;
+        }
+    </style>
+
+    <div class="quality-control" id="quality-control">
+        <h4><?= lang('Quality Check', 'Qualitätsprüfung') ?></h4>
+
+        <?php if (!$wf): ?>
+            <p class="text-muted"><?= lang('No workflow attached.', 'Kein Workflow verknüpft.') ?></p>
+        <?php else: ?>
+            <div class="wf-bar" id="wf-bar" style="max-width: <?= count($progress) * 14 ?>rem;">
+                <?php foreach ($progress as $i => $s): ?>
+                    <?php
+                    $state = $s['state'];
+                    $isCurrent = ($s['id'] === $currentId);
+                    $isFuture = $s['future'] ?? false;
+                    ?>
+                    <div class="wf-step <?= $isCurrent ? 'current' : '' ?>" data-step-id="<?= $s['id'] ?>" title="<?= htmlspecialchars($s['label']) ?>">
+                        <div class="wf-circle <?= $state === 'approved' ? 'approved' : ($isFuture ? 'future' : 'current') ?>">
+                            <?php if ($state === 'approved'): ?>
+                                <i class="ph ph-check icon"></i>
+                            <?php elseif (($s['orgScope'] ?? 'any') === 'same_org_only' && !$isCurrent) : ?>
+                                <i class="ph ph-users icon text-muted" title="<?= lang('Restricted to reviewers from the same organization', 'Nur Prüfer*innen aus der gleichen Organisation') ?>"></i>
+                            <?php endif; ?>
+                        </div>
+                        <div class="wf-step-label">
+                            <?= htmlspecialchars($s['label']) ?>
+                        </div>
+                    </div>
+                    <?php if ($i < count($progress) - 1): ?>
+                        <div class="wf-line"></div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if ($actionable): ?>
+                <div class="mt-15 flex gap-10">
+                    <button class="btn success" id="btn-approve">
+                        <i class="ph ph-check"></i> <?= lang('Approve', 'Freigeben') ?>
+                    </button>
+                    <button class="btn danger" id="btn-reject">
+                        <i class="ph ph-x"></i> <?= lang('Reject', 'Zurückweisen') ?>
+                    </button>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
+
+    <script>
+        (function() {
+            const activityId = <?= json_encode((string)$activity['_id']) ?>;
+            const $bar = $('#wf-bar');
+
+            function currentStepId() {
+                return $bar.find('.wf-step.current').data('step-id') || null;
+            }
+
+            function markApproved(stepId, meta) {
+                const $step = $bar.find('.wf-step[data-step-id="' + stepId + '"]');
+                $step.removeClass('current').find('.wf-circle')
+                    .removeClass('current future')
+                    .addClass('approved')
+                    .html('<i class="ph ph-check icon"></i>');
+                // nächste Step current
+                const $next = $step.nextAll('.wf-step').first();
+                if ($next.length) {
+                    $next.addClass('current');
+                    $next.find('.wf-circle').removeClass('future').addClass('current');
+                }
+            }
+
+            $('#btn-approve').on('click', function() {
+                const stepId = currentStepId();
+                if (!stepId) return;
+                $.post('<?= ROOTPATH ?>/crud/activities/workflow/approve/' + activityId, {
+                    stepId
+                }, function(res) {
+                    if (res.status === 'ok') {
+                        markApproved(stepId, res);
+                        $('#btn-approve,#btn-reject').prop('disabled', true);
+                    } else alert(res.error || 'Error');
+                }, 'json');
+            });
+
+            $('#btn-reject').on('click', function() {
+                const comment = prompt("<?= lang('Please enter a comment', 'Bitte Kommentar eingeben') ?>");
+                if (comment === null) return;
+                const stepId = currentStepId();
+                $.post('<?= ROOTPATH ?>/crud/activities/workflow/reject/' + activityId, {
+                    stepId,
+                    comment
+                }, function(res) {
+                    if (res.status === 'ok') {
+                        alert("<?= lang('Step rejected', 'Schritt zurückgewiesen') ?>");
+                        location.reload();
+                    } else alert(res.error || 'Error');
+                }, 'json');
+            });
+        })();
+    </script>
 <?php } ?>
 
 <?php
@@ -176,7 +363,6 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'add-success') { ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/activity.js?v=<?= CSS_JS_VERSION ?>"></script>
-
 
 
 <div class="btn-toolbar">
@@ -801,7 +987,7 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                             <td>
                                 <span class="key">Event</span>
                                 <?php if (empty($conference)) { ?>
-                                    <div><?=$doc['conference'] ?? ''?></div>
+                                    <div><?= $doc['conference'] ?? '' ?></div>
                                     <span class="text-danger">
                                         <?= lang('This event has been deleted.', 'Diese Veranstaltung wurde gelöscht.') ?>
                                     </span>
@@ -832,13 +1018,13 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                                 <?php } ?>
                             </td>
                         </tr>
-                    <?php else : 
+                    <?php else :
                         $val = $Format->get_field($module);
                         if (empty($val) || $val == '-') {
                             $emptyModules[] = $module;
                             continue;
                         }
-                        ?>
+                    ?>
 
                         <tr>
                             <td>
@@ -856,15 +1042,15 @@ if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empt
                 if (count($emptyModules)) {
                     $emptyModules = array_unique($emptyModules);
                 ?>
-                <tr>
-                    <td>
-                        <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
-                       <?php foreach ($emptyModules as $key) { ?>
-                            <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
-                       <?php } ?>
-                       
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
+                            <?php foreach ($emptyModules as $key) { ?>
+                                <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
+                            <?php } ?>
+
+                        </td>
+                    </tr>
                 <?php } ?>
 
 
