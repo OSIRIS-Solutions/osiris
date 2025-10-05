@@ -12019,6 +12019,279 @@ a.text-muted:focus {
     transform: rotate(360deg);
   }
 }
+.quality-control {
+  z-index: 20;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  --workflow-width: 50rem;
+}
+
+.wf-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 15px 40px 30px;
+  max-width: 100%;
+  width: var(--workflow-width);
+}
+.wf-bar .wf-line {
+  flex: 1;
+  height: 2px;
+  background: #ccc;
+}
+
+.wf-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.wf-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wf-circle.approved {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: #fff;
+}
+.wf-circle.current {
+  border-color: var(--blue-color);
+  border-width: 1px;
+}
+.wf-circle.current:after {
+  content: "";
+  width: 1.8rem;
+  height: 1.8rem;
+  background-color: var(--blue-color);
+  border-radius: 1rem;
+}
+.wf-circle.current.same_org_only:after {
+  content: "\e4d6";
+  font-family: "Phosphor";
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+}
+.wf-circle.current.user-can-approve::before {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--blue-color) transparent;
+}
+.wf-circle.future {
+  border-color: #ccc;
+  background: #eee;
+}
+.wf-circle .icon {
+  font-size: 16px;
+}
+
+.wf-step-label {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #333;
+  position: absolute;
+  top: 24px;
+  color: var(--muted-color);
+  max-width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  /* display: none; */
+}
+
+.wf-step.current .wf-step-label {
+  display: block;
+  font-weight: bold;
+  color: var(--blue-color);
+}
+
+.wf-actions {
+  border: 1px solid var(--blue-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  width: calc(var(--workflow-width) + 4rem);
+  max-width: 100%;
+  text-align: center;
+  background-color: var(--blue-color-20);
+}
+
+/* Höhe der Topbar an dein Layout anpassen */
+:root {
+  --os-header-h: var(--navbar-bottom-height);
+}
+
+#wf-mini {
+  position: sticky;
+  top: var(--os-header-h);
+  z-index: 50;
+  height: 2rem;
+  background: var(--gray-color-very-light);
+  /* neutral */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--muted-color-60);
+  border-top: 1px solid var(--muted-color-60);
+  box-shadow: var(--button-box-shadow);
+  z-index: 12;
+  cursor: pointer;
+  transition: height 0.3s ease;
+}
+#wf-mini:hover {
+  height: 3rem;
+}
+#wf-mini:hover .dot {
+  transform: scale(1.2);
+}
+#wf-mini b {
+  font-size: smaller;
+  /* font-weight: normal; */
+  margin-right: 2rem;
+  color: var(--muted-color);
+}
+#wf-mini.has-action {
+  box-shadow: 0 0 8px var(--blue-color-60);
+  background: var(--blue-color-very-light);
+  border-color: var(--blue-color);
+}
+#wf-mini.has-action b {
+  color: var(--blue-color);
+  font-weight: bold;
+}
+#wf-mini.ok {
+  background: var(--success-color-very-light);
+  border-color: var(--success-color-60);
+}
+#wf-mini.ok b {
+  color: var(--success-color);
+}
+#wf-mini.bad {
+  background: var(--danger-color-very-light);
+  border-color: var(--danger-color);
+}
+#wf-mini.bad b {
+  color: var(--danger-color);
+}
+#wf-mini .track {
+  position: relative;
+  width: var(--workflow-width);
+  height: 6px;
+}
+#wf-mini .dot {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+#wf-mini .dot.approved {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+#wf-mini .dot.current {
+  border-color: var(--blue-color);
+}
+#wf-mini .tick {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.1);
+}
+#wf-mini .track.ok .tick {
+  background: var(--success-color-20);
+}
+#wf-mini .track.bad .tick {
+  background: var(--danger-color);
+}
+#wf-mini .clickmask {
+  position: absolute;
+  inset: -6px 0;
+  cursor: pointer;
+}
+
+.rejection-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.rejection-chat .chat-bubble {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 100%;
+  position: relative;
+}
+.rejection-chat .chat-bubble b {
+  font-weight: bold;
+}
+.rejection-chat .chat-bubble .small {
+  font-size: 0.8em;
+  color: var(--muted-color);
+}
+
+[class^=col-] .box {
+  margin: 0;
+  /* height: 100%; */
+}
+
+.btn-toolbar {
+  margin: 0 0 1rem;
+  /* background-color: white;
+      padding: .5rem;
+      border-radius: .5rem; */
+}
+
+.filelink {
+  display: block;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: inherit !important;
+  padding: 0.5rem 1rem;
+  margin: 0 0 1rem;
+  background: white;
+}
+
+.filelink:hover {
+  text-decoration: none;
+  background-color: rgba(0, 110, 183, 0.05);
+}
+
+.show-on-hover:hover .invisible {
+  visibility: visible !important;
+}
+
+.badge.block {
+  display: block;
+  text-align: center;
+}
+
 /*
 -------------------------------------------------------------------------------
 Print
@@ -12836,6 +13109,16 @@ table img {
 
 .history-list .box {
   margin-top: 0;
+}
+
+.history-list > div {
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.history-list > div:first-child {
+  border-bottom: none;
 }
 
 .del {

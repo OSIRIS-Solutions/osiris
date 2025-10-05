@@ -551,4 +551,17 @@ class Settings
         }
         return $regex;
     }
+
+    public static function getHistoryType($type) {
+        $mapping = [
+            'created' => lang('Created by ', 'Erstellt von '),
+            'edited' => lang('Edited by ', 'Bearbeitet von '),
+            'imported' => lang('Imported by ', 'Importiert von '),
+            'workflow-reset' => lang('Workflow reset by ', 'Workflow zurückgesetzt von '),
+            'workflow-approve' => lang('Workflow step approved by ', 'Workflow-Schritt genehmigt von '),
+            'workflow-reject' => lang('Workflow step rejected by ', 'Workflow-Schritt abgelehnt von '),
+            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von ')
+        ];
+        return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
+    }
 }

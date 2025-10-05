@@ -327,7 +327,7 @@ Route::post('/crud/activities/workflow/approve/(.*)', function ($id) {
     } catch (RuntimeException $e) {
         return JSON::error($e->getMessage(), 403);
     }
-    
+
     // check if we need to lock the activity
     $tplArr = DB::doc2Arr($tpl);
     $shouldLock = false;
@@ -343,6 +343,16 @@ Route::post('/crud/activities/workflow/approve/(.*)', function ($id) {
     if ($shouldLock && empty($act['locked'])) {
         $set['locked'] = true;  // set global lock
     }
+
+    $history = $act['history'] ?? [];
+    $hist = [
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'] ?? 'system',
+        'type' => 'workflow-approve',
+        'comment' => 'Approved step ' . $stepId
+    ];
+    $history[] = $hist;
+    $set['history'] = $history;
 
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => $set]);
 
@@ -369,7 +379,6 @@ Route::post('/crud/activities/workflow/reject-reply/(.*)', function ($id) {
     $comment = trim($_POST['comment'] ?? '');
 
     // Reset workflow to before rejection
-    // unset($wf['rejectedDetails']);
     $wf['status'] = 'in_progress';
     $wf['rejectedDetails']['reply'] = [
         'by'      => $_SESSION['username'] ?? null,
@@ -377,7 +386,17 @@ Route::post('/crud/activities/workflow/reject-reply/(.*)', function ($id) {
         'comment' => $comment
     ];
 
-    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf, 'locked' => false]]);
+
+    $history = $act['history'] ?? [];
+    $hist = [
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'] ?? 'system',
+        'type' => 'workflow-reject',
+        'comment' => $comment
+    ];
+    $history[] = $hist;
+
+    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf, 'locked' => false, 'history' => $history]]);
     JSON::ok();
 });
 
@@ -400,10 +419,20 @@ Route::post('/crud/activities/workflow/reject/(.*)', function ($id) {
         'action' => 'rejected',
         'by'     => $_SESSION['username'] ?? null,
         'at'     => Workflows::nowIso(),
-        'comment' => trim($_POST['comment'] ?? '')
+        'comment' => $comment
     ];
     $wf['status'] = 'rejected';
-    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf, 'locked' => false]]);
+
+    $history = $act['history'] ?? [];
+    $hist = [
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'] ?? 'system',
+        'type' => 'workflow-reject',
+        'comment' => $comment
+    ];
+    $history[] = $hist;
+
+    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf, 'locked' => false, 'history' => $history]]);
     JSON::ok();
 });
 
@@ -484,7 +513,15 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     $tpl = DB::doc2Arr($tpl);
 
     $initial = Workflows::buildInitialState($tpl);
-    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $initial, 'locked' => false]]);
+
+    $history = $act['history'] ?? [];
+    $hist = [
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'] ?? 'system',
+        'type' => 'workflow-reset'
+    ];
+    $history[] = $hist;
+    $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $initial, 'locked' => false, 'history' => $history]]);
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=success#workflow-modal");
 });
 
@@ -514,8 +551,9 @@ Route::get('/api/workflow-reviews/count', function () {
 
     // 1) Workflows vorladen, die für diese Rollen relevant sind
     $roleSet = array_flip($user['roles']);
-    $wfCursor = $osiris->adminWorkflows->find([], ['projection'=>['id'=>1,'name'=>1,'steps'=>1]]);
-    $tplById = []; $wfIdsForUser = [];
+    $wfCursor = $osiris->adminWorkflows->find([], ['projection' => ['id' => 1, 'name' => 1, 'steps' => 1]]);
+    $tplById = [];
+    $wfIdsForUser = [];
 
     foreach ($wfCursor as $tpl) {
         $tpl = DB::doc2Arr($tpl);
@@ -563,7 +601,10 @@ Route::get('/api/workflow-reviews/count', function () {
         $hasAction = false;
         foreach ($view as $s) {
             if ($s['state'] !== 'pending' || intval($s['index']) !== $currentIndex) continue;
-            if (Workflows::canApprove($actArr, $tpl, $wf, $s['id'], $user)) { $hasAction = true; break; }
+            if (Workflows::canApprove($actArr, $tpl, $wf, $s['id'], $user)) {
+                $hasAction = true;
+                break;
+            }
         }
         if ($hasAction) $count++;
     }
@@ -587,12 +628,12 @@ Route::get('/api/workflow-reviews/list', function () {
     // === 1) Parameter ===
     $q       = trim($_GET['q'] ?? '');
     $role    = $roles;
-    $category= trim($_GET['category'] ?? '');
+    $category = trim($_GET['category'] ?? '');
     $ou      = trim($_GET['ou'] ?? '');
     $since   = trim($_GET['since'] ?? '');
     $scope   = trim($_GET['scope'] ?? ''); // z. B. "same_org_only"
     $page    = max(1, intval($_GET['page'] ?? 1));
-    $pageSize= max(1, min(100, intval($_GET['pageSize'] ?? 25)));
+    $pageSize = max(1, min(100, intval($_GET['pageSize'] ?? 25)));
 
     // === 2) User-Kontext ===
     $units = DB::doc2Arr($USER['units'] ?? []);
@@ -604,7 +645,7 @@ Route::get('/api/workflow-reviews/list', function () {
     ];
 
     // === 3) Relevante Workflows finden ===
-    $wfCursor = $osiris->adminWorkflows->find([], ['projection'=>['id'=>1,'steps'=>1]]);
+    $wfCursor = $osiris->adminWorkflows->find([], ['projection' => ['id' => 1, 'steps' => 1]]);
     $tplById = [];
     $wfIdsForUser = [];
     foreach ($wfCursor as $tpl) {
@@ -617,7 +658,7 @@ Route::get('/api/workflow-reviews/list', function () {
             }
         }
     }
-    if (empty($wfIdsForUser)) return JSON::ok(['items'=>[], 'total'=>0]);
+    if (empty($wfIdsForUser)) return JSON::ok(['items' => [], 'total' => 0]);
 
     // === 4) Basis-Filter ===
     $filter = [
@@ -632,12 +673,16 @@ Route::get('/api/workflow-reviews/list', function () {
 
     // === 5) Aktivitäten holen ===
     $cursor = $osiris->activities->find($filter, [
-        'projection'=>[
-            '_id'=>1,'title'=>1,'type'=>1,'units'=>1,'workflow'=>1
+        'projection' => [
+            '_id' => 1,
+            'title' => 1,
+            'type' => 1,
+            'units' => 1,
+            'workflow' => 1
         ],
-        'sort'=>['updated'=>-1],
-        'skip'=>($page-1)*$pageSize,
-        'limit'=>$pageSize
+        'sort' => ['updated' => -1],
+        'skip' => ($page - 1) * $pageSize,
+        'limit' => $pageSize
     ]);
 
     $items = [];
@@ -664,8 +709,8 @@ Route::get('/api/workflow-reviews/list', function () {
                 'ou' => implode(', ', DB::doc2Arr($actArr['units'] ?? [])),
                 'workflow_id' => $wf['workflow_id'],
                 'phaseIndex' => $currentIndex,
-                'step' => ['id'=>$s['id'], 'label'=>$s['label']],
-                'parallelPending' => count(array_filter($view, fn($x)=>$x['state']==='pending' && intval($x['index'])===$currentIndex)) - 1,
+                'step' => ['id' => $s['id'], 'label' => $s['label']],
+                'parallelPending' => count(array_filter($view, fn($x) => $x['state'] === 'pending' && intval($x['index']) === $currentIndex)) - 1,
                 'updated' => $actArr['updated'] ?? null
             ];
             break; // pro Aktivität nur 1 Eintrag
@@ -673,5 +718,5 @@ Route::get('/api/workflow-reviews/list', function () {
     }
 
     $total = count($items);
-    JSON::ok(['items'=>$items, 'total'=>$total]);
+    JSON::ok(['items' => $items, 'total' => $total]);
 });

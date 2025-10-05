@@ -52,275 +52,6 @@ $guests = $doc['guests'] ?? [];
 ?>
 
 <?php if ($Settings->featureEnabled('quality-workflow', false)) { ?>
-    <style>
-        .quality-control {
-            /* position: sticky; */
-            /* top: 6rem; */
-            z-index: 20;
-            margin-bottom: 2rem;
-            /* background-color: white; */
-            /* margin: -2rem -2rem 2rem -2rem; */
-            /* padding: .5rem 2rem; */
-            /* border: 1px solid var(--border-color); */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            --workflow-width: 50rem;
-            /* border-radius: var(--border-radius); */
-            /* width: calc(var(--workflow-width) + 10rem); */
-            /* float: right; */
-        }
-
-        .wf-bar {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin: 15px 40px 30px;
-            max-width: 100%;
-            width: var(--workflow-width);
-        }
-
-        .wf-step {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: default;
-        }
-
-        .wf-circle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /*  */
-        }
-
-        .wf-circle.approved {
-            background: var(--success-color);
-            border-color: var(--success-color);
-            color: #fff;
-        }
-
-        .wf-circle.current {
-            border-color: var(--blue-color);
-            /* background: #fff; */
-            border-width: 1px;
-        }
-
-        .wf-circle.current:after {
-            content: '';
-            width: 1.8rem;
-            height: 1.8rem;
-            background-color: var(--blue-color);
-            border-radius: 1rem;
-        }
-
-        .wf-circle.current.same_org_only:after {
-            content: '\e4d6';
-            font-family: 'Phosphor';
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        .wf-circle.future {
-            border-color: #ccc;
-            background: #eee;
-        }
-
-        .wf-step-label {
-            margin-top: 6px;
-            font-size: 12px;
-            color: #333;
-            position: absolute;
-            top: 24px;
-            color: var(--muted-color);
-            max-width: 100px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            /* display: none; */
-        }
-
-        .wf-step.current .wf-step-label {
-            display: block;
-            font-weight: bold;
-            color: var(--blue-color);
-        }
-
-        /* current and can be approved */
-
-        .wf-circle.current.user-can-approve {
-            /* border-color: var(--blue-color);
-            background: var(--blue-color);
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 0 8px var(--blue-color-60);
-            transition: box-shadow 0.3s ease; */
-        }
-
-        /* triangle below */
-        .wf-circle.current.user-can-approve::before {
-            content: '';
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 6px;
-            border-style: solid;
-            border-color: transparent transparent var(--blue-color) transparent;
-        }
-
-        .wf-bar .wf-line {
-            flex: 1;
-            height: 2px;
-            background: #ccc;
-        }
-
-        .wf-circle .icon {
-            font-size: 16px;
-        }
-
-        .wf-actions {
-            border: 1px solid var(--blue-color);
-            padding: .5rem 1rem;
-            border-radius: var(--border-radius);
-            width: calc(var(--workflow-width) + 4rem);
-            max-width: 100%;
-            text-align: center;
-            background-color: var(--blue-color-20);
-        }
-
-
-        /* Höhe der Topbar an dein Layout anpassen */
-        :root {
-            --os-header-h: 6rem;
-        }
-
-        #wf-mini {
-            position: sticky;
-            top: var(--os-header-h);
-            z-index: 50;
-            height: 2rem;
-            background: var(--gray-color-very-light);
-            /* neutral */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* /* border-bottom: 1px solid var(--border-color); */
-            border-bottom: 1px solid var(--muted-color-60);
-            border-top: 1px solid var(--muted-color-60);
-            box-shadow: var(--button-box-shadow);
-            z-index: 12;
-            cursor: pointer;
-            transition: height .3s ease;
-        }
-
-        #wf-mini:hover {
-            height: 3rem;
-        }
-
-        #wf-mini b {
-            font-size: smaller;
-            /* font-weight: normal; */
-            margin-right: 2rem;
-            color: var(--muted-color);
-        }
-
-        #wf-mini.has-action {
-            box-shadow: 0 0 8px var(--blue-color-60);
-            background: var(--blue-color-very-light);
-            border-color: var(--blue-color);
-        }
-
-        #wf-mini.has-action b {
-            color: var(--blue-color);
-            font-weight: bold;
-        }
-
-        #wf-mini.ok {
-            background: var(--success-color-very-light);
-            border-color: var(--success-color-60);
-            /* box-shadow: none; */
-        }
-
-        #wf-mini.ok b {
-            color: var(--success-color);
-        }
-
-        /* verified */
-        #wf-mini.bad {
-            background: var(--danger-color-very-light);
-            border-color: var(--danger-color);
-        }
-
-        #wf-mini.bad b {
-            color: var(--danger-color);
-        }
-
-        /* rejected */
-        #wf-mini .track {
-            position: relative;
-            width: var(--workflow-width);
-            height: 6px;
-        }
-
-        #wf-mini .dot {
-            position: absolute;
-            top: 50%;
-            width: 14px;
-            height: 14px;
-            margin-top: -7px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform .15s;
-        }
-
-        #wf-mini .dot.approved {
-            background: var(--success-color);
-            border-color: var(--success-color);
-            color: white;
-        }
-
-        #wf-mini .dot.current {
-            border-color: var(--blue-color);
-        }
-
-        #wf-mini:hover .dot {
-            transform: scale(1.2);
-        }
-
-        #wf-mini .tick {
-            position: absolute;
-            top: 2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        #wf-mini .track.ok .tick {
-            background: var(--success-color-20);
-        }
-
-        #wf-mini .track.bad .tick {
-            background: var(--danger-color);
-        }
-
-        #wf-mini .clickmask {
-            position: absolute;
-            inset: -6px 0;
-            cursor: pointer;
-        }
-    </style>
     <?php
     include_once BASEPATH . "/php/Workflows.php";
 
@@ -495,33 +226,6 @@ $guests = $doc['guests'] ?? [];
 
                             <?php if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity)) { ?>
 
-                                <style>
-                                    .rejection-chat {
-                                        display: flex;
-                                        flex-direction: column;
-                                        gap: 10px;
-                                        margin-top: 10px;
-                                    }
-
-                                    .chat-bubble {
-                                        background-color: white;
-                                        border: 1px solid var(--border-color);
-                                        border-radius: 10px;
-                                        padding: 10px;
-                                        max-width: 100%;
-                                        position: relative;
-                                    }
-
-                                    .chat-bubble b {
-                                        font-weight: bold;
-                                    }
-
-                                    .chat-bubble .small {
-                                        font-size: 0.8em;
-                                        color: var(--muted-color);
-                                    }
-                                </style>
-
                                 <h5 class="mb-0">
                                     <?= lang('Comments for the rejection:', 'Kommentare zur Zurückweisung:') ?>
                                 </h5>
@@ -548,7 +252,7 @@ $guests = $doc['guests'] ?? [];
                                     <?php } ?>
 
                                     <!-- mark as resolved and delete rejectionDetails -->
-                                    <?php if (!empty($actionableIds) || $wf['rejectedDetails']['from'] == $_SESSION['username']) { ?>
+                                    <?php if (!empty($actionableIds) || $wf['rejectedDetails']['by'] == $_SESSION['username']) { ?>
                                         <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-resolve/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to mark this rejection as resolved? All comments will be deleted.', 'Möchten Sie diese Zurückweisung wirklich als erledigt markieren? Alle Kommentare werden gelöscht.') ?>');">
                                             <button class="btn small mt-5" type="submit"><?= lang('Mark as resolved and delete comments', 'Als erledigt markieren und Kommentare löschen') ?></button>
                                         </form>
@@ -681,44 +385,7 @@ $guests = $doc['guests'] ?? [];
     <?php } ?>
 
     <?php include_once BASEPATH . '/header-editor.php'; ?>
-    <style>
-        [class^="col-"] .box {
-            margin: 0;
-            /* height: 100%; */
-        }
-
-        .btn-toolbar {
-            margin: 0 0 1rem;
-            /* background-color: white;
-        padding: .5rem;
-        border-radius: .5rem; */
-        }
-
-        .filelink {
-            display: block;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            color: inherit !important;
-            padding: .5rem 1rem;
-            margin: 0 0 1rem;
-            background: white;
-        }
-
-        .filelink:hover {
-            text-decoration: none;
-            background-color: rgba(0, 110, 183, 0.05);
-        }
-
-        .show-on-hover:hover .invisible {
-            visibility: visible !important;
-        }
-
-        .badge.block {
-            display: block;
-            text-align: center;
-        }
-    </style>
-
+ 
     <script>
         const ACTIVITY_ID = '<?= $id ?>';
         const TYPE = '<?= $doc['type'] ?>';
@@ -2036,22 +1703,16 @@ $guests = $doc['guests'] ?? [];
             // require BASEPATH . "/php/TextDiff/TextDiff.php";
             // $latest = '';
         ?>
-            <div class="history-list">
-                <?php foreach (($doc['history']) as $h) {
+            <div class="history-list ">
+                <?php foreach (($doc['history'] ?? []) as $h) {
                     if (!is_array($h)) continue;
                 ?>
-                    <div class="box p-20">
-                        <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
+                    <div class="">
+                        <small class="text-primary"><?= date('d.m.Y', strtotime($h['date'])) ?></small>
                         <h5 class="m-0">
-                            <?php if ($h['type'] == 'created') {
-                                echo lang('Created by ', 'Erstellt von ');
-                            } else if ($h['type'] == 'edited') {
-                                echo lang('Edited by ', 'Bearbeitet von ');
-                            } else if ($h['type'] == 'imported') {
-                                echo lang('Imported by ', 'Importiert von ');
-                            } else {
-                                echo $h['type'] . lang(' by ', ' von ');
-                            }
+                            <?php 
+                            echo Settings::getHistoryType($h['type']);
+                            echo ' ';
                             if (isset($h['user']) && !empty($h['user'])) {
                                 echo '<a href="' . ROOTPATH . '/profile/' . $h['user'] . '">' . $DB->getNameFromId($h['user']) . '</a>';
                             } else {
@@ -2062,19 +1723,14 @@ $guests = $doc['guests'] ?? [];
 
                         <?php
                         if (isset($h['comment']) && !empty($h['comment'])) { ?>
-                            <blockquote class=" signal">
-                                <div class="title">
-                                    <?= lang('Comment', 'Kommentar') ?>
-                                </div>
-                                <?= $h['comment'] ?>
-                            </blockquote>
+                            <code><?= $h['comment'] ?></code>
                         <?php
                         }
                         if (isset($h['changes']) && !empty($h['changes'])) {
                             echo '<div class="font-weight-bold mt-10">' .
                                 lang('Changes to the activity:', 'Änderungen an der Aktivität:') .
                                 '</div>';
-                            echo '<table class="table simple w-auto small border px-10">';
+                            echo '<table class="table w-auto small">';
                             foreach ($h['changes'] as $key => $change) {
                                 $before = $change['before'] ?? '<em>empty</em>';
                                 $after = $change['after'] ?? '<em>empty</em>';
@@ -2082,7 +1738,7 @@ $guests = $doc['guests'] ?? [];
                                 if (empty($before)) $before = '<em>empty</em>';
                                 if (empty($after)) $after = '<em>empty</em>';
                                 echo '<tr>
-                                <td class="pl-0">
+                                <td class="">
                                     <span class="key">' . $Modules->get_name($key) . '</span> 
                                     <span class="del">' . $before . '</span>
                                     <i class="ph ph-arrow-right mx-10"></i>
@@ -2096,10 +1752,10 @@ $guests = $doc['guests'] ?? [];
                                 lang('Status at this time point:', 'Status zu diesem Zeitpunkt:') .
                                 '</div>';
 
-                            echo '<table class="table simple w-auto small border px-10">';
+                            echo '<table class="table w-auto small">';
                             foreach ($h['data'] as $key => $datum) {
                                 echo '<tr>
-                                <td class="pl-0">
+                                <td class="">
                                     <span class="key">' . $Modules->get_name($key) . '</span> 
                                     ' . $datum . ' 
                                 </td>
