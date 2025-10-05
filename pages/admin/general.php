@@ -578,12 +578,12 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="box px-20">
                     <h3 id="quality-workflow">
-                        <?= lang('Quality control of activities', 'Qualitätsprüfung von Aktivitäten') ?>
+                        <?= lang('Quality workflows of activities', 'Qualitäts-Workflows von Aktivitäten') ?>
                     </h3>
                     <div class="form-group">
 
                         <p>
-
+                            <?= lang('You can enable a quality workflow for activities. This means that users can submit their activities for review and an admin or editor can approve or reject them. This is useful if you want to ensure that only verified activities are visible in the system.', 'Du kannst einen Qualitäts-Workflow für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten zur Überprüfung einreichen können und ein Admin oder Editor diese dann genehmigen oder ablehnen kann. Das ist nützlich, wenn du sicherstellen möchtest, dass nur verifizierte Aktivitäten im System sichtbar sind.') ?>
                         </p>
 
                         <?php
