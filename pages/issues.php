@@ -229,6 +229,7 @@ if (array_sum($a) === 0) {
                     </button>
                     <div class="mt-10" style="display:none">
                         <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-reply/<?= $id ?>" method="post">
+                            <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                             <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
                             <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('Cancel', 'Abbrechen') ?></button>

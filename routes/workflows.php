@@ -397,6 +397,11 @@ Route::post('/crud/activities/workflow/reject-reply/(.*)', function ($id) {
     $history[] = $hist;
 
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf, 'locked' => false, 'history' => $history]]);
+
+    if (!empty($_POST['redirect'])) {
+        header("Location: " . $_POST['redirect'] . "#workflow-modal");
+        die;
+    }
     JSON::ok();
 });
 
