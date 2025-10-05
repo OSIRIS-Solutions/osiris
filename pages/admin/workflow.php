@@ -35,7 +35,8 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <p><b>ID:</b> <code class="code"><?= $form['id'] ?></code></p>
             <div class="form-group">
                 <label for="name" class="required"><?= lang('Name of the workflow', 'Name des Workflow') ?></label>
-                <input type="text" class="form-control" name="values[name]" required value="<?= htmlspecialchars($form['name'] ?? '') ?>">
+                <input type="text" class="form-control" name="values[name]" required value="<?= htmlspecialchars($form['name'] ?? '') ?>" maxlength="30">
+                <small class="form-text text-muted"><?= lang('Max 30 characters', 'Maximal 30 Zeichen') ?></small>
             </div>
         </div>
         <hr>
@@ -172,7 +173,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
         echo '<p>' . lang('No activities are associated with this workflow.', 'Keine Aktivitäten sind mit diesem Workflow verknüpft.') . '</p>';
     } else {
     ?>
-        <table class="table">
+        <table class="table simple">
             <thead>
                 <tr>
                     <th><?= lang('Category', 'Kategorie') ?></th>

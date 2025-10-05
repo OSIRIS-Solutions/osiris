@@ -46,7 +46,8 @@
 
         <div class="form-group">
             <label for="name" class="required "><?= lang('Name of the workflow', 'Name des Workflow') ?></label>
-            <input type="text" class="form-control" name="values[name]" required value="<?= $form['name'] ?? '' ?>">
+            <input type="text" class="form-control" name="values[name]" required value="<?= $form['name'] ?? '' ?>" maxlength="30">
+            <small class="form-text text-muted"><?= lang('Max 30 characters', 'Maximal 30 Zeichen') ?></small>
         </div>
 
         <h5><?= lang('Steps', 'Schritte') ?></h5>

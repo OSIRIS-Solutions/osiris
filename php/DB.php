@@ -141,6 +141,7 @@ class DB
             'project-open' => lang('Open project applications', 'Offene Projektanträge'),
             'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
+            'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
         ];
 
         $now = time();
@@ -964,6 +965,23 @@ class DB
 
         foreach ($infrastructures as $infra) {
             $issues['infrastructure'][] = $infra['id'];
+        }
+
+        // check if an activity was rejected
+        $docs = $this->db->activities->find(
+            [
+                'authors' => ['$elemMatch' => ['user' => $user]],
+                'workflow.status' => 'rejected'
+            ],
+            [
+                'projection' => ['workflow' => 1]
+            ]
+        );
+        foreach ($docs as $doc) {
+            $issues['rejected'][] = [
+                'id' => strval($doc['_id']),
+                'details' => $doc['workflow']['rejectedDetails'] ?? []
+            ];
         }
 
         return $issues;

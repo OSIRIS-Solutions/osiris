@@ -73,6 +73,19 @@
             </div>
         </div>
 
+        <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+                <div class="form-group">
+                    <label for="filter-workflow"><?= lang('Filter by workflow status', 'Filter nach Workflow-Status') ?></label>
+                    <select name="filter[workflow]" id="filter-workflow" class="form-control">
+                        <option value=""><?= lang('Do not filter', 'Nicht filtern') ?></option>
+                        <option value="in_progress"><?= lang('In Progress', 'In Bearbeitung') ?></option>
+                        <option value="verified"><?= lang('Completed', 'Abgeschlossen') ?></option>
+                        <option value="verified-or-empty"><?= lang('Completed or no workflow', 'Abgeschlossen oder kein Workflow') ?></option>
+                        <option value="rejected"><?= lang('Rejected', 'Abgelehnt') ?></option>
+                    </select>
+                </div>
+        <?php } ?>
+
         <?php if ($Settings->featureEnabled('topics')) {
             $topics = $osiris->topics->find();
             if (!empty($topics)) { ?>

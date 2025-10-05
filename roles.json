@@ -331,6 +331,20 @@
         ]
     },
     {
+        "de": "Workflows",
+        "en": "Workflows",
+        "icon": "seal-check",
+        "fields": [
+            {
+                "id": "workflows.reset",
+                "de": "Alle Workflows zurücksetzen",
+                "en": "Reset all workflows",
+                "comment_de": "Dies erlaubt es, den Workflow einer Aktivität zurückzusetzen, sodass alle bisherigen Freigaben und Ablehnungen gelöscht werden. Dies ist nützlich, wenn eine Aktivität komplett überarbeitet wurde und erneut zur Freigabe vorgelegt werden soll.",
+                "comment_en": "This allows resetting the workflow of an activity, deleting all previous approvals and rejections. This is useful if an activity has been completely revised and is to be resubmitted for approval."
+            }
+        ]
+    },
+    {
         "de": "Gäste",
         "en": "Guests",
         "icon": "user-switch",

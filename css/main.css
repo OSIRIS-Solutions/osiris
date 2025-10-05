@@ -127,6 +127,14 @@ CSS variables (CSS custom properties)
   --signal-color-20: rgba(236, 175, 0, 0.2);
   --signal-color-30: rgba(236, 175, 0, 0.3);
   --signal-color-60: rgba(236, 175, 0, 0.6);
+  --blue-color: #06667d;
+  --blue-color-light: #239dbb;
+  --blue-color-very-light: #d3eaf0;
+  --blue-color-dark: #12687d;
+  --blue-color-very-dark: #043a48;
+  --blue-color-20: rgba(6, 102, 125, 0.2);
+  --blue-color-30: rgba(6, 102, 125, 0.3);
+  --blue-color-60: rgba(6, 102, 125, 0.6);
   --box-bg-color: white;
   --table-head-color: #dfdfdf;
   --navbar-height: 8rem;

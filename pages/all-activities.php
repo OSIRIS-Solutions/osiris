@@ -19,6 +19,7 @@
 
 $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+$workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $osiris->adminWorkflows->count() > 0;
 ?>
 
 
@@ -246,6 +247,35 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </div>
             <?php } ?>
 
+
+            <?php if ($workflowsEnabled) { ?>
+                <h6><?= lang('By workflow status', 'Nach Workflow Status') ?></h6>
+
+                <div class="filter">
+                    <table id="filter-workflows" class="table small simple">
+                        <tr style="--highlight-color:  var(--success-color);">
+                            <td>
+                                <a data-type="verified" onclick="filterActivities(this, 'verified', 16)" class="item" id="verified-btn">
+                                    <span style="color: var(--highlight-color)">
+                                        <?= lang('Only verified', 'Nur verifiziert') ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr style="--highlight-color:  var(--signal-color);">
+                            <td>
+                                <a data-type="verif" onclick="filterActivities(this, 'verif', 16)" class="item" id="verified-empty-btn">
+                                    <span style="color: var(--highlight-color)">
+                                        <?= lang('Verified or no workflow', 'Verifiziert oder kein Workflow') ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
@@ -297,6 +327,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 <script>
     var dataTable;
     var topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
+    var workflowsEnabled = <?= $workflowsEnabled ? 'true' : 'false' ?>;
 
     const minEl = document.querySelector('#filter-from');
     const maxEl = document.querySelector('#filter-to');
@@ -365,6 +396,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         {
             title: lang('Affiliated', 'Affiliiert'),
             'key': 'affiliated'
+        },
+        {
+            title: lang('Workflow status', 'Workflow Status'),
+            'key': 'workflow'
         }
     ]
 
@@ -445,6 +480,18 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     data: "quarter",
                     searchPanes: {
                         show: false
+                    },
+                    render: function(data, type, row) {
+                        if (workflowsEnabled){
+                            if (row.workflow && row.workflow == 'in_progress') {
+                                return `${data} <i class="ph ph-seal text-muted" title="<?= lang('In workflow', 'Im Workflow') ?>"></i>`;
+                            } else if (row.workflow && row.workflow == 'rejected') {
+                                return `${data} <i class="ph ph-x-circle text-danger" title="<?= lang('Rejected in workflow', 'Im Workflow abgelehnt') ?>"></i>`;
+                            } else if (row.workflow && row.workflow == 'verified') {
+                                return `${data} <i class="ph ph-seal-check text-success" title="<?= lang('Verified in workflow', 'Im Workflow verifiziert') ?>"></i>`;
+                            } 
+                        }
+                        return data;
                     }
                 },
                 {
@@ -586,7 +633,15 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     render: function(data, type, row) {
                         return data ? 'yes' : 'no'
                     }
-                }
+                },
+                {
+                    targets: 16,
+                    data: 'workflow',
+                    visible: false,
+                    render: function(data, type, row) {
+                        return data ? data : 'no workflow'
+                    }
+                },
             ],
             "order": [
                 [5, 'desc'],

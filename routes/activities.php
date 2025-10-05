@@ -167,6 +167,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
             $additionalHead = $Format->schema();
         }
     }
+    $no_container = true;
     include BASEPATH . "/header.php";
 
     if (empty($activity)) {
@@ -445,7 +446,7 @@ Route::post('/crud/activities/create', function () {
             $template = $osiris->adminWorkflows->findOne(['id' => $typeArr['workflow']]);
             if ($template && !empty($template['steps'])) {
                 $template = DB::doc2Arr($template);
-                $values['workflow'] = Workflows::buildSnapshot($template);
+                $values['workflow'] = Workflows::buildInitialState($template);
             }
         }
     }

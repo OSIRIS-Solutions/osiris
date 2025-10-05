@@ -801,6 +801,26 @@ if ($Settings->featureEnabled('topics')) {
     ];
 }
 
+if ($Settings->featureEnabled('quality-workflow')) {
+    $workflowTypes = $osiris->adminCategories->find(['workflow' => ['$ne' => null]])->toArray();
+    $FIELDS[] = [
+        'id' => 'workflow.status',
+        'module_of' => $workflowTypes ? array_column($workflowTypes, 'id') : [],
+        'usage' => [
+            'filter',
+            'columns'
+        ],
+        'label' => lang('Workflow Status', 'Workflow-Status'),
+        'type' => 'string',
+        'input' => 'select',
+        'values' => [
+            'verified' => lang('Verified', 'Verifiziert'),
+            'rejected' => lang('Rejected', 'Abgelehnt'),
+            'in_progress' => lang('In Process', 'In Bearbeitung'),
+        ]
+    ];
+}
+
 function typeConvert($type)
 {
     return match ($type) {

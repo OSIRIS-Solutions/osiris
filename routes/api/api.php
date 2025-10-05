@@ -367,6 +367,7 @@ Route::get('/api/all-activities', function () {
             'raw_type' => $doc['type'],
             'raw_subtype' => $doc['subtype'],
             'affiliated' => $doc['affiliated'] ?? false,
+            'workflow' => (isset($doc['workflow']) ? $doc['workflow']['status'] : 'verif'),
         ];
 
         if ($active) {

@@ -199,6 +199,15 @@ Route::post('/download', function () {
         $filename .= "_" . trim($params['topic']);
     }
 
+    if (isset($params['workflow']) && !empty($params['workflow'])) {
+        if ($params['workflow'] == 'verified-or-empty') {
+            $filter['$and'][] = array('$or' => [['workflow.status' => 'verified'], ['workflow' => ['$exists' => false]], ['workflow' => null]]);
+        } else {
+            $filter['$and'][] = array('workflow.status' => trim($params['workflow']));
+        }
+        $filename .= "_" . trim($params['workflow']);
+    }
+
     // if (isset($params['year']) && !empty($params['year'])) {
     //     $filter['year'] = intval($params['year']);
     // }

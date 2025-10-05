@@ -166,6 +166,7 @@ if (
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";
     include_once BASEPATH . "/routes/organizations.php";
+    include_once BASEPATH . "/routes/workflows.php";
     // include_once BASEPATH . "/routes/adminGeneral.php";
     // include_once BASEPATH . "/routes/adminRoles.php";
 
