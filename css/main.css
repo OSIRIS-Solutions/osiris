@@ -12256,42 +12256,6 @@ a.text-muted:focus {
   color: var(--muted-color);
 }
 
-[class^=col-] .box {
-  margin: 0;
-  /* height: 100%; */
-}
-
-.btn-toolbar {
-  margin: 0 0 1rem;
-  /* background-color: white;
-      padding: .5rem;
-      border-radius: .5rem; */
-}
-
-.filelink {
-  display: block;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: inherit !important;
-  padding: 0.5rem 1rem;
-  margin: 0 0 1rem;
-  background: white;
-}
-
-.filelink:hover {
-  text-decoration: none;
-  background-color: rgba(0, 110, 183, 0.05);
-}
-
-.show-on-hover:hover .invisible {
-  visibility: visible !important;
-}
-
-.badge.block {
-  display: block;
-  text-align: center;
-}
-
 /*
 -------------------------------------------------------------------------------
 Print

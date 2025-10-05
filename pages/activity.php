@@ -269,7 +269,7 @@ $guests = $doc['guests'] ?? [];
                                 <button class="btn danger mt-5" type="submit"><?= lang('Reset workflow', 'Workflow zurücksetzen') ?></button>
                             </form>
                         <?php } ?>
-                        
+
                     </div>
                     <div class="text-right mt-20">
                         <a href="#close-modal" class="btn mr-5" role="button">Close</a>
@@ -334,6 +334,44 @@ $guests = $doc['guests'] ?? [];
 <?php
 } ?>
 
+<style>
+    [class^="col-"] .box {
+        margin: 0;
+        /* height: 100%; */
+    }
+
+    .btn-toolbar {
+        margin: 0 0 1rem;
+        /* background-color: white;
+        padding: .5rem;
+        border-radius: .5rem; */
+    }
+
+    .filelink {
+        display: block;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        color: inherit !important;
+        padding: .5rem 1rem;
+        margin: 0 0 1rem;
+        background: white;
+    }
+
+    .filelink:hover {
+        text-decoration: none;
+        background-color: rgba(0, 110, 183, 0.05);
+    }
+
+    .show-on-hover:hover .invisible {
+        visibility: visible !important;
+    }
+
+    .badge.block {
+        display: block;
+        text-align: center;
+    }
+</style>
+
 <div class="content-container">
     <?php
     if (function_exists('printMsg') && (isset($_GET['msg']) || isset($_GET['error'])) || isset($_SESSION['msg'])) {
@@ -385,7 +423,7 @@ $guests = $doc['guests'] ?? [];
     <?php } ?>
 
     <?php include_once BASEPATH . '/header-editor.php'; ?>
- 
+
     <script>
         const ACTIVITY_ID = '<?= $id ?>';
         const TYPE = '<?= $doc['type'] ?>';
@@ -1710,7 +1748,7 @@ $guests = $doc['guests'] ?? [];
                     <div class="">
                         <small class="text-primary"><?= date('d.m.Y', strtotime($h['date'])) ?></small>
                         <h5 class="m-0">
-                            <?php 
+                            <?php
                             echo Settings::getHistoryType($h['type']);
                             echo ' ';
                             if (isset($h['user']) && !empty($h['user'])) {
