@@ -2,7 +2,7 @@
 
 
 <span class="badge float-right">01.10.2025</span>
-<a class="anchor" href="#version-1.5.3" id="version-1.5.3"></a>
+<a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
 ## Build 20251001
 

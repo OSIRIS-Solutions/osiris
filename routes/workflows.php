@@ -21,8 +21,7 @@ Route::get('/workflow-reviews', function () {
     include_once BASEPATH . "/php/init.php";
 
     $breadcrumb = [
-        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
-        ['name' => lang("Workflow Reviews", "Workflow-Bewertungen")]
+        ['name' => lang("Workflow Reviews", "Workflow-Überprüfungen")]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/workflows/reviews.php";
@@ -707,19 +706,16 @@ Route::get('/api/workflow-reviews/list', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
     $roles = $Settings->roles ?? [];
-    // $userUnits = DB::doc2Arr($USER['units'] ?? []);
-    // if (!empty($userUnits)) $userUnits = array_column($userUnits, 'unit');
-
     // === 1) Parameter ===
     $q       = trim($_GET['q'] ?? '');
-    $role    = $roles;
+    // $role    = $roles;
     $category = trim($_GET['category'] ?? '');
-    $ou      = trim($_GET['ou'] ?? '');
+    // $ou      = trim($_GET['ou'] ?? '');
     $since   = trim($_GET['since'] ?? '');
     $scope   = trim($_GET['scope'] ?? ''); // z. B. "same_org_only"
     $page    = max(1, intval($_GET['page'] ?? 1));
@@ -759,8 +755,7 @@ Route::get('/api/workflow-reviews/list', function () {
     if ($since) $filter['created']['$gte'] = $since;
     if ($q) $filter['title'] = ['$regex' => $q, '$options' => 'i'];
     // OU-Filter (vereinfacht)
-    if ($scope == 'same_org_only') $filter['units'] = ['$in' => [$userUnits]];
-
+    if ($scope == 'same_org_only') $filter['units'] = ['$in' => [$units]];
     // === 5) Aktivitäten holen ===
     $cursor = $osiris->activities->find($filter, [
         'projection' => [
@@ -768,15 +763,17 @@ Route::get('/api/workflow-reviews/list', function () {
             'title' => 1,
             'type' => 1,
             'units' => 1,
-            'workflow' => 1
+            'workflow' => 1,
+            'rendered' => 1,
         ],
-        'sort' => ['updated' => -1],
-        'skip' => ($page - 1) * $pageSize,
-        'limit' => $pageSize
+        'sort' => ['updated' => -1, 'created' => -1],
     ]);
 
     $items = [];
-    foreach ($cursor as $act) {
+
+    foreach ($cursor as $i => $act) {
+        if ($i < ($page - 1) * $pageSize) continue;
+        if (count($items) >= $pageSize) break;
         $actArr = DB::doc2Arr($act);
         $wf     = DB::doc2Arr($actArr['workflow'] ?? []);
         $tpl    = DB::doc2Arr($tplById[$wf['workflow_id']] ?? null);
@@ -794,11 +791,12 @@ Route::get('/api/workflow-reviews/list', function () {
             // Treffer gefunden → in Liste
             $items[] = [
                 'id' => (string)$actArr['_id'],
-                'title' => $actArr['title'] ?? '',
+                'title' => $actArr['rendered']['print'] ?? '',
                 'category' => $actArr['type'] ?? '',
                 'ou' => implode(', ', DB::doc2Arr($actArr['units'] ?? [])),
                 'workflow_id' => $wf['workflow_id'],
                 'phaseIndex' => $currentIndex,
+                'completed' => count($wf['completedSteps'] ?? []) . '/' . count($tpl['steps'] ?? []), 
                 'step' => ['id' => $s['id'], 'label' => $s['label']],
                 'parallelPending' => count(array_filter($view, fn($x) => $x['state'] === 'pending' && intval($x['index']) === $currentIndex)) - 1,
                 'updated' => $actArr['updated'] ?? null

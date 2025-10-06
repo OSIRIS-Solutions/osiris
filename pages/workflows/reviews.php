@@ -17,12 +17,11 @@
 
 <h1>
     <i class="ph ph-highlighter"></i>
-    <?= lang('Review activities', 'Aktivitäten überprüfen') ?>
+    <?= lang('My Reviews', 'Meine Überprüfungen') ?>
 </h1>
 
 <div class="">
     <div class="mb-10">
-        <h3><?= lang('My reviews', 'Meine Prüfungen') ?></h3>
         <div class="input-group">
             <input id="q" class="form-control" placeholder="<?= lang('Search', 'Suche') ?>">
             <div class="input-group-append">
@@ -49,12 +48,7 @@
         <thead>
             <tr>
                 <th style="width:28px"></th>
-                <th><?= lang('Title', 'Titel') ?></th>
-                <th><?= lang('Category', 'Kategorie') ?></th>
-                <th><?= lang('OU', 'OU') ?></th>
-                <th><?= lang('Phase', 'Phase') ?></th>
-                <th><?= lang('Your step', 'Dein Schritt') ?></th>
-                <th class="text-right"><?= lang('Actions', 'Aktionen') ?></th>
+                <th><?= lang('Activity', 'Aktivität') ?></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -102,14 +96,20 @@
                 const row = `
         <tr data-id="${it.id}" data-step="${it.step.id}">
           <td><input type="checkbox" class="sel"></td>
-          <td><a href="<?= ROOTPATH ?>/activities/view/${it.id}" target="_blank">${it.title}</a></td>
-          <td>${it.category}</td>
-          <td>${it.ou || ''}</td>
-          <td>${it.phaseIndex}</td>
-          <td>${escapeHtml(it.step.label)}</td>
-          <td class="text-right">
-            <button class="btn success btn-approve"><i class="ph ph-check"></i></button>
-            <button class="btn danger btn-reject"><i class="ph ph-x"></i></button>
+          <td>
+                <a href="<?= ROOTPATH ?>/activities/view/${it.id}" target="_blank" class="colorless link">${it.title}</a>
+                <p class="text-muted font-size-12 mb-0 d-flex align-items-center justify-content-between">
+                    <span>
+                        <b>${lang('Completed', 'Abgeschlossen')}</b>: ${it.completed} | 
+                        <b>${lang('Your Step', 'Dein Schritt')}</b>: ${it.step.label}
+                    </span>
+
+                    <span class="">
+                        <button class="btn small success btn-approve"><i class="ph ph-check"></i></button>
+                        <button class="btn small text-danger btn-reject"><i class="ph ph-x"></i></button>
+                        <a href="<?= ROOTPATH ?>/activities/view/${it.id}" target="_blank" class="btn small"><i class="ph ph-arrow-right"></i></a>
+                    </span>
+                </p>
           </td>
         </tr>`;
                 $tb.append(row);
@@ -126,7 +126,7 @@
             }, function(res) {
                 if (res.status === 'ok') {
                     $tr.remove();
-                } else alert(res.error || 'Error');
+                } else toastError(res.error || 'Error');
             }, 'json');
         });
 
@@ -142,7 +142,7 @@
             }, function(res) {
                 if (res.status === 'ok') {
                     $tr.remove();
-                } else alert(res.error || 'Error');
+                } else toastError(res.error || 'Error');
             }, 'json');
         });
 
