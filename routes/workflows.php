@@ -100,7 +100,7 @@ Route::post('/crud/workflows/create', function () {
 
     $osiris->adminWorkflows->insertOne($values);
 
-    header("Location: " . ROOTPATH . "/admin/workflows?msg=success");
+    header("Location: " . ROOTPATH . "/admin/workflows/" . $values['id'] . "?msg=success");
 });
 
 Route::post('/crud/workflows/update/(.*)', function ($id) {
@@ -706,10 +706,10 @@ Route::get('/api/workflow-reviews/list', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $roles = $Settings->roles ?? [];
     // === 1) Parameter ===
     $q       = trim($_GET['q'] ?? '');

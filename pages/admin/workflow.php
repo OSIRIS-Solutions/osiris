@@ -48,10 +48,10 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     <tr>
                         <th style="width:28px"></th>
                         <th><?= lang('Step title', 'Titel') ?></th>
-                        <th style="width:90px"><?= lang('Phase', 'Phase') ?></th>
+                        <th style="width:90px"><?= lang('Phase', 'Phase') ?>*</th>
                         <th style="width:200px"><?= lang('Role', 'Rolle') ?></th>
                         <th style="width:130px"><?= lang('OU scope', 'OU-Scope') ?></th>
-                        <th style="width:100px"><?= lang('Required', 'Erforderlich') ?></th>
+                        <!-- <th style="width:100px"><?= lang('Required', 'Erforderlich') ?></th> -->
                         <th style="width:120px"><?= lang('Lock after', 'Sperren') ?></th>
                         <th style="width:80px"></th>
                     </tr>
@@ -71,7 +71,6 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             </td>
                             <td>
                                 <input type="number" class="form-control" min="0" step="1" name="values[steps][<?= $i ?>][index]" value="<?= intval($s['index'] ?? 0) ?>">
-                                <small><?= lang('Same phase = parallel', 'Gleiche Phase = parallel') ?></small>
                             </td>
                             <td>
                                 <select name="values[steps][<?= $i ?>][role]" class="form-control">
@@ -87,10 +86,10 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                                     <option value="same_org_only" <?= $scope === 'same_org_only' ? 'selected' : '' ?>><?= lang('Same OU only', 'Nur eigene OU') ?></option>
                                 </select>
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <?php $reqd = !isset($s['required']) ? true : (bool)$s['required']; ?>
                                 <input type="checkbox" name="values[steps][<?= $i ?>][required]" value="1" <?= $reqd ? 'checked' : '' ?>>
-                            </td>
+                            </td> -->
                             <td class="text-center">
                                 <input type="checkbox" name="values[steps][<?= $i ?>][locksAfterApproval]" value="1" <?= !empty($s['locksAfterApproval']) ? 'checked' : '' ?>>
                             </td>
@@ -110,6 +109,10 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     </tr>
                 </tfoot>
             </table>
+
+            <p class="text-sm text-muted">
+                * <?= lang('Multiple steps with the same phase number are executed in parallel, all others sequentially.', 'Mehrere Schritte mit gleicher Phasennummer werden parallel ausgeführt, alle anderen nacheinander.') ?><br>
+            </p>
 
             <button type="submit" class="btn success" id="submitBtn">
                 <i class="ph ph-check"></i> <?= lang('Update', 'Aktualisieren') ?>
@@ -131,7 +134,6 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </td>
             <td>
                 <input type="number" class="form-control" min="0" step="1" name="__name__[index]" value="0">
-                <small><?= lang('Same phase = parallel', 'Gleiche Phase = parallel') ?></small>
             </td>
             <td>
                 <select name="__name__[role]" class="form-control">
@@ -143,12 +145,12 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <td>
                 <select name="__name__[orgScope]" class="form-control">
                     <option value="any"><?= lang('Any', 'Beliebig') ?></option>
-                    <option value="same_org_only"><?= lang('Same OU only', 'Nur eigene OU') ?></option>
+                    <option value="same_org_only"><?= lang('Same unit only', 'Nur eigene Einheit') ?></option>
                 </select>
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
                 <input type="checkbox" name="__name__[required]" value="1" checked>
-            </td>
+            </td> -->
             <td class="text-center">
                 <input type="checkbox" name="__name__[locksAfterApproval]" value="1">
             </td>

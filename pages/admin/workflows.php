@@ -35,7 +35,9 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Aktion</th>
+            <th><?=lang('Steps', 'Schritte')?></th>
+            <th># <?=lang('Activities', 'Aktivitäten')?></th>
+            <th><?=lang('Action', 'Aktion')?></th>
         </tr>
     </thead>
     <tbody>
@@ -46,6 +48,15 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                 </td>
                 <td>
                     <?= $workflow['name'] ?>
+                </td>
+                <td>
+                    <?= count($workflow['steps'] ?? []) ?>
+                </td>
+                <td>
+                    <?php
+                    $count = $osiris->activities->count(['workflow.workflow_id' => $workflow['id']]);
+                    echo $count;
+                    ?>
                 </td>
                 <td class="unbreakable">
                     <a href="<?= ROOTPATH ?>/admin/workflows/<?= $workflow['id'] ?>">

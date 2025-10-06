@@ -11,7 +11,8 @@ class JSON
     public static function error(string $message, int $code = 400): void {
         self::respond([
             'status' => 'error',
-            'error'  => $message
+            'error'  => $message,
+            'code'   => $code
         ], $code);
     }
 
