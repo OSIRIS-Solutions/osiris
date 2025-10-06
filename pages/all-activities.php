@@ -19,7 +19,7 @@
 
 $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
-$workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $osiris->adminWorkflows->count() > 0;
+$workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
 ?>
 
 

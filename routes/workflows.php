@@ -298,6 +298,91 @@ Route::post('/crud/workflows/apply/(.*)', function ($wfId) {
     ]);
 });
 
+// POST /crud/workflows/reset-action
+Route::post('/crud/workflows/reset-action', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Workflows.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $action = $_POST['action'] ?? null;
+    $activity = $_POST['activity'] ?? 'all';
+
+    if (!in_array($action, ['remove', 'reset'], true)) {
+        return JSON::error('Invalid action', 400);
+    }
+
+    // Base-Filter
+    $base = [];
+    if ($activity !== 'all') {
+        $base['type'] = $activity;
+    }
+    $base['workflow'] = ['$ne' => null];
+
+    // Counts
+    $totalWithWorkflow = $osiris->activities->countDocuments($base);
+    if ($totalWithWorkflow === 0) {
+        if (isset($_POST['redirect'])) {
+            $_SESSION['msg'] = lang('No activities with workflows found.', 'Keine Aktivitäten mit Workflows gefunden.');
+            $_SESSION['msg_type'] = 'info';
+            header("Location: " . $_POST['redirect']);
+            die;
+        }
+        return JSON::ok(['updatedCount' => 0, 'skippedCount' => 0, 'total' => 0]);
+    }
+
+    if ($action === 'remove') {
+        // Remove workflow
+        $updateResult = $osiris->activities->updateMany(
+            $base,
+            ['$unset' => ['workflow' => ""]]
+        );
+        $modified = $updateResult->getModifiedCount();
+    } else {
+        // Reset to first step
+        $allActs = $osiris->activities->find($base);
+        $templates = []; // Cache für Templates
+        $updatedCount = 0;
+        foreach ($allActs as $act) {
+            if (empty($act['workflow']['workflow_id'])) {
+                continue; // kein Template referenziert
+            }
+            $wfId = $act['workflow']['workflow_id'];
+            if (isset($templates[$wfId])) {
+                $tpl = $templates[$wfId];
+            } else {
+                $tpl = $osiris->adminWorkflows->findOne(['id' => $wfId]);
+                $templates[$wfId] = $tpl;
+            }
+            if (empty($tpl)) {
+                continue; // Template nicht gefunden
+            }
+            $initial = Workflows::buildInitialState(DB::doc2Arr($tpl));
+            if (empty($initial)) {
+                continue; // Template fehlerhaft
+            }
+            $osiris->activities->updateOne(
+                ['_id' => $act['_id']],
+                ['$set' => ['workflow' => $initial]]
+            );
+            $updatedCount++;
+        }
+        $modified = $updatedCount;
+    }
+
+    if (isset($_POST['redirect'])) {
+        $_SESSION['msg'] = lang('Action applied to '.$modified.' activities.', 'Aktion auf '.$modified.' Aktivitäten angewendet.');
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
+        die;
+    }
+
+    return JSON::ok([
+        'updatedCount' => $modified,
+        'skippedCount' => $totalWithWorkflow - $modified,
+        'total' => $totalWithWorkflow
+    ]);
+});
+
 // POST /crud/activities/workflow/approve/{id}
 Route::post('/crud/activities/workflow/approve/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";

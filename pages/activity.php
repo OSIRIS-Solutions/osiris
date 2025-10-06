@@ -51,7 +51,7 @@ $guests = $doc['guests'] ?? [];
 
 ?>
 
-<?php if ($Settings->featureEnabled('quality-workflow', false)) { ?>
+<?php if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) { ?>
     <?php
     include_once BASEPATH . "/php/Workflows.php";
 

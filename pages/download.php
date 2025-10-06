@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+        <?php if ($Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view')) { ?>
                 <div class="form-group">
                     <label for="filter-workflow"><?= lang('Filter by workflow status', 'Filter nach Workflow-Status') ?></label>
                     <select name="filter[workflow]" id="filter-workflow" class="form-control">
