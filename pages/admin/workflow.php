@@ -83,7 +83,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                                 <select name="values[steps][<?= $i ?>][orgScope]" class="form-control">
                                     <?php $scope = $s['orgScope'] ?? 'any'; ?>
                                     <option value="any" <?= $scope === 'any' ? 'selected' : '' ?>><?= lang('Any', 'Beliebig') ?></option>
-                                    <option value="same_org_only" <?= $scope === 'same_org_only' ? 'selected' : '' ?>><?= lang('Same OU only', 'Nur eigene OU') ?></option>
+                                    <option value="same_org_only" <?= $scope === 'same_org_only' ? 'selected' : '' ?>><?= lang('Same unit only', 'Nur eigene Einheit') ?></option>
                                 </select>
                             </td>
                             <td class="text-center">

@@ -12214,6 +12214,10 @@ a.text-muted:focus {
 #wf-mini .dot.current {
   border-color: var(--blue-color);
 }
+#wf-mini .dot.future {
+  border-color: #ccc;
+  background: #eee;
+}
 #wf-mini .tick {
   position: absolute;
   top: 2px;

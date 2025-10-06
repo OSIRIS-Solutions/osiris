@@ -796,7 +796,7 @@ Route::get('/api/workflow-reviews/list', function () {
                 'ou' => implode(', ', DB::doc2Arr($actArr['units'] ?? [])),
                 'workflow_id' => $wf['workflow_id'],
                 'phaseIndex' => $currentIndex,
-                'completed' => count($wf['completedSteps'] ?? []) . '/' . count($tpl['steps'] ?? []), 
+                'completed' => count($wf['approved'] ?? []) . '/' . count($tpl['steps'] ?? []), 
                 'step' => ['id' => $s['id'], 'label' => $s['label']],
                 'parallelPending' => count(array_filter($view, fn($x) => $x['state'] === 'pending' && intval($x['index']) === $currentIndex)) - 1,
                 'updated' => $actArr['updated'] ?? null

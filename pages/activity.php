@@ -58,7 +58,6 @@ $guests = $doc['guests'] ?? [];
     $wf = $activity['workflow'] ?? null;
 
     if ($wf) {
-
         $wf = DB::doc2Arr($wf);
         $tpl = $osiris->adminWorkflows->findOne(['id' => $wf['workflow_id']]) ?? [];
         $tpl = DB::doc2Arr($tpl);
@@ -70,7 +69,6 @@ $guests = $doc['guests'] ?? [];
         $isVerified = ($wf['status'] ?? '') === 'verified';
         $isRejected =  ($wf['status'] ?? '') === 'rejected'; // optional
         $barState   = $isVerified ? 'ok' : ($isRejected ? 'bad' : 'neutral');
-
 
         // $progress = Workflows::view($tpl, $wf); // enthält id,label,index,required,state
         $currentIndex = Workflows::currentPhaseIndex($tpl, $wf);
@@ -110,6 +108,19 @@ $guests = $doc['guests'] ?? [];
             }
             return $a['index'] <=> $b['index'];
         });
+
+        // render steps for modal and wf-mini
+        // $all_steps = [];
+        // foreach ($progress as $i => $s):
+        //     $all_steps[] = [
+        //         'id'       => $s['id'],
+        //         'label'    => $s['label'],
+        //         'index'    => intval($s['index'] ?? 0),
+        //         'required' => !empty($s['required']),
+        //         'orgScope' => ($s['orgScope'] ?? 'any'),
+        //     ];
+        // endforeach;
+
     }
     ?>
     <?php if (!empty($wf) && !empty($progress)): ?>
@@ -120,9 +131,7 @@ $guests = $doc['guests'] ?? [];
                 <?php foreach ($progress as $i => $s):
                     $pct = $total > 1 ? ($i / ($total - 1)) * 100 : 0; // dot-position
                     $cls = $s['state'] === 'approved' ? 'approved' : 'current';
-                    // current = erste pending-Phase (einfach: erster pending im Array)
-                    if ($s['state'] !== 'approved' && $cls === 'current') {
-                    }
+                    if ($s['state'] === 'pending' && intval($s['index']) > $currentIndex) $cls = 'future';
                 ?>
                     <div class="dot <?= $cls ?>" style="left: <?= round($pct, 2) ?>%;" title="<?= htmlspecialchars($s['label']) ?>">
                         <?php if ($s['state'] === 'approved'): ?><i class="ph ph-check" style="font-size:11px"></i>
@@ -140,6 +149,7 @@ $guests = $doc['guests'] ?? [];
 
                 <?= lang('You can update your activity and resubmit it for review.', 'Sie können Ihre Aktivität aktualisieren und erneut zur Überprüfung einreichen.') ?>
                 <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-reply/<?= $id ?>" method="post">
+                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                     <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
                     <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('Cancel', 'Abbrechen') ?></button>
