@@ -390,6 +390,7 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
         'projection' => [
             'html' => '$rendered.portfolio',
             'search' => '$rendered.plain',
+            'print' => '$rendered.print',
             'type' => 1,
             'subtype' => 1,
             'year' => 1,
@@ -1031,7 +1032,8 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
                 $docs[] = [
                     'id' => strval($doc['_id']),
                     'icon' => $doc['rendered']['icon'],
-                    'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio'])
+                    'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio']),
+                    'print' => $doc['rendered']['print' ]?? null,
                 ];
             }
         }
