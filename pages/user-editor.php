@@ -453,6 +453,32 @@ $active = function ($field) use ($data_fields) {
             } ?>
         </div>
 
+        <?php
+        $digest = $Settings->get('mail-digest', 'none');
+        if ($digest != 'none') {
+            // select frequency or opt out
+            $user_digest = $data['mail_digest'] ?? 'default';
+            if ($user_digest == 'default') {
+                $user_digest = $Settings->get('mail-digest', 'none');
+            }
+        ?>
+            <div class="form-group">
+                <label for="mail_digest"><?= lang('Mail Digest', 'E-Mail-Zusammenfassung') ?></label>
+                <select name="values[mail_digest]" id="mail_digest" class="form-control w-auto">
+                    <option value="default" <?= $user_digest == 'default' ? 'selected' : '' ?>>--- <?= lang('Use default setting', 'Standard-Einstellung verwenden') ?> (<?= lang(ucfirst($digest), ucfirst($digest)) ?>)</option>
+                    <option value="none" <?= $user_digest == 'none' ? 'selected' : '' ?>><?= lang('No mail digest', 'Keine E-Mail-Zusammenfassung') ?></option>
+                    <option value="daily" <?= $user_digest == 'daily' ? 'selected' : '' ?>><?= lang('Daily mail digest', 'Tägliche E-Mail-Zusammenfassung') ?></option>
+                    <option value="weekly" <?= $user_digest == 'weekly' ? 'selected' : '' ?>><?= lang('Weekly mail digest', 'Wöchentliche E-Mail-Zusammenfassung') ?></option>
+                    <option value="monthly" <?= $user_digest == 'monthly' ? 'selected' : '' ?>><?= lang('Monthly mail digest', 'Monatliche E-Mail-Zusammenfassung') ?></option>
+                </select>
+                <small class="text-muted">
+                    <?= lang('You can choose to receive a summary of your activities by email at regular intervals. You can also opt out of this at any time.', 'Du kannst wählen, ob du in regelmäßigen Abständen eine Zusammenfassung deiner Aktivitäten per E-Mail erhalten möchtest. Du kannst dies auch jederzeit wieder abwählen.') ?>
+                    <?= lang('Preferred language based on interface:', 'Bevorzugte Sprache basierend auf der Benutzeroberfläche:') ?>
+                    <strong><?= strtoupper($data['lang'] ?? 'de') ?></strong>
+                </small>
+            </div>
+        <?php } ?>
+
         <div class="form-row row-eq-spacing">
             <?php if ($active('telephone')) { ?>
                 <div class="col-sm-6">

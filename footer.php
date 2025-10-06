@@ -41,7 +41,7 @@
                 </a>
             </div>
             <div class="col">
-                <h3>OSIRIS <small class="text-monospace">v<?= OSIRIS_VERSION ?>-<?= OSIRIS_BUILD ?></small></h3>
+                <h3>OSIRIS <small class="text-monospace">v<?= OSIRIS_VERSION ?>-<?= OSIRIS_BUILD ?> <?= defined('OSIRIS_BETA') && OSIRIS_BETA ? '<span class="badge signal">Beta</span>' : '' ?></small></h3>
                 <a href="https://osiris-app.de" target="_blank" class="">
                     <?= lang('About OSIRIS', 'Über OSIRIS') ?>
                     <i class="ph ph-arrow-square-out"></i>

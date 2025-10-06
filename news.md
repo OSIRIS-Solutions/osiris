@@ -4,7 +4,73 @@
 <span class="badge float-right">01.10.2025</span>
 <a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
-## Build 20251001
+## Version 1.6.0 Beta
+
+### <i class="ph ph-seal-check"></i> Neue Qualitäts-Workflows für Aktivitäten
+
+OSIRIS 1.6.0 führt ein vollständig neues System für Qualitäts- und Prüf-Workflows ein – flexibel, offen und direkt in der Aktivität integriert:
+- Admins können eigene Workflows definieren und beliebigen Aktivitätskategorien zuordnen.
+- Jeder Workflow besteht aus frei konfigurierbaren Schritten, denen Rollen und Organisationseinheiten zugewiesen werden können.
+- Schritte können parallel oder sequenziell ablaufen – ideal für Freigaben durch Abteilungsleitungen und Bibliothek.
+- Workflow-Schritte lassen sich bei Bedarf auf die eigene Organisationseinheit beschränken.
+- Fertige Workflows können nachträglich bestehenden Aktivitäten zugewiesen („migriert“) werden.
+- Der Abschluss aller Schritte führt automatisch zum Status „verified“, über den zentral gefiltert werden kann.
+- Aktivitäten können optional nach bestimmten Schritten gesperrt werden.
+
+👉 Damit lassen sich interne Prüf- und Freigabeprozesse direkt in OSIRIS abbilden – von der Datenerfassung bis zur Veröffentlichung.
+
+**Neues Workflow-UI in der Aktivität**
+
+Ein neues Workflow-Widget wurde zu Aktivitäten hinzugefügt, die Teil eines Workflows sind:
+
+- Kompakte Schritt-Leiste mit visuellem Fortschritt, Icons und Tooltips.
+- Aktuell laufende Schritte werden hervorgehoben, abgeschlossene nach vorne sortiert.
+- Ein schmaler, fixierter Fortschrittsbalken oben im Interface zeigt den Workflow-Status jederzeit an.
+- Bei abgeschlossenen Workflows färbt sich die Leiste grün, bei Zurückweisungen rot.
+- Klick auf die Leiste öffnet das vollständige Workflow-Widget mit allen Details.
+- Dieses zeigt alle Schritte, Zuständige, Status und eventuelle Kommentare an.
+- Die einzelnen Schritte des Workflows werden in der Historie der Aktivität protokolliert.
+
+**Neues Reviewer-Interface**
+
+Für Rollen mit Prüfaufgaben (z. B. Abteilungsleitungen, Bibliothek) gibt es ein übersichtliches neues Reviewer-Dashboard:
+- Zeigt alle aktuell zu prüfenden Aktivitäten auf einen Blick.
+- Filter nach Kategorie, Rolle, Organisationseinheit oder Status.
+- Schnell-Aktionen zum Freigeben oder Zurückweisen direkt aus der Liste.
+- Benachrichtigungen erscheinen automatisch in der Seitenleiste und in der Navigation.
+
+**Möglichkeit, Aktivitäten zurückzuweisen**
+
+Prüfer:innen können Aktivitäten zurückweisen, wenn z. B. Angaben fehlen oder unklar sind. Wird eine Aktivität zurückgewiesen, passiert Folgendes:
+- Der Workflow-Status wechselt auf „rejected“.
+- Prüfer:innen können einen Kommentar hinterlassen und damit die Aktivität zur Bearbeitung freigeben.
+- Autor:innen erhalten eine Nachricht in ihren Benachrichtigungen mit Kommentar.
+- Nach Überarbeitung können sie die Aktivität per Klick erneut zur Prüfung einreichen. Dabei können sie ebenfalls einen Kommentar hinterlassen.
+- Alle bisherigen Freigaben bleiben erhalten – kein Datenverlust, kein Neustart des Workflows.
+
+**Filter für Workflow-Status**
+
+- Damit Filter und Übersichten korrekt funktionieren, gibt es ein neues Recht zum Anzeigen von Workflows, das standardmäßig nicht zugewiesen ist. Nur wer dieses Recht hat, sieht alle Workflows und kann sie nutzen.
+- In der Aktivitäten-Übersicht gibt es jetzt einen neuen Filter für den Workflow-Status (pending, in-progress, verified, rejected). Außerdem gibt es im Quartalfeld einen Indikator, wenn eine Aktivität Teil eines Workflows ist, der den Status anzeigt.
+- In der erweiterten Suche gibt es ebenfalls einen Filter für den Workflow-Status.
+- Im Download-Bereich gibt es einen neuen Filter für den Workflow-Status.
+
+**Migration & Datenmodell**
+
+- Alte Workflows können per Migration entfernt oder zurückgesetzt werden (über das Workflow-Interface).
+- Automatische Initialisierung bei neu erstellten Aktivitäten.
+
+
+### <i class="ph ph-envelope"></i> Neuer Mail-Digest (Benachrichtigungs-Zusammenfassung)
+
+OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, zweisprachig und im OSIRIS-Design:
+
+- Enthält eine Übersicht offener Aktivitäten, Nachrichten und Aufgaben (alles was man in den Benachrichtigungen sieht).
+- Frequenz pro Nutzer einstellbar: none, daily, weekly, monthly.
+- Standardverhalten kann global von Admins festgelegt werden.
+- Versand erfolgt automatisch über den Cron-Job `/cron/digest`.
+- Mails sind zweisprachig (DE/EN), vollständig UTF-8-kodiert und nutzen das OSIRIS-Design.
+
 
 #### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt

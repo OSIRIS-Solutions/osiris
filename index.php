@@ -96,6 +96,7 @@ include_once BASEPATH . "/routes/login.php";
 
 // route for language setting
 Route::get('/set-preferences', function () {
+    include_once BASEPATH . "/php/init.php";
 
     // Language settings and cookies
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('language', $_GET)) {
@@ -108,6 +109,15 @@ Route::get('/set-preferences', function () {
             'httponly' => false,
             'samesite' => 'Lax',
         ]);
+        // save language in user profile
+        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
+            && isset($_SESSION['username']) && !empty($_SESSION['username'])
+        ) {
+            $osiris->persons->updateOne(
+                ['username' => $_SESSION['username']],
+                ['$set' => ['lang' => $_COOKIE['osiris-language']]]
+            );
+        }
     }
     // check if accessibility settings are given
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('accessibility', $_GET)) {
@@ -178,6 +188,7 @@ include_once BASEPATH . "/routes/api/api.php";
 include_once BASEPATH . "/routes/api/dashboard.php";
 include_once BASEPATH . "/routes/api/portfolio.php";
 
+include_once BASEPATH . "/routes/cron.php";
 
 /**
  * Routes for OSIRIS Portal

@@ -131,7 +131,7 @@ class DB
         }
         return $doc;
     }
-    function notifications($force = false)
+    function notifications($force = false, $user = null)
     {
         $notifications = [
             'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
@@ -145,7 +145,9 @@ class DB
         ];
 
         $now = time();
-        $user = $_SESSION['username'] ?? null;
+        if ($user === null) {
+            $user = $_SESSION['username'] ?? null;
+        }
         $last = $_SESSION['last_notification_check'] ?? 0;
         $issues = [];
 

@@ -424,12 +424,64 @@ $affiliation = $Settings->get('affiliation_details');
                     </span>
                 </div>
 
+                <hr>
+
+                <h3 id="mail-digest">
+                    <?= lang('Mail digest', 'E-Mail-Zusammenfassung') ?>
+                </h3>
+
+                <p>
+                    <?= lang('Users can receive a daily, weekly or monthly email summary of their activities, depending on their settings. You can define the default mail digest frequency for them here.', 'Nutzende können eine tägliche, wöchentliche oder monatliche E-Mail-Zusammenfassung ihrer Aktivitäten erhalten, abhängig von ihren Einstellungen. Du kannst die standardmäßige E-Mail-Zusammenfassungsfrequenz für sie hier festlegen.') ?>
+                </p>
+
+                <p class="text-danger">
+                    <i class="ph ph-warning"></i>
+                    <?= lang('This setting requires additional configuration of a CRON job. Without this configuration, email digests will not be sent automatically.', 'Diese Einstellungen erfordern zusätzlich Konfiguration eines CRON-Jobs. Ohne diese Konfiguration werden die E-Mail-Zusammenfassungen nicht automatisch versendet.') ?>
+                </p>
+
+                <div class="form-group">
+                    <?php
+                    $digest = $Settings->get('mail-digest', 'none');
+                    ?>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-none" value="none" name="general[mail-digest]" <?= $digest == 'none' ? 'checked' : '' ?>>
+                        <label for="mail-digest-none">
+                            <?= lang('Disabled', 'Deaktiviert') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-daily" value="daily" name="general[mail-digest]" <?= $digest == 'daily' ? 'checked' : '' ?>>
+                        <label for="mail-digest-daily">
+                            <?= lang('Daily', 'Täglich') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-weekly" value="weekly" name="general[mail-digest]" <?= $digest == 'weekly' ? 'checked' : '' ?>>
+                        <label for="mail-digest-weekly">
+                            <?= lang('Weekly', 'Wöchentlich') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-monthly" value="monthly" name="general[mail-digest]" <?= $digest == 'monthly' ? 'checked' : '' ?>>
+                        <label for="mail-digest-monthly">
+                            <?= lang('Monthly', 'Monatlich') ?>
+                        </label>
+                    </div>
+                    <small>
+                        <?= lang('Note: Users can change their mail digest frequency in their profile settings. The default setting here is only used for new users and as a fallback if the user has not set a preference.', 'Hinweis: Nutzende können ihre E-Mail-Zusammenfassungsfrequenz in ihren Profileinstellungen ändern. Die hier festgelegte Standardeinstellung wird nur für neue Nutzende und als Fallback verwendet, wenn der Nutzende keine Präferenz festgelegt hat.') ?>
+                    </small>
+                </div>
+
+
+
                 <button class="btn info">
                     <i class="ph ph-floppy-disk"></i>
                     Save
                 </button>
             </div>
         </div>
+
     </form>
 
     <!-- Test Email Settings by sending a test mail -->
