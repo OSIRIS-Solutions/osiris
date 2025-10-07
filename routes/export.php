@@ -138,6 +138,27 @@ Route::get('/guest-analysis', function () {
 });
 
 
+Route::get('/download/user-groups', function () {
+    error_reporting(E_ERROR | E_PARSE);
+
+    require_once BASEPATH . '/php/init.php';
+
+    $users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['projection' => ['username' => 1, 'formalname' => 1, 'units' => 1], 'sort' => ['formalname' => 1]]);
+
+    header("Content-Type: text/plain; charset=utf-8");
+    header('Content-Disposition: attachment; filename="user-groups.csv"');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Expires: 0');
+
+    echo "Username;Name;Groups" . PHP_EOL;
+    foreach ($users as $u) {
+        $units = [];
+        foreach ($Groups->getPersonUnit($u['username'], null, false, false) as $unit) {
+            $units[] = $Groups->getName($unit['unit']);
+        }
+        echo "$u[username];$u[formalname];" . implode(", ", $units) . PHP_EOL;
+    }
+});
 
 Route::post('/download', function () {
     error_reporting(E_ERROR | E_PARSE);

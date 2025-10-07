@@ -183,12 +183,18 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 </div>
                             <?php } ?>
                         <?php } ?>
-                        
+
                     </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
+
+
+    <!-- download: download/user-groups -->
+    <div class="mt-20">
+        <a href="<?= ROOTPATH ?>/download/user-groups" class="ml-20"><i class="ph ph-download"></i> <?= lang('Download list of users with units', 'Liste der Personen mit Einheiten herunterladen') ?></a>
+    </div>
 
     <script>
         var dataTable;
