@@ -48,7 +48,7 @@
             <?= lang('Preview', 'Vorschau') ?>
         </a>
         <!-- Help -->
-        <a href="<?= ROOTPATH ?>/docs/reports" class="btn tour" target="_blank">
+        <a href="https://wiki.osiris-app.de/users/reporting/" class="btn tour" target="_blank">
             <i class="ph ph-question"></i>
             <?= lang('Help', 'Hilfe') ?>
         </a>

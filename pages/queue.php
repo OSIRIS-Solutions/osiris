@@ -23,10 +23,6 @@ $Format = new Document();
 
 ?>
 
-<!-- <a target="_blank" href="<?= ROOTPATH ?>/docs/add-activities" class="btn tour float-right" id="">
-    <i class="ph ph-lg ph-question mr-5"></i>
-    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
-</a> -->
 <h1>
     <i class="ph ph-queue text-osiris"></i>
     <?= lang('Queue', 'Warteschlange') ?>
