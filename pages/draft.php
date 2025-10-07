@@ -24,6 +24,9 @@
 
 <p class="text-muted">
     <?= lang('A draft from', 'Ein Entwurf von') ?> <?= $DB->getNameFromId($draft['created_by'] ?? '') ?> <?= lang('created at', 'erstellt am') ?> <?= format_date($draft['created'] ?? '', 'd.m.Y') ?>
+    <?php if ($draft['created_by'] !== $_SESSION['username']) { ?>
+        (<?= lang('shared with you', 'mit dir geteilt') ?>)
+    <?php } ?>
 </p>
 
 <div class="btn-toolbar">
@@ -31,8 +34,44 @@
         <i class="ph ph-pencil"></i>
         <?= lang('Edit', 'Bearbeiten') ?>
     </a>
-    <form action="<?= ROOTPATH ?>/crud/activities/delete-draft" method="post" style="display:inline;">
-        <input type="hidden" name="id" value="<?= $draft['_id'] ?>">
+    <div class="dropdown">
+        <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">
+            <i class="ph ph-user-plus"></i> <?= lang('Share this draft', 'Diesen Entwurf teilen') ?>
+        </button>
+        <div class="dropdown-menu w-300" aria-labelledby="invite-editor">
+            <form action="<?= ROOTPATH ?>/crud/activities/invite-draft/<?= $draft['_id'] ?>" method="post" class="content">
+                <?= lang('You shared this draft with:', 'Du hast diesen Entwurf mit geteilt mit:') ?>
+                <ul class="list">
+                    <?php
+                    $shared_with = $draft['draft_shared_with'] ?? [];
+                    if (!empty($shared_with)) foreach ($shared_with as $user) {
+                    ?>
+                        <li>
+                            <i class="ph ph-user"></i>
+                            <?= $DB->getNameFromId($user) ?>
+                        </li>
+                    <?php
+                    } else {
+                        echo '<li>' . lang('no one', 'niemand') . '</li>';
+                    }
+                    ?>
+                </ul>
+                <div class="form-group">
+                    <label for="invitee"><?= lang('Select a user to invite', 'Wählen Sie einen Nutzenden aus, um ihn einzuladen') ?></label>
+                    <select class="form-control" name="invitee" id="invitee" required>
+                        <option value=""><?= lang('Select editor', 'Editor auswählen') ?></option>
+                        <?php
+                        $users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['projection' => ['username' => 1, 'formalname' => 1], 'sort' => ['formalname' => 1]]);
+                        foreach ($users as $user) { ?>
+                            <option value="<?= $user['username'] ?>"><?= $user['formalname'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button class="btn btn-block" type="submit"><?= lang('Share', 'Teilen') ?></button>
+            </form>
+        </div>
+    </div>
+    <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
         <button type="submit" class="btn danger" onclick="return confirm('<?= lang('Are you sure you want to delete this draft?', 'Sind Sie sicher, dass Sie diesen Entwurf löschen möchten?') ?>');">
             <i class="ph ph-trash"></i>
             <?= lang('Delete', 'Löschen') ?>

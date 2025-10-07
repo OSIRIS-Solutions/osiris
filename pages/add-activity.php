@@ -21,7 +21,12 @@ $drafts_enabled = $Settings->featureEnabled('drafts');
 $user_drafts = 0;
 if ($drafts_enabled) {
     // check if user has drafts
-    $user_drafts = $osiris->activitiesDrafts->count(['created_by' => $_SESSION['username']]);
+    $user_drafts = $osiris->activitiesDrafts->count([
+        '$or' => [
+            ['created_by' => $_SESSION['username']],
+            ['draft_shared_with' => $_SESSION['username']]
+        ]
+    ]);
 }
 ?>
 
@@ -243,7 +248,7 @@ function val($index, $default = '')
                 </p>
             <?php } ?>
 
-            <a href="<?= ROOTPATH ?>/docs/add-activities#autoren-bearbeiten" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
+            <a href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
 
         </div>
     </div>
@@ -402,7 +407,7 @@ function val($index, $default = '')
 <?php } ?>
 
 
-<a target="_blank" href="<?= ROOTPATH ?>/docs/add-activities" class="btn tour float-right ml-5" id="docs-btn">
+<a target="_blank" href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour float-right ml-5" id="docs-btn">
     <i class="ph ph-question mr-5"></i>
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>

@@ -115,7 +115,10 @@ Route::get('/activities/drafts', function () {
     }
 
     $drafts = $osiris->activitiesDrafts->find([
-        'created_by' => $_SESSION['username']
+        '$or' => [
+            ['created_by' => $_SESSION['username']],
+            ['draft_shared_with' => $_SESSION['username']]
+        ]
     ], ['sort' => ['created' => -1]]);
 
     if (isset($_GET['frame'])) {
@@ -599,6 +602,58 @@ Route::post('/crud/activities/save-draft', function () {
     $id = $insertOneResult->getInsertedId();
 
     header("Location: " . ROOTPATH . "/activities/drafts/" . $id . "?msg=add-success");
+});
+
+// POST /crud/activities/delete-draft/([A-Za-z0-9]*)
+Route::post('/crud/activities/delete-draft/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
+    $id = $DB->to_ObjectID($id);
+    $updateResult = $osiris->activitiesDrafts->deleteOne(
+        ['_id' => $id]
+    );
+    $deletedCount = $updateResult->getDeletedCount();
+    if ($deletedCount == 0) {
+        $_SESSION['msg'] = lang("Draft could not be deleted.", "Entwurf konnte nicht gelöscht werden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/drafts");
+        die();
+    }
+    $_SESSION['msg'] = lang("Draft deleted.", "Entwurf gelöscht.");
+    $_SESSION['msg_type'] = "success";
+
+    header("Location: " . ROOTPATH . "/activities/drafts");
+});
+
+// POST /crud/activities/invite-draft/([A-Za-z0-9]*)
+Route::post('/crud/activities/invite-draft/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
+    if (!isset($_POST['invitee']) || empty($_POST['invitee'])) {
+        $_SESSION['msg'] = lang("No invitee given.", "Kein Einzuladender angegeben.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/draft/" . $id);
+        die();
+    }
+    $id = $DB->to_ObjectID($id);
+    $draft = $osiris->activitiesDrafts->findOne(['_id' => $id]);
+    if (empty($draft)) {
+        $_SESSION['msg'] = lang("Draft not found.", "Entwurf nicht gefunden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/drafts");
+        die();
+    }
+
+    // get username
+    $invitee = $_POST['invitee'];
+    // append user name to draft_shared_with
+    $osiris->activitiesDrafts->updateOne(
+        ['_id' => $id],
+        ['$addToSet' => ['draft_shared_with' => $invitee]]
+    );
+    
+    header("Location: " . ROOTPATH . "/activities/drafts/" . $id);
+    die();
 });
 
 
