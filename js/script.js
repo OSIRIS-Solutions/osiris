@@ -24,7 +24,7 @@ function initQuill(element) {
                 [{ script: 'super' }, { script: 'sub' }]
             ]
         },
-        formats: ['italic', 'underline', 'script', 'symbol'],
+        formats: ['italic', 'underline', 'script'],
         placeholder: '',
         theme: 'snow' // or 'bubble'
     });
@@ -56,7 +56,7 @@ function initQuill(element) {
 }
 
 function quillEditor(selector) {
-    const quill = new Quill('#'+selector+'-quill', {
+    const quill = new Quill('#' + selector + '-quill', {
         modules: {
             toolbar: [
                 [{
@@ -65,7 +65,7 @@ function quillEditor(selector) {
                 ['bold', 'italic', 'underline'],
                 [{
                     'list': 'ordered'
-                }, 
+                },
                 {
                     'list': 'bullet'
                 }],
