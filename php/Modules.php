@@ -679,6 +679,17 @@ class Modules
             "width" => 6,
             "tags" => ['people', 'publication']
         ],
+        "tags" => [
+            "fields" => ["tags" => ['OSIRIS', 'CRIS2023']],
+            "name" => "Tags",
+            "name_de" => "Schlagworte",
+            "label" => "Tags",
+            "label_de" => "Schlagworte",
+            "description" => "A field for a list of tags, that can be selected from a list of existing tags in the database. These can be managed in the admin area.",
+            "description_de" => "Ein Feld für eine Liste von Schlagworten, die aus einer Liste von bestehenden Schlagworten in der Datenbank ausgewählt werden können. Diese können im Admin-Bereich verwaltet werden.",
+            "width" => 12,
+            "tags" => ['general']
+        ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
             "name" => "Thesis Category",
@@ -3097,6 +3108,36 @@ class Modules
 
                     <?= $this->render_help($help) ?>
                 </div>
+            <?php
+                break;
+
+            case 'tags':
+                $Settings = new Settings;
+                if (!$Settings->featureEnabled('tags')) break;
+                $all_tags = $Settings->get('tags') ?? [];
+                $tags = DB::doc2Arr($this->val('tags', []));
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="tags">
+                    <label for="tag-select" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
+                    </label>
+                    <select class="form-control" name="values[tags][]" id="tag-select" multiple <?= $labelClass ?> autocomplete="off">
+                        <?php
+                        foreach ($all_tags as $val) {
+                            $selected = in_array($val, $tags);
+                        ?>
+                            <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <script>
+                    $('#tag-select').multiSelect({
+                        noneText: '<?= lang('No tags selected', 'Keine Tags ausgewählt') ?>',
+                        allText: '<?= lang('All tags', 'Alle Tags') ?>',
+                    });
+                </script>
             <?php
                 break;
 

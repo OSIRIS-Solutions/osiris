@@ -163,7 +163,6 @@ if (
     include_once BASEPATH . "/routes/projects.php";
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
-    include_once BASEPATH . "/routes/tags.php";
     include_once BASEPATH . "/routes/teaching.php";
     include_once BASEPATH . "/routes/users.php";
     include_once BASEPATH . "/routes/visualize.php";

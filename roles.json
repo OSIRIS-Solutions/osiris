@@ -42,6 +42,13 @@
                 "en": "Delete locked activities"
             },
             {
+                "id": "activities.tags",
+                "de": "Aktivitäten mit Schlagworten versehen",
+                "en": "Tag activities with tags",
+                "comment_de": "Diese Berechtigung addiert sich mit 'Alle Aktivitäten bearbeiten'. Wenn alle Aktivitäten bearbeitet werden können, kann mit diesem Recht auch zu allen ein Tag hinzugefügt werden. Ansonsten kann mit diesem Recht nur zu eigenen Aktivitäten Schlagworte hinzugefügt werden. Schlagworte müssen zentral in den Einstellungen eingeschaltet und im Admin-Bereich unter 'Inhalte' > 'Schlagworte' verwaltet werden.",
+                "comment_en": "This permission is cumulative with 'Edit all activities'. If all activities can be edited, this permission also allows tags to be added to all activities. Otherwise, this permission only allows tags to be added to your own activities. Tags must be enabled centrally in the settings and managed in the admin area under 'Content' > 'Tags'."
+            },
+            {
                 "id": "journals.edit",
                 "de": "Journale hinzufügen und bearbeiten",
                 "en": "Add and edit journals"

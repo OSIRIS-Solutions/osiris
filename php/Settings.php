@@ -441,6 +441,14 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
         return lang($settings['en'], $settings['de'] ?? null);
     }
+    
+    function tagLabel()
+    {
+        if (!$this->featureEnabled('tags')) return '';
+        $settings = $this->get('tags_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
 
     function tripLabel()
     {

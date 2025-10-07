@@ -78,6 +78,16 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Wenn ein Entwurf gespeichert wird, wird automatisch eine neue Aktivität erstellt und der Entwurf gelöscht.
 - Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
 
+### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten
+
+- Aktivitäten können nun mit Schlagworten versehen werden, um sie besser zu kategorisieren und zu finden.
+- Es kann in alle Aktivitäten nach Schlagworten gefiltert werden.
+- Schlagworte lassen sich in der Detailansicht von Aktivitäten hinzufügen. Sie können aber auch bei der Erstellung oder Bearbeitung von Aktivitäten hinzugefügt werden. Dazu wurde ein neues Datenfeld `tags` hinzugefügt.
+- Dem Rechte-Management wurde ein neues Recht `activities.tags` hinzugefügt, das standardmäßig nicht vergeben ist. Nur wer dieses Recht hat, kann Schlagworte zu Aktivitäten hinzufügen oder entfernen. Dies gilt auch immer nur dann, wenn die Aktivität selbst auch bearbeitet werden darf. 
+- Schlagworte lassen sich zentral im Admin-Bereich unter "Inhalte" > "Schlagworte" verwalten. Dort können Admins neue Schlagworte hinzufügen, bestehende bearbeiten oder löschen.
+- Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
+- Schlagworte können zurzeit nur zu Aktivitäten hinzugefügt werden, nicht zu Projekten, Infrastrukturen oder Events. Dies ist für zukünftige Versionen geplant.
+
 ### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt

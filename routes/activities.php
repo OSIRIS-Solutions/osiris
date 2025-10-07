@@ -651,8 +651,37 @@ Route::post('/crud/activities/invite-draft/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $id],
         ['$addToSet' => ['draft_shared_with' => $invitee]]
     );
-    
+
     header("Location: " . ROOTPATH . "/activities/drafts/" . $id);
+    die();
+});
+
+
+Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+    $collection = $osiris->activities;
+    $id = $DB->to_ObjectID($id);
+
+    if (!isset($_POST['values'])) {
+        // delete tags
+        $collection->updateOne(
+            ['_id' => $id],
+            ['$unset' => ['tags' => '']]
+        );
+        $_SESSION['msg'] = lang("Tags deleted.", "Tags gelöscht.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $values = validateValues($_POST['values'], $DB);
+        $collection->updateOne(
+            ['_id' => $id],
+            ['$set' => ['tags' => $values['tags']]]
+        );
+        $_SESSION['msg'] = lang("Tags updated.", "Tags aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    }
+
+    header("Location: " . ROOTPATH . "/activities/view/$id");
     die();
 });
 

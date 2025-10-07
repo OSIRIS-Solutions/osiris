@@ -913,6 +913,53 @@ $affiliation = $Settings->get('affiliation_details');
 
 
 
+                <div class="box px-20">
+                    <h3 id="tags">
+                        <?= lang('Tags', 'Schlagwörter') ?>
+                    </h3>
+                    <div class="form-group">
+                        <label for="">
+                            <?= lang('Tags in OSIRIS', 'Schlagwörter in OSIRIS') ?>
+                        </label>
+                        <?php
+                        $tags = $Settings->featureEnabled('tags');
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="tags-true" value="1" name="values[tags]" <?= $tags ? 'checked' : '' ?>>
+                            <label for="tags-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="tags-false" value="0" name="values[tags]" <?= $tags ? '' : 'checked' ?>>
+                            <label for="tags-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="position">
+                            <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+                        </label>
+
+                        <?php
+                        $label = $Settings->get('tags_label');
+                        ?>
+
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="tags_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Tags') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tags_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Schlagwörter') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="box px-20">
                     <h3 id="research-topics">

@@ -5,8 +5,7 @@
  * A report may consists of text blocks (markdown), paragraphs with filtered activities, and tables with aggregated numbers.
  */
 
-// include_once BASEPATH . "/php/Report.php";
-// $report = new Report();
+// report is defined in the controller
 
 ?>
 

@@ -49,6 +49,11 @@ $guests = $doc['guests'] ?? [];
 // if ($guests_involved)
 //     $guests = $osiris->guests->find(['activity' => $id])->toArray();
 
+$edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+$tagName = '';
+if ($Settings->featureEnabled('tags')) {
+    $tagName = $Settings->tagLabel();
+}
 ?>
 
 <?php if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) { ?>
@@ -473,7 +478,7 @@ $guests = $doc['guests'] ?? [];
         <?php } ?>
 
         <div class="btn-group">
-            <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
+            <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn text-primary border-primary">
                     <i class="ph ph-pencil-simple-line"></i>
                     <?= lang('Edit', 'Bearbeiten') ?>
@@ -485,6 +490,13 @@ $guests = $doc['guests'] ?? [];
                     <?= lang("Copy", "Kopie") ?>
                 </a>
             <?php } ?>
+            <?php if ($Settings->featureEnabled('tags')) { ?>
+                <a href="#add-tags" class="btn text-primary border-primary">
+                    <i class="ph ph-tag"></i>
+                    <?= $tagName ?>
+                </a>
+            <?php } ?>
+
         </div>
 
 
@@ -726,7 +738,7 @@ $guests = $doc['guests'] ?? [];
             <div class="mr-10 badge bg-white">
                 <small><?= lang('Online Visibility', 'Online-Sichtbarkeit') ?>: </small>
                 <br />
-                <?php if ($user_activity || $Settings->hasPermission('activities.edit')) { ?>
+                <?php if ($edit_perm) { ?>
                     <div class="custom-switch">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
@@ -950,7 +962,7 @@ $guests = $doc['guests'] ?? [];
             <div class="col-lg-6">
 
                 <div class="btn-toolbar float-sm-right">
-                    <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
+                    <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
                             <?= lang('Edit', 'Bearbeiten') ?>
@@ -1119,6 +1131,37 @@ $guests = $doc['guests'] ?? [];
 
                     <?php } ?>
 
+                    <!-- tags -->
+                    <?php if ($Settings->featureEnabled('tags') && $edit_perm) : ?>
+                        <tr>
+                            <td>
+                                <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
+                                    <a href="#add-tags" class="btn small float-right">
+                                        <i class="ph ph-edit"></i>
+                                        <?= lang('Edit', 'Bearbeiten') ?>
+                                    </a>
+                                <?php } ?>
+                                <span class="key"><?= $tagName ?></span>
+                                <p id="tag-list" class="mt-5">
+                                    <?php
+                                    $tags = $doc['tags'] ?? [];
+                                    if (count($tags)) {
+                                        foreach ($tags as $tag) {
+                                    ?>
+                                            <a class="badge primary" href="<?= ROOTPATH ?>/activities?tag=<?= urlencode($tag) ?>">
+                                                <i class="ph ph-tag"></i>
+                                                <?= $tag ?>
+                                            </a>
+                                    <?php }
+                                    } else {
+                                        echo lang('No ' . $tagName . ' assigned yet.', 'Noch keine ' . $tagName . ' vergeben.');
+                                    }
+                                    ?>
+                                </p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+
                     <?php
                     // check for empty modules and show a short info
                     if (count($emptyModules)) {
@@ -1137,7 +1180,7 @@ $guests = $doc['guests'] ?? [];
 
 
 
-                    <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && isset($doc['comment'])) : ?>
+                    <?php if (($edit_perm) && isset($doc['comment'])) : ?>
                         <tr class="text-muted">
                             <td>
                                 <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
@@ -1215,43 +1258,9 @@ $guests = $doc['guests'] ?? [];
 
 
             <div class="col-lg-6">
-
-                <div class="">
-                    <?php
-                    // calculate units based on publication date and authors
-                    // $units = [];
-                    // $startdate = strtotime($doc['start_date']);
-
-                    // foreach (array_filter($doc['authors']) as $i => $author) {
-                    //     if (!($author['aoi'] ?? false) || !isset($author['user'])) continue;
-                    //     $user = $author['user'];
-                    //     $person = $DB->getPerson($user);
-                    //     if (isset($person['units']) && !empty($person['units'])) {
-                    //         $u = DB::doc2Arr($person['units']);
-                    //         // dump($u);
-                    //         // filter units that have been active at the time of activity
-                    //         $u = array_filter($u, function ($unit) use ($startdate) {
-                    //             if (!$unit['scientific']) return false; // we are only interested in scientific units
-                    //             if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
-                    //             return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
-                    //         });
-                    //         $u = array_column($u, 'unit');
-                    //         $activity['authors'][$i]['units'] = $u;
-                    //         $units = array_merge($units, $u);
-                    //     }
-                    // }
-
-                    // $units = array_unique($units);
-                    // // add parent units
-                    // foreach ($units as $unit) {
-                    //     $units = array_merge($units, $Groups->getParents($unit, true));
-                    // }
-                    // $units = array_unique($units);
-                    $units = $doc['units'] ?? [];
-                    ?>
-                </div>
-
-                <?php foreach (['authors', 'editors'] as $role) {
+                <?php
+                $units = $doc['units'] ?? [];
+                foreach (['authors', 'editors'] as $role) {
                     if (!isset($activity[$role]) || empty($activity[$role])) {
                         // check if the module is active
                         if ($role == 'editors' && !in_array('editor', $typeModules) && !in_array('editor' . '*', $typeModules)) continue;
@@ -1271,7 +1280,7 @@ $guests = $doc['guests'] ?? [];
                 ?>
 
                     <div class="btn-toolbar mb-10 float-sm-right">
-                        <?php if (($user_activity || $Settings->hasPermission('activities.edit')) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
+                        <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
                                 <?= lang("Edit", "Bearbeiten") ?>
@@ -1617,74 +1626,71 @@ $guests = $doc['guests'] ?? [];
 
     <?php endif; ?>
 
-    <!-- 
-<div class="modal" id="connect" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                <span aria-hidden="true">&times;</span>
-            </a>
-            <h5 class="title">
-                <?= lang('Connect research data', 'Schlagwörter verknüpfen') ?>
-            </h5>
-            <div>
-                <?php
-                include BASEPATH . "/components/connect-tags.php";
-                ?>
 
+    <div class="modal" id="add-tags" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+                <h5 class="title">
+                    <?= lang('Connect ' . $tagName, $tagName . ' verknüpfen') ?>
+                </h5>
+                <p>
+                    <?= lang('Currently connected ', 'Zurzeit ausgewählte ') . $tagName ?>:
+                    <?php
+                    $tags = $doc['tags'] ?? [];
+                    if (count($tags)) {
+                        foreach ($tags as $tag) {
+                    ?>
+                            <a class="badge primary" href="<?= ROOTPATH ?>/activities?tag=<?= urlencode($tag) ?>">
+                                <i class="ph ph-tag"></i>
+                                <?= $tag ?>
+                            </a>
+                    <?php }
+                    } else {
+                        echo lang('No ' . $tagName . ' assigned yet.', 'Noch keine ' . $tagName . ' vergeben.');
+                    }
+                    ?>
+                </p>
+
+                <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
+                    <form action="<?= ROOTPATH ?>/crud/activities/update-tags/<?= $id ?>" method="post">
+                        <?php
+                        $all_tags = $Settings->get('tags') ?? [];
+                        $tags = DB::doc2Arr($doc['tags'] ?? []);
+                        ?>
+                        <div class="form-group" data-module="tags">
+                            <label for="tag-select" class="floating-title">
+                                <?= $tagName ?>
+                            </label>
+                            <select class="form-control" name="values[tags][]" id="tag-select" multiple>
+                                <?php
+                                foreach ($all_tags as $val) {
+                                    $selected = in_array($val, $tags);
+                                ?>
+                                    <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <script>
+                            $('#tag-select').multiSelect({
+                                noneText: '<?= lang('No ' . $tagName . ' selected', 'Keine ' . $tagName . ' ausgewählt') ?>',
+                                allText: '<?= lang('All ' . $tagName . 's', 'Alle ' . $tagName . 's') ?>',
+                            });
+                        </script>
+
+                        <button type="submit" class="btn success">
+                            <i class="ph ph-floppy-disk"></i>
+                            <?= lang('Save', 'Speichern') ?>
+                        </button>
+                    </form>
+                <?php } ?>
             </div>
         </div>
     </div>
-</div> -->
-
-    <section id="tags" style="display: none;">
-
-
-        <div class="btn-toolbar float-sm-right">
-            <a href="#connect" class="btn secondary mr-5">
-                <i class="ph ph-circles-three-plus"></i>
-                <?= lang("Connect", "Verknüpfen") ?>
-            </a>
-        </div>
-
-        <h2 class="title">
-            <?= lang('Tags', 'Schlagwörter') ?>
-        </h2>
-
-        <?php if (!empty($doc['connections'] ?? null)) { ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Entity</th>
-                        <th>Name</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($doc['connections'] as $con) { ?>
-                        <tr>
-                            <th class="mr-10"><?= $con['entity'] ?></th>
-                            <td>
-                                <?= $con['name'] ?>
-                            </td>
-                            <td>
-                                <?php if (!empty($con['link'])) { ?>
-                                    <a href="<?= $con['link'] ?>" class="badge " target="_blank">
-                                        <i class="ph ph-link text-primary" style="line-height: 0;"></i>
-                                        <?= $con['link'] ?>
-                                    </a>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-
-                </tbody>
-
-            </table>
-        <?php } else { ?>
-            <?= lang('No research data connected.', 'Noch keine Schlagwörter verknüpft.') ?>
-        <?php } ?>
-    </section>
 
     <?php if ($Settings->featureEnabled('concepts')) { ?>
         <section id="concepts" style="display:none">

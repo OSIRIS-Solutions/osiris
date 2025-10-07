@@ -50,7 +50,7 @@ Route::get('/admin/users', function () {
 }, 'login');
 
 
-Route::get('/admin/(general|roles|features)', function ($page) {
+Route::get('/admin/(general|roles|features|tags)', function ($page) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
@@ -452,9 +452,8 @@ Route::post('/crud/admin/general', function () {
     $msg = 'settings-saved';
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
-            dump($key);
             if ($key == 'auth-self-registration') $value = boolval($value);
-            if (str_contains($key, 'keywords')) {
+            if (str_contains($key, 'keywords') || $key == 'tags') {
                 $value = array_map('trim', explode(PHP_EOL, $value));
                 $value = array_filter($value);
             }

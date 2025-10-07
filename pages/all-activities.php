@@ -20,65 +20,55 @@
 $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
+$tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 
-<?php if (isset($_GET['user'])) { ?>
-    <h1 class='m-0'>
+<h1 class='m-0'>
+    <?php if (isset($_GET['user'])) { ?>
         <i class="ph ph-folder-user"></i>
-
         <?= lang("Activities of ", "Aktivitäten von ") ?>
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
-    </h1>
-    <a href="<?= ROOTPATH ?>/activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-book-open"></i>
-        <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
-    </a>
-<?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
-    <h1 class='m-0'>
+    <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
         <i class="ph ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
-    </h1>
-
-    <button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
-
-    <div class="btn-toolbar justify-between">
-
-        <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
-            <i class="ph ph-chart-line-up"></i>
-            <?= lang('Statistics', 'Statistiken') ?>
-        </a>
-        <?php if ($Settings->hasPermission('activities.lock')) { ?>
-            <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
-                <i class="ph ph-lock"></i>
-                <?= lang('Locking', 'Sperren') ?>
-            </a>
-        <?php } ?>
-        <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i>
-            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
-        </a>
-
-    </div>
-
-<?php
-} elseif ($page == 'my-activities') { ?>
-    <h1 class='m-0'>
+    <?php
+    } elseif ($page == 'my-activities') { ?>
         <i class="ph ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
-    </h1>
+    <?php } ?>
+</h1>
 
-    <div class="btn-toolbar justify-between">
+<button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
+
+<div class="btn-toolbar justify-between">
+    <?php if (isset($_GET['user']) || $page == 'my-activities') { ?>
         <a href="<?= ROOTPATH ?>/activities" class="btn" id="user-btn">
             <i class="ph ph-book-open"></i>
-            <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
+            <?= lang('Show all activities', "Zeige alle Aktivitäten") ?>
         </a>
-        <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i>
-            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+    <?php } ?>
+    <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
+        <i class="ph ph-chart-line-up"></i>
+        <?= lang('Statistics', 'Statistiken') ?>
+    </a>
+    <?php if ($Settings->hasPermission('activities.lock')) { ?>
+        <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
+            <i class="ph ph-lock"></i>
+            <?= lang('Locking', 'Sperren') ?>
         </a>
-    </div>
-<?php } ?>
+    <?php } ?>
+    <?php if ($tagsEnabled) { ?>
+        <!-- <a href="<?= ROOTPATH ?>/tags" class="btn">
+            <i class="ph ph-tag"></i>
+            <?= $Settings->tagLabel() ?>
+        </a> -->
+    <?php } ?>
+    <a href="<?= ROOTPATH ?>/add-activity">
+        <i class="ph ph-plus"></i>
+        <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+    </a>
+</div>
 
 <style>
     /* under md */
@@ -294,6 +284,31 @@ $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->
                 </table>
             </div>
 
+            <?php if ($tagsEnabled) { ?>
+                <h6>
+                    <?= $Settings->tagLabel() ?>
+                    <a class="float-right" onclick="filterActivities('#filter-tags .active', null, 17)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter" style="max-height: 15rem; overflow-y: auto;">
+                    <table id="filter-tags" class="table small simple">
+                        <?php
+                        $keywords = DB::doc2Arr($Settings->get('tags', []));
+                        foreach ($keywords as $tag) {
+                            $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
+                        ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $tag ?>" onclick="filterActivities(this, '<?= $tag ?>', 17)" class="item" id="<?= $tagId ?>-btn">
+                                        <span><?= $tag ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
+            
+
             <h6>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
@@ -400,6 +415,10 @@ $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->
         {
             title: lang('Workflow status', 'Workflow Status'),
             'key': 'workflow'
+        },
+        {
+            title: '<?= $Settings->tagLabel() ?>',
+            'key': 'tags'
         }
     ]
 
@@ -482,14 +501,14 @@ $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->
                         show: false
                     },
                     render: function(data, type, row) {
-                        if (workflowsEnabled){
+                        if (workflowsEnabled) {
                             if (row.workflow && row.workflow == 'in_progress') {
                                 return `${data} <i class="ph ph-seal text-muted" title="<?= lang('In workflow', 'Im Workflow') ?>"></i>`;
                             } else if (row.workflow && row.workflow == 'rejected') {
                                 return `${data} <i class="ph ph-x-circle text-danger" title="<?= lang('Rejected in workflow', 'Im Workflow abgelehnt') ?>"></i>`;
                             } else if (row.workflow && row.workflow == 'verified') {
                                 return `${data} <i class="ph ph-seal-check text-success" title="<?= lang('Verified in workflow', 'Im Workflow verifiziert') ?>"></i>`;
-                            } 
+                            }
                         }
                         return data;
                     }
@@ -642,6 +661,17 @@ $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->
                         return data ? data : 'no workflow'
                     }
                 },
+                {
+                    targets: 17,
+                    data: 'tags',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    render: function(data, type, row, meta) {
+                        if (data.length == 0) return ''
+                        return data.join(', ')
+                    }
+                }
             ],
             "order": [
                 [5, 'desc'],

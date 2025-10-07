@@ -801,6 +801,22 @@ if ($Settings->featureEnabled('topics')) {
     ];
 }
 
+if ($Settings->featureEnabled('tags')) {
+    $tags = $Settings->get('tags', []);
+    $FIELDS[] = [
+        'id' => 'tags',
+        'module_of' => ['general'],
+        'usage' => [
+            'filter',
+            'columns'
+        ],
+        'label' => $Settings->tagLabel(),
+        'type' => 'list',
+        'input' => 'select',
+        'values' => $tags
+    ];
+}
+
 if ($Settings->featureEnabled('quality-workflow')) {
     $workflowTypes = $osiris->adminCategories->find(['workflow' => ['$ne' => null]])->toArray();
     $FIELDS[] = [

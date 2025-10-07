@@ -76,6 +76,15 @@
             <small class="text-muted"><?= lang('Manage workflows to quality-check your activities', 'Verwalte Workflows, um Aktivitäten zu prüfen') ?></small>
         </a>
     <?php } ?>
+    <?php if ($Settings->featureEnabled('tags')) { ?>
+        <a href="<?= ROOTPATH ?>/admin/tags" style="--secondary-color: var(--primary-color)">
+            <i class="ph ph-tag text-secondary" aria-hidden="true"></i>
+            <?= lang('Tags', 'Schlagwörter') ?>
+            <br>
+            <small class="text-muted"><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></small>
+        </a>
+    <?php } ?>
+    
 </div>
 
 <!-- smaller section with links to helper tools -->
