@@ -1615,10 +1615,10 @@ class Modules
                         <table class="table simple small">
                             <thead>
                                 <tr>
+                                    <th>Username</th>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th>Username</th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
@@ -1630,6 +1630,9 @@ class Modules
                                 $i = 0;
                                 foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
+                                        <td>
+                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                        </td>
                                         <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
@@ -1643,10 +1646,6 @@ class Modules
                                             </div>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
-                                        </td>
-
-                                        <td>
                                             <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
@@ -1658,7 +1657,12 @@ class Modules
                             <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                            <small class="text-muted float-left align-items-center">
+                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                            </small>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -1675,17 +1679,35 @@ class Modules
                             }
                         }
 
+                        function selectUsernameSupervisor(el) {
+                            let username = el.value
+                            let user = $('#user-list option[value=' + username + ']')
+                            if (!user || user === undefined || user.length === 0) return;
+
+                            console.log(user);
+                            let name = user.html()
+                            name = name.replace(/\(.+\)/, ''); // remove username in brackets
+                            name = name.split(', ')
+                            if (name.length !== 2) return;
+
+                            let tr = $(el).closest('tr')
+                            console.log(tr);
+                            tr.find('td:nth-child(2) input').val(name[0])
+                            tr.find('td:nth-child(3) input').val(name[1])
+                            tr.find('td:nth-child(4) input').prop('checked', true)
+                        }
+
                         var counter = <?= $i ?>;
 
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
+                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
                             tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list"></td>')
                             tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
-                            var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                            var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
                             tr.append($('<td>').append(btn))
@@ -1730,6 +1752,9 @@ class Modules
                                 ?>
                                     <tr>
                                         <td>
+                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                        </td>
+                                        <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
@@ -1741,10 +1766,6 @@ class Modules
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
-                                        <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>">
-                                        </td>
-
                                         <td>
                                             <select name="values[authors][<?= $i ?>][role]" class="form-control">
                                                 <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
@@ -1766,7 +1787,12 @@ class Modules
                             <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                            <small class="text-muted">
+                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                            </small>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -1783,15 +1809,33 @@ class Modules
                             }
                         }
 
+                        function selectUsernameSupervisor(el) {
+                            let username = el.value
+                            let user = $('#user-list-thesis option[value=' + username + ']')
+                            if (!user || user === undefined || user.length === 0) return;
+
+                            console.log(user);
+                            let name = user.html()
+                            name = name.replace(/\(.+\)/, ''); // remove username in brackets
+                            name = name.split(', ')
+                            if (name.length !== 2) return;
+
+                            let tr = $(el).closest('tr')
+                            console.log(tr);
+                            tr.find('td:nth-child(2) input').val(name[0])
+                            tr.find('td:nth-child(3) input').val(name[1])
+                            tr.find('td:nth-child(4) input').prop('checked', true)
+                        }
+
                         var counter = <?= $i ?>;
 
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
+                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
                             tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis"></td>')
                             var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
                             var roles = {
                                 'supervisor': lang('Supervisor', 'Betreuer'),
@@ -1807,7 +1851,7 @@ class Modules
                                 select.append('<option value="' + key + '">' + value + '</option>')
                             }
                             tr.append($('<td>').append(select))
-                            var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                            var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
                             tr.append($('<td>').append(btn))
