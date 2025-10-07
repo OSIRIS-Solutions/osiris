@@ -2960,6 +2960,8 @@ class Modules
                         <tbody id="project-list"><?php
                                                     foreach ($projects ?? [] as $i => $con) {
                                                         if (empty($con)) continue;
+                                                        if (is_string($con))
+                                                            $con = DB::to_ObjectID($con);
                                                         $p = $this->DB->db->projects->findOne(['_id' => $con]);
                                                         if (empty($p)) continue;
                                                     ?>
@@ -2992,9 +2994,6 @@ class Modules
                                                 <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                                             <?php } ?>
                                         </select>
-                                        <div class="input-group-append">
-                                            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('Add project', 'Projekt hinzuf.') ?></button>
-                                        </div>
                                     </div>
                                     <?php if ($full_permission) { ?>
                                         <small class="text-muted">
@@ -3029,18 +3028,27 @@ class Modules
                                 return;
                             }
                             row.append(`<td class="w-full">
-            <input type="hidden" name="values[projects][]" value="${projectId}">
-            <b>${projectName}</b>
-            </td>
-            `);
+                                <input type="hidden" name="values[projects][]" value="${projectId}">
+                                <b>${projectName}</b>
+                                </td>
+                                `);
                             row.append(`<td>
-            <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-        </td>`);
+                                <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+                            </td>`);
                             row.attr('id', `project-${projectId}`);
                             $('#project-list').append(row)
+
+                            // reset selectize
+                            var control = $('#project-select')[0].selectize;
+                            control.clear();
                         }
 
-                        $("#project-select").selectize();
+                        $("#project-select").selectize({
+                            onChange: function(value) {
+                                if (!value.length) return;
+                                addProjectRow(value, $("#project-select option[value='" + value + "']").text());
+                            }
+                        });
                     </script>
 
                     <?= $this->render_help($help) ?>
