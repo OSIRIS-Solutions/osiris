@@ -396,7 +396,7 @@ class DB
             $con = $this->db->journals->findOne(['_id' => $id]);
         } elseif ($type == 'teaching') {
             $con = $this->db->teaching->findOne(['_id' => $id]);
-        } elseif ($type == 'project') {
+        } elseif ($type == 'project' || $type == 'projects') {
             $con = $this->db->projects->findOne(['_id' => $id]);
         } elseif ($type == 'person') {
             $con = $this->db->persons->findOne(['_id' => $id]);

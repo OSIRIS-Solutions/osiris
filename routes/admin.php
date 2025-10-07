@@ -332,7 +332,11 @@ Route::get('/settings/modules', function () {
     $form = array();
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         $mongoid = $DB->to_ObjectID($_GET['id']);
-        $form = $osiris->activities->findOne(['_id' => $mongoid]);
+        if (isset($_GET['draft']) && $_GET['draft'] == 'true') {
+            $form = $osiris->activitiesDrafts->findOne(['_id' => $mongoid]);
+        } else {
+            $form = $osiris->activities->findOne(['_id' => $mongoid]);
+        }
     }
     $Modules = new Modules($form, $_GET['copy'] ?? false, $_GET['conference'] ?? false);
 

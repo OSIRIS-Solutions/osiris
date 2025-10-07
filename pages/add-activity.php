@@ -16,6 +16,13 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$drafts_enabled = $Settings->featureEnabled('drafts');
+$user_drafts = 0;
+if ($drafts_enabled) {
+    // check if user has drafts
+    $user_drafts = $osiris->activitiesDrafts->count(['created_by' => $_SESSION['username']]);
+}
 ?>
 
 <style>
@@ -34,7 +41,7 @@
         font-style: italic;
     }
 
-   
+
     .form-help {
         display: none;
         position: absolute;
@@ -102,6 +109,7 @@
 
 $form = $form ?? array();
 $copy = $copy ?? false;
+$draft = $draft ?? false;
 
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id']) && !$copy) {
@@ -173,6 +181,19 @@ function val($index, $default = '')
                 </div>
 
                 <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('Add event', 'Event hinzufügen') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="drafts-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <div id="content" id="drafts">
             </div>
         </div>
     </div>
@@ -372,11 +393,20 @@ function val($index, $default = '')
     </div>
 </div>
 
+<?php if ($drafts_enabled && $user_drafts > 0) { ?>
+    <a data-target="#drafts-modal" class="btn primary mb-10" id="drafts-btn" onclick="loadDrafts()">
+        <i class="ph ph-file-text mr-5"></i>
+        <?= lang('You have pending drafts', 'Du hast ausstehende Entwürfe') ?>
+        <span class="index"><?= $user_drafts ?></span>
+    </a>
+<?php } ?>
+
 
 <a target="_blank" href="<?= ROOTPATH ?>/docs/add-activities" class="btn tour float-right ml-5" id="docs-btn">
     <i class="ph ph-question mr-5"></i>
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
+
 <?php if (empty($form)) { ?>
     <!-- Create new activity -->
     <h1 class="my-0">
@@ -435,6 +465,10 @@ function val($index, $default = '')
     </div>
 
 
+<?php } elseif ($draft) { ?>
+    <h1 class="mt-0">
+        <?= lang('Edit draft', 'Bearbeite Entwurf') ?>
+    </h1>
 <?php } elseif ($copy) { ?>
     <h1 class="mt-0"><?= lang('Copy activity', 'Kopiere Aktivität') ?></h1>
 <?php } else { ?>
@@ -448,7 +482,6 @@ function val($index, $default = '')
         echo $Format->formatShort();
         ?>
     </div>
-
 <?php } ?>
 
 <?php if (!empty($form)) { ?>
@@ -550,6 +583,11 @@ function val($index, $default = '')
             <input type="hidden" class="form-control disabled" name="values[type]" id="type" readonly>
             <input type="hidden" class="form-control disabled" name="values[subtype]" id="subtype" readonly>
 
+            <?php if ($draft) { ?>
+                <input type="hidden" class="form-control disabled" name="values[draft_id]" id="draft_id" value="<?= $form['_id'] ?? '' ?>" readonly>
+            <?php } ?>
+
+
             <p id="type-description" class="description">
                 <!-- filled by togglePubType() in add-activity.js -->
             </p>
@@ -624,6 +662,10 @@ function val($index, $default = '')
 
             <button class="btn secondary" type="submit" id="submit-btn" onclick="verifyForm(event, '#activity-form')"><?= $btntext ?></button>
 
+            <?php if ($drafts_enabled && (empty($form) || $draft)) { ?>
+                <button class="btn" type="button" id="draft-btn" onclick="saveDraft()"><?= lang('Save as draft', 'Als Entwurf speichern') ?></button>
+            <?php } ?>
+
         </form>
     </div>
 </div>
@@ -652,6 +694,7 @@ function val($index, $default = '')
     let ID = null;
     let COPY = false;
     let CONFERENCE = '<?= $_GET['conference'] ?? '' ?>';
+    let DRAFT = <?= json_encode($draft) ?>;
 </script>
 
 <?php if (!empty($form)) {
@@ -701,7 +744,7 @@ function val($index, $default = '')
 
     <script>
         var doi = '<?= $_GET['doi'] ?>'
-        console.log(doi);
+        // console.log(doi);
 
         $('#search-doi').val(doi);
         getDOI(doi);
@@ -731,7 +774,7 @@ function val($index, $default = '')
             INPUT = $('#org-' + type + '-search')
             SELECTED = $('#org-' + type + '-value')
             COMMENT = $('#org-' + type + '-search-comment')
-            console.log(SUGGEST);
+            // console.log(SUGGEST);
             window.createOrganizationTR = function(org) {
                 // overwrite organisation function
                 let id = cleanID(org.id)

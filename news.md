@@ -71,8 +71,14 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Versand erfolgt automatisch über den Cron-Job `/cron/digest`.
 - Mails sind zweisprachig (DE/EN), vollständig UTF-8-kodiert und nutzen das OSIRIS-Design.
 
+### <i class="ph ph-file-text"></i> Entwürfe für Aktivitäten
+- Nutzer:innen können Aktivitäten als Entwurf speichern und später fertigstellen.
+- Entwürfe sind nur für die erstellende Person sichtbar.
+- Entwürfe können jederzeit geladen, bearbeitet und gespeichert werden.
+- Wenn ein Entwurf gespeichert wird, wird automatisch eine neue Aktivität erstellt und der Entwurf gelöscht.
+- Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
 
-#### Bug Fixes und Verbesserungen
+### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
 

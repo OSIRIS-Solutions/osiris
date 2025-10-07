@@ -657,6 +657,34 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
 
+                 <div class="box px-20">
+                    <h3 id="drafts">
+                        <?= lang('Drafts', 'Entwürfe') ?>
+                    </h3>
+                    <div class="form-group">
+
+                        <p>
+                            <?= lang('You can enable drafts for activities. This means that users can save their activities as drafts and complete them later.', 'Du kannst Entwürfe für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten als Entwürfe speichern und später vervollständigen können. ') ?>
+                        </p>
+
+                        <?php
+                        $drafts = $Settings->featureEnabled('drafts', false);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="drafts-true" value="1" name="values[drafts]" <?= $drafts ? 'checked' : '' ?>>
+                            <label for="drafts-true">
+                                <?= lang('Enabled', 'Aktiviert') ?>
+                            </label>
+                        </div>
+                        <div class="custom-radio">
+                            <input type="radio" id="drafts-false" value="0" name="values[drafts]" <?= $drafts ? '' : 'checked' ?>>
+                            <label for="drafts-false">
+                                <?= lang('Disabled', 'Deaktiviert') ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="box px-20">
                     <h3 id="guest-forms">

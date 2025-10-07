@@ -6648,7 +6648,8 @@ Sidebar content
 }
 
 .pills .index,
-.tabs .index {
+.tabs .index,
+.btn .index {
   background-color: var(--body-color);
   border-radius: 10px;
   color: var(--muted-color);

@@ -89,6 +89,7 @@ function togglePubType(type, callback = () => { }) {
                 url: ROOTPATH + "/settings/modules",
                 data: {
                     id: ID,
+                    draft: DRAFT ?? false,
                     modules: SELECTED_MODULES,
                     copy: COPY ?? false,
                     conference: CONFERENCE ?? false,
@@ -336,6 +337,32 @@ function verifyForm(event, form) {
     return false
 }
 
+function saveDraft(){
+    // no validation needed, just change the route and save
+    var form = $('#activity-form')
+    form.attr('action', ROOTPATH + '/crud/activities/save-draft')
+    form.submit()
+}
+
+function loadDrafts(){
+    $('#drafts-modal #content').html('<div class="loader show"></div>')
+    // open modal
+    $('#drafts-modal').addClass('show')
+    $.ajax({
+        type: "GET",
+        url: ROOTPATH + '/activities/drafts',
+        data: {
+            frame: true
+        },
+        dataType: "html",
+        success: function (response) {
+            $('#drafts-modal #content').html(response)
+        },
+        error: function (response) {
+            $('#drafts-modal #content').html('<p>' + lang('Error loading drafts', 'Fehler beim Laden der Entwürfe') + '</p>')
+        }
+    })
+}
 
 function getTeaching(name) {
     // console.log(name);
