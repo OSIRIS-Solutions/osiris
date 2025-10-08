@@ -2492,6 +2492,22 @@ body {
   margin-top: 0;
 }
 
+.gap-5 {
+  gap: 0.5rem !important;
+}
+
+.gap-10 {
+  gap: 1rem !important;
+}
+
+.gap-15 {
+  gap: 1.5rem !important;
+}
+
+.gap-20 {
+  gap: 2rem !important;
+}
+
 a {
   color: var(--link-color);
   text-decoration: none;
