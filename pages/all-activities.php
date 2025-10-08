@@ -58,12 +58,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             <?= lang('Locking', 'Sperren') ?>
         </a>
     <?php } ?>
-    <?php if ($tagsEnabled) { ?>
-        <!-- <a href="<?= ROOTPATH ?>/tags" class="btn">
-            <i class="ph ph-tag"></i>
-            <?= $Settings->tagLabel() ?>
-        </a> -->
-    <?php } ?>
     <a href="<?= ROOTPATH ?>/add-activity">
         <i class="ph ph-plus"></i>
         <?= lang('Add activity', 'Aktivität hinzufügen') ?>

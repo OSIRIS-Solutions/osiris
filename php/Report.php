@@ -1,5 +1,6 @@
 <?php
 require_once "init.php";
+include_once 'fields.php';
 
 use Amenadiel\JpGraph\Graph;
 use Amenadiel\JpGraph\Plot;
@@ -15,11 +16,17 @@ class Report
     private $endmonth = 12;
     private $startyear = CURRENTYEAR - 1;
     private $endyear = CURRENTYEAR - 1;
+    private $fields = array();
 
     public function __construct($report)
     {
         $this->report = $report;
         $this->steps = $report['steps'] ?? array();
+
+        // we need fields for labels
+        $Fields = new Fields();
+        // field array with id as key
+        $this->fields = array_column($Fields->fields, null, 'id');
     }
 
     public function setYear($year)
@@ -90,6 +97,8 @@ class Report
                 return $this->formatText($item);
             case 'activities':
                 return $this->formatActivities($item);
+            case 'activities-impact':
+                return $this->formatActivitiesImpact($item);
             case 'table':
                 return $this->formatTable($item);
             case 'line':
@@ -131,7 +140,7 @@ class Report
         return '<hr />';
     }
 
-    public function getActivities($item)
+    public function getActivities($item, $impact = false)
     {
         $filter = json_decode($item['filter'], true);
         $timelimit = $item['timelimit'] ?? false;
@@ -140,11 +149,28 @@ class Report
         if ($timelimit)
             $filter = array_merge_recursive($this->timefilter, $filter);
 
-        // sort by type, year, month
+        // default sorting by type, year, month
         $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
+        if (isset($item['sort']) && !empty($item['sort'])) {
+            $options['sort'] = [];
+            foreach ($item['sort'] as $s) {
+                $dir = ($s['dir'] == 'asc') ? 1 : -1;
+                $options['sort'][$s['field']] = $dir;
+            }
+        }
+        $options['projection'] = ['rendered.print' => 1];
+        if ($impact) {
+            $options['projection']['impact'] = 1;
+        }
 
         $DB = new DB();
         $data = $DB->db->activities->find($filter, $options);
+
+        if ($impact) {
+            return array_map(function ($item) {
+                return [$item['rendered']['print'], $item['impact'] ?? ''];
+            }, $data->toArray());
+        }
 
         return array_map(function ($item) {
             return ($item['rendered']['print']);
@@ -158,6 +184,19 @@ class Report
         foreach ($data as $activity) {
             $html .= "<p>" . $activity . "</p>";
         }
+        return $html;
+    }
+    private function formatActivitiesImpact($item)
+    {
+        $data = $this->getActivities($item, true);
+        $html = "<table class='table my-20'><thead><tr><th></th><th>" . lang('Impact', 'Impact') . "</th></tr></thead><tbody>";
+        foreach ($data as $activity) {
+            $html .= "<tr>";
+            $html .= "<td>" . $activity[0] . "</td>";
+            $html .= "<td><strong>" . ($activity[1] ?? '-') . "</strong></td>";
+            $html .= "</tr>";
+        }
+        $html .= "</tbody></table>";
         return $html;
     }
 
@@ -174,6 +213,34 @@ class Report
         $group = $item['aggregate'] ?? '';
         $group2 = $item['aggregate2'] ?? null;
 
+        // get labels for group fields
+        $label = $group;
+        $transform = null;
+        $unwind = false;
+        if (isset($this->fields[$group]) && !empty($this->fields[$group])) {
+            $f = $this->fields[$group];
+            $label = $f['label'] ?? $f['id'];
+            // if f value is an associative array, we need to transform the value
+            if (isset($f['values']) && is_array($f['values']) && array_keys($f['values']) !== range(0, count($f['values']) - 1)) {
+                $transform = $f['values'];
+            }
+            if ($f['type'] == 'list') {
+                $unwind = true;
+            }
+        }
+        $transform2 = null;
+        $unwind2 = false;
+        if (!empty($group2) && isset($this->fields[$group2]) && !empty($this->fields[$group2])) {
+            $f = $this->fields[$group2];
+            // if f value is an associative array, we need to transform the value
+            if (isset($f['values']) && is_array($f['values']) && array_keys($f['values']) !== range(0, count($f['values']) - 1)) {
+                $transform2 = $f['values'];
+            }
+            if ($f['type'] == 'list') {
+                $unwind2 = true;
+            }
+        }
+
         if ($timelimit)
             $filter = array_merge_recursive($this->timefilter, $filter);
 
@@ -181,9 +248,16 @@ class Report
         $aggregate = [
             ['$match' => $filter],
         ];
-        if (strpos($group, 'authors') !== false) {
-            $aggregate[] = ['$unwind' => '$authors'];
+        // if (strpos($group, 'authors') !== false) {
+        //     $aggregate[] = ['$unwind' => '$authors'];
+        // }
+        if ($unwind) {
+            $aggregate[] = ['$unwind' => '$' . $group];
         }
+        if ($unwind2) {
+            $aggregate[] = ['$unwind' => '$' . $group2];
+        }
+
         if (empty($group2)) {
             $aggregate[] =
                 ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
@@ -203,9 +277,18 @@ class Report
         $table = [];
 
         if (empty($group2)) {
-            $table[] = ['Activity', 'Count'];
+            $table[] = [$label, 'Count'];
             foreach ($data as $row) {
-                $table[] = [$row['activity'], $row['count']];
+                $activity = $row['activity'];
+                if (!is_string($activity)) {
+                    $activity = DB::doc2Arr($activity)[0] ?? '';
+                }
+                if (empty($activity)) {
+                    $activity = '<em>' . lang('Empty', 'Leer') . '</em>';
+                } elseif ($transform && isset($transform[$activity])) {
+                    $activity = $transform[$activity];
+                }
+                $table[] = [$activity, $row['count']];
             }
         } else {
             $activities = [];
@@ -213,19 +296,36 @@ class Report
             foreach ($data as $row) {
                 $g1 = $row['activity'][0];
                 $g2 = $row['activity'][1];
+                if (!is_string($g1)) {
+                    $g1 = DB::doc2Arr($g1)[0] ?? '';
+                }
+                if (!is_string($g2)) {
+                    $g2 = DB::doc2Arr($g2)[0] ?? '';
+                }
                 $activities[$g1][$g2] = $row['count'];
-                if (!in_array($g2, $header)) {
-                    $header[] = $g2;
+                if (!array_key_exists($g2, $header)) {
+                    $name = $g2;
+                    if (empty($g2)) {
+                        $name = '<em>' . lang('Empty', 'Leer') . '</em>';
+                    } elseif ($transform2 && isset($transform2[$g2])) {
+                        $name = $transform2[$g2];
+                    }
+                    $header[$g2] = $name;
                 }
             }
-            sort($header);
+
+            asort($header);
             ksort($activities);
 
-            $table[] = array_merge(['Activity'], $header);
-            
+            $table[] = array_merge([$label], array_values($header));
             foreach ($activities as $activity => $counts) {
+                if (empty($activity)) {
+                    $activity = '<em>' . lang('Empty', 'Leer') . '</em>';
+                } elseif ($transform && isset($transform[$activity])) {
+                    $activity = $transform[$activity];
+                }
                 $row = [$activity];
-                foreach ($header as $h) {
+                foreach ($header as $h => $hn) {
                     $row[] = $counts[$h] ?? 0;
                 }
                 $table[] = $row;

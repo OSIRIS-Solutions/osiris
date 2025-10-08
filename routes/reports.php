@@ -264,6 +264,34 @@ Route::post('/reports', function () {
                     \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
                 }
                 break;
+            case 'activities-impact':
+                $data = $Report->getActivities($step, $impact = true);
+                $table = $section->addTable();
+                $table->addRow();
+                $cell = $table->addCell(9000);
+                $cell = $table->addCell(1000);
+                $cell->addText('Impact Factor', ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
+
+                foreach ($data as $d) {
+                    [$line, $impact] = $d;
+                    $table->addRow();
+                    $cell = $table->addCell(9000);
+                    $line = clean_comment_export($line);
+                    \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
+                    if (isset($impact)) {
+                        $if = $impact;
+                    } else {
+                        $if = $DB->get_impact($doc);
+                    }
+                    if (empty($if)) {
+                        $if = "IF not yet available";
+                    } else {
+                        $if = number_format($if, 3, ',', '.');
+                    }
+                    $cell = $table->addCell(1000);
+                    $cell->addText($if, $styleTextBold, $styleParagraphCenter);
+                }
+                break;
             case 'table':
                 $result = $Report->getTable($step);
 

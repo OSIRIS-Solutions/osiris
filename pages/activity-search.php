@@ -20,10 +20,11 @@ $Format = new Document(true);
 $expert = isset($_GET['expert']);
 
 include_once BASEPATH . "/php/fields.php";
+$FIELDS = new Fields();
 
 // dump($FIELDS, true);
 
-$filters = array_filter($FIELDS, function ($f) {
+$filters = array_filter($FIELDS->fields, function ($f) {
     return in_array('filter', $f['usage'] ?? []);
 });
 
@@ -277,7 +278,7 @@ $filters = array_map(function ($f) {
                 ];
                 // $ignore = ['_id', 'authors.user', 'authors.position', 'authors.approved', 'authors.aoi', 'authors.last', 'authors.first'];
                 // $fields = array_values($FIELDS);
-                $fields = array_filter($FIELDS, function ($f) {
+                $fields = array_filter($FIELDS->fields, function ($f) {
                     return in_array('columns', $f['usage'] ?? []);
                 });
                 // sort by module_of
