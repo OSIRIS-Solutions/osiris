@@ -6,7 +6,7 @@
 
 ## Version 1.6.0 Beta
 
-### <i class="ph ph-seal-check"></i> Neue Qualitäts-Workflows für Aktivitäten
+#### <i class="ph ph-seal-check"></i> Neue Qualitäts-Workflows für Aktivitäten
 
 OSIRIS 1.6.0 führt ein vollständig neues System für Qualitäts- und Prüf-Workflows ein – flexibel, offen und direkt in der Aktivität integriert:
 - Admins können eigene Workflows definieren und beliebigen Aktivitätskategorien zuordnen.
@@ -61,7 +61,7 @@ Prüfer:innen können Aktivitäten zurückweisen, wenn z. B. Angaben fehlen oder
 - Automatische Initialisierung bei neu erstellten Aktivitäten.
 
 
-### <i class="ph ph-envelope"></i> Neuer Mail-Digest (Benachrichtigungs-Zusammenfassung)
+#### <i class="ph ph-envelope"></i> Neuer Mail-Digest (Benachrichtigungs-Zusammenfassung)
 
 OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, zweisprachig und im OSIRIS-Design:
 
@@ -71,14 +71,14 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Versand erfolgt automatisch über den Cron-Job `/cron/digest`.
 - Mails sind zweisprachig (DE/EN), vollständig UTF-8-kodiert und nutzen das OSIRIS-Design.
 
-### <i class="ph ph-file-text"></i> Entwürfe für Aktivitäten
+#### <i class="ph ph-file-text"></i> Entwürfe für Aktivitäten
 - Nutzer:innen können Aktivitäten als Entwurf speichern und später fertigstellen.
 - Entwürfe sind nur für die erstellende Person sichtbar.
 - Entwürfe können jederzeit geladen, bearbeitet und gespeichert werden.
 - Wenn ein Entwurf gespeichert wird, wird automatisch eine neue Aktivität erstellt und der Entwurf gelöscht.
 - Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
 
-### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten
+#### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten
 
 - Aktivitäten können nun mit Schlagworten versehen werden, um sie besser zu kategorisieren und zu finden.
 - Es kann in alle Aktivitäten nach Schlagworten gefiltert werden.
@@ -88,7 +88,17 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
 - Schlagworte können zurzeit nur zu Aktivitäten hinzugefügt werden, nicht zu Projekten, Infrastrukturen oder Events. Dies ist für zukünftige Versionen geplant.
 
-### Bug Fixes und Verbesserungen
+#### <i class="ph ph-file-text"></i> Verbesserter Report-Builder
+
+- Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzeroberfläche sowie zusätzliche Funktionen zur Anpassung von Berichten.
+- Es wurde ein neuer Baustein hinzugefügt, mit dem man eine Tabelle mit Aktivitäten und deren Impact-Faktor hinzufügen kann (gewünscht von DSMZ).
+- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt Sortierungen (Absteigend, aufsteigend)
+- Die Zeitbegrenzung ist jetzt standardmäßig ausgewählt, um Verwirrung zu vermeiden.
+- Die Benutzeroberfläche wurde verbessert, indem Klapp- und Kopierfunktionen hinzugefügt wurden. Außerdem gibt es jetzt Dropdown-Menüs für Aggregationen und eine bessere Beschreibung der Bausteine.
+- Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.
+
+
+#### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
 - Es wurde ein Problem behoben, durch das man beim Kopieren einer Aktivität eine deaktivierte Kategorie auswählen konnte

@@ -9,8 +9,11 @@
 
 include_once BASEPATH . "/php/fields.php";
 $FIELDS = new Fields();
-$fields = array_filter($FIELDS->fields, function ($f) {
+$fields_aggregate = array_filter($FIELDS->fields, function ($f) {
     return !empty($f['module_of']) && in_array('aggregate', $f['usage']);
+});
+$fields_sort = array_filter($FIELDS->fields, function ($f) {
+    return !empty($f['module_of']) && in_array('filter', $f['usage']);
 });
 ?>
 
@@ -108,14 +111,8 @@ $fields = array_filter($FIELDS->fields, function ($f) {
     <div class="step" id="text">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t text-secondary"></i>
+            <i class="ph ph-text-t ph-fw text-secondary"></i>
             <span class="step-title"><?= lang('Text', 'Text') ?></span>
-            <select name="values[*][level]" class="form-control small w-auto d-inline-block ml-10" required>
-                <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
-                <option value="h2"><?= lang('Heading 2', 'Überschrift 2') ?></option>
-                <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
-                <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
-            </select>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -129,6 +126,12 @@ $fields = array_filter($FIELDS->fields, function ($f) {
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
+            <select name="values[*][level]" class="form-control small w-auto" required>
+                <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
+                <option value="h2"><?= lang('Heading 2', 'Überschrift 2') ?></option>
+                <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
+                <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
+            </select>
             <div class="mt-10">
                 <textarea type="text" class="form-control" name="values[*][text]" placeholder="<?= lang('Content', 'Inhalt') ?>" required></textarea>
             </div>
@@ -138,7 +141,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
     <div class="step" id="activities">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t text-secondary"></i>
+            <i class="ph ph-article ph-fw text-secondary"></i>
             <span class="step-title"><?= lang('Activities', 'Aktivitäten') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -171,7 +174,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
     <div class="step" id="activities-impact">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t text-secondary"></i>
+            <i class="ph ph-ranking ph-fw text-secondary"></i>
             <span class="step-title"><?= lang('Activities (incl. Impact)', 'Aktivitäten (mit Impact)') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -204,7 +207,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
     <div class="step" id="table">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t text-secondary"></i>
+            <i class="ph ph-table ph-fw text-secondary"></i>
             <span class="step-title"><?= lang('Table', 'Tabelle') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -224,7 +227,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
                 <div class="col">
                     <label for="aggregate"><?= lang('First aggregation', 'Erste Aggregation') ?></label>
                     <select name="values[*][aggregate]" required class="form-control">
-                        <?php foreach ($fields as $f) { ?>
+                        <?php foreach ($fields_aggregate as $f) { ?>
                             <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
@@ -233,7 +236,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
                     <label for="aggregate2"><?= lang('Second aggregation', 'Zweite Aggregation (optional)') ?></label>
                     <select name="values[*][aggregate2]" class="form-control">
                         <option value=""><?= lang('Without second aggregation', 'Ohne zweite Aggregation') ?></option>
-                        <?php foreach ($fields as $f) { ?>
+                        <?php foreach ($fields_aggregate as $f) { ?>
                             <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
@@ -249,7 +252,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
     <div class="step" id="line">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t text-secondary"></i>
+            <i class="ph ph-minus ph-fw text-secondary"></i>
             <span class="step-title"><?= lang('Line', 'Trennlinie') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -381,26 +384,34 @@ $fields = array_filter($FIELDS->fields, function ($f) {
 
     // Add one sort row to the nearest .sort-rows container
     function addSortRow(elOrContainer, data) {
+        console.log('Adding sort row');
+        console.log(data);
         const $container = $(elOrContainer).hasClass('sort-rows') ? $(elOrContainer) : $(elOrContainer).closest('.step-body').find('.sort-rows');
         const base = $container.data('name'); // e.g. values[*][sort]
         const idx = $container.children('.sort-row').length;
         const namePrefix = base.replace('*', getIndexFromContainer($container));
+        // copy options from select fields
         const row = $(`
     <div class="sort-row d-flex align-items-center gap-5 mb-5">
-      <input class="form-control w-40" placeholder="field" name="${namePrefix}[${idx}][field]">
-      <select class="form-control w-20" name="${namePrefix}[${idx}][dir]">
-        <option value="asc">asc</option><option value="desc">desc</option>
+      <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
+        <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
+        <?php foreach ($fields_sort as $f) { ?>
+            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+        <?php } ?>
       </select>
-      <select class="form-control w-20" name="${namePrefix}[${idx}][nulls]">
-        <option value="">nulls default</option>
-        <option value="first">nulls first</option>
-        <option value="last">nulls last</option>
+      <select class="form-control small w-150 flex-grow-0" name="${namePrefix}[${idx}][dir]" required>
+        <option value="asc">${lang('Ascending', 'Aufsteigend')}</option><option value="desc">${lang('Descending', 'Absteigend')}</option>
       </select>
-      <button type="button" class="btn link btn-icon" title="Remove" onclick="$(this).closest('.sort-row').remove()">
+      <button type="button" class="btn small link text-danger" title="Remove" onclick="$(this).closest('.sort-row').remove()">
         <i class="ph ph-x"></i>
       </button>
     </div>
   `);
+        // <select class="form-control w-20" name="${namePrefix}[${idx}][nulls]">
+        //         <option value="">nulls default</option>
+        //         <option value="first">nulls first</option>
+        //         <option value="last">nulls last</option>
+        //       </select>
         $container.append(row);
 
         if (data) { // prefill
@@ -456,6 +467,7 @@ $fields = array_filter($FIELDS->fields, function ($f) {
 
         // For each loaded step: if step.sort exists -> generate rows
         steps.forEach((step, i) => {
+            console.log(step.sort);
             const $block = $('#report .step').eq(i);
             if (step.sort && Array.isArray(step.sort)) {
                 const $rows = $block.find('.sort-rows');

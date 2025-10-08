@@ -130,6 +130,10 @@ Route::post('/crud/reports/update', function () {
     } else {
         $steps = array_values($values);
     }
+    // array_values for steps.sort, because the indexes might be non-consecutive
+    foreach ($steps as &$step) {
+        $step['sort'] = array_values($step['sort'] ?? []);
+    }
 
     // dump($steps, true);
     $id = $_POST['id'];
