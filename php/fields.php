@@ -896,7 +896,7 @@ class Fields
                 'int' => 'integer',
                 'float' => 'double',
                 'bool', 'bool-check' => 'boolean',
-                'list' => 'list',
+                'list' => 'string',
                 'url' => 'string',
                 'text' => 'string',
                 default => 'string',

@@ -16,7 +16,7 @@ class Report
     private $endmonth = 12;
     private $startyear = CURRENTYEAR - 1;
     private $endyear = CURRENTYEAR - 1;
-    private $fields = array();
+    public $fields = array();
     private $variables = array();
 
     public function __construct($report)
@@ -107,8 +107,8 @@ class Report
                 return $this->formatText($item);
             case 'activities':
                 return $this->formatActivities($item);
-            case 'activities-impact':
-                return $this->formatActivitiesImpact($item);
+            case 'activities-field':
+                return $this->formatActivitiesFields($item);
             case 'table':
                 return $this->formatTable($item);
             case 'line':
@@ -127,9 +127,10 @@ class Report
     public function getText($item)
     {
         $text = $item['text'] ?? '';
-        if (empty($text)) return '';
-        $Parsedown = new Parsedown();
-        return $Parsedown->line($text);
+        return $text;
+        // if (empty($text)) return '';
+        // $Parsedown = new Parsedown();
+        // return $Parsedown->line($text);
     }
 
     /**
@@ -185,7 +186,7 @@ class Report
         );
     }
 
-    public function getActivities($item, $impact = false)
+    public function getActivities($item, $field = false)
     {
         // apply variable substitutions
 
@@ -204,18 +205,24 @@ class Report
                 $dir = ($s['dir'] == 'asc') ? 1 : -1;
                 $options['sort'][$s['field']] = $dir;
             }
+
+            $options['collation'] = [
+                'locale' => lang('en', 'de'),     // je nach gewünschter Sprache
+                'strength' => 1,
+                'numericOrdering' => true  // optional: "10" > "2"
+            ];
         }
         $options['projection'] = ['rendered.print' => 1];
-        if ($impact) {
-            $options['projection']['impact'] = 1;
+        if ($field) {
+            $options['projection'][$field] = 1;
         }
 
         $DB = new DB();
         $data = $DB->db->activities->find($filter, $options);
 
-        if ($impact) {
-            return array_map(function ($item) {
-                return [$item['rendered']['print'], $item['impact'] ?? ''];
+        if ($field) {
+            return array_map(function ($item) use ($field) {
+                return [$item['rendered']['print'], $item[$field] ?? ''];
             }, $data->toArray());
         }
 
@@ -233,14 +240,20 @@ class Report
         }
         return $html;
     }
-    private function formatActivitiesImpact($item)
+    private function formatActivitiesFields($item)
     {
-        $data = $this->getActivities($item, true);
-        $html = "<table class='table my-20'><thead><tr><th></th><th>" . lang('Impact', 'Impact') . "</th></tr></thead><tbody>";
+        $field = $item['field'] ?? false;
+        $label = $field;
+        if (isset($this->fields[$field]) && !empty($this->fields[$field])) {
+            $f = $this->fields[$field];
+            $label = $f['label'] ?? $f['id'];
+        }
+        $data = $this->getActivities($item, $field);
+        $html = "<table class='table my-20'><thead><tr><th></th><th>" . $label . "</th></tr></thead><tbody>";
         foreach ($data as $activity) {
             $html .= "<tr>";
             $html .= "<td>" . $activity[0] . "</td>";
-            $html .= "<td><strong>" . ($activity[1] ?? '-') . "</strong></td>";
+            $html .= "<td><strong>" . (!empty($activity[1] ?? '') ? $activity[1] : '-') . "</strong></td>";
             $html .= "</tr>";
         }
         $html .= "</tbody></table>";

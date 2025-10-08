@@ -184,7 +184,7 @@ Route::post('/crud/reports/update', function () {
 
 Route::post('/reports', function () {
     // hide deprecated because PHPWord has a lot of them
-    error_reporting(E_ERROR);
+    // error_reporting(E_ERROR);
     // hide errors! otherwise they will break the word document
     if ($_POST['format'] == 'word') {
         // error_reporting(E_ERROR);
@@ -265,18 +265,20 @@ Route::post('/reports', function () {
                 $level = $step['level'] ?? 'p';
                 switch ($level) {
                     case 'h1':
-                        $section->addTitle($text, 1);
+                        $run = $section->addTextRun(['styleName' => 'Heading1']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     case 'h2':
-                        $section->addTitle($text, 2);
+                        $run = $section->addTextRun(['styleName' => 'Heading2']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     case 'h3':
-                        $section->addTitle($text, 3);
+                        $run = $section->addTextRun(['styleName' => 'Heading3']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     default:
-                        $paragraph = $section->addTextRun();
-                        // $text = clean_comment_export($text, false);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $text, false, false);
+                        $run = $section->addTextRun();
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                 }
                 break;
@@ -291,32 +293,23 @@ Route::post('/reports', function () {
                     \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
                 }
                 break;
-            case 'activities-impact':
-                $data = $Report->getActivities($step, $impact = true);
+            case 'activities-field':
+                $field = $step['field'] ?? 'impact';
+                $data = $Report->getActivities($step, $field);
                 $table = $section->addTable();
                 $table->addRow();
                 $cell = $table->addCell(9000);
                 $cell = $table->addCell(1000);
-                $cell->addText('Impact Factor', ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
-
+                $label = $Report->fields[$field]['label'] ?? $field;
+                $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
                 foreach ($data as $d) {
-                    [$line, $impact] = $d;
+                    [$line, $val] = $d;
                     $table->addRow();
                     $cell = $table->addCell(9000);
                     $line = clean_comment_export($line);
                     \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
-                    if (isset($impact)) {
-                        $if = $impact;
-                    } else {
-                        $if = $DB->get_impact($doc);
-                    }
-                    if (empty($if)) {
-                        $if = "IF not yet available";
-                    } else {
-                        $if = number_format($if, 3, ',', '.');
-                    }
                     $cell = $table->addCell(1000);
-                    $cell->addText($if, $styleTextBold, $styleParagraphCenter);
+                    $cell->addText($val, $styleTextBold, $styleParagraphCenter);
                 }
                 break;
             case 'table':

@@ -85,7 +85,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     }
 
     .table#vars-table td {
-        vertical-align: baseline;
+        vertical-align: baseline !important;
     }
 </style>
 
@@ -151,7 +151,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                 <div id="vars-help" class="text-muted small mb-10">
                     <?= lang(
                         'Define variables here and use them anywhere in your template using {{vars.KEY}}. In filters: quote strings, do not quote numbers/booleans.',
-                        'Definiere Variablen hier und nutze sie im Template mit {{vars.KEY}}. In Filtern: Strings in Anführungszeichen, Zahlen/Booleans ohne.'
+                        'Definiere hier Variablen und nutze sie im Template mit {{vars.KEY}}. In Filtern: Strings in Anführungszeichen, Zahlen/Booleans ohne.'
                     ) ?>
                     <button type="button" class="btn link small" onclick="$('#vars-cheatsheet').toggle();">Cheatsheet</button>
                 </div>
@@ -234,9 +234,9 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                 <b class="text-primary d-block"><?= lang('Activities', 'Aktivitäten') ?></b>
                 <small class="text-muted"><?= lang('A block that contains a list of activities', 'Ein Block, der eine Liste von Aktivitäten enthält') ?></small>
             </a>
-            <a class="item" onclick="addRow('activities-impact')">
-                <b class="text-primary d-block"><?= lang('Activities (incl. Impact)', 'Aktivitäten (mit Impact)') ?></b>
-                <small class="text-muted"><?= lang('A block that contains a table of activities with impact in a seperate column', 'Ein Block, der eine Tabelle von Aktivitäten mit Impact in einer separaten Spalte enthält') ?></small>
+            <a class="item" onclick="addRow('activities-field')">
+                <b class="text-primary d-block"><?= lang('Activities (incl. additional Feld)', 'Aktivitäten (mit weiterem Feld)') ?></b>
+                <small class="text-muted"><?= lang('A block that contains a table of activities with another field in a seperate column', 'Ein Block, der eine Tabelle von Aktivitäten mit einem weiteren Feld in einer separaten Spalte enthält') ?></small>
             </a>
             <a class="item" onclick="addRow('table')">
                 <b class="text-primary d-block"><?= lang('Table', 'Tabelle') ?></b>
@@ -285,9 +285,14 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                 <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
                 <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
             </select>
-            <div class="mt-10">
+            <!-- <div class="mt-10">
                 <textarea type="text" class="form-control step-text" name="values[*][text]" placeholder="<?= lang('Content', 'Inhalt') ?>" required></textarea>
+            </div> -->
+            <div class="form-group lang-<?= lang('en', 'de') ?>">
+                <div class="title-editor form-group"></div>
+                <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
             </div>
+
         </div>
     </div>
 
@@ -324,11 +329,11 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
     </div>
 
-    <div class="step" id="activities-impact">
+    <div class="step" id="activities-field">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-ranking ph-fw text-secondary"></i>
-            <span class="step-title"><?= lang('Activities (incl. Impact)', 'Aktivitäten (mit Impact)') ?></span>
+            <i class="ph ph-columns-plus-right ph-fw text-secondary"></i>
+            <span class="step-title"><?= lang('Activities (incl. additional Field)', 'Aktivitäten (mit weiterem Feld)') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -340,11 +345,23 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             </button>
         </div>
         <div class="step-body">
-            <input type="hidden" class="hidden" name="values[*][type]" value="activities-impact">
+            <input type="hidden" class="hidden" name="values[*][type]" value="activities-field">
             <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
             <small>
                 <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie von "Zeige Filter" kopieren.') ?>
             </small>
+            <div class="form-group">
+                <label for="field"><?= lang('Additional field', 'Weiteres Feld') ?></label>
+                <select name="values[*][field]" required class="form-control step-field">
+                    <?php
+                    $fields_add = array_filter($fields_sort, function ($f) {
+                        return $f['type'] !== 'boolean' && $f['type'] !== 'list' && !str_starts_with($f['id'], 'authors.');
+                    });
+                    foreach ($fields_add as $f) { ?>
+                        <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                    <?php } ?>
+                </select>
+            </div>
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
                 <label for="timelimit"><?= lang('Limit to reporting time', 'Auf den Berichtszeitraum beschränken') ?></label>
@@ -459,22 +476,13 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
 <script src="<?= ROOTPATH ?>/js/reports.js"></script>
 
 <script>
-    let n = 0;
-
-    // function addRow(type) {
-    //     let tr = $('#' + type).clone();
-    //     console.log(n);
-    //     tr.html(tr.html().replace(/\*/g, n));
-    //     n++;
-    //     $('#report').append(tr);
-    // }
-
     let templateIndex = 0;
 
     function addRow(type, data) {
         const $tpl = $('#' + type).clone(true, true);
-        // remove id
-        $tpl.removeAttr('id');
+        // new id
+        $tpl.attr('id', type + '-' + templateIndex);
+
         // replace [*] → [varIndex]
         $tpl.find('input,select,textarea').each(function() {
             const name = $(this).attr('name');
@@ -489,6 +497,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             $tpl.find('.step-timelimit').prop('checked', data.timelimit ? true : false);
             $tpl.find('.step-aggregate').val(data.aggregate || '');
             $tpl.find('.step-aggregate2').val(data.aggregate2 || '');
+            $tpl.find('.step-field').val(data.field || '');
             // sort rows
             if (data.sort && Array.isArray(data.sort)) {
                 data.sort.forEach(sortCriterion => {
@@ -497,7 +506,19 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             }
         }
         $('#report').append($tpl);
-        console.log($tpl);
+
+        if (type === 'text') {
+            // init editor
+            const editorId = 'title-editor-' + templateIndex;
+            const editorInput = $tpl.find('.title-editor');
+            if (data) {
+                editorInput.html(data.text || '');
+            }
+            editorInput.attr('id', editorId);
+            editorInput.next().attr('id', editorId + '-field');
+            initQuill(editorInput.get(0));
+        }
+
         templateIndex++;
     }
 
@@ -593,6 +614,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             navigator.clipboard?.writeText(t);
         });
         $('#vars-table tbody').append($tpl);
+
         console.log($tpl);
         varIndex++;
     }
@@ -634,6 +656,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         $('#report').sortable({
             handle: ".handle"
         });
+
 
         // For each loaded step: if step.sort exists -> generate rows
         // steps.forEach((step, i) => {

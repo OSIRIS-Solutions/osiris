@@ -93,8 +93,9 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzeroberfläche sowie zusätzliche Funktionen zur Anpassung von Berichten.
 
 - Es wurden neue **Variablen für Berichte** hinzugefügt, die im Report-Template verwendet werden können. Diese Variablen können im Report-Builder definiert werden und ermöglichen es, dynamische Inhalte in den Bericht einzufügen. Sowohl die Vorschau als auch der generierte Bericht unterstützen diese Variablen.
-- Es wurde ein neuer Baustein hinzugefügt, mit dem man eine Tabelle mit Aktivitäten und deren Impact-Faktor hinzufügen kann (gewünscht von DSMZ).
-- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt Sortierungen (gewünscht von IfL).
+- Es wurde ein neuer Baustein hinzugefügt, mit dem man eine Tabelle mit Aktivitäten und einem beliebigen weiteren Datenfeld erstellen kann. Dies ermöglicht es, Berichte zu erstellen, die spezifische Informationen zu Aktivitäten enthalten, die für den Bericht relevant sind, zum Beispiel Impact-Faktoren, Publikationsarten oder andere benutzerdefinierte Felder.
+- Die Unterstützung für **Textbausteine** wurde verbessert. Textbausteine können jetzt formatierten Text enthalten, der im Bericht korrekt dargestellt wird. Dies ermöglicht es, Berichte mit ansprechenderen und besser strukturierten Textinhalten zu erstellen.
+- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt **Sortierungen** (gewünscht von IfL). Es wird dabei zwischen aufsteigender und absteigender Sortierung unterschieden.
 - Die Zeitbegrenzung ist jetzt standardmäßig ausgewählt, um Verwirrung zu vermeiden.
 - Die Benutzeroberfläche wurde verbessert, indem Klapp- und Kopierfunktionen hinzugefügt wurden. Außerdem gibt es jetzt Dropdown-Menüs für Aggregationen und eine bessere Beschreibung der Bausteine.
 - Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.
