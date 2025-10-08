@@ -28,6 +28,42 @@ if ($drafts_enabled) {
         ]
     ]);
 }
+
+
+$form = $form ?? array();
+$copy = $copy ?? false;
+$draft = $draft ?? false;
+
+// check if it is a copy of a disabled category
+if ($copy && isset($form['subtype'])) {
+    $cat = $osiris->adminTypes->findOne(['id' => $form['subtype']]);
+    if ($cat === null || (isset($cat['disabled']) && $cat['disabled'] == "true")) {
+        echo '<div class="alert signal mb-20">';
+        echo lang('The activity you are trying to copy is of a disabled category. Please select a new category.', 'Die Aktivität, die du kopieren möchtest, gehört zu einer deaktivierten Kategorie. Bitte wähle eine neue Kategorie aus.');
+        echo '</div>';
+        $form['subtype'] = null;
+    }
+}
+
+$formaction = ROOTPATH;
+if (!empty($form) && isset($form['_id']) && !$copy) {
+    $formaction .= "/crud/activities/update/" . $form['_id'];
+    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $url = ROOTPATH . "/activities/view/" . $form['_id'];
+} else {
+    $formaction .= "/crud/activities/create";
+    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $url = ROOTPATH . "/activities/view/*";
+}
+
+function val($index, $default = '')
+{
+    $val = $GLOBALS['form'][$index] ?? $default;
+    if (is_string($val)) {
+        return htmlspecialchars($val);
+    }
+    return $val;
+}
 ?>
 
 <style>
@@ -110,32 +146,6 @@ if ($drafts_enabled) {
         }
     }
 </style>
-<?php
-
-$form = $form ?? array();
-$copy = $copy ?? false;
-$draft = $draft ?? false;
-
-$formaction = ROOTPATH;
-if (!empty($form) && isset($form['_id']) && !$copy) {
-    $formaction .= "/crud/activities/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-    $url = ROOTPATH . "/activities/view/" . $form['_id'];
-} else {
-    $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
-    $url = ROOTPATH . "/activities/view/*";
-}
-
-function val($index, $default = '')
-{
-    $val = $GLOBALS['form'][$index] ?? $default;
-    if (is_string($val)) {
-        return htmlspecialchars($val);
-    }
-    return $val;
-}
-?>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
@@ -707,10 +717,15 @@ function val($index, $default = '')
     if (isset($form['subtype'])) $t = $form['subtype'];
     else {
         $t = $form['type'];
-        if ($t == 'publication') $t = $form['pubtype'];
-        if ($t == 'students') $t = $form['category'] ?? 'doctoral thesis';
-        if ($t == 'review') $t = $form['role'] ?? 'review';
-        if ($t == 'misc') $t = 'misc-' . ($form['iteration'] ?? 'once');
+        // get first available subtype
+        $type = $Categories->getCategory($t);
+        $subtypes = $type['children'] ?? array();
+        $subtypes = array_filter(DB::doc2Arr($subtypes), function ($s) {
+            return !($s['disabled'] ?? false);
+        });
+        if (!empty($subtypes)) {
+            $t = array_values($subtypes)[0]['id'] ?? $t;
+        }
     }
 ?>
 
