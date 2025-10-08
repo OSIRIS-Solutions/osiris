@@ -40,6 +40,11 @@ if (empty($reports)) {
 } else foreach ($reports as $report) { ?>
     <div class="box">
         <div class="content">
+            <?php if ($Settings->hasPermission('report.templates')) { ?>
+                <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn btn-sm btn-secondary float-right" title="<?= lang('Edit report template', 'Report-Vorlage bearbeiten') ?>">
+                    <i class="ph ph-pencil" aria-hidden="true"></i>
+                </a>
+            <?php } ?>
             <h3><?= $report['title'] ?></h3>
             <p class="text-primary"><?= $report['description'] ?? '' ?></p>
         </div>
@@ -58,10 +63,24 @@ if (empty($reports)) {
                         <input type="number" class="form-control" name="startmonth" id="startmonth" value="<?= $report['start'] ?>" required>
                     </div>
                     <div class="col-sm">
-                    <label for="format"><?= lang('Duration in month', 'Dauer in Monaten') ?></label>
+                        <label for="format"><?= lang('Duration in month', 'Dauer in Monaten') ?></label>
                         <input type="number" class="form-control" name="duration" id="duration" value="<?= $report['duration'] ?>" required>
-                      </div>
+                    </div>
                 </div>
+                <?php
+                $vars = DB::doc2Arr($report['variables'] ?? []);
+                if (!empty($vars)) { ?>
+                    <fieldset>
+                        <legend><?= lang('Additional parameters', 'Zusätzliche Parameter') ?></legend>
+                        <?php foreach ($vars as $var) {  ?>
+                            <div class="form-group">
+                                <label for="var[<?= ($var['key']) ?>]"><?= ($var['label'] ?? $var['key']) ?></label>
+                                <input type="<?= ($var['type'] ?? 'text') ?>" class="form-control" value="<?= htmlspecialchars($_GET['var'][$var['key']] ?? ($var['default'] ?? '')) ?>" name="var[<?= ($var['key']) ?>]">
+                            </div>
+                        <?php } ?>
+                    </fieldset>
+                <?php } ?>
+
                 <div class="form-group">
                     <label for="format">Format</label>
                     <select name="format" id="format" class="form-control">

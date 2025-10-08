@@ -90,9 +90,11 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 
 #### <i class="ph ph-file-text"></i> Verbesserter Report-Builder
 
-- Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzeroberfläche sowie zusätzliche Funktionen zur Anpassung von Berichten.
+Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzeroberfläche sowie zusätzliche Funktionen zur Anpassung von Berichten.
+
+- Es wurden neue **Variablen für Berichte** hinzugefügt, die im Report-Template verwendet werden können. Diese Variablen können im Report-Builder definiert werden und ermöglichen es, dynamische Inhalte in den Bericht einzufügen. Sowohl die Vorschau als auch der generierte Bericht unterstützen diese Variablen.
 - Es wurde ein neuer Baustein hinzugefügt, mit dem man eine Tabelle mit Aktivitäten und deren Impact-Faktor hinzufügen kann (gewünscht von DSMZ).
-- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt Sortierungen (Absteigend, aufsteigend)
+- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt Sortierungen (gewünscht von IfL).
 - Die Zeitbegrenzung ist jetzt standardmäßig ausgewählt, um Verwirrung zu vermeiden.
 - Die Benutzeroberfläche wurde verbessert, indem Klapp- und Kopierfunktionen hinzugefügt wurden. Außerdem gibt es jetzt Dropdown-Menüs für Aggregationen und eine bessere Beschreibung der Bausteine.
 - Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.

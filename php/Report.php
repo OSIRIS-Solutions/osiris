@@ -17,11 +17,12 @@ class Report
     private $startyear = CURRENTYEAR - 1;
     private $endyear = CURRENTYEAR - 1;
     private $fields = array();
+    private $variables = array();
 
     public function __construct($report)
     {
-        $this->report = $report;
-        $this->steps = $report['steps'] ?? array();
+        $this->report = DB::doc2Arr($report);
+        $this->steps = DB::doc2Arr($this->report['steps'] ?? array());
 
         // we need fields for labels
         $Fields = new Fields();
@@ -42,6 +43,15 @@ class Report
         }
 
         $this->setTime($startyear, $endyear, $startmonth, $endmonth);
+    }
+
+    public function setVariables($vars)
+    {
+        if (empty($vars)) return;
+        $this->variables = $this->resolve_vars($vars);
+        // apply variable substitutions to report definition
+        $this->steps = $this->apply_tokens_recursive($this->steps, $this->variables);
+        $this->report['steps'] = $this->steps;
     }
 
     public function setTime($startyear, $endyear, $startmonth, $endmonth)
@@ -140,8 +150,45 @@ class Report
         return '<hr />';
     }
 
+    private function resolve_vars(array $runtime = []): array
+    {
+        $vars = [];
+        foreach (($this->report['variables'] ?? []) as $k => $def) {
+            $vars[$k] = $def['default'] ?? null;
+        }
+        // apply ad-hoc overrides
+        foreach ($runtime as $k => $v) if ($k !== '_preset') $vars[$k] = $v;
+
+        return $vars;
+    }
+
+    private function apply_tokens_recursive($data, array $vars)
+    {
+        if (is_array($data) || $data instanceof MongoDB\Model\BSONArray  || $data instanceof MongoDB\Model\BSONDocument) {
+            foreach ($data as $k => $v) $data[$k] = $this->apply_tokens_recursive($v, $vars);
+            return $data;
+        }
+        if (!is_string($data)) return $data;
+
+        return preg_replace_callback(
+            '/\{\{\s*vars\.([a-zA-Z0-9_]+)(?:\|([a-z]+):"?([^"}]+)"?)?\s*\}\}/',
+            function ($m) use ($vars) {
+                $key = $m[1];
+                $filter = $m[2] ?? null;
+                $arg = $m[3] ?? null;
+                $val = $vars[$key] ?? null;
+                if ($filter === 'default' && ($val === null || $val === '')) $val = $arg;
+                if ($filter === 'date' && !empty($val)) $val = date($arg ?: 'Y-m-d', is_numeric($val) ? $val : strtotime($val));
+                return is_bool($val) ? ($val ? 'true' : 'false') : (string)$val;
+            },
+            $data
+        );
+    }
+
     public function getActivities($item, $impact = false)
     {
+        // apply variable substitutions
+
         $filter = json_decode($item['filter'], true);
         $timelimit = $item['timelimit'] ?? false;
 

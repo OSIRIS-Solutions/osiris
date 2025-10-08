@@ -123,6 +123,8 @@ Route::post('/crud/reports/update', function () {
     if (!isset($_POST['id'])) {
         die('No ID provided');
     }
+    $id = $_POST['id'];
+
     $title = $_POST['title'];
     $values = $_POST['values'];
     if (empty($values)) {
@@ -135,8 +137,26 @@ Route::post('/crud/reports/update', function () {
         $step['sort'] = array_values($step['sort'] ?? []);
     }
 
-    // dump($steps, true);
-    $id = $_POST['id'];
+    $varsIn = $_POST['variables'] ?? [];
+    $varsOut = [];
+    foreach ($varsIn as $v) {
+        $key = trim($v['key'] ?? '');
+        if ($key === '') continue;
+        $type = $v['type'] ?? 'string';
+        $def  = $v['default'] ?? null;
+
+        // cast default by type
+        if ($type === 'int' && $def !== '' && $def !== null)   $def = (int)$def;
+        if ($type === 'bool' && $def !== '' && $def !== null)  $def = filter_var($def, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($type === 'float' && $def !== '' && $def !== null) $def = (float)$def;
+
+        $varsOut[$key] = [
+            'key'    => $key,
+            'type'   => $type,
+            'label'  => $v['label'] ?? '',
+            'default' => $def
+        ];
+    }
     // upsert adminReports
     $osiris->adminReports->updateOne(
         [
@@ -148,7 +168,8 @@ Route::post('/crud/reports/update', function () {
                 'description' => $_POST['description'] ?? '',
                 'start' => $_POST['start'] ?? 1,
                 'duration' => $_POST['duration'] ?? 12,
-                'steps' => $steps
+                'steps' => $steps,
+                'variables' => array_values($varsOut)
             ]
         ]
     );
@@ -234,6 +255,8 @@ Route::post('/reports', function () {
     }
 
     $Report->setTime($startyear, $endyear, $startmonth, $endmonth);
+    $vars = $_POST['var'] ?? [];
+    $Report->setVariables($vars);
 
     foreach ($Report->steps as $step) {
         switch ($step['type']) {
