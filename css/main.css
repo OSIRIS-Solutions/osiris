@@ -12079,11 +12079,6 @@ a.text-muted:focus {
   align-items: center;
   justify-content: center;
 }
-.wf-circle.approved {
-  background: var(--success-color);
-  border-color: var(--success-color);
-  color: #fff;
-}
 .wf-circle.current {
   border-color: var(--blue-color);
   border-width: 1px;
@@ -12102,7 +12097,21 @@ a.text-muted:focus {
   font-size: 1.2rem;
   text-align: center;
 }
-.wf-circle.current.user-can-approve::before {
+.wf-circle.approved {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: #fff;
+}
+.wf-circle.rejected {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: white;
+}
+.wf-circle.future {
+  border-color: #ccc;
+  background: #eee;
+}
+.wf-circle.current.user-can-approve::before, .wf-circle.rejected.user-can-approve::before {
   content: "";
   position: absolute;
   bottom: -30px;
@@ -12111,10 +12120,6 @@ a.text-muted:focus {
   border-width: 6px;
   border-style: solid;
   border-color: transparent transparent var(--blue-color) transparent;
-}
-.wf-circle.future {
-  border-color: #ccc;
-  background: #eee;
 }
 .wf-circle .icon {
   font-size: 16px;
@@ -12138,6 +12143,14 @@ a.text-muted:focus {
   display: block;
   font-weight: bold;
   color: var(--blue-color);
+}
+
+.wf-step.approved .wf-step-label {
+  color: var(--success-color);
+}
+
+.wf-step.rejected .wf-step-label {
+  color: var(--danger-color);
 }
 
 .wf-actions {
@@ -12229,6 +12242,11 @@ a.text-muted:focus {
 #wf-mini .dot.approved {
   background: var(--success-color);
   border-color: var(--success-color);
+  color: white;
+}
+#wf-mini .dot.rejected {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
   color: white;
 }
 #wf-mini .dot.current {

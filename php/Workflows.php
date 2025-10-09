@@ -95,6 +95,14 @@ class Workflows
                 break;
             }
         }
+        // check if we have a rejection that needs to be cleared
+        if (!empty($wf['rejectedDetails'])) {
+            // check if rejected step is now approved
+            if (in_array($wf['rejectedDetails']['stepId'], $approved, true)) {
+                // clear rejection
+                unset($wf['rejectedDetails']);
+            }
+        }
         if ($allReqApproved) {
             $wf['status']     = 'verified';
             $wf['verifiedAt'] = $wf['verifiedAt'] ?? self::nowIso();

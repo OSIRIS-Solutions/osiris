@@ -360,7 +360,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     foreach ($fields_add as $f) { ?>
                         <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
                     <?php } ?>
-                </select>
+                </select> 
             </div>
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">

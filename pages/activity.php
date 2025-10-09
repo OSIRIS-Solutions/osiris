@@ -75,6 +75,11 @@ if ($Settings->featureEnabled('tags')) {
         $isRejected =  ($wf['status'] ?? '') === 'rejected'; // optional
         $barState   = $isVerified ? 'ok' : ($isRejected ? 'bad' : 'neutral');
 
+        $rejectedStep = null;
+        if ($isRejected && isset($wf['rejectedDetails']['stepId'])) {
+            $rejectedStep = $wf['rejectedDetails']['stepId'];
+        }
+
         // $progress = Workflows::view($tpl, $wf); // enthält id,label,index,required,state
         $currentIndex = Workflows::currentPhaseIndex($tpl, $wf);
 
@@ -135,11 +140,20 @@ if ($Settings->featureEnabled('tags')) {
                 <div class="tick"></div>
                 <?php foreach ($progress as $i => $s):
                     $pct = $total > 1 ? ($i / ($total - 1)) * 100 : 0; // dot-position
-                    $cls = $s['state'] === 'approved' ? 'approved' : 'current';
-                    if ($s['state'] === 'pending' && intval($s['index']) > $currentIndex) $cls = 'future';
+                    $cls = '';
+                    if ($s['state'] === 'approved') {
+                        $cls = 'approved';
+                    } elseif ($s['id'] === $rejectedStep) {
+                        $cls = 'rejected';
+                    } elseif ($s['state'] === 'pending' && intval($s['index']) === $currentIndex) {
+                        $cls = 'current';
+                    } elseif ($s['state'] === 'pending' && intval($s['index']) > $currentIndex) {
+                        $cls = 'future';
+                    }
                 ?>
                     <div class="dot <?= $cls ?>" style="left: <?= round($pct, 2) ?>%;" title="<?= htmlspecialchars($s['label']) ?>">
                         <?php if ($s['state'] === 'approved'): ?><i class="ph ph-check" style="font-size:11px"></i>
+                        <?php elseif ($s['id'] === $rejectedStep): ?><i class="ph ph-x" style="font-size:11px"></i>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -181,19 +195,31 @@ if ($Settings->featureEnabled('tags')) {
                                     <?php
                                     $isApproved = ($s['state'] === 'approved');
                                     $isCurrent  = ($s['state'] === 'pending' && intval($s['index']) === $currentIndex);
-                                    $circleCls  = $isApproved ? 'approved' : ($isCurrent ? 'current' : 'future');
+                                    // $circleCls  = $isApproved ? 'approved' : ($isCurrent ? 'current' : 'future');
                                     $ts = $tplById[$s['id']] ?? [];
                                     $orgScope = $ts['orgScope'] ?? 'any';
                                     $userCanApprove = in_array($s['id'], $actionableIds, true);
+                                    $cls = '';
+                                    if ($s['state'] === 'approved') {
+                                        $cls = 'approved';
+                                    } elseif ($s['id'] === $rejectedStep) {
+                                        $cls = 'rejected';
+                                    } elseif ($s['state'] === 'pending' && intval($s['index']) === $currentIndex) {
+                                        $cls = 'current';
+                                    } elseif ($s['state'] === 'pending' && intval($s['index']) > $currentIndex) {
+                                        $cls = 'future';
+                                    }
                                     ?>
-                                    <div class="wf-step <?= $isCurrent ? 'current' : '' ?> <?= $isApproved ? 'approved' : '' ?>"
+                                    <div class="wf-step <?= $isCurrent ? 'current' : '' ?> <?= $cls ?>"
                                         data-step-id="<?= htmlspecialchars($s['id']) ?>"
                                         data-index="<?= intval($s['index']) ?>"
                                         data-required="<?= !empty($s['required']) ? '1' : '0' ?>"
                                         <?= ($orgScope === 'same_org_only') ? 'title="' . lang('Restricted to reviewers from the same organizational unit', 'Nur Prüfer*innen aus der gleichen Organisationseinheit') . '"' : '' ?>>
-                                        <div class="wf-circle <?= $circleCls ?> <?= $userCanApprove ? 'user-can-approve' : $orgScope ?>">
+                                        <div class="wf-circle <?= $cls ?> <?= $userCanApprove ? 'user-can-approve' : $orgScope ?>">
                                             <?php if ($isApproved): ?>
                                                 <i class="ph ph-check wf-icon"></i>
+                                            <?php elseif ($s['id'] === $rejectedStep): ?>
+                                                <i class="ph ph-x wf-icon"></i>
                                             <?php endif; ?>
                                         </div>
                                         <div class="wf-step-label"><?= htmlspecialchars($s['label']) ?></div>
@@ -239,10 +265,11 @@ if ($Settings->featureEnabled('tags')) {
                             <?php endif; ?>
 
 
-                            <?php if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity)) { ?>
-
+                            <?php 
+                            // show rejection details if exists and user can approve and the step was rejected
+                            if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity) && in_array($wf['rejectedDetails']['stepId'], $actionableIds)) { ?>
                                 <h5 class="mb-0">
-                                    <?= lang('Comments for the rejection:', 'Kommentare zur Zurückweisung:') ?>
+                                    <?= lang('Rejection in this step:', 'Zurückweisung in diesem Schritt:') ?>
                                 </h5>
                                 <div class="rejection-chat">
                                     <div class="chat-bubble">
