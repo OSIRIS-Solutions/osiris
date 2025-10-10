@@ -21,6 +21,7 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project();
+$Project->isProposal = true;
 
 // $Format = new Document(true);
 $form = $form ?? array();
@@ -35,6 +36,7 @@ function val($index, $default = '')
 }
 
 $filter = [];
+$tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css">
@@ -162,9 +164,9 @@ $filter = [];
                 <table id="filter-type" class="table small simple">
                     <?php
                     $vocab = $Project->getProjectTypes();
-                    foreach ($vocab as $v) { 
+                    foreach ($vocab as $v) {
                         if ($v['process'] == 'project') continue;
-                        ?>
+                    ?>
                         <tr style="--highlight-color: <?= $v['color'] ?>;">
                             <td>
                                 <a data-type="<?= $v['id'] ?>" onclick="filterProjects(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn" style="color:var(--highlight-color);">
@@ -187,22 +189,22 @@ $filter = [];
             <div class="filter">
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
-                        <td> 
+                        <td>
                             <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
-                        <td> 
+                        <td>
                             <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
-                        <td> 
+                        <td>
                             <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
-                        <td> 
+                        <td>
                             <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('withdrawn', 'zurückgezogen') ?></a>
                         </td>
                     </tr>
@@ -229,6 +231,31 @@ $filter = [];
                     <?php } ?>
                 </table>
             </div>
+
+
+            <?php if ($tagsEnabled) { ?>
+                <h6>
+                    <?= $Settings->tagLabel() ?>
+                    <a class="float-right" onclick="filterProjects('#filter-tags .active', null, 13)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter" style="max-height: 15rem; overflow-y: auto;">
+                    <table id="filter-tags" class="table small simple">
+                        <?php
+                        $keywords = DB::doc2Arr($Settings->get('tags', []));
+                        foreach ($keywords as $tag) {
+                            $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
+                        ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $tag ?>" onclick="filterProjects(this, '<?= $tag ?>', 13)" class="item" id="<?= $tagId ?>-btn">
+                                        <span><?= $tag ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
 
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
@@ -357,6 +384,10 @@ $filter = [];
             title: lang('Title', 'Titel'),
             key: 'title'
         },
+        {
+            title: '<?= $Settings->tagLabel() ?>',
+            key: 'tags'
+        }
     ]
 
 
@@ -493,37 +524,28 @@ $filter = [];
             language: {
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
-            buttons: [
-                // {
-                //     text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
-                //     className: 'btn small text-primary mr-10',
-                //     action: function(e, dt, node, config) {
-                //         window.location.href = '<?= ROOTPATH ?>/projects/search';
-                //     }
-                // },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: [10, 1, 2, 9, 3, 4, 5, 6, 7],
-                        format: {
-                            header: function(html, index, node) {
-                                return headers[index].title ?? '';
-                            }
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [10, 1, 2, 9, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function(html, index, node) {
+                            return headers[index].title ?? '';
                         }
-                    },
-                    className: 'btn small',
-                    title: function() {
-                        var filters = []
-                        activeFilters.find('.badge').find('span').each(function(i, el) {
-                            filters.push(el.innerHTML)
-                        })
-                        console.log(filters);
-                        if (filters.length == 0) return "OSIRIS All Projects";
-                        return 'OSIRIS Projects ' + filters.join('_')
-                    },
-                    text: '<i class="ph ph-file-xls"></i> Export'
+                    }
                 },
-            ],
+                className: 'btn small',
+                title: function() {
+                    var filters = []
+                    activeFilters.find('.badge').find('span').each(function(i, el) {
+                        filters.push(el.innerHTML)
+                    })
+                    console.log(filters);
+                    if (filters.length == 0) return "OSIRIS All Projects";
+                    return 'OSIRIS Projects ' + filters.join('_')
+                },
+                text: '<i class="ph ph-file-xls"></i> Export'
+            }, ],
             dom: 'fBrtip',
             columnDefs: [{
                     target: 0,
@@ -659,6 +681,14 @@ $filter = [];
                     visible: false,
                     defaultContent: '',
                     header: lang('Title', 'Titel')
+                },
+                {
+                    target: 13,
+                    data: 'tags',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: '<?= $Settings->tagLabel() ?>',
                 }
             ],
             order: [
@@ -688,6 +718,11 @@ $filter = [];
             }
             if (hash.topics !== undefined) {
                 filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
+            }
+            if (hash.tags !== undefined) {
+                var tagId = hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '-btn';
+                var tag = document.getElementById(tagId).getAttribute('data-type');
+                filterProjects(document.getElementById(tagId), tag, 13)
             }
 
             if (hash.search !== undefined) {

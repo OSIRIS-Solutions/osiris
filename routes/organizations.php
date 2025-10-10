@@ -147,7 +147,7 @@ Route::post('/crud/organizations/create', function () {
             header("Location: " . $red . "?msg=organization does already exist.");
         } else {
             echo json_encode([
-                'msg' => "Organisation ID already exists.",
+                'msg' => lang("Organization does already exist and was connected.", "Organisation existiert bereits und wurde verknüpft."),
                 'id' => strval($exist['_id']),
                 'ror' => $exist['ror'] ?? '',
                 'name' => $exist['name'],

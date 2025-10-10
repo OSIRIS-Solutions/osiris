@@ -114,6 +114,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By type', 'Nach Typ') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
@@ -180,6 +181,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             </div>
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By affiliation', 'Nach Zugehörigkeit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-affiliated .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
@@ -261,6 +263,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             <?php } ?>
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
@@ -301,9 +304,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     </table>
                 </div>
             <?php } ?>
-            
+
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
@@ -741,6 +745,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 resetTime()
             }
 
+            if (hash.tags !== undefined) {
+                var tagId = hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+                var tag = document.getElementById(tagId + '-btn').getAttribute('data-type');
+                filterActivities(document.getElementById(tagId + '-btn'), tag, 17)
+            }
 
             if (hash.search !== undefined) {
                 dataTable.search(decodeURIComponent(hash.search)).draw();
@@ -756,6 +765,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 7: '#filter-unit',
                 15: '#filter-affiliated',
                 14: '#filter-topics',
+                17: '#filter-tags'
             }
 
             for (const key in all_filters) {
@@ -771,7 +781,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                             type = false
                         }
                         const count = dataTable.column(key).data().filter(function(d) {
-                            if ((key == 7 || key == 14) && d instanceof Array) {
+                            if ((key == 7 || key == 14 || key == 17) && d instanceof Array) {
                                 return d.includes(type)
                             }
                             return d == type

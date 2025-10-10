@@ -42,13 +42,6 @@
                 "en": "Delete locked activities"
             },
             {
-                "id": "activities.tags",
-                "de": "Aktivitäten mit Schlagworten versehen",
-                "en": "Tag activities with tags",
-                "comment_de": "Diese Berechtigung addiert sich mit 'Alle Aktivitäten bearbeiten'. Wenn alle Aktivitäten bearbeitet werden können, kann mit diesem Recht auch zu allen ein Tag hinzugefügt werden. Ansonsten kann mit diesem Recht nur zu eigenen Aktivitäten Schlagworte hinzugefügt werden. Schlagworte müssen zentral in den Einstellungen eingeschaltet und im Admin-Bereich unter 'Inhalte' > 'Schlagworte' verwaltet werden.",
-                "comment_en": "This permission is cumulative with 'Edit all activities'. If all activities can be edited, this permission also allows tags to be added to all activities. Otherwise, this permission only allows tags to be added to your own activities. Tags must be enabled centrally in the settings and managed in the admin area under 'Content' > 'Tags'."
-            },
-            {
                 "id": "journals.edit",
                 "de": "Journale hinzufügen und bearbeiten",
                 "en": "Add and edit journals"
@@ -355,6 +348,34 @@
                 "en": "See workflows",
                 "comment_de": "Dies erlaubt es, den aktuellen Stand des Workflows in der Aktivität zu sehen, in Tabellen und Exporten danach filtern zu können und Icons in Übersichten zu sehen. Alle Nutzende, die einen Workflow bearbeiten können, sollten diese Berechtigung haben. Jeder kann auf der Detailseite seiner eigenen Aktivitäten den Workflow sehen, auch ohne diese Berechtigung.",
                 "comment_en": "This allows seeing the current state of the workflow in the activity, filtering by it in tables and exports, and seeing icons in overviews. All users who can edit a workflow should have this permission. Everyone can see the workflow on the detail page of their own activities, even without this permission."
+            }
+        ]
+    },
+    {
+        "de": "Schlagworte",
+        "en": "Tags",
+        "icon": "tag",
+        "fields": [
+            {
+                "id": "activities.tags",
+                "de": "Aktivitäten mit Schlagworten versehen",
+                "en": "Tag activities with tags",
+                "comment_de": "Diese Berechtigung addiert sich mit anderen zum Bearbeiten von Aktivitäten. Du kannst immer nur Schlagworte zu Aktivitäten hinzufügen, die du auch sehen und bearbeiten kannst. Schlagworte müssen zentral in den Einstellungen eingeschaltet und im Admin-Bereich unter 'Inhalte' > 'Schlagworte' verwaltet werden.",
+                "comment_en": "This permission is cumulative with other activity editing permissions. You can only add tags to activities that you can also see and edit. Tags must be enabled centrally in the settings and managed in the admin area under 'Content' > 'Tags'."
+            },
+            {
+                "id": "projects.tags",
+                "de": "Projekte/Anträge mit Schlagworten versehen",
+                "en": "Tag projects/proposals with tags",
+                "comment_de": "Diese Berechtigung addiert sich mit anderen zum Bearbeiten von Projekten/Anträgen. Du kannst immer nur Schlagworte zu Projekten/Anträgen hinzufügen, die du auch sehen und bearbeiten kannst. Schlagworte müssen zentral in den Einstellungen eingeschaltet und im Admin-Bereich unter 'Inhalte' > 'Schlagworte' verwaltet werden.",
+                "comment_en": "This permission is cumulative with other project/proposal editing permissions. You can only add tags to projects/proposals that you can also see and edit. Tags must be enabled centrally in the settings and managed in the admin area under 'Content' > 'Tags'."
+            },
+            {
+                "id": "events.tags",
+                "de": "Events mit Schlagworten versehen",
+                "en": "Tag events with tags",
+                "comment_de": "Diese Berechtigung addiert sich mit anderen zum Bearbeiten von Events. Du kannst immer nur Schlagworte zu Events hinzufügen, die du auch sehen und bearbeiten kannst. Schlagworte müssen zentral in den Einstellungen eingeschaltet und im Admin-Bereich unter 'Inhalte' > 'Schlagworte' verwaltet werden.",
+                "comment_en": "This permission is cumulative with other event editing permissions. You can only add tags to events that you can also see and edit. Tags must be enabled centrally in the settings and managed in the admin area under 'Content' > 'Tags'."
             }
         ]
     },

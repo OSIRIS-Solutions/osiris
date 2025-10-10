@@ -1175,7 +1175,7 @@ if ($Settings->featureEnabled('tags')) {
                                     if (count($tags)) {
                                         foreach ($tags as $tag) {
                                     ?>
-                                            <a class="badge primary" href="<?= ROOTPATH ?>/activities?tag=<?= urlencode($tag) ?>">
+                                            <a class="badge primary" href="<?= ROOTPATH ?>/activities#tags=<?= urlencode($tag) ?>">
                                                 <i class="ph ph-tag"></i>
                                                 <?= $tag ?>
                                             </a>
@@ -1668,13 +1668,7 @@ if ($Settings->featureEnabled('tags')) {
                     <?php
                     $tags = $doc['tags'] ?? [];
                     if (count($tags)) {
-                        foreach ($tags as $tag) {
-                    ?>
-                            <a class="badge primary" href="<?= ROOTPATH ?>/activities?tag=<?= urlencode($tag) ?>">
-                                <i class="ph ph-tag"></i>
-                                <?= $tag ?>
-                            </a>
-                    <?php }
+                        echo $Settings->printTags($tags, 'all-activities');
                     } else {
                         echo lang('No ' . $tagName . ' assigned yet.', 'Noch keine ' . $tagName . ' vergeben.');
                     }
@@ -1684,30 +1678,8 @@ if ($Settings->featureEnabled('tags')) {
                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                     <form action="<?= ROOTPATH ?>/crud/activities/update-tags/<?= $id ?>" method="post">
                         <?php
-                        $all_tags = $Settings->get('tags') ?? [];
-                        $tags = DB::doc2Arr($doc['tags'] ?? []);
+                        $Settings->tagChooser($doc['tags'] ?? []);
                         ?>
-                        <div class="form-group" data-module="tags">
-                            <label for="tag-select" class="floating-title">
-                                <?= $tagName ?>
-                            </label>
-                            <select class="form-control" name="values[tags][]" id="tag-select" multiple>
-                                <?php
-                                foreach ($all_tags as $val) {
-                                    $selected = in_array($val, $tags);
-                                ?>
-                                    <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <script>
-                            $('#tag-select').multiSelect({
-                                noneText: '<?= lang('No ' . $tagName . ' selected', 'Keine ' . $tagName . ' ausgewählt') ?>',
-                                allText: '<?= lang('All ' . $tagName . 's', 'Alle ' . $tagName . 's') ?>',
-                            });
-                        </script>
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>

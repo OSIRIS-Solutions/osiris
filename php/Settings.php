@@ -62,7 +62,6 @@ class Settings
             ['projection' => ['_id' => 0, 'id' => 1]]
         )->toArray();
         $this->continuousTypes = array_column($continuous, 'id');
-        
     }
 
     /**
@@ -441,7 +440,7 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
         return lang($settings['en'], $settings['de'] ?? null);
     }
-    
+
     function tagLabel()
     {
         if (!$this->featureEnabled('tags')) return '';
@@ -480,7 +479,7 @@ class Settings
                         $subtitle = 'data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '"';
                     }
                 ?>
-                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?=$subtitle?>>
+                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
                         <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
@@ -489,7 +488,7 @@ class Settings
                 <?php } ?>
             </div>
         </div>
-<?php }
+    <?php }
 
     function printTopics($topics, $class = "", $header = false)
     {
@@ -522,6 +521,58 @@ class Settings
         return "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]'>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
     }
 
+    public function tagChooser($selected = [])
+    {
+        if (!$this->featureEnabled('tags')) return '';
+        $tags = $this->get('tags') ?? [];
+        if (empty($tags)) return '';
+        $selected = DB::doc2Arr($selected);
+        $tagName = $this->tagLabel();
+    ?>
+        <div class="form-group" data-module="tags">
+            <label for="tag-select" class="floating-title">
+                <?= $tagName ?>
+            </label>
+            <select class="form-control" name="values[tags][]" id="tag-select" multiple>
+                <?php
+                foreach ($tags as $val) {
+                    $sel = in_array($val, $selected);
+                ?>
+                    <option <?= ($sel ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
+                <?php
+                }
+                ?>
+            </select>
+            <script>
+                $('#tag-select').multiSelect({
+                    noneText: '<?= lang('No ' . $tagName . ' selected', 'Keine ' . $tagName . ' ausgewählt') ?>',
+                    allText: '<?= lang('All ' . $tagName . 's', 'Alle ' . $tagName . 's') ?>',
+                });
+            </script>
+        </div>
+<?php
+    }
+
+    public function printTags($tags, $linkbase = false, $class = "", $header = false)
+    {
+        if (!$this->featureEnabled('tags')) return '';
+        if (empty($tags) || empty($tags[0])) return '';
+
+        $html = '<div class="tags ' . $class . '">';
+        if ($header) {
+            $html .= '<h5 class="m-0">' . $this->tagLabel() . '</h5>';
+        }
+
+        foreach ($tags as $tag) {
+            if ($linkbase) {
+                $html .= "<a class='badge primary mr-5 mb-5' href='" . ROOTPATH . "/$linkbase#tags=$tag'><i class='ph ph-tag'></i> $tag</a>";
+            } else {
+                $html .= "<span class='badge primary mr-5 mb-5' id='$tag-btn' data-type='$tag'><i class='ph ph-tag'></i> $tag</span>";
+            }
+        }
+        $html .= '</div>';
+        return $html;
+    }
 
     public function canProjectsBeCreated()
     {
@@ -560,7 +611,8 @@ class Settings
         return $regex;
     }
 
-    public static function getHistoryType($type) {
+    public static function getHistoryType($type)
+    {
         $mapping = [
             'created' => lang('Created by ', 'Erstellt von '),
             'edited' => lang('Edited by ', 'Bearbeitet von '),

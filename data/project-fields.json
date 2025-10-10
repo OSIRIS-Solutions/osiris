@@ -397,6 +397,18 @@
         "order": 83
     },
     {
+        "id": "tags",
+        "en": "Tags",
+        "de": "Schlagworte",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 90
+    },
+    {
         "id": "countries",
         "en": "Countries of research (simple)",
         "de": "Forschungsländer (einfach)",
