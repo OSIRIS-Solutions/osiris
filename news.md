@@ -78,7 +78,7 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Wenn ein Entwurf gespeichert wird, wird automatisch eine neue Aktivität erstellt und der Entwurf gelöscht.
 - Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
 
-#### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten
+#### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten, Projekte und Events
 
 - Aktivitäten können nun mit Schlagworten versehen werden, um sie besser zu kategorisieren und zu finden.
 - Es kann in alle Aktivitäten nach Schlagworten gefiltert werden.
@@ -86,7 +86,7 @@ OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, 
 - Dem Rechte-Management wurde ein neues Recht `activities.tags` hinzugefügt, das standardmäßig nicht vergeben ist. Nur wer dieses Recht hat, kann Schlagworte zu Aktivitäten hinzufügen oder entfernen. Dies gilt auch immer nur dann, wenn die Aktivität selbst auch bearbeitet werden darf. 
 - Schlagworte lassen sich zentral im Admin-Bereich unter "Inhalte" > "Schlagworte" verwalten. Dort können Admins neue Schlagworte hinzufügen, bestehende bearbeiten oder löschen.
 - Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
-- Schlagworte können zurzeit nur zu Aktivitäten hinzugefügt werden, nicht zu Projekten, Infrastrukturen oder Events. Dies ist für zukünftige Versionen geplant.
+- Schlagworte können zu Aktivitäten, Projekten, und Events hinzugefügt werden. 
 
 #### <i class="ph ph-file-text"></i> Verbesserter Report-Builder
 
@@ -99,6 +99,13 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Die Zeitbegrenzung ist jetzt standardmäßig ausgewählt, um Verwirrung zu vermeiden.
 - Die Benutzeroberfläche wurde verbessert, indem Klapp- und Kopierfunktionen hinzugefügt wurden. Außerdem gibt es jetzt Dropdown-Menüs für Aggregationen und eine bessere Beschreibung der Bausteine.
 - Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.
+
+
+#### <i class="ph ph-text"></i> Neue Datenfelder
+- Es wurden neue Datenfelder für Aktivitäten hinzugefügt:
+  - **Funding Type**: Ein Dropdown-Feld, das es ermöglicht, den Typ der Finanzierung auszuwählen. Die möglichen Werte können im Vokabular unter "funding-type" definiert werden und sind die gleichen wie bei Projekten.
+  - **Schlagworte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Schlagworte zu Aktivitäten hinzuzufügen. Die möglichen Werte können im Admin-Bereich unter "Inhalte" > "Schlagworte" verwaltet werden.
+  - **Projekte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Projekte mit Aktivitäten zu verknüpfen. Es können mehrere Projekte ausgewählt werden und die über die DOI zur Verfügung gestellten Funding-Nummern werden automatisch mit den Projekten abgeglichen und verknüpft. Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können.
 
 
 #### Bug Fixes und Verbesserungen

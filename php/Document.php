@@ -11,6 +11,7 @@ require_once "DB.php";
 require_once "Schema.php";
 require_once "Country.php";
 require_once "Organization.php";
+require_once "Vocabulary.php";
 
 class Document extends Settings
 {
@@ -1061,6 +1062,10 @@ class Document extends Settings
                     $files .= " <a href='$file[filepath]' target='_blank' data-toggle='tooltip' data-title='$file[filetype]: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
                 }
                 return $files;
+            case 'funding_type':
+                $Vocabulary = new Vocabulary();
+                $funder = $this->getVal('funding_type', null);
+                return $Vocabulary->getValue('funding-type', $funder);
             case "guest": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
             case "isbn": // ["isbn"],

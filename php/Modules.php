@@ -1,6 +1,7 @@
 <?php
 include_once "_config.php";
 include_once "init.php";
+include_once "Vocabulary.php";
 
 class Modules
 {
@@ -261,6 +262,17 @@ class Modules
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
             "width" => 0,
             "tags" => ['event', 'modificator']
+        ],
+        "funding_type" => [
+            "fields" => ["funding_type" => 'Third-Party Funded'],
+            "name" => "Funding Type",
+            "name_de" => "Art der Finanzierung",
+            "label" => "Type of Funding",
+            "label_de" => "Art der Finanzierung",
+            "description" => "A field for the type of financing, e.g., for a scholarship. The values are managed via the vocabulary and are identical to the values from the data field in projects.",
+            "description_de" => "Ein Feld für die Art der Finanzierung, z.B. für ein Stipendium. Die Werte werden über das Vokabular verwaltet und sind identisch zu den Werten aus dem Datenfeld in Projekten.",
+            "width" => 6,
+            "tags" => ['general']
         ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
@@ -3140,6 +3152,27 @@ class Modules
                 </script>
             <?php
                 break;
+
+            case 'funding_type': // funding_type
+                $Vocabulary = new Vocabulary();
+                $val = $this->val('funding_type', null);
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">
+                    <select class="form-control" name="values[funding_type]" id="funding_type"  <?= $labelClass ?> autocomplete="off">
+                        <?php
+                        $vocab = $Vocabulary->getValues('funding-type');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="funding_type" class=" <?= $labelClass ?>">
+                        <?= $label ?>
+                    </label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
 
             default:
             ?>
