@@ -25,8 +25,14 @@ if (empty($lat) || empty($lng)) {
 }
 ?>
 
- <script src="<?=ROOTPATH?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
+<script src="<?=ROOTPATH?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 
+<style>
+    #map {
+        height: calc(100vh - 26rem);
+        min-height: 400px;
+    }
+</style>
 
 <script>
     var layout = {
@@ -46,7 +52,7 @@ if (empty($lat) || empty($lng)) {
             l: 0
         },
         hoverinfo: 'text',
-        // autosize:true
+        autosize: true
     };
 </script>
 

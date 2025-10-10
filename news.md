@@ -113,6 +113,9 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
 - Es wurde ein Problem behoben, durch das man beim Kopieren einer Aktivität eine deaktivierte Kategorie auswählen konnte
 - Die Dokumentation wurde durch das neue Wiki unter https://wiki.osiris-app.de/ ersetzt. Die alten Links zu den Hilfeseiten wurden aktualisiert.
+- Die Darstellung der Weltkarte von Kooperationspartnern wurde verbessert, indem das Layout-Styling angepasst und die Größe der Karte automatisch an den verfügbaren Platz angepasst wird. Dadurch sieht die Karte jetzt besonders auf großen Bildschirmen besser aus und nutzt den verfügbaren Platz optimal.
+
+
 
 
 <span class="badge float-right">30.09.2025</span>
