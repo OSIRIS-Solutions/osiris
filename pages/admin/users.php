@@ -15,6 +15,8 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$um = strtoupper(USER_MANAGEMENT);
 ?>
 
 <style>
@@ -44,14 +46,70 @@
 
 <span class="badge primary">
     <?= lang('By', 'Mittels') ?>
-    <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+    <?php if ($um == 'AUTH') { ?>
         <?= lang('AUTH', 'AUTH') ?>
-    <?php } elseif (strtoupper(USER_MANAGEMENT) == 'LDAP') { ?>
+    <?php } elseif ($um == 'LDAP') { ?>
         <?= lang('LDAP', 'LDAP') ?>
-    <?php } elseif (strtoupper(USER_MANAGEMENT) == 'OAUTH2') { ?>
+    <?php } elseif ($um == 'OAUTH2') { ?>
         <?= lang('OAUTH2', 'OAUTH2') ?>
     <?php } ?>
 </span>
+
+<?php if ($um == 'AUTH') {
+    $token = $Settings->get('auth-token');
+    if (!$Settings->get('auth-self-registration', true)) {?>
+        <div class="alert">
+            <h5 class="title">
+                <?= lang('Self-registration is disabled', 'Selbstregistrierung ist deaktiviert') ?>
+            </h5>
+            <p>
+                <?= lang('Currently, self-registration is completely disabled. This means that only an admin can create user accounts. If you want to allow users to register, please enable self-registration and/or set an AUTH token.', 'Derzeit ist die Selbstregistrierung komplett deaktiviert. Das bedeutet, dass nur ein Admin Nutzerkonten erstellen kann. Wenn du Nutzern die Registrierung erlauben möchtest, aktiviere bitte die Selbstregistrierung und/oder setze unten ein AUTH-Token.') ?>
+            </p>
+            <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn">
+                <?= lang('Go to AUTH settings', 'Zu den AUTH-Einstellungen') ?>
+            </a>
+        </div>
+    <?php } elseif (!empty($token)) { ?>
+
+        <div class="box padded">
+            <?= lang('To allow users to register, share the following token with them:', 'Um Nutzern die Registrierung zu ermöglichen, teile ihnen folgendes Token mit:') ?>
+            <code id="auth-token" class="code"><?= $token ?></code>
+            <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
+            </button>
+            <br>
+            <!-- or share the link -->
+            <?= lang('or share the link', 'oder teile den Link') ?>
+            <code id="auth-token" class="code"><?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?></code>
+            <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
+            </button>
+        </div>
+
+        <script>
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text)
+                toastSuccess('Query copied to clipboard.')
+            }
+        </script>
+    <?php } else {?>
+        <div class="alert">
+            <div class="title">
+                <?= lang('No AUTH token set', 'Kein AUTH-Token gesetzt') ?>
+            </div>
+            <p>
+                <?= lang('Currently, no AUTH token is set. This means that users can register without a token. If you want to restrict registration, please set an AUTH token below.', 'Derzeit ist kein AUTH-Token gesetzt. Das bedeutet, dass sich Nutzer ohne Token registrieren können. Wenn du die Registrierung einschränken möchtest, setze bitte unten ein AUTH-Token.') ?>
+            </p>
+            <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn">
+                <?= lang('Go to AUTH settings', 'Zu den AUTH-Einstellungen') ?>
+            </a>
+        </div>
+    <?php } ?>
+
+    <!-- /admin/persons#section-auth -->
+    </p>
+<?php } ?>
+
 
 <form action="<?= ROOTPATH ?>/crud/admin/add-user" method="post" class="box padded">
 
@@ -63,22 +121,22 @@
         <div class="col floating-form">
             <input class="form-control" type="text" id="username" name="username" required placeholder="username">
             <label class="required" for="username"><?= lang('Username', 'Nutzername') ?></label>
-            <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+            <?php if ($um == 'AUTH') { ?>
                 <small class="text-muted">
                     <?= lang('Please choose a username without spaces or special characters', 'Bitte wähle einen Benutzernamen ohne Leerzeichen oder Sonderzeichen ') ?>
                 </small>
-            <?php } elseif (strtoupper(USER_MANAGEMENT) == 'LDAP') { ?>
+            <?php } elseif ($um == 'LDAP') { ?>
                 <small class="text-muted">
                     <?= lang('Please make sure that the username equals the username in LDAP (case-sensitive)', 'Vergewisser dich, dass der Benutzername mit dem Benutzernamen in LDAP übereinstimmt (Groß- und Kleinschreibung wird beachtet)') ?>
                 </small>
-            <?php } elseif (strtoupper(USER_MANAGEMENT) == 'OAUTH2') { ?>
+            <?php } elseif ($um == 'OAUTH2') { ?>
                 <small class="text-muted">
                     <?= lang('Please use the exact user name from the email address of the user (everything before @)', 'Bitte verwende den genauen Benutzernamen aus der E-Mail-Adresse des Benutzers (alles vor @)') ?>
                 </small>
             <?php } ?>
         </div>
 
-        <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH') { ?>
+        <?php if ($um == 'AUTH') { ?>
             <div class="col floating-form">
                 <input class="form-control" type="password" id="password" name="password" required placeholder="password">
                 <label class="required" for="password">Password</label>
