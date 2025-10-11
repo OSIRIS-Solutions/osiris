@@ -42,6 +42,19 @@ foreach ($typeModules as $m) {
         background-color: white;
         border: 1px solid var(--border-color);
     }
+
+    /* Keep override panel subtle */
+    .unit-override-panel {
+        background: var(--primary-color-very-light);
+        padding: .5rem;
+        border-radius: .5rem;
+    }
+
+
+    .text-link {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 </style>
 <div class="content">
 
@@ -123,6 +136,7 @@ foreach ($typeModules as $m) {
                         </td>
                         <td class="units">
                             <?php
+                            $overrides = DB::doc2Arr($author['units'] ?? []);
                             if ($author['aoi'] ?? 0) {
                                 $selected = DB::doc2Arr($author['units'] ?? []);
                                 if (!is_array($selected)) $selected = [];
@@ -133,6 +147,11 @@ foreach ($typeModules as $m) {
                                 } else {
                                     foreach ($person_units as $unit) {
                                         $unit_id = $unit['unit'];
+                                        // remove from overrides, so we don't show it twice
+                                        if (in_array($unit_id, $overrides)) {
+                                            // remove from overrides
+                                            $overrides = array_diff($overrides, [$unit_id]);
+                                        }
                                         $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
                                         $group = $Groups->getGroup($unit_id);
                                         $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
@@ -156,6 +175,14 @@ foreach ($typeModules as $m) {
                                     <?= lang('Not applicable', 'Nicht zutreffend') ?>
                                 </small>
                             <?php } ?>
+                            <div class="unit-override mt-5 font-size-12">
+                                <a class="unit-override-toggle text-link" data-author-index="<?= $i ?>">
+                                    <?= lang('Set unit manually', 'Einheit manuell setzen') ?>
+                                </a>
+                                <div class="unit-override-panel" data-author-index="<?= $i ?>" style="display:<?= !empty($overrides) ? 'block' : 'none' ?>">
+                                    <input type="text" name="authors[<?= $i ?>][unit_override]" class="form-control unit-search" placeholder="<?= lang('Search unit…', 'Einheit suchen…') ?>" list="units-list" value="<?= implode(',', $overrides) ?>">
+                                </div>
+                            </div>
                         </td>
                         <td>
                             <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="updateUnits(this)">
@@ -190,11 +217,16 @@ foreach ($typeModules as $m) {
                 <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
             <?php } ?>
         </datalist>
-    </form>
 
-    <p>
-        * <?= lang('In case you have edited the username or affiliation, please save once before editing this.', 'Falls du den Nutzernamen oder die Affiliation geändert hast, bitte zuerst einmal speichern, damit du die Einheiten bearbeiten kannst.') ?>
-    </p>
+
+        <datalist id="units-list">
+            <?php
+            $all_units = $osiris->groups->find();
+            foreach ($all_units as $s) { ?>
+                <option value="<?= $s['id'] ?>"><?= lang($s['name'], $s['name_de'] ?? '') ?> (<?= $s['id'] ?>)</option>
+            <?php } ?>
+        </datalist>
+    </form>
 
 </div>
 
@@ -227,6 +259,7 @@ foreach ($typeModules as $m) {
         $('#authors').append(tr)
     }
 
+
     function updateUnits(el) {
         let username = el.value.trim();
         let tr = $(el).closest('tr');
@@ -237,29 +270,55 @@ foreach ($typeModules as $m) {
             td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
             return;
         }
-        $.getJSON(`${ROOTPATH}/api/user-units/${username}`, function(data) {
-            if (data.status !== 200) {
+        $.getJSON(`${ROOTPATH}/api/user-units/${username}`, function(resp) {
+            if (resp.status !== 200) {
                 td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
-                toastError(data.msg || 'Error fetching user units');
-                // remove the username from the input
+                toastError(resp.msg || 'Error fetching user units');
                 $(el).val('');
                 return;
             }
-            data = data.data;
+            const data = resp.data || {};
             const units = data.units || [];
-            td.html(` ${units.map(unit => `
-                        <div class="custom-checkbox mb-5 ${unit.in_past ? 'text-muted' : ''}">
-                            <input type="checkbox" name="authors[${counter}][units][]" id="unit-${counter}-${unit.unit}" value="${unit.unit}">
-                            <label for="unit-${counter}-${unit.unit}">
-                                <span data-toggle="tooltip" data-title="${unit.name}" class="underline-dashed">
-                                    ${unit.unit}
-                                </span>
-                            </label>
-                        </div>
-                    `).join('')}`);
-        });
 
+            tr.find('.unit-ids').val('');
+            tr.find('.unit-override-panel').hide();
+
+            td.html(`${units.map(unit => `
+      <div class="custom-checkbox mb-5 ${unit.in_past ? 'text-muted' : ''}">
+        <input type="checkbox" name="authors[${counter}][units][]" id="unit-${counter}-${unit.unit}" value="${unit.unit}">
+        <label for="unit-${counter}-${unit.unit}">
+          <span data-toggle="tooltip" data-title="${unit.name}" class="underline-dashed">
+            ${unit.unit}
+          </span>
+        </label>
+      </div>`).join('')}`);
+            // add override link again
+            td.append(`
+      <div class="unit-override mt-5 font-size-12">
+        <a class="unit-override-toggle text-link" data-author-index="${counter}">
+          <?= lang('Set unit manually', 'Einheit manuell setzen') ?>
+        </a>
+      </div>`);
+            // Wenn keine Units → Manual-Link prominent lassen
+            if (!units.length) {
+                td.prepend('<small class="text-danger">No units found</small>');
+            }
+        });
     }
+
+    // Toggle the inline override panel
+    $(document).on('click', '.unit-override-toggle', function() {
+        const idx = $(this).data('author-index');
+        $(`.unit-override-panel[data-author-index="${idx}"]`).slideToggle(120);
+    });
+
+    // // Remove chip and reset manual flag
+    // $(document).on('click', '.chip-remove', function() {
+    //     const $panel = $(this).closest('.unit-override-panel');
+    //     const idx = $panel.data('author-index');
+    //     $(this).parent().remove();
+    //     $panel.find('.unit-ids').val('');
+    // });
 
     $(document).ready(function() {
         $('#authors').sortable({

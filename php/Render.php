@@ -125,9 +125,7 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
     // $old = array_column($old, 'units', 'user');
 
     foreach ($authors as $i => $author) {
-        if ($author_key == 'authors' && (!($author['aoi'] ?? false) || !isset($author['user']))) continue;
-        $user = $author['user'];
-
+        if ($author_key == 'authors' && (!($author['aoi'] ?? false))) continue;
         // check if author has been manually set, if so, do not update units
         if ($author['manually'] ?? false) {
             $units = array_merge($units, DB::doc2Arr($authors[$i]['units']));
@@ -142,6 +140,9 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
         //     $units = array_merge($units, $authors[$i]['units']);
         //     continue;
         // }
+        if (!isset($author['user'])) continue; // skip if no user
+        $user = $author['user'];
+
         $person = $DB->getPerson($user);
         if (isset($person['units']) && !empty($person['units'])) {
             $u = DB::doc2Arr($person['units']);
@@ -199,7 +200,7 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
 function renderAuthorUnitsMany($filter = [])
 {
     $DB = new DB;
-    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'units' => 1, 'start_date' => 1]]);
+    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'units' => 1, 'start_date' => 1, 'subtype' => 1]]);
     foreach ($cursor as $doc) {
         $doc = renderAuthorUnits($doc);
         $DB->db->activities->updateOne(

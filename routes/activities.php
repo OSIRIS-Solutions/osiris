@@ -952,6 +952,10 @@ Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function
     $authors = [];
     $units = [];
     foreach ($_POST['authors'] as $i => $a) {
+        if (isset($a['unit_override']) && !empty($a['unit_override'])) {
+            if (!($a['units'] ?? false)) $a['units'] = [];
+            $a['units'] = array_merge($a['units'], explode(',', $a['unit_override']));
+        }
         if (isset($a['units']) && !empty($a['units']) && is_array($a['units'])) {
             $units = array_merge($units, $a['units']);
         }
