@@ -108,6 +108,11 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
   - **Projekte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Projekte mit Aktivitäten zu verknüpfen. Es können mehrere Projekte ausgewählt werden und die über die DOI zur Verfügung gestellten Funding-Nummern werden automatisch mit den Projekten abgeglichen und verknüpft. Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können.
 
 
+#### <i class="ph ph-lock"></i> Auth-Token für Nutzerregistrierung
+- Es wurde ein Auth-Token für die Auth-Nutzerregistrierung eingeführt. Dieser Token kann verwendet werden, um die Registrierung neuer Nutzer zu validieren und sicherzustellen, dass nur autorisierte Anfragen bearbeitet werden.
+- Der Token kann in der URL zur Registrierungsseite übergeben werden und wird dort überprüft. Bei erfolgreicher Validierung kann der Nutzer mit der Registrierung fortfahren.
+- Dies erhöht die Sicherheit des Registrierungsprozesses und verhindert Missbrauch durch unautorisierte Zugriffe.
+
 #### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
