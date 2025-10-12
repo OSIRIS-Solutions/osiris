@@ -14,6 +14,17 @@
  * @license     MIT
  */
 
+function portfolio_apikey_check($key)
+{
+    global $Settings;
+    // ensure that settings is available, otherwise allow access
+    if (!isset($Settings) || !$Settings instanceof Settings) return true;
+    $apikey = $Settings->get('portfolio_apikey', null);
+    if (empty($apikey)) return true;
+    if ($key === $apikey) return true;
+    return false;
+}
+
 function rest($data, $count = 0, $status = 200)
 {
     $result = array();
@@ -89,10 +100,10 @@ function help_getGroup($osiris, $id)
 Route::get('/portfolio/units', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $result = $osiris->groups->find(
         [],
         // ['hide' => ['$ne' => true]],
@@ -105,10 +116,10 @@ Route::get('/portfolio/units', function () {
 Route::get('/portfolio/unit/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     if ($id == 0)
         $group = $osiris->groups->findOne(['level' => 0]);
     else
@@ -160,10 +171,10 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
 Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     if ($id == 0)
         $group = $osiris->groups->findOne(['level' => 0]);
@@ -207,10 +218,10 @@ Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
 Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
 
     $result = [];
@@ -313,6 +324,10 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
 Route::get('/portfolio/(publications|activities|all-activities)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['hide' => ['$ne' => true]];
 
@@ -364,10 +379,10 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
 Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|all-activities)', function ($context, $id, $type) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     if ($context == 'unit') {
         if ($id == 0) {
@@ -454,10 +469,10 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
 Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]];
     if ($context == 'unit') {
@@ -523,10 +538,10 @@ Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id)
 Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = [
         'public' => true,
@@ -596,10 +611,10 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
 Route::get('/portfolio/unit/([^/]*)/staff', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     // dump($_SERVER, true);
 
     $filter = [
@@ -648,10 +663,10 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
     include(BASEPATH . '/php/Project.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -718,10 +733,10 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
 Route::get('/portfolio/activity/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -864,10 +879,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
     include(BASEPATH . '/php/Project.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -1005,10 +1020,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
 Route::get('/portfolio/person/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -1196,10 +1211,10 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
 Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $result = [];
     if ($context == 'project') {
@@ -1296,7 +1311,10 @@ Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($con
 Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
     // error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     // select publications from the past five years where the department is involved
     $filter = [
@@ -1411,6 +1429,10 @@ Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
 Route::get('/portfolio/projects', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'public' => true,
     ];
@@ -1445,6 +1467,10 @@ Route::get('/portfolio/projects', function () {
 Route::get('/portfolio/persons', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'hide' => ['$ne' => true]
     ];
@@ -1470,6 +1496,10 @@ Route::get('/portfolio/persons', function () {
 Route::get('/portfolio/person-images', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'hide' => ['$ne' => true],
         'public_image' => true

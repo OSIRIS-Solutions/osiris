@@ -561,6 +561,19 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
                 <h5>
+                    <?=lang('Portfolio-API Key')?>
+                </h5>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="general[portfolio_apikey]" value="<?= $Settings->get('portfolio_apikey') ?>">
+                    <span class="text-muted">
+                        <?= lang(
+                            'The portfolio API key is used to authenticate the portfolio API. If you do not provide an API key, the portfolio API will be open to anyone.',
+                            'Der Portfolio-API-Schlüssel wird verwendet, um die Portfolio-API zu authentifizieren. Falls kein API-Schlüssel angegeben wird, ist die Portfolio-API für jeden offen.'
+                        ) ?>
+                    </span>
+                </div>
+
+                <h5>
                     <?=lang('Generally visible activity types', 'Allgemein sichtbare Aktivitätstypen')?>
                 </h5>
 
