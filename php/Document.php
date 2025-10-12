@@ -807,7 +807,8 @@ class Document extends Settings
     private function getVal($field, $default = '')
     {
         if ($default === '' && $this->usecase == 'list') $default = '-';
-        return $this->doc[$field] ?? $default;
+        if (!array_key_exists($field, $this->doc)) return $default;
+        return ($this->doc[$field] ?? '');
     }
 
     private function formatAuthorsNew($module)
@@ -1351,7 +1352,11 @@ class Document extends Settings
             case "political_consultation":
                 return $this->getVal('political_consultation', false);
             default:
-                $val = $this->getVal($module, '-');
+                if (isset($this->custom_fields[$module])) {
+                    $val = $this->customVal($this->custom_fields[$module]);
+                } else {
+                    $val = $this->getVal($module, $default);
+                }
                 // only in german because standard is always english
                 if (lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
                     if (is_array($val)) {
@@ -1373,9 +1378,7 @@ class Document extends Settings
                         }
                     }
                 }
-                if (isset($this->custom_fields[$module])) {
-                    $val = $this->customVal($val, $this->custom_fields[$module]);
-                }
+
                 if ($val === true || $val === false) {
                     if ($this->usecase == 'list') return bool_icon($val);
                     $field = $this->custom_fields[$module];
@@ -1390,9 +1393,13 @@ class Document extends Settings
         }
     }
 
-    public function customVal($val, $field)
+    public function customVal($field)
     {
         $format = $field['format'] ?? '';
+        $default = $field['default'] ?? '';
+        if (!array_key_exists($field['id'], $this->doc)) return $default;
+
+        $val = ($this->doc[$field['id']] ?? '');
         if ($format == 'date') {
             return Document::format_date($val);
         }

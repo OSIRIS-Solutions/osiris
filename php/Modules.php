@@ -873,7 +873,7 @@ class Modules
     function __construct($form = array(), $copy = false, $conference = false)
     {
         global $USER;
-        $this->form = $form;
+        $this->form = DB::doc2Arr($form);
 
         $this->DB = new DB;
 
@@ -1125,7 +1125,10 @@ class Modules
             echo '</div>';
             return;
         }
-        $value = ($this->val($module, $field['default'] ?? ''));
+        $value = ($this->val($module, ''));
+        if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
+            $value = $field['default'];
+        }
 
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
 ?>
@@ -1194,7 +1197,7 @@ class Modules
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
                 echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
                 if (!$req) {
-                    '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
+                    echo '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
                 }
                 if ($value instanceof MongoDB\Model\BSONArray) {
                     $value = DB::doc2Arr($value);

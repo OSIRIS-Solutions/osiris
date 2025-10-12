@@ -139,6 +139,8 @@ Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zus�
 - Es wurde ein Problem behoben, durch das man beim Kopieren einer Aktivität eine deaktivierte Kategorie auswählen konnte
 - Die Dokumentation wurde durch das neue Wiki unter https://wiki.osiris-app.de/ ersetzt. Die alten Links zu den Hilfeseiten wurden aktualisiert.
 - Die Darstellung der Weltkarte von Kooperationspartnern wurde verbessert, indem das Layout-Styling angepasst und die Größe der Karte automatisch an den verfügbaren Platz angepasst wird. Dadurch sieht die Karte jetzt besonders auf großen Bildschirmen besser aus und nutzt den verfügbaren Platz optimal.
+- Es wurde ein Problem behoben, durch das Custom Fields ohne Wert immer '-' ausgegeben haben.
+  - Die Logik ist, dass ein Custom Field das explizit leer gelassen wurde, auch als leer gerendert wird. Wenn das Feld jedoch gar nicht existiert, z.B. bei neuen Aktivitäten oder weil das Feld später dazugekommen ist, dann wird der angegebene Default-Wert verwendet.
 
 
 ---
