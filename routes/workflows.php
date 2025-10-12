@@ -65,7 +65,7 @@ Route::get('/admin/workflows/(.*)', function ($id) {
 
     $form = $osiris->adminWorkflows->findOne(['id' => $id]);
     if (empty($form)) {
-        header("Location: " . ROOTPATH . "/fields?msg=not-found");
+        header("Location: " . ROOTPATH . "/admin/workflows?msg=not-found");
         die;
     }
     $name = $form['name'];
