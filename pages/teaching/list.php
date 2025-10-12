@@ -102,10 +102,10 @@ function val($index, $default = '')
 </div>
 
 
-<!-- <a target="_blank" href="<?= ROOTPATH ?>/docs/add-activities" class="btn tour float-right ml-5" id="docs-btn">
-        <i class="ph ph-lg ph-question mr-5"></i>
-        <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
-    </a> -->
+<a target="_blank" href="https://wiki.osiris-app.de/users/courses/" class="btn tour float-right ml-5" id="docs-btn">
+    <i class="ph ph-lg ph-question mr-5"></i>
+    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
+</a>
 
 <h1 class="mt-0">
     <i class="ph ph-chalkboard-simple text-osiris mr-5"></i>

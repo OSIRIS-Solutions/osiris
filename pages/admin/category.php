@@ -238,8 +238,46 @@ $member = $osiris->activities->count(['type' => $t]);
                 </div>
             </div>
 
-            <?php if (!empty($type)) { ?>
-                <hr>
+        </div>
+
+        <?php if ($Settings->featureEnabled('quality-workflow')) { ?>        
+        <hr>
+        <div class="content">
+            <!-- quality workflow -->
+            <h5><?= lang('Quality Workflow', 'Qualitätsworkflow') ?></h5>
+
+           <?php
+            $workflow = $type['workflow'] ?? false;
+            $workflows = $osiris->adminWorkflows->find([], ['sort' => ['name' => 1]])->toArray();
+            if (empty($workflows)) {
+           ?>
+                <p class="text-muted">
+                    <?= lang('No workflow defined yet. Please create a workflow first.', 'Noch kein Workflow definiert. Bitte erstelle zuerst einen Workflow.') ?>
+                    <br>
+                    <a href="<?= ROOTPATH ?>/admin/workflows/new"><i class="ph ph-plus-circle"></i> <?= lang('Create workflow', 'Workflow erstellen') ?></a>
+                </p>
+            <?php } else { ?>
+                <div class="form-group">
+                    <select class="form-control" name="values[workflow]" id="quality-workflow">
+                        <option value="" <?= sel('workflow', '') ?>><?= lang('No workflow', 'Kein Workflow') ?></option>
+                        <?php
+                        foreach ($workflows as $wf) {
+                        ?>
+                            <option value="<?= $wf['id'] ?>" <?= sel('workflow', $wf['id']) ?>>
+                                <?= lang($wf['name'], $wf['name_de'] ?? $wf['name']) ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                    <small><?= lang('If a workflow is selected here, it will be automatically assigned to all activities of this category.', 'Wenn hier ein Workflow ausgewählt ist, wird dieser automatisch allen Aktivitäten dieses Typs zugewiesen.') ?></small>
+                </div>
+            <?php } ?>
+        </div>
+        <?php } ?>
+
+
+        <?php if (!empty($type)) { ?>
+            <hr>
+            <div class="content">
                 <a class="btn float-right" href="#order">
                     <i class="ph ph-list-numbers"></i>
                     <?= lang('Change order', 'Reihenfolge ändern') ?>
@@ -258,9 +296,9 @@ $member = $osiris->activities->count(['type' => $t]);
                     </a>
 
                 </div>
-            <?php } ?>
+            </div>
+        <?php } ?>
 
-        </div>
 
     </div>
 

@@ -1,7 +1,7 @@
 <?php
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
-
+$Project->isProposal = true;
 
 $status = $project['status'] ?? 'proposed';
 $type = $project['type'] ?? 'third-party';

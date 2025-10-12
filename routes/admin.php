@@ -50,7 +50,7 @@ Route::get('/admin/users', function () {
 }, 'login');
 
 
-Route::get('/admin/(general|roles|features)', function ($page) {
+Route::get('/admin/(general|roles|features|tags)', function ($page) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
@@ -332,7 +332,11 @@ Route::get('/settings/modules', function () {
     $form = array();
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         $mongoid = $DB->to_ObjectID($_GET['id']);
-        $form = $osiris->activities->findOne(['_id' => $mongoid]);
+        if (isset($_GET['draft']) && $_GET['draft'] == 'true') {
+            $form = $osiris->activitiesDrafts->findOne(['_id' => $mongoid]);
+        } else {
+            $form = $osiris->activities->findOne(['_id' => $mongoid]);
+        }
     }
     $Modules = new Modules($form, $_GET['copy'] ?? false, $_GET['conference'] ?? false);
 
@@ -437,7 +441,6 @@ Route::get('/admin/projects/new', function () {
 
 
 
-
 /**
  * CRUD routes
  */
@@ -449,9 +452,8 @@ Route::post('/crud/admin/general', function () {
     $msg = 'settings-saved';
     if (isset($_POST['general'])) {
         foreach ($_POST['general'] as $key => $value) {
-            dump($key);
             if ($key == 'auth-self-registration') $value = boolval($value);
-            if (str_contains($key, 'keywords')) {
+            if (str_contains($key, 'keywords') || $key == 'tags') {
                 $value = array_map('trim', explode(PHP_EOL, $value));
                 $value = array_filter($value);
             }
@@ -1165,3 +1167,5 @@ Route::post('/crud/admin/vocabularies/([a-z\-]*)', function ($id) {
     $red = ROOTPATH . "/admin/vocabulary#vocabulary-$id";
     header("Location: " . $red);
 });
+
+

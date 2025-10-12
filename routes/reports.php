@@ -123,6 +123,8 @@ Route::post('/crud/reports/update', function () {
     if (!isset($_POST['id'])) {
         die('No ID provided');
     }
+    $id = $_POST['id'];
+
     $title = $_POST['title'];
     $values = $_POST['values'];
     if (empty($values)) {
@@ -130,9 +132,31 @@ Route::post('/crud/reports/update', function () {
     } else {
         $steps = array_values($values);
     }
+    // array_values for steps.sort, because the indexes might be non-consecutive
+    foreach ($steps as &$step) {
+        $step['sort'] = array_values($step['sort'] ?? []);
+    }
 
-    // dump($steps, true);
-    $id = $_POST['id'];
+    $varsIn = $_POST['variables'] ?? [];
+    $varsOut = [];
+    foreach ($varsIn as $v) {
+        $key = trim($v['key'] ?? '');
+        if ($key === '') continue;
+        $type = $v['type'] ?? 'string';
+        $def  = $v['default'] ?? null;
+
+        // cast default by type
+        if ($type === 'int' && $def !== '' && $def !== null)   $def = (int)$def;
+        if ($type === 'bool' && $def !== '' && $def !== null)  $def = filter_var($def, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($type === 'float' && $def !== '' && $def !== null) $def = (float)$def;
+
+        $varsOut[$key] = [
+            'key'    => $key,
+            'type'   => $type,
+            'label'  => $v['label'] ?? '',
+            'default' => $def
+        ];
+    }
     // upsert adminReports
     $osiris->adminReports->updateOne(
         [
@@ -144,7 +168,8 @@ Route::post('/crud/reports/update', function () {
                 'description' => $_POST['description'] ?? '',
                 'start' => $_POST['start'] ?? 1,
                 'duration' => $_POST['duration'] ?? 12,
-                'steps' => $steps
+                'steps' => $steps,
+                'variables' => array_values($varsOut)
             ]
         ]
     );
@@ -159,7 +184,7 @@ Route::post('/crud/reports/update', function () {
 
 Route::post('/reports', function () {
     // hide deprecated because PHPWord has a lot of them
-    error_reporting(E_ERROR);
+    // error_reporting(E_ERROR);
     // hide errors! otherwise they will break the word document
     if ($_POST['format'] == 'word') {
         // error_reporting(E_ERROR);
@@ -230,6 +255,8 @@ Route::post('/reports', function () {
     }
 
     $Report->setTime($startyear, $endyear, $startmonth, $endmonth);
+    $vars = $_POST['var'] ?? [];
+    $Report->setVariables($vars);
 
     foreach ($Report->steps as $step) {
         switch ($step['type']) {
@@ -238,18 +265,20 @@ Route::post('/reports', function () {
                 $level = $step['level'] ?? 'p';
                 switch ($level) {
                     case 'h1':
-                        $section->addTitle($text, 1);
+                        $run = $section->addTextRun(['styleName' => 'Heading1']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     case 'h2':
-                        $section->addTitle($text, 2);
+                        $run = $section->addTextRun(['styleName' => 'Heading2']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     case 'h3':
-                        $section->addTitle($text, 3);
+                        $run = $section->addTextRun(['styleName' => 'Heading3']);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                     default:
-                        $paragraph = $section->addTextRun();
-                        // $text = clean_comment_export($text, false);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $text, false, false);
+                        $run = $section->addTextRun();
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
                         break;
                 }
                 break;
@@ -262,6 +291,25 @@ Route::post('/reports', function () {
                     $paragraph = $section->addTextRun();
                     $line = clean_comment_export($d, false);
                     \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
+                }
+                break;
+            case 'activities-field':
+                $field = $step['field'] ?? 'impact';
+                $data = $Report->getActivities($step, $field);
+                $table = $section->addTable();
+                $table->addRow();
+                $cell = $table->addCell(9000);
+                $cell = $table->addCell(1000);
+                $label = $Report->fields[$field]['label'] ?? $field;
+                $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
+                foreach ($data as $d) {
+                    [$line, $val] = $d;
+                    $table->addRow();
+                    $cell = $table->addCell(9000);
+                    $line = clean_comment_export($line);
+                    \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
+                    $cell = $table->addCell(1000);
+                    $cell->addText($val, $styleTextBold, $styleParagraphCenter);
                 }
                 break;
             case 'table':
@@ -297,8 +345,7 @@ Route::post('/reports', function () {
     // Save file
     if ($_POST['format'] == 'html') {
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
-        $objWriter->save('.data/report.html');
-        include_once '.data/report.html';
+        $objWriter->save('php://output');
         die;
     }
 

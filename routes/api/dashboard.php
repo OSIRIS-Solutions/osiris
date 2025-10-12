@@ -391,11 +391,11 @@ Route::get('/api/dashboard/impact-factor-hist', function () {
         die;
     }
     $max_impact = ceil($max[0]['impact']);
+    if ($max_impact < 3) $max_impact = 3;
     $x = [];
     for ($i = 1; $i <= $max_impact; $i++) {
         $x[] = $i;
     }
-
     $data = $osiris->activities->aggregate([
         ['$match' => $filter],
         ['$project' => ['_id' => 0, 'impact' => 1]],
@@ -622,7 +622,10 @@ Route::get('/api/dashboard/department-network', function () {
 
     if (!empty($dept)) {
         $filter['units'] = $dept;
+    } else {
+        $filter['units'] = ['$in' => $dept_ids];
     }
+
 
     $pipeline = [
         [
@@ -823,7 +826,7 @@ Route::get('/api/dashboard/author-network', function () {
         $filter['year'] = ['$gte' => CURRENTYEAR - 4];
     }
 
-    $activities = $osiris->activities->find($filter, ['projection' => ['authors' => 1]])->toArray();
+    $activities = $osiris->activities->find($filter, ['projection' => ['authors' => 1]]);
     foreach ($activities as $doc) {
         $authors = [];
         foreach ($doc['authors'] as $a) {
@@ -846,9 +849,13 @@ Route::get('/api/dashboard/author-network', function () {
                     // get unit on 1st level
                     $p = $Groups->getUnitParent($unit, 1);
                     if (!empty($p)) {
-                        $units[] = $p;
-                    } else {
-                        $units[] = 'unknown';
+                        $units[] = [
+                            'id' => $p['id'],
+                            'name' => $p['name'],
+                            'name_de' => $p['name_de'],
+                            'color' => $p['color']
+                        ];
+                        break;
                     }
                 }
 
@@ -856,7 +863,7 @@ Route::get('/api/dashboard/author-network', function () {
                     'name' => $name,
                     'id' => $id,
                     'user' => $a['user'],
-                    'dept' => $units[0] ?? '',
+                    'dept' => $units[0] ?? [],
                     'count' => 1
                 ];
             }

@@ -66,6 +66,15 @@ $affiliation = $Settings->get('affiliation_details');
         <i class="ph ph-envelope" aria-hidden="true"></i>
         <?= lang('Email', 'E-Mail') ?>
     </a>
+    <!-- portfolio -->
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <a onclick="navigate('portfolio')" id="btn-portfolio" class="btn">
+            <i class="ph ph-globe" aria-hidden="true"></i>
+            <?= lang('Portfolio', 'Portfolio') ?>
+        </a>
+    <?php } ?>
+
+    <!-- footer -->
     <a onclick="navigate('custom-footer')" id="btn-custom-footer" class="btn">
         <i class="ph ph-scales" aria-hidden="true"></i>
         <?= lang('Footer contents', 'Inhalte im Footer') ?>
@@ -424,12 +433,64 @@ $affiliation = $Settings->get('affiliation_details');
                     </span>
                 </div>
 
+                <hr>
+
+                <h3 id="mail-digest">
+                    <?= lang('Mail digest', 'E-Mail-Zusammenfassung') ?>
+                </h3>
+
+                <p>
+                    <?= lang('Users can receive a daily, weekly or monthly email summary of their activities, depending on their settings. You can define the default mail digest frequency for them here.', 'Nutzende können eine tägliche, wöchentliche oder monatliche E-Mail-Zusammenfassung ihrer Aktivitäten erhalten, abhängig von ihren Einstellungen. Du kannst die standardmäßige E-Mail-Zusammenfassungsfrequenz für sie hier festlegen.') ?>
+                </p>
+
+                <p class="text-danger">
+                    <i class="ph ph-warning"></i>
+                    <?= lang('This setting requires additional configuration of a CRON job. Without this configuration, email digests will not be sent automatically.', 'Diese Einstellungen erfordern zusätzlich Konfiguration eines CRON-Jobs. Ohne diese Konfiguration werden die E-Mail-Zusammenfassungen nicht automatisch versendet.') ?>
+                </p>
+
+                <div class="form-group">
+                    <?php
+                    $digest = $Settings->get('mail-digest', 'none');
+                    ?>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-none" value="none" name="general[mail-digest]" <?= $digest == 'none' ? 'checked' : '' ?>>
+                        <label for="mail-digest-none">
+                            <?= lang('Disabled', 'Deaktiviert') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-daily" value="daily" name="general[mail-digest]" <?= $digest == 'daily' ? 'checked' : '' ?>>
+                        <label for="mail-digest-daily">
+                            <?= lang('Daily', 'Täglich') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-weekly" value="weekly" name="general[mail-digest]" <?= $digest == 'weekly' ? 'checked' : '' ?>>
+                        <label for="mail-digest-weekly">
+                            <?= lang('Weekly', 'Wöchentlich') ?>
+                        </label>
+                    </div>
+                    <div class="custom-radio">
+                        <input type="radio" id="mail-digest-monthly" value="monthly" name="general[mail-digest]" <?= $digest == 'monthly' ? 'checked' : '' ?>>
+                        <label for="mail-digest-monthly">
+                            <?= lang('Monthly', 'Monatlich') ?>
+                        </label>
+                    </div>
+                    <small>
+                        <?= lang('Note: Users can change their mail digest frequency in their profile settings. The default setting here is only used for new users and as a fallback if the user has not set a preference.', 'Hinweis: Nutzende können ihre E-Mail-Zusammenfassungsfrequenz in ihren Profileinstellungen ändern. Die hier festgelegte Standardeinstellung wird nur für neue Nutzende und als Fallback verwendet, wenn der Nutzende keine Präferenz festgelegt hat.') ?>
+                    </small>
+                </div>
+
+
+
                 <button class="btn info">
                     <i class="ph ph-floppy-disk"></i>
                     Save
                 </button>
             </div>
         </div>
+
     </form>
 
     <!-- Test Email Settings by sending a test mail -->
@@ -455,6 +516,88 @@ $affiliation = $Settings->get('affiliation_details');
                     Send Test Email
                 </button>
             </div>
+        </div>
+    </form>
+</section>
+
+
+<section id="portfolio" style="display: none;">
+
+    <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+        <div class="box primary">
+
+            <div class="content">
+                <h2 class="title"><?= lang('Portfolio Settings', 'Portfolio Einstellungen') ?></h2>
+
+                <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+                    <?= lang('You can specify here, if only workflow-approved activities should be shown in the portfolio.', 'Hier kannst du festlegen, ob nur workflow-genehmigte Aktivitäten im Portfolio angezeigt werden sollen.') ?>
+                <?php } ?>
+
+                <div class="form-group">
+                    <?php
+                    $portfolio = $Settings->get('portfolio-workflow-visibility', 'all');
+                    ?>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-approved" value="only-approved" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'only-approved' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-approved">
+                            <?= lang('Only approved activities', 'Nur genehmigte Aktivitäten') ?>
+                        </label>
+                    </div>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-approved-or-empty" value="approved-or-empty" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'approved-or-empty' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-approved-or-empty">
+                            <?= lang('Approved activities and activities without workflow', 'Genehmigte Aktivitäten und Aktivitäten ohne Workflow') ?>
+                        </label>
+                    </div>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-all" value="all" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'all' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-all">
+                            <?= lang('All activities', 'Alle Aktivitäten') ?>
+                        </label>
+                    </div>
+                </div>
+
+                <h5>
+                    <?=lang('Portfolio-API Key')?>
+                </h5>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="general[portfolio_apikey]" value="<?= $Settings->get('portfolio_apikey') ?>">
+                    <span class="text-muted">
+                        <?= lang(
+                            'The portfolio API key is used to authenticate the portfolio API. If you do not provide an API key, the portfolio API will be open to anyone.',
+                            'Der Portfolio-API-Schlüssel wird verwendet, um die Portfolio-API zu authentifizieren. Falls kein API-Schlüssel angegeben wird, ist die Portfolio-API für jeden offen.'
+                        ) ?>
+                    </span>
+                </div>
+
+                <h5>
+                    <?=lang('Generally visible activity types', 'Allgemein sichtbare Aktivitätstypen')?>
+                </h5>
+
+                <ul class="list">
+                    <?php foreach ($osiris->adminTypes->find(['portfolio' => 1], ['sort'=> ['parent'=> 1, 'order'=>1]]) as $type) { ?>
+                        <li>
+                            <i class="ph ph-<?= $type['icon'] ?> ph-fw text-<?= $type['parent'] ?>"></i>
+                            <?= lang($type['name'], $type['name_de']) ?>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <p class="text-muted">
+                    <?= lang('The activity types listed above are generally visible in the portfolio. You can manage the activity types in the', 'Die oben aufgeführten Aktivitätstypen sind generell im Portfolio sichtbar. Du kannst die Aktivitätstypen im') ?>
+                    <a href="<?= ROOTPATH ?>/admin/categories" class="colorless text-decoration-underline">
+                        <?= lang('activity types settings', 'Einstellungen der Aktivitätstypen') ?>
+                    </a>.
+                </p>
+
+                <button class="btn primary">
+                    <i class="ph ph-floppy-disk"></i>
+                    <?= lang('Save', 'Speichern') ?>
+                </button>
+            </div>
+
         </div>
     </form>
 </section>
@@ -575,36 +718,64 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
 
-<!-- 
+
                 <div class="box px-20">
-                    <h3 id="quality-control">
-                        <?= lang('Quality control of activities', 'Qualitätsprüfung von Aktivitäten') ?>
+                    <h3 id="quality-workflow">
+                        <?= lang('Quality workflows of activities', 'Qualitäts-Workflows von Aktivitäten') ?>
                     </h3>
                     <div class="form-group">
 
                         <p>
-
+                            <?= lang('You can enable a quality workflow for activities. This means that users can submit their activities for review and an admin or editor can approve or reject them. This is useful if you want to ensure that only verified activities are visible in the system.', 'Du kannst einen Qualitäts-Workflow für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten zur Überprüfung einreichen können und ein Admin oder Editor diese dann genehmigen oder ablehnen kann. Das ist nützlich, wenn du sicherstellen möchtest, dass nur verifizierte Aktivitäten im System sichtbar sind.') ?>
                         </p>
 
                         <?php
-                        $quality = $Settings->featureEnabled('quality-control', false);
+                        $quality = $Settings->featureEnabled('quality-workflow', false);
                         ?>
 
                         <div class="custom-radio">
-                            <input type="radio" id="quality-control-true" value="1" name="values[quality-control]" <?= $quality ? 'checked' : '' ?>>
-                            <label for="quality-control-true">
+                            <input type="radio" id="quality-workflow-true" value="1" name="values[quality-workflow]" <?= $quality ? 'checked' : '' ?>>
+                            <label for="quality-workflow-true">
                                 <?= lang('Enabled', 'Aktiviert') ?>
                             </label>
                         </div>
                         <div class="custom-radio">
-                            <input type="radio" id="quality-control-false" value="0" name="values[quality-control]" <?= $quality ? '' : 'checked' ?>>
-                            <label for="quality-control-false">
+                            <input type="radio" id="quality-workflow-false" value="0" name="values[quality-workflow]" <?= $quality ? '' : 'checked' ?>>
+                            <label for="quality-workflow-false">
                                 <?= lang('Disabled', 'Deaktiviert') ?>
                             </label>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
+                <div class="box px-20">
+                    <h3 id="drafts">
+                        <?= lang('Drafts', 'Entwürfe') ?>
+                    </h3>
+                    <div class="form-group">
+
+                        <p>
+                            <?= lang('You can enable drafts for activities. This means that users can save their activities as drafts and complete them later.', 'Du kannst Entwürfe für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten als Entwürfe speichern und später vervollständigen können. ') ?>
+                        </p>
+
+                        <?php
+                        $drafts = $Settings->featureEnabled('drafts', false);
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="drafts-true" value="1" name="values[drafts]" <?= $drafts ? 'checked' : '' ?>>
+                            <label for="drafts-true">
+                                <?= lang('Enabled', 'Aktiviert') ?>
+                            </label>
+                        </div>
+                        <div class="custom-radio">
+                            <input type="radio" id="drafts-false" value="0" name="values[drafts]" <?= $drafts ? '' : 'checked' ?>>
+                            <label for="drafts-false">
+                                <?= lang('Disabled', 'Deaktiviert') ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="box px-20">
                     <h3 id="guest-forms">
@@ -832,6 +1003,53 @@ $affiliation = $Settings->get('affiliation_details');
                 </div>
 
 
+
+                <div class="box px-20">
+                    <h3 id="tags">
+                        <?= lang('Tags', 'Schlagwörter') ?>
+                    </h3>
+                    <div class="form-group">
+                        <label for="">
+                            <?= lang('Tags in OSIRIS', 'Schlagwörter in OSIRIS') ?>
+                        </label>
+                        <?php
+                        $tags = $Settings->featureEnabled('tags');
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="tags-true" value="1" name="values[tags]" <?= $tags ? 'checked' : '' ?>>
+                            <label for="tags-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="tags-false" value="0" name="values[tags]" <?= $tags ? '' : 'checked' ?>>
+                            <label for="tags-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="position">
+                            <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+                        </label>
+
+                        <?php
+                        $label = $Settings->get('tags_label');
+                        ?>
+
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="tags_label" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Tags') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tags_label_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Schlagwörter') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <div class="box px-20">
@@ -1159,7 +1377,7 @@ $affiliation = $Settings->get('affiliation_details');
                         <a href="#journal-metrics">
                             <?= lang('Journals', 'Journale') ?>
                         </a>
-                        <a href="#quality-control">
+                        <a href="#quality-workflow">
                             <?= lang('Quality control', 'Qualitätskontrolle') ?>
                         </a>
                         <a href="#guest-forms">

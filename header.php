@@ -607,6 +607,31 @@ $pageactive = function ($p) use ($page) {
                             </a>
                         <?php } ?>
 
+                        <?php if ($Settings->featureEnabled('quality-workflow', false)) { 
+                            $userRoles = $Settings->roles;
+                            $isReviewer = $osiris->adminWorkflows->count(['steps.role' => ['$in' => $userRoles]]) > 0;
+                            if ($isReviewer) {
+                            ?>
+                            <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
+                                <i class="ph ph-highlighter" aria-hidden="true"></i>
+                                <?= lang('Reviews', 'Überprüfungen') ?>
+                                <span class="badge secondary badge-pill ml-10" id="review-counter">0</span>
+                            </a>
+
+                            <script>
+                                // highlight if there are reviews to be done
+                                $(document).ready(function() {
+                                    $.getJSON('<?= ROOTPATH ?>/api/workflow-reviews/count', function(data) {
+                                        if (data.count > 0) {
+                                            $('#review-counter').text(data.count);
+                                        }
+                                    });
+                                });
+                            </script>
+                        <?php }
+                        } ?>
+                        
+
 
                         <a href="<?= ROOTPATH ?>/user/logout" class=" with-icon" style="--primary-color:var(--danger-color);--primary-color-20:var(--danger-color-20);">
                             <i class="ph ph-sign-out" aria-hidden="true"></i>
@@ -918,15 +943,16 @@ $pageactive = function ($p) use ($page) {
                 </div>
             <?php } ?>
 
-
-            <div class="content-container">
-                <?php
-                if (function_exists('printMsg') && (isset($_GET['msg']) || isset($_GET['error'])) || isset($_SESSION['msg'])) {
-                    printMsg();
+            <?php if (!isset($no_container)) { ?>
+                <div class="content-container">
+                    <?php
+                    if (function_exists('printMsg') && (isset($_GET['msg']) || isset($_GET['error'])) || isset($_SESSION['msg'])) {
+                        printMsg();
+                    }
                 }
 
                 if ($Settings->hasPermission('admin.give-right') && isset($Settings->errors) && !empty($Settings->errors)) {
-                ?>
+                    ?>
                     <div class="alert danger mb-20">
                         <h3 class="title">There are errors in your settings:</h3>
                         <?= implode('<br>', $Settings->errors) ?>

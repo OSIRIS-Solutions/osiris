@@ -1,6 +1,7 @@
 <?php
 include_once "_config.php";
 include_once "init.php";
+include_once "Vocabulary.php";
 
 class Modules
 {
@@ -261,6 +262,17 @@ class Modules
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
             "width" => 0,
             "tags" => ['event', 'modificator']
+        ],
+        "funding_type" => [
+            "fields" => ["funding_type" => 'Third-Party Funded'],
+            "name" => "Funding Type",
+            "name_de" => "Art der Finanzierung",
+            "label" => "Type of Funding",
+            "label_de" => "Art der Finanzierung",
+            "description" => "A field for the type of financing, e.g., for a scholarship. The values are managed via the vocabulary and are identical to the values from the data field in projects.",
+            "description_de" => "Ein Feld für die Art der Finanzierung, z.B. für ein Stipendium. Die Werte werden über das Vokabular verwaltet und sind identisch zu den Werten aus dem Datenfeld in Projekten.",
+            "width" => 6,
+            "tags" => ['general']
         ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
@@ -679,6 +691,17 @@ class Modules
             "width" => 6,
             "tags" => ['people', 'publication']
         ],
+        "tags" => [
+            "fields" => ["tags" => ['OSIRIS', 'CRIS2023']],
+            "name" => "Tags",
+            "name_de" => "Schlagworte",
+            "label" => "Tags",
+            "label_de" => "Schlagworte",
+            "description" => "A field for a list of tags, that can be selected from a list of existing tags in the database. These can be managed in the admin area.",
+            "description_de" => "Ein Feld für eine Liste von Schlagworten, die aus einer Liste von bestehenden Schlagworten in der Datenbank ausgewählt werden können. Diese können im Admin-Bereich verwaltet werden.",
+            "width" => 12,
+            "tags" => ['general']
+        ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
             "name" => "Thesis Category",
@@ -850,7 +873,7 @@ class Modules
     function __construct($form = array(), $copy = false, $conference = false)
     {
         global $USER;
-        $this->form = $form;
+        $this->form = DB::doc2Arr($form);
 
         $this->DB = new DB;
 
@@ -1102,7 +1125,10 @@ class Modules
             echo '</div>';
             return;
         }
-        $value = ($this->val($module, $field['default'] ?? ''));
+        $value = ($this->val($module, ''));
+        if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
+            $value = $field['default'];
+        }
 
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
 ?>
@@ -1171,7 +1197,7 @@ class Modules
                 $name = 'values[' . $module . ']' . ($multiple ? '[]' : '');
                 echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
                 if (!$req) {
-                    '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
+                    echo '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
                 }
                 if ($value instanceof MongoDB\Model\BSONArray) {
                     $value = DB::doc2Arr($value);
@@ -1615,10 +1641,10 @@ class Modules
                         <table class="table simple small">
                             <thead>
                                 <tr>
+                                    <th>Username</th>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th>Username</th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
@@ -1630,6 +1656,9 @@ class Modules
                                 $i = 0;
                                 foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
+                                        <td>
+                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                        </td>
                                         <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
@@ -1643,10 +1672,6 @@ class Modules
                                             </div>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>">
-                                        </td>
-
-                                        <td>
                                             <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
@@ -1658,7 +1683,12 @@ class Modules
                             <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                            <small class="text-muted float-left align-items-center">
+                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                            </small>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -1675,17 +1705,35 @@ class Modules
                             }
                         }
 
+                        function selectUsernameSupervisor(el) {
+                            let username = el.value
+                            let user = $('#user-list option[value=' + username + ']')
+                            if (!user || user === undefined || user.length === 0) return;
+
+                            console.log(user);
+                            let name = user.html()
+                            name = name.replace(/\(.+\)/, ''); // remove username in brackets
+                            name = name.split(', ')
+                            if (name.length !== 2) return;
+
+                            let tr = $(el).closest('tr')
+                            console.log(tr);
+                            tr.find('td:nth-child(2) input').val(name[0])
+                            tr.find('td:nth-child(3) input').val(name[1])
+                            tr.find('td:nth-child(4) input').prop('checked', true)
+                        }
+
                         var counter = <?= $i ?>;
 
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
+                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
                             tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list"></td>')
                             tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
-                            var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                            var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
                             tr.append($('<td>').append(btn))
@@ -1730,6 +1778,9 @@ class Modules
                                 ?>
                                     <tr>
                                         <td>
+                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                        </td>
+                                        <td>
                                             <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
@@ -1741,10 +1792,6 @@ class Modules
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
-                                        <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>">
-                                        </td>
-
                                         <td>
                                             <select name="values[authors][<?= $i ?>][role]" class="form-control">
                                                 <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
@@ -1766,7 +1813,12 @@ class Modules
                             <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                            <small class="text-muted">
+                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                            </small>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -1783,15 +1835,33 @@ class Modules
                             }
                         }
 
+                        function selectUsernameSupervisor(el) {
+                            let username = el.value
+                            let user = $('#user-list-thesis option[value=' + username + ']')
+                            if (!user || user === undefined || user.length === 0) return;
+
+                            console.log(user);
+                            let name = user.html()
+                            name = name.replace(/\(.+\)/, ''); // remove username in brackets
+                            name = name.split(', ')
+                            if (name.length !== 2) return;
+
+                            let tr = $(el).closest('tr')
+                            console.log(tr);
+                            tr.find('td:nth-child(2) input').val(name[0])
+                            tr.find('td:nth-child(3) input').val(name[1])
+                            tr.find('td:nth-child(4) input').prop('checked', true)
+                        }
+
                         var counter = <?= $i ?>;
 
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
+                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
                             tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis"></td>')
                             var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
                             var roles = {
                                 'supervisor': lang('Supervisor', 'Betreuer'),
@@ -1807,7 +1877,7 @@ class Modules
                                 select.append('<option value="' + key + '">' + value + '</option>')
                             }
                             tr.append($('<td>').append(select))
-                            var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                            var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
                             tr.append($('<td>').append(btn))
@@ -2960,6 +3030,8 @@ class Modules
                         <tbody id="project-list"><?php
                                                     foreach ($projects ?? [] as $i => $con) {
                                                         if (empty($con)) continue;
+                                                        if (is_string($con))
+                                                            $con = DB::to_ObjectID($con);
                                                         $p = $this->DB->db->projects->findOne(['_id' => $con]);
                                                         if (empty($p)) continue;
                                                     ?>
@@ -2992,9 +3064,6 @@ class Modules
                                                 <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                                             <?php } ?>
                                         </select>
-                                        <div class="input-group-append">
-                                            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('Add project', 'Projekt hinzuf.') ?></button>
-                                        </div>
                                     </div>
                                     <?php if ($full_permission) { ?>
                                         <small class="text-muted">
@@ -3029,24 +3098,84 @@ class Modules
                                 return;
                             }
                             row.append(`<td class="w-full">
-            <input type="hidden" name="values[projects][]" value="${projectId}">
-            <b>${projectName}</b>
-            </td>
-            `);
+                                <input type="hidden" name="values[projects][]" value="${projectId}">
+                                <b>${projectName}</b>
+                                </td>
+                                `);
                             row.append(`<td>
-            <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-        </td>`);
+                                <button class="btn danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+                            </td>`);
                             row.attr('id', `project-${projectId}`);
                             $('#project-list').append(row)
+
+                            // reset selectize
+                            var control = $('#project-select')[0].selectize;
+                            control.clear();
                         }
 
-                        $("#project-select").selectize();
+                        $("#project-select").selectize({
+                            onChange: function(value) {
+                                if (!value.length) return;
+                                addProjectRow(value, $("#project-select option[value='" + value + "']").text());
+                            }
+                        });
                     </script>
 
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
+
+            case 'tags':
+                $Settings = new Settings;
+                if (!$Settings->featureEnabled('tags')) break;
+                $all_tags = $Settings->get('tags') ?? [];
+                $tags = DB::doc2Arr($this->val('tags', []));
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="tags">
+                    <label for="tag-select" class="floating-title <?= $labelClass ?>">
+                        <?= $label ?>
+                    </label>
+                    <select class="form-control" name="values[tags][]" id="tag-select" multiple <?= $labelClass ?> autocomplete="off">
+                        <?php
+                        foreach ($all_tags as $val) {
+                            $selected = in_array($val, $tags);
+                        ?>
+                            <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <script>
+                    $('#tag-select').multiSelect({
+                        noneText: '<?= lang('No tags selected', 'Keine Tags ausgewählt') ?>',
+                        allText: '<?= lang('All tags', 'Alle Tags') ?>',
+                    });
+                </script>
+            <?php
+                break;
+
+            case 'funding_type': // funding_type
+                $Vocabulary = new Vocabulary();
+                $val = $this->val('funding_type', null);
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">
+                    <select class="form-control" name="values[funding_type]" id="funding_type"  <?= $labelClass ?> autocomplete="off">
+                        <?php
+                        $vocab = $Vocabulary->getValues('funding-type');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="funding_type" class=" <?= $labelClass ?>">
+                        <?= $label ?>
+                    </label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
 
             default:
             ?>

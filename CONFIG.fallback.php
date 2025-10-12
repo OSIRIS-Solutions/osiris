@@ -61,3 +61,6 @@ if (!defined('ORCID_SECRET_KEY'))
 
 if (!defined('PORTALPATH'))
     define('PORTALPATH', $_GET['path']??(ROOTPATH.'/preview'));
+
+if (!defined('CRON_SECRET'))
+    define('CRON_SECRET', 'please-change-this-secret');

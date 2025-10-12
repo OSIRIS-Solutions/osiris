@@ -73,7 +73,7 @@
 
         <div class="box padded">
             <h2 class="title">
-            <i class="ph ph-gear" aria-hidden="true"></i>
+                <i class="ph ph-gear" aria-hidden="true"></i>
                 <?= lang('General settings', 'Allgemeine Einstellungen') ?>
             </h2>
             <div class="form-group">
@@ -334,11 +334,54 @@
                     </h2>
 
                     <input type="hidden" name="general[auth-self-registration]" value="0">
-                    <div class="custom-checkbox">
-                        <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration', true) ? 'checked' : '' ?>>
-                        <label for="auth-self-registration-1"><?= lang('Allow users to create their own account', 'Erlaube Benutzern, ein eigenes Konto zu erstellen') ?></label>
+                    <div class="form-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration', true) ? 'checked' : '' ?>>
+                            <label for="auth-self-registration-1"><?= lang('Allow users to create their own account', 'Erlaube Benutzern, ein eigenes Konto zu erstellen') ?></label>
+                        </div>
                     </div>
-                    <br>
+
+                    <div class="form-group">
+                        <label for="auth-token"><?= lang('AUTH Token', 'AUTH-Token') ?></label>
+                        <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                            <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
+                        </button>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="general[auth-token]" id="auth-token" value="<?= $Settings->get('auth-token') ?>">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn" onclick="generateAUTHtoken()"><i class="ph ph-arrows-clockwise"></i> Generate</button>
+                            </div>
+                        </div>
+                        <span class="text-muted">
+                            <?= lang(
+                                'Here you can generate a so-called AUTH token that users can use to register. Only share this token with people who are allowed to register! If you change the token, anyone who has the old token will lose the ability to register. Only the currently stored token is valid. If no token is stored, registration without a token is possible.',
+                                'Du kannst hier ein sogenanntes AUTH-Token generieren, das Nutzende verwenden können, um sich zu registrieren. Teile dieses Token nur mit Personen, die sich registrieren dürfen! Wenn du das Token änderst, verlieren alle Personen, die das alte Token haben, die Möglichkeit, sich zu registrieren. Es gilt immer nur das aktuell hinterlegte Token. Wenn kein Token hinterlegt ist, ist eine Registrierung ohne Token möglich.'
+                            ) ?>
+                        </span>
+
+                    </div>
+
+                    <script>
+                        function copyToClipboard() {
+                            var text = $('#auth-token').val()
+                            navigator.clipboard.writeText(text)
+                            toastSuccess('Query copied to clipboard.')
+                        }
+
+                        function generateAUTHtoken() {
+                            let length = 50;
+                            let result = '';
+                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            const charactersLength = characters.length;
+                            let counter = 0;
+                            while (counter < length) {
+                                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                                counter += 1;
+                            }
+                            $('#auth-token').val(result)
+                        }
+                    </script>
 
                     <button class="btn signal">
                         <i class="ph ph-floppy-disk"></i>
@@ -508,7 +551,7 @@ if (!is_null($data)) {
                 <?= lang('Defined list of positions', 'Definierte Liste möglicher Positionen') ?>:
             </h5>
             <small class="text-muted">
-                <?=lang('This list will only be used if you select "Defined selection" above.', 'Diese Liste wird nur verwendet, wenn du "Definierte Liste" oben auswählst.')?>
+                <?= lang('This list will only be used if you select "Defined selection" above.', 'Diese Liste wird nur verwendet, wenn du "Definierte Liste" oben auswählst.') ?>
             </small>
 
             <table class="table simple small my-20">

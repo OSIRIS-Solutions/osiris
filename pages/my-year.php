@@ -253,7 +253,7 @@ if (!$Settings->featureEnabled('coins')) {
                 </div>
             </form>
             <div class="text-lg-right">
-                <a target="_blank" href="<?= ROOTPATH ?>/docs/my-year" class="btn tour" id="tour">
+                <a target="_blank" href="https://wiki.osiris-app.de/users/profile/scientist_view/" class="btn tour" id="tour">
                     <i class="ph ph-lg ph-question mr-5"></i>
                     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
                 </a>

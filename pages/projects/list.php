@@ -26,6 +26,7 @@ $Project = new Project();
 $form = $form ?? array();
 
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+$tagsEnabled = $Settings->featureEnabled('tags');
 
 function val($index, $default = '')
 {
@@ -300,6 +301,32 @@ $Vocabulary = new Vocabulary();
                 </div>
             <?php } ?>
 
+
+            <?php if ($tagsEnabled) { ?>
+                <h6>
+                    <?= $Settings->tagLabel() ?>
+                    <a class="float-right" onclick="filterProjects('#filter-tags .active', null, 16)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter" style="max-height: 15rem; overflow-y: auto;">
+                    <table id="filter-tags" class="table small simple">
+                        <?php
+                        $keywords = DB::doc2Arr($Settings->get('tags', []));
+                        foreach ($keywords as $tag) {
+                            $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
+                        ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $tag ?>" onclick="filterProjects(this, '<?= $tag ?>', 16)" class="item" id="<?= $tagId ?>-btn">
+                                        <span><?= $tag ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
+
+
             <h6>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
@@ -444,6 +471,10 @@ $Vocabulary = new Vocabulary();
         {
             title: lang('Timeline', 'Zeitachse'),
             key: 'timeline'
+        },
+        {
+            title: '<?= $Settings->tagLabel() ?>',
+            key: 'tags'
         }
     ]
 
@@ -785,6 +816,14 @@ $Vocabulary = new Vocabulary();
                     defaultContent: '',
                     header: lang('Timeline', 'Zeitachse'),
                     render: (data, type, row) => renderTimeline(data, type, row)
+                },
+                {
+                    target: 16,
+                    data: 'tags',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: '<?= $Settings->tagLabel() ?>',
                 }
             ],
             order: [
@@ -827,6 +866,11 @@ $Vocabulary = new Vocabulary();
             if (topicsEnabled && hash.topics !== undefined) {
                 filterProjects(document.getElementById(hash.topics + '-btn'), hash.topics, 9)
             }
+            if (hash.tags !== undefined) {
+                var tagId = hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '-btn';
+                var tag = document.getElementById(tagId).getAttribute('data-type');
+                filterProjects(document.getElementById(tagId), tag, 16)
+            }
 
             if (hash.search !== undefined) {
                 dataTable.search(decodeURIComponent(hash.search)).draw();
@@ -843,6 +887,7 @@ $Vocabulary = new Vocabulary();
                 8: '#filter-units',
                 9: '#filter-topics',
                 14: '#filter-subproject',
+                16: '#filter-tags',
                 // 15: '#filter-timeline'
             }
             for (const key in all_filters) {
@@ -852,7 +897,7 @@ $Vocabulary = new Vocabulary();
                     filter.each(function(i, el) {
                         let type = $(el).data('type')
                         const count = dataTable.column(key).data().filter(function(d) {
-                            if (key == 8 || key == 9) {
+                            if (key == 8 || key == 9 || key == 16) {
                                 return d.includes(type)
                             }
                             return d == type

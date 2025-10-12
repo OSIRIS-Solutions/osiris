@@ -3,6 +3,7 @@
 require_once BASEPATH . '/php/Settings.php';
 include_once BASEPATH . "/php/_config.php";
 include_once BASEPATH . "/php/DB.php";
+include_once BASEPATH . "/php/JSON.php";
 
 // Database connection
 global $DB;

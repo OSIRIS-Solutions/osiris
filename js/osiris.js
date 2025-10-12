@@ -345,7 +345,7 @@ function osirisJSOnDOMContentLoaded() {
 
     // Adding the click event listener
     document.addEventListener(
-        "click",
+        "mousedown",
         function (event) {
             var eventCopy = event;
             var target = event.target;

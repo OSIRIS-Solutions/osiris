@@ -22,6 +22,7 @@ require_once "Groups.php";
 class Project extends Vocabulary
 {
     public $project = array();
+    public $isProposal = false;
 
     public $FIELDS = [];
 
@@ -171,6 +172,11 @@ class Project extends Vocabulary
         });
     }
 
+    public function isProposal()
+    {
+        return $this->isProposal;
+    }
+
     public function getProjectType($id)
     {
         $filter = [
@@ -263,7 +269,7 @@ class Project extends Vocabulary
             case 'research-countries':
                 $lang = lang('name', 'name_de');
                 $countriesList = '';
-                
+
                 foreach ($value ?? [] as $c) {
                     $iso = $c['iso'] ?? $c;
                     $role = '';
@@ -360,6 +366,18 @@ class Project extends Vocabulary
                     }
                 }
                 return $return . '</ul>';
+            case 'tags':
+                $tags = DB::doc2Arr($value);
+                $return = '';
+                $base = ($this->isProposal ? 'proposals' : 'projects');
+                global $Settings;
+                return $Settings->printTags($tags, $base);
+                // foreach ($tags as $tag) {
+                //     $return .= '<a class="badge primary mr-5 mb-5" href="' . ROOTPATH . '/' . $base . '#tags=' . urlencode($tag) . '">
+                //         <i class="ph ph-tag"></i> ' . htmlspecialchars($tag) . '
+                //     </a>';
+                // }
+                return $return;
             case 'funding_organization':
             case 'scholarship':
             case 'university':
@@ -413,7 +431,7 @@ class Project extends Vocabulary
         }
     }
 
-    public function getType($cls = '', $default='third-party')
+    public function getType($cls = '', $default = 'third-party')
     {
         $type = $this->project['type'] ?? $default;
         $project_type = $this->getProjectType($type);
@@ -569,7 +587,7 @@ class Project extends Vocabulary
 
     public function getStartDate()
     {
-        if (!isset($this->project['start']) && isset($this->project['start_proposed'])){
+        if (!isset($this->project['start']) && isset($this->project['start_proposed'])) {
             // start proposed is in ISO
             return Document::format_date($this->project['start_proposed']);
         }
@@ -578,7 +596,7 @@ class Project extends Vocabulary
     }
     public function getEndDate()
     {
-        if (!isset($this->project['end']) && isset($this->project['end_proposed'])){
+        if (!isset($this->project['end']) && isset($this->project['end_proposed'])) {
             // end proposed is in ISO
             return Document::format_date($this->project['end_proposed']);
         }
@@ -640,15 +658,17 @@ class Project extends Vocabulary
         return $this->getValue('project-person-role', $role);
     }
 
-    public function getProjectStatus(){
-        if ($this->inPast()){
-            return '<i class="ph ph-check-circle text-success"></i> '. lang('ended', 'abgeschlossen');
+    public function getProjectStatus()
+    {
+        if ($this->inPast()) {
+            return '<i class="ph ph-check-circle text-success"></i> ' . lang('ended', 'abgeschlossen');
         } else {
             return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
         }
     }
 
-    public function getTimeline(){
+    public function getTimeline()
+    {
         $startDate = $this->project['start_date']; // ISO date string
         $endDate = $this->project['end_date']; // ISO date string
         $today = strtotime(date('Y-m-d'));
@@ -712,7 +732,7 @@ class Project extends Vocabulary
 
     public function widgetLarge($user = null, $external = false, $collection = 'projects')
     {
-        $widget = '<a class="module" href="' . ROOTPATH . '/'.$collection.'/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
+        $widget = '<a class="module" href="' . ROOTPATH . '/' . $collection . '/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
         $widget .= '<span class="float-right">' . $this->getDateRange() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
@@ -804,7 +824,7 @@ class Project extends Vocabulary
         return $Groups->deptHierarchies($units);
     }
 
-    
+
     /**
      * Function to convert array into human readable Module fields
      */
@@ -868,4 +888,3 @@ class Project extends Vocabulary
         return $new_doc;
     }
 }
-

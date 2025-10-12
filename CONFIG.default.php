@@ -46,13 +46,10 @@ define("DB_HOST", $host_db);
 
 define("DB_STRING", "mongodb://" . DB_HOST . ":27017/" . DB_NAME . "?retryWrites=true&w=majority");
 
-// define API keys
-define("WOS_STARTER_KEY", "wos starter key");
-
-define("WOS_JOURNAL_INFO", 2021);
+// define CRON secret for cron jobs
+define('CRON_SECRET', 'your_cron_secret');
 
 // not needed right now, but planned in the future
 define("ORCID_APP_ID", null);
 define("ORCID_SECRET_KEY", null);
 
-define('LIVE', true);

@@ -19,65 +19,50 @@
 
 $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+$workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
+$tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 
-<?php if (isset($_GET['user'])) { ?>
-    <h1 class='m-0'>
+<h1 class='m-0'>
+    <?php if (isset($_GET['user'])) { ?>
         <i class="ph ph-folder-user"></i>
-
         <?= lang("Activities of ", "Aktivitäten von ") ?>
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
-    </h1>
-    <a href="<?= ROOTPATH ?>/activities" class="btn small mb-10" id="user-btn">
-        <i class="ph ph-book-open"></i>
-        <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
-    </a>
-<?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
-    <h1 class='m-0'>
+    <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
         <i class="ph ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
-    </h1>
-
-    <button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
-
-    <div class="btn-toolbar justify-between">
-
-        <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
-            <i class="ph ph-chart-line-up"></i>
-            <?= lang('Statistics', 'Statistiken') ?>
-        </a>
-        <?php if ($Settings->hasPermission('activities.lock')) { ?>
-            <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
-                <i class="ph ph-lock"></i>
-                <?= lang('Locking', 'Sperren') ?>
-            </a>
-        <?php } ?>
-        <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i>
-            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
-        </a>
-
-    </div>
-
-<?php
-} elseif ($page == 'my-activities') { ?>
-    <h1 class='m-0'>
+    <?php
+    } elseif ($page == 'my-activities') { ?>
         <i class="ph ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
-    </h1>
+    <?php } ?>
+</h1>
 
-    <div class="btn-toolbar justify-between">
+<button class="btn primary float-right d-none d-md-inline-block" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
+
+<div class="btn-toolbar justify-between">
+    <?php if (isset($_GET['user']) || $page == 'my-activities') { ?>
         <a href="<?= ROOTPATH ?>/activities" class="btn" id="user-btn">
             <i class="ph ph-book-open"></i>
-            <?= lang('Show  all activities', "Zeige alle Aktivitäten") ?>
+            <?= lang('Show all activities', "Zeige alle Aktivitäten") ?>
         </a>
-        <a href="<?= ROOTPATH ?>/add-activity">
-            <i class="ph ph-plus"></i>
-            <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+    <?php } ?>
+    <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
+        <i class="ph ph-chart-line-up"></i>
+        <?= lang('Statistics', 'Statistiken') ?>
+    </a>
+    <?php if ($Settings->hasPermission('activities.lock')) { ?>
+        <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
+            <i class="ph ph-lock"></i>
+            <?= lang('Locking', 'Sperren') ?>
         </a>
-    </div>
-<?php } ?>
+    <?php } ?>
+    <a href="<?= ROOTPATH ?>/add-activity">
+        <i class="ph ph-plus"></i>
+        <?= lang('Add activity', 'Aktivität hinzufügen') ?>
+    </a>
+</div>
 
 <style>
     /* under md */
@@ -129,6 +114,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By type', 'Nach Typ') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
@@ -195,6 +181,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             </div>
 
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By affiliation', 'Nach Zugehörigkeit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-affiliated .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
@@ -246,7 +233,37 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </div>
             <?php } ?>
 
+
+            <?php if ($workflowsEnabled) { ?>
+                <h6><?= lang('By workflow status', 'Nach Workflow Status') ?></h6>
+
+                <div class="filter">
+                    <table id="filter-workflows" class="table small simple">
+                        <tr style="--highlight-color:  var(--success-color);">
+                            <td>
+                                <a data-type="verified" onclick="filterActivities(this, 'verified', 16)" class="item" id="verified-btn">
+                                    <span style="color: var(--highlight-color)">
+                                        <?= lang('Only verified', 'Nur verifiziert') ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr style="--highlight-color:  var(--signal-color);">
+                            <td>
+                                <a data-type="verif" onclick="filterActivities(this, 'verif', 16)" class="item" id="verified-empty-btn">
+                                    <span style="color: var(--highlight-color)">
+                                        <?= lang('Verified or no workflow', 'Verifiziert oder kein Workflow') ?>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            <?php } ?>
+
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
@@ -264,7 +281,33 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 </table>
             </div>
 
+            <?php if ($tagsEnabled) { ?>
+                <h6>
+                    <?= $Settings->tagLabel() ?>
+                    <a class="float-right" onclick="filterActivities('#filter-tags .active', null, 17)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter" style="max-height: 15rem; overflow-y: auto;">
+                    <table id="filter-tags" class="table small simple">
+                        <?php
+                        $keywords = DB::doc2Arr($Settings->get('tags', []));
+                        foreach ($keywords as $tag) {
+                            $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
+                        ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $tag ?>" onclick="filterActivities(this, '<?= $tag ?>', 17)" class="item" id="<?= $tagId ?>-btn">
+                                        <span><?= $tag ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+            <?php } ?>
+
+
             <h6>
+                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
                 <?= lang('By time', 'Nach Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
@@ -297,6 +340,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 <script>
     var dataTable;
     var topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
+    var workflowsEnabled = <?= $workflowsEnabled ? 'true' : 'false' ?>;
 
     const minEl = document.querySelector('#filter-from');
     const maxEl = document.querySelector('#filter-to');
@@ -365,6 +409,14 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         {
             title: lang('Affiliated', 'Affiliiert'),
             'key': 'affiliated'
+        },
+        {
+            title: lang('Workflow status', 'Workflow Status'),
+            'key': 'workflow'
+        },
+        {
+            title: '<?= $Settings->tagLabel() ?>',
+            'key': 'tags'
         }
     ]
 
@@ -445,6 +497,18 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     data: "quarter",
                     searchPanes: {
                         show: false
+                    },
+                    render: function(data, type, row) {
+                        if (workflowsEnabled) {
+                            if (row.workflow && row.workflow == 'in_progress') {
+                                return `${data} <i class="ph ph-seal text-muted" title="<?= lang('In workflow', 'Im Workflow') ?>"></i>`;
+                            } else if (row.workflow && row.workflow == 'rejected') {
+                                return `${data} <i class="ph ph-x-circle text-danger" title="<?= lang('Rejected in workflow', 'Im Workflow abgelehnt') ?>"></i>`;
+                            } else if (row.workflow && row.workflow == 'verified') {
+                                return `${data} <i class="ph ph-seal-check text-success" title="<?= lang('Verified in workflow', 'Im Workflow verifiziert') ?>"></i>`;
+                            }
+                        }
+                        return data;
                     }
                 },
                 {
@@ -586,6 +650,25 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     render: function(data, type, row) {
                         return data ? 'yes' : 'no'
                     }
+                },
+                {
+                    targets: 16,
+                    data: 'workflow',
+                    visible: false,
+                    render: function(data, type, row) {
+                        return data ? data : 'no workflow'
+                    }
+                },
+                {
+                    targets: 17,
+                    data: 'tags',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    render: function(data, type, row, meta) {
+                        if (data.length == 0) return ''
+                        return data.join(', ')
+                    }
                 }
             ],
             "order": [
@@ -662,6 +745,11 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 resetTime()
             }
 
+            if (hash.tags !== undefined) {
+                var tagId = hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+                var tag = document.getElementById(tagId + '-btn').getAttribute('data-type');
+                filterActivities(document.getElementById(tagId + '-btn'), tag, 17)
+            }
 
             if (hash.search !== undefined) {
                 dataTable.search(decodeURIComponent(hash.search)).draw();
@@ -677,6 +765,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 7: '#filter-unit',
                 15: '#filter-affiliated',
                 14: '#filter-topics',
+                17: '#filter-tags'
             }
 
             for (const key in all_filters) {
@@ -692,7 +781,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             type = false
                         }
                         const count = dataTable.column(key).data().filter(function(d) {
-                            if ((key == 7 || key == 14) && d instanceof Array) {
+                            if ((key == 7 || key == 14 || key == 17) && d instanceof Array) {
                                 return d.includes(type)
                             }
                             return d == type

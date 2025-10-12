@@ -14,6 +14,17 @@
  * @license     MIT
  */
 
+function portfolio_apikey_check($key)
+{
+    global $Settings;
+    // ensure that settings is available, otherwise allow access
+    if (!isset($Settings) || !$Settings instanceof Settings) return true;
+    $apikey = $Settings->get('portfolio_apikey', null);
+    if (empty($apikey)) return true;
+    if ($key === $apikey) return true;
+    return false;
+}
+
 function rest($data, $count = 0, $status = 200)
 {
     $result = array();
@@ -89,10 +100,10 @@ function help_getGroup($osiris, $id)
 Route::get('/portfolio/units', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $result = $osiris->groups->find(
         [],
         // ['hide' => ['$ne' => true]],
@@ -105,10 +116,10 @@ Route::get('/portfolio/units', function () {
 Route::get('/portfolio/unit/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     if ($id == 0)
         $group = $osiris->groups->findOne(['level' => 0]);
     else
@@ -160,10 +171,10 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
 Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     if ($id == 0)
         $group = $osiris->groups->findOne(['level' => 0]);
@@ -207,10 +218,10 @@ Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
 Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
 
     $result = [];
@@ -221,8 +232,6 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
         $group = $osiris->groups->findOne(['id' => $id]);
 
     $child_ids = $Groups->getChildren($id);
-    $users = $osiris->persons->find(['units.unit' => ['$in' => $child_ids]], ['projection' => ['username' => 1]])->toArray();
-    $users = array_column($users, 'username');
 
     if (isset($group['description']) || isset($group['description_de'])) {
         $result['general'] = 1;
@@ -231,37 +240,58 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
         $result['research'] = 1;
     }
 
-    $filter = [
+    $person_filter = [
         'units.unit' => ['$in' => $child_ids],
         'is_active' => ['$ne' => false],
         'hide' => ['$ne' => true]
     ];
 
-    $result['persons'] = $osiris->persons->count($filter);
+    $result['persons'] = $osiris->persons->count($person_filter);
 
     $publication_filter = [
-        'authors.user' => ['$in' => $users],
+        'units' => ['$in' => $child_ids],
         'type' => 'publication',
         'hide' => ['$ne' => true]
     ];
-    $result['publications'] = $osiris->activities->count($publication_filter);
 
     $activities_filter = [
-        'authors.user' => ['$in' => $users],
+        'units' => ['$in' => $child_ids],
         'subtype' => ['$in' => $Settings->getActivitiesPortfolio()],
         'hide' => ['$ne' => true]
     ];
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $publication_filter['workflow.status'] = 'verified';
+            $activities_filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $publication_filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+            $activities_filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
+    $result['publications'] = $osiris->activities->count($publication_filter);
+
     $result['activities'] = $osiris->activities->count($activities_filter);
 
     $membership_filter = [
-        'authors.user' => ['$in' => $users],
+        'units' => ['$in' => $child_ids],
         'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $result['memberships'] = $osiris->activities->count($membership_filter);
 
     if ($Settings->featureEnabled('projects')) {
         $project_filter = [
-            'persons.user' => ['$in' => $users],
+            'units' => ['$in' => $child_ids],
             "public" => true,
         ];
 
@@ -271,12 +301,12 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     }
 
     if ($group['level'] == 1) {
+        // copy from project filter
         $cooperation_filter = [
-            'type' => 'publication',
-            'hide' => ['$ne' => true],
             'year' => ['$gte' => CURRENTYEAR - 4],
             'units' => $id
         ];
+        $cooperation_filter = array_merge($cooperation_filter, $publication_filter);
         $coop = $osiris->activities->aggregate([
             ['$match' => $cooperation_filter],
             ['$unwind' => '$units'],
@@ -294,6 +324,10 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
 Route::get('/portfolio/(publications|activities|all-activities)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['hide' => ['$ne' => true]];
 
@@ -303,6 +337,19 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
         $filter['subtype'] = ['$in' => $Settings->getActivitiesPortfolio(false)];
     } else {
         $filter['subtype'] = ['$in' => $Settings->getActivitiesPortfolio(true)];
+    }
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
     }
 
     $options = [
@@ -317,7 +364,7 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
             'month' => 1,
             'day' => 1,
             'icon' => '$rendered.icon',
-            'affiliated'=> 1
+            'affiliated' => 1
         ]
     ];
 
@@ -332,10 +379,10 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
 Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|all-activities)', function ($context, $id, $type) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     if ($context == 'unit') {
         if ($id == 0) {
@@ -344,10 +391,8 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
         }
 
         $child_ids = $Groups->getChildren($id);
-        $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids]], ['sort' => ['last' => 1]])->toArray();
-        $users = array_column($persons, 'username');
         $filter = [
-            'authors.user' => ['$in' => $users],
+            'units' => ['$in' => $child_ids],
             'hide' => ['$ne' => true],
             'authors.aoi' => ['$in' => [1, '1', true, 'true']]
         ];
@@ -385,11 +430,25 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
         $filter['subtype'] = ['$in' => $Settings->getActivitiesPortfolio(true)];
     }
 
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
     $options = [
         'sort' => ['year' => -1, 'month' => -1, 'day' => -1],
         'projection' => [
             'html' => '$rendered.portfolio',
             'search' => '$rendered.plain',
+            'print' => '$rendered.print',
             'type' => 1,
             'subtype' => 1,
             'year' => 1,
@@ -410,10 +469,10 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
 Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]];
     if ($context == 'unit') {
@@ -422,14 +481,25 @@ Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id)
             $id = $group['id'];
         }
         $child_ids = $Groups->getChildren($id);
-        $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
-        $users = array_column($persons, 'username');
-        $filter['authors.user'] = ['$in' => $users];
+        $filter['units'] = ['$in' => $child_ids];
     } else {
         $id = DB::to_ObjectID($id);
         $person = $osiris->persons->findOne(['_id' => $id]);
         $id = $person['username'];
         $filter['authors.user'] =  $id;
+    }
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
     }
 
     $teaching = $osiris->activities->aggregate([
@@ -468,10 +538,10 @@ Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id)
 Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = [
         'public' => true,
@@ -489,9 +559,7 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
             $id = $group['id'];
         }
         $child_ids = $Groups->getChildren($id);
-        $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
-        $users = array_column($persons, 'username');
-        $filter['persons.user'] = ['$in' => $users];
+        $filter['units'] = ['$in' => $child_ids];
     } else {
         $id = DB::to_ObjectID($id);
         $person = $osiris->persons->findOne(['_id' => $id]);
@@ -543,10 +611,10 @@ Route::get('/portfolio/(unit|person)/([^/]*)/projects', function ($context, $id)
 Route::get('/portfolio/unit/([^/]*)/staff', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     // dump($_SERVER, true);
 
     $filter = [
@@ -595,10 +663,10 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
     include(BASEPATH . '/php/Project.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -665,10 +733,10 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
 Route::get('/portfolio/activity/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -682,6 +750,21 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     if (empty($doc) || ($doc['hide'] ?? false)) {
         echo rest('Activity not found', 0, 404);
         die;
+    }
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            if (($doc['workflow']['status'] ?? '') != 'verified') {
+                echo rest('Activity not found', 0, 404);
+                die;
+            }
+        } elseif ($visibility == 'approved-or-empty') {
+            if (isset($doc['workflow']['status']) && $doc['workflow']['status'] != 'verified') {
+                echo rest('Activity not found', 0, 404);
+                die;
+            }
+        }
     }
     $result = [
         'id' => strval($doc['_id']),
@@ -796,10 +879,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
     include(BASEPATH . '/php/Project.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -841,13 +924,28 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     if (isset($result['image']) && !empty($result['image']))
         $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['image'];
 
-    $project['activities'] = $osiris->activities->count([
+    $activities_filter = [
         '$or' => [
             ['projects' => $result['name']],
             ['projects' => DB::to_ObjectID($id)]
         ],
         'hide' => ['$ne' => true]
-    ]);
+    ];
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $activities_filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $activities_filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
+    $project['activities'] = $osiris->activities->count($activities_filter);
 
     if (!empty($result['persons'])) {
 
@@ -922,10 +1020,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
 Route::get('/portfolio/person/([^/]*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -1023,30 +1121,59 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $hierarchy = $Groups->getPersonHierarchyTree($unit_ids);
         $result['depts'] = $Groups->readableHierarchy($hierarchy);
     }
+
+    $visibility = 'all';
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+    }
     if (isset($person['highlighted']) && !empty($person['highlighted'])) {
         $docs = [];
         foreach ($person['highlighted'] as $id) {
             $doc = $DB->getActivity($id);
             if (!empty($doc)) {
+                if ($visibility == 'only-approved' && ($doc['workflow']['status'] ?? '') != 'verified') {
+                    continue;
+                } elseif ($visibility == 'approved-or-empty' && isset($doc['workflow']['status']) && $doc['workflow']['status'] != 'verified') {
+                    continue;
+                }
                 $docs[] = [
                     'id' => strval($doc['_id']),
                     'icon' => $doc['rendered']['icon'],
-                    'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio'])
+                    'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio']),
+                    'print' => $doc['rendered']['print'] ?? null,
                 ];
             }
         }
         $result['highlighted'] = $docs;
     }
 
+    $defaultFilter = [
+        'authors.user' => $person['username'],
+        'hide' => ['$ne' => true]
+    ];
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $defaultFilter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $defaultFilter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
     $result['numbers'] = [
-        'publications' => $osiris->activities->count(['authors.user' => $person['username'], 'type' => 'publication', 'hide' => ['$ne' => true]]),
-        'activities' => $osiris->activities->count(['authors.user' => $person['username'], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio()], 'hide' => ['$ne' => true]]),
-        'teaching' => $osiris->activities->count(['authors.user' => $person['username'], 'type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]]),
-        'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true, ]),
+        'publications' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'publication'])),
+        'activities' => $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]])),
+        'teaching' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'teaching', 'module_id' => ['$ne' => null]])),
+        'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true,]),
     ];
 
     if ($result['numbers']['projects'] > 0) {
-        $raw = $osiris->projects->find(['persons.user' => $person['username'], "public" => true, ])->toArray();
+        $raw = $osiris->projects->find(['persons.user' => $person['username'], "public" => true,])->toArray();
         $projects = ['current' => [], 'past' => []];
         foreach ($raw as $project) {
             $Project->setProject($project);
@@ -1084,10 +1211,10 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
 Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $result = [];
     if ($context == 'project') {
@@ -1137,10 +1264,8 @@ Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($con
         $dept = $id;
 
         $child_ids = $Groups->getChildren($dept);
-        $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne' => false], 'hide' => ['$ne' => true]], ['sort' => ['last' => 1]])->toArray();
-        $users = array_column($persons, 'username');
         $filter = [
-            'persons.user' => ['$in' => $users],
+            'units' => ['$in' => $child_ids],
             "public" => true,
             'collaborators' => ['$exists' => 1]
         ];
@@ -1186,7 +1311,10 @@ Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($con
 Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
     // error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
-
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     // select publications from the past five years where the department is involved
     $filter = [
@@ -1195,6 +1323,19 @@ Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
         'year' => ['$gte' => CURRENTYEAR - 4],
         'units' => $id
     ];
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
     $options = [
         'projection' => [
             'depts' => '$units'
@@ -1288,9 +1429,13 @@ Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
 Route::get('/portfolio/projects', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'public' => true,
-    ];  
+    ];
 
     $options = [
         'sort' => ['year' => -1, 'month' => -1],
@@ -1314,7 +1459,7 @@ Route::get('/portfolio/projects', function () {
         $filter,
         $options
     )->toArray();
-    
+
     echo rest($result);
 });
 
@@ -1322,22 +1467,28 @@ Route::get('/portfolio/projects', function () {
 Route::get('/portfolio/persons', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'hide' => ['$ne' => true]
     ];
 
     $persons = $osiris->persons->find(
         $filter,
-        ['sort' => ['last' => 1],
-        'projection' => [
-            'displayname' => 1,
-            'academic_title' => 1,
-            'position' => 1,
-            'position_de' => 1,
-            'depts' => 1
-        ]]
+        [
+            'sort' => ['last' => 1],
+            'projection' => [
+                'displayname' => 1,
+                'academic_title' => 1,
+                'position' => 1,
+                'position_de' => 1,
+                'depts' => 1
+            ]
+        ]
     )->toArray();
-    
+
     echo rest($persons);
 });
 
@@ -1345,6 +1496,10 @@ Route::get('/portfolio/persons', function () {
 Route::get('/portfolio/person-images', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $filter = [
         'hide' => ['$ne' => true],
         'public_image' => true
@@ -1352,10 +1507,12 @@ Route::get('/portfolio/person-images', function () {
 
     $persons = $osiris->persons->find(
         $filter,
-        ['sort' => ['last' => 1],
-        'projection' => [
-            'username' => 1,
-        ]]
+        [
+            'sort' => ['last' => 1],
+            'projection' => [
+                'username' => 1,
+            ]
+        ]
     )->toArray();
 
     $result = [];
@@ -1376,6 +1533,6 @@ Route::get('/portfolio/person-images', function () {
             'path' => $img
         ];
     }
-    
+
     echo rest($result);
 });

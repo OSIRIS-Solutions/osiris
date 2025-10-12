@@ -30,9 +30,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
 <div class="d-flex align-items-center mb-10">
 
-    <?php if ($Settings->hasPermission('guests.add')) { ?>
+    <?php if ($Settings->hasPermission('units.add')) { ?>
         <a href="<?= ROOTPATH ?>/groups/new"><i class="ph ph-plus"></i> <?= lang('New unit', 'Neue Einheit') ?></a>
     <?php } ?>
+
 
     <div class="pills small ml-auto">
         <span class="badge text-muted"><?= lang('Show as', 'Zeige als') ?></span>
@@ -182,12 +183,18 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 </div>
                             <?php } ?>
                         <?php } ?>
-                        
+
                     </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
+
+
+    <!-- download: download/user-groups -->
+    <div class="mt-20">
+        <a href="<?= ROOTPATH ?>/download/user-groups" class="ml-20"><i class="ph ph-download"></i> <?= lang('Download list of users with units', 'Liste der Personen mit Einheiten herunterladen') ?></a>
+    </div>
 
     <script>
         var dataTable;
