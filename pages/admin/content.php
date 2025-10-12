@@ -18,6 +18,9 @@
     <?= lang('Manage content', 'Inhalte verwalten') ?>
 </h1>
 
+<h4>
+    <?= lang('Entities', 'Entitäten') ?>
+</h4>
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/categories" class="">
         <i class="ph ph-bookmarks text-secondary" aria-hidden="true"></i>
@@ -47,19 +50,41 @@
             <small class="text-muted"><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></small>
         </a>
     <?php } ?>
-    <hr>
-    <a href="<?= ROOTPATH ?>/admin/fields" class="">
+</div>
+
+<h4>
+    <?= lang('Custom data', 'Benutzerdefinierte Daten') ?>
+</h4>
+<div class="link-list w-600 mw-full">
+    <a href="<?= ROOTPATH ?>/admin/fields" style="--secondary-color: var(--primary-color)">
         <i class="ph ph-textbox text-secondary" aria-hidden="true"></i>
         <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
         <br>
         <small class="text-muted"><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></small>
     </a>
-    <a href="<?= ROOTPATH ?>/admin/vocabulary" class="">
+    <a href="<?= ROOTPATH ?>/admin/vocabulary" style="--secondary-color: var(--primary-color)">
         <i class="ph ph-book-bookmark text-secondary" aria-hidden="true"></i>
         <?= lang('Vocabularies', 'Vokabular') ?>
         <br>
         <small class="text-muted"><?= lang('Modify existing vocabularies for activities and projects', 'Bearbeite existierendes Vokabular für Aktivitäten und Projekte') ?></small>
     </a>
+    <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+        <a href="<?= ROOTPATH ?>/admin/workflows" style="--secondary-color: var(--primary-color)">
+            <i class="ph ph-seal-check text-secondary" aria-hidden="true"></i>
+            <?= lang('Quality workflows', 'Qualitäts-Workflows') ?>
+            <br>
+            <small class="text-muted"><?= lang('Manage workflows to quality-check your activities', 'Verwalte Workflows, um Aktivitäten zu prüfen') ?></small>
+        </a>
+    <?php } ?>
+    <?php if ($Settings->featureEnabled('tags')) { ?>
+        <a href="<?= ROOTPATH ?>/admin/tags" style="--secondary-color: var(--primary-color)">
+            <i class="ph ph-tag text-secondary" aria-hidden="true"></i>
+            <?= lang('Tags', 'Schlagwörter') ?>
+            <br>
+            <small class="text-muted"><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></small>
+        </a>
+    <?php } ?>
+    
 </div>
 
 <!-- smaller section with links to helper tools -->

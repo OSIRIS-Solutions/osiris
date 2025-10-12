@@ -131,7 +131,7 @@ class DB
         }
         return $doc;
     }
-    function notifications($force = false)
+    function notifications($force = false, $user = null)
     {
         $notifications = [
             'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
@@ -141,10 +141,13 @@ class DB
             'project-open' => lang('Open project applications', 'Offene Projektanträge'),
             'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
+            'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
         ];
 
         $now = time();
-        $user = $_SESSION['username'] ?? null;
+        if ($user === null) {
+            $user = $_SESSION['username'] ?? null;
+        }
         $last = $_SESSION['last_notification_check'] ?? 0;
         $issues = [];
 
@@ -393,7 +396,7 @@ class DB
             $con = $this->db->journals->findOne(['_id' => $id]);
         } elseif ($type == 'teaching') {
             $con = $this->db->teaching->findOne(['_id' => $id]);
-        } elseif ($type == 'project') {
+        } elseif ($type == 'project' || $type == 'projects') {
             $con = $this->db->projects->findOne(['_id' => $id]);
         } elseif ($type == 'person') {
             $con = $this->db->persons->findOne(['_id' => $id]);
@@ -964,6 +967,23 @@ class DB
 
         foreach ($infrastructures as $infra) {
             $issues['infrastructure'][] = $infra['id'];
+        }
+
+        // check if an activity was rejected
+        $docs = $this->db->activities->find(
+            [
+                'authors' => ['$elemMatch' => ['user' => $user]],
+                'workflow.status' => 'rejected'
+            ],
+            [
+                'projection' => ['workflow' => 1]
+            ]
+        );
+        foreach ($docs as $doc) {
+            $issues['rejected'][] = [
+                'id' => strval($doc['_id']),
+                'details' => $doc['workflow']['rejectedDetails'] ?? []
+            ];
         }
 
         return $issues;

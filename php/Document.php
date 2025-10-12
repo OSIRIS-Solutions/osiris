@@ -11,6 +11,7 @@ require_once "DB.php";
 require_once "Schema.php";
 require_once "Country.php";
 require_once "Organization.php";
+require_once "Vocabulary.php";
 
 class Document extends Settings
 {
@@ -806,7 +807,8 @@ class Document extends Settings
     private function getVal($field, $default = '')
     {
         if ($default === '' && $this->usecase == 'list') $default = '-';
-        return $this->doc[$field] ?? $default;
+        if (!array_key_exists($field, $this->doc)) return $default;
+        return ($this->doc[$field] ?? '');
     }
 
     private function formatAuthorsNew($module)
@@ -856,9 +858,9 @@ class Document extends Settings
                 if ($part === 'Eds' || $part === 'eds') {
                     $suffix = ' (' . $part . '.)';
                 } elseif ($N == 1) {
-                    $suffix = ' (' . $part . 's.)';
-                } else {
                     $suffix = ' (' . $part . '.)';
+                } else {
+                    $suffix = ' (' . $part . 's.)';
                 }
             }
         }
@@ -1061,6 +1063,10 @@ class Document extends Settings
                     $files .= " <a href='$file[filepath]' target='_blank' data-toggle='tooltip' data-title='$file[filetype]: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
                 }
                 return $files;
+            case 'funding_type':
+                $Vocabulary = new Vocabulary();
+                $funder = $this->getVal('funding_type', null);
+                return $Vocabulary->getValue('funding-type', $funder);
             case "guest": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
             case "isbn": // ["isbn"],
@@ -1346,7 +1352,11 @@ class Document extends Settings
             case "political_consultation":
                 return $this->getVal('political_consultation', false);
             default:
-                $val = $this->getVal($module, '-');
+                if (isset($this->custom_fields[$module])) {
+                    $val = $this->customVal($this->custom_fields[$module]);
+                } else {
+                    $val = $this->getVal($module, $default);
+                }
                 // only in german because standard is always english
                 if (lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
                     if (is_array($val)) {
@@ -1368,9 +1378,7 @@ class Document extends Settings
                         }
                     }
                 }
-                if (isset($this->custom_fields[$module])) {
-                    $val = $this->customVal($val, $this->custom_fields[$module]);
-                }
+
                 if ($val === true || $val === false) {
                     if ($this->usecase == 'list') return bool_icon($val);
                     $field = $this->custom_fields[$module];
@@ -1385,9 +1393,13 @@ class Document extends Settings
         }
     }
 
-    public function customVal($val, $field)
+    public function customVal($field)
     {
         $format = $field['format'] ?? '';
+        $default = $field['default'] ?? '';
+        if (!array_key_exists($field['id'], $this->doc)) return $default;
+
+        $val = ($this->doc[$field['id']] ?? '');
         if ($format == 'date') {
             return Document::format_date($val);
         }
@@ -1661,12 +1673,38 @@ class Document extends Settings
 
         foreach ($matches[1] as $match) {
             $m = explode(' ', $match, 2);
-            $value = $this->get_field($m[0]);
-            $text = $m[1];
-            if (empty($value)) $text = '';
+            $fields = $m[0];          // e.g. field1&field2 or field1|field2
+            $text = $m[1] ?? '';
+
+            // Check if multiple fields are used
+            if (strpos($fields, '&') !== false) {
+                $allFilled = true;
+                foreach (explode('&', $fields) as $f) {
+                    $value = trim($this->get_field($f));
+                    if (empty($value) || $value == '-') {
+                        $allFilled = false;
+                        break;
+                    }
+                }
+                if (!$allFilled) $text = '';
+            } elseif (strpos($fields, '|') !== false) {
+                $anyFilled = false;
+                foreach (explode('|', $fields) as $f) {
+                    $value = trim($this->get_field($f));
+                    if (!empty($value) && $value != '-') {
+                        $anyFilled = true;
+                        break;
+                    }
+                }
+                if (!$anyFilled) $text = '';
+            } else {
+                // single field as before
+                $value = trim($this->get_field($fields));
+                if (empty($value) || $value == '-') $text = '';
+            }
+
             $vars['%' . $match . '%'] = $text;
         }
-
         $line = strtr($template, $vars);
 
         $line = preg_replace('/\(\s*\)/', '', $line);

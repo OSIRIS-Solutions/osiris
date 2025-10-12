@@ -5,6 +5,7 @@ $Vocabulary = new Vocabulary();
 $user = $_SESSION['username'];
 
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+$tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 
@@ -66,6 +67,7 @@ $conferences = $osiris->conferences->find(
                     <th><?= lang('End', 'Ende') ?></th>
                     <th><?= lang('Type', 'Typ') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
+                    <th><?= $Settings->tagLabel() ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -127,6 +129,30 @@ $conferences = $osiris->conferences->find(
                         <?php } ?>
                     </table>
 
+                </div>
+            <?php } ?>
+
+            <?php if ($tagsEnabled) { ?>
+                <h6>
+                    <?= $Settings->tagLabel() ?>
+                    <a class="float-right" onclick="filterEvents('#filter-tags .active', null, 6)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter" style="max-height: 15rem; overflow-y: auto;">
+                    <table id="filter-tags" class="table small simple">
+                        <?php
+                        $keywords = DB::doc2Arr($Settings->get('tags', []));
+                        foreach ($keywords as $tag) {
+                            $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
+                        ?>
+                            <tr>
+                                <td>
+                                    <a data-type="<?= $tag ?>" onclick="filterEvents(this, '<?= $tag ?>', 6)" class="item" id="tag-<?= $tagId ?>-btn">
+                                        <span><?= $tag ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
                 </div>
             <?php } ?>
 
@@ -200,6 +226,10 @@ $conferences = $osiris->conferences->find(
             title: '<?= $Settings->topicLabel() ?>',
             key: 'topics'
         },
+        {
+            title: '<?= $Settings->tagLabel() ?>',
+            key: 'tags'
+        }
     ]
 
 
@@ -226,6 +256,34 @@ $conferences = $osiris->conferences->find(
             responsive: true,
             autoWidth: true,
             deferRender: true,
+            language: {
+                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+            },
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5, 6],
+                        format: {
+                            header: function(html, index, node) {
+                                return headers[index].title ?? '';
+                            }
+                        }
+                    },
+                    className: 'btn small',
+                    title: function() {
+                        var filters = []
+                        activeFilters.find('.badge').find('span').each(function(i, el) {
+                            filters.push(el.innerHTML)
+                        })
+                        console.log(filters);
+                        if (filters.length == 0) return "OSIRIS All Events";
+                        return 'OSIRIS Events ' + filters.join('_')
+                    },
+                    text: '<i class="ph ph-file-xls"></i> Export'
+                },
+            ],
+            dom: 'fBrtip',
             columnDefs: [{
                     targets: 0,
                     data: 'title',
@@ -287,6 +345,18 @@ $conferences = $osiris->conferences->find(
                         if (data === undefined || data.length === 0) return '';
                         return data.join(' ');
                     }
+                },
+                {
+                    target: 6,
+                    data: 'tags',
+                    searchable: true,
+                    visible: false,
+                    defaultContent: '',
+                    header: '<?= $Settings->tagLabel() ?>',
+                    render: function(data, type, row) {
+                        if (data === undefined || data.length === 0) return '';
+                        return data.join(' ');
+                    }
                 }
             ],
             "order": [
@@ -310,12 +380,24 @@ $conferences = $osiris->conferences->find(
             if (hash.start !== undefined) {
                 filterEvents(document.getElementById(hash.start + '-btn'), hash.start, 2)
             }
+            if (hash.tags !== undefined) {
+                // url decode and find tag button
+                hash.tags = decodeURIComponent(hash.tags);
+                var tagId = 'tag-' + hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '-btn';
+                var tag = document.getElementById(tagId);
+                if (tag) {
+                    tag = tag.getAttribute('data-type')
+                    filterEvents(document.getElementById(tagId), tag, 6)
+                }
+            }
             initializing = false;
 
 
             // count data for the filter and add it to the filter
             let all_filters = {
                 4: '#filter-type',
+                5: '#filter-topics',
+                6: '#filter-tags',
             }
 
             for (const key in all_filters) {
@@ -325,6 +407,9 @@ $conferences = $osiris->conferences->find(
                     filter.each(function(i, el) {
                         let type = $(el).data('type')
                         const count = dataTable.column(key).data().filter(function(d) {
+                            if (key == 5 || key == 6) {
+                                return d.includes(type)
+                            }
                             return d == type
                         }).length
                         // console.log(count);
@@ -351,73 +436,73 @@ $conferences = $osiris->conferences->find(
 
 
     function eventTimeline(filter = {}, props = {}) {
-            if (typeof timeline !== 'function') {
-                console.error('Timeline function is not defined. Please ensure the timeline.js script is included.');
-                return;
-            }
-
-            let selector = props.timelineSelector || '#timeline';
-            let eventSelector = props.eventSelector || '#event-selector';
-            let yearSelector = props.yearSelector || '#activity-year';
-
-            // check if selector exists
-            if (!$(selector).length || !$(yearSelector).length) {
-                console.error('Timeline selector or year selector not found.');
-                return;
-            }
-            if (eventSelector && !$(eventSelector).length) {
-                eventSelector = null; // if eventSelector is not found, set it to null
-            }
-
-            // current year and quarter
-            // let date = new Date();
-            let year = $(yearSelector).val();
-            let currentYear = new Date().getFullYear();
-            // check if year is a valid 4 digit number
-            if (!/^\d{4}$/.test(year)) {
-                toastError('Invalid year format. Please enter a valid 4-digit year.');
-                return;
-            }
-            if (year > currentYear) {
-                year = currentYear;
-                $(yearSelector).val(year);
-            }
-
-            $(selector).empty()
-            if (eventSelector) {
-                $(eventSelector).empty()
-            }
-            // let quarter = Math.ceil((date.getMonth() + 1) / 3);
-            $.ajax({
-                type: "GET",
-                url: ROOTPATH + "/api/dashboard/event-timeline",
-                data: {
-                    year: year
-                },
-                dataType: "json",
-                success: function(response) {
-                    let events = response.data.events;
-                    if (events.length === 0) {
-                        $(selector).html('<div class="content text-muted text-center">' + lang('No activities found for this year.', 'Keine Aktivitäten für dieses Jahr gefunden.') + '</div>');
-                        return;
-                    }
-                    let typeInfo = {}
-                    let colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8', '#343a40'];
-                    for (const type of response.data.types) {
-                        typeInfo[type] = {
-                            title: type,
-                            color: colors[Object.keys(typeInfo).length % colors.length],
-                        }
-                    }
-                    timeline(year, 0, typeInfo, events, clickEvent=function(data) {
-                        location.href = ROOTPATH + '/conferences/view/' + data.id;
-                    });
-                },
-                error: function(response) {
-                    console.log(response);
-                }
-            });
+        if (typeof timeline !== 'function') {
+            console.error('Timeline function is not defined. Please ensure the timeline.js script is included.');
+            return;
         }
+
+        let selector = props.timelineSelector || '#timeline';
+        let eventSelector = props.eventSelector || '#event-selector';
+        let yearSelector = props.yearSelector || '#activity-year';
+
+        // check if selector exists
+        if (!$(selector).length || !$(yearSelector).length) {
+            console.error('Timeline selector or year selector not found.');
+            return;
+        }
+        if (eventSelector && !$(eventSelector).length) {
+            eventSelector = null; // if eventSelector is not found, set it to null
+        }
+
+        // current year and quarter
+        // let date = new Date();
+        let year = $(yearSelector).val();
+        let currentYear = new Date().getFullYear();
+        // check if year is a valid 4 digit number
+        if (!/^\d{4}$/.test(year)) {
+            toastError('Invalid year format. Please enter a valid 4-digit year.');
+            return;
+        }
+        if (year > currentYear) {
+            year = currentYear;
+            $(yearSelector).val(year);
+        }
+
+        $(selector).empty()
+        if (eventSelector) {
+            $(eventSelector).empty()
+        }
+        // let quarter = Math.ceil((date.getMonth() + 1) / 3);
+        $.ajax({
+            type: "GET",
+            url: ROOTPATH + "/api/dashboard/event-timeline",
+            data: {
+                year: year
+            },
+            dataType: "json",
+            success: function(response) {
+                let events = response.data.events;
+                if (events.length === 0) {
+                    $(selector).html('<div class="content text-muted text-center">' + lang('No activities found for this year.', 'Keine Aktivitäten für dieses Jahr gefunden.') + '</div>');
+                    return;
+                }
+                let typeInfo = {}
+                let colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8', '#343a40'];
+                for (const type of response.data.types) {
+                    typeInfo[type] = {
+                        title: type,
+                        color: colors[Object.keys(typeInfo).length % colors.length],
+                    }
+                }
+                timeline(year, 0, typeInfo, events, clickEvent = function(data) {
+                    location.href = ROOTPATH + '/conferences/view/' + data.id;
+                });
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    }
 
     function filterEvents(btn, filter = null, column = 1) {
         var tr = $(btn).closest('tr')

@@ -367,6 +367,8 @@ Route::get('/api/all-activities', function () {
             'raw_type' => $doc['type'],
             'raw_subtype' => $doc['subtype'],
             'affiliated' => $doc['affiliated'] ?? false,
+            'workflow' => (isset($doc['workflow']) ? $doc['workflow']['status'] : 'verif'),
+            'tags' => DB::doc2Arr($doc['tags'] ?? []),
         ];
 
         if ($active) {
@@ -436,7 +438,7 @@ Route::get('/api/concept-activities', function () {
 });
 
 
-Route::get('/api/conferences', function () {
+Route::get('/api/(conferences|events)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
@@ -445,15 +447,12 @@ Route::get('/api/conferences', function () {
         die;
     }
 
-    include_once BASEPATH . "/php/Document.php";
-
     $events = $osiris->conferences->find(
         [],
         ['sort' => ['start' => -1]]
     )->toArray();
 
     foreach ($events as $i => $row) {
-        // $events[$i]['activities'] = $osiris->activities->count(['conference_id' => strval($row['_id'])]);
         $events[$i]['id'] = strval($row['_id']);
     }
 
@@ -805,6 +804,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
                 'units' => $Project->getUnits(true),
                 'persons' => array_column(DB::doc2Arr($project['persons'] ?? []), 'name'),
                 'subproject' => $doc['subproject'] ?? false,
+                'tags' => $project['tags'] ?? [],
             ];
         }
         $result = $data;

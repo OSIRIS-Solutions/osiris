@@ -3,7 +3,8 @@ $data = $_POST['values'] ?? [];
 ?>
 
 <h1>
-    <?= lang('Create new user', 'Nutzer anlegen') ?>
+    <i class="ph ph-user-plus" aria-hidden="true"></i>
+    <?= lang('Register', 'Registrieren') ?>
 </h1>
 
 <form action="#" method="post">

@@ -69,6 +69,30 @@ Route::get('/add-activity', function () {
     include_once BASEPATH . "/php/init.php";
 
     $user = $_SESSION['username'];
+
+    global $form, $copy, $draft;
+    $form = [];
+    $copy = false;
+    $draft = false;
+    if (isset($_GET['draft']) && !empty($_GET['draft'])) {
+        if (!$Settings->featureEnabled('drafts')) {
+            $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+            $_SESSION['msg_type'] = "error";
+        } else {
+            $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
+            if (empty($draft)) {
+                header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+                die();
+            }
+            $form = DB::doc2Arr($draft);
+            unset($form['created']);
+            unset($form['created_by']);
+            // unset($form['_id']);
+            $draft = true;
+            $copy = true;
+        }
+    }
+
     $breadcrumb = [
         ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
         ['name' => lang("Add new", "Neu hinzufügen")]
@@ -77,6 +101,74 @@ Route::get('/add-activity', function () {
     include BASEPATH . "/pages/add-activity.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
+
+
+Route::get('/activities/drafts', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->featureEnabled('drafts')) {
+        $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities");
+        die();
+    }
+
+    $drafts = $osiris->activitiesDrafts->find([
+        '$or' => [
+            ['created_by' => $_SESSION['username']],
+            ['draft_shared_with' => $_SESSION['username']]
+        ]
+    ], ['sort' => ['created' => -1]]);
+
+    if (isset($_GET['frame'])) {
+        include BASEPATH . "/pages/drafts.php";
+        die();
+    }
+
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Drafts", "Entwürfe")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/drafts.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/activities/drafts/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->featureEnabled('drafts')) {
+        $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities");
+        die();
+    }
+
+    $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
+    if (empty($draft)) {
+        header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+        die();
+    }
+
+    if (isset($_GET['frame'])) {
+        include BASEPATH . "/pages/draft.php";
+        die();
+    }
+
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang("Drafts", "Entwürfe"), 'path' => "/activities/drafts"],
+        ['name' => $draft['title'] ?? $id]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/draft.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 
 Route::post('/crud/activities/add-activity', function () {
     include_once BASEPATH . "/php/init.php";
@@ -167,6 +259,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
             $additionalHead = $Format->schema();
         }
     }
+    $no_container = true;
     include BASEPATH . "/header.php";
 
     if (empty($activity)) {
@@ -366,18 +459,10 @@ Route::post('/crud/activities/create', function () {
     // die();
     $collection = $osiris->activities;
     $required = [];
-    $col = $_POST['values']['type'];
+    $activityType = $_POST['values']['type'];
 
     $values = validateValues($_POST['values'], $DB);
 
-    $values['history'] = [[
-        'date' => date('Y-m-d'),
-        'user' => $_SESSION['username'],
-        'type' => 'created',
-        'data' => DB::convert4humans(array_filter($values))
-    ]];
-    // dump($values, true);
-    // die;
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['created_by'] = ($_SESSION['username']);
@@ -435,6 +520,35 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['authors'])) {
         $values = renderAuthorUnits($values);
     }
+
+    // if this activity is created from a draft, delete the draft
+    if (isset($values['draft_id']) && !empty($values['draft_id'])) {
+        $draft_id = $DB->to_ObjectID($values['draft_id']);
+        unset($values['draft_id']);
+        $osiris->activitiesDrafts->deleteOne(['_id' => $draft_id]);
+    }
+
+    $values['history'] = [[
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'],
+        'type' => 'created',
+        'data' => DB::convert4humans(array_filter($values))
+    ]];
+
+    // check if workflows are enabled
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $typeArr = $osiris->adminCategories->findOne(['id' => $activityType]);
+        // check if workflow is defined for this type
+        if (isset($typeArr['workflow']) && !empty($typeArr['workflow'])) {
+            include_once BASEPATH . "/php/Workflows.php";
+            $template = $osiris->adminWorkflows->findOne(['id' => $typeArr['workflow']]);
+            if ($template && !empty($template['steps'])) {
+                $template = DB::doc2Arr($template);
+                $values['workflow'] = Workflows::buildInitialState($template);
+            }
+        }
+    }
+
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
 
@@ -459,6 +573,116 @@ Route::post('/crud/activities/create', function () {
         'id' => $id,
         // 'result' => format($col, $result)
     ]);
+});
+
+
+Route::post('/crud/activities/save-draft', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['values'])) die("no values given");
+    if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
+    $collection = $osiris->activitiesDrafts;
+
+    $values = validateValues($_POST['values'], $DB);
+
+    $values['created'] = date('Y-m-d');
+    $values['created_by'] = ($_SESSION['username']);
+
+    if (isset($values['draft_id']) && !empty($values['draft_id'])) {
+        $draft_id = $DB->to_ObjectID($values['draft_id']);
+        unset($values['draft_id']);
+        $updateResult = $collection->updateOne(
+            ['_id' => $draft_id],
+            ['$set' => $values]
+        );
+        header("Location: " . ROOTPATH . "/activities/drafts/" . $draft_id . "?msg=update-success");
+        die();
+    }
+
+    $insertOneResult  = $collection->insertOne($values);
+    $id = $insertOneResult->getInsertedId();
+
+    header("Location: " . ROOTPATH . "/activities/drafts/" . $id . "?msg=add-success");
+});
+
+// POST /crud/activities/delete-draft/([A-Za-z0-9]*)
+Route::post('/crud/activities/delete-draft/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
+    $id = $DB->to_ObjectID($id);
+    $updateResult = $osiris->activitiesDrafts->deleteOne(
+        ['_id' => $id]
+    );
+    $deletedCount = $updateResult->getDeletedCount();
+    if ($deletedCount == 0) {
+        $_SESSION['msg'] = lang("Draft could not be deleted.", "Entwurf konnte nicht gelöscht werden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/drafts");
+        die();
+    }
+    $_SESSION['msg'] = lang("Draft deleted.", "Entwurf gelöscht.");
+    $_SESSION['msg_type'] = "success";
+
+    header("Location: " . ROOTPATH . "/activities/drafts");
+});
+
+// POST /crud/activities/invite-draft/([A-Za-z0-9]*)
+Route::post('/crud/activities/invite-draft/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
+    if (!isset($_POST['invitee']) || empty($_POST['invitee'])) {
+        $_SESSION['msg'] = lang("No invitee given.", "Kein Einzuladender angegeben.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/draft/" . $id);
+        die();
+    }
+    $id = $DB->to_ObjectID($id);
+    $draft = $osiris->activitiesDrafts->findOne(['_id' => $id]);
+    if (empty($draft)) {
+        $_SESSION['msg'] = lang("Draft not found.", "Entwurf nicht gefunden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/drafts");
+        die();
+    }
+
+    // get username
+    $invitee = $_POST['invitee'];
+    // append user name to draft_shared_with
+    $osiris->activitiesDrafts->updateOne(
+        ['_id' => $id],
+        ['$addToSet' => ['draft_shared_with' => $invitee]]
+    );
+
+    header("Location: " . ROOTPATH . "/activities/drafts/" . $id);
+    die();
+});
+
+
+Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+    $collection = $osiris->activities;
+    $id = $DB->to_ObjectID($id);
+
+    if (!isset($_POST['values'])) {
+        // delete tags
+        $collection->updateOne(
+            ['_id' => $id],
+            ['$unset' => ['tags' => '']]
+        );
+        $_SESSION['msg'] = lang("Tags deleted.", "Tags gelöscht.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $values = validateValues($_POST['values'], $DB);
+        $collection->updateOne(
+            ['_id' => $id],
+            ['$set' => ['tags' => $values['tags']]]
+        );
+        $_SESSION['msg'] = lang("Tags updated.", "Tags aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    }
+
+    header("Location: " . ROOTPATH . "/activities/view/$id");
+    die();
 });
 
 
@@ -728,6 +952,10 @@ Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function
     $authors = [];
     $units = [];
     foreach ($_POST['authors'] as $i => $a) {
+        if (isset($a['unit_override']) && !empty($a['unit_override'])) {
+            if (!($a['units'] ?? false)) $a['units'] = [];
+            $a['units'] = array_merge($a['units'], explode(',', $a['unit_override']));
+        }
         if (isset($a['units']) && !empty($a['units']) && is_array($a['units'])) {
             $units = array_merge($units, $a['units']);
         }

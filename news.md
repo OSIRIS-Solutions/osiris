@@ -1,14 +1,149 @@
 # Neuigkeiten
 
 
-<span class="badge float-right">01.10.2025</span>
-<a class="anchor" href="#version-1.5.3" id="version-1.5.3"></a>
+<span class="badge float-right">12.10.2025</span>
+<a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
-## Build 20251001
+## Version 1.6.0
+
+#### <i class="ph ph-seal-check"></i> Neue Qualitäts-Workflows für Aktivitäten
+
+OSIRIS 1.6.0 führt ein vollständig neues System für Qualitäts- und Prüf-Workflows ein – flexibel, offen und direkt in der Aktivität integriert:
+- Admins können eigene Workflows definieren und beliebigen Aktivitätskategorien zuordnen.
+- Jeder Workflow besteht aus frei konfigurierbaren Schritten, denen Rollen und Organisationseinheiten zugewiesen werden können.
+- Schritte können parallel oder sequenziell ablaufen – ideal für Freigaben durch Abteilungsleitungen und Bibliothek.
+- Workflow-Schritte lassen sich bei Bedarf auf die eigene Organisationseinheit beschränken.
+- Fertige Workflows können nachträglich bestehenden Aktivitäten zugewiesen („migriert“) werden.
+- Der Abschluss aller Schritte führt automatisch zum Status „verified“, über den zentral gefiltert werden kann.
+- Aktivitäten können optional nach bestimmten Schritten gesperrt werden.
+
+👉 Damit lassen sich interne Prüf- und Freigabeprozesse direkt in OSIRIS abbilden – von der Datenerfassung bis zur Veröffentlichung.
+
+**Neues Workflow-UI in der Aktivität**
+
+Ein neues Workflow-Widget wurde zu Aktivitäten hinzugefügt, die Teil eines Workflows sind:
+
+- Kompakte Schritt-Leiste mit visuellem Fortschritt, Icons und Tooltips.
+- Aktuell laufende Schritte werden hervorgehoben, abgeschlossene nach vorne sortiert.
+- Ein schmaler, fixierter Fortschrittsbalken oben im Interface zeigt den Workflow-Status jederzeit an.
+- Bei abgeschlossenen Workflows färbt sich die Leiste grün, bei Zurückweisungen rot.
+- Klick auf die Leiste öffnet das vollständige Workflow-Widget mit allen Details.
+- Dieses zeigt alle Schritte, Zuständige, Status und eventuelle Kommentare an.
+- Die einzelnen Schritte des Workflows werden in der Historie der Aktivität protokolliert.
+
+**Neues Reviewer-Interface**
+
+Für Rollen mit Prüfaufgaben (z. B. Abteilungsleitungen, Bibliothek) gibt es ein übersichtliches neues Reviewer-Dashboard:
+- Zeigt alle aktuell zu prüfenden Aktivitäten auf einen Blick.
+- Filter nach Kategorie, Rolle, Organisationseinheit oder Status.
+- Schnell-Aktionen zum Freigeben oder Zurückweisen direkt aus der Liste.
+- Benachrichtigungen erscheinen automatisch in der Seitenleiste und in der Navigation.
+
+**Möglichkeit, Aktivitäten zurückzuweisen**
+
+Prüfer:innen können Aktivitäten zurückweisen, wenn z. B. Angaben fehlen oder unklar sind. Wird eine Aktivität zurückgewiesen, passiert Folgendes:
+- Der Workflow-Status wechselt auf „rejected“.
+- Prüfer:innen können einen Kommentar hinterlassen und damit die Aktivität zur Bearbeitung freigeben.
+- Autor:innen erhalten eine Nachricht in ihren Benachrichtigungen mit Kommentar.
+- Nach Überarbeitung können sie die Aktivität per Klick erneut zur Prüfung einreichen. Dabei können sie ebenfalls einen Kommentar hinterlassen.
+- Alle bisherigen Freigaben bleiben erhalten – kein Datenverlust, kein Neustart des Workflows.
+
+**Filter für Workflow-Status**
+
+- Damit Filter und Übersichten korrekt funktionieren, gibt es ein neues Recht zum Anzeigen von Workflows, das standardmäßig nicht zugewiesen ist. Nur wer dieses Recht hat, sieht alle Workflows und kann sie nutzen.
+- In der Aktivitäten-Übersicht gibt es jetzt einen neuen Filter für den Workflow-Status (pending, in-progress, verified, rejected). Außerdem gibt es im Quartalfeld einen Indikator, wenn eine Aktivität Teil eines Workflows ist, der den Status anzeigt.
+- In der erweiterten Suche gibt es ebenfalls einen Filter für den Workflow-Status.
+- Im Download-Bereich gibt es einen neuen Filter für den Workflow-Status.
+- In den allgemeinen Einstellungen gibt es jetzt einen Neuen Tab für Portfolio (wenn eingeschaltet), in dem Admins festlegen können, welche Aktivitäten im Portfolio angezeigt werden. Es gibt drei Optionen:
+  - Alle Aktivitäten (Standard)
+  - Nur genehmigte Aktivitäten (nur Aktivitäten mit dem Status verified)
+  - Genehmigte Aktivitäten und Aktivitäten ohne Workflow (Aktivitäten mit dem Status verified und Aktivitäten, die keinem Workflow zugeordnet sind)
+
+**Migration & Datenmodell**
+
+- Alte Workflows können per Migration entfernt oder zurückgesetzt werden (über das Workflow-Interface).
+- Automatische Initialisierung bei neu erstellten Aktivitäten.
+
+
+#### <i class="ph ph-envelope"></i> Neuer Mail-Digest (Benachrichtigungs-Zusammenfassung)
+
+OSIRIS versendet nun auf Wunsch automatische Digest-E-Mails – übersichtlich, zweisprachig und im OSIRIS-Design:
+
+- Enthält eine Übersicht offener Aktivitäten, Nachrichten und Aufgaben (alles was man in den Benachrichtigungen sieht).
+- Frequenz pro Nutzer einstellbar: none, daily, weekly, monthly.
+- Standardverhalten kann global von Admins festgelegt werden.
+- Versand erfolgt automatisch über den Cron-Job `/cron/digest`.
+- Mails sind zweisprachig (DE/EN), vollständig UTF-8-kodiert und nutzen das OSIRIS-Design.
+
+#### <i class="ph ph-file-text"></i> Entwürfe für Aktivitäten
+- Nutzer:innen können Aktivitäten als Entwurf speichern und später fertigstellen.
+- Entwürfe sind nur für die erstellende Person sichtbar.
+- Entwürfe können jederzeit geladen, bearbeitet und gespeichert werden.
+- Wenn ein Entwurf gespeichert wird, wird automatisch eine neue Aktivität erstellt und der Entwurf gelöscht.
+- Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
+
+#### <i class="ph ph-tag"></i> Schlagworte für Aktivitäten, Projekte und Events
+
+- Aktivitäten können nun mit Schlagworten versehen werden, um sie besser zu kategorisieren und zu finden.
+- Es kann in alle Aktivitäten nach Schlagworten gefiltert werden.
+- Schlagworte lassen sich in der Detailansicht von Aktivitäten hinzufügen. Sie können aber auch bei der Erstellung oder Bearbeitung von Aktivitäten hinzugefügt werden. Dazu wurde ein neues Datenfeld `tags` hinzugefügt.
+- Dem Rechte-Management wurde ein neues Recht `activities.tags` hinzugefügt, das standardmäßig nicht vergeben ist. Nur wer dieses Recht hat, kann Schlagworte zu Aktivitäten hinzufügen oder entfernen. Dies gilt auch immer nur dann, wenn die Aktivität selbst auch bearbeitet werden darf. 
+- Schlagworte lassen sich zentral im Admin-Bereich unter "Inhalte" > "Schlagworte" verwalten. Dort können Admins neue Schlagworte hinzufügen, bestehende bearbeiten oder löschen.
+- Dieses Feature kann im Admin-Bereich unter "Funktionen" ein- und ausgeschaltet werden.
+- Schlagworte können zu Aktivitäten, Projekten, und Events hinzugefügt werden. 
+
+#### <i class="ph ph-file-text"></i> Verbesserter Report-Builder
+
+Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzeroberfläche sowie zusätzliche Funktionen zur Anpassung von Berichten.
+
+- Es wurden neue **Variablen für Berichte** hinzugefügt, die im Report-Template verwendet werden können. Diese Variablen können im Report-Builder definiert werden und ermöglichen es, dynamische Inhalte in den Bericht einzufügen. Sowohl die Vorschau als auch der generierte Bericht unterstützen diese Variablen.
+- Es wurde ein neuer Baustein hinzugefügt, mit dem man eine Tabelle mit Aktivitäten und einem beliebigen weiteren Datenfeld erstellen kann. Dies ermöglicht es, Berichte zu erstellen, die spezifische Informationen zu Aktivitäten enthalten, die für den Bericht relevant sind, zum Beispiel Impact-Faktoren, Publikationsarten oder andere benutzerdefinierte Felder.
+- Die Unterstützung für **Textbausteine** wurde verbessert. Textbausteine können jetzt formatierten Text enthalten, der im Bericht korrekt dargestellt wird. Dies ermöglicht es, Berichte mit ansprechenderen und besser strukturierten Textinhalten zu erstellen.
+- Sowohl der Aktivitäten- als auch der Impact-Faktor-Baustein unterstützen jetzt **Sortierungen** (gewünscht von IfL). Es wird dabei zwischen aufsteigender und absteigender Sortierung unterschieden.
+- Die Zeitbegrenzung ist jetzt standardmäßig ausgewählt, um Verwirrung zu vermeiden.
+- Die Benutzeroberfläche wurde verbessert, indem Klapp- und Kopierfunktionen hinzugefügt wurden. Außerdem gibt es jetzt Dropdown-Menüs für Aggregationen und eine bessere Beschreibung der Bausteine.
+- Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.
+
+
+#### <i class="ph ph-textbox"></i> Neue Datenfelder
+- Es wurden neue Datenfelder für Aktivitäten hinzugefügt:
+  - **Funding Type**: Ein Dropdown-Feld, das es ermöglicht, den Typ der Finanzierung auszuwählen. Die möglichen Werte können im Vokabular unter "funding-type" definiert werden und sind die gleichen wie bei Projekten.
+  - **Schlagworte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Schlagworte zu Aktivitäten hinzuzufügen. Die möglichen Werte können im Admin-Bereich unter "Inhalte" > "Schlagworte" verwaltet werden.
+  - **Projekte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Projekte mit Aktivitäten zu verknüpfen. Es können mehrere Projekte ausgewählt werden und die über die DOI zur Verfügung gestellten Funding-Nummern werden automatisch mit den Projekten abgeglichen und verknüpft. Es gibt ein neues Recht, um Projekte mit Aktivitäten zu verknüpfen, ohne sie bearbeiten zu können.
+
+
+#### <i class="ph ph-lock"></i> Auth-Token für Nutzerregistrierung
+- Es wurde ein Auth-Token für die Auth-Nutzerregistrierung eingeführt. Dieser Token kann verwendet werden, um die Registrierung neuer Nutzer zu validieren und sicherzustellen, dass nur autorisierte Anfragen bearbeitet werden.
+- Der Token kann in der URL zur Registrierungsseite übergeben werden und wird dort überprüft. Bei erfolgreicher Validierung kann der Nutzer mit der Registrierung fortfahren.
+- Dies erhöht die Sicherheit des Registrierungsprozesses und verhindert Missbrauch durch unautorisierte Zugriffe.
+
+
+#### <i class="ph ph-list-checks"></i> Erweiterung für Conditional Templates
+
+Die Vorlagenlogik wurde erweitert, um bedingtes Rendern basierend auf **mehreren Feldern** zu unterstützen:
+
+- Verwende `&`, um zu verlangen, dass **alle** Felder vorhanden sind.
+- Verwende `|`, um zu rendern, wenn **ein beliebiges** Feld vorhanden ist.
+
+**Beispiele:**
+- `%title Titel: %` → wird nur gerendert, wenn `title` gesetzt ist.  
+- `%title&authors by %` → wird nur gerendert, wenn **sowohl** `title` als auch `authors` ausgefüllt sind  
+- `%journal|conference In: %` → wird gerendert, wenn **entweder** `journal` oder `conference` vorhanden ist
+
+Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zusätzliche Codelogik hinzugefügt werden muss.
+
 
 #### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
+- Es wurde ein Problem behoben, durch das man beim Kopieren einer Aktivität eine deaktivierte Kategorie auswählen konnte
+- Die Dokumentation wurde durch das neue Wiki unter https://wiki.osiris-app.de/ ersetzt. Die alten Links zu den Hilfeseiten wurden aktualisiert.
+- Die Darstellung der Weltkarte von Kooperationspartnern wurde verbessert, indem das Layout-Styling angepasst und die Größe der Karte automatisch an den verfügbaren Platz angepasst wird. Dadurch sieht die Karte jetzt besonders auf großen Bildschirmen besser aus und nutzt den verfügbaren Platz optimal.
+- Es wurde ein Problem behoben, durch das Custom Fields ohne Wert immer '-' ausgegeben haben.
+  - Die Logik ist, dass ein Custom Field das explizit leer gelassen wurde, auch als leer gerendert wird. Wenn das Feld jedoch gar nicht existiert, z.B. bei neuen Aktivitäten oder weil das Feld später dazugekommen ist, dann wird der angegebene Default-Wert verwendet.
+
+
+---
 
 
 <span class="badge float-right">30.09.2025</span>
@@ -50,6 +185,7 @@
 - Es werden jetzt nicht zusätzlich volle Adminrechte benötigt, um Nutzer zu synchronisieren
 - Die Karte der Kooperationspartner wurde nicht geladen, wenn Latitude und Longitude des Instituts nicht gesetzt waren. Jetzt wird eine Standard-Position verwendet, um dem vorzubeugen.
 
+---
 
 <span class="badge float-right">24.08.2025</span>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>

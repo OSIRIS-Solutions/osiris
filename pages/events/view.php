@@ -1,8 +1,11 @@
 <?php
-$in_past = strtotime($conference['end']) < time();
+$today = date('Y-m-d') == $conference['end'];
+$in_past = !$today && strtotime($conference['end']) < time();
 
 $days = false;
-if (!$in_past) {
+if ($today) {
+    $days = lang('today', 'heute');
+} elseif (!$in_past) {
     $days = ceil((strtotime($conference['start']) - time()) / 86400);
     $days = $days > 0 ? $days : 0;
     $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
@@ -125,18 +128,26 @@ if ($topicsEnabled) {
             <tr>
                 <td>
                     <span class="key"><?= lang('URL', 'URL') ?></span>
-                    <?php if (!empty($conference['url'])) { 
+                    <?php if (!empty($conference['url'])) {
                         $short_url = str_replace('https://', '', $conference['url']);
                         if (strlen($short_url) > 50) {
                             $short_url = substr($short_url, 0, 50) . '...';
                         }
-                        ?>
+                    ?>
                         <a href="<?= $conference['url'] ?>" target="_blank"><i class="ph ph-link"></i> <?= $short_url ?></a>
                     <?php } else { ?>
                         -
                     <?php } ?>
                 </td>
             </tr>
+            <?php if ($Settings->featureEnabled('tags')) { ?>
+                <tr>
+                    <td>
+                        <span class="key"><?= $Settings->tagLabel() ?></span>
+                        <?= $Settings->printTags($conference['tags'] ?? [], 'conferences') ?>
+                    </td>
+                </tr>
+            <?php } ?>
             <?php if (!$in_past) { ?>
                 <tr>
                     <td>

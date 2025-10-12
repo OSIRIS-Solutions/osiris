@@ -16,6 +16,54 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$drafts_enabled = $Settings->featureEnabled('drafts');
+$user_drafts = 0;
+if ($drafts_enabled) {
+    // check if user has drafts
+    $user_drafts = $osiris->activitiesDrafts->count([
+        '$or' => [
+            ['created_by' => $_SESSION['username']],
+            ['draft_shared_with' => $_SESSION['username']]
+        ]
+    ]);
+}
+
+
+$form = $form ?? array();
+$copy = $copy ?? false;
+$draft = $draft ?? false;
+
+// check if it is a copy of a disabled category
+if ($copy && isset($form['subtype'])) {
+    $cat = $osiris->adminTypes->findOne(['id' => $form['subtype']]);
+    if ($cat === null || (isset($cat['disabled']) && $cat['disabled'] == "true")) {
+        echo '<div class="alert signal mb-20">';
+        echo lang('The activity you are trying to copy is of a disabled category. Please select a new category.', 'Die Aktivität, die du kopieren möchtest, gehört zu einer deaktivierten Kategorie. Bitte wähle eine neue Kategorie aus.');
+        echo '</div>';
+        $form['subtype'] = null;
+    }
+}
+
+$formaction = ROOTPATH;
+if (!empty($form) && isset($form['_id']) && !$copy) {
+    $formaction .= "/crud/activities/update/" . $form['_id'];
+    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $url = ROOTPATH . "/activities/view/" . $form['_id'];
+} else {
+    $formaction .= "/crud/activities/create";
+    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $url = ROOTPATH . "/activities/view/*";
+}
+
+function val($index, $default = '')
+{
+    $val = $GLOBALS['form'][$index] ?? $default;
+    if (is_string($val)) {
+        return htmlspecialchars($val);
+    }
+    return $val;
+}
 ?>
 
 <style>
@@ -34,7 +82,7 @@
         font-style: italic;
     }
 
-   
+
     .form-help {
         display: none;
         position: absolute;
@@ -98,31 +146,6 @@
         }
     }
 </style>
-<?php
-
-$form = $form ?? array();
-$copy = $copy ?? false;
-
-$formaction = ROOTPATH;
-if (!empty($form) && isset($form['_id']) && !$copy) {
-    $formaction .= "/crud/activities/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-    $url = ROOTPATH . "/activities/view/" . $form['_id'];
-} else {
-    $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
-    $url = ROOTPATH . "/activities/view/*";
-}
-
-function val($index, $default = '')
-{
-    $val = $GLOBALS['form'][$index] ?? $default;
-    if (is_string($val)) {
-        return htmlspecialchars($val);
-    }
-    return $val;
-}
-?>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
@@ -179,6 +202,19 @@ function val($index, $default = '')
 </div>
 
 
+<div class="modal" id="drafts-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <div id="content" id="drafts">
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal" id="author-help" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -222,7 +258,7 @@ function val($index, $default = '')
                 </p>
             <?php } ?>
 
-            <a href="<?= ROOTPATH ?>/docs/add-activities#autoren-bearbeiten" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
+            <a href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
 
         </div>
     </div>
@@ -372,11 +408,20 @@ function val($index, $default = '')
     </div>
 </div>
 
+<?php if ($drafts_enabled && $user_drafts > 0) { ?>
+    <a data-target="#drafts-modal" class="btn primary mb-10" id="drafts-btn" onclick="loadDrafts()">
+        <i class="ph ph-file-text mr-5"></i>
+        <?= lang('You have pending drafts', 'Du hast ausstehende Entwürfe') ?>
+        <span class="index"><?= $user_drafts ?></span>
+    </a>
+<?php } ?>
 
-<a target="_blank" href="<?= ROOTPATH ?>/docs/add-activities" class="btn tour float-right ml-5" id="docs-btn">
+
+<a target="_blank" href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour float-right ml-5" id="docs-btn">
     <i class="ph ph-question mr-5"></i>
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
+
 <?php if (empty($form)) { ?>
     <!-- Create new activity -->
     <h1 class="my-0">
@@ -435,6 +480,10 @@ function val($index, $default = '')
     </div>
 
 
+<?php } elseif ($draft) { ?>
+    <h1 class="mt-0">
+        <?= lang('Edit draft', 'Bearbeite Entwurf') ?>
+    </h1>
 <?php } elseif ($copy) { ?>
     <h1 class="mt-0"><?= lang('Copy activity', 'Kopiere Aktivität') ?></h1>
 <?php } else { ?>
@@ -448,7 +497,6 @@ function val($index, $default = '')
         echo $Format->formatShort();
         ?>
     </div>
-
 <?php } ?>
 
 <?php if (!empty($form)) { ?>
@@ -550,6 +598,11 @@ function val($index, $default = '')
             <input type="hidden" class="form-control disabled" name="values[type]" id="type" readonly>
             <input type="hidden" class="form-control disabled" name="values[subtype]" id="subtype" readonly>
 
+            <?php if ($draft) { ?>
+                <input type="hidden" class="form-control disabled" name="values[draft_id]" id="draft_id" value="<?= $form['_id'] ?? '' ?>" readonly>
+            <?php } ?>
+
+
             <p id="type-description" class="description">
                 <!-- filled by togglePubType() in add-activity.js -->
             </p>
@@ -624,6 +677,10 @@ function val($index, $default = '')
 
             <button class="btn secondary" type="submit" id="submit-btn" onclick="verifyForm(event, '#activity-form')"><?= $btntext ?></button>
 
+            <?php if ($drafts_enabled && (empty($form) || $draft)) { ?>
+                <button class="btn" type="button" id="draft-btn" onclick="saveDraft()"><?= lang('Save as draft', 'Als Entwurf speichern') ?></button>
+            <?php } ?>
+
         </form>
     </div>
 </div>
@@ -652,6 +709,7 @@ function val($index, $default = '')
     let ID = null;
     let COPY = false;
     let CONFERENCE = '<?= $_GET['conference'] ?? '' ?>';
+    let DRAFT = <?= json_encode($draft) ?>;
 </script>
 
 <?php if (!empty($form)) {
@@ -659,10 +717,15 @@ function val($index, $default = '')
     if (isset($form['subtype'])) $t = $form['subtype'];
     else {
         $t = $form['type'];
-        if ($t == 'publication') $t = $form['pubtype'];
-        if ($t == 'students') $t = $form['category'] ?? 'doctoral thesis';
-        if ($t == 'review') $t = $form['role'] ?? 'review';
-        if ($t == 'misc') $t = 'misc-' . ($form['iteration'] ?? 'once');
+        // get first available subtype
+        $type = $Categories->getCategory($t);
+        $subtypes = $type['children'] ?? array();
+        $subtypes = array_filter(DB::doc2Arr($subtypes), function ($s) {
+            return !($s['disabled'] ?? false);
+        });
+        if (!empty($subtypes)) {
+            $t = array_values($subtypes)[0]['id'] ?? $t;
+        }
     }
 ?>
 
@@ -701,7 +764,7 @@ function val($index, $default = '')
 
     <script>
         var doi = '<?= $_GET['doi'] ?>'
-        console.log(doi);
+        // console.log(doi);
 
         $('#search-doi').val(doi);
         getDOI(doi);
@@ -731,7 +794,7 @@ function val($index, $default = '')
             INPUT = $('#org-' + type + '-search')
             SELECTED = $('#org-' + type + '-value')
             COMMENT = $('#org-' + type + '-search-comment')
-            console.log(SUGGEST);
+            // console.log(SUGGEST);
             window.createOrganizationTR = function(org) {
                 // overwrite organisation function
                 let id = cleanID(org.id)

@@ -21,7 +21,7 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '12');
+define('CSS_JS_VERSION', '13');
 
 // error_reporting(E_ERROR);
 
@@ -96,6 +96,7 @@ include_once BASEPATH . "/routes/login.php";
 
 // route for language setting
 Route::get('/set-preferences', function () {
+    include_once BASEPATH . "/php/init.php";
 
     // Language settings and cookies
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('language', $_GET)) {
@@ -108,6 +109,15 @@ Route::get('/set-preferences', function () {
             'httponly' => false,
             'samesite' => 'Lax',
         ]);
+        // save language in user profile
+        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
+            && isset($_SESSION['username']) && !empty($_SESSION['username'])
+        ) {
+            $osiris->persons->updateOne(
+                ['username' => $_SESSION['username']],
+                ['$set' => ['lang' => $_COOKIE['osiris-language']]]
+            );
+        }
     }
     // check if accessibility settings are given
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('accessibility', $_GET)) {
@@ -153,7 +163,6 @@ if (
     include_once BASEPATH . "/routes/projects.php";
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
-    include_once BASEPATH . "/routes/tags.php";
     include_once BASEPATH . "/routes/teaching.php";
     include_once BASEPATH . "/routes/users.php";
     include_once BASEPATH . "/routes/visualize.php";
@@ -166,6 +175,7 @@ if (
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";
     include_once BASEPATH . "/routes/organizations.php";
+    include_once BASEPATH . "/routes/workflows.php";
     // include_once BASEPATH . "/routes/adminGeneral.php";
     // include_once BASEPATH . "/routes/adminRoles.php";
 
@@ -177,6 +187,7 @@ include_once BASEPATH . "/routes/api/api.php";
 include_once BASEPATH . "/routes/api/dashboard.php";
 include_once BASEPATH . "/routes/api/portfolio.php";
 
+include_once BASEPATH . "/routes/cron.php";
 
 /**
  * Routes for OSIRIS Portal
