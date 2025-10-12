@@ -1,10 +1,10 @@
 # Neuigkeiten
 
 
-<span class="badge float-right">01.10.2025</span>
+<span class="badge float-right">12.10.2025</span>
 <a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
-## Version 1.6.0 Beta
+## Version 1.6.0
 
 #### <i class="ph ph-seal-check"></i> Neue Qualitäts-Workflows für Aktivitäten
 
@@ -101,7 +101,7 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Die Aggregations-Tabellen wurden verbessert, indem korrekte Namen für Felder und Werte verwendet werden. Auch leere Felder werden jetzt besser dargestellt. Außerdem sorgt das "Entwirren" von Array-Feldern dazu, dass diese einzeln gezählt werden können. Man kann also jetzt zum Beispiel nach Einheiten oder Forschungsbereichen aggregieren, auch wenn diese als Mehrfachauswahl definiert sind.
 
 
-#### <i class="ph ph-text"></i> Neue Datenfelder
+#### <i class="ph ph-textbox"></i> Neue Datenfelder
 - Es wurden neue Datenfelder für Aktivitäten hinzugefügt:
   - **Funding Type**: Ein Dropdown-Feld, das es ermöglicht, den Typ der Finanzierung auszuwählen. Die möglichen Werte können im Vokabular unter "funding-type" definiert werden und sind die gleichen wie bei Projekten.
   - **Schlagworte**: Ein Mehrfachauswahl-Feld, das es ermöglicht, Schlagworte zu Aktivitäten hinzuzufügen. Die möglichen Werte können im Admin-Bereich unter "Inhalte" > "Schlagworte" verwaltet werden.
@@ -113,6 +113,22 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Der Token kann in der URL zur Registrierungsseite übergeben werden und wird dort überprüft. Bei erfolgreicher Validierung kann der Nutzer mit der Registrierung fortfahren.
 - Dies erhöht die Sicherheit des Registrierungsprozesses und verhindert Missbrauch durch unautorisierte Zugriffe.
 
+
+#### <i class="ph ph-list-checks"></i> Erweiterung für Conditional Templates
+
+Die Vorlagenlogik wurde erweitert, um bedingtes Rendern basierend auf **mehreren Feldern** zu unterstützen:
+
+- Verwende `&`, um zu verlangen, dass **alle** Felder vorhanden sind.
+- Verwende `|`, um zu rendern, wenn **ein beliebiges** Feld vorhanden ist.
+
+**Beispiele:**
+- `%title Titel: %` → wird nur gerendert, wenn `title` gesetzt ist.  
+- `%title&authors by %` → wird nur gerendert, wenn **sowohl** `title` als auch `authors` ausgefüllt sind  
+- `%journal|conference In: %` → wird gerendert, wenn **entweder** `journal` oder `conference` vorhanden ist
+
+Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zusätzliche Codelogik hinzugefügt werden muss.
+
+
 #### Bug Fixes und Verbesserungen
 - Es wurde die Visualisierung der Netzwerke von Organisationseinheiten gefixt
 - Autor:innen mit mehreren Vornamen werden jetzt korrekt abgekürzt
@@ -121,6 +137,7 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Die Darstellung der Weltkarte von Kooperationspartnern wurde verbessert, indem das Layout-Styling angepasst und die Größe der Karte automatisch an den verfügbaren Platz angepasst wird. Dadurch sieht die Karte jetzt besonders auf großen Bildschirmen besser aus und nutzt den verfügbaren Platz optimal.
 
 
+---
 
 
 <span class="badge float-right">30.09.2025</span>
@@ -162,6 +179,7 @@ Der Report-Builder wurde überarbeitet und bietet nun eine verbesserte Benutzero
 - Es werden jetzt nicht zusätzlich volle Adminrechte benötigt, um Nutzer zu synchronisieren
 - Die Karte der Kooperationspartner wurde nicht geladen, wenn Latitude und Longitude des Instituts nicht gesetzt waren. Jetzt wird eine Standard-Position verwendet, um dem vorzubeugen.
 
+---
 
 <span class="badge float-right">24.08.2025</span>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>

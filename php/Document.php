@@ -1666,12 +1666,38 @@ class Document extends Settings
 
         foreach ($matches[1] as $match) {
             $m = explode(' ', $match, 2);
-            $value = $this->get_field($m[0]);
-            $text = $m[1];
-            if (empty($value)) $text = '';
+            $fields = $m[0];          // e.g. field1&field2 or field1|field2
+            $text = $m[1] ?? '';
+
+            // Check if multiple fields are used
+            if (strpos($fields, '&') !== false) {
+                $allFilled = true;
+                foreach (explode('&', $fields) as $f) {
+                    $value = trim($this->get_field($f));
+                    if (empty($value) || $value == '-') {
+                        $allFilled = false;
+                        break;
+                    }
+                }
+                if (!$allFilled) $text = '';
+            } elseif (strpos($fields, '|') !== false) {
+                $anyFilled = false;
+                foreach (explode('|', $fields) as $f) {
+                    $value = trim($this->get_field($f));
+                    if (!empty($value) && $value != '-') {
+                        $anyFilled = true;
+                        break;
+                    }
+                }
+                if (!$anyFilled) $text = '';
+            } else {
+                // single field as before
+                $value = trim($this->get_field($fields));
+                if (empty($value) || $value == '-') $text = '';
+            }
+
             $vars['%' . $match . '%'] = $text;
         }
-
         $line = strtr($template, $vars);
 
         $line = preg_replace('/\(\s*\)/', '', $line);
