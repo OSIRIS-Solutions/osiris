@@ -66,6 +66,15 @@ $affiliation = $Settings->get('affiliation_details');
         <i class="ph ph-envelope" aria-hidden="true"></i>
         <?= lang('Email', 'E-Mail') ?>
     </a>
+    <!-- portfolio -->
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <a onclick="navigate('portfolio')" id="btn-portfolio" class="btn">
+            <i class="ph ph-globe" aria-hidden="true"></i>
+            <?= lang('Portfolio', 'Portfolio') ?>
+        </a>
+    <?php } ?>
+
+    <!-- footer -->
     <a onclick="navigate('custom-footer')" id="btn-custom-footer" class="btn">
         <i class="ph ph-scales" aria-hidden="true"></i>
         <?= lang('Footer contents', 'Inhalte im Footer') ?>
@@ -512,6 +521,75 @@ $affiliation = $Settings->get('affiliation_details');
 </section>
 
 
+<section id="portfolio" style="display: none;">
+
+    <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+        <div class="box primary">
+
+            <div class="content">
+                <h2 class="title"><?= lang('Portfolio Settings', 'Portfolio Einstellungen') ?></h2>
+
+                <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+                    <?= lang('You can specify here, if only workflow-approved activities should be shown in the portfolio.', 'Hier kannst du festlegen, ob nur workflow-genehmigte Aktivitäten im Portfolio angezeigt werden sollen.') ?>
+                <?php } ?>
+
+                <div class="form-group">
+                    <?php
+                    $portfolio = $Settings->get('portfolio-workflow-visibility', 'all');
+                    ?>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-approved" value="only-approved" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'only-approved' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-approved">
+                            <?= lang('Only approved activities', 'Nur genehmigte Aktivitäten') ?>
+                        </label>
+                    </div>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-approved-or-empty" value="approved-or-empty" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'approved-or-empty' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-approved-or-empty">
+                            <?= lang('Approved activities and activities without workflow', 'Genehmigte Aktivitäten und Aktivitäten ohne Workflow') ?>
+                        </label>
+                    </div>
+
+                    <div class="custom-radio">
+                        <input type="radio" id="portfolio-workflow-visibility-all" value="all" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'all' ? 'checked' : '' ?>>
+                        <label for="portfolio-workflow-visibility-all">
+                            <?= lang('All activities', 'Alle Aktivitäten') ?>
+                        </label>
+                    </div>
+                </div>
+
+                <h5>
+                    <?=lang('Generally visible activity types', 'Allgemein sichtbare Aktivitätstypen')?>
+                </h5>
+
+                <ul class="list">
+                    <?php foreach ($osiris->adminTypes->find(['portfolio' => 1], ['sort'=> ['parent'=> 1, 'order'=>1]]) as $type) { ?>
+                        <li>
+                            <i class="ph ph-<?= $type['icon'] ?> ph-fw text-<?= $type['parent'] ?>"></i>
+                            <?= lang($type['name'], $type['name_de']) ?>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <p class="text-muted">
+                    <?= lang('The activity types listed above are generally visible in the portfolio. You can manage the activity types in the', 'Die oben aufgeführten Aktivitätstypen sind generell im Portfolio sichtbar. Du kannst die Aktivitätstypen im') ?>
+                    <a href="<?= ROOTPATH ?>/admin/categories" class="colorless text-decoration-underline">
+                        <?= lang('activity types settings', 'Einstellungen der Aktivitätstypen') ?>
+                    </a>.
+                </p>
+
+                <button class="btn primary">
+                    <i class="ph ph-floppy-disk"></i>
+                    <?= lang('Save', 'Speichern') ?>
+                </button>
+            </div>
+
+        </div>
+    </form>
+</section>
+
+
 <section id="countries" style="display: none">
 
     <div class="box padded">
@@ -657,7 +735,7 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                 </div>
 
-                 <div class="box px-20">
+                <div class="box px-20">
                     <h3 id="drafts">
                         <?= lang('Drafts', 'Entwürfe') ?>
                     </h3>

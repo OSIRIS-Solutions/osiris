@@ -54,6 +54,10 @@ Prüfer:innen können Aktivitäten zurückweisen, wenn z. B. Angaben fehlen oder
 - In der Aktivitäten-Übersicht gibt es jetzt einen neuen Filter für den Workflow-Status (pending, in-progress, verified, rejected). Außerdem gibt es im Quartalfeld einen Indikator, wenn eine Aktivität Teil eines Workflows ist, der den Status anzeigt.
 - In der erweiterten Suche gibt es ebenfalls einen Filter für den Workflow-Status.
 - Im Download-Bereich gibt es einen neuen Filter für den Workflow-Status.
+- In den allgemeinen Einstellungen gibt es jetzt einen Neuen Tab für Portfolio (wenn eingeschaltet), in dem Admins festlegen können, welche Aktivitäten im Portfolio angezeigt werden. Es gibt drei Optionen:
+  - Alle Aktivitäten (Standard)
+  - Nur genehmigte Aktivitäten (nur Aktivitäten mit dem Status verified)
+  - Genehmigte Aktivitäten und Aktivitäten ohne Workflow (Aktivitäten mit dem Status verified und Aktivitäten, die keinem Workflow zugeordnet sind)
 
 **Migration & Datenmodell**
 
