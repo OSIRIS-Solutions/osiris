@@ -94,7 +94,7 @@ Route::post('/crud/workflows/create', function () {
     if (!empty($workflow_exist)) {
         $_SESSION['msg'] = lang('Workflow ID does already exist.', 'Die Workflow-ID wird bereits verwendet.');
         $_SESSION['msg_type'] = "error";
-        header("Location: " . ROOTPATH . "/workflows/new");
+        header("Location: " . ROOTPATH . "/admin/workflows/new");
         die();
     }
 
