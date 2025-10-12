@@ -1,3 +1,18 @@
+<?php 
+/**
+ * Admin Workflow Page for creating a new workflow
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2025 Julia Koblitz, OSIRIS Solutions GmbH
+ *
+ * @package     OSIRIS
+ * @since       1.6.0
+ * 
+ * @copyright	Copyright (c) 2025 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+?>
 <div class="modal" id="unique" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
