@@ -228,8 +228,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
 
     if (!empty($activity)) {
-
-        $doc = json_decode(json_encode($activity->getArrayCopy()), true);
+        $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
         $locked = $activity['locked'] ?? false;
         if ($doc['type'] == 'publication' && isset($doc['journal'])) {
             // fix old journal_ids
