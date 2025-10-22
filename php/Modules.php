@@ -1190,7 +1190,7 @@ class Modules
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
+                echo '<input type="number" step="0.0001" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;
@@ -2109,7 +2109,7 @@ class Modules
                     <select name="values[category]" id="category-students" class="form-control" <?= $labelClass ?>>
                         <option value="doctoral student" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Student', 'Doktorand:in') ?></option>
                         <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
-                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelostudent') ?></option>
+                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelorstudent') ?></option>
                         <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>

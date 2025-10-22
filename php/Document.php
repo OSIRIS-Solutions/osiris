@@ -778,7 +778,7 @@ class Document extends Settings
             case "master student":
                 return lang('Master Student', 'Masterstudent');
             case "bachelor student":
-                return lang('Bachelor Student', 'Bachelostudent');
+                return lang('Bachelor Student', 'Bachelorstudent');
             case "intern":
                 return lang('Intern', 'Praktikant');
             default:
