@@ -35,9 +35,22 @@ if (!empty($form) && isset($form['id'])) {
                 <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
             </p>
             <ul class="list" id="used-ids">
+                <li class="font-weight-bold">--- <?=lang('OSIRIS Fields', 'OSIRIS-Felder')?> ---</li>
+                <?php 
+                require_once BASEPATH . '/php/Fields.php';
+                $Fields = new Fields();
+                $field_ids = array_column($Fields->fields, 'id');
+                sort($field_ids);
+                foreach ($field_ids as $k) { 
+                    if (str_contains($k, '.')) continue;
+                    ?>
+                    <li><?= $k ?></li>
+                <?php } ?>
+                <li class="font-weight-bold">--- Custom Fields ---</li>
                   <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
                     <li><?= $k ?></li>
                 <?php } ?>
+                <li class="font-weight-bold">--- <?=lang('Keywords', 'Schlüsselwörter')?> ---</li>
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
