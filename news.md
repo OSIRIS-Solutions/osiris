@@ -1,6 +1,22 @@
 # Neuigkeiten
 
 
+
+<span class="badge float-right">23.10.2025</span>
+<a class="anchor" href="#version-251023" id="version-251023"></a>
+
+## Build 251023
+
+Wir haben kleinere Fehlerbehebungen und Verbesserungen vorgenommen:
+
+- Die Benutzeroberfläche für das Feature-Management wurde verbessert, indem die Features in Kategorien gruppiert und mit Beschreibungen versehen wurden. Dies erleichtert es Administratoren, die verfügbaren Funktionen zu verstehen und zu verwalten.
+- Es wurde eine Möglichkeit hinzugefügt, Events zentral auszuschalten. Dies kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" konfiguriert werden. Wenn diese Option deaktiviert ist, werden Events in der Navigation und auf der Startseite nicht mehr angezeigt.
+- Im Bereich News der eigenen Profilseite können jetzt auch neue Nutzer:innen angezeigt werden. Dies kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" eingestellt werden.
+- Es wird nun deutlicher auf Benachrichtigungen hingewiesen, indem der Button im Header rot hervorgehoben wird, wenn neue Benachrichtigungen vorhanden sind und auf der Startseite des Profils eine Meldung angezeigt wird.
+- Ein Problem mit Custom Fields des Typs `float` wurde behoben, wodurch nur ganze Zahlen erlaubt waren. Jetzt können auch Dezimalzahlen korrekt gespeichert und angezeigt werden.
+
+
+
 <span class="badge float-right">12.10.2025</span>
 <a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
