@@ -1005,10 +1005,10 @@ $affiliation = $Settings->get('affiliation_details');
                         </h4>
                         <div class="form-group">
                             <label for="" class="label">
-                                <?= lang('Automatic retrieval of journal metrics', 'Automatischer Download von Journal-Metriken') ?>
+                                <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>
                             </label>
                             <?php
-                            renderCheckbox('no-journal-metrics');
+                            renderCheckbox('no-journal-metrics', false);
                             ?>
                             <p class="description">
                                 <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
