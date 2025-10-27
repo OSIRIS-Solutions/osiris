@@ -51,6 +51,7 @@ if (!empty($form) && isset($form['id'])) {
                     <li><?= $k ?></li>
                 <?php } ?>
                 <li class="font-weight-bold">--- <?=lang('Keywords', 'Schlüsselwörter')?> ---</li>
+                <li>language</li>
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
