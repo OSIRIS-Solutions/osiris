@@ -1181,6 +1181,8 @@ class Modules
 
         switch ($field['format']) {
             case 'string':
+                // make sure that value is string
+                $value = strval($value);
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
