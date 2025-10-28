@@ -923,7 +923,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                             <?php } ?>
 
                                             <?php if ($Settings->hasPermission('activities.lock')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/controlling"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
+                                                <a class="border" href="<?= ROOTPATH ?>/activities/locking"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
                                             <?php } ?>
 
                                             <?php if ($Settings->hasPermission('admin.see')) { ?>
