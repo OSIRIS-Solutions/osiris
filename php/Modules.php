@@ -904,13 +904,27 @@ class Modules
         }
 
         if (!empty($form) && !empty($form['type'])) {
-            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['type']]);
+            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['subtype']]);
             if (!empty($typeArr) && !empty($typeArr['fields'])) {
                 $fields = DB::doc2Arr($typeArr['fields']);
                 $fields = array_filter($fields, function ($f) {
                     return ($f['type'] ?? 'field') === 'field' || ($f['type'] ?? 'field') === 'custom';
                 });
                 $this->fields = array_column($fields, 'props', 'id');
+            } elseif (!empty($typeArr) && !empty($typeArr['modules'])) {
+                // collect fields from modules
+                $fields = [];
+                foreach ($typeArr['modules'] as $module) {
+                    $req = false;
+                    if (str_ends_with($module, '*')) {
+                        $module = str_replace('*', '', $module);
+                        $req = true;
+                    }
+                    $fields[$module]= [
+                        'required' => $req
+                    ];
+                }
+                $this->fields = $fields;
             }
         }
 
@@ -978,18 +992,24 @@ class Modules
             </div>";
     }
 
+    function getFields(){
+        if (!empty($this->fields)) {
+            return $this->fields;
+        }
+
+    }
 
     function get_name($module)
     {
         if (!empty($this->fields) && !empty($this->fields[$module]) && isset($this->fields[$module]['label'])) {
             return lang($this->fields[$module]['label'], $this->fields[$module]['label_de'] ?? null);
         }
-        if (!isset($this->all_modules[$module]['name'])) {
+        if (!isset($this->all_modules[$module]['label'])) {
             $field = $this->DB->db->adminFields->findOne(['id' => $module]);
             if (!empty($field)) return lang($field['name'], $field['name_de'] ?? $field['name']);
             return ucfirst($module);
         }
-        return lang($this->all_modules[$module]['name'], $this->all_modules[$module]['name_de']);
+        return lang($this->all_modules[$module]['label'], $this->all_modules[$module]['label_de']);
     }
 
     function get_fields($modules)
@@ -1294,7 +1314,7 @@ class Modules
         $labelClass = ($req ? "required" : "");
 
         $m = $this->all_modules[$module] ?? [];
-        $label = lang($m['name'], $m['name_de'] ?? $m['name']);
+        $label = lang($m['label'], $m['label_de'] ?? $m['label']);
 
         $width = 12;
         if ($m['width'] ?? 6 > 0) {
