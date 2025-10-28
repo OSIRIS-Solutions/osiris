@@ -103,7 +103,7 @@ foreach ($typeModules as $m) {
                         </td>
                         <?php if ($sws) : ?>
                             <td>
-                                <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
+                                <input type="number" step="0.1" class="form-control" name="authors[<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
                             </td>
                         <?php elseif ($supervisorThesis) : ?>
                             <td>
@@ -243,7 +243,7 @@ foreach ($typeModules as $m) {
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
 
         <?php if ($sws) : ?>
-            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws"></td>')
+            tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
             tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('Other', 'Sonstiges') ?></option></select></td>')
         <?php elseif ($role == 'authors') : ?>
