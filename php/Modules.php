@@ -1783,10 +1783,10 @@ class Modules
                         <table class="table simple small">
                             <thead>
                                 <tr>
+                                    <th>Username</th>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th>Username</th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th>
                                     </th>
