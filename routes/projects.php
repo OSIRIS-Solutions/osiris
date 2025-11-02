@@ -115,6 +115,32 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 }, 'login');
 
 
+Route::get('/proposals/nagoya/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $collection = 'proposals';
+
+    if (DB::is_ObjectID($id)) {
+        $mongo_id = $DB->to_ObjectID($id);
+        $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
+    } else {
+        $project = $osiris->$collection->findOne(['name' => $id]);
+        $id = strval($project['_id'] ?? '');
+    }
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $project['name']]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/$collection/nagoya.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
     include_once BASEPATH . "/php/init.php";
