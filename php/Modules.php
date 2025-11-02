@@ -2066,7 +2066,7 @@ class Modules
                         <div class="footer">
 
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add author ...', 'Füge Autor hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
                                         <i class="ph ph-plus"></i>
@@ -2085,15 +2085,15 @@ class Modules
                         <?= $this->render_help($help) ?>
                     </div>
                     <small class="text-muted">
-                        <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
+                        <?= lang('Note: A detailed person editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Personeneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
                     </small>
                     <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affiliierten Autoren angegeben.') ?>
+                            <?= lang("Attention: No affiliated persons added.", 'Achtung: Keine affiliierten Personen angegeben.') ?>
                         </h5>
                         <?= lang(
-                            'Please double click on every affiliated author in the list above, to mark them as affiliated. Only affiliated authors will receive points and are shown in reports.',
-                            'Bitte doppelklicken Sie auf jeden affiliierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
+                            'Please double click on every affiliated person in the list above, to mark them as affiliated. Only affiliated persons will receive points and are shown in reports.',
+                            'Bitte doppelklicken Sie auf jede affiliierte Person in der Liste oben, um sie als zugehörig zu markieren. Nur zugehörige Personen erhalten Punkte und werden in Berichten berücksichtigt.'
                         ) ?>
                     </div>
                 </div>
@@ -2652,7 +2652,7 @@ class Modules
                         </div>
                         <div class="footer">
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Herausgeber hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">
                                         <i class="ph ph-plus"></i>
