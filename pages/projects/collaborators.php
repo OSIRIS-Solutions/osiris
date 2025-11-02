@@ -230,7 +230,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
     <datalist id="country-list">
         <?php
-        foreach ($DB->getCountries() as $iso => $name) { ?>
+        foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
             <option value="<?= $iso ?>"><?= $name ?></option>
         <?php } ?>
     </datalist>
