@@ -604,6 +604,9 @@ if ($topicsEnabled) {
                 <br>
                 <i class="ph ph-fill ph-circle" style="color:#008083"></i>
                 Partner
+                <br>
+                <i class="ph ph-fill ph-circle" style="color:#a6b1b1"></i>
+                <?=lang('Associated Partner', 'Assoziierter Partner')?>
             </p>
         </div>
     </div>
@@ -968,10 +971,9 @@ if ($topicsEnabled) {
     <p>
         <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
     </p>
-    <div class="box overflow-x-auto mt-0">
-        <?php
-        dump($project);
-        ?>
+    
+    <div class="box padded overflow-x-scroll">
+        <pre><?= htmlspecialchars(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
     </div>
 
 </section>

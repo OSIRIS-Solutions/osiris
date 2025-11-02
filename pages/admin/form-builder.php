@@ -1168,10 +1168,10 @@ $tagLabels = [
             }
 
             // check if an author field is present
-            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis"];
+            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
-                toastError('Das Formular muss mindestens ein User-Feld enthalten.');
+                toastError('Das Formular muss mindestens ein Personen-Feld enthalten.');
                 // filter by authors tag
                 $('.pillbar .tag').removeClass('active');
                 searchByTag('authors');

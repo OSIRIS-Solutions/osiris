@@ -891,7 +891,8 @@ $active = function ($field) use ($data_fields) {
             <h2 class="title">
                 <?= lang('Expertise') ?>
             </h2>
-
+            <!-- ensure to save empty expertise -->
+            <input type="hidden" name="values[expertise]" value="">
             <?php
             $expertise = $data['expertise'] ?? array();
             foreach ($expertise as $n) { ?>
@@ -941,6 +942,8 @@ $active = function ($field) use ($data_fields) {
                 <?= lang('Research interest', 'Forschungsinteressen') ?>
             </h2>
 
+            <!-- ensure to save empty research interests -->
+            <input type="hidden" name="values[research]" value="">
             <small class="text-muted">Max. 5</small><br>
             <table class="table simple">
                 <thead>
@@ -1027,6 +1030,9 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('cv')) { ?>
             <h2 class="title"><?= lang('Curriculum Vitae') ?></h2>
+
+            <!-- ensure to save empty cv -->
+            <input type="hidden" name="values[cv]" value="">
 
             <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
             <br>

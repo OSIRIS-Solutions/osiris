@@ -20,6 +20,8 @@ use chillerlan\QRCode\{QRCode, QROptions};
 
 include_once BASEPATH . "/php/Modules.php";
 
+$Modules = new Modules($doc);
+
 // check if this is an ongoing activity type
 $ongoing = false;
 $sws = false;
@@ -29,6 +31,19 @@ $typeArr = $Format->typeArr;
 $upload_possible = $typeArr['upload'] ?? true;
 $subtypeArr = $Format->subtypeArr;
 $typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
+$typeFields = $Modules->getFields();
+// if (empty($typeFields)) {
+//     $typeFields = [];
+//     foreach ($typeModules as $m) {
+//         $req = false;
+//         if (str_ends_with($m, '*')) {
+//             $m = str_replace('*', '', $m);
+//             $req = true;
+//         }
+//         $typeFields[] = ['id' => $m, 'required' => $req];
+//     }
+// }
+
 foreach ($typeModules as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
     if ($m == 'date-range-ongoing') $ongoing = true;
@@ -265,7 +280,7 @@ if ($Settings->featureEnabled('tags')) {
                             <?php endif; ?>
 
 
-                            <?php 
+                            <?php
                             // show rejection details if exists and user can approve and the step was rejected
                             if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity) && in_array($wf['rejectedDetails']['stepId'], $actionableIds)) { ?>
                                 <h5 class="mb-0">
@@ -976,10 +991,8 @@ if ($Settings->featureEnabled('tags')) {
 
         <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
 
-        <div class="box overflow-x-scroll">
-            <?php
-            dump($doc, true);
-            ?>
+        <div class="box padded overflow-x-scroll">
+            <pre><?= htmlspecialchars(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
         </div>
 
     </section>
@@ -1049,7 +1062,6 @@ if ($Settings->featureEnabled('tags')) {
                         </td>
                     </tr>
                     <?php
-                    $Modules = new Modules($doc);
                     $Format->usecase = "list";
 
                     $emptyModules = [];
@@ -1287,23 +1299,12 @@ if ($Settings->featureEnabled('tags')) {
             <div class="col-lg-6">
                 <?php
                 $units = $doc['units'] ?? [];
-                foreach (['authors', 'editors'] as $role) {
-                    if (!isset($activity[$role]) || empty($activity[$role])) {
-                        // check if the module is active
-                        if ($role == 'editors' && !in_array('editor', $typeModules) && !in_array('editor' . '*', $typeModules)) continue;
-                        // authors can have many modules, i.e. authors, author-table, scientist, supervisor
-                        if ($role == 'authors') {
-                            $active = false;
-                            foreach ($typeModules as $module) {
-                                if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-                                if (in_array($module, ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis'])) {
-                                    $active = true;
-                                    break;
-                                }
-                            }
-                            if (!$active) continue;
-                        }
+                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+                foreach ($typeFields as $field_id => $props) {
+                    if (!in_array($field_id, $authorModules)) {
+                        continue;
                     }
+                    $role = ($field_id == 'editor') ? 'editors' : 'authors';
                 ?>
 
                     <div class="btn-toolbar mb-10 float-sm-right">
@@ -1316,11 +1317,12 @@ if ($Settings->featureEnabled('tags')) {
                     </div>
 
                     <h2 class="mt-0">
-                        <?php if ($role == 'authors') {
-                            echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
-                        } else {
-                            echo lang('Editor(s)', 'Herausgeber');
-                        } ?>
+                        <!-- <?php if ($role == 'authors') {
+                                    echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
+                                } else {
+                                    echo lang('Editor(s)', 'Herausgeber');
+                                } ?> -->
+                        <?= $Modules->get_name($field_id) ?>
                     </h2>
 
 
@@ -1456,7 +1458,7 @@ if ($Settings->featureEnabled('tags')) {
                         ?>
                                 <tr>
                                     <td class="indent-<?= $row['indent'] ?>">
-                                        <a href="<?= ROOTPATH ?>/group/<?= $row['id'] ?>">
+                                        <a href="<?= ROOTPATH ?>/groups/view/<?= $row['id'] ?>">
                                             <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                         </a>
                                     </td>

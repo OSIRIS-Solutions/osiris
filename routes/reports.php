@@ -184,7 +184,7 @@ Route::post('/crud/reports/update', function () {
 
 Route::post('/reports', function () {
     // hide deprecated because PHPWord has a lot of them
-    // error_reporting(E_ERROR);
+    error_reporting(E_ERROR);
     // hide errors! otherwise they will break the word document
     if ($_POST['format'] == 'word') {
         // error_reporting(E_ERROR);

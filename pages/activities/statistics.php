@@ -160,8 +160,8 @@ $all = $osiris->activities->count(['affiliated' => true]);
     <table class="table w-auto">
         <thead>
             <tr>
+                <th><?= lang('Category', 'Kategorie') ?></th>
                 <th><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Subtype', 'Untertyp') ?></th>
                 <th><?= lang('Count', 'Anzahl') ?></th>
             </tr>
         </thead>

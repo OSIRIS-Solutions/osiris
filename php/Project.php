@@ -190,7 +190,7 @@ class Project extends Vocabulary
     {
         $filter = [];
         if (!$include_hidden) $filter = ['disabled' => ['$ne' => true]];
-        return $this->db->adminProjects->find($filter)->toArray();
+        return $this->db->adminProjects->find($filter, ['sort' => ['updated' => -1]])->toArray();
     }
 
     public function getFields($type_id, $phase = 'all')

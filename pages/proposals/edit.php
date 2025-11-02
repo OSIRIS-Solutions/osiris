@@ -327,8 +327,8 @@ if ($is_subproject) {
 
             <?php if (array_key_exists('comment', $fields)) { ?>
                 <div class="form-group floating-form">
-                    <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment"><?= val('comment') ?></textarea>
-                    <label for="comment">
+                    <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment" <?= $req('comment') ?>><?= val('comment') ?></textarea>
+                    <label for="comment <?= $req('comment') ?>">
                         <?= lang('Comment', 'Kommentar') ?>
                     </label>
                 </div>
@@ -355,8 +355,8 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('name_de', $fields)) { ?>
                     <div class="form-group floating-form position-relative with-icon">
-                        <input type="text" class="form-control" name="values[name_de]" id="name_de" value="<?= val('name_de') ?>" maxlength="30" placeholder="Kurztitel">
-                        <label for="project">
+                        <input type="text" class="form-control" name="values[name_de]" id="name_de" value="<?= val('name_de') ?>" maxlength="30" placeholder="Kurztitel" <?= $req('name_de') ?>>
+                        <label for="name_de" class="<?= $req('name_de') ?>">
                             <?= lang('Short title (German)', 'Kurztitel (Deutsch)') ?>
                         </label>
                         <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon">
@@ -387,12 +387,12 @@ if ($is_subproject) {
                 <?php if (array_key_exists('title_de', $fields)) { ?>
                     <div class="form-group with-icon">
                         <div class=" lang-<?= lang('en', 'de') ?>">
-                            <label for="title_de" class="floating-title">
+                            <label for="title_de" class="floating-title <?= $req('title_de') ?>">
                                 <?= lang('Full title of the project (German)', 'Voller Titel des Projekts (Deutsch)') ?>
                             </label>
 
                             <div class="form-group title-editor" id="title_de-quill"><?= $form['title_de'] ?? '' ?></div>
-                            <input type="text" class="form-control hidden" name="values[title_de]" id="title_de" value="<?= val('title_de') ?>">
+                            <input type="text" class="form-control hidden" name="values[title_de]" id="title_de" value="<?= val('title_de') ?>" <?= $req('title_de') ?>>
                         </div>
                         <img src="<?= ROOTPATH ?>/img/DE.svg" alt="" class="flag form-icon top-0" style="transform:translate(0, 4rem)">
 
@@ -502,14 +502,14 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('purpose', $fields)) { ?>
                     <div class="form-group floating-form">
-                        <select class="form-control" name="values[purpose]" id="purpose">
+                        <select class="form-control" name="values[purpose]" id="purpose" <?= $req('purpose') ?> autocomplete="off">
                             <?php
                             $vocab = $Vocabulary->getValues('project-purpose');
                             foreach ($vocab as $v) { ?>
                                 <option value="<?= $v['id'] ?>" <?= sel('purpose', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="purpose">
+                        <label for="purpose" class="<?= $req('purpose') ?>">
                             <?= lang('Purpose of the project', 'Zweck des Projekts') ?>
                         </label>
                     </div>
@@ -518,9 +518,9 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('internal_number', $fields)) { ?>
                     <div class="form-group floating-form">
-                        <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234">
+                        <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234" <?= $req('internal_number') ?>>
 
-                        <label for="internal_number">
+                        <label for="internal_number" class="<?= $req('internal_number') ?>">
                             <?= lang('Internal ID', 'Interne ID') ?>
                         </label>
                     </div>
@@ -592,14 +592,14 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('scholar', $fields)) { ?>
                     <div class="form-group floating-form">
-                        <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off">
+                        <select class="form-control" id="scholar" name="values[scholar]" required autocomplete="off" <?= $req('scholar') ?>>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == ($form['scholar'] ?? $user) ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>
                         </select>
-                        <label for="scholar">
+                        <label for="scholar" class="<?= $req('scholar') ?>">
                             <?= lang('Scholar', 'Stipendiat:in') ?>
                         </label>
                     </div>
@@ -623,14 +623,14 @@ if ($is_subproject) {
 
                 ?>
                     <div class="form-group floating-form">
-                        <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off">
+                        <select class="form-control" id="supervisor" name="values[supervisor]" required autocomplete="off" <?= $req('supervisor') ?>>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) { ?>
                                 <option value="<?= $j['username'] ?>" <?= $j['username'] == $selected ? 'selected' : '' ?>><?= $j['last'] ?>, <?= $j['first'] ?></option>
                             <?php } ?>
                         </select>
-                        <label for="supervisor">
+                        <label for="supervisor" class="<?= $req('supervisor') ?>">
                             <?= lang('Supervisor', 'Betreuende Person') ?>
                         </label>
                     </div>

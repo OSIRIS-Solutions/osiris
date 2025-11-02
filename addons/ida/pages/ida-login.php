@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
-        <input class="form-control" id="password" type="password" name="password" placeholder="your windows password" required />
+        <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
     </div>
 
     <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />

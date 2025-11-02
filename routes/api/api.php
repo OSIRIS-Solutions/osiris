@@ -637,16 +637,30 @@ Route::get('/api/user-units/(.*)', function ($id) {
         echo return_rest(lang('User not found', 'Nutzer nicht gefunden'), 0, 404);
         die;
     }
-    $person_units = $person['units'] ?? [];
-    foreach ($person_units as &$unit) {
+    if (empty($person['units'] ?? null)) {
+        return_rest([
+            'name' => $person['first'] . ' ' . $person['last'],
+            'units' => []
+        ]);
+    }
+    $used_unit_ids = [];
+    $units = [];
+    $person_units = DB::doc2Arr($person['units'] ?? []);
+    // reverse to see newest first
+    $person_units = array_reverse($person_units);
+    foreach ($person_units as $unit) {
+        // make sure units are unique
+        if (in_array($unit['unit'], $used_unit_ids)) continue; // skip duplicates
         $unit['in_past'] =  isset($unit['end']) && date('Y-m-d') > $unit['end'];
         $group = $Groups->getGroup($unit['unit']);
         $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+        $used_unit_ids[] = $unit['unit'];
+        $units[] = $unit;
     }
 
     echo return_rest([
         'name' => $person['first'] . ' ' . $person['last'],
-        'units' => $person_units
+        'units' => $units
     ], 1);
 });
 

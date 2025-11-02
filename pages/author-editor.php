@@ -103,7 +103,7 @@ foreach ($typeModules as $m) {
                         </td>
                         <?php if ($sws) : ?>
                             <td>
-                                <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
+                                <input type="number" step="0.1" class="form-control" name="authors[<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
                             </td>
                         <?php elseif ($supervisorThesis) : ?>
                             <td>
@@ -141,12 +141,16 @@ foreach ($typeModules as $m) {
                                 $selected = DB::doc2Arr($author['units'] ?? []);
                                 if (!is_array($selected)) $selected = [];
                                 $person_units = $osiris->persons->findOne(['username' => $author['user']], ['units' => 1]);
-                                $person_units = $person_units['units'] ?? [];
+                                $person_units = DB::doc2Arr($person_units['units'] ?? []);
+                                // reverse to see newest first
+                                $person_units = array_reverse($person_units);
                                 if (empty($person_units)) {
                                     echo '<small class="text-danger">No units found</small>';
                                 } else {
+                                    $used_unit_ids = [];
                                     foreach ($person_units as $unit) {
                                         $unit_id = $unit['unit'];
+                                        if (in_array($unit_id, $used_unit_ids)) continue; // skip duplicates
                                         // remove from overrides, so we don't show it twice
                                         if (in_array($unit_id, $overrides)) {
                                             // remove from overrides
@@ -155,6 +159,7 @@ foreach ($typeModules as $m) {
                                         $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
                                         $group = $Groups->getGroup($unit_id);
                                         $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+                                        $used_unit_ids[] = $unit_id;
                             ?>
                                         <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                             <input type="checkbox"
@@ -243,7 +248,7 @@ foreach ($typeModules as $m) {
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
 
         <?php if ($sws) : ?>
-            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws"></td>')
+            tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
             tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('Other', 'Sonstiges') ?></option></select></td>')
         <?php elseif ($role == 'authors') : ?>

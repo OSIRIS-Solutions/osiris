@@ -619,8 +619,12 @@ class DB
         }
 
         if (isset($doc['journal'])) {
-            $j = new Regex('^' . trim($doc['journal']) . '$', 'i');
-            return $this->db->journals->findOne(['journal' => ['$regex' => $j]]);
+            try {
+                $j = new Regex('^' . trim($doc['journal']) . '$', 'i');
+                return $this->db->journals->findOne(['journal' => ['$regex' => $j]]);
+            } catch (\Throwable $th) {
+                return [];
+            }
         }
         return [];
     }

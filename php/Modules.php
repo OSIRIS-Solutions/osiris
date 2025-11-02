@@ -882,7 +882,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
+        if (empty($form) && (empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -904,13 +904,27 @@ class Modules
         }
 
         if (!empty($form) && !empty($form['type'])) {
-            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['type']]);
+            $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['subtype']]);
             if (!empty($typeArr) && !empty($typeArr['fields'])) {
                 $fields = DB::doc2Arr($typeArr['fields']);
                 $fields = array_filter($fields, function ($f) {
                     return ($f['type'] ?? 'field') === 'field' || ($f['type'] ?? 'field') === 'custom';
                 });
                 $this->fields = array_column($fields, 'props', 'id');
+            } elseif (!empty($typeArr) && !empty($typeArr['modules'])) {
+                // collect fields from modules
+                $fields = [];
+                foreach ($typeArr['modules'] as $module) {
+                    $req = false;
+                    if (str_ends_with($module, '*')) {
+                        $module = str_replace('*', '', $module);
+                        $req = true;
+                    }
+                    $fields[$module]= [
+                        'required' => $req
+                    ];
+                }
+                $this->fields = $fields;
             }
         }
 
@@ -978,18 +992,24 @@ class Modules
             </div>";
     }
 
+    function getFields(){
+        if (!empty($this->fields)) {
+            return $this->fields;
+        }
+
+    }
 
     function get_name($module)
     {
         if (!empty($this->fields) && !empty($this->fields[$module]) && isset($this->fields[$module]['label'])) {
             return lang($this->fields[$module]['label'], $this->fields[$module]['label_de'] ?? null);
         }
-        if (!isset($this->all_modules[$module]['name'])) {
+        if (!isset($this->all_modules[$module]['label'])) {
             $field = $this->DB->db->adminFields->findOne(['id' => $module]);
             if (!empty($field)) return lang($field['name'], $field['name_de'] ?? $field['name']);
             return ucfirst($module);
         }
-        return lang($this->all_modules[$module]['name'], $this->all_modules[$module]['name_de']);
+        return lang($this->all_modules[$module]['label'], $this->all_modules[$module]['label_de']);
     }
 
     function get_fields($modules)
@@ -1181,6 +1201,8 @@ class Modules
 
         switch ($field['format']) {
             case 'string':
+                // make sure that value is string
+                $value = strval($value);
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
@@ -1190,7 +1212,7 @@ class Modules
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
+                echo '<input type="number" step="0.0001" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;
@@ -1292,7 +1314,7 @@ class Modules
         $labelClass = ($req ? "required" : "");
 
         $m = $this->all_modules[$module] ?? [];
-        $label = lang($m['name'], $m['name_de'] ?? $m['name']);
+        $label = lang($m['label'], $m['label_de'] ?? $m['label']);
 
         $width = 12;
         if ($m['width'] ?? 6 > 0) {
@@ -1637,6 +1659,11 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
+                    
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1757,14 +1784,19 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
+
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
                                 <tr>
+                                    <th>Username</th>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th>Username</th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th>
                                     </th>
@@ -2037,6 +2069,10 @@ class Modules
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
 
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
+
                     <div class="author-widget" id="author-widget">
                         <div class="author-list p-10" id="author-list">
                             <?= $this->authors ?>
@@ -2044,7 +2080,7 @@ class Modules
                         <div class="footer">
 
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add author ...', 'Füge Autor hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
                                         <i class="ph ph-plus"></i>
@@ -2063,15 +2099,15 @@ class Modules
                         <?= $this->render_help($help) ?>
                     </div>
                     <small class="text-muted">
-                        <?= lang('Note: A detailed author editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Autoreneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
+                        <?= lang('Note: A detailed person editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Personeneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
                     </small>
                     <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <?= lang("Attention: No affiliated authors added.", 'Achtung: Keine affiliierten Autoren angegeben.') ?>
+                            <?= lang("Attention: No affiliated persons added.", 'Achtung: Keine affiliierten Personen angegeben.') ?>
                         </h5>
                         <?= lang(
-                            'Please double click on every affiliated author in the list above, to mark them as affiliated. Only affiliated authors will receive points and are shown in reports.',
-                            'Bitte doppelklicken Sie auf jeden affiliierten Autor in der Liste oben, um ihn als zugehörig zu markieren. Nur zugehörige Autoren erhalten Punkte und werden in Berichten berücksichtigt.'
+                            'Please double click on every affiliated person in the list above, to mark them as affiliated. Only affiliated persons will receive points and are shown in reports.',
+                            'Bitte doppelklicken Sie auf jede affiliierte Person in der Liste oben, um sie als zugehörig zu markieren. Nur zugehörige Personen erhalten Punkte und werden in Berichten berücksichtigt.'
                         ) ?>
                     </div>
                 </div>
@@ -2109,7 +2145,7 @@ class Modules
                     <select name="values[category]" id="category-students" class="form-control" <?= $labelClass ?>>
                         <option value="doctoral student" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Student', 'Doktorand:in') ?></option>
                         <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
-                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelostudent') ?></option>
+                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelorstudent') ?></option>
                         <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
@@ -2624,13 +2660,18 @@ class Modules
                         <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
+                    
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[editors]" value="">
+                    <?php } ?>
+
                     <div class="author-widget" id="editor-widget">
                         <div class="author-list p-10" id="editor-list">
                             <?= $this->editors ?>
                         </div>
                         <div class="footer">
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add editor ...', 'Füge Herausgeber hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">
                                         <i class="ph ph-plus"></i>
