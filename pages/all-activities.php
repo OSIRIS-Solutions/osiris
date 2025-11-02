@@ -530,7 +530,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         if (row.start == '') {
                             text += ' <i class="ph ph-warning text-danger" title="' + lang('no date', 'kein Datum') + '"></i>';
                         }
-                        if (row.authors == '' && row.editors == '') {
+                        if (row.authors == '' && row.editor == '') {
                             text += ' <i class="ph ph-warning text-danger" title="' + lang('no persons', 'keine Personen') + '"></i>';
                         }
                         return text;
