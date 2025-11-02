@@ -280,7 +280,7 @@ if ($Settings->featureEnabled('tags')) {
                             <?php endif; ?>
 
 
-                            <?php 
+                            <?php
                             // show rejection details if exists and user can approve and the step was rejected
                             if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity) && in_array($wf['rejectedDetails']['stepId'], $actionableIds)) { ?>
                                 <h5 class="mb-0">
@@ -991,10 +991,8 @@ if ($Settings->featureEnabled('tags')) {
 
         <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
 
-        <div class="box overflow-x-scroll">
-            <?php
-            dump($doc, true);
-            ?>
+        <div class="box padded overflow-x-scroll">
+            <pre><?= htmlspecialchars(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
         </div>
 
     </section>
@@ -1320,10 +1318,10 @@ if ($Settings->featureEnabled('tags')) {
 
                     <h2 class="mt-0">
                         <!-- <?php if ($role == 'authors') {
-                            echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
-                        } else {
-                            echo lang('Editor(s)', 'Herausgeber');
-                        } ?> -->
+                                    echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
+                                } else {
+                                    echo lang('Editor(s)', 'Herausgeber');
+                                } ?> -->
                         <?= $Modules->get_name($field_id) ?>
                     </h2>
 

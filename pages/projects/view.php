@@ -971,10 +971,9 @@ if ($topicsEnabled) {
     <p>
         <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
     </p>
-    <div class="box overflow-x-auto mt-0">
-        <?php
-        dump($project);
-        ?>
+    
+    <div class="box padded overflow-x-scroll">
+        <pre><?= htmlspecialchars(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
     </div>
 
 </section>
