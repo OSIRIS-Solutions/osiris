@@ -604,6 +604,9 @@ if ($topicsEnabled) {
                 <br>
                 <i class="ph ph-fill ph-circle" style="color:#008083"></i>
                 Partner
+                <br>
+                <i class="ph ph-fill ph-circle" style="color:#a6b1b1"></i>
+                <?=lang('Associated Partner', 'Assoziierter Partner')?>
             </p>
         </div>
     </div>

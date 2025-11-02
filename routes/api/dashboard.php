@@ -225,6 +225,9 @@ Route::get('/api/dashboard/collaborators', function () {
                 $data['lat'][] = $c['lat'];
                 $data['text'][] = "<b>$c[name]</b><br>$c[location]";
                 $color = ($c['role'] == 'partner' ? '#008083' : '#f78104');
+                if ($c['role'] == 'associated') {
+                    $color = '#a6b1b1';
+                }
                 $data['marker']['color'][] = $color;
             }
             $institute = $Settings->get('affiliation_details');
