@@ -141,12 +141,16 @@ foreach ($typeModules as $m) {
                                 $selected = DB::doc2Arr($author['units'] ?? []);
                                 if (!is_array($selected)) $selected = [];
                                 $person_units = $osiris->persons->findOne(['username' => $author['user']], ['units' => 1]);
-                                $person_units = $person_units['units'] ?? [];
+                                $person_units = DB::doc2Arr($person_units['units'] ?? []);
+                                // reverse to see newest first
+                                $person_units = array_reverse($person_units);
                                 if (empty($person_units)) {
                                     echo '<small class="text-danger">No units found</small>';
                                 } else {
+                                    $used_unit_ids = [];
                                     foreach ($person_units as $unit) {
                                         $unit_id = $unit['unit'];
+                                        if (in_array($unit_id, $used_unit_ids)) continue; // skip duplicates
                                         // remove from overrides, so we don't show it twice
                                         if (in_array($unit_id, $overrides)) {
                                             // remove from overrides
@@ -155,6 +159,7 @@ foreach ($typeModules as $m) {
                                         $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
                                         $group = $Groups->getGroup($unit_id);
                                         $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+                                        $used_unit_ids[] = $unit_id;
                             ?>
                                         <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                             <input type="checkbox"
