@@ -224,85 +224,100 @@ Route::get('/migrate', function () {
         $DBversion = $DBversion['value'];
     }
 
+    $rerender = false;
+
     if (version_compare($DBversion, '1.2.0', '<')) {
         include BASEPATH . "/routes/migration/v1.2.0.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.2.1', '<')) {
         include BASEPATH . "/routes/migration/v1.2.1.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.0', '<')) {
         include BASEPATH . "/routes/migration/v1.3.0.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.3', '<')) {
         include BASEPATH . "/routes/migration/v1.3.3.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.4', '<')) {
         include BASEPATH . "/routes/migration/v1.3.4.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.6', '<')) {
         include BASEPATH . "/routes/migration/v1.3.6.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.7', '<')) {
         include BASEPATH . "/routes/migration/v1.3.7.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.3.8', '<')) {
         include BASEPATH . "/routes/migration/v1.3.8.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.4.0', '<')) {
         include BASEPATH . "/routes/migration/v1.4.0.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.4.1', '<')) {
         include BASEPATH . "/routes/migration/v1.4.1.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.4.2', '<')) {
         include BASEPATH . "/routes/migration/v1.4.2.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
     if (version_compare($DBversion, '1.5.0', '<')) {
         include BASEPATH . "/routes/migration/v1.5.0.php";
         flush();
         ob_flush();
+        $rerender = true;
     }
 
-    echo "<p>Rerender activities, please wait ...</p>";
-    flush();
-    ob_flush();
+    if ($rerender) {
+        echo "<p>Rerender activities, please wait ...</p>";
+        flush();
+        ob_flush();
 
-    include_once BASEPATH . "/php/Render.php";
-    renderActivities();
-
+        include_once BASEPATH . "/php/Render.php";
+        renderActivities();
+    }
     // echo '<p>Rerender projects</p>';
     // renderAuthorUnitsProjects();
 
