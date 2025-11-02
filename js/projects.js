@@ -1,5 +1,17 @@
 var activitiesTable = false
 
+let activeCategories = new Set(); // Wird initial leer, also zeigt alles
+
+// DataTables Filterfunktion registrieren
+$.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    const type = data[5]; // z. B. Spalte 1 ist der Typ (Publikation, Poster…)
+    console.log(type);
+    // Wenn keine Kategorien ausgewählt sind, alles zeigen
+    if (activeCategories.size === 0) return true;
+
+    return !activeCategories.has(type);
+});
+
 function navigate(key) {
     $('section').hide()
     $('section#' + key).show()

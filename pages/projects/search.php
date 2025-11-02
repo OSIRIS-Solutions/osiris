@@ -180,34 +180,34 @@ $expert = isset($_GET['expert']);
             },
             {
                 id: 'collaborators.country',
-                label: lang('Collaborators (Country)', 'Koopertionspartner (Land)'),
+                label: lang('Collaborators (Country)', 'Kooperationspartner (Land)'),
                 type: 'string'
             },
             {
                 id: 'collaborators.location',
-                label: lang('Collaborators (Location)', 'Koopertionspartner (Ort)'),
+                label: lang('Collaborators (Location)', 'Kooperationspartner (Ort)'),
                 type: 'string'
             },
             {
                 id: 'collaborators.name',
-                label: lang('Collaborators (Name)', 'Koopertionspartner (Name)'),
+                label: lang('Collaborators (Name)', 'Kooperationspartner (Name)'),
                 type: 'string'
             },
             {
                 id: 'collaborators.role',
-                label: lang('Collaborators (Role)', 'Koopertionspartner (Rolle)'),
+                label: lang('Collaborators (Role)', 'Kooperationspartner (Rolle)'),
                 type: 'string',
                 values: ['gold', 'green', 'bronze', 'hybrid', 'open', 'closed'],
                 input: 'select'
             },
             {
                 id: 'collaborators.ror',
-                label: lang('Collaborators (ROR)', 'Koopertionspartner (ROR)'),
+                label: lang('Collaborators (ROR)', 'Kooperationspartner (ROR)'),
                 type: 'string'
             },
             {
                 id: 'collaborators.type',
-                label: lang('Collaborators (Type)', 'Koopertionspartner (Typ)'),
+                label: lang('Collaborators (Type)', 'Kooperationspartner (Typ)'),
                 type: 'string',
                 values: ['Education', 'Healthcare', 'Company', 'Archive', 'Nonprofit', 'Government', 'Facility', 'Other'],
                 input: 'select'

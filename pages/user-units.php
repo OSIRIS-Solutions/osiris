@@ -17,6 +17,8 @@
  */
 ?>
 
+<?php include_once BASEPATH . '/header-editor.php'; ?>
+
 <h1>
     <small class="font-weight-normal"><?= lang('Organisational units of', 'Organisationseinheiten von') ?></small>
     <br>
@@ -214,6 +216,7 @@ function printTree($tree, $level = 0)
                 <div class="form-group">
                     <label for="unit"><?= lang('Unit', 'Einheit') ?></label>
                     <select class="form-control" id="unit" name="values[unit]">
+                        <option value=""><?= lang('Select unit', 'Einheit auswählen') ?></option>
                         <?php printTree($tree) ?>
                     </select>
                 </div>
@@ -237,6 +240,10 @@ function printTree($tree, $level = 0)
                 </div>
                 <button class="btn primary" type="submit"><?= lang('Save', 'Speichern') ?></button>
             </form>
+            <script>
+
+    $("#unit").selectize();
+            </script>
         </div>
     </div>
 </div>

@@ -238,6 +238,65 @@ class Fields
                 'type' => 'integer'
             ],
             [
+                'id' => 'editors',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'columns'
+                ],
+                'label' => lang('Editor', 'Herausgeber'),
+                'type' => 'list',
+            ],
+            [
+                'id' => 'editors.first',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Editor (first name)', 'Herausgeber (Vorname)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'editors.last',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Editor (last name)', 'Herausgeber (Nachname)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'editors.user',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Editor (username)', 'Herausgeber (Username)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'editors.aoi',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Editor (affiliated)', 'Herausgeber (Affiliated)'),
+                'type' => 'boolean',
+            ],
+            [
+                'id' => 'editors.units',
+                'module_of' => $typeModules['editors'] ?? [],
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Editor (unit)', 'Herausgeber (Einheit)'),
+                'type' => 'string'
+            ],
+            [
                 'id' => 'affiliated',
                 'module_of' => $typeModules['affiliated'] ?? [],
                 'usage' => [
@@ -340,6 +399,27 @@ class Fields
                 'label' => lang('Year', 'Jahr'),
                 'type' => 'integer',
                 'default_value' => CURRENTYEAR
+            ],
+            [
+                'id' => 'history',
+                'module_of' => [],
+                'usage' => [],
+                'label' => lang('History', 'Verlauf'),
+                'type' => 'list'
+            ],
+            [
+                'id' => 'workflow',
+                'module_of' => [],
+                'usage' => [],
+                'label' => lang('Workflow', 'Workflow'),
+                'type' => 'list'
+            ],
+            [
+                'id' => 'rendered',
+                'module_of' => [],
+                'usage' => [],
+                'label' => lang('Rendered', 'Gerendert'),
+                'type' => 'list'
             ],
             [
                 'id' => 'month',

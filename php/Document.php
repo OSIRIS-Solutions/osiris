@@ -642,6 +642,10 @@ class Document extends Settings
         }
         // $to = date_create($to);
         $from = Document::format_date($from);
+
+        if (empty($from)) {
+            return Document::format_date($to);
+        }
         $to = Document::format_date($to);
 
         $f = explode('.', $from, 3);
@@ -778,7 +782,7 @@ class Document extends Settings
             case "master student":
                 return lang('Master Student', 'Masterstudent');
             case "bachelor student":
-                return lang('Bachelor Student', 'Bachelostudent');
+                return lang('Bachelor Student', 'Bachelorstudent');
             case "intern":
                 return lang('Intern', 'Praktikant');
             default:

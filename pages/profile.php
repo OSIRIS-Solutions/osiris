@@ -724,7 +724,36 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <section id="news">
         <div class="row row-eq-spacing my-0">
             <div class="col-md-6">
-                <div class="box h-full">
+                <?php if (isset($n_notifications) && $n_notifications) { ?>
+                    <div class="box padded">
+                        <p class="lead cursor-pointer" onclick="openNotifications()">
+                            <i class="ph ph-bell-ringing ph-fw text-danger mr-5"></i>
+                            <?= lang('You have <strong class="text-danger">' . $n_notifications . '</strong> new notifications.', 'Du hast <strong class="text-danger">' . $n_notifications . '</strong> neue Benachrichtigungen.') ?>
+                        </p>
+                    </div>
+                    <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
+                    ?>
+                        <div class="box padded d-flex align-items-center">
+                            <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i>
+
+                            <p>
+                                <?= lang("You can now approve the past quarter:", "Du kannst jetzt das vergangene Quartal freigeben:") ?>
+                                <br>
+                                <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
+                                    <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
+                                </a>
+                            </p>
+                        </div>
+                    <?php } ?>
+
+                    <script>
+                        function openNotifications() {
+                            $('.dropdown-menu.dropdown-menu-center.notifications').closest('.dropdown').toggleClass('show');
+                        }
+                    </script>
+                <?php } ?>
+
+                <div class="box">
                     <div class="content">
                         <h4 class="title">
                             <?= lang('Newest publications', 'Neuste Publikationen') ?>
@@ -763,7 +792,50 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
             <div class="col-md-6 h-full">
 
-                <?php if ($currentuser && (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) || $Settings->hasPermission('report.generate'))) { ?>
+                <?php if ($Settings->featureEnabled('new-colleagues')) { ?>
+                    <!-- Show new users -->
+                    <div class="box">
+                        <div class="content">
+                            <h4 class="title">
+                                <?= lang('New Colleagues', 'Neue Kolleg:innen') ?>
+                            </h4>
+                            <p class="text-muted">
+                                <?= lang('Recently added colleagues in OSIRIS.', 'Kürzlich hinzugefügte Kolleg:innen in OSIRIS.') ?>
+                            </p>
+                            <?php
+                            $new_colleagues = $osiris->persons->find(
+                                ['created' => ['$exists' => true]],
+                                [
+                                    'sort' => ['created' => -1],
+                                    'limit' => 3,
+                                ]
+                            )->toArray();
+                            ?>
+                            <table class="table simple">
+                                <?php foreach ($new_colleagues as $colleague) { ?>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <?= $Settings->printProfilePicture($colleague['username'], 'profile-img small mr-20') ?>
+                                                <div>
+                                                    <h5 class="my-0">
+                                                        <a href="<?= ROOTPATH ?>/profile/<?= $colleague['username'] ?>" class="">
+                                                            <?= $colleague['displayname'] ?? $colleague['username'] ?>
+                                                        </a>
+                                                    </h5>
+                                                    <?= lang($colleague['position'] ?? '', $colleague['position_de'] ?? null) ?>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </table>
+                        </div>
+                    </div>
+                <?php } ?>
+
+
+                <?php if (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) || $Settings->hasPermission('report.generate')) { ?>
 
                     <div class="row row-eq-spacing mt-0">
 
@@ -773,7 +845,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
                         ?>
                             <div class="col-6">
-                                <div class="box h-full">
+                                <div class="box">
                                     <div class="chart content">
                                         <h5 class="title text-center"><?= $lastquarter ?></h5>
 
@@ -851,7 +923,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                             <?php } ?>
 
                                             <?php if ($Settings->hasPermission('activities.lock')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/controlling"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
+                                                <a class="border" href="<?= ROOTPATH ?>/activities/locking"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
                                             <?php } ?>
 
                                             <?php if ($Settings->hasPermission('admin.see')) { ?>
@@ -867,127 +939,129 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     </div>
                 <?php } ?>
 
-                <div class="box h-full">
-                    <div class="content">
-                        <?php if ($Settings->hasPermission('conferences.edit')) { ?>
-                            <a href="<?= ROOTPATH ?>/conferences#add-conference" class="float-md-right btn primary">
-                                <i class="ph ph-plus"></i>
-                                <?= lang('Add', 'Hinzufügen') ?>
-                            </a>
-                        <?php } ?>
-
-                        <h4 class="title">
-                            <a href="<?= ROOTPATH ?>/conferences" class="link">
-                                <?= lang('Events') ?>
-                            </a>
-                        </h4>
-                        <p class="text-muted">
-                            <?= lang('Shown are approaching events in the next 6 month and events you attended within the past six month.', 'Gezeigt sind zukünftige Events in den nächsten 6 Monaten und vergangene, an denen du in den letzten sechs Monaten teilgenommen hast.') ?>
-                        </p>
-
-                        <?php
-                        // conferences max past 3 month
-                        $conferences = $osiris->conferences->find(
-                            [
-                                '$or' => [
-                                    ['end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))], 'start' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]],
-                                    [
-                                        'start' => ['$gte' => date('Y-m-d', strtotime('-6 month'))],
-                                        '$or' => [
-                                            ['participants' => $user],
-                                            ['interests' => $user]
-                                        ]
-                                    ]
-                                ],
-                                'dismissed' => ['$ne' => $user]
-                            ],
-                            ['sort' => ['start' => 1]]
-                        )->toArray();
-                        ?>
-                        <table class="table simple">
-                            <?php foreach ($conferences as $n => $c) {
-                                $past = strtotime($c['end']) > time();
-                                if ($past) {
-                                    $days = ceil((strtotime($c['start']) - time()) / 86400);
-                                    $days = $days > 0 ? $days : 0;
-                                    $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
-                                }
-                                // user is interested in conference
-                                $interest = in_array($user, DB::doc2Arr($c['interests'] ?? []));
-                                $participate = in_array($user, DB::doc2Arr($c['participants'] ?? []));
-                                $interestTooltip = $interest ? lang('Click to remove interest', 'Klicken um Interesse zu entfernen') : lang('Click to show interest', 'Klicken um Interesse zu zeigen');
-                                $participateTooltip = $participate ? lang('Click to remove participation', 'Klicken um Teilnahme zu entfernen') : lang('Click to show participation', 'Klicken um Teilnahme zu zeigen');
-
-                            ?>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex justify-content-between">
-                                            <h6 class="m-0">
-                                                <a href="<?= ROOTPATH ?>/conferences/view/<?= $c['_id'] ?>">
-                                                    <?= $c['title'] ?>
-                                                </a>
-                                                <?php if (!empty($c['url'] ?? null)) { ?>
-                                                    <a href="<?= $c['url'] ?>" target="_blank" rel="noopener noreferrer">
-                                                        <i class="ph ph-link"></i>
-                                                    </a>
-                                                <?php } ?>
-                                            </h6>
-                                            <!-- dismiss btn -->
-                                            <a class="text-danger" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'dismissed')" data-toggle="tooltip" data-title="<?= lang('Dismiss', 'Verwerfen') ?>">
-                                                <i class="ph ph-x"></i>
-                                            </a>
-                                        </div>
-                                        <p class="my-5 text-muted">
-                                            <?= $c['title_full'] ?? '' ?>
-                                        </p>
-                                        <p class="my-5 text-muted">
-                                            <small class="text- mr-10">
-                                                <?= fromToDate($c['start'], $c['end']) ?>
-                                            </small>
-                                            <small>
-                                                <?= $c['location'] ?>
-                                            </small>
-                                        </p>
-
-                                        <div class="btn-toolbar font-size-12">
-                                            <?php
-                                            // check if conference is in the future
-                                            if ($past) {
-                                            ?>
-                                                <div class="btn-group">
-                                                    <small class="btn small cursor-default">
-                                                        <?= $days ?>
-                                                    </small>
-                                                    <a class="btn small" href="<?= ROOTPATH ?>/conferences/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
-                                                        <i class="ph ph-calendar-plus"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="btn-group">
-                                                    <a class="btn small <?= $interest ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'interests')" data-toggle="tooltip" data-title="<?= $interestTooltip ?>">
-                                                        <b><?= count($c['interests'] ?? []) ?></b>
-                                                        <?= lang('Interested', 'Interessiert') ?>
-                                                    </a>
-                                                    <a class="btn small <?= $participate ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'participants')" data-toggle="tooltip" data-title="<?= $participateTooltip ?>">
-                                                        <b><?= count($c['participants'] ?? []) ?></b>
-                                                        <?= lang('Participants', 'Teilnehmer') ?>
-                                                    </a>
-                                                </div>
-                                            <?php } else { ?>
-                                                <a class="btn small primary" href="<?= ROOTPATH ?>/add-activity?type=poster&conference=<?= $c['_id'] ?>">
-                                                    <i class="ph ph-plus-circle"></i>
-                                                    <?= lang('Add contribution', 'Beitrag hinzufügen') ?>
-                                                </a>
-                                            <?php } ?>
-                                        </div>
-                                    </td>
-                                </tr>
+                <?php if ($Settings->featureEnabled('events', true)) { ?>
+                    <div class="box">
+                        <div class="content">
+                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
+                                <a href="<?= ROOTPATH ?>/conferences#add-conference" class="float-md-right btn primary">
+                                    <i class="ph ph-plus"></i>
+                                    <?= lang('Add', 'Hinzufügen') ?>
+                                </a>
                             <?php } ?>
 
-                        </table>
-                        <small class="text-muted"> <?= lang('Events were added by users of the OSIRIS system.', 'Events wurden von Nutzenden des OSIRIS-Systems angelegt.') ?></small>
+                            <h4 class="title">
+                                <a href="<?= ROOTPATH ?>/conferences" class="link">
+                                    <?= lang('Events') ?>
+                                </a>
+                            </h4>
+                            <p class="text-muted">
+                                <?= lang('Shown are approaching events in the next 6 month and events you attended within the past six month.', 'Gezeigt sind zukünftige Events in den nächsten 6 Monaten und vergangene, an denen du in den letzten sechs Monaten teilgenommen hast.') ?>
+                            </p>
 
+                            <?php
+                            // conferences max past 3 month
+                            $conferences = $osiris->conferences->find(
+                                [
+                                    '$or' => [
+                                        ['end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))], 'start' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]],
+                                        [
+                                            'start' => ['$gte' => date('Y-m-d', strtotime('-6 month'))],
+                                            '$or' => [
+                                                ['participants' => $user],
+                                                ['interests' => $user]
+                                            ]
+                                        ]
+                                    ],
+                                    'dismissed' => ['$ne' => $user]
+                                ],
+                                ['sort' => ['start' => 1]]
+                            )->toArray();
+                            ?>
+                            <table class="table simple">
+                                <?php foreach ($conferences as $n => $c) {
+                                    $past = strtotime($c['end']) > time();
+                                    if ($past) {
+                                        $days = ceil((strtotime($c['start']) - time()) / 86400);
+                                        $days = $days > 0 ? $days : 0;
+                                        $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+                                    }
+                                    // user is interested in conference
+                                    $interest = in_array($user, DB::doc2Arr($c['interests'] ?? []));
+                                    $participate = in_array($user, DB::doc2Arr($c['participants'] ?? []));
+                                    $interestTooltip = $interest ? lang('Click to remove interest', 'Klicken um Interesse zu entfernen') : lang('Click to show interest', 'Klicken um Interesse zu zeigen');
+                                    $participateTooltip = $participate ? lang('Click to remove participation', 'Klicken um Teilnahme zu entfernen') : lang('Click to show participation', 'Klicken um Teilnahme zu zeigen');
+
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="m-0">
+                                                    <a href="<?= ROOTPATH ?>/conferences/view/<?= $c['_id'] ?>">
+                                                        <?= $c['title'] ?>
+                                                    </a>
+                                                    <?php if (!empty($c['url'] ?? null)) { ?>
+                                                        <a href="<?= $c['url'] ?>" target="_blank" rel="noopener noreferrer">
+                                                            <i class="ph ph-link"></i>
+                                                        </a>
+                                                    <?php } ?>
+                                                </h6>
+                                                <!-- dismiss btn -->
+                                                <a class="text-danger" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'dismissed')" data-toggle="tooltip" data-title="<?= lang('Dismiss', 'Verwerfen') ?>">
+                                                    <i class="ph ph-x"></i>
+                                                </a>
+                                            </div>
+                                            <p class="my-5 text-muted">
+                                                <?= $c['title_full'] ?? '' ?>
+                                            </p>
+                                            <p class="my-5 text-muted">
+                                                <small class="text- mr-10">
+                                                    <?= fromToDate($c['start'], $c['end']) ?>
+                                                </small>
+                                                <small>
+                                                    <?= $c['location'] ?>
+                                                </small>
+                                            </p>
+
+                                            <div class="btn-toolbar font-size-12">
+                                                <?php
+                                                // check if conference is in the future
+                                                if ($past) {
+                                                ?>
+                                                    <div class="btn-group">
+                                                        <small class="btn small cursor-default">
+                                                            <?= $days ?>
+                                                        </small>
+                                                        <a class="btn small" href="<?= ROOTPATH ?>/conferences/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
+                                                            <i class="ph ph-calendar-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group">
+                                                        <a class="btn small <?= $interest ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'interests')" data-toggle="tooltip" data-title="<?= $interestTooltip ?>">
+                                                            <b><?= count($c['interests'] ?? []) ?></b>
+                                                            <?= lang('Interested', 'Interessiert') ?>
+                                                        </a>
+                                                        <a class="btn small <?= $participate ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'participants')" data-toggle="tooltip" data-title="<?= $participateTooltip ?>">
+                                                            <b><?= count($c['participants'] ?? []) ?></b>
+                                                            <?= lang('Participants', 'Teilnehmer') ?>
+                                                        </a>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <a class="btn small primary" href="<?= ROOTPATH ?>/add-activity?type=poster&conference=<?= $c['_id'] ?>">
+                                                        <i class="ph ph-plus-circle"></i>
+                                                        <?= lang('Add contribution', 'Beitrag hinzufügen') ?>
+                                                    </a>
+                                                <?php } ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                            </table>
+                            <small class="text-muted"> <?= lang('Events were added by users of the OSIRIS system.', 'Events wurden von Nutzenden des OSIRIS-Systems angelegt.') ?></small>
+
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
         </div>
     </section>
