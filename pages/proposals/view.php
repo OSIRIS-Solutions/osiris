@@ -282,7 +282,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                 <?php if ($status == 'rejected') { ?>
                     <button class="btn font-weight-bold" style="--primary-color: var(--danger-color);--primary-color-20: var(--danger-color-20);" onclick="selectTab('rejection')" id="rejection-btn">
                         <i class="ph ph-x-circle"></i>
-                        <?= lang('Rejection', 'Ablehnungs') ?>
+                        <?= lang('Rejection', 'Ablehnung') ?>
                     </button>
                 <?php } ?>
 
