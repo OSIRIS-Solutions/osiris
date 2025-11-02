@@ -2,18 +2,38 @@
 
 
 
-<span class="badge float-right">23.10.2025</span>
-<a class="anchor" href="#version-251023" id="version-251023"></a>
+<span class="badge float-right">02.11.2025</span>
+<a class="anchor" href="#version-1.6.1" id="version-1.6.1"></a>
 
-## Build 251023
+## Version 1.6.1
 
-Wir haben kleinere Fehlerbehebungen und Verbesserungen vorgenommen:
+Wir haben viele kleinere Fehlerbehebungen und Verbesserungen vorgenommen:
 
 - Die Benutzeroberfläche für das Feature-Management wurde verbessert, indem die Features in Kategorien gruppiert und mit Beschreibungen versehen wurden. Dies erleichtert es Administratoren, die verfügbaren Funktionen zu verstehen und zu verwalten.
 - Es wurde eine Möglichkeit hinzugefügt, Events zentral auszuschalten. Dies kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" konfiguriert werden. Wenn diese Option deaktiviert ist, werden Events in der Navigation und auf der Startseite nicht mehr angezeigt.
 - Im Bereich News der eigenen Profilseite können jetzt auch neue Nutzer:innen angezeigt werden. Dies kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" eingestellt werden.
 - Es wird nun deutlicher auf Benachrichtigungen hingewiesen, indem der Button im Header rot hervorgehoben wird, wenn neue Benachrichtigungen vorhanden sind und auf der Startseite des Profils eine Meldung angezeigt wird.
+
+
 - Ein Problem mit Custom Fields des Typs `float` wurde behoben, wodurch nur ganze Zahlen erlaubt waren. Jetzt können auch Dezimalzahlen korrekt gespeichert und angezeigt werden.
+- Ein Problem wurde behoben, durch das das Rendern von Aktivitäten fehlschlagen konnte, wenn der Name eines Journals Klammern enthielt.
+- Der "keine Personen"-Warnhinweis in der Aktivitätenübersicht wurde korrigiert, sodass er jetzt nicht mehr warnt, wenn Herausgeber:innen vorhanden sind.
+- Im Formularbaukasten können jetzt auch Felder gespeichert werden, die statt Autoren nur Herausgeber:innen enthalten.
+- Die Spaltennamen des Feldes `supervisor-thesis` wurden korrigiert und das Auto-Vervollständigen von Namen funktioniert jetzt korrekt.
+- Der Link auf der Startseite zum Sperren von Aktivitäten funktioniert wieder.
+- Ein paar Formular-Labels wurden nicht korrekt durch Nutzereinstellungen überschrieben. Dies wurde behoben. Auf der Seite der Aktivität wird nun die korrekte Überschrift für Autoren und Herausgeber angezeigt, basierend auf den Nutzereinstellungen im Formularbaukasten.
+- Es ist nicht mehr möglich ein Custom Field `language` zu nennen, da dies Probleme mit MongoDB verursacht.
+- Ein Problem wurde behoben, durch das SWS nicht im Autoren-Editor bearbeitet werden konnten.
+- Die Konfetti-Timeline kann in Projekten jetzt korrekt gefiltert werden.
+- Links zu Einheiten in Aktivitäten wurden korrigiert.
+- Die Projekt-Typen werden jetzt nach Aktualisierungsdatum sortiert.
+- Proposals hinzufügen ist der neue Default, wenn es möglich ist.
+- Im Personen-Editor können die Werte für Expertise, CV und Forschungsinteressen jetzt auch leer gesetzt werden.
+- Wenn man auf "Event hinzufügen" auf der Profilseite klickt, wird jetzt das richtige Formular geöffnet.
+- Ein Problem wurde behoben, durch das einige Seiten unter bestimmten PHP-Einstellungen nicht geladen werden konnten.
+
+
+---
 
 
 
