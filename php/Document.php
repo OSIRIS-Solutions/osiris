@@ -642,6 +642,10 @@ class Document extends Settings
         }
         // $to = date_create($to);
         $from = Document::format_date($from);
+
+        if (empty($from)) {
+            return Document::format_date($to);
+        }
         $to = Document::format_date($to);
 
         $f = explode('.', $from, 3);
