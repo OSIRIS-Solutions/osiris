@@ -551,10 +551,14 @@ class Groups
     }
 
 
-    function getAllPersons($units, $date = null, $include_parents = false, $only_scientific = false)
+    function getAllPersons($units, $date = null, $include_children = false, $only_scientific = false)
     {
         if (is_string($units)) {
             $units = [$units];
+            if ($include_children) {
+                $children = $this->getChildren($units[0]);
+                $units = array_merge($units, $children);
+            }
         }
         if (empty($date)) $date = date('Y-m-d');
 
@@ -585,31 +589,10 @@ class Groups
     }
 
 
-    function countAllPersons($units, $date = null, $include_parents = false, $only_scientific = true)
+    function countAllPersons($units, $date = null, $include_children = false, $only_scientific = false)
     {
-        if (is_string($units)) {
-            $units = [$units];
-        }
-        if (empty($date)) $date = date('Y-m-d');
-        $persons = $this->DB->db->persons->find(
-            [
-                'units' => ['$elemMatch' => [
-                    'unit' => ['$in' => $units],
-                    '$and' => [
-                        ['$or' => [
-                            ['start' => null],
-                            ['start' => ['$lte' => $date]]
-                        ]],
-                        ['$or' => [
-                            ['end' => null],
-                            ['end' => ['$gte' => $date]]
-                        ]]
-                    ]
-                ]],
-                'is_active' => ['$ne' => false]
-            ]
-        )->toArray();
-        return $persons;
+        $persons = $this->getAllPersons($units, $date, $include_children, $only_scientific);
+        return count($persons);
     }
 
     function getPersonDept($units)

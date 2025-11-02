@@ -164,10 +164,8 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         <?php if (!$inactive) { ?>
 
                             <div class="text-muted font-size-12">
-                                <?php
-                                $children = $Groups->getChildren($group['id']);
-                                ?>
-                                <?= $osiris->persons->count(['units.unit' => ['$in' => $children],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
+                                <?= $Groups->countAllPersons($group['id'], null, true) ?> 
+                                <?= lang('Coworkers', 'Mitarbeitende') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>
