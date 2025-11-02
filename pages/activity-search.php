@@ -87,7 +87,7 @@ $filters = array_map(function ($f) {
                 <div class="collapse-group" id="saved-queries">
                     <?php foreach ($queries as $query) {
                         $rules = json_decode($query['rules'], true);
-                        if (empty($rules['rules'])) {
+                        if (!$expert && empty($rules['rules'])) {
                             $rules['rules'] = ['id' => 'No rules'];
                         }
                     ?>
@@ -102,6 +102,11 @@ $filters = array_map(function ($f) {
 
                                     <tr>
                                         <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
+                                        <?php if ($expert) { ?>
+                                        <td>
+                                            <?= dump($rules) ?>
+                                        </td>
+                                        <?php } else { ?>
                                         <td>
                                             <ul>
                                                 <?php foreach ($rules['rules'] as $key) { ?>
@@ -171,6 +176,7 @@ $filters = array_map(function ($f) {
                                                 <?php } ?>
                                             </ul>
                                         </td>
+                                        <?php } ?>
                                     </tr>
 
                                     <tr>
