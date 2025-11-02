@@ -882,7 +882,7 @@ class Modules
 
         $this->copy = $copy ?? false;
         $this->preset = $form['authors'] ?? array();
-        if ((empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
+        if (empty($form) && (empty($this->preset) || count($this->preset) === 0) && isset($USER['username']))
             $this->preset = array(
                 [
                     'last' => $USER['last'],
@@ -1659,6 +1659,11 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
+                    
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1779,6 +1784,11 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
+
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -2058,6 +2068,10 @@ class Modules
                         <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
+
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[authors]" value="">
+                    <?php } ?>
 
                     <div class="author-widget" id="author-widget">
                         <div class="author-list p-10" id="author-list">
@@ -2646,6 +2660,11 @@ class Modules
                         <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
+                    
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[editors]" value="">
+                    <?php } ?>
+
                     <div class="author-widget" id="editor-widget">
                         <div class="author-list p-10" id="editor-list">
                             <?= $this->editors ?>
