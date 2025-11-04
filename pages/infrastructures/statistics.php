@@ -23,7 +23,7 @@ $additionalFields = [];
 $fields = $Vocabulary->getVocabulary('infrastructure-stats');
 if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
 } else {
-    $fields = $fields['values'];
+    $fields = DB::doc2Arr($fields['values']);
     foreach ($fields as $field) {
         if ($field['id'] == 'internal' || $field['id'] == 'national' || $field['id'] == 'international' || $field['id'] == 'hours' || $field['id'] == 'accesses') {
             continue; // skip the default fields
@@ -168,43 +168,61 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 'national' => 0,
                 'international' => 0
             ];
-            foreach ($infrastructures as $infrastructure) {
-                $statistics = DB::doc2Arr($infrastructure['statistics'] ?? []);
-                if (!empty($statistics)) {
-                    // filter statistics by year
-                    $statistics = array_filter($statistics, function ($stat) use ($year) {
-                        return $stat['year'] == $year;
-                    });
-                }
-                foreach ($statistics as $yearstats) {
-                    $stats['internal'] += $yearstats['internal'] ?? 0;
-                    $stats['national'] += $yearstats['national'] ?? 0;
-                    $stats['international'] += $yearstats['international'] ?? 0;
+
+            // 1) Build $group stage with one accumulator per field
+            $group = ['_id' => ['infrastructure' => '$infrastructure']];
+            foreach ($fields as $f) {
+                $fid = $f['id'];
+                // Sum only docs where field == $fid; coerce to number
+                $group[$fid] = [
+                    '$sum' => [
+                        '$cond' => [
+                            ['$eq' => ['$field', $fid]],
+                            ['$toDouble' => ['$ifNull' => ['$value', 0]]],
+                            0
+                        ]
+                    ]
+                ];
+            }
+
+            $pipeline = [
+                ['$match' => ['year' => intval($year)]],
+                ['$group' => $group],
+                ['$project' => array_merge(['_id' => 0, 'infrastructure' => '$_id.infrastructure'], array_fill_keys(array_column($fields, 'id'), 1))],
+                ['$sort' => ['infrastructure' => -1]]
+            ];
+
+            $aggregations = $osiris->infrastructureStats->aggregate($pipeline)->toArray();
+            foreach ($aggregations as $yearstats) {
+                $infrastructure = $osiris->infrastructures->findOne(['id' => $yearstats['infrastructure']]);
+                if (empty($infrastructure)) continue;
+                $stats['internal'] += $yearstats['internal'] ?? 0;
+                $stats['national'] += $yearstats['national'] ?? 0;
+                $stats['international'] += $yearstats['international'] ?? 0;
             ?>
-                    <tr>
-                        <td>
-                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                                <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
-                            </a>
-                        </td>
-                        <td>
-                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
-                        </td>
-                        <td class="text-right">
-                            <?= $yearstats['internal'] ?? 0 ?>
-                        </td>
-                        <td class="text-right">
-                            <?= $yearstats['national'] ?? 0 ?>
-                        </td>
-                        <td class="text-right">
-                            <?= $yearstats['international'] ?? 0 ?>
-                        </td>
-                        <td class="text-right">
-                            <?= ($yearstats['internal'] ?? 0) + ($yearstats['national'] ?? 0) + ($yearstats['international'] ?? 0) ?>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
+                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $yearstats['internal'] ?? 0 ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $yearstats['national'] ?? 0 ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $yearstats['international'] ?? 0 ?>
+                    </td>
+                    <td class="text-right">
+                        <?= ($yearstats['internal'] ?? 0) + ($yearstats['national'] ?? 0) + ($yearstats['international'] ?? 0) ?>
+                    </td>
+                </tr>
             <?php
-                }
             } ?>
         </tbody>
         <tfoot>
@@ -256,47 +274,37 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             foreach ($additionalFields as $f) {
                 $stats[$f['id']] = 0;
             }
-            foreach ($infrastructures as $infrastructure) {
-                $statistics = DB::doc2Arr($infrastructure['statistics'] ?? []);
-                if (!empty($statistics)) {
-                    usort($statistics, function ($a, $b) {
-                        return $a['year'] <=> $b['year'];
-                    });
+            foreach ($aggregations as $yearstats) {
+                $infrastructure = $osiris->infrastructures->findOne(['id' => $yearstats['infrastructure']]);
+                if (empty($infrastructure)) continue;
+                $stats['hours'] += $yearstats['hours'] ?? 0;
+                $stats['accesses'] += $yearstats['accesses'] ?? 0;
+                foreach ($additionalFields as $f) {
+                    $stats[$f['id']] += $yearstats[$f['id']] ?? 0;
                 }
-                foreach ($statistics as $yearstats) {
-                    if ($yearstats['year'] != $year) {
-                        continue; // only show statistics for the selected year
-                    }
-                    $stats['hours'] += $yearstats['hours'] ?? 0;
-                    $stats['accesses'] += $yearstats['accesses'] ?? 0;
-                    foreach ($additionalFields as $f) {
-                        $stats[$f['id']] += $yearstats[$f['id']] ?? 0;
-                    }
             ?>
-                    <tr>
-                        <td>
-                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                                <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
-                            </a>
-                        </td>
-                        <td>
-                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
-                        </td>
+                <tr>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
+                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $yearstats['hours'] ?? 0 ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $yearstats['accesses'] ?? 0 ?>
+                    </td>
+                    <?php foreach ($additionalFields as $f) { ?>
                         <td class="text-right">
-                            <?= $yearstats['hours'] ?? 0 ?>
+                            <?= $yearstats[$f['id']] ?? 0 ?>
                         </td>
-                        <td class="text-right">
-                            <?= $yearstats['accesses'] ?? 0 ?>
-                        </td>
-                        <?php foreach ($additionalFields as $f) { ?>
-                            <td class="text-right">
-                                <?= $yearstats[$f['id']] ?? 0 ?>
-                            </td>
-                        <?php } ?>
-                    </tr>
-            <?php
-                }
-            } ?>
+                    <?php } ?>
+                </tr>
+            <?php } ?>
         </tbody>
         <tfoot>
             <tr>
@@ -320,7 +328,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
     <h3>
         <?= lang('Personnel statistics', 'Personalstatistiken') ?>
-        <?=lang('on the reporting date', 'am Stichtag')?>
+        <?= lang('on the reporting date', 'am Stichtag') ?>
     </h3>
 
     <table class="table" id="person-stats">

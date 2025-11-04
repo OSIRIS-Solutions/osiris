@@ -2,6 +2,21 @@
 
 
 
+<span class="badge float-right">04.11.2025</span>
+<a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
+
+## Version 1.6.2
+
+In diesem Update haben wir die Handhabung der Infrastruktur-Statistiken überarbeitet und ein Migrationsskript hinzugefügt, um bestehende Statistiken in ein neues Format zu überführen.
+
+Infrastruktur-Statistiken sind jetzt deutlich flexibler. Man konnte zuvor bereits verschiedene Statistikfelder definieren, aber diese wurden immer auf alle Infrastrukturen angewendet. Jetzt können Statistiken individuell für jede Infrastruktur definiert und verwaltet werden.
+
+Außerdem ist es möglich, den Zeitraum für die Erhebung der Statistiken festzulegen, z.B. jährlich, vierteljährlich, monatlich oder unregelmäßig. Dies ermöglicht eine genauere und kontextbezogenere Erfassung der Daten. Bei der unregelmäßigen Erfassung wird das Datum der Erhebung gespeichert, sodass man im Nachhinein nachvollziehen kann, wann die Daten erfasst wurden. Wenn der Zeitpunkt der Erhebung erneut verwendet wird, dann werden die bestehenden Daten überschrieben.
+
+Diese neue Flexibilität ermöglicht es, die Statistiken besser an die spezifischen Anforderungen und Gegebenheiten der jeweiligen Infrastruktur anzupassen. Die Abbildungen wurden entsprechend angepasst, um die neuen Möglichkeiten zu unterstützen.
+
+---
+
 <span class="badge float-right">02.11.2025</span>
 <a class="anchor" href="#version-1.6.1" id="version-1.6.1"></a>
 
