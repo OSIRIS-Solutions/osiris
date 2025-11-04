@@ -1200,7 +1200,6 @@ if ($is_subproject) {
                 $nagoya = $form['nagoya'] ?? 'no';
                 // include_once BASEPATH . "/php/Country.php";
             ?>
-
                 <h5>
                     <?= lang('Nagoya Protocol') ?>
                 </h5>
