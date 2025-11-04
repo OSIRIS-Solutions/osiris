@@ -57,6 +57,7 @@
                     bronze: '#cd7f31',
                     hybrid: '#4C96CB',
                     green: '#1FA138',
+                    'diamond': '#8E44AD',
                 }
 
                 var piechart = [{
