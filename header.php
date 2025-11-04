@@ -236,7 +236,7 @@ $pageactive = function ($p) use ($page) {
                 $n_notifications = $_SESSION['has_notifications'] ?? false;
             ?>
                 <div class="dropdown modal-sm">
-                    <button class="btn <?= $n_notifications > 0 ? 'danger' : 'muted' ?> mr-5" data-toggle="dropdown" type="button" id="messages" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn position-relative <?= $n_notifications > 0 ? 'danger' : 'muted' ?> mr-5" data-toggle="dropdown" type="button" id="messages" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-bell"></i>
                         <span class="sr-only"><?= lang('Notifications', 'Benachrichtigungen') ?></span>
                         <?php if ($n_notifications > 0) { ?>

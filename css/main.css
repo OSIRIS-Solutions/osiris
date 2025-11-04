@@ -6128,7 +6128,7 @@ span.notification {
   display: block;
   font-size: x-small;
   position: absolute;
-  top: 0.4rem;
+  top: 0.3rem;
   line-height: 1;
   background-color: var(--danger-color);
   color: white;
@@ -6137,7 +6137,7 @@ span.notification {
   font-weight: bold;
   margin-left: -1.2rem;
   height: 1.2rem;
-  right: 1.5rem;
+  right: 1.2rem;
 }
 
 @keyframes bellBounce {
