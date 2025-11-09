@@ -545,6 +545,24 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
+    if (isset($values['nagoya'])){
+        $nagoya = ($values['nagoya'] == 'yes');
+        $countries = [];
+        foreach ($values['nagoya_countries'] as $iso) {
+             $countries[] = [
+                'id' => uniqid(),
+                'code' => $iso,
+                "periods" => [],
+                "scope" => [],
+                "abs" => []
+            ];
+        }
+        $values['nagoya'] = [
+            'enabled' => $nagoya,
+            'countries' => $countries
+        ];
+
+    }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);

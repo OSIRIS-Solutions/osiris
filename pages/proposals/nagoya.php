@@ -15,7 +15,7 @@
         <label class="mb-2">
           <input type="checkbox" name="enabled" value="1"
             <?= !empty($project['nagoya']['enabled'])?'checked':''; ?>>
-          Dieses Projekt **collect / obtain / utilize** genetische Ressourcen außerhalb Deutschlands.
+          Dieses Projekt collect / obtain / utilize genetische Ressourcen außerhalb Deutschlands.
         </label>
         <p class="small text-muted mb-0">
           Hinweis: „Provider country“ = Land der ursprünglichen Feldsammlung (nicht Lagerort/ Sammlung).

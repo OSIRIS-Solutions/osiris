@@ -549,6 +549,8 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     <?php
                         $nagoya_status = $Project->getNagoyaStatus();
                         echo $nagoya_status;
+
+                        dump($project['nagoya']);
                     ?>
 
                     <a href="<?= ROOTPATH ?>/proposals/nagoya/<?= $id ?>" class="btn"><?= lang('View details', 'Details anzeigen') ?></a>
