@@ -72,7 +72,7 @@ if ($id === null || empty($data)) {
                 if (is_array($issn)) $issn = implode(' ', $issn);
             }
             ?>
-            <input type="text" name="values[issn]" id="issn" class="form-control" value="<?= $issn ?>" required>
+            <input type="text" name="values[issn]" id="issn" class="form-control" value="<?= $issn ?>">
         </div>
         <div class="col-sm">
             <label for="publisher" class="required">Publisher</label>
