@@ -32,8 +32,9 @@ Route::get('/migrate/test', function () {
     include BASEPATH . "/header.php";
 
     // transform nagoya info from proposals
-    $proposals = $osiris->proposals->find(['nagoya' => 'yes'])->toArray();
+    $proposals = $osiris->proposals->find(['nagoya' => ['$exists' => true]])->toArray();
     foreach ($proposals as $proposal) {
+        $enabled = ($proposal['nagoya'] == 'yes');
         $countries = [];
         foreach ($proposal['nagoya_countries'] ?? [] as $iso) {
             $countries[] = [
@@ -45,7 +46,7 @@ Route::get('/migrate/test', function () {
             ];
         }
         $nagoya = [
-            'enabled' => true,
+            'enabled' => $enabled,
             'countries' => $countries,
         ];
         $osiris->proposals->updateOne(
@@ -55,6 +56,7 @@ Route::get('/migrate/test', function () {
             ]]
         );
     }
+    echo "Nagoya info transformed for " . count($proposals) . " proposals.";
 
     include BASEPATH . "/footer.php";
 });

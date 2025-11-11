@@ -1206,13 +1206,12 @@ if ($is_subproject) {
                 $enabled = $nagoya['enabled'] ?? false;
 
                 // if the form is not empty, and Nagoya was disabled just refer to the nagoya tab and do not show the fields here
-                if (!empty($form) && $enabled) { ?>
+                if (!empty($form) && $enabled && !empty($countries)) { ?>
                     <div class="alert alert-info">
                         <?= lang('Nagoya Protocol settings can be found in the Nagoya Protocol tab after saving the form.', 'Die Einstellungen zum Nagoya-Protokoll finden Sie im Nagoya-Protokoll-Tab nach dem Speichern des Formulars.') ?>
                     </div>
                 <?php
                 } else {
-                    include_once BASEPATH . "/php/Country.php";
                 ?>
 
                     <div class="form-group">
