@@ -451,7 +451,7 @@ class Settings
 
     function tripLabel()
     {
-        if (!$this->featureEnabled('topics')) return '';
+        if (!$this->featureEnabled('trips')) return '';
         $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
         if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
         return lang($arr['name'], $arr['name_de'] ?? null);
