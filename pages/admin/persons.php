@@ -445,11 +445,7 @@ if (!is_null($data)) {
                     <?php foreach ($fields as $field) { ?>
                         <tr>
                             <td>
-                                <!-- checkbox -->
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" name="general[person-data][]" id="field-<?= $field['id'] ?>" value="<?= $field['id'] ?>" <?= in_array($field['id'], $data) ? 'checked' : '' ?>>
-                                    <label for="field-<?= $field['id'] ?>"></label>
-                                </div>
+                                <input type="checkbox" name="general[person-data][]" id="field-<?= $field['id'] ?>" value="<?= $field['id'] ?>" <?= in_array($field['id'], $data) ? 'checked' : '' ?>>
                             </td>
                             <td>
                                 <b><?= lang($field['en'], $field['de'] ?? null) ?></b>
