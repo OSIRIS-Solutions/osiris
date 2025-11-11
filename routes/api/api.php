@@ -78,7 +78,26 @@ function return_rest($data, $count = 0, $status = 200)
             'msg' => $data
         );
     }
-    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+}
+
+function return_rest_stream($data)
+{
+    header("Content-Type: application/json; charset=utf-8");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo '{"status":200,"data":[';
+    $i = 0;
+    $first = true;
+    foreach ($data as $doc) {
+        $i++;
+        if (!$first) echo ',';
+        echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        $first = false;
+        // optional: flush() für Chunked Transfer
+        // flush();
+    }
+    echo '],"count":' . $i . '}';
 }
 
 Route::get('/api/activities', function () {
@@ -131,12 +150,17 @@ Route::get('/api/activities', function () {
     }
 
     if (isset($_GET['full'])) {
-        $result = $osiris->activities->find(
+        $cursor = $osiris->activities->find(
             $filter,
-            ['sort' => ['year' => -1]]
-        )->toArray();
-        echo return_rest($result, count($result));
-        die;
+            [
+                'sort' => ['_id' => -1],
+                // 'projection' => ['rendered' => 0, 'files' => 0],
+                'batchSize' => 500,
+                // 'noCursorTimeout' => true, // nur wenn nötig
+            ]
+        );
+        return_rest_stream($cursor);
+        return;
     }
 
     $projection = [
