@@ -529,8 +529,7 @@ $pageactive = function ($p) use ($page) {
                                         <?= lang('Add project', 'Projekt hinzufügen') ?>
                                     </a>
                                 <?php } ?>
-                            <?php } ?>
-                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
+                            <?php if ($Settings->hasPermission('conferences.edit') && $Settings->featureEnabled('events', true)) { ?>
                                 <a href="<?= ROOTPATH ?>/conferences/new">
                                     <i class="ph ph-calendar-plus"></i>
                                     <?= lang('Add event', 'Event hinzufügen') ?>
