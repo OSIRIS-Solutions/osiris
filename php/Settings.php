@@ -38,6 +38,9 @@ class Settings
         }
         // everyone is a user
         $this->roles[] = 'user';
+        if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
+            $this->roles[] = 'admin';
+        }
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],
