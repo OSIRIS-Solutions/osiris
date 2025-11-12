@@ -17,7 +17,7 @@
 Route::get('/queue/(user|editor)', function ($role) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
-    if ($role == 'editor' && ($Settings->hasPermission('report.dashboard'))) {
+    if ($Settings->hasPermission('report.dashboard')) {
         $filter = ['declined' => ['$ne' => true]];
     } else {
         $filter = ['authors.user' => $user, 'declined' => ['$ne' => true]];
