@@ -20,18 +20,14 @@
 
 <h1><i class="ph ph-stack-plus text-primary"></i>
     <?php
+    $label = $Settings->journalLabel();
     if ($id === null || empty($data)) {
-        echo lang("Add journal", "Journal hinzufügen");
+        echo lang("Add $label",  "$label hinzufügen");
     } else {
         echo $data['journal'];
     }
     ?>
 </h1>
-
-<!-- 
-<?php
-dump($data, true);
-?> -->
 
 <?php
 if ($id === null || empty($data)) {
@@ -43,37 +39,38 @@ if ($id === null || empty($data)) {
 }
 ?>
 
-
 <form action="<?= $formaction ?>" method="post">
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
 
-    <div class="form-row row-eq-spacing-sm">
+    <div class="form-row row-eq-spacing">
         <div class="col-sm">
-            <label for="journal" class="required"><?= lang('Journal name', 'Name des Journals') ?></label>
+            <label for="journal" class="required"><?= lang('Name', 'Name') ?></label>
             <input type="text" name="values[journal]" id="journal" class="form-control" value="<?= $data['journal'] ?? '' ?>" required>
         </div>
         <div class="col-sm">
-            <label for="abbr"><?= lang('Abbr. name', 'Abkürzung') ?></label>
+            <label for="abbr"><?= lang('Abbreviation', 'Abkürzung') ?></label>
             <input type="text" name="values[abbr]" id="abbr" class="form-control" value="<?= $data['abbr'] ?? '' ?>">
         </div>
     </div>
-
-    <div class="form-row row-eq-spacing-sm">
-        <div class="col-sm">
-            <label class="required" for="issn"><?= lang('ISSN') ?></label>
-            <?php
-            $issn = "";
-            if (isset($data['issn'])) {
-                $issn = $data['issn'];
-                try {
-                    $issn = DB::doc2Arr($issn);
-                } catch (\Throwable $th) {
-                }
-                if (is_array($issn)) $issn = implode(' ', $issn);
+    <div class="form-group">
+        <label for="issn"><?= lang('ISSN') ?></label>
+        <?php
+        $issn = "";
+        if (isset($data['issn'])) {
+            $issn = $data['issn'];
+            try {
+                $issn = DB::doc2Arr($issn);
+            } catch (\Throwable $th) {
             }
-            ?>
-            <input type="text" name="values[issn]" id="issn" class="form-control" value="<?= $issn ?>">
-        </div>
+            if (is_array($issn)) $issn = implode(' ', $issn);
+        }
+        ?>
+        <input type="text" name="values[issn]" id="issn" class="form-control" value="<?= $issn ?>">
+        <small>
+            <?= lang('Multiple ISSNs can be separated by spaces.', 'Mehrere ISSNs können durch Leerzeichen getrennt werden.') ?>
+        </small>
+    </div>
+    <div class="form-row row-eq-spacing">
         <div class="col-sm">
             <label for="publisher" class="required">Publisher</label>
             <input type="text" name="values[publisher]" id="publisher" class="form-control" value="<?= $data['publisher'] ?? '' ?>" required>

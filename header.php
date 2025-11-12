@@ -681,7 +681,7 @@ $pageactive = function ($p) use ($page) {
 
                         <a href="<?= ROOTPATH ?>/journal" class="with-icon <?= $pageactive('journal') ?>">
                             <i class="ph ph-stack" aria-hidden="true"></i>
-                            <?= lang('Journals', 'Journale') ?>
+                            <?= $Settings->journalLabel() ?>
                         </a>
 
                         <?php if ($Settings->featureEnabled('events', true)) { ?>

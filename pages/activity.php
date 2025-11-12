@@ -1098,7 +1098,7 @@ if ($Settings->featureEnabled('tags')) {
 
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Journal') ?></span>
+                                    <span class="key"><?= $Settings->journalLabel() ?></span>
 
                                     <a class="module " href="<?= ROOTPATH ?>/journal/view/<?= $doc['journal_id'] ?>">
                                         <h6 class="m-0"><?= $journal['journal'] ?></h6>

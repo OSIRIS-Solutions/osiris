@@ -16,12 +16,13 @@
  * @license     MIT
  */
 
+$label = $Settings->journalLabel();
 ?>
 
 
 <h1 class="mt-0">
     <i class="ph ph-stack text-primary"></i>
-    <?= lang('Journals', 'Journale') ?>
+    <?= $label ?>
 </h1>
 
 <?php
@@ -29,7 +30,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
     <div class="btn-toolbar mb-20">
         <a href="<?= ROOTPATH ?>/journal/add" class="btn primary">
             <i class="ph ph-stack-plus"></i>
-            <?= lang('Add Journal', 'Journal hinzufügen') ?>
+            <?= lang("Add $label", "$label hinzufügen") ?>
         </a>
         <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
             <a href="<?= ROOTPATH ?>/journal/metrics">
@@ -44,7 +45,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="result-table">
     <thead>
-        <th>Journal name</th>
+        <th><?= $label ?> name</th>
         <th>Publisher</th>
         <th>ISSN</th>
         <th>OA</th>

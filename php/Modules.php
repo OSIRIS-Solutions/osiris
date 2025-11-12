@@ -2500,7 +2500,6 @@ class Modules
                     </a>
                     <label for="journal" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <a href="#journal-select" id="journal-field" class="module">
-                        <!-- <a class="btn link" ><i class="ph ph-edit"></i> <?= lang('Edit Journal', 'Journal bearbeiten') ?></a> -->
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
 
                         <div id="selected-journal">
@@ -2511,7 +2510,7 @@ class Modules
                                 <span class="float-right text-muted"><?= $journal['publisher'] ?></span>
                                 <span class="text-muted">ISSN: <?= print_list($journal['issn']) ?></span>
                             <?php else : ?>
-                                <span class="title"><?= lang('No Journal selected', 'Kein Journal ausgewählt') ?></span>
+                                <span class="font-weight-bold"><?= lang('Not selected', 'Nichts ausgewählt') ?></span>
                             <?php endif; ?>
                         </div>
 

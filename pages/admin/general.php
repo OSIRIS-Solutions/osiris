@@ -1003,6 +1003,22 @@ $affiliation = $Settings->get('affiliation_details');
                         <h4 id="journal-metrics">
                             <?= lang('Journals', 'Journale') ?>
                         </h4>
+                         <div class="form-group">
+                            <?php
+                            $label = $Settings->get('journals_label');
+                            ?>
+
+                            <div class="row row-eq-spacing my-0">
+                                <div class="col-md-6">
+                                    <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                    <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Journals') ?>">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                    <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Journale') ?>">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="" class="label">
                                 <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>

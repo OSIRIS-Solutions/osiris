@@ -451,6 +451,13 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
+    
+    function journalLabel()
+    {
+        $settings = $this->get('journals_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
 
     function tripLabel()
     {

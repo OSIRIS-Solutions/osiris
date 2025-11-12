@@ -651,7 +651,7 @@ function dump($element, $as_json = true)
         $element = $element->bsonSerialize();
     }
     if ($as_json) {
-        echo json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        echo htmlspecialchars(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         if (!empty(json_last_error())) {
             var_dump(json_last_error_msg()) . PHP_EOL;
             var_export($element);

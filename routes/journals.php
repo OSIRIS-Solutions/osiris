@@ -16,10 +16,10 @@
 
 
 Route::get('/journal', function () {
-    $breadcrumb = [
-        ['name' => lang('Journals', 'Journale')]
-    ];
     include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => $Settings->journalLabel(), 'path' => "/journal"],
+    ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/table.php";
     include BASEPATH . "/footer.php";
@@ -33,7 +33,7 @@ Route::get('/journal/metrics', function () {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
+        ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => lang('Metrics', 'Metriken')]
     ];
     include BASEPATH . "/header.php";
@@ -50,7 +50,7 @@ Route::get('/journal/view/([a-zA-Z0-9]*)', function ($id) {
 
     $data = $osiris->journals->findOne(['_id' => $id]);
     $breadcrumb = [
-        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
+        ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '']
     ];
 
@@ -65,7 +65,7 @@ Route::get('/journal/add', function () {
     $id = null;
     $data = [];
     $breadcrumb = [
-        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
+        ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => lang("Add", "Hinzufügen")]
     ];
 
@@ -82,7 +82,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
 
     $data = $osiris->journals->findOne(['_id' => $id]);
     $breadcrumb = [
-        ['name' => lang('Journals', 'Journale'), 'path' => "/journal"],
+        ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
         ['name' => lang("Edit", "Bearbeiten")]
     ];

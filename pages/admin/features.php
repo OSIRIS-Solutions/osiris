@@ -72,7 +72,7 @@
 
     <div class="box px-20">
         <h3>
-            <?= lang('Journals', 'Journale') ?>
+            <?= $Settings->journalLabel() ?>
         </h3>
         <div class="form-group">
             <label for="">

@@ -15,21 +15,22 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+$label = $Settings->journalLabel();
 ?>
 
 <h1>
     <i class="ph ph-ranking"></i>
-    <?= lang('Journal metrics', 'Zeitschriftmetriken') ?>
+    <?= lang("$label metrics", "$label-Metriken") ?>
 </h1>
 
 <p>
-    <?= lang('This will check the metrics for all journals. This may take a while.', 'Dies wird die Metriken für alle Journale prüfen. Dies kann eine Weile dauern.') ?>
+    <?= lang("This will check the metrics for all $label. This may take a while.", "Dies wird die Metriken für alle $label prüfen. Dies kann eine Weile dauern.") ?>
 </p>
 
 <?php
 // check if the user has permission to edit journals
 if (!$Settings->hasPermission('journals.edit')) {
-    echo "<p class='alert alert-danger'>" . lang('You do not have permission to edit journals.', 'Sie haben keine Berechtigung, Journale zu bearbeiten.') . "</p>";
+    echo "<p class='alert alert-danger'>" . lang("You do not have permission to edit $label.", "Sie haben keine Berechtigung, $label zu bearbeiten.") . "</p>";
     die;
 }
 // check the latest year for which metrics are available in the OSIRIS API
@@ -90,7 +91,7 @@ if (isset($_GET['year'])) {
             <p class="mt-5">
                 <?= lang('We found', 'Wir haben') ?>
                 <strong class="highlight" id="total"><?= $count ?></strong>
-                <?= lang('journals that do not have metrics for this year. ', 'Journale gefunden, die noch keine Metriken für dieses Jahr haben. ') ?>
+                <?= lang("{$label} that do not have metrics for this year. ", "Für {$label} gefunden, die noch keine Metriken für dieses Jahr haben. ") ?>
             </p>
 
             <button id="startBtn" onclick="startProcess()" class="btn primary">
@@ -105,7 +106,7 @@ if (isset($_GET['year'])) {
                 let year = $("#year").val();
                 let total = $("#total").text();
                 if (total == 0) {
-                    $("#status").text("<?= lang('No journals found', 'Keine Journale gefunden') ?>");
+                    $("#status").text("<?= lang("No {$label} found", "Keine {$label} gefunden") ?>");
                     return;
                 }
                 $("#startBtn").attr("disabled", true);

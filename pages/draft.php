@@ -160,7 +160,7 @@ include_once BASEPATH . "/php/Modules.php";
 
             <tr>
                 <td>
-                    <span class="key"><?= lang('Journal') ?></span>
+                    <span class="key"><?= $Settings->journalLabel() ?></span>
 
                     <a class="module " href="<?= ROOTPATH ?>/journal/view/<?= $draft['journal_id'] ?>">
                         <h6 class="m-0"><?= $journal['journal'] ?></h6>
