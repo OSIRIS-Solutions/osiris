@@ -150,6 +150,16 @@ function toastWarning(msg = "", title = null) {
         timeShown: 10000
     })
 }
+function toastInfo(msg = "", title = null) {
+    if (title === null) title = lang("Info", "Information")
+    osirisJS.initStickyAlert({
+        content: msg,
+        title: title,
+        alertType: "primary",
+        hasDismissButton: true,
+        timeShown: 10000
+    })
+}
 function getCookie(cname) {
     let decodedCookie = decodeURIComponent(document.cookie);
     if (cname === null) {
