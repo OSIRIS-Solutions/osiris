@@ -175,6 +175,18 @@ $affiliation = $Settings->get('affiliation_details');
                     </p>
                 </div>
 
+                <!-- render language -->
+                <div class="form-group">
+                    <?php
+                    $renderLang = $Settings->get('render_language', 'en');
+                    ?>
+                    <label for="render_language"><?= lang('Render language for print output', 'Anzeigesprache für Print-Ausgabe') ?></label>
+                    <select class="form-control" name="general[render_language]" id="render_language">
+                        <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option> -->
+                        <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= lang('English only', 'Nur Englisch') ?></option>
+                        <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= lang('German only', 'Nur Deutsch') ?></option>
+                    </select>
+                </div>
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>

@@ -2,8 +2,11 @@
 include_once 'init.php';
 function renderActivities($filter = [])
 {
-    global $Groups;
+    // global $Groups;
+    global $Settings;
     $Format = new Document(true);
+    
+    $renderLang = $Settings->get('render_language', lang('en', 'de'));
     $DB = new DB;
     $cursor = $DB->db->activities->find($filter);
     $rendered = [
@@ -18,15 +21,13 @@ function renderActivities($filter = [])
         $Format->usecase = 'web';
         $doc['authors'] = DB::doc2Arr($doc['authors'] ?? []);
 
-        // $depts = $Groups->getDeptFromAuthors($doc['authors']);
-
         $Format->usecase = 'print';
-        $f = $Format->format();
+        $f = $Format->format($renderLang);
         $Format->usecase = 'web';
-        $web = $Format->formatShort();
+        $web = $Format->formatShort($renderLang);
 
         $Format->usecase = 'portal';
-        $portfolio = $Format->formatPortfolio();
+        $portfolio = $Format->formatPortfolio($renderLang);
 
         $rendered = [
             'print' => $f,

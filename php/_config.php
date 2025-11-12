@@ -30,7 +30,7 @@ function validateValues($values, $DB)
     unset($values['last_authors']);
 
     foreach ($values as $key => $value) {
-        if ($key == 'id'){
+        if ($key == 'id') {
             // do not validate id, it is set by the database
             continue;
         } else if ($key == 'doi') {
@@ -130,7 +130,7 @@ function validateValues($values, $DB)
             $values[$key] = boolval($value);
         } else if ($key == 'oa_status') {
             $values['open_access'] = $value != 'closed';
-        } else if ($key == 'title' || $key == 'title_de'){
+        } else if ($key == 'title' || $key == 'title_de') {
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
@@ -199,7 +199,8 @@ function validateValues($values, $DB)
     return $values;
 }
 
-function shortenName($name, $maxLength = 30) {
+function shortenName($name, $maxLength = 30)
+{
     return get_preview($name, $maxLength);
 }
 
@@ -544,7 +545,7 @@ function fromToYear($from, $to, $continuous = false)
     $from = format_date($from, "Y");
     if (!empty($to))
         $to = format_date($to, "Y");
-    
+
     if ($from == $to) {
         return $from;
     }
@@ -857,7 +858,8 @@ function socialLogo($type)
     }
 }
 
-function getNextColor() {
+function getNextColor()
+{
     static $palatte = [
         "#1f77b4",
         "#ff7f0f",
@@ -880,4 +882,24 @@ function getNextColor() {
     $index = ($index + 1) % count($palatte); // Zurück zum Anfang, wenn Ende erreicht
 
     return $color;
+}
+function format_month($month)
+{
+    if (empty($month)) return '';
+    $month = intval($month);
+    $array = [
+        1 => lang("January", "Januar"),
+        2 => lang("February", "Februar"),
+        3 => lang("March", "März"),
+        4 => lang("April"),
+        5 => lang("May", "Mai"),
+        6 => lang("June", "Juni"),
+        7 => lang("July", "Juli"),
+        8 => lang("August"),
+        9 => lang("September"),
+        10 => lang("October", "Oktober"),
+        11 => lang("November"),
+        12 => lang("December", "Dezember")
+    ];
+    return $array[$month];
 }

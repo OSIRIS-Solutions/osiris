@@ -23,7 +23,7 @@ foreach ($reports as $report) { ?>
             <p class="text-primary"><?= $report['description'] ?? '' ?></p>
 
             <span class="badge primary">
-                <b><?= lang('Start month', 'Startmonat') ?></b>: <?= Document::format_month($report['start'] ?? null) ?>
+                <b><?= lang('Start month', 'Startmonat') ?></b>: <?= format_month($report['start'] ?? null) ?>
             </span>
             <span class="badge primary">
                 <b><?= lang('Duration', 'Dauer') ?></b>: <?= $report['duration'] ?? '-' ?> <?= lang('months', 'Monate') ?>
