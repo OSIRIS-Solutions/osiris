@@ -137,7 +137,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         </thead>
         <tbody>
             <?php foreach ($Groups->groups as $group) {
-                $inactive = $group['inactive'] ?? false;
+                $inactive = boolval($group['inactive'] ?? false);
             ?>
                 <tr>
                     <td class="<?= $inactive ? 'inactive' : '' ?>" id="<?= $group['id'] ?>" <?= $Groups->cssVar($group['id']) ?>>
