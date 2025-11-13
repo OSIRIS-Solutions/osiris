@@ -22,7 +22,7 @@
 
 $Format = new Document();
 $user = $_SESSION['username'];
-if ($Settings->hasPermission('report.queue')) {
+if ($Settings->hasPermission('report.queue') && $role == 'editor') {
     $filter = ['declined' => ['$ne' => true]];
 } else {
     $filter = ['authors.user' => $user, 'declined' => ['$ne' => true]];
