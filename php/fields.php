@@ -58,7 +58,7 @@ class Fields
                 'id' => 'print',
                 'module_of' => $typeModules['print'] ?? [],
                 'usage' => [
-                    'columns'
+                    'columns', 'filter'
                 ],
                 'label' => lang('Print version', 'Printdarstellung'),
                 'type' => 'string'
