@@ -24,6 +24,12 @@ class Report
         $this->report = DB::doc2Arr($report);
         $this->steps = DB::doc2Arr($this->report['steps'] ?? array());
 
+        // add default variables for year and months
+        $this->variables['startyear'] = $this->startyear;
+        $this->variables['endyear'] = $this->endyear;
+        $this->variables['startmonth'] = $this->startmonth;
+        $this->variables['endmonth'] = $this->endmonth;
+
         // we need fields for labels
         $Fields = new Fields();
         // field array with id as key
@@ -47,7 +53,7 @@ class Report
 
     public function setVariables($vars)
     {
-        if (empty($vars)) return;
+        // if (empty($vars)) return;
         $this->variables = $this->resolve_vars($vars);
         // apply variable substitutions to report definition
         $this->steps = $this->apply_tokens_recursive($this->steps, $this->variables);
@@ -56,37 +62,104 @@ class Report
 
     public function setTime($startyear, $endyear, $startmonth, $endmonth)
     {
-        $this->startmonth = intval($startmonth);
-        $this->endmonth = intval($endmonth);
-        $this->startyear = intval($startyear);
-        $this->endyear = intval($endyear);
+        global $Settings; // contains continuousTypes
 
+        $this->startmonth = intval($startmonth);
+        $this->endmonth   = intval($endmonth);
+        $this->startyear  = intval($startyear);
+        $this->endyear    = intval($endyear);
+
+        // 1) Continuous / long-running activities:
+        // Include if they overlap with the selected year range.
+        $continuousFilter = [
+            'start.year' => ['$lte' => $this->endyear],
+            '$or' => [
+                ['end.year' => ['$gte' => $this->startyear]],
+                [
+                    'end'     => null,
+                    'subtype' => ['$in' => $Settings->continuousTypes],
+                ],
+            ],
+        ];
+
+        // 2) "Simple" activities that only use year/month
         if ($this->startyear == $this->endyear) {
-            $this->timefilter = [
+            // Single year with month range
+            $discreteFilter = [
                 '$and' => [
-                    ['year' => ['$eq' => $this->startyear]],
+                    ['year'  => $this->startyear],
                     ['month' => ['$gte' => $this->startmonth]],
-                    ['month' => ['$lte' => $this->endmonth]]
-                ]
+                    ['month' => ['$lte' => $this->endmonth]],
+                ],
             ];
         } else {
-            $this->timefilter = [
+            // Multi-year range
+            $discreteFilter = [
                 '$or' => [
+                    // First year: from start month to end of year
                     [
                         '$and' => [
-                            ['year' => ['$eq' => $this->startyear]],
-                            ['month' => ['$gte' => $this->startmonth]]
-                        ]
+                            ['year'  => $this->startyear],
+                            ['month' => ['$gte' => $this->startmonth]],
+                        ],
                     ],
+                    // Last year: from beginning of year to end month
                     [
                         '$and' => [
-                            ['year' => ['$eq' => $this->endyear]],
-                            ['month' => ['$lte' => $this->endmonth]]
-                        ]
-                    ]
-                ]
+                            ['year'  => $this->endyear],
+                            ['month' => ['$lte' => $this->endmonth]],
+                        ],
+                    ],
+                    // All full years in between
+                    [
+                        'year' => [
+                            '$gt' => $this->startyear,
+                            '$lt' => $this->endyear,
+                        ],
+                    ],
+                ],
             ];
         }
+
+        // 3) Combine both: running OR discrete activities
+        $this->timefilter = [
+            '$or' => [
+                $continuousFilter,
+                $discreteFilter,
+            ],
+        ];
+        // OLD code for reference:
+        // $this->startmonth = intval($startmonth);
+        // $this->endmonth = intval($endmonth);
+        // $this->startyear = intval($startyear);
+        // $this->endyear = intval($endyear);
+
+        // if ($this->startyear == $this->endyear) {
+        //     $this->timefilter = [
+        //         '$and' => [
+        //             ['year' => ['$eq' => $this->startyear]],
+        //             ['month' => ['$gte' => $this->startmonth]],
+        //             ['month' => ['$lte' => $this->endmonth]]
+        //         ]
+        //     ];
+        // } else {
+        //     $this->timefilter = [
+        //         '$or' => [
+        //             [
+        //                 '$and' => [
+        //                     ['year' => ['$eq' => $this->startyear]],
+        //                     ['month' => ['$gte' => $this->startmonth]]
+        //                 ]
+        //             ],
+        //             [
+        //                 '$and' => [
+        //                     ['year' => ['$eq' => $this->endyear]],
+        //                     ['month' => ['$lte' => $this->endmonth]]
+        //                 ]
+        //             ]
+        //         ]
+        //     ];
+        // }
     }
 
     public function getReport()
@@ -159,6 +232,12 @@ class Report
         }
         // apply ad-hoc overrides
         foreach ($runtime as $k => $v) if ($k !== '_preset') $vars[$k] = $v;
+
+        // add vars for time period
+        $vars['startyear'] = $this->startyear;
+        $vars['endyear'] = $this->endyear;
+        $vars['startmonth'] = $this->startmonth;
+        $vars['endmonth'] = $this->endmonth;
 
         return $vars;
     }
@@ -269,6 +348,19 @@ class Report
     public function getTable($item)
     {
         $filter = json_decode($item['filter'], true);
+        $sort = $item['table_sort'] ?? 'count-desc';
+        $sortField = 'count';
+        $sortDir = -1;
+        if ($sort == 'aggregation-asc') {
+            $sortField = 'activity';
+            $sortDir = 1;
+        } elseif ($sort == 'aggregation-desc') {
+            $sortField = 'activity';
+            $sortDir = -1;
+        } elseif ($sort == 'count-asc') {
+            $sortField = 'count';
+            $sortDir = 1;
+        }
         $timelimit = $item['timelimit'] ?? false;
         $group = $item['aggregate'] ?? '';
         $group2 = $item['aggregate2'] ?? null;
@@ -325,10 +417,8 @@ class Report
             $aggregate[] =
                 ['$group' => ['_id' => ['$' . $group, '$' . $group2], 'count' => ['$sum' => 1]]];
         }
-        $aggregate[] = ['$sort' => ['count' => -1]];
         $aggregate[] = ['$project' => ['_id' => 0, 'activity' => '$_id', 'count' => 1]];
-        $aggregate[] = ['$sort' => ['count' => -1]];
-        $aggregate[] = ['$project' => ['_id' => 0, 'activity' => 1, 'count' => 1]];
+        $aggregate[] = ['$sort' => [$sortField => $sortDir]];
 
         $data = $DB->db->activities->aggregate(
             $aggregate
