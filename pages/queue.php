@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page to see the queue
  * 
@@ -20,7 +21,14 @@
  */
 
 $Format = new Document();
-
+$user = $_SESSION['username'];
+if ($Settings->hasPermission('report.queue')) {
+    $filter = ['declined' => ['$ne' => true]];
+} else {
+    $filter = ['authors.user' => $user, 'declined' => ['$ne' => true]];
+}
+$n_queue = $osiris->queue->count($filter);
+$queue = $osiris->queue->find($filter, ['sort' => ['duplicate' => 1]])->toArray();
 ?>
 
 <h1>
@@ -108,7 +116,7 @@ if ($n_queue == 0) {
                 if (accept) {
                     $('#tr-' + id).empty()
                     var p = $('<p>')
-                    p.html(lang('Added new activity: ', 'Neue Aktivität hinzugefügt: ') )
+                    p.html(lang('Added new activity: ', 'Neue Aktivität hinzugefügt: '))
                     var a = $('<a>')
                     a.attr('href', ROOTPATH + '/activities/view/' + response)
                     a.attr('target', '_blank')
@@ -122,7 +130,7 @@ if ($n_queue == 0) {
                 } else {
                     $('#tr-' + id).remove()
                     toastSuccess(
-                        lang('Activity has not been added to the database.','Aktivität wurde nicht zur Datenbank hinzugefügt.'),
+                        lang('Activity has not been added to the database.', 'Aktivität wurde nicht zur Datenbank hinzugefügt.'),
                         lang('Declined', 'Abgelehnt')
                     )
                 }
