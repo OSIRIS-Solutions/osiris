@@ -264,6 +264,19 @@ function sel($index, $value)
                 <span><?= lang('Note that only level 1 groups can have a color.', 'Bitte beachte, dass nur Level 1-Gruppen eine eigene Farbe haben können.') ?></span>
             </div>
 
+            <!-- synonyms -->
+            <div class="form-group">
+                <label for="synonyms">
+                    <?= lang('Synonyms', 'Synonyme') ?>
+                </label>
+                <?php
+                    $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
+                ?>
+                
+                <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= htmlspecialchars(is_array($synonyms) ? implode(', ', $synonyms) : $synonyms) ?>">
+                <small class="text-muted"><?= lang('Separate multiple synonyms with commas.', 'Mehrere Synonyme mit Kommas trennen.') ?></small>
+            </div>
+
             <!-- cost center -->
             <div class="form-group">
                 <label for="costcenter">

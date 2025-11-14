@@ -31,6 +31,7 @@ if (isset($group['head'])) {
 }
 
 $users = array_column($persons, 'username');
+$synonyms = DB::doc2Arr($group['synonyms'] ?? []);
 
 $show_general = (isset($group['description']) || isset($group['description_de']) || (isset($group['research']) && !empty($group['research'])));
 
@@ -317,6 +318,18 @@ $count_wordcloud = 0;
                                 <?php } ?>
                             </td>
                         </tr>
+                        <?php if (!empty($synonyms)) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang('Synonyms', 'Synonyme') ?></span>
+                                    <ul class="list m-0">
+                                        <?php foreach ($synonyms as $synonym) { ?>
+                                            <li><?= htmlspecialchars($synonym) ?></li>
+                                        <?php } ?>
+                                    </ul>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td>
 

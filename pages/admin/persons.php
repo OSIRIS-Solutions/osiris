@@ -293,7 +293,7 @@
 
                 <p class="text-danger">
                     <i class="ph ph-warning"></i>
-                    <?= lang('Please note that the synchronized attributes cannot be edited within OSIRIS anymore.', 'Bitte beachte, dass die synchronisierten Attribute nicht mehr in OSIRIS bearbeitet werden können.') ?>
+                    <?= lang('Please note that the synchronized attributes cannot be edited within OSIRIS anymore, except for units.', 'Bitte beachte, dass die synchronisierten Attribute nicht mehr in OSIRIS bearbeitet werden können, abgesehen von Einheiten.') ?>
                 </p>
 
                 <table class="table simple w-auto small mb-10">
