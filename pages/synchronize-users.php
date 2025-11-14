@@ -18,6 +18,7 @@ if ($action === 'view') {
     <div class="box">
         <div class="content">
             <h2 class="title">
+                <i class="ph-duotone ph-arrows-clockwise text-secondary"></i>
                 <?= lang('Synchronize users', 'Nutzer:innen synchronisieren') ?>
             </h2>
             <p>
@@ -34,6 +35,23 @@ if ($action === 'view') {
     <div class="box">
         <div class="content">
             <h2 class="title">
+                <i class="ph-duotone ph-user-list text-secondary"></i>
+                <?=lang('Attribute synchronization', 'Attribut-Synchronisation')?>
+            </h2>
+            <p>
+                <?=lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.')?>
+            </p>
+            <a href="<?=ROOTPATH?>/admin/synchronize-attributes" class="btn primary">
+                <i class="ph ph-user-list"></i>
+                <?=lang('Attribute preview', 'Vorschau der Attribute')?>
+            </a>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="content">
+            <h2 class="title">
+                <i class="ph-duotone ph-user-plus text-secondary"></i>
                 <?=lang('Guest accounts', 'Gast-Accounts')?>
             </h2>
             <p>

@@ -465,7 +465,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
     if (el === null) {
         location.reload()
     } else {
-        $(el).find('i').toggleClass('ph ph-fill').toggleClass('ph').toggleClass('text-success')
+        $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
     }
     // setTimeout(function () {
     //     $(el).find('i').removeClass('animate__flip')

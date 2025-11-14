@@ -77,7 +77,7 @@ $pageactive = function ($p) use ($page) {
 
     <!-- Icon font -->
     <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/fill/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
     <!-- for open access icons -->
     <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
 
@@ -799,18 +799,18 @@ $pageactive = function ($p) use ($page) {
                         </a>
 
                         <a href="<?= ROOTPATH ?>/cart" class="with-icon <?= $pageactive('cart') ?>">
-                            <i class="ph ph-shopping-cart" aria-hidden="true"></i>
-                            <?= lang('Cart', 'Einkaufswagen') ?>
+                            <i class="ph ph-basket" aria-hidden="true"></i>
+                            <?= lang('Collection', 'Sammlung') ?>
                             <?php
                             $cart = readCart();
                             if (!empty($cart)) { ?>
-                                <span class="badge secondary badge-pill ml-10" id="cart-counter">
+                                <small class="badge secondary badge-pill ml-10" id="cart-counter">
                                     <?= count($cart) ?>
-                                </span>
+                                </small>
                             <?php } else { ?>
-                                <span class="badge secondary badge-pill ml-10 hidden" id="cart-counter">
+                                <small class="badge secondary badge-pill ml-10 hidden" id="cart-counter">
                                     0
-                                </span>
+                                </small>
                             <?php } ?>
                         </a>
                         <a href="<?= ROOTPATH ?>/import" class="with-icon <?= $pageactive('import') ?>">

@@ -164,7 +164,7 @@ $issues = $DB->getUserIssues($user);
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
 <h1 class="mt-0">
-    <i class="ph ph-fill ph-warning text-osiris"></i>
+    <i class="ph ph-duotone ph-warning text-osiris"></i>
     <?= lang('Warnings', 'Warnungen') ?>
 </h1>
 

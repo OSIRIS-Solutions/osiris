@@ -417,7 +417,7 @@ Route::get('/api/all-activities', function () {
             //     </a>";
             // }
             $datum['links'] .= "<button class='btn link square' onclick='addToCart(this, \"$id\")'>
-            <i class='" . (in_array($id, $cart) ? 'ph ph-fill ph-shopping-cart ph-shopping-cart-plus text-success' : 'ph ph-shopping-cart ph-shopping-cart-plus') . "'></i>
+            <i class='" . (in_array($id, $cart) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus') . "'></i>
         </button>";
         }
         $result[] = $datum;

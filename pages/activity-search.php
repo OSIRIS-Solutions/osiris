@@ -312,7 +312,7 @@ $filters = array_map(function ($f) {
                             <?= $field['label'] ?>
                             <?php if ($field['custom'] ?? false) { ?>
                                 <span data-toggle="tooltip" data-title="Custom field">
-                                    <i class="ph ph-fill ph-gear text-muted"></i>
+                                    <i class="ph ph-duotone ph-gear text-muted"></i>
                                 </span>
                             <?php } ?>
                             <?php foreach ($modules as $key) {

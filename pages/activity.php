@@ -533,7 +533,7 @@ if ($Settings->featureEnabled('tags')) {
 
         <div class="btn-group">
             <button class="btn text-primary border-primary" onclick="addToCart(this, '<?= $id ?>')">
-                <i class="<?= (in_array($id, $cart)) ? 'ph ph-fill ph-shopping-cart ph-shopping-cart-plus text-success' : 'ph ph-shopping-cart ph-shopping-cart-plus' ?>"></i>
+                <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
                 <?= lang('Collect', 'Sammeln') ?>
             </button>
             <div class=" dropdown with-arrow btn-group ">
