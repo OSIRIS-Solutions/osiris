@@ -270,15 +270,22 @@
                     'example' => 'objectsid', // Beispiel: "12345"
                 ],
             ];
-
     ?>
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
-
 
                 <h2 class="title">
                     <i class="ph ph-lock" aria-hidden="true"></i>
                     <?= lang('LDAP Settings', 'LDAP-Einstellungen') ?>
                 </h2>
+
+                <?php
+                    $last_sync = $osiris->system->findOne(['key' => 'ldap-sync']);
+                    $last_sync = $last_sync['value'] ?? null;
+                ?>
+                
+                <p>
+                    <?=lang('Last synchronization:', 'Letzte Synchronisierung:')?> <b><?= $last_sync ? format_date($last_sync) : lang('Never', 'Nie') ?></b>
+                </p>
 
                 <p>
                     <?= lang('Here you can define the attributes that will be automatically synchronized with your LDAP instance.', 'Hier kannst du die Attribute festlegen, die automatisch mit deiner LDAP-Instanz synchronisiert werden sollen.') ?>
