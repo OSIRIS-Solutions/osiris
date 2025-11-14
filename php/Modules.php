@@ -2526,10 +2526,16 @@ class Modules
             case "magazine":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="magazine">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine" list="magazine-list">
                     <label for="magazine" class=" <?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
+                <datalist id="magazine-list">
+                        <?php
+                        foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
+                            <option><?= $m ?></option>
+                        <?php } ?>
+                </datalist>
             <?php
                 break;
 
