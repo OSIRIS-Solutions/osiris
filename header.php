@@ -249,7 +249,6 @@ $pageactive = function ($p) use ($page) {
                             <?php
                             if ($n_notifications > 0) {
                                 if (isset($notifications['activity'])) {
-
                                     $issues = $notifications['activity']['values'];
                                     $n_issues = $notifications['activity']['count'];
                             ?>
@@ -759,7 +758,7 @@ $pageactive = function ($p) use ($page) {
                     </nav>
 
                     <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tools">
-                        <?= lang('Visualisation', 'Visualisierung') ?>
+                        <?= lang('Analysis', 'Analyse') ?>
                     </div>
                     <nav>
 
