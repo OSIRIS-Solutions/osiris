@@ -86,7 +86,7 @@ function val($index, $default = '')
     .form-help {
         display: none;
         position: absolute;
-        right: 2rem;
+        left: 2rem;
         /* in d-flex row sitzt es angenehm rechts */
         top: 100%;
         margin-top: -.75rem;
@@ -101,7 +101,7 @@ function val($index, $default = '')
         color: #374151;
     }
 
-    .data-module:focus-within .form-help {
+    .data-module:focus-within .form-help, .data-module:hover .form-help {
         display: block;
     }
 
@@ -109,7 +109,7 @@ function val($index, $default = '')
     .form-help::before {
         content: "";
         position: absolute;
-        right: .75rem;
+        left: .75rem;
         top: -13px;
         border: 6px solid transparent;
         border-bottom-color: var(--signal-color);
@@ -118,7 +118,7 @@ function val($index, $default = '')
     .form-help::after {
         content: "";
         position: absolute;
-        right: .75rem;
+        left: .75rem;
         top: -11px;
         border: 6px solid transparent;
         border-bottom-color: var(--signal-color-very-light);
