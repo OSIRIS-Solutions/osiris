@@ -17,12 +17,52 @@
 
 require_once BASEPATH . '/php/LDAPInterface.php';
 require_once BASEPATH . '/php/Groups.php';
+require_once BASEPATH . '/php/DB.php';
 
 function login($username, $password)
 {
+    // try to login via LDAP first
     $LDAP = new LDAPInterface();
-    return $LDAP->login($username, $password);
+    $login = $LDAP->login($username, $password);
+    if ($login['success']) {
+        return $login;
+    } else {
+        // try to login via guest accounts
+        return loginGuest($username, $password);
+    }
 }
+
+function loginGuest($username, $password)
+{
+    $DB = new DB();
+    $osiris = $DB->db;
+    $return = array("msg" => '', "success" => false);
+    
+    // find user and check password
+    $USER = $osiris->guestAccounts->findOne(['username' => $username]);
+    if (empty($USER)) {
+        $return["msg"] = lang("Account not found or password incorrect.", "Account nicht gefunden oder Passwort falsch.");
+        return $return;
+    }
+    if (isset($USER['valid_until']) && $USER['valid_until'] < date('Y-m-d')) {
+        $return["msg"] = lang("Account has expired.", "Account ist abgelaufen.");
+        return $return;
+    }
+    if (empty($USER['password'])) {
+        $return["msg"] = lang("User has no password.", "Benutzer hat kein Passwort.");
+        return $return;
+    }
+    // check if password is correct
+    if (!password_verify($password, $USER['password'])) {
+        $return["msg"] = lang("Login failed.", "Anmeldung fehlgeschlagen.");
+        return $return;
+    }
+    $_SESSION['username'] = $username;
+    $_SESSION['loggedin'] = true;
+    $return["success"] = true;
+    return $return;
+};
+
 
 function getUser($name)
 {

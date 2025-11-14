@@ -57,7 +57,7 @@ $um = strtoupper(USER_MANAGEMENT);
 
 <?php if ($um == 'AUTH') {
     $token = $Settings->get('auth-token');
-    if (!$Settings->get('auth-self-registration', true)) {?>
+    if (!$Settings->get('auth-self-registration', true)) { ?>
         <div class="alert">
             <h5 class="title">
                 <?= lang('Self-registration is disabled', 'Selbstregistrierung ist deaktiviert') ?>
@@ -65,7 +65,7 @@ $um = strtoupper(USER_MANAGEMENT);
             <p>
                 <?= lang('Currently, self-registration is completely disabled. This means that only an admin can create user accounts. If you want to allow users to register, please enable self-registration and/or set an AUTH token.', 'Derzeit ist die Selbstregistrierung komplett deaktiviert. Das bedeutet, dass nur ein Admin Nutzerkonten erstellen kann. Wenn du Nutzern die Registrierung erlauben möchtest, aktiviere bitte die Selbstregistrierung und/oder setze unten ein AUTH-Token.') ?>
             </p>
-            <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn">
+            <a href="<?= ROOTPATH ?>/admin/persons#section-auth" class="btn">
                 <?= lang('Go to AUTH settings', 'Zu den AUTH-Einstellungen') ?>
             </a>
         </div>
@@ -92,7 +92,7 @@ $um = strtoupper(USER_MANAGEMENT);
                 toastSuccess('Query copied to clipboard.')
             }
         </script>
-    <?php } else {?>
+    <?php } else { ?>
         <div class="alert">
             <div class="title">
                 <?= lang('No AUTH token set', 'Kein AUTH-Token gesetzt') ?>
@@ -100,7 +100,7 @@ $um = strtoupper(USER_MANAGEMENT);
             <p>
                 <?= lang('Currently, no AUTH token is set. This means that users can register without a token. If you want to restrict registration, please set an AUTH token below.', 'Derzeit ist kein AUTH-Token gesetzt. Das bedeutet, dass sich Nutzer ohne Token registrieren können. Wenn du die Registrierung einschränken möchtest, setze bitte unten ein AUTH-Token.') ?>
             </p>
-            <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn">
+            <a href="<?= ROOTPATH ?>/admin/persons#section-auth" class="btn">
                 <?= lang('Go to AUTH settings', 'Zu den AUTH-Einstellungen') ?>
             </a>
         </div>
@@ -193,9 +193,8 @@ $um = strtoupper(USER_MANAGEMENT);
         <?php
         $tree = $Groups->getHierarchyTree();
         ?>
-        <div class="form-group">
-            <?= lang('Select multiple with <kbd>Ctrl</kbd>.', 'Wähle mehrere mit <kbd>Strg</kbd>.') ?>
 
+        <div class="form-group">
             <select name="values[depts][]" id="dept" class="form-control" multiple="multiple" size="5">
                 <option value="">Unknown</option>
                 <?php
@@ -204,6 +203,11 @@ $um = strtoupper(USER_MANAGEMENT);
                 <?php } ?>
             </select>
 
+            <script>
+                $(document).ready(function() {
+                    $("#dept").selectize();
+                });
+            </script>
         </div>
     </div>
 
@@ -254,30 +258,6 @@ $um = strtoupper(USER_MANAGEMENT);
 
 
     </div>
-
-    <?php
-    if ($Settings->get('affiliation') === 'LISI') {
-    ?>
-        <div class="alert signal mb-20">
-            <div class="title">
-                Demo
-            </div>
-
-            <?= lang('
-            This OSIRIS instance is a demo with the fictional institute LISI. 
-            The use of this app and therefore the provision of personal data is voluntary. 
-            By using this site, you agree to our <a href="/impress" class="">privacy</a> policy.
-            User accounts will be deleted by the admin after an unspecified amount of time. If you want me to actively delete your data, contact me.
-            ', '
-            Bei dieser OSIRIS-Instanz handelt es sich um eine Demo mit dem fiktiven Institut LISI. 
-            Die Nutzung dieser App und somit auch der Bereitstellung von personenbezogenen Daten ist freiwillig. 
-            Wenn du diese Seite nutzt, stimmst du damit unseren Richtlinien zum <a href="/impress" class="">Datenschutz</a> zu.
-            Nutzeraccounts werden nach unbestimmter Zeit vom Admin gelöscht. Wenn ihr möchtet, dass ich eure Daten aktiv lösche, meldet euch bei mir.
-            ') ?>
-        </div>
-    <?php
-    }
-    ?>
 
 
     <button type="submit" class="btn">Submit</button>

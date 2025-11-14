@@ -69,6 +69,7 @@ class LDAPInterface
 
         ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
+        ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 5); // 5 Sekunden
 
         if ($useTLS && !$useSSL) {
             if (!ldap_start_tls($this->connection)) {
