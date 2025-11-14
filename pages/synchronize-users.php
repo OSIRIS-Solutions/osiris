@@ -18,7 +18,7 @@ if ($action === 'view') {
     <div class="box">
         <div class="content">
             <h2 class="title">
-                <i class="ph-duotone ph-arrows-clockwise text-secondary"></i>
+                <i class="ph-duotone ph-arrows-clockwise"></i>
                 <?= lang('Synchronize users', 'Nutzer:innen synchronisieren') ?>
             </h2>
             <p>

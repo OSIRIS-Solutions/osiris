@@ -23,7 +23,7 @@
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
-    <i class="ph ph-user text-primary"></i>
+    <i class="ph-duotone ph-user"></i>
     <?= lang('Person data', 'Personendaten') ?>
 </h1>
 

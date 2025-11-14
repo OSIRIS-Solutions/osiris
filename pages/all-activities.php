@@ -26,15 +26,15 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1 class='m-0'>
     <?php if (isset($_GET['user'])) { ?>
-        <i class="ph ph-folder-user"></i>
+        <i class="ph-duotone ph-folder-user"></i>
         <?= lang("Activities of ", "Aktivitäten von ") ?>
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
     <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
-        <i class="ph ph-book-open"></i>
+        <i class="ph-duotone ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
     <?php
     } elseif ($page == 'my-activities') { ?>
-        <i class="ph ph-folder-user"></i>
+        <i class="ph-duotone ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
     <?php } ?>
 </h1>

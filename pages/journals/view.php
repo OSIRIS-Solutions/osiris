@@ -22,7 +22,7 @@ $label = $Settings->journalLabel();
 <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.naturalsort.js"></script>
 
 <h2 class="mt-0">
-    <i class="ph ph-stack text-primary"></i>
+    <i class="ph-duotone ph-stack"></i>
     <?= $data['journal'] ?>
 </h2>
 <div class="btn-toolbar mb-20">

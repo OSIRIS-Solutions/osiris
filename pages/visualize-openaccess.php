@@ -18,9 +18,10 @@
 
 ?>
 
-<h2>
+<h1>
+    <i class="ph-duotone ph-lock-open" aria-hidden="true"></i>
     <?= lang('Open Access') ?>
-</h2>
+</h1>
 
 <div class="row row-eq-spacing mt-0">
     <div class="col-md-6">

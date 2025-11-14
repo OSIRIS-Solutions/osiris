@@ -52,7 +52,7 @@ if ($active('keywords')) {
 <?php } ?>
 
 <h1>
-    <i class="ph ph-student"></i>
+    <i class="ph-duotone ph-student"></i>
     <?= lang('Users', 'Personen') ?>
 </h1>
 

@@ -32,7 +32,7 @@ $queue = $osiris->queue->find($filter, ['sort' => ['duplicate' => 1]])->toArray(
 ?>
 
 <h1>
-    <i class="ph ph-queue text-osiris"></i>
+    <i class="ph-duotone ph-queue"></i>
     <?= lang('Queue', 'Warteschlange') ?>
 </h1>
 

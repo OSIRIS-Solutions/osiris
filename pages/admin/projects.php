@@ -16,6 +16,7 @@
 ?>
 
 <h1>
+    <i class="ph-duotone ph-gear"></i>
     <?= lang('Project Settings', 'Projekt-Einstellungen') ?>
 </h1>
 

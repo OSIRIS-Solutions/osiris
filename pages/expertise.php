@@ -65,7 +65,7 @@ $cursor = $osiris->persons->aggregate([
 
 
 <h1 class="mt-0">
-    <i class="ph ph-<?= $icon ?> mr-10"></i>
+    <i class="ph-duotone ph-<?= $icon ?> mr-10"></i>
     <?= $title ?>
 </h1>
 

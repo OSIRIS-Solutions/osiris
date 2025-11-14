@@ -383,6 +383,10 @@ function readCart()
     return $cart;
 }
 
+function emptyCart()
+{
+    setcookie('osiris-cart', '', time() - 3600, "/");
+}
 
 function currentGET(array $exclude = [], array $include = [])
 {

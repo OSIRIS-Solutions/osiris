@@ -881,7 +881,7 @@ $pageactive = function ($p) use ($page) {
                         <?php if ($Settings->hasPermission('report.templates')) { ?>
                             <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
                                 <i class="ph ph-clipboard-text"></i>
-                                <?= lang('Report templates', 'Berichte-Vorlagen') ?>
+                                <?= lang('Report templates', 'Berichtsvorlagen') ?>
                             </a>
                         <?php } ?>
                         <?php if ($Settings->hasPermission('user.synchronize')) { ?>

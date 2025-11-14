@@ -50,7 +50,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 ?>
 
 <h1>
-    <i class="ph ph-cube-transparent" aria-hidden="true"></i>
+    <i class="ph-duotone ph-cube-transparent" aria-hidden="true"></i>
     <?= $Settings->infrastructureLabel() ?>
 </h1>
 <div class="btn-toolbar">

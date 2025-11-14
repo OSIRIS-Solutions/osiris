@@ -24,7 +24,7 @@ $organizations  = $osiris->organizations->find(
 
 
 <h1>
-    <i class="ph ph-building-office" aria-hidden="true"></i>
+    <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
     <?= lang('External Organisations', 'Externe Organisationen') ?>
 </h1>
 <div class="btn-toolbar">

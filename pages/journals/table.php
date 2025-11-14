@@ -21,7 +21,7 @@ $label = $Settings->journalLabel();
 
 
 <h1 class="mt-0">
-    <i class="ph ph-stack text-primary"></i>
+    <i class="ph-duotone ph-stack"></i>
     <?= $label ?>
 </h1>
 

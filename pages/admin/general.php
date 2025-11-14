@@ -24,7 +24,7 @@ $affiliation = $Settings->get('affiliation_details');
 <script src="<?= ROOTPATH ?>/js/general-settings.js"></script>
 
 <h1 class="mt-0">
-    <i class="ph ph-gear text-primary"></i>
+    <i class="ph-duotone ph-gear"></i>
     <?= lang('General Settings', 'Allgemeine Einstellungen') ?>
 </h1>
 

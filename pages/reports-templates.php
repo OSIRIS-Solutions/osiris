@@ -15,8 +15,14 @@
  */
 
 $reports = $osiris->adminReports->find();
+?>
 
-foreach ($reports as $report) { ?>
+<h1>
+    <i class="ph-duotone ph-clipboard-text"></i>
+    <?= lang('Report Templates', 'Berichtsvorlagen') ?>
+</h1>
+
+<?php foreach ($reports as $report) { ?>
     <div class="box">
         <div class="content">
             <h3><?= $report['title'] ?></h3>

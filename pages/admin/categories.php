@@ -77,7 +77,7 @@
 </div>
 
 <h1>
-    <i class="ph ph-gear"></i>
+    <i class="ph-duotone ph-gear"></i>
     <?= lang('Categories', 'Kategorien') ?>
 </h1>
 

@@ -19,7 +19,7 @@ $label = $Settings->journalLabel();
 ?>
 
 <h1>
-    <i class="ph ph-ranking"></i>
+    <i class="ph-duotone ph-ranking"></i>
     <?= lang("$label metrics", "$label-Metriken") ?>
 </h1>
 

@@ -33,7 +33,7 @@
 
 <div class="container w-800 mw-full">
     <h1>
-        <i class="ph ph-lock"></i>
+        <i class="ph-duotone ph-lock"></i>
         <?= lang('Lock a period', 'Zeitraum sperren') ?>
     </h1>
     <p>

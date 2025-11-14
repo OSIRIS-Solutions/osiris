@@ -16,6 +16,7 @@ $year = $_GET['year'] ?? CURRENTYEAR - 1;
 
 
     <h1>
+        <i class="ph-duotone ph-clipboard-text"></i>
         <?= lang('Report Preview', 'Berichtsvorschau') ?>
     </h1>
 

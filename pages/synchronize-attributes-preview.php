@@ -32,6 +32,7 @@ if (is_string($result)) {
 </div>
 
 <h1>
+    <i class="ph-duotone ph-arrow-clockwise"></i>
     <?= lang('Synchronized attributes from LDAP', 'Synchronisierte Attribute aus LDAP') ?>
 </h1>
 

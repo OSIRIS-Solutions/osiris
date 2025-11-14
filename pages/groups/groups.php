@@ -24,7 +24,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     <a href="<?= ROOTPATH ?>/preview/groups" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
 <?php } ?>
 <h1>
-    <i class="ph ph-users-three"></i>
+    <i class="ph-duotone ph-users-three"></i>
     <?= lang('Organisational Units', 'Organisationseinheiten') ?>
 </h1>
 

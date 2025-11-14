@@ -92,7 +92,7 @@ $Vocabulary = new Vocabulary();
 
 
 <h1 class="mt-0">
-    <i class="ph ph-tree-structure text-osiris"></i>
+    <i class="ph-duotone ph-tree-structure"></i>
     <?= $pagetitle ?>
 </h1>
 

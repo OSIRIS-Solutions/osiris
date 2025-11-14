@@ -69,7 +69,7 @@ $active = function ($field) use ($data_fields) {
 </style>
 
 <h1 class="mt-0">
-    <i class="ph ph-student"></i>
+    <i class="ph-duotone ph-student"></i>
     <?= $data['name'] ?>
 </h1>
 

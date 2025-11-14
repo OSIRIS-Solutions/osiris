@@ -33,7 +33,10 @@
 
     <form action="<?= ROOTPATH ?>/download" method="post">
 
-        <h3><?= lang('Export activities', 'Exportiere Aktivitäten') ?></h3>
+        <h1>
+            <i class="ph-duotone ph-download"></i>
+            <?= lang('Export activities', 'Exportiere Aktivitäten') ?>
+        </h1>
 
         <div class="form-group">
             <label for="filter-type"><?= lang('Filter by type', 'Filter nach Art der Aktivität') ?></label>
@@ -74,16 +77,16 @@
         </div>
 
         <?php if ($Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view')) { ?>
-                <div class="form-group">
-                    <label for="filter-workflow"><?= lang('Filter by workflow status', 'Filter nach Workflow-Status') ?></label>
-                    <select name="filter[workflow]" id="filter-workflow" class="form-control">
-                        <option value=""><?= lang('Do not filter', 'Nicht filtern') ?></option>
-                        <option value="in_progress"><?= lang('In Progress', 'In Bearbeitung') ?></option>
-                        <option value="verified"><?= lang('Completed', 'Abgeschlossen') ?></option>
-                        <option value="verified-or-empty"><?= lang('Completed or no workflow', 'Abgeschlossen oder kein Workflow') ?></option>
-                        <option value="rejected"><?= lang('Rejected', 'Abgelehnt') ?></option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="filter-workflow"><?= lang('Filter by workflow status', 'Filter nach Workflow-Status') ?></label>
+                <select name="filter[workflow]" id="filter-workflow" class="form-control">
+                    <option value=""><?= lang('Do not filter', 'Nicht filtern') ?></option>
+                    <option value="in_progress"><?= lang('In Progress', 'In Bearbeitung') ?></option>
+                    <option value="verified"><?= lang('Completed', 'Abgeschlossen') ?></option>
+                    <option value="verified-or-empty"><?= lang('Completed or no workflow', 'Abgeschlossen oder kein Workflow') ?></option>
+                    <option value="rejected"><?= lang('Rejected', 'Abgelehnt') ?></option>
+                </select>
+            </div>
         <?php } ?>
 
         <?php if ($Settings->featureEnabled('topics')) {

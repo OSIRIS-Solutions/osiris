@@ -16,7 +16,7 @@
 ?>
 
 <h1>
-    <i class="ph ph-user-plus"></i>
+    <i class="ph-duotone ph-user-plus"></i>
     <?= lang('Manage guest accounts', 'Gast-Accounts verwalten') ?>
 </h1>
 

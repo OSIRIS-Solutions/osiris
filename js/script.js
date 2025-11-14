@@ -448,7 +448,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
             updateCart(false)
         } else {
             if (favlist.length > 30) {
-                toastError(lang('You can have no more than 30 items in your cart.', 'Du kannst nicht mehr als 30 Aktivitäten in deinem Einkaufswagen haben.'))
+                toastError(lang('You can have no more than 30 items in your collection.', 'Du kannst nicht mehr als 30 Aktivitäten in deiner Sammlung haben.'))
                 return;
             }
             favlist.push(id)

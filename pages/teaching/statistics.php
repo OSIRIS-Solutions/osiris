@@ -69,7 +69,7 @@ $all = $osiris->activities->count(
 
 
 <h1>
-    <i class="ph ph-chart-line-up"></i>
+    <i class="ph-duotone ph-chart-line-up"></i>
     <?= lang("Teaching statistics", "Statistiken zu Lehrveranstaltungen") ?>
 </h1>
 

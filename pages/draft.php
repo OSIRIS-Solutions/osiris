@@ -17,7 +17,7 @@
 ?>
 
 <h1>
-    <i class="ph ph-file-text"></i>
+    <i class="ph-duotone ph-file-text"></i>
     <?= $draft['title'] ?? lang('Draft', 'Entwurf') ?>
 </h1>
 

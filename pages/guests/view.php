@@ -435,7 +435,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                                         <input type="hidden" name="delete" value="<?= $file['filename'] ?>">
 
                                         <button class="btn link" type="submit">
-                                            <i class="ph ph-trash text-danger"></i>
+                                            <i class="ph-duotone ph-trash text-danger"></i>
                                         </button>
                                     </form>
                                 </td>

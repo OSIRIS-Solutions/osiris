@@ -343,7 +343,7 @@ $filters = array_map(function ($f) {
 <div class="container">
     <a href="https://wiki.osiris-app.de/users/activities/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
-        <i class="ph ph-magnifying-glass-plus text-osiris"></i>
+        <i class="ph-duotone ph-magnifying-glass-plus"></i>
         <?= lang('Advanced activity search', 'Erweiterte Aktivitäten-Suche') ?>
     </h1>
 

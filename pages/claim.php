@@ -39,6 +39,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
 ?>
 
 <h1>
+    <i class="ph-duotone ph-hand"></i>
     <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>
 </h1>
 

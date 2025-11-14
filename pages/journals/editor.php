@@ -18,7 +18,8 @@
  */
 ?>
 
-<h1><i class="ph ph-stack-plus text-primary"></i>
+<h1>
+    <i class="ph-duotone ph-stack-plus"></i>
     <?php
     $label = $Settings->journalLabel();
     if ($id === null || empty($data)) {

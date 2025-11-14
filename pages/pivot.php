@@ -18,6 +18,7 @@ $mode = $_GET['mode'] ?? 'standard';
 ?>
 
 <h1>
+    <i class="ph-duotone ph-table"></i>
     <?= lang('Pivot tables and charts', 'Pivot-Tabellen und Diagramme') ?>
     <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
 </h1>

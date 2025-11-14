@@ -42,7 +42,10 @@ $um = strtoupper(USER_MANAGEMENT);
 
 
 
-<h1><?= lang('User Management', 'Nutzermanagement') ?></h1>
+<h1>
+    <i class="ph-duotone ph-users" aria-hidden="true"></i>
+    <?= lang('User Management', 'Nutzermanagement') ?>
+</h1>
 
 <span class="badge primary">
     <?= lang('By', 'Mittels') ?>

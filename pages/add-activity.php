@@ -425,7 +425,7 @@ function val($index, $default = '')
 <?php if (empty($form)) { ?>
     <!-- Create new activity -->
     <h1 class="my-0">
-        <i class="ph ph-plus-circle"></i>
+        <i class="ph-duotone ph-plus-circle"></i>
         <?= lang('Add activity', 'Füge Aktivität hinzu') ?>
     </h1>
 
@@ -482,13 +482,20 @@ function val($index, $default = '')
 
 <?php } elseif ($draft) { ?>
     <h1 class="mt-0">
+        <i class="ph-duotone ph-file-text"></i>
         <?= lang('Edit draft', 'Bearbeite Entwurf') ?>
     </h1>
 <?php } elseif ($copy) { ?>
-    <h1 class="mt-0"><?= lang('Copy activity', 'Kopiere Aktivität') ?></h1>
+    <h1 class="mt-0">
+        <i class="ph-duotone ph-copy"></i>
+        <?= lang('Copy activity', 'Kopiere Aktivität') ?>
+    </h1>
 <?php } else { ?>
     <!-- Edit existing activity -->
-    <h1 class="my-0"><?= lang('Edit activity', 'Bearbeite Aktivität') ?>:</h1>
+    <h1 class="my-0">
+        <i class="ph-duotone ph-pencil"></i>
+        <?= lang('Edit activity', 'Bearbeite Aktivität') ?>:
+    </h1>
     <div class="mb-10">
         <?php
         $Format = new Document(false);

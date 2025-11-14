@@ -1872,7 +1872,7 @@ if ($Settings->featureEnabled('tags')) {
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn small link" id="remove-guest" onclick="$(this).closest('tr').remove()">
-                                                        <i class="ph ph-trash text-danger"></i>
+                                                        <i class="ph-duotone ph-trash text-danger"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1994,7 +1994,7 @@ if ($Settings->featureEnabled('tags')) {
                                     </td>
                                     <td>
                                         <button type="button" class="btn small link" id="remove-guest" onclick="$(this).closest('tr').remove()">
-                                            <i class="ph ph-trash text-danger"></i>
+                                            <i class="ph-duotone ph-trash text-danger"></i>
                                         </button>
                                     </td>
                                 `;
