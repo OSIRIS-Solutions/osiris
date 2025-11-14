@@ -790,7 +790,7 @@ if ($Settings->featureEnabled('tags')) {
 
                                     $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>' : '<?= lang('Visible', 'Sichtbar') ?>');
 
-                                    toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
+                                    toastSuccess(lang('Visibility status changed', 'Sichtbarkeitsstatus geändert'))
                                 },
                                 error: function(response) {
                                     console.log(response);
@@ -816,7 +816,7 @@ if ($Settings->featureEnabled('tags')) {
             </div>
         <?php } ?>
 
-        <?php if ($user_activity) {
+        <?php if ($DB->isUserActivity($doc, $_SESSION['username'], false)) {
             $highlights = DB::doc2Arr($USER['highlighted'] ?? []);
             $highlighted = in_array($id, $highlights);
         ?>
