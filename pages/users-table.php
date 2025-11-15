@@ -42,7 +42,7 @@ if ($active('keywords')) {
 
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= CSS_JS_VERSION ?>">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
     <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
