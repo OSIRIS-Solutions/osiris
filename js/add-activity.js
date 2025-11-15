@@ -1612,6 +1612,7 @@ function addEvent() {
         start: $('#event-start').val(),
         end: $('#event-end').val(),
         location: $('#event-location').val(),
+        type: $('#event-type').val(),
         url: $('#event-url').val()
     }
 
@@ -1641,10 +1642,18 @@ function addEvent() {
         dataType: "json",
         url: ROOTPATH + '/crud/conferences/add',
         success: function (response) {
-            if (response.msg) {
+            console.log(response);
+            if (response.id && response.status == 'warning') {
+                if (response.msg) toastWarning(response.msg)
+                selectEvent(response.id, data.title, data.start, data.end, data.location)
+                // close modal
+                window.location.hash = '#event-select'
+                return;
+            } else if (response.msg && response.status == 'error') {
                 toastWarning(response.msg)
                 return;
             } else {
+                toastSuccess(lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.'))
                 selectEvent(response.id, data.title, data.start, data.end, data.location)
                 // close modal
                 window.location.hash = '#event-select'

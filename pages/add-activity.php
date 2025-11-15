@@ -16,6 +16,8 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 
 $drafts_enabled = $Settings->featureEnabled('drafts');
 $user_drafts = 0;
@@ -101,7 +103,8 @@ function val($index, $default = '')
         color: #374151;
     }
 
-    .data-module:focus-within .form-help, .data-module:hover .form-help {
+    .data-module:focus-within .form-help,
+    .data-module:hover .form-help {
         display: block;
     }
 
@@ -167,6 +170,20 @@ function val($index, $default = '')
                 <div class="form-group mb-10">
                     <label for="title"><?= lang('Full Title', 'Kompletter Titel') ?></label>
                     <input type="text" id="event-title_full" class="form-control">
+                </div>
+
+                <div class="form-group floating-form">
+                    <select id="event-type" class="form-control" required>
+                        <?php
+                        $vocab = $Vocabulary->getValues('event-type');
+                        $sel = $form['type'] ?? '';
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="event-type" class="required">
+                        <?= lang('Type', 'Typ') ?>
+                    </label>
                 </div>
 
                 <div class="form-row row-eq-spacing mb-10">
