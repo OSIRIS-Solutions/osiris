@@ -39,7 +39,11 @@ $organizations  = $osiris->organizations->find(
 <table class="table" id="organizations-table">
     <thead>
         <tr>
+            <th><?= lang('Organisation', 'Organisation') ?></th>
             <th><?= lang('Name', 'Name') ?></th>
+            <th><?= lang('Type', 'Typ') ?></th>
+            <th><?= lang('Location', 'Ort') ?></th>
+            <th>ROR</th>
         </tr>
     </thead>
     <tbody>
@@ -62,6 +66,10 @@ $organizations  = $osiris->organizations->find(
                         </div>
                     </div>
                 </td>
+                <td><?= $org['name'] ?></td>
+                <td><?= $org['type'] ?></td>
+                <td><?= $org['location'] ?></td>
+                <td><?= $org['ror'] ?? '' ?></td>
             </tr>
         <?php } ?>
     </tbody>
@@ -69,5 +77,25 @@ $organizations  = $osiris->organizations->find(
 
 
 <script>
-    $('#organizations-table').DataTable({});
+    $('#organizations-table').DataTable({
+            responsive: true,
+            language: {
+                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+            },
+            columnDefs: [{
+                targets: [1, 2, 3, 4],
+                visible: false
+            }, ],
+            paging: true,
+            autoWidth: true,
+            pageLength: 10,
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [1, 2, 3, 4] // exclude the first column with the action buttons
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-file-xls"></i> Excel`,
+            }]
+        });
 </script>

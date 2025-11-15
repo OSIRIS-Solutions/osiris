@@ -648,7 +648,6 @@ $Vocabulary = new Vocabulary();
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
-                        console.log(row);
                         let persons = '';
                         if (Array.isArray(row.persons)) {
                             persons = row.persons.map(a => a.name).join(', ')

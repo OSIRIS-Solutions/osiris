@@ -19,7 +19,6 @@ $label = $Settings->journalLabel();
 ?>
 
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.naturalsort.js"></script>
 
 <h2 class="mt-0">
     <i class="ph-duotone ph-stack"></i>

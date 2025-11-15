@@ -73,6 +73,9 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <thead>
                 <tr>
                     <th><?= lang('Name', 'Name') ?></th>
+                    <th><?= lang('Name', 'Name') ?></th>
+                    <th><?= lang('Start Date', 'Startdatum') ?></th>
+                    <th><?= lang('End Date', 'Enddatum') ?></th>
                     <th><?= lang('Category', 'Kategorie') ?></th>
                     <th><?= lang('Type', 'Typ') ?></th>
                     <th><?= lang('Access', 'Zugang') ?></th>
@@ -111,6 +114,9 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
                             </div>
                         </td>
+                        <td><?= lang($infra['name'], $infra['name_de'] ?? null) ?></td>
+                        <td><?= $infra['start_date'] ?></td>
+                        <td><?= $infra['end_date'] ?? '' ?></td>
                         <td>
                             <?= $infra['type'] ?? '' ?>
                         </td>
@@ -145,7 +151,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <?php if ($active('type')) { ?>
                 <h6>
                     <?= lang('By category', 'Nach Kategorie') ?>
-                    <a class="float-right" onclick="filterInfra('#filter-category .active', null, 1)"><i class="ph ph-x"></i></a>
+                    <a class="float-right" onclick="filterInfra('#filter-category .active', null, 4)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
                     <table id="filter-category" class="table small simple">
@@ -154,7 +160,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         foreach ($vocab as $v) { ?>
                             <tr>
                                 <td>
-                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 1)" class="item" id="<?= $v['id'] ?>-btn">
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 4)" class="item" id="<?= $v['id'] ?>-btn">
                                         <span>
                                             <?= lang($v['en'], $v['de'] ?? null) ?>
                                         </span>
@@ -169,7 +175,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <?php if ($active('infrastructure_type')) { ?>
                 <h6>
                     <?= lang('By type', 'Nach Typ') ?>
-                    <a class="float-right" onclick="filterInfra('#filter-type .active', null, 2)"><i class="ph ph-x"></i></a>
+                    <a class="float-right" onclick="filterInfra('#filter-type .active', null, 5)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
                     <table id="filter-type" class="table small simple">
@@ -178,7 +184,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         foreach ($vocab as $v) { ?>
                             <tr>
                                 <td>
-                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 2)" class="item" id="<?= $v['id'] ?>-btn">
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 5)" class="item" id="<?= $v['id'] ?>-btn">
                                         <span>
                                             <?= lang($v['en'], $v['de'] ?? null) ?>
                                         </span>
@@ -193,7 +199,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <?php if ($active('access')) { ?>
                 <h6>
                     <?= lang('By access', 'Nach Zugang') ?>
-                    <a class="float-right" onclick="filterInfra('#filter-access .active', null, 3)"><i class="ph ph-x"></i></a>
+                    <a class="float-right" onclick="filterInfra('#filter-access .active', null, 6)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
                     <table id="filter-access" class="table small simple">
@@ -202,7 +208,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         foreach ($vocab as $v) { ?>
                             <tr>
                                 <td>
-                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 3)" class="item" id="<?= $v['id'] ?>-btn">
+                                    <a data-type="<?= $v['id'] ?>" onclick="filterInfra(this, '<?= $v['id'] ?>', 6)" class="item" id="<?= $v['id'] ?>-btn">
                                         <span>
                                             <?= lang($v['en'], $v['de'] ?? null) ?>
                                         </span>
@@ -219,7 +225,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <?php if ($topicsEnabled && $active('topics')) { ?>
                 <h6>
                     <?= $Settings->topicLabel() ?>
-                    <a class="float-right" onclick="filterInfra('#filter-topics .active', null, 4)"><i class="ph ph-x"></i></a>
+                    <a class="float-right" onclick="filterInfra('#filter-topics .active', null, 7)"><i class="ph ph-x"></i></a>
                 </h6>
 
                 <div class="filter">
@@ -229,7 +235,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         ?>
                             <tr style="--highlight-color:  <?= $a['color'] ?>;">
                                 <td>
-                                    <a data-type="<?= $topic_id ?>" onclick="filterInfra(this, '<?= $topic_id ?>', 4)" class="item" id="<?= $topic_id ?>-btn">
+                                    <a data-type="<?= $topic_id ?>" onclick="filterInfra(this, '<?= $topic_id ?>', 7)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">
                                             <?= lang($a['name'], $a['name_en'] ?? null) ?>
                                         </span>
@@ -252,8 +258,20 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     var dataTable;
 
     let headers = [{
+            key: 'label',
+            title: 'Label'
+        },
+        {
             key: 'name',
             title: 'Name'
+        },
+        {
+            key: 'start_date',
+            title: 'Start Date'
+        },
+        {
+            key: 'end_date',
+            title: 'End Date'
         },
         {
             key: 'category',
@@ -281,12 +299,20 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
             columnDefs: [{
-                targets: [1, 2, 3, 4],
+                targets: [1, 2, 3, 4, 5, 6, 7],
                 visible: false
             }, ],
             paging: true,
             autoWidth: true,
-            pageLength: 8,
+            pageLength: 10,
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7] // exclude the first column with the action buttons
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-file-xls"></i> Excel`,
+            }]
         });
 
         // $('#infrastructure-table_wrapper').prepend($('.filters'))
@@ -297,7 +323,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
             var hash = readHash();
             if (hash.type !== undefined) {
-                filterInfra(document.getElementById(hash.status + '-btn'), hash.status, 1)
+                filterInfra(document.getElementById(hash.status + '-btn'), hash.status, 4)
             }
             if (hash.search !== undefined) {
                 dataTable.search(decodeURIComponent(hash.search)).draw();
@@ -310,10 +336,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
             // count data for the filter and add it to the filter
             let all_filters = {
-                1: '#filter-category',
-                2: '#filter-type',
-                3: '#filter-access',
-                4: '#filter-topics'
+                4: '#filter-category',
+                5: '#filter-type',
+                6: '#filter-access',
+                7: '#filter-topics'
             }
 
             for (const key in all_filters) {
@@ -336,10 +362,11 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            console.log(settings.oPreviousSearch.sSearch);
+            var search = settings.oPreviousSearch.sSearch;
+            if (search === undefined) search = '';
             writeHash({
                 page: info.page + 1,
-                search: settings.oPreviousSearch.sSearch
+                search: search
             })
         });
 

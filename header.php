@@ -98,24 +98,49 @@ $pageactive = function ($p) use ($page) {
     </script>
 
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.responsive.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 
     <script>
         $.extend($.fn.DataTable.ext.classes, {
-            sPaging: "pagination mt-10 ",
-            sPageFirst: "direction ",
-            sPageLast: "direction ",
-            sPagePrevious: "direction ",
-            sPageNext: "direction ",
-            sPageButtonActive: "active ",
-            sFilterInput: "form-control small d-inline w-auto ml-10 ",
-            sLengthSelect: "form-control small d-inline w-auto",
-            sInfo: "float-right text-muted",
-            sLength: "float-right"
+            paging: {
+                container: "pagination mt-10 ",
+                first: "direction ",
+                last: "direction ",
+                previous: "direction ",
+                next: "direction ",
+                active: "active ",
+            },
+            search: {
+                input: "form-control small d-inline w-auto ml-10 ",
+                container: "d-inline-block mr-10"
+            },
+            length: {
+                select: "form-control small d-inline w-auto mr-10",
+                container: "text-right"
+            },
+            info: {
+                container: "text-right text-muted"
+            }
+        });
+        // default layout
+        $.extend(true, $.fn.dataTable.defaults, {
+            layout: {
+                // top1Start: '',
+                topStart: ['search', 'buttons'],
+                topEnd: 'pageLength',
+                bottomStart: 'paging',
+                bottomEnd: 'info',
+                // bottom1End: ''
+            },
+            lengthMenu: [5, 10, 25, 50, 100],
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-file-xls"></i> Excel`,
+            }]
         });
     </script>
     <script src="<?= ROOTPATH ?>/js/osiris.js?<?= filemtime(BASEPATH . '/js/osiris.js') ?>"></script>

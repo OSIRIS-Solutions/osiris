@@ -531,7 +531,7 @@ $expert = isset($_GET['expert']);
         }
 
         function applyFilter(id, aggregate) {
-            console.log((id));
+            // console.log((id));
             if (EXPERT) {
                 applyFilterExpert(id, aggregate)
                 return

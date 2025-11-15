@@ -551,7 +551,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
-                        console.log(row);
                         let persons = '';
                         if (row.persons && row.persons.length > 0) {
                             persons = row.persons.map(a => a.name).join(', ')

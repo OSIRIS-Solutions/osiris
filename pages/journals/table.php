@@ -57,9 +57,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 </table>
 
 
-<script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.naturalsort.js"></script>
-
-
 <script>
     var dataTable;
     $(document).ready(function() {
@@ -88,14 +85,16 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     targets: 2,
                     data: 'issn',
                     defaultContent: '',
+                    // visible: false,
+                    // searchable: true,
                     render: function(data, type, full, meta) {
                         if (!data) return '';
                         if (Array.isArray(data)) {
-                            return data.join('<br>');
+                            return data.join(', ');
                         }
                         return data;
                     },
-                    className: 'unbreakable'
+                    // className: 'unbreakable'
                 },
                 {
                     targets: 3,
