@@ -1196,7 +1196,7 @@ $affiliation = $Settings->get('affiliation_details');
             </div>
 
 
-            <div class="col-lg-3 d-none d-lg-block">
+            <div class="col-md-3 d-none d-md-block">
                 <nav class="on-this-page-nav">
                     <div class="content">
                         <div class="title"><?= lang('Features', 'Funktionen') ?></div>
