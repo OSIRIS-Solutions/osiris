@@ -165,7 +165,6 @@ $pageactive = function ($p) use ($page) {
     ">
         <div class="sticky-alerts"></div>
 
-
         <div class="modal" id="the-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -560,12 +559,30 @@ $pageactive = function ($p) use ($page) {
                                     <?= lang('Add event', 'Event hinzufügen') ?>
                                 </a>
                             <?php } ?>
-                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) { ?>
-                                <a href="<?= ROOTPATH ?>/infrastructures/new">
-                                    <i class="ph ph-cube-transparent"></i>
-                                    <?= lang('Add infrastructure', 'Infrastruktur hinzuf.') ?>
-                                </a>
-                            <?php } ?>
+                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) {
+                                $header_infras = $osiris->infrastructures->find([
+                                    'statistic_frequency' => 'irregularly',
+                                    'persons' => [
+                                        '$elemMatch' => [
+                                            'user' => $_SESSION['username'],
+                                            'reporter' => true
+                                        ]
+                                    ],
+                                    'start_date' => ['$lte' => CURRENTYEAR . '-12-31'],
+                                    '$or' => [
+                                        ['end_date' => null],
+                                        ['end_date' => ['$gte' => CURRENTYEAR . '-01-01']]
+                                    ],
+                                ]);
+                                foreach ($header_infras as $inf) {
+                            ?>
+                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $inf['_id'] ?>?edit-stats=<?= date('Y-m-d') ?>">
+                                        <i class="ph ph-cube-transparent"></i>
+                                        <?= lang('Statics for ', 'Statistik für ') . $inf['name'] ?>
+                                    </a>
+                            <?php
+                                }
+                            } ?>
                         </div>
                     </nav>
 

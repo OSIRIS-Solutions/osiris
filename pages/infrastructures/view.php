@@ -75,7 +75,6 @@ $statistics = $osiris->infrastructureStats->find(
         'sort' => ['year' => -1]
     ]
 )->toArray();
-
 ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 
@@ -546,25 +545,25 @@ $statistics = $osiris->infrastructureStats->find(
         <!-- table with all yearly statistics ordered by year -->
         <div class="table-responsive-not">
             <table class="table small my-20" id="yearly-statistics">
-            <thead>
-                <tr>
-                    <th><?= lang('Year', 'Jahr') ?></th>
-                    <?php foreach ($fields as $field) { ?>
-                        <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
-                    <?php } ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($aggregated as $stat) { ?>
+                <thead>
                     <tr>
-                        <th><?= $stat['year'] ?></th>
+                        <th><?= lang('Year', 'Jahr') ?></th>
                         <?php foreach ($fields as $field) { ?>
-                            <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
                         <?php } ?>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($aggregated as $stat) { ?>
+                        <tr>
+                            <th><?= $stat['year'] ?></th>
+                            <?php foreach ($fields as $field) { ?>
+                                <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
 
 
@@ -580,7 +579,6 @@ $statistics = $osiris->infrastructureStats->find(
 
         <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
         <script>
-            
             // Load & render
             async function loadStats() {
                 //   const infra = $('#infra-select').val();
@@ -793,3 +791,30 @@ $statistics = $osiris->infrastructureStats->find(
         dump($infrastructure, true);
     } ?>
 </div>
+
+<?php if (isset($_GET['edit-stats'])) {
+    $timeparam = $_GET['edit-stats'];
+?>
+    <script>
+        // scroll to statistics edit box
+        document.getElementById('infra-stat-edit-box').classList.remove('hidden');
+        document.getElementById('infra-stat-edit-box').scrollIntoView();
+        // prefill time parameters
+        <?php
+        switch ($stat_frequency) {
+            case 'annual':
+                echo "document.getElementById('add-stat-year').value = '$timeparam';";
+                break;
+            case 'monthly':
+                echo "document.getElementById('add-stat-month').value = '$timeparam';";
+                break;
+            case 'quarterly':
+                echo "document.getElementById('add-stat-quarter').value = '$timeparam';";
+                break;
+            case 'irregularly':
+                echo "document.getElementById('add-stat-date').value = '$timeparam';";
+                break;
+        }
+        ?>
+    </script>
+<?php } ?>
