@@ -1130,7 +1130,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $docs = [];
         foreach ($person['highlighted'] as $id) {
             $doc = $DB->getActivity($id);
-            if (!empty($doc)) {
+            if (!empty($doc) && !($doc['hide'] ?? false)) {
                 if ($visibility == 'only-approved' && ($doc['workflow']['status'] ?? '') != 'verified') {
                     continue;
                 } elseif ($visibility == 'approved-or-empty' && isset($doc['workflow']['status']) && $doc['workflow']['status'] != 'verified') {
