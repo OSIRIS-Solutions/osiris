@@ -781,7 +781,7 @@ function _approve(id, approval) {
             if (n_notifications >= 0) {
                 $('span.notification').text(n_notifications)
             }
-            
+
             var loc = location.pathname.split('/')
             if (loc[loc.length - 1] == "issues") {
                 $('#tr-' + id).remove()
@@ -799,7 +799,7 @@ function _approve(id, approval) {
                 $('#tr-' + id).remove()
                 toastSuccess('Removed activity')
             }
-            
+
             // toastSuccess("Updated " + response.updated + " datasets.")
             // $('#result').html(response)
         },
@@ -846,6 +846,7 @@ function initActivities(selector, data = {}) {
         console.warn('No activities table found with selector:', selector);
         return;
     }
+    const TITLE = (document.title.split(' | ')[0] || document.title);
     return $(selector).DataTable({
         "ajax": {
             "url": ROOTPATH + '/api/all-activities',
@@ -870,27 +871,42 @@ function initActivities(selector, data = {}) {
                         header: function (data, columnIdx) {
                             // eigene Header-Texte definieren
                             const customHeaders = {
-                                0: lang('Icon', 'Icon'),
-                                1: lang('Activity', 'Aktivität'),
-                                2: lang('Links', 'Links'),
-                                3: lang('Formatted text', 'Formatierter Text'),
-                                4: lang('Start date', 'Startdatum'),
-                                5: lang('Type', 'Typ'),
-                                6: lang('Subtype', 'Untertyp'),
-                                7: lang('Title', 'Titel'),
-                                8: lang('Authors', 'Autoren'),
-                                9: lang('Year', 'Jahr')
+                                0: lang('Category', 'Kategorie'),
+                                1: lang('Printed title', 'Gedruckter Titel'),
+                                2: lang('Start date', 'Startdatum'),
+                                3: lang('Type', 'Typ'),
+                                4: lang('Title', 'Titel'),
+                                5: lang('Authors', 'Autoren'),
+                                6: lang('Year', 'Jahr'),
                             };
                             return customHeaders[columnIdx] || data;
                         }
                     }
                 },
+                title: TITLE,
                 className: 'btn small',
                 title: 'OSIRIS_activities',
                 text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [3],
+                    // do not strip HTML tags in the links column
+                    stripHtml: false
+                },
+                title: TITLE,
+                className: 'btn small',
+                text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+                customize: function (win) {
+                    // hier könntest du noch CSS ergänzen, wenn nötig
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        .find('table')
+                        .addClass('compact');
+                }
             }
         ],
-        dom: 'fBrtip',
         pageLength: 5,
         columnDefs: [
             {
@@ -910,6 +926,7 @@ function initActivities(selector, data = {}) {
             {
                 targets: 3,
                 data: 'search-text',
+                title: lang('Aktivitäten', 'Activities'),
                 searchable: true,
                 visible: false,
                 header: 'Test'
@@ -1949,7 +1966,7 @@ function sanitizeID(element, idlist = '#IDLIST li') {
     var list = []
 
     // get existing IDs from list
-    if ( typeof idlist === 'string' ) {
+    if (typeof idlist === 'string') {
         list = $(idlist).map(function (i, v) {
             return $(this).text().trim();
         }).toArray();

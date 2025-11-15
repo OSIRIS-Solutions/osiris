@@ -498,7 +498,7 @@ if ($topicsEnabled) {
                                     </a>
                                 </td>
                             </tr>
-                    <?php }
+                        <?php }
                     } else { ?>
                         <tr>
                             <td>
@@ -594,19 +594,29 @@ if ($topicsEnabled) {
                 ?>
             </div>
         </div>
+        <style>
+            .circle-icon {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                margin-right: .5rem;
+                background-color: #000;
+            }
+        </style>
         <div class="col-lg-8">
             <div class="box my-0">
                 <div id="map" class=""></div>
             </div>
             <p>
-                <i class="ph ph-fill ph-circle" style="color:#f78104"></i>
+                <span class="circle-icon" style="background-color:#f78104"></span>
                 <?= lang('Coordinator', 'Koordinator') ?>
                 <br>
-                <i class="ph ph-fill ph-circle" style="color:#008083"></i>
+                <span class="circle-icon" style="background-color:#008083"></span>
                 Partner
                 <br>
-                <i class="ph ph-fill ph-circle" style="color:#a6b1b1"></i>
-                <?=lang('Associated Partner', 'Assoziierter Partner')?>
+                <span class="circle-icon" style="background-color:#a6b1b1"></span>
+                <?= lang('Associated Partner', 'Assoziierter Partner') ?>
             </p>
         </div>
     </div>
@@ -971,7 +981,7 @@ if ($topicsEnabled) {
     <p>
         <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
     </p>
-    
+
     <div class="box padded overflow-x-scroll">
         <pre><?= htmlspecialchars(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
     </div>

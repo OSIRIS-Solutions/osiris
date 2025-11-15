@@ -740,9 +740,9 @@ class DB
      * @param string $user Username of potential author.
      * @return bool is user activity.
      */
-    public static function isUserActivity($doc, $user)
+    public static function isUserActivity($doc, $user, $include_created_by = true)
     {
-        if (isset($doc['created_by']) && $doc['created_by'] == $user) return true;
+        if ($include_created_by && isset($doc['created_by']) && $doc['created_by'] == $user) return true;
         if (isset($doc['user']) && $doc['user'] == $user) return true;
         foreach (['authors', 'editors'] as $role) {
             if (!isset($doc[$role])) continue;

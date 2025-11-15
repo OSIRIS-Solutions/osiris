@@ -43,7 +43,10 @@ if (isset($person['units'])) {
 }
 ?>
 
-<h1><?= lang('Calendar', 'Kalender') ?></h1>
+<h1>
+    <i class="ph-duotone ph-calendar"></i>
+    <?= lang('Calendar', 'Kalender') ?>
+</h1>
 
 <div class="row row-eq-spacing-md">
     <div class="col-12 col-md-4">

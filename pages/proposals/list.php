@@ -75,7 +75,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 </style>
 
 <h1 class="mt-0">
-    <i class="ph ph-tree-structure text-osiris"></i>
+    <i class="ph-duotone ph-tree-structure"></i>
     <?= lang('Project proposals', 'Projektanträge') ?>
 </h1>
 
@@ -551,7 +551,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
-                        console.log(row);
                         let persons = '';
                         if (row.persons && row.persons.length > 0) {
                             persons = row.persons.map(a => a.name).join(', ')

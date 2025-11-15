@@ -24,7 +24,7 @@ $affiliation = $Settings->get('affiliation_details');
 <script src="<?= ROOTPATH ?>/js/general-settings.js"></script>
 
 <h1 class="mt-0">
-    <i class="ph ph-gear text-primary"></i>
+    <i class="ph-duotone ph-gear"></i>
     <?= lang('General Settings', 'Allgemeine Einstellungen') ?>
 </h1>
 
@@ -145,36 +145,53 @@ $affiliation = $Settings->get('affiliation_details');
                     }
                 </script>
 
-                <div class="form-group">
-                    <!-- affiliation formatting -->
-                    <?php
-                    $format = $Settings->get('affiliation_format', 'bold');
-                    ?>
+                <hr>
+                <h5 class="mb-0">
+                    <?= lang('Print output settings', 'Einstellungen für die Print-Ausgabe') ?>
+                </h5>
+                <div class="row row-eq-spacing mt-0">
+                    <div class="col-sm-6">
+                        <!-- affiliation formatting -->
+                        <?php
+                        $format = $Settings->get('affiliation_format', 'bold');
+                        ?>
 
-                    <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affiliierten Autor:innen') ?></label>
-                    <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
-                        <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('Bold (default)', 'Fett (Standard)') ?></option>
-                        <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('Italic', 'Kursiv') ?></option>
-                        <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= lang('Underline', 'Unterstrichen') ?></option>
-                        <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= lang('Bold and italic', 'Fett und kursiv') ?></option>
-                        <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= lang('Bold and underline', 'Fett und unterstrichen') ?></option>
-                        <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= lang('Italic and underline', 'Kursiv und unterstrichen') ?></option>
-                        <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
-                    </select>
+                        <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affiliierten Autor:innen') ?></label>
+                        <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
+                            <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('Bold (default)', 'Fett (Standard)') ?></option>
+                            <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('Italic', 'Kursiv') ?></option>
+                            <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= lang('Underline', 'Unterstrichen') ?></option>
+                            <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= lang('Bold and italic', 'Fett und kursiv') ?></option>
+                            <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= lang('Bold and underline', 'Fett und unterstrichen') ?></option>
+                            <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= lang('Italic and underline', 'Kursiv und unterstrichen') ?></option>
+                            <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        </select>
+                    </div>
 
-                    <p class="mt-5">
-                        <b>
-                            <i class="ph ph-warning"></i>
-                            <?= lang('Hint:', 'Hinweis:') ?>
-                        </b>
-                        <?= lang('you have to rerender all activities to see the changes. You can do this here:', 'Du musst alle Aktivitäten neu rendern, um die Änderungen zu sehen. Du kannst dies hier tun:') ?>
-                        <a href="<?= ROOTPATH ?>/rerender" class="btn small primary">
-                            <?= lang('Render all activities', 'Alle Aktivitäten rendern') ?>
-                        </a>
-                        <?= lang('This might take a while. Please be patient and do not reload the page.', 'Das kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
-                    </p>
+                    <!-- render language -->
+                    <div class="col-sm-6">
+                        <?php
+                        $renderLang = $Settings->get('render_language', 'en');
+                        ?>
+                        <label for="render_language"><?= lang('Render language', 'Anzeigesprache') ?></label>
+                        <select class="form-control" name="general[render_language]" id="render_language">
+                            <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option> -->
+                            <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= lang('English only', 'Nur Englisch') ?></option>
+                            <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= lang('German only', 'Nur Deutsch') ?></option>
+                        </select>
+                    </div>
                 </div>
-
+                <p class="mt-5">
+                    <b>
+                        <i class="ph ph-warning"></i>
+                        <?= lang('Hint:', 'Hinweis:') ?>
+                    </b>
+                    <?= lang('you have to rerender all activities to see the changes. You can do this here:', 'Du musst alle Aktivitäten neu rendern, um die Änderungen zu sehen. Du kannst dies hier tun:') ?>
+                    <a href="<?= ROOTPATH ?>/rerender" class="btn small primary">
+                        <?= lang('Render all activities', 'Alle Aktivitäten rendern') ?>
+                    </a>
+                    <?= lang('This might take a while. Please be patient and do not reload the page.', 'Das kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
+                </p>
 
                 <button class="btn primary">
                     <i class="ph ph-floppy-disk"></i>
@@ -1004,6 +1021,22 @@ $affiliation = $Settings->get('affiliation_details');
                             <?= lang('Journals', 'Journale') ?>
                         </h4>
                         <div class="form-group">
+                            <?php
+                            $label = $Settings->get('journals_label');
+                            ?>
+
+                            <div class="row row-eq-spacing my-0">
+                                <div class="col-md-6">
+                                    <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                    <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Journals') ?>">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                    <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Journale') ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="" class="label">
                                 <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>
                             </label>
@@ -1163,7 +1196,7 @@ $affiliation = $Settings->get('affiliation_details');
             </div>
 
 
-            <div class="col-lg-3 d-none d-lg-block">
+            <div class="col-md-3 d-none d-md-block">
                 <nav class="on-this-page-nav">
                     <div class="content">
                         <div class="title"><?= lang('Features', 'Funktionen') ?></div>

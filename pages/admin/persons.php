@@ -23,7 +23,7 @@
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
-    <i class="ph ph-user text-primary"></i>
+    <i class="ph-duotone ph-user"></i>
     <?= lang('Person data', 'Personendaten') ?>
 </h1>
 
@@ -270,15 +270,22 @@
                     'example' => 'objectsid', // Beispiel: "12345"
                 ],
             ];
-
     ?>
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post" class="box primary padded">
-
 
                 <h2 class="title">
                     <i class="ph ph-lock" aria-hidden="true"></i>
                     <?= lang('LDAP Settings', 'LDAP-Einstellungen') ?>
                 </h2>
+
+                <?php
+                    $last_sync = $osiris->system->findOne(['key' => 'ldap-sync']);
+                    $last_sync = $last_sync['value'] ?? null;
+                ?>
+                
+                <p>
+                    <?=lang('Last synchronization:', 'Letzte Synchronisierung:')?> <b><?= $last_sync ? format_date($last_sync) : lang('Never', 'Nie') ?></b>
+                </p>
 
                 <p>
                     <?= lang('Here you can define the attributes that will be automatically synchronized with your LDAP instance.', 'Hier kannst du die Attribute festlegen, die automatisch mit deiner LDAP-Instanz synchronisiert werden sollen.') ?>
@@ -286,7 +293,7 @@
 
                 <p class="text-danger">
                     <i class="ph ph-warning"></i>
-                    <?= lang('Please note that the synchronized attributes cannot be edited within OSIRIS anymore.', 'Bitte beachte, dass die synchronisierten Attribute nicht mehr in OSIRIS bearbeitet werden können.') ?>
+                    <?= lang('Please note that the synchronized attributes cannot be edited within OSIRIS anymore, except for units.', 'Bitte beachte, dass die synchronisierten Attribute nicht mehr in OSIRIS bearbeitet werden können, abgesehen von Einheiten.') ?>
                 </p>
 
                 <table class="table simple w-auto small mb-10">
@@ -445,11 +452,7 @@ if (!is_null($data)) {
                     <?php foreach ($fields as $field) { ?>
                         <tr>
                             <td>
-                                <!-- checkbox -->
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" name="general[person-data][]" id="field-<?= $field['id'] ?>" value="<?= $field['id'] ?>" <?= in_array($field['id'], $data) ? 'checked' : '' ?>>
-                                    <label for="field-<?= $field['id'] ?>"></label>
-                                </div>
+                                <input type="checkbox" name="general[person-data][]" id="field-<?= $field['id'] ?>" value="<?= $field['id'] ?>" <?= in_array($field['id'], $data) ? 'checked' : '' ?>>
                             </td>
                             <td>
                                 <b><?= lang($field['en'], $field['de'] ?? null) ?></b>

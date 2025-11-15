@@ -22,10 +22,10 @@
 <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
     <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/tags">
     <div class="box primary padded">
-        <h2 class="title">
-            <i class="ph ph-tag" aria-hidden="true"></i>
+        <h1 class="title">
+            <i class="ph-duotone ph-tag" aria-hidden="true"></i>
             <?= lang('Tags', 'Schlagwörter') ?>
-        </h2>
+        </h1>
 
         <p>
             <?= lang('Define tags that can be attached to activities and projects.', 'Definiere Schlagworte, die für Aktivitäten und Projekte verwendet werden können.') ?>

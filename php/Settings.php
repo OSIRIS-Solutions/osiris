@@ -38,6 +38,9 @@ class Settings
         }
         // everyone is a user
         $this->roles[] = 'user';
+        if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
+            $this->roles[] = 'admin';
+        }
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],
@@ -448,10 +451,17 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
+    
+    function journalLabel()
+    {
+        $settings = $this->get('journals_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
 
     function tripLabel()
     {
-        if (!$this->featureEnabled('topics')) return '';
+        if (!$this->featureEnabled('trips')) return '';
         $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
         if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
         return lang($arr['name'], $arr['name_de'] ?? null);

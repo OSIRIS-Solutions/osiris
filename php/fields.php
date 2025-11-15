@@ -58,7 +58,7 @@ class Fields
                 'id' => 'print',
                 'module_of' => $typeModules['print'] ?? [],
                 'usage' => [
-                    'columns'
+                    'columns', 'filter'
                 ],
                 'label' => lang('Print version', 'Printdarstellung'),
                 'type' => 'string'
@@ -363,7 +363,7 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Journal'),
+                'label' => $Settings->journalLabel(),
                 'type' => 'string'
             ],
             [
@@ -925,7 +925,7 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Research Topics', 'Forschungsbereiche'),
+                'label' => $Settings->topicLabel(),
                 'type' => 'list',
                 'input' => 'select',
                 'values' => $topics

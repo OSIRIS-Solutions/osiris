@@ -1,5 +1,5 @@
 <?php
-    
+
 /**
  * Page to visualize collaborators on a map
  * 
@@ -25,7 +25,7 @@ if (empty($lat) || empty($lng)) {
 }
 ?>
 
-<script src="<?=ROOTPATH?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
+<script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 
 <style>
     #map {
@@ -39,8 +39,8 @@ if (empty($lat) || empty($lng)) {
         mapbox: {
             style: "open-street-map",
             center: {
-                lat: <?=($lat)?>,
-                lon: <?=($lng)?>
+                lat: <?= ($lat) ?>,
+                lon: <?= ($lng) ?>
             },
             zoom: 1
         },
@@ -66,7 +66,10 @@ if (empty($lat) || empty($lng)) {
     $Project = new Project($project);
 ?>
 
-    <h1><?= lang('Project Map', 'Projekt-Karte') ?></h1>
+    <h1>
+        <i class="ph-duotone ph-map-pin"></i>
+        <?= lang('Project Map', 'Projekt-Karte') ?>
+    </h1>
 
     <div class="row row-eq-spacing">
         <div class="col-md-8">
@@ -76,7 +79,7 @@ if (empty($lat) || empty($lng)) {
         </div>
         <div class="col-md-4">
             <?= $Project->widgetSmall() ?>
-            
+
             <h2>
                 <?= lang('Collaborators', 'Kooperationspartner') ?>
             </h2>
@@ -155,7 +158,7 @@ if (empty($lat) || empty($lng)) {
                 data.mode = 'markers'
                 data.hoverinfo = 'text',
 
-                Plotly.newPlot('map', [data], layout);
+                    Plotly.newPlot('map', [data], layout);
             },
             error: function(response) {
                 console.log(response);
@@ -175,6 +178,7 @@ if (empty($lat) || empty($lng)) {
         </a>
     </div>
     <h1>
+        <i class="ph-duotone ph-map-pin"></i>
         <?= lang('Collaboration map', 'Kooperations-Karte') ?>
     </h1>
 

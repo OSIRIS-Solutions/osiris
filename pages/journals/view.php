@@ -15,48 +15,54 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+$label = $Settings->journalLabel();
 ?>
 
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.naturalsort.js"></script>
 
 <h2 class="mt-0">
-    <i class="ph ph-stack text-primary"></i>
+    <i class="ph-duotone ph-stack"></i>
     <?= $data['journal'] ?>
 </h2>
 <div class="btn-toolbar mb-20">
     <?php if ($Settings->hasPermission('journals.edit')) { ?>
         <a href="<?= ROOTPATH ?>/journal/edit/<?= $id ?>" class="btn primary">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit Journal', 'Journal bearbeiten') ?>
+            <?= lang("Edit $label", " $label bearbeiten") ?>
         </a>
     <?php } ?>
 
     <?php if ($Settings->hasPermission('journals.edit') && !$Settings->featureEnabled('no-journal-metrics')) { ?>
 
-        <a href="#metrics-modal" class="btn primary">
-            <i class="ph ph-ranking"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?>
-        </a>
+        <?php if (count($data['issn'] ?? []) == 0) { ?>
+            <a href="#/" class="btn disabled" data-toggle="tooltip" data-direction="bottom" data-title="<?= lang('No metrics without ISSN.', 'Keine Metriken ohne ISSN.') ?>">
+                <i class="ph ph-ranking"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?>
+            </a>
+        <?php } else { ?>
+            <a href="#metrics-modal" class="btn primary">
+                <i class="ph ph-ranking"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?>
+            </a>
 
-        <div class="modal" id="metrics-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <a href="#/" class="close" role="button" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </a>
-                    <h5 class="title"><?= lang('Update metrics', 'Metriken aktualisieren') ?></h5>
-                    <p>
-                        <i class="ph ph-warning text-signal"></i>
-                        <?= lang('This will update the metrics for this journal and overwrite all manual changes to impact factors, categories and quartiles.', 'Dadurch werden die Metriken für diese Zeitschrift aktualisiert und alle manuellen Änderungen an Impact-Faktoren, Kategorien und Quartilen überschrieben.') ?>
-                    </p>
+            <div class="modal" id="metrics-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <a href="#/" class="close" role="button" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                        <h5 class="title"><?= lang('Update metrics', 'Metriken aktualisieren') ?></h5>
+                        <p>
+                            <i class="ph ph-warning text-signal"></i>
+                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to impact factors, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an Impact-Faktoren, Kategorien und Quartilen überschrieben.") ?>
+                        </p>
 
-                    <form action="<?= ROOTPATH ?>/crud/journal/update-metrics/<?= $id ?>" method="post">
-                        <button class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?></button>
-                    </form>
+                        <form action="<?= ROOTPATH ?>/crud/journal/update-metrics/<?= $id ?>" method="post">
+                            <button class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?></button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        <?php } ?>
     <?php } ?>
 </div>
 
@@ -67,7 +73,7 @@
         <td><?= $data['_id'] ?></td>
     </tr>
     <tr>
-        <td>Journal</td>
+        <td><?= $label ?></td>
         <td><?= $data['journal'] ?></td>
     </tr>
     <tr>
@@ -146,7 +152,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 <a href="#/" class="close" role="button" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <h5 class="title"><?= lang('Edit journal categories', 'Journal-Kategorien bearbeiten') ?></h5>
+                <h5 class="title"><?= lang("Edit $label categories", "$label-Kategorien bearbeiten") ?></h5>
 
                 <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
@@ -195,7 +201,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 
 <h3>
-    <?= lang('Publications in this journal', 'Publikationen in diesem Journal') ?>
+    <?= lang("Publications in this $label", "Publikationen in diesem $label") ?>
 </h3>
 
 <!-- <canvas id="spark"></canvas> -->
@@ -226,7 +232,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
             },
             language: {
                 "zeroRecords": "No matching records found",
-                "emptyTable": lang('No publications available for this journal.', 'Für dieses Journal sind noch keine Publikationen verfügbar.'),
+                "emptyTable": lang("No publications available for this <?= $label ?>.", "Für dieses <?= $label ?> sind noch keine Publikationen verfügbar."),
             },
             "pageLength": 5,
             columnDefs: [{
@@ -288,7 +294,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
             },
             language: {
                 "zeroRecords": "No matching records found",
-                "emptyTable": lang('No reviews/editorials available for this journal.', 'Für dieses Journal sind noch keine Reviews/Editorials verfügbar.'),
+                "emptyTable": lang("No reviews/editorials available for this <?= $label ?>.", "Für dieses <?= $label ?> sind noch keine Reviews/Editorials verfügbar."),
             },
             "pageLength": 5,
             columnDefs: [{
@@ -334,7 +340,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
-                    <?= lang('Add IF', 'Füge IF hinzu') ?> <i class="ph ph-fill ph-angle-down ml-5" aria-hidden="true"></i>
+                    <?= lang('Add IF', 'Füge IF hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-2">
                     <div class="content">
@@ -445,7 +451,7 @@ foreach ($metrics as $metric) {
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
-                    <?= lang('Add quartile', 'Füge Quartil hinzu') ?> <i class="ph ph-fill ph-angle-down ml-5" aria-hidden="true"></i>
+                    <?= lang('Add quartile', 'Füge Quartil hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-2">
                     <div class="content">

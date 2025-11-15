@@ -52,7 +52,7 @@ if ($active('keywords')) {
 <?php } ?>
 
 <h1>
-    <i class="ph ph-student"></i>
+    <i class="ph-duotone ph-student"></i>
     <?= lang('Users', 'Personen') ?>
 </h1>
 
@@ -61,11 +61,21 @@ if ($active('keywords')) {
 
         <table class="table cards w-full" id="user-table">
             <thead>
+                <th><?= lang('Image', 'Bild') ?></th>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th><?= lang('Units', 'Einheiten') ?></th>
+                <th><?= lang('Active', 'Aktiv') ?></th>
+                <th><?= lang('Names', 'Namen') ?></th>
+                <th><?= lang('Research topics', 'Forschungsbereiche') ?></th>
+                <th><?= lang('First name', 'Vorname') ?></th>
+                <th><?= lang('Last name', 'Nachname') ?></th>
+                <th><?= lang('Academic title', 'Akad. Titel') ?></th>
+                <th><?= lang('Email', 'E-Mail') ?></th>
+                <th><?= lang('Telephone', 'Telefon') ?></th>
+                <th><?= lang('Position', 'Position') ?></th>
+                <th><?= lang('ORCID', 'ORCID') ?></th>
+                <th><?= lang('Username', 'Kürzel') ?></th>
+                <th><?= $keyword_name ?></th>
             </thead>
             <tbody>
 
@@ -241,6 +251,10 @@ if ($active('keywords')) {
             language: {
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
+            paging: true,
+            autoWidth: true,
+            pageLength: 18,
+            lengthMenu: [9, 18, 36, 72, 144],
             buttons: [
                 // custom link button
                 {
@@ -277,13 +291,30 @@ if ($active('keywords')) {
                     },
                     className: 'btn small ml-10',
                     title: 'OSIRIS Users',
-                    text: '<i class="ph ph-file-xls"></i> <?= lang('Excel', 'Excel') ?>',
+                    text: '<i class="ph ph-file-xls"></i> Excel',
+                },
+                // pdf
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [6, 7, 8, 9, 10, 11, 2]
+                    },
+                    className: 'btn small pdf-btn',
+                    title: 'OSIRIS Users',
+                    text: '<i class="ph ph-file-pdf"></i> PDF',
+                    customize: function (doc) {
+                        doc.defaultStyle = doc.defaultStyle || {};
+                        doc.defaultStyle.fontSize = 8; // PDF body font size
+                        doc.styles = doc.styles || {};
+                        doc.styles.tableHeader = doc.styles.tableHeader || {};
+                        doc.styles.tableHeader.fontSize = 9; // header font size
+                    }
                 }
             ],
-            dom: 'fBrtip',
             columnDefs: [{
                     targets: 0,
                     data: 'img',
+                    title: lang('Image', 'Bild'),
                     searchable: false,
                     sortable: false,
                     visible: true
@@ -297,6 +328,7 @@ if ($active('keywords')) {
                 {
                     targets: 2,
                     data: 'dept',
+                    title: lang('Dept.', 'Abteilung'),
                     searchable: true,
                     sortable: false,
                     visible: false
@@ -304,6 +336,7 @@ if ($active('keywords')) {
                 {
                     targets: 3,
                     data: 'active',
+                    title: lang('Active', 'Aktiv'),
                     searchable: true,
                     sortable: false,
                     visible: false
@@ -311,66 +344,77 @@ if ($active('keywords')) {
                 {
                     target: 4,
                     data: 'names',
+                    title: lang('Names', 'Namen'),
                     searchable: true,
                     visible: false
                 },
                 {
                     target: 5,
                     data: 'topics',
+                    title: lang('Research topics', 'Forschungsbereiche'),
                     searchable: true,
                     visible: false
                 },
                 {
                     target: 6,
                     data: 'first',
+                    title: lang('First name', 'Vorname'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 7,
                     data: 'last',
+                    title: lang('Last name', 'Nachname'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 8,
                     data: 'academic_title',
+                    title: lang('Academic title', 'Akad. Titel'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 9,
                     data: 'mail',
+                    title: lang('Email', 'E-Mail'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 10,
                     data: 'telephone',
+                    title: lang('Telephone', 'Telefon'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 11,
                     data: 'position',
+                    title: lang('Position', 'Position'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 12,
                     data: 'orcid',
+                    title: lang('ORCID', 'ORCID'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 13,
                     data: 'username',
+                    title: lang('Username', 'Kürzel'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 14,
                     data: 'keywords',
+                    title: '<?= $keyword_name ?>',
                     visible: false,
                     defaultContent: ''
                 },
@@ -378,10 +422,6 @@ if ($active('keywords')) {
             "order": [
                 [1, 'asc'],
             ],
-
-            paging: true,
-            autoWidth: true,
-            pageLength: 18,
         });
 
         var hash = readHash();

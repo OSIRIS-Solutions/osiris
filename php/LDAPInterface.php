@@ -69,6 +69,7 @@ class LDAPInterface
 
         ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
+        ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 5); // 5 Sekunden
 
         if ($useTLS && !$useSSL) {
             if (!ldap_start_tls($this->connection)) {
@@ -132,7 +133,7 @@ class LDAPInterface
         $res = array();
         $cookie = '';
 
-        if (!empty($attributes)){
+        if (!empty($attributes)) {
             // add missing attributes to the attributes array
             foreach ($attributes as $key) {
                 if (!in_array($key, $this->attributes)) {
@@ -299,7 +300,7 @@ class LDAPInterface
                 break;
 
             case 'dn':
-                $bindIdentifier = $result['dn'] ?? null; 
+                $bindIdentifier = $result['dn'] ?? null;
                 break;
 
             case 'userPrincipalName':
@@ -415,12 +416,12 @@ class LDAPInterface
             }
             if (empty($user)) {
                 // if ($verbose) {
-                    echo "Skipping user: " . $username . "<br>";
+                echo "Skipping user: " . $username . "<br>";
                 // }
                 continue;
             }
 
-            echo $username .' ';
+            echo $username . ' ';
 
             $userData = [];
 
@@ -441,9 +442,15 @@ class LDAPInterface
                 $updatedUnits = [];
                 // first get the current units
                 $currentUnits = [];
+                $pastUnits = [];
                 $currentUser = $osiris->persons->findOne(['username' => $username], ['projection' => ['units' => 1]]);
                 if (!empty($currentUser)) {
                     foreach ($currentUser['units'] as $unit) {
+                        // check if unit is in the past
+                        if (!empty($unit['end']) && $unit['end'] < date('Y-m-d')) {
+                            $pastUnits[] = $unit;
+                            continue;
+                        }
                         $group = $Groups->getGroup($unit['unit']);
                         if (!empty($group)) {
                             $u = [
@@ -520,7 +527,12 @@ class LDAPInterface
 
                     if (!empty($updatedUnits)) {
                         $userData['units'] = array_values($updatedUnits);
-                        // var_dump($userData['units']);
+                    }
+                    // finally add past units again (can be duplicates, so without keys)
+                    if (!empty($pastUnits)) {
+                        foreach ($pastUnits as $pUnit) {
+                            $updatedUnits[] = $pUnit;
+                        }
                     }
                 }
             }
@@ -528,7 +540,7 @@ class LDAPInterface
             if (isset($ldapMappings['is_active'])) {
                 $accountControl = isset($entry[$ldapMappings['is_active']][0]) ? (int)$entry[$ldapMappings['is_active']][0] : 0;
                 $userData['is_active'] = boolval(!($accountControl & 2)); // 2 entspricht ACCOUNTDISABLE
-                if ($userData['is_active']){
+                if ($userData['is_active']) {
                     echo " (active)";
                 } else {
                     echo " (inactive)";

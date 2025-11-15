@@ -10,6 +10,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
 
 <h2>
+    <i class="ph-duotone ph-handshake"></i>
     <?= lang('Collaborators', 'Kooperationspartner') ?>
 </h2>
 

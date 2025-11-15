@@ -15,15 +15,21 @@
  */
 
 $reports = $osiris->adminReports->find();
+?>
 
-foreach ($reports as $report) { ?>
+<h1>
+    <i class="ph-duotone ph-clipboard-text"></i>
+    <?= lang('Report Templates', 'Berichtsvorlagen') ?>
+</h1>
+
+<?php foreach ($reports as $report) { ?>
     <div class="box">
         <div class="content">
             <h3><?= $report['title'] ?></h3>
             <p class="text-primary"><?= $report['description'] ?? '' ?></p>
 
             <span class="badge primary">
-                <b><?= lang('Start month', 'Startmonat') ?></b>: <?= Document::format_month($report['start'] ?? null) ?>
+                <b><?= lang('Start month', 'Startmonat') ?></b>: <?= format_month($report['start'] ?? null) ?>
             </span>
             <span class="badge primary">
                 <b><?= lang('Duration', 'Dauer') ?></b>: <?= $report['duration'] ?? '-' ?> <?= lang('months', 'Monate') ?>

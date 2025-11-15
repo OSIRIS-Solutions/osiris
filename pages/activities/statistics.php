@@ -70,7 +70,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 </style>
 
 <h1>
-    <i class="ph ph-chart-line-up" aria-hidden="true"></i>
+    <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
     <?= lang('Statistics', 'Statistiken') ?>
 </h1>
 

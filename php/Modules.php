@@ -2500,7 +2500,6 @@ class Modules
                     </a>
                     <label for="journal" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <a href="#journal-select" id="journal-field" class="module">
-                        <!-- <a class="btn link" ><i class="ph ph-edit"></i> <?= lang('Edit Journal', 'Journal bearbeiten') ?></a> -->
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
 
                         <div id="selected-journal">
@@ -2511,7 +2510,7 @@ class Modules
                                 <span class="float-right text-muted"><?= $journal['publisher'] ?></span>
                                 <span class="text-muted">ISSN: <?= print_list($journal['issn']) ?></span>
                             <?php else : ?>
-                                <span class="title"><?= lang('No Journal selected', 'Kein Journal ausgewählt') ?></span>
+                                <span class="font-weight-bold"><?= lang('Not selected', 'Nichts ausgewählt') ?></span>
                             <?php endif; ?>
                         </div>
 
@@ -2527,10 +2526,16 @@ class Modules
             case "magazine":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="magazine">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[magazine]" value="<?= $this->val('magazine') ?>" id="magazine" placeholder="magazine" list="magazine-list">
                     <label for="magazine" class=" <?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
+                <datalist id="magazine-list">
+                        <?php
+                        foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
+                            <option><?= $m ?></option>
+                        <?php } ?>
+                </datalist>
             <?php
                 break;
 

@@ -83,7 +83,7 @@ $active_fields = array_values($active_fields);
     </div>
 
     <h1>
-        <i class="ph ph-student text-osiris"></i>
+        <i class="ph-duotone ph-student"></i>
         <?= lang('Advanced user search', 'Erweiterte Nutzer-Suche') ?>
     </h1>
     <!-- <form action="#" method="get"> -->

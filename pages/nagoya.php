@@ -1,5 +1,5 @@
 <h1>
-    <i class="ph ph-scales" aria-hidden="true"></i>
+    <i class="ph-duotone ph-scales" aria-hidden="true"></i>
     <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
 </h1>
 

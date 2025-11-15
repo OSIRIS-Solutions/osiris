@@ -16,12 +16,13 @@
  * @license     MIT
  */
 
+$label = $Settings->journalLabel();
 ?>
 
 
 <h1 class="mt-0">
-    <i class="ph ph-stack text-primary"></i>
-    <?= lang('Journals', 'Journale') ?>
+    <i class="ph-duotone ph-stack"></i>
+    <?= $label ?>
 </h1>
 
 <?php
@@ -29,7 +30,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
     <div class="btn-toolbar mb-20">
         <a href="<?= ROOTPATH ?>/journal/add" class="btn primary">
             <i class="ph ph-stack-plus"></i>
-            <?= lang('Add Journal', 'Journal hinzufügen') ?>
+            <?= lang("Add $label", "$label hinzufügen") ?>
         </a>
         <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
             <a href="<?= ROOTPATH ?>/journal/metrics">
@@ -44,7 +45,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="result-table">
     <thead>
-        <th>Journal name</th>
+        <th><?= $label ?> name</th>
         <th>Publisher</th>
         <th>ISSN</th>
         <th>OA</th>
@@ -54,9 +55,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
     <tbody>
     </tbody>
 </table>
-
-
-<script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.naturalsort.js"></script>
 
 
 <script>
@@ -87,14 +85,16 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     targets: 2,
                     data: 'issn',
                     defaultContent: '',
+                    // visible: false,
+                    // searchable: true,
                     render: function(data, type, full, meta) {
                         if (!data) return '';
                         if (Array.isArray(data)) {
-                            return data.join('<br>');
+                            return data.join(', ');
                         }
                         return data;
                     },
-                    className: 'unbreakable'
+                    // className: 'unbreakable'
                 },
                 {
                     targets: 3,

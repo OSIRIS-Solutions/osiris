@@ -92,7 +92,7 @@ $Vocabulary = new Vocabulary();
 
 
 <h1 class="mt-0">
-    <i class="ph ph-tree-structure text-osiris"></i>
+    <i class="ph-duotone ph-tree-structure"></i>
     <?= $pagetitle ?>
 </h1>
 
@@ -648,7 +648,6 @@ $Vocabulary = new Vocabulary();
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
-                        console.log(row);
                         let persons = '';
                         if (Array.isArray(row.persons)) {
                             persons = row.persons.map(a => a.name).join(', ')

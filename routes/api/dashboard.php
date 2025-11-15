@@ -1390,6 +1390,7 @@ Route::get('/api/pivot-data', function () {
         'topics' => 1,
         'created' => 1,
         'imported' => 1,
+        'tags' => 1,
         'id' => ['$toString' => '$_id']
     ];
 

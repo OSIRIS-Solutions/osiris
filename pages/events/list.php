@@ -9,7 +9,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 
-<h1><?= lang('Events') ?></h1>
+<h1>
+    <i class="ph-duotone ph-calendar-dots"></i>
+    <?= lang('Events') ?>
+</h1>
 
 
 <!-- modal for adding conference -->

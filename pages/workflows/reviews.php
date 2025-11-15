@@ -16,7 +16,7 @@
 ?>
 
 <h1>
-    <i class="ph ph-highlighter"></i>
+    <i class="ph-duotone ph-highlighter"></i>
     <?= lang('My Reviews', 'Meine Überprüfungen') ?>
 </h1>
 

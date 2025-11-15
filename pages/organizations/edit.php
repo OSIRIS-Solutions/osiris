@@ -48,13 +48,13 @@ if (empty($form) || !isset($form['_id'])) {
     <?php if (empty($form) || !isset($form['_id'])) { ?>
 
         <h1 class="title">
-            <i class="ph ph-building-office" aria-hidden="true"></i>
+            <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
             <?= lang('New Organisation', 'Neue Organisation') ?>
         </h1>
 
     <?php } else { ?>
         <h1 class="title">
-            <i class="ph ph-building-office" aria-hidden="true"></i>
+            <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
             <?= lang('Edit Organisation', 'Organisation bearbeiten') ?>
         </h1>
     <?php } ?>

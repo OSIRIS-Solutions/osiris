@@ -69,7 +69,7 @@ $active = function ($field) use ($data_fields) {
 </style>
 
 <h1 class="mt-0">
-    <i class="ph ph-student"></i>
+    <i class="ph-duotone ph-student"></i>
     <?= $data['name'] ?>
 </h1>
 
@@ -263,7 +263,9 @@ $active = function ($field) use ($data_fields) {
             foreach ($custom_fields as $field) {
                 $key = $field['id'] ?? null;
                 if ($active($key)) {
+                    echo '<div class="form-group">';
                     $Modules->custom_field($key);
+                    echo '</div>';
                 }
             }
         } ?>
@@ -984,7 +986,7 @@ $active = function ($field) use ($data_fields) {
             </datalist>
             <datalist id="research-list-de">
                 <?php
-                foreach ($osiris->persons->distinct('research-de') as $d) { ?>
+                foreach ($osiris->persons->distinct('research_de') as $d) { ?>
                     <option><?= $d ?></option>
                 <?php } ?>
             </datalist>

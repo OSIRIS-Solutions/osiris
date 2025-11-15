@@ -20,7 +20,7 @@ $topics  = $osiris->topics->find();
 
 
 <h1>
-    <i class="ph ph-puzzle-piece"></i>
+    <i class="ph-duotone ph-puzzle-piece"></i>
     <?= $Settings->topicLabel() ?>
 </h1>
 

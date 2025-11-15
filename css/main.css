@@ -96,33 +96,33 @@ CSS variables (CSS custom properties)
   --link-color: var(--primary-color);
   --link-color-hover: var(--primary-color-light);
   --success-color: #63a308;
-  --success-color-light: #6faa1c;
+  --success-color-light: #73ac21;
   --success-color-very-light: #e0edce;
-  --success-color-dark: #5b9607;
+  --success-color-dark: #599307;
   --success-color-very-dark: #142102;
   --success-color-20: rgba(99, 163, 8, 0.2);
   --success-color-30: rgba(99, 163, 8, 0.3);
   --success-color-60: rgba(99, 163, 8, 0.6);
   --danger-color: #B61F29;
-  --danger-color-light: #bc313a;
+  --danger-color-light: #bd353e;
   --danger-color-very-light: #f0d2d4;
-  --danger-color-dark: #a71d26;
+  --danger-color-dark: #a41c25;
   --danger-color-very-dark: #240608;
   --danger-color-20: rgba(182, 31, 41, 0.2);
   --danger-color-30: rgba(182, 31, 41, 0.3);
   --danger-color-60: rgba(182, 31, 41, 0.6);
   --muted-color: #878787;
-  --muted-color-light: #919191;
+  --muted-color-light: #939393;
   --muted-color-very-light: #e7e7e7;
-  --muted-color-dark: #7c7c7c;
+  --muted-color-dark: #7a7a7a;
   --muted-color-very-dark: #1b1b1b;
   --muted-color-20: rgba(135, 135, 135, 0.2);
   --muted-color-30: rgba(135, 135, 135, 0.3);
   --muted-color-60: rgba(135, 135, 135, 0.6);
   --signal-color: #ECAF00;
-  --signal-color-light: #eeb514;
+  --signal-color-light: #eeb71a;
   --signal-color-very-light: #fbefcc;
-  --signal-color-dark: #d9a100;
+  --signal-color-dark: #d49e00;
   --signal-color-very-dark: #2f2300;
   --signal-color-20: rgba(236, 175, 0, 0.2);
   --signal-color-30: rgba(236, 175, 0, 0.3);
@@ -526,12 +526,22 @@ h6 {
   font-weight: var(--header-weight);
   font-family: var(--header-font);
 }
-h1 i.ph,
+h1 i.ph, h1 i.ph-fill, h1 i.ph-duotone,
 h2 i.ph,
+h2 i.ph-fill,
+h2 i.ph-duotone,
 h3 i.ph,
+h3 i.ph-fill,
+h3 i.ph-duotone,
 h4 i.ph,
+h4 i.ph-fill,
+h4 i.ph-duotone,
 h5 i.ph,
-h6 i.ph {
+h5 i.ph-fill,
+h5 i.ph-duotone,
+h6 i.ph,
+h6 i.ph-fill,
+h6 i.ph-duotone {
   font-size: 1.2em;
   margin-right: 0.5rem;
   vertical-align: text-bottom;
@@ -609,10 +619,19 @@ blockquote {
   color: var(--text-color);
 }
 
-i.ph {
+i.ph, i.ph-fill, i.ph-duotone {
   line-height: 1;
   font-size: 1.5em;
   vertical-align: -0.2em;
+}
+
+h1 i.ph-duotone,
+h2 i.ph-duotone,
+h3 i.ph-duotone,
+h4 i.ph-duotone,
+h5 i.ph-duotone,
+h6 i.ph-duotone {
+  color: var(--primary-color);
 }
 
 span.secondary {
@@ -670,7 +689,7 @@ i.ph {
   content: "\e30c";
 }
 
-.fa, .fas, .fa-solid, .far, .fa-regular, .fal, .fa-light, .fat, .fa-thin, .fad, .fa-duotone, .fab, .fa-brands, .ph, .ph-fill {
+.ph, .ph-fill, .ph-duotone {
   line-height: inherit;
 }
 
@@ -3369,6 +3388,164 @@ tbody:empty {
   padding: 0.5rem 1rem;
 }
 
+div.dt-layout-row label {
+  margin-bottom: 0;
+}
+
+div.dt-container div.dt-layout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0.75em 0;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-start {
+  justify-content: flex-start;
+  margin-right: auto;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-end {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell:empty {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) {
+    display: block;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell {
+    display: block;
+    text-align: center;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell > * {
+    margin: 0.5em 0;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell.dt-layout-start {
+    margin-right: 0;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell.dt-layout-end {
+    margin-left: 0;
+  }
+}
+div.dt-container div.dt-layout-start > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+div.dt-container div.dt-layout-end > *:not(:first-child) {
+  margin-left: 1em;
+}
+
+div.dt-container div.dt-layout-full {
+  width: 100%;
+}
+
+div.dt-container div.dt-layout-full > *:only-child {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.dt-container div.dt-layout-table > div {
+  display: block !important;
+}
+
+@media screen and (max-width: 767px) {
+  div.dt-container div.dt-layout-start > *:not(:last-child) {
+    margin-right: 0;
+  }
+  div.dt-container div.dt-layout-end > *:not(:first-child) {
+    margin-left: 0;
+  }
+}
+div.dt-button-collection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 0.75em 0;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background-color: white;
+  overflow: hidden;
+  z-index: 2002;
+  border-radius: 5px;
+  box-shadow: 3px 4px 10px 1px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+div.dt-button-collection .dt-button {
+  position: relative;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  float: none;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  margin: 0;
+  padding: 0.5em 1em;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+div.dt-button-collection .dt-button.dt-button-active {
+  background: none;
+  box-shadow: none;
+}
+
+div.dt-button-collection .dt-button.disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+div.dt-button-collection .dt-button:hover:not(.disabled) {
+  border: none;
+  background: rgba(153, 153, 153, 0.1);
+  box-shadow: none;
+}
+
+div.dt-button-collection .dt-button:focus {
+  outline-offset: -2px;
+}
+
+div.dt-button-collection .dt-button-active:after {
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  right: 1em;
+  display: inline-block;
+  content: "✓";
+  color: inherit;
+}
+
+.dt-button-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2001;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dt-button-down-arrow {
+  display: none;
+}
+
 /*
 -------------------------------------------------------------------------------
 11. Form elements [hm-11]
@@ -4743,7 +4920,7 @@ input[type=number] {
 }
 .input-group-prepend > .btn.muted:hover,
 .input-group-append > .btn.muted:hover {
-  border-color: #919191;
+  border-color: #939393;
 }
 .input-group-prepend > .btn.muted:focus, .input-group-prepend > .btn.muted.active,
 .input-group-append > .btn.muted:focus,
@@ -7528,6 +7705,11 @@ Badges
 .badge.pill {
   border-radius: 3rem;
   padding: 0.2rem 1rem;
+}
+.badge.large {
+  height: 3.2rem;
+  line-height: 3.2rem;
+  padding: 0 1.5rem;
 }
 
 /* Badge group */

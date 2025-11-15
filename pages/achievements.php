@@ -19,7 +19,7 @@
 
 <div class="content mt-0">
     <h1>
-        <i class="ph ph-trophy text-signal"></i>
+        <i class="ph-duotone ph-trophy text-signal"></i>
         <?= lang('Achievements', 'Errungenschaften') ?>
     </h1>
 

@@ -470,7 +470,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                                         <td>
                                             <div class="dropdown float-right">
                                                 <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="ph ph-trash text-danger"></i>
+                                                    <i class="ph-duotone ph-trash text-danger"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
                                                     <div class="content">

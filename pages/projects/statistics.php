@@ -75,7 +75,7 @@ $all = $osiris->projects->count();
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 
 <h1>
-    <i class="ph ph-chart-line-up" aria-hidden="true"></i>
+    <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
     <?= lang('Statistics', 'Statistiken') ?>
 </h1>
 
