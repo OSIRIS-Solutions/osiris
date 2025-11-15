@@ -198,7 +198,9 @@ Route::get('/migrate', function () {
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
-    echo "Please wait...<br>";
+    echo "<h1>" . lang('OSIRIS Migration', 'OSIRIS Migration') . "</h1>";
+    echo "<p>" . lang('Please wait...', 'Bitte warten...') . "</p>";
+    // flush output buffer
     flush();
     ob_flush();
 
@@ -310,6 +312,13 @@ Route::get('/migrate', function () {
         $rerender = true;
     }
 
+    if (version_compare($DBversion, '1.6.2', '<')) {
+        include BASEPATH . "/routes/migration/v1.6.2.php";
+        flush();
+        ob_flush();
+        $rerender = false;
+    }
+
     if ($rerender) {
         echo "<p>Rerender activities, please wait ...</p>";
         flush();
@@ -321,7 +330,7 @@ Route::get('/migrate', function () {
     // echo '<p>Rerender projects</p>';
     // renderAuthorUnitsProjects();
 
-    echo "<p>Done.</p>";
+    echo "<p>". lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
     $osiris->system->updateOne(
         ['key' => 'version'],
         ['$set' => ['value' => OSIRIS_VERSION]],

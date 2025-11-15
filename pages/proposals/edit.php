@@ -1232,11 +1232,10 @@ if ($is_subproject) {
             ?>
 
             <?php if (array_key_exists('nagoya', $fields) && $Settings->featureEnabled('nagoya')) {
-                $countries = $form['nagoya_countries'] ?? [];
+                // $countries = $form['nagoya_countries'] ?? [];
                 $nagoya = $form['nagoya'] ?? 'no';
-                include_once BASEPATH . "/php/Country.php";
+                // include_once BASEPATH . "/php/Country.php";
             ?>
-
                 <h5>
                     <?= lang('Nagoya Protocol') ?>
                 </h5>
@@ -1254,7 +1253,11 @@ if ($is_subproject) {
                         <label for="nagoya-no">No</label>
                     </div>
 
-                    <div id="ressource-nagoya" style="display: <?= ($nagoya == 'yes') ? 'block' : 'none' ?>;">
+                    <small class="text-muted">
+                        <?= lang('If you answer yes, you will be prompted to list all countries from which you plan to collect, obtain or utilize genetic resources (biological samples) after you have submitted the form.', 'Falls du ja auswählst, wirst du nach dem Absenden des Formulars aufgefordert, alle Länder aufzulisten, aus denen du planst, genetische Ressourcen (biologische Proben) zu sammeln, zu beschaffen oder zu nutzen.') ?>
+                    </small>
+
+                    <!-- <div id="ressource-nagoya" style="display: <?= ($nagoya == 'yes') ? 'block' : 'none' ?>;">
 
                         <b>
                             <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
@@ -1313,7 +1316,7 @@ if ($is_subproject) {
                         document.getElementById('nagoya-no').addEventListener('change', function() {
                             document.getElementById('ressource-nagoya').style.display = 'none';
                         });
-                    </script>
+                    </script> -->
 
                 </div>
             <?php } ?>

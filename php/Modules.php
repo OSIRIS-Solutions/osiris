@@ -903,7 +903,7 @@ class Modules
             $this->authorcount = count($form['authors']);
         }
 
-        if (!empty($form) && !empty($form['type'])) {
+        if (!empty($form) && !empty($form['type']) && !empty($form['subtype'])) {
             $typeArr = $this->DB->db->adminTypes->findOne(['id' => $form['subtype']]);
             if (!empty($typeArr) && !empty($typeArr['fields'])) {
                 $fields = DB::doc2Arr($typeArr['fields']);
