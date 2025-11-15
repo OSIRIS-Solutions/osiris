@@ -5,7 +5,7 @@ function renderActivities($filter = [])
     // global $Groups;
     global $Settings;
     $Format = new Document(true);
-    
+
     $renderLang = $Settings->get('render_language', lang('en', 'de'));
     $DB = new DB;
     $cursor = $DB->db->activities->find($filter);
@@ -63,8 +63,13 @@ function renderActivities($filter = [])
         $aoi_authors = array_filter($doc['authors'], function ($a) {
             return $a['aoi'] ?? false;
         });
+        if (empty($aoi_authors) && isset($doc['editors'])) {
+            $aoi_authors = array_filter(DB::doc2Arr($doc['editors']), function ($a) {
+                return $a['aoi'] ?? false;
+            });
+        }
         $values['affiliated'] = !empty($aoi_authors);
-        $values['affiliated_positions'] = $Format->getAffiliationTypes();
+        $values['affiliated_positions'] = $Format->getAffiliationTypes('authors');
         $values['cooperative'] = $Format->getCooperationType($values['affiliated_positions'], $doc['units'] ?? []);
         $DB->db->activities->updateOne(
             ['_id' => $id],

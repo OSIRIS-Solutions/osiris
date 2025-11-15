@@ -544,12 +544,12 @@ class Document extends Settings
         return Document::commalist($authors, $separator) . $append;
     }
 
-    public function getAffiliationTypes()
+    public function getAffiliationTypes($key = 'authors')
     {
-        if (!isset($this->doc['authors']) || empty($this->doc['authors'])) {
+        if (!isset($this->doc[$key]) || empty($this->doc[$key])) {
             return ['unspecified'];
         }
-        $authors = DB::doc2Arr($this->doc['authors']);
+        $authors = DB::doc2Arr($this->doc[$key]);
         $aoi_authors = array_filter($authors, function ($a) {
             return $a['aoi'] ?? false;
         });
