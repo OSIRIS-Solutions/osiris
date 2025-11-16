@@ -7,6 +7,10 @@
 
 ## Version 1.6.2
 
+Dieses Update bringt viele Verbesserungen in Performance, Formularlogik, LDAP-Synchronisation, Journals, Events, Reports und UI-Design. Hier die wichtigsten Änderungen:
+
+### Verbesserte Infrastruktur-Statistiken
+
 In diesem Update haben wir die Handhabung der Infrastruktur-Statistiken überarbeitet und ein Migrationsskript hinzugefügt, um bestehende Statistiken in ein neues Format zu überführen.
 
 Infrastruktur-Statistiken sind jetzt deutlich flexibler. Man konnte zuvor bereits verschiedene Statistikfelder definieren, aber diese wurden immer auf alle Infrastrukturen angewendet. Jetzt können Statistiken individuell für jede Infrastruktur definiert und verwaltet werden.
@@ -14,6 +18,95 @@ Infrastruktur-Statistiken sind jetzt deutlich flexibler. Man konnte zuvor bereit
 Außerdem ist es möglich, den Zeitraum für die Erhebung der Statistiken festzulegen, z.B. jährlich, vierteljährlich, monatlich oder unregelmäßig. Dies ermöglicht eine genauere und kontextbezogenere Erfassung der Daten. Bei der unregelmäßigen Erfassung wird das Datum der Erhebung gespeichert, sodass man im Nachhinein nachvollziehen kann, wann die Daten erfasst wurden. Wenn der Zeitpunkt der Erhebung erneut verwendet wird, dann werden die bestehenden Daten überschrieben.
 
 Diese neue Flexibilität ermöglicht es, die Statistiken besser an die spezifischen Anforderungen und Gegebenheiten der jeweiligen Infrastruktur anzupassen. Die Abbildungen wurden entsprechend angepasst, um die neuen Möglichkeiten zu unterstützen.
+
+Diese neuen Statistiken reflektieren sich auch in den Benachrichtigungen, die Reporter erhalten, wenn sie ihre Statistiken aktualisieren müssen. Irreguläre Statistiken werden dabei nicht in den Benachrichtigungen angezeigt, es wurde jedoch ein Shortcut zum Hinzufügen-Menü hinzugefügt, um die Erfassung zu erleichtern.
+
+
+
+### LDAP, Nutzer & Rollen
+
+**Guest Accounts**
+
+Neu: Vollständiges Management für Gastkonten
+- Anlegen, Bearbeiten & Löschen von Gastaccounts
+- Neue UI-Seiten zur Verwaltung
+- Gäste können sich anmelden, wenn LDAP fehlschlägt
+- Gastkonten können ein Ablaufdatum haben
+- Gastkonten bekommen automatisch die "guest"-Rolle zugewiesen. Diese wurde angelegt, hat aber per Default keine Rechte.
+
+**LDAP-Synchronisation**
+
+- UI der Synchronisation verbessert
+- Ein LDAP-Timeout führt dazu, dass die Synchronisation abgebrochen wird, sollte LDAP nicht erreichbar sein
+- Synchronisation von Einheiten wurde verbessert: 
+  - Synonyme für Einheiten hinzugefügt und berücksichtigt
+  - Wiederaktivierte Einheiten werden nicht gelöscht
+  - Bei neuen Einheiten wird jetzt nicht mehr angenommen, dass der aktuelle Tag der Start der Zugehörigkeit ist
+  - In der Synchronisations-Vorschau gibt es jetzt eine Warnung, wenn Einheiten nicht gefunden werden
+  - Neue Sync-Zeitstempel in der UI
+
+
+### Events
+- Events können jetzt zentral deaktiviert werden (Einstellungen > Features)
+- Länder wurden zu Events hinzugefügt
+- Event-Handling in "Aktivität hinzufügen" wurde verbessert: 
+  - Duplikate werden jetzt anhand von Titel und Startdatum erkannt und verhindert
+  - Fehlermeldungen werden jetzt korrekt ausgegeben (#253)
+  - Typauswahl und Länder wurden ebenfalls hinzugefügt
+  - Der Event-Select wurde deutlich verbessert, zeigt jetzt alle verfügbaren Events in einem durchsuchbaren Dropdown an
+  - Beim Auswählen eines Events werden automatisch Titel, Datum, Ort und Land vorausgefüllt. Dies wird jetzt im UI deutlicher kommuniziert mit einem Hinweistext und einer kurzzeitigen Markierung der Datenfelder
+
+
+### Formulare & Eingaben
+- Checkboxen in Personen-Feldern funktionieren wieder korrekt (#240)
+- Hilfe-Texte werden jetzt per Hover angezeigt und erscheinen links (#288)
+- Bei Forschungsinteressen werden jetzt auch deutsche Vorschläge korrekt gezeigt (#286)
+- Nutzer:innen können Aktivitäten nicht mehr highlighten, wenn sie keine Autor:innen sind (#290)
+- Wenn eine hervorgehobene Aktivität versteckt wird, wird sie nicht mehr über die Portfolio-API ausgeliefert
+- Das Label für Forschungsreisen erscheint jetzt auch, wenn Forschungsbereiche deaktiviert sind (#282)
+- Man kann jetzt auch Zeitschriften ohne ISSN hinzufügen
+- Magazine (nicht-standardisierte Journals) haben eine Vorschlagsliste bekommen
+- Journale können jetzt zentral umbenannt werden (Einstellungen > Features)
+- Bei Projektanträgen werden jetzt die Formularfelder von "Bewilligt" durch die Felder aus "Beantragt" vorausgefüllt
+- Wenn eine Aktivität über eine DOI geladen wird, deren Typ es aber nicht gibt, wird stattdessen jetzt eine Warnmeldung angezeigt, die den Nutzenden auffordert, einen passenden Typ auszuwählen
+- Affiliation-Check berücksichtigt nun auch affiliierte Herausgeber:innen (#292)
+- Das Default-Icon von Aktivitäten wurde angepasst
+- Der volle Link ist nun der Standard in Templates, der abgekürzte Link kann als "link-short" verwendet werden und ist Standard in der Tabellen-Ansicht
+
+
+### Warteschlange
+- Problem behoben: persönliche Warteschlange war nicht für alle Nutzer:innen sichtbar
+- Warteschlange wird nicht mehr versteckt, wenn Nutzer:innen eine Warteschlange-Warnung in ihren Benachrichtigungen haben
+- Gesamte Warteschlange nur noch für Editor-Berechtigte sichtbar
+- Editoren können jetzt trotzdem ihre eigene Warteschlange sehen
+
+### Reports & Report Builder
+- Neue Standardvariablen für Zeitfilter im Report Builder
+- Tabellen im Report Builder können jetzt sortiert werden
+- Zeitlimit im Report Builder verbessert, um langfristige Aktivitäten zu erfassen
+
+
+### Einstellungen, UI & Design
+- Rendering-Sprache als globale Einstellung hinzugefügt (#267)
+- Layout der Feature-Einstellung wurde angepasst und verbessert
+- Icons auf Duotone umgestellt
+- Typografie vereinheitlicht, Header mit Icons versehen
+
+### Tabellen & Downloads
+- DataTables auf Version 2.3.5 aktualisiert
+- Verbesserte Tabellenfunktionalität:
+  - bessere Stabilität
+  - mehr Download-Optionen (z.B. PDF), Excel mehr verbreitet (z.B. bei Journalen, Events, ...)
+  - Teilweise Drucken-Funktionalität hinzugefügt
+  - Seitenlänge kann angepasst werden
+  - Statistik-Tabellen haben jetzt ebenfalls Download- und Druck-Buttons
+
+### Weitere Verbesserungen
+- Man kann Forschungsbereiche jetzt inaktivieren
+- Backend-Admin erhält garantiert Admin-Rechte
+- Wenn Journal-Namen Klammern enthalten, bricht das Rendern nicht mehr ab
+- Icons in Hinweis- und Fehlermeldungen werden jetzt in allen Browsern korrekt angezeigt
+- Die Portfolio-Vorschau funktioniert jetzt auch mit HTTPS
 
 ---
 
