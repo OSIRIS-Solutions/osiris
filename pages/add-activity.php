@@ -197,9 +197,23 @@ function val($index, $default = '')
                     </div>
                 </div>
 
-                <div class="form-group mb-10">
-                    <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
-                    <input type="text" id="event-location" required class="form-control">
+                <div class="form-row row-eq-spacing">
+                    <div class="col">
+                        <label for="event-location" class="required"><?= lang('Location', 'Ort') ?></label>
+                        <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
+                    </div>
+                    <div class="col">
+                        <label for="event-country"><?= lang('Country', 'Land') ?></label>
+                        <select id="event-country" class="form-control" required>
+                            <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                            <!-- germany first -->
+                            <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
+                            <?php
+                            foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                                <option value="<?= $key ?>"><?= $value ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group mb-10">

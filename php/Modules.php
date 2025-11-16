@@ -1983,7 +1983,7 @@ class Modules
                 );
             ?>
 
-                <div class="data-module col-sm-<?= $width ?>" data-module="event-select">
+                <div class="data-module col-sm-12 d-flex" data-module="event-select">
                     <!-- <label class="floating-title"></label> -->
 
                     <!-- dropdown with scroll and search, onclick -->
@@ -2014,7 +2014,17 @@ class Modules
                             </div>
                         </div>
                     </div>
+                    <a href="#add-event" class="btn" id="add-event-button" data-toggle="tooltip" data-title="<?= lang('Add new event', 'Neue Veranstaltung hinzufügen') ?>">
+                        <i class="ph ph-calendar-plus ph-2x"></i>
+                    </a>
                     <style>
+                        #add-event-button {
+                            margin-left: 10px;
+                            height: auto;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
                         #event-select-button {
                             width: 100%;
                             text-align: left;

@@ -88,6 +88,12 @@ if ($topicsEnabled) {
                     <?= $conference['location'] ?>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('Country', 'Land') ?></span>
+                    <?= $DB->getCountry($conference['country'] ?? '', lang('name', 'name_de')) ?>
+                </td>
+            </tr>
             <?php if (isset($conference['type'])) { ?>
                 <tr>
                     <td>

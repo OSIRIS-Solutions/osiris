@@ -5115,6 +5115,10 @@ input[type=number] {
   left: unset;
 }
 
+.form-row.row-eq-spacing > [class^=col].floating-form:not(:first-child) label {
+  left: 1rem;
+}
+
 select.form-control[multiple] option {
   padding: 0.5rem 0.8rem;
   margin: 0 -0.8rem;
