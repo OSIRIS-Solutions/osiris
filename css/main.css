@@ -5704,8 +5704,10 @@ Alerts
   font-family: "Phosphor";
   font-size: 3rem;
   color: var(--primary-color);
-  margin-left: -4rem;
-  align-self: anchor-center;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
 }
 .alert p:first-of-type {
   margin-top: 0;
