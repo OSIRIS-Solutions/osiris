@@ -1586,6 +1586,9 @@ function projectTimeline(selector, data = {}) {
                 .style('font-weight', '600')
                 .style('font-size', "5px")
                 .text((d) => d.title)
+
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);
@@ -1648,6 +1651,9 @@ function coauthorNetwork(selector, data = {}) {
                     row.append('span').text(d.name)
                 }
             }
+
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
 
         },
         error: function (response) {
@@ -1770,6 +1776,8 @@ function wordcloud(selector, data = {}) {
                     });
             }
 
+            var svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);
@@ -1777,6 +1785,96 @@ function wordcloud(selector, data = {}) {
     });
 }
 
+function registerDownloadHandlers(svgNode, selector) {
+    const filename = selector.replace('#', '');
+    // Add download buttons
+    const container = $(selector);
+    // container.addClass('position-relative');
+    const downloadDiv = $(`<div class="download-buttons">
+        <button id="download-` + filename + `-svg" class="btn small link" title="${lang('Download SVG', 'SVG herunterladen')}">
+            <i class="ph ph-file-svg"></i> SVG
+        </button>
+        <button id="download-` + filename + `-png" class="btn small link" title="${lang('Download PNG', 'PNG herunterladen')}">
+            <i class="ph ph-file-png"></i> PNG
+        </button>
+    </div>`);
+    container.append(downloadDiv);
+    // Download SVG
+    $('#download-' + filename + '-svg').off('click').on('click', function () {
+        // serialize SVG
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgNode);
+
+        // add missing namespaces if necessary
+        if (!source.match(/^<svg[^>]+xmlns="/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns="http://www.w3.org/2000/svg"'
+            );
+        }
+        if (!source.match(/xmlns:xlink=/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'
+            );
+        }
+
+        const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename + '.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // Download PNG
+    $('#download-' + filename + '-png').off('click').on('click', function () {
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgNode);
+
+        // ensure xmlns is present
+        if (!source.match(/^<svg[^>]+xmlns="/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns="http://www.w3.org/2000/svg"'
+            );
+        }
+
+        const svg64 = window.btoa(unescape(encodeURIComponent(source)));
+        const imageSrc = 'data:image/svg+xml;base64,' + svg64;
+
+        const img = new Image();
+        img.onload = function () {
+            // canvas size should match your viewBox
+            const canvas = document.createElement('canvas');
+            // canvas.width = 1600;
+            // canvas.height = 1000;
+            const viewBox = svgNode.getAttribute('viewBox').split(' ');
+            canvas.width = parseInt(viewBox[2])*2;
+            canvas.height = parseInt(viewBox[3])*2;
+            const ctx = canvas.getContext('2d');
+
+            // optional: white background
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(img, 0, 0);
+
+            const pngData = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = pngData;
+            a.download = filename + '.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+        img.src = imageSrc;
+    });
+}
 
 function userTable(selector, data = {}) {
     data['table'] = true
@@ -1986,6 +2084,8 @@ function timelineChart(filter = {}, props = {}) {
                 });
             }
             timeline(year, 0, typeInfo, events);
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);

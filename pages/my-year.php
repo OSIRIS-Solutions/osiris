@@ -119,7 +119,18 @@ if (!$Settings->featureEnabled('coins')) {
 }
 ?>
 
+<style>
+    .download-buttons {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+    }
 
+    #timeline-container {
+        position: relative;
+    }
+</style>
 
 <div class="modal modal-lg" id="coins" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

@@ -22,6 +22,15 @@ Diese neue Flexibilität ermöglicht es, die Statistiken besser an die spezifisc
 Diese neuen Statistiken reflektieren sich auch in den Benachrichtigungen, die Reporter erhalten, wenn sie ihre Statistiken aktualisieren müssen. Irreguläre Statistiken werden dabei nicht in den Benachrichtigungen angezeigt, es wurde jedoch ein Shortcut zum Hinzufügen-Menü hinzugefügt, um die Erfassung zu erleichtern.
 
 
+### Tabellen & Downloads
+- Verbesserte Tabellenfunktionalität:
+  - bessere Stabilität
+  - mehr Download-Optionen (z.B. PDF), Excel mehr verbreitet (z.B. bei Journalen, Events, ...)
+  - Teilweise Drucken-Funktionalität hinzugefügt
+  - Seitenlänge kann angepasst werden
+  - Statistik-Tabellen haben jetzt ebenfalls Download- und Druck-Buttons
+- Viele Abbildungen lassen sich jetzt ebenfalls als PNG oder SVG herunterladen (z.B. Konfetti-Timelines, Koautoren-Netzwerke, Wordclouds), weitere folgen in kommenden Versionen
+
 
 ### LDAP, Nutzer & Rollen
 
@@ -91,15 +100,6 @@ Neu: Vollständiges Management für Gastkonten
 - Layout der Feature-Einstellung wurde angepasst und verbessert
 - Icons auf Duotone umgestellt
 - Typografie vereinheitlicht, Header mit Icons versehen
-
-### Tabellen & Downloads
-- DataTables auf Version 2.3.5 aktualisiert
-- Verbesserte Tabellenfunktionalität:
-  - bessere Stabilität
-  - mehr Download-Optionen (z.B. PDF), Excel mehr verbreitet (z.B. bei Journalen, Events, ...)
-  - Teilweise Drucken-Funktionalität hinzugefügt
-  - Seitenlänge kann angepasst werden
-  - Statistik-Tabellen haben jetzt ebenfalls Download- und Druck-Buttons
 
 ### Weitere Verbesserungen
 - Man kann Forschungsbereiche jetzt inaktivieren
