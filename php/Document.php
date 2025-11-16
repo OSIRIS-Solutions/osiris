@@ -334,7 +334,7 @@ class Document extends Settings
 
     function activity_icon($tooltip = true)
     {
-        $icon = 'placeholder';
+        $icon = 'folder-open';
 
         if (!empty($this->subtypeArr) && isset($this->subtypeArr['icon'])) {
             $icon = $this->subtypeArr['icon'];

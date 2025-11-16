@@ -298,7 +298,7 @@ Route::get('/admin/types/new', function () {
     $st = $t;
     $type = [
         "id" => '',
-        "icon" => $type['icon'] ?? 'placeholder',
+        "icon" => $type['icon'] ?? 'folder-open',
         "name" => '',
         "name_de" => '',
         "new" => true,

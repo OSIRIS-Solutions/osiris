@@ -264,7 +264,7 @@ class Settings
             'name' => $type,
             'name_de' => $type,
             'color' => '#cccccc',
-            'icon' => 'placeholder'
+            'icon' => 'folder-open'
         ];
     }
 
@@ -317,7 +317,7 @@ class Settings
     function icon($cat, $type = null, $tooltip = true)
     {
         $act = $this->getActivity($cat, $type);
-        $icon = $act['icon'] ?? 'placeholder';
+        $icon = $act['icon'] ?? 'folder-open';
 
         $icon = "<i class='ph text-$cat ph-$icon'></i>";
         if ($tooltip) {
