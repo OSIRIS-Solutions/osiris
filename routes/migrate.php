@@ -195,6 +195,8 @@ Route::get('/install', function () {
 
 Route::get('/migrate', function () {
     set_time_limit(6000);
+    // show all errors for debugging
+    error_reporting(E_ALL);
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
