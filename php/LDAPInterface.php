@@ -443,7 +443,7 @@ class LDAPInterface
                 // first get the current units
                 $currentUnits = [];
                 $pastUnits = [];
-                $currentUser = $osiris->persons->findOne(['username' => $username], ['projection' => ['units' => 1]]);
+                $currentUser = $osiris->persons->findOne(['$or' => [['username' => $username], ['uniqueid' => $userData['uniqueid']]]], ['projection' => ['units' => 1]]);
                 if (!empty($currentUser)) {
                     foreach ($currentUser['units'] as $unit) {
                         // check if unit is in the past
@@ -499,15 +499,16 @@ class LDAPInterface
                     // 2. check if a new unit is found
                     if (!empty($new)) {
                         // check if the unit is already in the current units
-                        foreach ($new as $newUnit) {
-                            if (!in_array($newUnit, $old)) {
+                        foreach ($newUnits as $u) {
+
+                            if (!in_array($u['unit'], $old)) {
                                 // unit is new
-                                $updatedUnits[$newUnit] = [
+                                $updatedUnits[$u['unit']] = [
                                     'id' => uniqid(),
-                                    'unit' => $newUnit,
-                                    'start' => date('Y-m-d'),
+                                    'unit' => $u,
+                                    'start' => $u['start'] ?? date('Y-m-d'),
                                     'end' => null,
-                                    'scientific' => true
+                                    'scientific' => $u['scientific'] ?? null,
                                 ];
                             }
                         }
