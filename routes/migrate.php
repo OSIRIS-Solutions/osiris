@@ -205,7 +205,14 @@ Route::get('/migrate', function () {
     ob_flush();
 
     // make sure that text index is created
-    $osiris->activities->createIndex(['rendered.plain' => 'text']);
+    // check if there is an language field that might cause trouble
+    $osiris->activities->createIndex(
+        ['rendered.plain' => 'text'],
+        [
+            'default_language'  => 'en',
+            'language_override' => 'language1234567', // non-existing field to avoid issues
+        ]
+    );
 
     $DBversion = $osiris->system->findOne(['key' => 'version']);
 
@@ -330,7 +337,7 @@ Route::get('/migrate', function () {
     // echo '<p>Rerender projects</p>';
     // renderAuthorUnitsProjects();
 
-    echo "<p>". lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
+    echo "<p>" . lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
     $osiris->system->updateOne(
         ['key' => 'version'],
         ['$set' => ['value' => OSIRIS_VERSION]],
