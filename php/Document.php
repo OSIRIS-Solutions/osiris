@@ -1119,10 +1119,11 @@ class Document extends Settings
                 return $this->getVal('lecture_type');
             case "link": // ["link"],
             case "link-full":
+            case "link-short":
             case "software-link": // ["link"],
                 $val = $this->getVal('link');
                 if (empty($val) || $val == $default) return $default;
-                if ($module == 'link-full') {
+                if ($module != 'link-short' || $module == 'link-full' || $this->usecase != 'list') {
                     return "<a target='_blank' href='$val'>$val</a>";
                 }
                 $short_url = str_replace(['https://', 'http://'], '', $val);
