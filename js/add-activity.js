@@ -1597,10 +1597,10 @@ function getDate(element) {
 
 function selectEvent(id, event, start, end, location) {
     $('#conference_id').val(id)
-    $('#conference').val(event)
-    $('#location').val(location)
-    $('#date_start').val(start)
-    $('#date_end').val(end)
+    $('#conference').val(event).addClass('is-valid')
+    $('#location').val(location).addClass('is-valid')
+    $('#date_start').val(start).addClass('is-valid')
+    $('#date_end').val(end).addClass('is-valid')
 
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
 
@@ -1608,6 +1608,14 @@ function selectEvent(id, event, start, end, location) {
         $('#event-select-dropdown').removeClass('show')
     }
     toastSuccess(lang('Event "'+event+'" selected.', 'Veranstaltung "'+event+'" ausgewählt.'))
+
+    // remove is_valid after 3 seconds
+    setTimeout(function () {
+        $('#conference').removeClass('is-valid')
+        $('#location').removeClass('is-valid')
+        $('#date_start').removeClass('is-valid')
+        $('#date_end').removeClass('is-valid')
+    }, 3000);
 }
 
 function addEvent() {

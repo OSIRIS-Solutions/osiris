@@ -1998,7 +1998,7 @@ class Modules
                             <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
-                            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterEvents();" class="form-control">
+                            <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
                                     <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>'); return false;">
@@ -2073,66 +2073,6 @@ class Modules
                             }
                         }
                     </script>
-
-
-
-                    <style>
-                        #event-select-container {
-                            border-radius: var(--border-radius);
-                            position: relative;
-                            margin: 0 -2rem;
-                        }
-
-                        /* white scrim */
-                        #event-select-container::after {
-                            content: '';
-                            position: absolute;
-                            right: 0;
-                            bottom: 0;
-                            width: 2rem;
-                            height: 100%;
-                            background: linear-gradient(270deg, #fff, #ffffff 30%, transparent);
-                            z-index: 1;
-                        }
-
-                        #event-select-container::before {
-                            content: '';
-                            position: absolute;
-                            left: 0;
-                            bottom: 0;
-                            width: 2rem;
-                            height: 100%;
-                            background: linear-gradient(90deg, #fff, #ffffff 30%, transparent);
-                            z-index: 1;
-                        }
-
-                        #event-select-btns {
-                            overflow-x: auto;
-                            padding: 0 2rem;
-                        }
-
-                        #event-select-btns .btn {
-                            width: 100%;
-                            text-align: left;
-                            display: flex;
-                            flex-direction: column;
-                            height: auto;
-                            line-height: 1.6;
-                            padding: .5rem 1.5rem;
-                            justify-content: center;
-                        }
-
-                        .btn-group .btn:not(.disabled):not(:disabled):focus,
-                        .btn-group .btn:not(.disabled):not(:disabled).active {
-                            box-shadow: none;
-                        }
-
-                        #event-select-btns .btn small {
-                            display: block;
-                            font-size: 0.8em;
-                            color: var(--muted-color);
-                        }
-                    </style>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
