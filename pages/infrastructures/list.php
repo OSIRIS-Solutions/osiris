@@ -230,10 +230,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $topic_id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $topic_id ?>" onclick="filterInfra(this, '<?= $topic_id ?>', 7)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">

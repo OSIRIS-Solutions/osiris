@@ -471,7 +471,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find();
+        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);
@@ -489,7 +489,7 @@ class Settings
                         $subtitle = 'data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '"';
                     }
                 ?>
-                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
+                    <div class="pill-checkbox <?= ($topic['inactive'] ?? false) ? 'inactive' : '' ?>" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
                         <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
@@ -515,7 +515,7 @@ class Settings
             if (!empty($topic['subtitle'])) {
                 $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
             }
-            $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $html .= "<a class='topic-pill ".($topic['inactive'] ?? false ? 'inactive' : '')."' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
             if (!empty($topic['subtitle'])) {
                 $html .= '</span>';
             }

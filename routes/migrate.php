@@ -206,16 +206,6 @@ Route::get('/migrate', function () {
     flush();
     ob_flush();
 
-    // make sure that text index is created
-    // check if there is an language field that might cause trouble
-    // $osiris->activities->createIndex(
-    //     ['rendered.plain' => 'text'],
-    //     [
-    //         'default_language'  => 'en',
-    //         'language_override' => 'language1234567', // non-existing field to avoid issues
-    //     ]
-    // );
-
     $DBversion = $osiris->system->findOne(['key' => 'version']);
 
     // check if DB version is current version

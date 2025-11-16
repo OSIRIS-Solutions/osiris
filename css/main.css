@@ -13082,7 +13082,6 @@ a.concept:hover {
 .pill-checkbox {
   display: inline-block;
 }
-
 .pill-checkbox label {
   display: inline-block;
   /* background-color: var(--primary-color); */
@@ -13093,26 +13092,36 @@ a.concept:hover {
   color: var(--primary-color);
   cursor: pointer;
 }
-
-.pill-checkbox input {
-  display: none;
-}
-
-.pill-checkbox input:checked + label {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
 .pill-checkbox label::before {
   content: "\e69a";
   font-family: "Phosphor";
   display: inline-block;
   margin-right: 0.5rem;
 }
-
+.pill-checkbox input {
+  display: none;
+}
+.pill-checkbox input:checked + label {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
 .pill-checkbox input:checked + label::before {
   content: "\e182";
+}
+.pill-checkbox.inactive {
+  opacity: 0.5;
+}
+.pill-checkbox.inactive label {
+  overflow: clip;
+  width: 2.8rem;
+  white-space: nowrap;
+}
+.pill-checkbox.inactive:hover {
+  opacity: 0.7;
+}
+.pill-checkbox.inactive:hover label {
+  width: auto;
 }
 
 .topic-pill {
@@ -13127,6 +13136,9 @@ a.concept:hover {
   align-items: center;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.topic-pill.inactive {
+  opacity: 0.6;
 }
 .topic-pill:hover {
   color: white;
