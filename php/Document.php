@@ -39,6 +39,8 @@ class Document extends Settings
     public $custom_fields = [];
     public $custom_field_values = [];
 
+    private $lang = 'en';
+
     public $templates = [
         "affiliation" => ["affiliation"],
         "authors" => ["authors"],
@@ -137,6 +139,8 @@ class Document extends Settings
         $fields = $this->DB->db->adminFields->find()->toArray();
         $this->custom_fields = array_column($fields, null, 'id');
         $this->custom_field_values = array_column($fields, 'values', 'id');
+
+        $this->lang = lang('en', 'de');
     }
 
     public function setDocument($doc)
@@ -152,6 +156,13 @@ class Document extends Settings
         foreach (($this->subtypeArr['modules'] ?? array()) as $m) {
             $this->modules[] = str_replace('*', '', $m);
         }
+    }
+
+    private function lang($en, $de = null)
+    {
+        if ($de === null) return $en;
+        if ($this->lang == "de") return $de;
+        return $en;
     }
 
     public function schema()
@@ -323,7 +334,7 @@ class Document extends Settings
 
     function activity_icon($tooltip = true)
     {
-        $icon = 'placeholder';
+        $icon = 'folder-open';
 
         if (!empty($this->subtypeArr) && isset($this->subtypeArr['icon'])) {
             $icon = $this->subtypeArr['icon'];
@@ -346,14 +357,14 @@ class Document extends Settings
 
     function activity_subtype()
     {
-        $name = lang("Other", "Sonstiges");
+        $name = $this->lang("Other", "Sonstiges");
         if (!empty($this->subtypeArr) && isset($this->subtypeArr['name'])) {
-            $name = lang(
+            $name = $this->lang(
                 $this->subtypeArr['name'],
                 $this->subtypeArr['name_de'] ?? $this->subtypeArr['name']
             );
         } elseif (!empty($this->typeArr) && isset($this->typeArr['name'])) {
-            $name = lang(
+            $name = $this->lang(
                 $this->typeArr['name'],
                 $this->typeArr['name_de'] ?? $this->typeArr['name']
             );
@@ -364,9 +375,9 @@ class Document extends Settings
     }
     function activity_type()
     {
-        $name = lang("Other", "Sonstiges");
+        $name = $this->lang("Other", "Sonstiges");
         if (!empty($this->typeArr) && isset($this->typeArr['name'])) {
-            $name = lang(
+            $name = $this->lang(
                 $this->typeArr['name'],
                 $this->typeArr['name_de'] ?? $this->typeArr['name']
             );
@@ -533,12 +544,12 @@ class Document extends Settings
         return Document::commalist($authors, $separator) . $append;
     }
 
-    public function getAffiliationTypes()
+    public function getAffiliationTypes($key = 'authors')
     {
-        if (!isset($this->doc['authors']) || empty($this->doc['authors'])) {
+        if (!isset($this->doc[$key]) || empty($this->doc[$key])) {
             return ['unspecified'];
         }
-        $authors = DB::doc2Arr($this->doc['authors']);
+        $authors = DB::doc2Arr($this->doc[$key]);
         $aoi_authors = array_filter($authors, function ($a) {
             return $a['aoi'] ?? false;
         });
@@ -662,24 +673,23 @@ class Document extends Settings
         return $from . '-' . $to;
     }
 
-
-    public static function format_month($month)
+    public function format_month($month)
     {
         if (empty($month)) return '';
         $month = intval($month);
         $array = [
-            1 => lang("January", "Januar"),
-            2 => lang("February", "Februar"),
-            3 => lang("March", "März"),
-            4 => lang("April"),
-            5 => lang("May", "Mai"),
-            6 => lang("June", "Juni"),
-            7 => lang("July", "Juli"),
-            8 => lang("August"),
-            9 => lang("September"),
-            10 => lang("October", "Oktober"),
-            11 => lang("November"),
-            12 => lang("December", "Dezember")
+            1 => $this->lang("January", "Januar"),
+            2 => $this->lang("February", "Februar"),
+            3 => $this->lang("March", "März"),
+            4 => $this->lang("April"),
+            5 => $this->lang("May", "Mai"),
+            6 => $this->lang("June", "Juni"),
+            7 => $this->lang("July", "Juli"),
+            8 => $this->lang("August"),
+            9 => $this->lang("September"),
+            10 => $this->lang("October", "Oktober"),
+            11 => $this->lang("November"),
+            12 => $this->lang("December", "Dezember")
         ];
         return $array[$month];
     }
@@ -746,7 +756,7 @@ class Document extends Settings
         return $issues;
     }
 
-    public static function translateCategory($cat)
+    public function translateCategory($cat)
     {
         switch ($cat) {
             case 'doctoral thesis':
@@ -762,29 +772,29 @@ class Document extends Settings
             case 'student internship':
                 return "Schülerpraktikum";
             case 'lecture':
-                return lang('Lecture', 'Vorlesung');
+                return $this->lang('Lecture', 'Vorlesung');
             case 'practical':
-                return lang('Practical course', 'Praktikum');
+                return $this->lang('Practical course', 'Praktikum');
             case 'practical-lecture':
-                return lang('Lecture and practical course', 'Vorlesung und Praktikum');
+                return $this->lang('Lecture and practical course', 'Vorlesung und Praktikum');
             case 'lecture-seminar':
-                return lang('Lecture and seminar', 'Vorlesung und Seminar');
+                return $this->lang('Lecture and seminar', 'Vorlesung und Seminar');
             case 'practical-seminar':
-                return lang('Practical course and seminar', 'Praktikum und Seminar');
+                return $this->lang('Practical course and seminar', 'Praktikum und Seminar');
             case 'lecture-practical-seminar':
-                return lang('Lecture, seminar, practical course', 'Vorlesung, Seminar und Praktikum');
+                return $this->lang('Lecture, seminar, practical course', 'Vorlesung, Seminar und Praktikum');
             case 'seminar':
-                return lang('Seminar');
+                return $this->lang('Seminar');
             case 'other':
-                return lang('Other', 'Sonstiges');
+                return $this->lang('Other', 'Sonstiges');
             case "doctoral student":
-                return lang('Doctoral Student', 'Doktorand:in');
+                return $this->lang('Doctoral Student', 'Doktorand:in');
             case "master student":
-                return lang('Master Student', 'Masterstudent');
+                return $this->lang('Master Student', 'Masterstudent');
             case "bachelor student":
-                return lang('Bachelor Student', 'Bachelorstudent');
+                return $this->lang('Bachelor Student', 'Bachelorstudent');
             case "intern":
-                return lang('Intern', 'Praktikant');
+                return $this->lang('Intern', 'Praktikant');
             default:
                 return $cat;
         }
@@ -793,14 +803,14 @@ class Document extends Settings
     public function getSupervisorRole($role)
     {
         $roles = [
-            'supervisor' => lang('Supervisor', 'Betreuer'),
-            'first-reviewer' => lang('First reviewer', 'Erster Gutachter'),
-            'second-reviewer' => lang('Second reviewer', 'Zweiter Gutachter'),
-            'third-reviewer' => lang('Third reviewer', 'Dritter Gutachter'),
-            'committee-member' => lang('Committee member', 'Ausschussmitglied'),
-            'chair' => lang('Chair', 'Vorsitzender'),
-            'mentor' => lang('Mentor', 'Mentor'),
-            'other' => lang('Other', 'Sonstiges')
+            'supervisor' => $this->lang('Supervisor', 'Betreuer'),
+            'first-reviewer' => $this->lang('First reviewer', 'Erster Gutachter'),
+            'second-reviewer' => $this->lang('Second reviewer', 'Zweiter Gutachter'),
+            'third-reviewer' => $this->lang('Third reviewer', 'Dritter Gutachter'),
+            'committee-member' => $this->lang('Committee member', 'Ausschussmitglied'),
+            'chair' => $this->lang('Chair', 'Vorsitzender'),
+            'mentor' => $this->lang('Mentor', 'Mentor'),
+            'other' => $this->lang('Other', 'Sonstiges')
         ];
         if (isset($roles[$role])) {
             return $roles[$role];
@@ -1010,13 +1020,13 @@ class Document extends Settings
             case "date-range-ongoing":
                 if (!empty($this->doc['start'])) {
                     if (!empty($this->doc['end'])) {
-                        $start = Document::format_month($this->doc['start']['month']) . ' ' . $this->doc['start']['year'];
-                        $end = Document::format_month($this->doc['end']['month']) . ' ' . $this->doc['end']['year'];
+                        $start = $this->format_month($this->doc['start']['month']) . ' ' . $this->doc['start']['year'];
+                        $end = $this->format_month($this->doc['end']['month']) . ' ' . $this->doc['end']['year'];
                         if ($start == $end) return $start;
-                        $date = lang("from ", "von ") . $start . lang(" until ", " bis ") . $end;
+                        $date = $this->lang("from ", "von ") . $start . $this->lang(" until ", " bis ") . $end;
                     } else {
-                        $date = lang("since ", "seit ");
-                        $date .= Document::format_month($this->doc['start']['month']) . ' ' . $this->doc['start']['year'];
+                        $date = $this->lang("since ", "seit ");
+                        $date .= $this->format_month($this->doc['start']['month']) . ' ' . $this->doc['start']['year'];
                     }
                     return $date;
                 }
@@ -1024,7 +1034,7 @@ class Document extends Settings
             case "year": // ["year", "month", "day"],
                 return $this->getVal('year');
             case "month": // ["year", "month", "day"],
-                return Document::format_month($this->getVal('month'));
+                return $this->format_month($this->getVal('month'));
             case "details": // ["details"],
                 return $this->getVal('details');
             case "doctype": // ["doc_type"],
@@ -1109,10 +1119,11 @@ class Document extends Settings
                 return $this->getVal('lecture_type');
             case "link": // ["link"],
             case "link-full":
+            case "link-short":
             case "software-link": // ["link"],
                 $val = $this->getVal('link');
                 if (empty($val) || $val == $default) return $default;
-                if ($module == 'link-full') {
+                if ($module != 'link-short' || $module == 'link-full' || $this->usecase != 'list') {
                     return "<a target='_blank' href='$val'>$val</a>";
                 }
                 $short_url = str_replace(['https://', 'http://'], '', $val);
@@ -1230,19 +1241,19 @@ class Document extends Settings
                     case 'article':
                         return "Journal article (refereed)";
                     case 'book':
-                        return lang('Book', 'Buch');
+                        return $this->lang('Book', 'Buch');
                     case 'chapter':
-                        return lang('Book chapter', 'Buchkapitel');
+                        return $this->lang('Book chapter', 'Buchkapitel');
                     case 'preprint':
                         return "Preprint (non refereed)";
                     case 'conference':
-                        return lang('Conference preceedings', 'Konferenzbeitrag');
+                        return $this->lang('Conference preceedings', 'Konferenzbeitrag');
                     case 'magazine':
-                        return lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)');
+                        return $this->lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)');
                     case 'dissertation':
-                        return lang('Thesis');
+                        return $this->lang('Thesis');
                     case 'others':
-                        return lang('Others', 'Weiteres');
+                        return $this->lang('Others', 'Weiteres');
                     default:
                         return $this->getVal('pubtype');
                 }
@@ -1277,19 +1288,19 @@ class Document extends Settings
             case "thesis": // ["category"],
                 switch ($this->getVal('thesis')) {
                     case 'doctor':
-                        return lang('Doctoral Thesis', 'Doktorarbeit');
+                        return $this->lang('Doctoral Thesis', 'Doktorarbeit');
                     case 'master':
-                        return lang('Master Thesis', 'Masterarbeit');
+                        return $this->lang('Master Thesis', 'Masterarbeit');
                     case 'bachelor':
-                        return lang('Bachelor Thesis', 'Bachelorarbeit');
+                        return $this->lang('Bachelor Thesis', 'Bachelorarbeit');
                     case 'thesis': // ["category"],
-                        return lang('Thesis', 'Abschlussarbeit');
+                        return $this->lang('Thesis', 'Abschlussarbeit');
                     case 'diploma':
-                        return lang('Diploma Thesis', 'Diplomarbeit');
+                        return $this->lang('Diploma Thesis', 'Diplomarbeit');
                     case 'habilitation':
-                        return lang('Habilitation Thesis', 'Habilitationsschrift');
+                        return $this->lang('Habilitation Thesis', 'Habilitationsschrift');
                     default:
-                        return lang('Thesis', 'Abschlussarbeit');
+                        return $this->lang('Thesis', 'Abschlussarbeit');
                 }
             case "teaching-category": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
@@ -1320,24 +1331,24 @@ class Document extends Settings
             case "country":
             case "nationality":
                 $code = $this->getVal('country');
-                return $this->DB->getCountry($code, lang('name', 'name_de'));
+                return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
             case 'countries':
                 $countries = DB::doc2Arr($this->getVal('countries', []));
                 if (empty($countries)) return '';
                 $country_names = array_map(function ($code) {
-                    return $this->DB->getCountry($code, lang('name', 'name_de'));
+                    return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
                 }, $countries);
                 return implode(', ', $country_names);
             case "gender":
                 switch ($this->getVal('gender')) {
                     case 'f':
-                        return lang('female', 'weiblich');
+                        return $this->lang('female', 'weiblich');
                     case 'm':
-                        return lang('male', 'männlich');
+                        return $this->lang('male', 'männlich');
                     case 'd':
-                        return lang('non-binary', 'divers');
+                        return $this->lang('non-binary', 'divers');
                     case '-':
-                        return lang('not specified', 'keine Angabe');
+                        return $this->lang('not specified', 'keine Angabe');
                     default:
                         return '';
                 }
@@ -1362,14 +1373,14 @@ class Document extends Settings
                     $val = $this->getVal($module, $default);
                 }
                 // only in german because standard is always english
-                if (lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
+                if ($this->lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
                     if (is_array($val)) {
                         $values = [];
                         foreach ($val as $v) {
                             // check if the value is in the custom field values
                             foreach ($this->custom_field_values[$module] as $field) {
                                 if ($v == $field[0] ?? '') {
-                                    $values[] = lang(...$field);
+                                    $values[] = $this->lang(...$field);
                                     continue 2;
                                 }
                             }
@@ -1378,7 +1389,7 @@ class Document extends Settings
                         return implode(", ", $values);
                     } else {
                         foreach ($this->custom_field_values[$module] as $field) {
-                            if ($val == $field[0] ?? '') return lang(...$field);
+                            if ($val == $field[0] ?? '') return $this->lang(...$field);
                         }
                     }
                 }
@@ -1389,7 +1400,7 @@ class Document extends Settings
                     if (!isset($field['name'])) {
                         $field['name'] = $module;
                     }
-                    $label = '[' . lang($field['name'], $field['name_de'] ?? null) . ']';
+                    $label = '[' . $this->lang($field['name'], $field['name_de'] ?? null) . ']';
                     return $val ? $label : '';
                 }
                 if (is_array($val)) return implode(", ", $val);
@@ -1413,7 +1424,7 @@ class Document extends Settings
         return $val;
     }
 
-    public function format()
+    public function format($lang = null)
     {
         $this->full = true;
         if (empty($this->usecase)) {
@@ -1421,18 +1432,27 @@ class Document extends Settings
         }
         $template = $this->subtypeArr['template']['print'] ?? '{title}';
 
+        if ($lang !== null) {
+            $this->lang = $lang;
+        }
         $line = $this->template($template);
         if (!empty($this->appendix)) {
             $line .= "<br><small style='color:#878787;'>" . $this->appendix . "</small>";
         }
+        if ($lang !== null) {
+            $this->lang = lang('en', 'de');
+        }
         return $line;
     }
 
-    public function formatShort($link = true)
+    public function formatShort($link = true, $lang = null)
     {
         $this->full = false;
         if (empty($this->usecase)) {
             $this->usecase = 'web';
+        }
+        if ($lang !== null) {
+            $this->lang = $lang;
         }
         $line = "";
         $title = $this->getTitle();
@@ -1456,14 +1476,19 @@ class Document extends Settings
         $line .= $this->getSubtitle();
         $line .= $this->get_field('file-icons');
         $line .= "</small>";
-
+        if ($lang !== null) {
+            $this->lang = lang('en', 'de');
+        }
         return $line;
     }
 
-    public function formatPortfolio()
+    public function formatPortfolio($lang = null)
     {
         $this->full = false;
         $this->usecase = 'portal';
+        if ($lang !== null) {
+            $this->lang = $lang;
+        }
         $line = "";
         $title = $this->getTitle();
 
@@ -1479,7 +1504,9 @@ class Document extends Settings
         $line .= "<br><small class='text-muted d-block'>";
         $line .= $this->getSubtitle();
         $line .= "</small>";
-
+        if ($lang !== null) {
+            $this->lang = lang('en', 'de');
+        }
         return $line;
     }
 

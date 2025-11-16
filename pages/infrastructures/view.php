@@ -53,6 +53,28 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+
+// $statistics
+
+$stat_frequency = $infrastructure['statistic_frequency'] ?? 'annual';
+
+$statistic_fields = DB::doc2Arr($infrastructure['statistic_fields'] ?? ['internal', 'national', 'international', 'hours', 'accesses']);
+$fields = $Vocabulary->getVocabulary('infrastructure-stats');
+$fields = DB::doc2Arr($fields['values'] ?? []);
+$fields = array_filter($fields, function ($field) use ($statistic_fields) {
+    return in_array($field['id'], $statistic_fields);
+});
+// get statistics ordered by year desc that are in the selected fields
+$statistics = $osiris->infrastructureStats->find(
+    [
+        'infrastructure' => $infrastructure['id'],
+        'field' => ['$in' => $statistic_fields]
+    ],
+    [
+        'sort' => ['year' => -1]
+    ]
+)->toArray();
 ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 
@@ -303,7 +325,6 @@ $active = function ($field) use ($data_fields) {
             ],
             "order": [
                 [4, 'desc'],
-                // [0, 'asc']
             ]
         });
     </script>
@@ -311,34 +332,93 @@ $active = function ($field) use ($data_fields) {
 
     <hr>
 
-    <h2>
+    <h2 id="statistics">
         <i class="ph ph-chart-line-up text-primary"></i>
         <?= lang('Statistics', 'Statistiken') ?>
     </h2>
 
-    <?php
+    <?php if ($reporter || $Settings->hasPermission('infrastructures.statistics') || $edit_perm) {
 
-    $statistics = DB::doc2Arr($infrastructure['statistics'] ?? []);
-    if (!empty($statistics)) {
-        usort($statistics, function ($a, $b) {
-            return $a['year'] <=> $b['year'];
-        });
-        $years = array_column((array) $statistics, 'year');
-    }
+        $kdsf_mapping = [
+            'internal' => 'KDSF-B-13-8-B',
+            'national' => 'KDSF-B-13-8-C',
+            'international' => 'KDSF-B-13-8-D',
+            'hours' => 'KDSF-B-13-9-B',
+            'accesses' => 'KDSF-B-13-10-B',
+        ];
+
     ?>
 
-    <?php if ($reporter || $Settings->hasPermission('infrastructures.statistics') || $edit_perm) { ?>
-        <form action="<?= ROOTPATH ?>/infrastructures/year/<?= $infrastructure['_id'] ?>" method="get" class="d-inline">
-            <div class="input-group w-auto d-inline-flex">
-                <input type="number" class="form-control w-100" placeholder="Year" name="year" required step="1" min="1900" max="<?= CURRENTYEAR + 1 ?>" value="<?= CURRENTYEAR - 1 ?>">
-                <div class="input-group-append">
-                    <button class="btn">
-                        <i class="ph ph-calendar-plus"></i>
-                        <?= lang('Edit year statistics', 'Jahresstatistik bearbeiten') ?>
-                    </button>
+        <button type="button" class="btn" id="add-stat-btn" onclick="$('#infra-stat-edit-box').toggleClass('hidden');">
+            <i class="ph ph-plus"></i>
+            <?= lang('Add ' . $stat_frequency . ' statistics', ucfirst('' . $stat_frequency . ' Statistik hinzufügen')) ?>
+        </button>
+
+        <div class="box padded small hidden" id="infra-stat-edit-box">
+            <form action="<?= ROOTPATH ?>/crud/infrastructures/stats/<?= $id ?>" method="post">
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/infrastructures/view/<?= $id ?>" />
+                <div class="form-group d-flex align-items-center mr-20 mb-10">
+                    <?php
+                    switch ($stat_frequency) {
+                        case 'annual': ?>
+                            <label for="year" class="w-300 font-weight-bold"><?= lang('Year', 'Jahr') ?>:</label>
+                            <input type="number" name="year" id="add-stat-year" class="form-control w-200" value="<?= CURRENTYEAR - 1 ?>" min="1900" max="<?= CURRENTYEAR + 1 ?>" />
+                        <?php
+                            break;
+                        case 'monthly': ?>
+                            <label for="month" class="w-300 font-weight-bold"><?= lang('Month', 'Monat') ?>:</label>
+                            <input type="month" name="month" id="add-stat-month" class="form-control w-200" value="<?= date('Y-m', strtotime('-1 month')) ?>" />
+                        <?php
+                            break;
+                        case 'quarterly':
+                        ?>
+                            <label for="quarter" class="w-300 font-weight-bold"><?= lang('Quarter', 'Quartal') ?>:</label>
+                            <select name="quarter" id="add-stat-quarter" class="form-control w-200">
+                                <?php
+                                $current_year = date('Y');
+                                for ($y = $current_year; $y >= $current_year - 10; $y--) {
+                                    for ($q = 1; $q <= 4; $q++) {
+                                        $selected = ($y == $current_year && $q == ceil(date('n') / 3) - 1) ? 'selected' : '';
+                                        echo "<option value=\"{$y}-Q{$q}\" {$selected}>{$y} - Q{$q}</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        <?php
+                            break;
+                        case 'irregularly': ?>
+                            <label for="date" class="w-300 font-weight-bold"><?= lang('Date', 'Datum') ?>:</label>
+                            <input type="date" name="date" id="add-stat-date" class="form-control w-200" value="<?= date('Y-m-d') ?>" />
+                    <?php
+                            break;
+                    }
+                    ?>
                 </div>
-            </div>
-        </form>
+
+                <?php foreach ($fields as $key) { ?>
+                    <div class="form-group d-flex align-items-center mr-20 mb-10">
+                        <label for="<?= $key['id'] ?>" class="w-300 font-weight-bold">
+                            <?= lang($key['en'], $key['de']) ?>:
+                        </label>
+                        <input type="number" class="form-control w-200" name="values[<?= $key['id'] ?>]" id="<?= $key['id'] ?>" value="0" />
+
+                        <?php if (!empty($kdsf_mapping[$key['id']])): ?>
+                            <span class="badge kdsf"><?= $kdsf_mapping[$key['id']] ?? '' ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php } ?>
+
+                <small class="text-muted">
+                    <?= lang('If you fill in statistics for a period that already exists, the existing entry will be overwritten. If the value is 0, the corresponding statistics will be deleted.', 'Wenn du eine Statistik für einen Zeitraum ausfüllst, der bereits existiert, wird der vorhandene Eintrag überschrieben. Wenn der Wert 0 beträgt, wird die entsprechende Statistik gelöscht.') ?>
+                </small>
+                <br>
+
+                <button class="btn btn-primary">
+                    <i class="ph ph-save"></i>
+                    <?= lang('Save', 'Speichern') ?>
+                </button>
+            </form>
+        </div>
     <?php } ?>
 
 
@@ -347,251 +427,208 @@ $active = function ($field) use ($data_fields) {
             <?= lang('No statistics found.', 'Keine Statistiken vorhanden.') ?>
         </div>
     <?php } else {
-
-        $fields = $Vocabulary->getVocabulary('infrastructure-stats');
-        if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
-            $fields = [
-                [
-                    "id" => "internal",
-                    "en" => "Number of internal users",
-                    "de" => "Anzahl interner Nutzer/-innen"
-                ],
-                [
-                    "id" => "national",
-                    "en" => "Number of national users",
-                    "de" => "Anzahl nationaler Nutzer/-innen"
-                ],
-                [
-                    "id" => "international",
-                    "en" => "Number of international users",
-                    "de" => "Anzahl internationaler Nutzer/-innen"
-                ],
-                [
-                    "id" => "hours",
-                    "en" => "Number of hours used",
-                    "de" => "Anzahl der genutzten Stunden"
-                ],
-                [
-                    "id" => "accesses",
-                    "en" => "Number of accesses",
-                    "de" => "Anzahl der Nutzungszugriffe"
-                ],
-            ];
-        } else {
-            $fields = $fields['values'] ?? [];
-        }
     ?>
+        <a href="#detailed-example-modal" class="btn primary" role="button">
+            <i class="ph ph-eye"></i>
+            <?= lang('Show detailed statistics', 'Detaillierte Statistiken anzeigen') ?>
+        </a>
+
+        <div class="modal" id="detailed-example-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <a href="#close-modal" class="close" role="button" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                    <h5 class="title"><?= lang('Detailed statistics', 'Detaillierte Statistiken') ?></h5>
+
+                    <table class="table" id="detailed-statistics">
+                        <thead>
+                            <tr>
+                                <th><?= lang('Year', 'Jahr') ?></th>
+                                <?php if ($stat_frequency == 'monthly') { ?>
+                                    <th><?= lang('Month', 'Monat') ?></th>
+                                <?php } elseif ($stat_frequency == 'quarterly') { ?>
+                                    <th><?= lang('Quarter', 'Quartal') ?></th>
+                                <?php } elseif ($stat_frequency == 'irregularly') { ?>
+                                    <th><?= lang('Date', 'Datum') ?></th>
+                                <?php } ?>
+                                <th><?= lang('Field', 'Feld') ?></th>
+                                <th class="text-right"><?= lang('Value', 'Wert') ?></th>
+                                <th><?= lang('Entered by', 'Eingegeben von') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $f = array_column($fields, null, 'id');
+                            foreach ($statistics as $stat) { ?>
+                                <tr>
+                                    <th><?= $stat['year'] ?></th>
+                                    <?php if ($stat_frequency == 'monthly') { ?>
+                                        <td><?= $stat['month'] ?? '' ?></td>
+                                    <?php } elseif ($stat_frequency == 'quarterly') { ?>
+                                        <td><?= $stat['quarter'] ?? '' ?></td>
+                                    <?php } elseif ($stat_frequency == 'irregularly') { ?>
+                                        <td><?= $stat['date'] ?? '' ?></td>
+                                    <?php } ?>
+                                    <td>
+                                        <?php
+                                        $field = $f[$stat['field']] ?? null;
+                                        if ($field) {
+                                            echo lang($field['en'], $field['de'] ?? null);
+                                        } else {
+                                            echo $stat['field'] ?? '';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td class="text-right"><?= number_format($stat['value'] ?? 0, 0, ',', '.') ?></td>
+                                    <td>
+                                        <small class="text-muted">
+                                            <?= $stat['created_by'] ?? '' ?>
+                                            <?= !empty($stat['updated_by']) ? ' | ' . $stat['updated_by'] : '' ?>
+                                        </small>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <script>
+                        $('#detailed-statistics').DataTable({
+                            deferRender: true,
+                            pageLength: 10,
+                            "order": [
+                                [0, 'desc']
+                            ]
+                        });
+                    </script>
+
+                    <div class="text-right mt-20">
+                        <a href="#close-modal" class="btn mr-5" role="button">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <?php
+
+        // 1) Build $group stage with one accumulator per field
+        $group = ['_id' => ['year' => '$year']];
+        foreach ($fields as $f) {
+            $fid = $f['id'];
+            // Sum only docs where field == $fid; coerce to number
+            $group[$fid] = [
+                '$sum' => [
+                    '$cond' => [
+                        ['$eq' => ['$field', $fid]],
+                        ['$toDouble' => ['$ifNull' => ['$value', 0]]],
+                        0
+                    ]
+                ]
+            ];
+        }
+
+        // 2) Robust year handling: if "year" is missing (irregular), derive from "date"
+        $pipeline = [
+            ['$match' => ['infrastructure' => $infrastructure['id']]],
+            // sum by year and field
+            ['$group' => $group],
+            // shape output
+            ['$project' => array_merge(['_id' => 0, 'year' => '$_id.year'], array_fill_keys(array_column($fields, 'id'), 1))],
+            ['$sort' => ['year' => -1]]
+        ];
+
+        $aggregated = $osiris->infrastructureStats->aggregate($pipeline);
+        ?>
+
         <!-- table with all yearly statistics ordered by year -->
-         <table class="table small my-20" id="yearly-statistics">
-            <thead>
-                <tr>
-                    <th><?= lang('Year', 'Jahr') ?></th>
-                    <?php foreach ($fields as $field) { ?>
-                        <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
-                    <?php } ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($statistics as $stat) { ?>
+        <div class="table-responsive-not">
+            <table class="table small my-20" id="yearly-statistics">
+                <thead>
                     <tr>
-                        <th><?= $stat['year'] ?></th>
+                        <th><?= lang('Year', 'Jahr') ?></th>
                         <?php foreach ($fields as $field) { ?>
-                            <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
                         <?php } ?>
                     </tr>
-                <?php } ?>
-            </tbody>
-         </table>
-
-        <div class="box padded mb-0">
-            <h5 class="title font-size-16">
-                <?= lang('Number of users by year', 'Anzahl der Nutzer/-innen nach Jahr') ?>
-            </h5>
-            <canvas id="chart-users" style="height: 30rem; max-height:30rem;"></canvas>
+                </thead>
+                <tbody>
+                    <?php foreach ($aggregated as $stat) { ?>
+                        <tr>
+                            <th><?= $stat['year'] ?></th>
+                            <?php foreach ($fields as $field) { ?>
+                                <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
 
-        <script>
-            var barChartConfig = {
-                type: 'bar',
-                data: [],
-                options: {
-                    plugins: {
-                        title: {
-                            display: false,
-                            text: 'Chart'
-                        },
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                        },
-                        y: {
-                            stacked: true,
-                        }
-                    }
-                },
 
-            };
-            var ctx = document.getElementById('chart-users')
-            var data = Object.assign({}, barChartConfig)
-            var raw_data = Object.values(<?= json_encode($statistics) ?>);
-            console.log(raw_data);
-            data.data = {
-                labels: <?= json_encode($years) ?>,
-                datasets: [{
-                        label: 'Internal users',
-                        data: raw_data,
-                        parsing: {
-                            yAxisKey: 'internal',
-                            xAxisKey: 'year'
-                        },
-                        backgroundColor: 'rgba(236, 175, 0, 0.7)',
-                        borderColor: 'rgba(236, 175, 0, 1)',
-                        borderWidth: 3
+        <div class="box">
+            <div class="chart content text-center">
+                <h5 class="title mb-0">
+                    <?= lang('Infrastructure statistics over time', 'Infrastrukturstatistiken im Zeitverlauf') ?>
+                </h5>
+
+                <div id="chart-infrastructure-stats"></div>
+            </div>
+        </div>
+
+        <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
+        <script>
+            // Load & render
+            async function loadStats() {
+                //   const infra = $('#infra-select').val();
+                const infra = '<?= $infrastructure['id'] ?>';
+
+                const params = new URLSearchParams({
+                    infrastructure: infra,
+                });
+
+                const res = await fetch(`${ROOTPATH}/api/infrastructure/stats?` + params.toString());
+                const json = await res.json();
+                const traces = json.data || [];
+
+                // Define a color palette (modify hex values as you like)
+                let palette = ['#008083', '#f78104', '#63a308', '#B61F29', '#ECAF00', '#06667d', '#b3b3b3'];
+
+                // Apply colors to each trace (cycles through the palette)
+                traces.forEach((trace, i) => {
+                    trace.line = trace.line || {};
+                    // Only override color if not already set by the API
+                    trace.line.color = trace.line.color || palette[i % palette.length];
+
+                    // If markers exist, set their color too
+                    if (trace.marker) {
+                        trace.marker.color = trace.marker.color || trace.line.color;
+                    }
+                });
+
+                // Use colorway in layout as a fallback/default palette
+                Plotly.newPlot('chart-infrastructure-stats', traces, {
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    colorway: palette,
+                    // legend to bottom
+                    legend: {
+                        orientation: 'h',
+                        y: -0.2,
                     },
-                    {
-                        label: 'National users',
-                        data: raw_data,
-                        parsing: {
-                            yAxisKey: 'national',
-                            xAxisKey: 'year'
-                        },
-                        backgroundColor: 'rgba(247, 129, 4, 0.7)',
-                        borderColor: 'rgba(247, 129, 4, 1)',
-                        borderWidth: 3
+                    height: 300,
+                    margin: {
+                        t: 25,
+                        r: 20,
+                        l: 40,
+                        b: 20
                     },
-                    {
-                        label: 'International users',
-                        data: raw_data,
-                        parsing: {
-                            yAxisKey: 'international',
-                            xAxisKey: 'year'
-                        },
-                        backgroundColor: 'rgba(233, 87, 9, 0.7)',
-                        borderColor: 'rgba(233, 87, 9, 1)',
-                        borderWidth: 3
-                    },
-                ],
+                });
             }
 
-
-            console.log(data);
-            var myChart = new Chart(ctx, data);
+            $(document).ready(loadStats);
         </script>
-
-        <div class="row row-eq-spacing mt-0">
-            <div class="col-md-6">
-                <div class="box padded">
-                    <h5 class="title font-size-16">
-                        <?= lang('Number of hours by year', 'Anzahl der Stunden nach Jahr') ?>
-                    </h5>
-                    <canvas id="chart-hours" style="height: 30rem; max-height:30rem;"></canvas>
-                </div>
-
-                <script>
-                    var lineChartConfig = {
-                        type: 'line',
-                        data: [],
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: false,
-                                    text: 'Chart'
-                                },
-                                legend: {
-                                    display: false,
-                                }
-                            },
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    min: 0
-                                }
-                            }
-                        },
-
-                    };
-                    var ctx = document.getElementById('chart-hours')
-                    var data = Object.assign({}, lineChartConfig)
-                    var raw_data = Object.values(<?= json_encode($statistics) ?>);
-                    console.log(raw_data);
-                    data.data = {
-                        labels: <?= json_encode($years) ?>,
-                        datasets: [{
-                            label: 'Hours',
-                            data: raw_data,
-                            parsing: {
-                                yAxisKey: 'hours',
-                                xAxisKey: 'year'
-                            },
-                            backgroundColor: 'rgba(247, 129, 4, 0.7)',
-                            borderColor: 'rgba(247, 129, 4, 1)',
-                            borderWidth: 3
-                        }, ],
-                    }
-
-                    var hoursChart = new Chart(ctx, data);
-                </script>
-            </div>
-            <div class="col-md-6">
-
-
-                <div class="box padded">
-                    <h5 class="title font-size-16">
-                        <?= lang('Number of accesses by year', 'Anzahl der Zugriffe nach Jahr') ?>
-                    </h5>
-                    <canvas id="chart-accesses" style="height: 30rem; max-height:30rem;"></canvas>
-
-                </div>
-
-                <script>
-                    var lineChartConfig = {
-                        type: 'line',
-                        data: [],
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: false,
-                                    text: 'Chart'
-                                },
-                                legend: {
-                                    display: false,
-                                }
-                            },
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    min: 0
-                                }
-                            }
-                        },
-
-                    };
-                    var ctx = document.getElementById('chart-accesses')
-                    var data = Object.assign({}, lineChartConfig)
-                    var raw_data = Object.values(<?= json_encode($statistics) ?>);
-                    console.log(raw_data);
-                    data.data = {
-                        labels: <?= json_encode($years) ?>,
-                        datasets: [{
-                            label: 'Accesses',
-                            data: raw_data,
-                            parsing: {
-                                yAxisKey: 'accesses',
-                                xAxisKey: 'year'
-                            },
-                            backgroundColor: 'rgba(233, 87, 9, 0.7)',
-                            borderColor: 'rgba(233, 87, 9, 1)',
-                            borderWidth: 3
-                        }, ],
-                    }
-
-                    var accessesChart = new Chart(ctx, data);
-                </script>
-
-            </div>
-        </div>
     <?php
     }
     ?>
@@ -754,3 +791,30 @@ $active = function ($field) use ($data_fields) {
         dump($infrastructure, true);
     } ?>
 </div>
+
+<?php if (isset($_GET['edit-stats'])) {
+    $timeparam = $_GET['edit-stats'];
+?>
+    <script>
+        // scroll to statistics edit box
+        document.getElementById('infra-stat-edit-box').classList.remove('hidden');
+        document.getElementById('infra-stat-edit-box').scrollIntoView();
+        // prefill time parameters
+        <?php
+        switch ($stat_frequency) {
+            case 'annual':
+                echo "document.getElementById('add-stat-year').value = '$timeparam';";
+                break;
+            case 'monthly':
+                echo "document.getElementById('add-stat-month').value = '$timeparam';";
+                break;
+            case 'quarterly':
+                echo "document.getElementById('add-stat-quarter').value = '$timeparam';";
+                break;
+            case 'irregularly':
+                echo "document.getElementById('add-stat-date').value = '$timeparam';";
+                break;
+        }
+        ?>
+    </script>
+<?php } ?>

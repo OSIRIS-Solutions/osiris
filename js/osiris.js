@@ -781,7 +781,7 @@ function _approve(id, approval) {
             if (n_notifications >= 0) {
                 $('span.notification').text(n_notifications)
             }
-            
+
             var loc = location.pathname.split('/')
             if (loc[loc.length - 1] == "issues") {
                 $('#tr-' + id).remove()
@@ -799,7 +799,7 @@ function _approve(id, approval) {
                 $('#tr-' + id).remove()
                 toastSuccess('Removed activity')
             }
-            
+
             // toastSuccess("Updated " + response.updated + " datasets.")
             // $('#result').html(response)
         },
@@ -846,6 +846,7 @@ function initActivities(selector, data = {}) {
         console.warn('No activities table found with selector:', selector);
         return;
     }
+    const TITLE = (document.title.split(' | ')[0] || document.title);
     return $(selector).DataTable({
         "ajax": {
             "url": ROOTPATH + '/api/all-activities',
@@ -870,27 +871,42 @@ function initActivities(selector, data = {}) {
                         header: function (data, columnIdx) {
                             // eigene Header-Texte definieren
                             const customHeaders = {
-                                0: lang('Icon', 'Icon'),
-                                1: lang('Activity', 'Aktivität'),
-                                2: lang('Links', 'Links'),
-                                3: lang('Formatted text', 'Formatierter Text'),
-                                4: lang('Start date', 'Startdatum'),
-                                5: lang('Type', 'Typ'),
-                                6: lang('Subtype', 'Untertyp'),
-                                7: lang('Title', 'Titel'),
-                                8: lang('Authors', 'Autoren'),
-                                9: lang('Year', 'Jahr')
+                                0: lang('Category', 'Kategorie'),
+                                1: lang('Printed title', 'Gedruckter Titel'),
+                                2: lang('Start date', 'Startdatum'),
+                                3: lang('Type', 'Typ'),
+                                4: lang('Title', 'Titel'),
+                                5: lang('Authors', 'Autoren'),
+                                6: lang('Year', 'Jahr'),
                             };
                             return customHeaders[columnIdx] || data;
                         }
                     }
                 },
+                title: TITLE,
                 className: 'btn small',
                 title: 'OSIRIS_activities',
                 text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [3],
+                    // do not strip HTML tags in the links column
+                    stripHtml: false
+                },
+                title: TITLE,
+                className: 'btn small',
+                text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+                customize: function (win) {
+                    // hier könntest du noch CSS ergänzen, wenn nötig
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        .find('table')
+                        .addClass('compact');
+                }
             }
         ],
-        dom: 'fBrtip',
         pageLength: 5,
         columnDefs: [
             {
@@ -910,6 +926,7 @@ function initActivities(selector, data = {}) {
             {
                 targets: 3,
                 data: 'search-text',
+                title: lang('Aktivitäten', 'Activities'),
                 searchable: true,
                 visible: false,
                 header: 'Test'
@@ -958,6 +975,65 @@ function initActivities(selector, data = {}) {
     });
 }
 
+function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible') {
+    return [
+        {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: columns
+            },
+            className: 'btn small',
+            title: title,
+            text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+        },
+        {
+            extend: 'pdfHtml5',
+            exportOptions: {
+                columns: columns
+            },
+            className: 'btn small',
+            title: title,
+            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
+        },
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: columns,
+                // do not strip HTML tags in the links column
+                stripHtml: false
+            },
+            title: title,
+            className: 'btn small',
+            text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+        }
+    ];
+}
+
+function initDownloadTable(selector, title = 'OSIRIS_data_export', columns = ':visible') {
+    // check that table exists and is not empty
+    if ($(selector).length === 0) {
+        console.warn('No table found with selector:', selector);
+        return;
+    }
+    if ($(selector).find('tbody tr').length === 0) {
+        console.warn('No data found in table with selector:', selector);
+        return;
+    }
+    // table with nothing but the download buttons
+    return $(selector).DataTable({
+        layout: {
+            topStart: {
+                buttons: downloadTableButtons(title, columns)
+            },
+            'topEnd': null,
+            'bottomStart': null,
+            'bottomEnd': null
+        },
+        paging: false,
+        searching: false,
+        info: false,
+    });
+}
 
 
 function initProjects(selector, data = {}) {
@@ -1510,6 +1586,9 @@ function projectTimeline(selector, data = {}) {
                 .style('font-weight', '600')
                 .style('font-size', "5px")
                 .text((d) => d.title)
+
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);
@@ -1572,6 +1651,9 @@ function coauthorNetwork(selector, data = {}) {
                     row.append('span').text(d.name)
                 }
             }
+
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
 
         },
         error: function (response) {
@@ -1694,6 +1776,8 @@ function wordcloud(selector, data = {}) {
                     });
             }
 
+            var svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);
@@ -1701,6 +1785,96 @@ function wordcloud(selector, data = {}) {
     });
 }
 
+function registerDownloadHandlers(svgNode, selector) {
+    const filename = selector.replace('#', '');
+    // Add download buttons
+    const container = $(selector);
+    // container.addClass('position-relative');
+    const downloadDiv = $(`<div class="download-buttons">
+        <button id="download-` + filename + `-svg" class="btn small link" title="${lang('Download SVG', 'SVG herunterladen')}">
+            <i class="ph ph-file-svg"></i> SVG
+        </button>
+        <button id="download-` + filename + `-png" class="btn small link" title="${lang('Download PNG', 'PNG herunterladen')}">
+            <i class="ph ph-file-png"></i> PNG
+        </button>
+    </div>`);
+    container.append(downloadDiv);
+    // Download SVG
+    $('#download-' + filename + '-svg').off('click').on('click', function () {
+        // serialize SVG
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgNode);
+
+        // add missing namespaces if necessary
+        if (!source.match(/^<svg[^>]+xmlns="/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns="http://www.w3.org/2000/svg"'
+            );
+        }
+        if (!source.match(/xmlns:xlink=/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'
+            );
+        }
+
+        const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename + '.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // Download PNG
+    $('#download-' + filename + '-png').off('click').on('click', function () {
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgNode);
+
+        // ensure xmlns is present
+        if (!source.match(/^<svg[^>]+xmlns="/)) {
+            source = source.replace(
+                /^<svg/,
+                '<svg xmlns="http://www.w3.org/2000/svg"'
+            );
+        }
+
+        const svg64 = window.btoa(unescape(encodeURIComponent(source)));
+        const imageSrc = 'data:image/svg+xml;base64,' + svg64;
+
+        const img = new Image();
+        img.onload = function () {
+            // canvas size should match your viewBox
+            const canvas = document.createElement('canvas');
+            // canvas.width = 1600;
+            // canvas.height = 1000;
+            const viewBox = svgNode.getAttribute('viewBox').split(' ');
+            canvas.width = parseInt(viewBox[2])*2;
+            canvas.height = parseInt(viewBox[3])*2;
+            const ctx = canvas.getContext('2d');
+
+            // optional: white background
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(img, 0, 0);
+
+            const pngData = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = pngData;
+            a.download = filename + '.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+        img.src = imageSrc;
+    });
+}
 
 function userTable(selector, data = {}) {
     data['table'] = true
@@ -1910,6 +2084,8 @@ function timelineChart(filter = {}, props = {}) {
                 });
             }
             timeline(year, 0, typeInfo, events);
+            let svgNode = d3.select(selector).select('svg').node();
+            registerDownloadHandlers(svgNode, selector);
         },
         error: function (response) {
             console.log(response);
@@ -1949,7 +2125,7 @@ function sanitizeID(element, idlist = '#IDLIST li') {
     var list = []
 
     // get existing IDs from list
-    if ( typeof idlist === 'string' ) {
+    if (typeof idlist === 'string') {
         list = $(idlist).map(function (i, v) {
             return $(this).text().trim();
         }).toArray();

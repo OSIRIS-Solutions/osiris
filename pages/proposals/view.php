@@ -182,7 +182,6 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
     <?php } ?>
 
     <?php if (
-
         $Settings->hasPermission('proposals.delete') || ($Settings->hasPermission('proposals.delete-own') && $edit_perm)
     ) { ?>
 
@@ -255,7 +254,6 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
 
     <?php
     $mentioned_fields = [];
-    $phases = ['proposed'];
     ?>
     <div class="row row-eq-spacing mt-0">
         <div class="col-md-8">
@@ -292,6 +290,14 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     <?= lang('Documents', 'Dokumente') ?>
                     <span class="index"><?= count($documents) ?></span>
                 </button>
+
+                <?php if ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant()) { ?>
+                    <button class="btn font-weight-bold" onclick="selectTab('nagoya')" id="nagoya-btn">
+                        <i class="ph ph-scales"></i>
+                        <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+                    </button>
+                <?php } ?>
+                
             </div>
             <table class="table" id="proposal-details">
                 <tbody>
@@ -464,7 +470,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                                         <td>
                                             <div class="dropdown float-right">
                                                 <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="ph ph-trash text-danger"></i>
+                                                    <i class="ph-duotone ph-trash text-danger"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
                                                     <div class="content">
@@ -535,6 +541,22 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
             <?php } ?>
 
 
+            <?php if ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant()) { ?>
+                <div class="box padded" id="nagoya-details" style="display:none;">
+                    <h3 class="title">
+                        <?= lang('Nagoya Protocol Details', 'Details zum Nagoya-Protokoll') ?>
+                    </h3>
+                    <?php
+                        $nagoya_status = $Project->getNagoyaStatus();
+                        echo $nagoya_status;
+                    ?>
+
+                    <a href="<?= ROOTPATH ?>/proposals/nagoya/<?= $id ?>" class="btn"><?= lang('View details', 'Details anzeigen') ?></a>
+
+                </div>
+            <?php } ?>
+
+
             <script>
                 // select tab function
                 function selectTab(tab) {
@@ -543,6 +565,7 @@ $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)])
                     $('#rejection-details').hide();
                     $('#finance-details').hide();
                     $('#documents-details').hide();
+                    $('#nagoya-details').hide();
                     $('#' + tab + '-details').show();
 
                     $('#status-tabs .btn').removeClass('active');

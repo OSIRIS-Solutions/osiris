@@ -2,6 +2,7 @@
      border: none;
      background: transparent;
      box-shadow: none;
+     display: block;
  }
 
  .table.cards thead {

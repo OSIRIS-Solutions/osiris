@@ -215,7 +215,10 @@ foreach ($countries as $iso => $data) {
 </style>
 
 <div class="container">
-    <h1><?= $Settings->tripLabel() ?></h1>
+    <h1>
+        <i class="ph-duotone ph-airplane"></i>
+        <?= $Settings->tripLabel() ?>
+    </h1>
 
     <div class="btn-toolbar">
         <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=travel">

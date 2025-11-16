@@ -64,8 +64,8 @@ Route::get('/infrastructures/view/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $infrastructure = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
+        $osiris_id = $DB->to_ObjectID($id);
+        $infrastructure = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
         $infrastructure = $osiris->infrastructures->findOne(['id' => $id]);
         $id = strval($infrastructure['_id'] ?? '');
@@ -98,8 +98,8 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     global $form;
 
     if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $form = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
+        $osiris_id = $DB->to_ObjectID($id);
+        $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
         $form = $osiris->infrastructures->findOne(['name' => $id]);
         $id = strval($infrastructure['_id'] ?? '');
@@ -145,8 +145,8 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
 
     global $form;
     if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $form = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
+        $osiris_id = $DB->to_ObjectID($id);
+        $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
         $form = $osiris->infrastructures->findOne(['name' => $id]);
         $id = strval($infrastructure['_id'] ?? '');
@@ -183,48 +183,48 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
 }, 'login');
 
 
-Route::get('/infrastructures/year/(.*)', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
+// Route::get('/infrastructures/year/(.*)', function ($id) {
+//     include_once BASEPATH . "/php/init.php";
+//     $user = $_SESSION['username'];
 
-    global $form;
+//     global $form;
 
-    if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $form = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
-    } else {
-        $form = $osiris->infrastructures->findOne(['name' => $id]);
-        $id = strval($infrastructure['_id'] ?? '');
-    }
-    if (empty($form)) {
-        header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
-        die;
-    }
-    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
-        // check if person is part of the infrastructure and is set as reporter
-        $permission = false;
-        foreach ($form['persons'] ?? [] as $person) {
-            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
-                $permission = true;
-                break;
-            }
-        }
-        if (!$permission) {
-            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
-            die;
-        }
-    }
+//     if (DB::is_ObjectID($id)) {
+//         $osiris_id = $DB->to_ObjectID($id);
+//         $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
+//     } else {
+//         $form = $osiris->infrastructures->findOne(['name' => $id]);
+//         $id = strval($infrastructure['_id'] ?? '');
+//     }
+//     if (empty($form)) {
+//         header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
+//         die;
+//     }
+//     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
+//         // check if person is part of the infrastructure and is set as reporter
+//         $permission = false;
+//         foreach ($form['persons'] ?? [] as $person) {
+//             if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
+//                 $permission = true;
+//                 break;
+//             }
+//         }
+//         if (!$permission) {
+//             header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+//             die;
+//         }
+//     }
 
-    $breadcrumb = [
-        ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang("Year Statistics", "Jahresstatistik")]
-    ];
+//     $breadcrumb = [
+//         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
+//         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
+//         ['name' => lang("Year Statistics", "Jahresstatistik")]
+//     ];
 
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/infrastructures/year.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
+//     include BASEPATH . "/header.php";
+//     include BASEPATH . "/pages/infrastructures/year.php";
+//     include BASEPATH . "/footer.php";
+// }, 'login');
 
 
 /**
@@ -353,75 +353,467 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
 });
 
 
-Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
+Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Vocabulary.php";
-    $Vocabulary = new Vocabulary();
-    $fields = $Vocabulary->getVocabulary('infrastructure-stats');
-    if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
-        $fields = ['internal', 'national', 'international', 'hours', 'accesses'];
-    } else {
-        $fields = array_column(DB::doc2Arr($fields['values']), 'id');
-    }
 
-    if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
-        // check if person is part of the infrastructure and is set as reporter
-        $permission = false;
-        $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
-        foreach (($infrastructure['persons'] ?? []) as $person) {
-            if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
-                $permission = true;
-                break;
-            }
-        }
-        if (!$permission) {
-            header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
-            die;
-        }
+    // get infrastructure
+    $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+    if (empty($infrastructure)) {
+        header("Location: " . ROOTPATH . "/infrastructures?msg=not-found");
+        die;
     }
     if (!isset($_POST['values'])) die("no values given");
-    $values = $_POST['values'];
-    if (!isset($_POST['values']['year'])) die("no year given");
 
-    $collection = $osiris->infrastructures;
-
-    $year = intval($_POST['values']['year']);
-
-    $stats = [
+    $year = intval($_POST['year'] ?? 0);
+    $base = [
+        'infrastructure' => $infrastructure['id'],
         'year' => $year,
     ];
-    foreach ($fields as $field) {
-        if (isset($values[$field]) && is_numeric($values[$field])) {
-            $stats[$field] = intval($values[$field]);
+    if (isset($_POST['month'])) {
+        $date = explode('-', $_POST['month']);
+        $base['month'] = intval($date[1]);
+        $base['year'] = intval($date[0]);
+    } elseif (isset($_POST['quarter'])) {
+        $date = explode('-', $_POST['quarter']);
+        $base['quarter'] = $date[1];
+        $base['year'] = intval($date[0]);
+    } elseif (isset($_POST['date'])) {
+        $date = explode('-', $_POST['date']);
+        $base['date'] = $_POST['date'];
+        $base['year'] = intval($date[0]);
+    }
+    foreach ($_POST['values'] as $field => $value) {
+        $entry = $base;
+        $entry['field'] = $field;
+
+        // check if entry already exists
+        $existing = $osiris->infrastructureStats->findOne($entry);
+        if (!empty($existing)) {
+            if (empty($value) || !is_numeric($value) || $value == 0) {
+                // delete entry
+                $osiris->infrastructureStats->deleteOne(['_id' => $existing['_id']]);
+                continue;
+            }
+            // update
+            $osiris->infrastructureStats->updateOne(
+                ['_id' => $existing['_id']],
+                ['$set' => ['value' => intval($value), 'updated_by' => $_SESSION['username']]]
+            );
         } else {
-            $stats[$field] = 0;
+            // do not insert empty values
+            if (empty($value) || !is_numeric($value) || $value == 0) continue;
+            // insert
+            $entry['value'] = intval($value);
+            $entry['created_by'] = $_SESSION['username'];
+            $osiris->infrastructureStats->insertOne($entry);
         }
     }
-
-    $id = $DB->to_ObjectID($id);
-
-    // remove year if exists
-    $collection->updateOne(
-        ['_id' => $id],
-        ['$pull' => ['statistics' => ['year' => $year]]]
-    );
-
-    // add year
-    $updateResult = $collection->updateOne(
-        ['_id' => $id],
-        ['$push' => ['statistics' => $stats]]
-    );
-
+    // redirect
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        header("Location: " . $_POST['redirect'] . "?msg=update-success#statistics");
+        die();
+    }
+});
+
+
+
+
+Route::get('/api/infrastructure/stats', function () {
+    // Returns aggregated data for Plotly charts.
+    // Requires: MongoDB PHP driver, collection "infrastructureStats"
+    include_once BASEPATH . "/php/init.php";
+
+    include_once BASEPATH . '/php/Vocabulary.php';
+    $Vocabulary = new Vocabulary();
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    $coll = $osiris->infrastructureStats;
+
+    // --- Inputs ---
+    $infra = $_GET['infrastructure'] ?? '';
+    if (empty($infra)) {
+        echo json_encode(['error' => 'infrastructure parameter is required']);
+        die();
+    }
+    $infrastructure = $osiris->infrastructures->findOne(['id' => $infra]);
+    if (empty($infrastructure)) {
+        echo json_encode(['error' => 'infrastructure not found']);
         die();
     }
 
+    $stat_frequency = $infrastructure['statistic_frequency'] ?? 'annual';
+
+    $statistic_fields = DB::doc2Arr($infrastructure['statistic_fields'] ?? ['internal', 'national', 'international', 'hours', 'accesses']);
+
+    $fields = $Vocabulary->getVocabulary('infrastructure-stats');
+    $fields = $fields['values'] ?? [];
+    $fields = array_filter($fields, function ($field) use ($statistic_fields) {
+        return in_array($field['id'], $statistic_fields);
+    });
+
+    // get statistics ordered by year desc that are in the selected fields
+    $statistics = $osiris->infrastructureStats->find(
+        [
+            'infrastructure' => $infrastructure['id'],
+            'field' => ['$in' => $statistic_fields]
+        ],
+        [
+            'sort' => ['year' => -1]
+        ]
+    )->toArray();
+
+    $data = [];
+    $fields_map = array_column($fields, null, 'id');
+    foreach ($statistics as $stat) {
+        $date = null;
+        if (!array_key_exists($stat['field'], $data)) {
+            $f = $fields_map[$stat['field']] ?? [];
+            $data[$stat['field']] = [
+                'x' => [],
+                'y' => [],
+                'type' => 'scatter',
+                'mode' => 'lines+markers',
+                'name' => lang($f['en'] ?? $stat['field'], $f['de'] ?? null),
+            ];
+        }
+        if ($stat_frequency == 'annual') {
+            $date = $stat['year'] . '-01-01';
+        } elseif ($stat_frequency == 'quarterly' && isset($stat['quarter'])) {
+            $quarter = str_replace('Q', '', $stat['quarter']);
+            $month = (intval($quarter) - 1) * 3 + 1;
+            $date = sprintf("%04d-%02d-01", $stat['year'], $month);
+        } elseif ($stat_frequency == 'monthly' && isset($stat['month'])) {
+            $date = sprintf("%04d-%02d-01", $stat['year'], $stat['month']);
+        } elseif (isset($stat['date'])) {
+            $date = $stat['date'];
+        } else {
+            $date = $stat['year'] . '-01-01';
+        }
+        $data[$stat['field']]['x'][] = $date;
+        $data[$stat['field']]['y'][] = $stat['value'];
+    }
+
     echo json_encode([
-        'inserted' => $updateResult->getModifiedCount(),
-        'id' => $id,
+        'data' => array_values($data),
+        'labels' => array_column($fields, lang('en', 'de'), 'id'),
     ]);
 });
+
+// Route::get('/api/infrastructure/stats', function () {
+//     // Returns aggregated data for Plotly charts.
+//     // Requires: MongoDB PHP driver, collection "infrastructureStats"
+//     include_once BASEPATH . "/php/init.php";
+
+//     header('Content-Type: application/json; charset=utf-8');
+
+//     $coll = $osiris->infrastructureStats;
+
+//     // --- Inputs ---
+//     $infra = $_GET['infrastructure'] ?? '';
+//     $granularity = $_GET['granularity'] ?? 'auto'; // 'auto'|'year'|'quarter'|'month'|'date'
+//     $fieldForHeatmap = $_GET['field'] ?? null;
+
+//     // Optional: limit fields to those enabled for the infra (if you have that list server-side)
+//     $enabledFields = $_GET['enabled'] ?? ''; // comma-separated ids, optional
+//     $enabled = array_filter(array_map('trim', explode(',', $enabledFields)));
+//     $fieldsFilter = $enabled ? ['field' => ['$in' => $enabled]] : [];
+
+//     // --- Helpers ---
+//     function pad2($expr)
+//     {
+//         return ['$cond' => [
+//             ['$lt' => [$expr, 10]],
+//             ['$concat' => ['0', ['$toString' => $expr]]],
+//             ['$toString' => $expr]
+//         ]];
+//     }
+
+//     // Derive year/quarter/month from "date" if missing. Handles irregular entries.
+//     $deriveStage = [
+//         '$addFields' => [
+//             'dateObj' => [
+//                 '$cond' => [
+//                     ['$and' => [['$ne' => ['$date', null]], ['$ne' => ['$date', '']]]],
+//                     ['$dateFromString' => ['dateString' => '$date']],
+//                     null
+//                 ]
+//             ]
+//         ]
+//     ];
+//     $addYQM = [
+//         '$addFields' => [
+//             'year' => [
+//                 '$ifNull' => [
+//                     '$year',
+//                     ['$cond' => [['$ne' => ['$dateObj', null]], ['$year' => '$dateObj'], null]]
+//                 ]
+//             ],
+//             'quarter' => [
+//                 '$ifNull' => [
+//                     '$quarter',
+//                     null
+//                 ]
+//             ],
+//             'month' => [
+//                 '$ifNull' => [
+//                     '$month',
+//                     ['$cond' => [['$ne' => ['$dateObj', null]], ['$month' => '$dateObj'], null]]
+//                 ]
+//             ],
+//         ]
+//     ];
+
+//     // Decide granularity if 'auto': prefer most specific present in data (quarter > month > year > date fallback)
+//     $detectGranularity = function () use ($coll, $infra, $fieldsFilter, $deriveStage, $addYQM) {
+//         $pipeline = [
+//             ['$match' => array_merge(['infrastructure' => $infra], $fieldsFilter)],
+//             $deriveStage,
+//             $addYQM,
+//             ['$group' => [
+//                 '_id' => null,
+//                 'hasQuarter' => ['$max' => ['$cond' => [['$ne' => ['$quarter', null]], 1, 0]]],
+//                 'hasMonth'   => ['$max' => ['$cond' => [['$ne' => ['$month', null]],   1, 0]]],
+//                 'hasYear'    => ['$max' => ['$cond' => [['$ne' => ['$year', null]],    1, 0]]],
+//                 'hasDate'    => ['$max' => ['$cond' => [['$ne' => ['$date', null]],    1, 0]]],
+//             ]]
+//         ];
+//         $r = $coll->aggregate($pipeline)->toArray();
+//         if (!$r) return 'year';
+//         $f = $r[0];
+//         // Priority: quarter -> month -> year -> date
+//         if (($f['hasQuarter'] ?? 0) === 1) return 'quarter';
+//         if (($f['hasMonth'] ?? 0) === 1)   return 'month';
+//         if (($f['hasYear'] ?? 0) === 1)    return 'year';
+//         if (($f['hasDate'] ?? 0) === 1)    return 'date';
+//         return 'year';
+//     };
+
+//     if ($granularity === 'auto') {
+//         $granularity = $detectGranularity();
+//     }
+
+//     // Build label for grouping
+//     switch ($granularity) {
+//         case 'quarter':
+//             $labelExpr = [
+//                 '$concat' => [
+//                     ['$toString' => '$year'],
+//                     '-',
+//                     ['$toString' => ['$ifNull' => ['$quarter', 0]]]
+//                 ]
+//             ];
+//             $sortKeys = ['year' => 1, 'quarter' => 1, 'month' => 1, 'label' => 1];
+//             break;
+//         case 'month':
+//             $labelExpr = [
+//                 '$concat' => [
+//                     ['$toString' => '$year'],
+//                     '-',
+//                     pad2('$month')
+//                 ]
+//             ];
+//             $sortKeys = ['year' => 1, 'month' => 1, 'label' => 1];
+//             break;
+//         case 'date':
+//             // Use ISO string YYYY-MM-DD as label
+//             $labelExpr = [
+//                 '$cond' => [
+//                     ['$ne' => ['$dateObj', null]],
+//                     ['$dateToString' => ['format' => '%Y-%m-%d', 'date' => '$dateObj']],
+//                     'n/a'
+//                 ]
+//             ];
+//             $sortKeys = ['label' => 1];
+//             break;
+//         case 'year':
+//         default:
+//             $labelExpr = ['$toString' => '$year'];
+//             $sortKeys = ['year' => 1, 'label' => 1];
+//             break;
+//     }
+
+//     // Common match
+//     $baseMatch = array_merge(['infrastructure' => $infra], $fieldsFilter);
+
+//     // Main time series: one series per field
+//     $seriesPipeline = [
+//         ['$match' => $baseMatch],
+//         $deriveStage,
+//         $addYQM,
+//         ['$addFields' => ['label' => $labelExpr]],
+//         ['$group' => [
+//             '_id'   => ['label' => '$label', 'field' => '$field'],
+//             'value' => ['$sum' => ['$toDouble' => ['$ifNull' => ['$value', 0]]]],
+//             'year'  => ['$first' => '$year'],
+//             'quarter' => ['$first' => '$quarter'],
+//             'month'   => ['$first' => '$month'],
+//         ]],
+//         ['$sort' => array_merge(['_id.label' => 1], $sortKeys)],
+//     ];
+
+//     $series = [];
+//     $labelsSet = [];
+//     foreach ($coll->aggregate($seriesPipeline) as $row) {
+//         $label = $row->_id->label ?? (string)($row['year'] ?? 'n/a');
+//         $field = $row->_id->field ?? 'n/a';
+//         $val   = (float)$row['value'];
+//         $labelsSet[$label] = true;
+//         if (!isset($series[$field])) $series[$field] = [];
+//         $series[$field][$label] = $val;
+//     }
+//     $labels = array_keys($labelsSet);
+//     natsort($labels);
+//     $labels = array_values($labels);
+
+//     // Align series to labels (fill gaps with 0)
+//     $seriesAligned = [];
+//     foreach ($series as $field => $dict) {
+//         $arr = [];
+//         foreach ($labels as $lab) {
+//             $arr[] = isset($dict[$lab]) ? (float)$dict[$lab] : 0.0;
+//         }
+//         $seriesAligned[$field] = $arr;
+//     }
+
+//     // Latest snapshot for donut (distribution by field in max label)
+//     $latestLabel = end($labels) ?: null;
+//     $latestByField = [];
+//     if ($latestLabel) {
+//         foreach ($seriesAligned as $f => $arr) {
+//             $latestByField[$f] = (float)end($arr);
+//         }
+//     }
+
+//     // Heatmap (months × years) for one field (if not provided, pick first field found)
+//     if (!$fieldForHeatmap) {
+//         $fieldForHeatmap = array_key_first($seriesAligned) ?: null;
+//     }
+//     $heatYears = [];
+//     $heatValues = [];
+//     if ($fieldForHeatmap) {
+//         $hmPipeline = [
+//             ['$match' => array_merge($baseMatch, ['field' => $fieldForHeatmap])],
+//             $deriveStage,
+//             $addYQM,
+//             // ensure months & years exist if possible
+//             ['$match' => ['year' => ['$ne' => null], 'month' => ['$ne' => null]]],
+//             ['$group' => [
+//                 '_id' => ['year' => '$year', 'month' => '$month'],
+//                 'value' => ['$sum' => ['$toDouble' => ['$ifNull' => ['$value', 0]]]],
+//             ]],
+//             ['$sort' => ['_id.year' => 1, '_id.month' => 1]]
+//         ];
+//         $heatData = iterator_to_array($coll->aggregate($hmPipeline));
+//         // Build year list & matrix 12 months
+//         $byYear = [];
+//         foreach ($heatData as $r) {
+//             $y = (int)$r->_id->year;
+//             $m = (int)$r->_id->month;
+//             $v = (float)$r['value'];
+//             if (!isset($byYear[$y])) $byYear[$y] = array_fill(1, 12, 0.0);
+//             $byYear[$y][$m] = $v;
+//         }
+//         $heatYears = array_keys($byYear);
+//         sort($heatYears);
+//         foreach ($heatYears as $y) {
+//             $row = [];
+//             for ($m = 1; $m <= 12; $m++) $row[] = $byYear[$y][$m] ?? 0.0;
+//             $heatValues[] = $row;
+//         }
+//     }
+
+//     // Output
+//     echo json_encode([
+//         'infrastructure' => $infra,
+//         'granularity'    => $granularity,
+//         'labels'         => $labels,
+//         'series'         => $seriesAligned,   // {fieldId: [values ...]}
+//         'latest'         => [
+//             'label' => $latestLabel,
+//             'byField' => $latestByField
+//         ],
+//         'heatmap'        => [
+//             'field' => $fieldForHeatmap,
+//             'years' => $heatYears,
+//             'months' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+//             'values' => $heatValues
+//         ]
+//     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+// });
+
+// Route::post('/crud/infrastructures/year/([A-Za-z0-9]*)', function ($id) {
+//     include_once BASEPATH . "/php/init.php";
+//     include_once BASEPATH . "/php/Vocabulary.php";
+//     $Vocabulary = new Vocabulary();
+//     $fields = $Vocabulary->getVocabulary('infrastructure-stats');
+//     if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+//         $fields = ['internal', 'national', 'international', 'hours', 'accesses'];
+//     } else {
+//         $fields = array_column(DB::doc2Arr($fields['values']), 'id');
+//     }
+
+//     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.statistics')) {
+//         // check if person is part of the infrastructure and is set as reporter
+//         $permission = false;
+//         $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+//         foreach (($infrastructure['persons'] ?? []) as $person) {
+//             if ($person['user'] == $_SESSION['username'] && (($person['reporter'] ?? false) || $Settings->hasPermission('infrastructures.edit-own'))) {
+//                 $permission = true;
+//                 break;
+//             }
+//         }
+//         if (!$permission) {
+//             header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=no-permission");
+//             die;
+//         }
+//     }
+//     if (!isset($_POST['values'])) die("no values given");
+//     $values = $_POST['values'];
+//     if (!isset($_POST['values']['year'])) die("no year given");
+
+//     $collection = $osiris->infrastructures;
+
+//     $year = intval($_POST['values']['year']);
+
+//     $stats = [
+//         'year' => $year,
+//     ];
+//     foreach ($fields as $field) {
+//         if (isset($values[$field]) && is_numeric($values[$field])) {
+//             $stats[$field] = intval($values[$field]);
+//         } else {
+//             $stats[$field] = 0;
+//         }
+//     }
+
+//     $id = $DB->to_ObjectID($id);
+
+//     // remove year if exists
+//     $collection->updateOne(
+//         ['_id' => $id],
+//         ['$pull' => ['statistics' => ['year' => $year]]]
+//     );
+
+//     // add year
+//     $updateResult = $collection->updateOne(
+//         ['_id' => $id],
+//         ['$push' => ['statistics' => $stats]]
+//     );
+
+//     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+//         header("Location: " . $_POST['redirect'] . "?msg=update-success");
+//         die();
+//     }
+
+//     echo json_encode([
+//         'inserted' => $updateResult->getModifiedCount(),
+//         'id' => $id,
+//     ]);
+// });
+
+
+
 
 
 Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id) {

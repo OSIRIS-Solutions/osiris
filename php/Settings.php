@@ -38,6 +38,9 @@ class Settings
         }
         // everyone is a user
         $this->roles[] = 'user';
+        if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
+            $this->roles[] = 'admin';
+        }
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],
@@ -261,7 +264,7 @@ class Settings
             'name' => $type,
             'name_de' => $type,
             'color' => '#cccccc',
-            'icon' => 'placeholder'
+            'icon' => 'folder-open'
         ];
     }
 
@@ -314,7 +317,7 @@ class Settings
     function icon($cat, $type = null, $tooltip = true)
     {
         $act = $this->getActivity($cat, $type);
-        $icon = $act['icon'] ?? 'placeholder';
+        $icon = $act['icon'] ?? 'folder-open';
 
         $icon = "<i class='ph text-$cat ph-$icon'></i>";
         if ($tooltip) {
@@ -448,10 +451,17 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
+    
+    function journalLabel()
+    {
+        $settings = $this->get('journals_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
 
     function tripLabel()
     {
-        if (!$this->featureEnabled('topics')) return '';
+        if (!$this->featureEnabled('trips')) return '';
         $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
         if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
         return lang($arr['name'], $arr['name_de'] ?? null);
@@ -461,7 +471,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find();
+        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);
@@ -479,7 +489,7 @@ class Settings
                         $subtitle = 'data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '"';
                     }
                 ?>
-                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
+                    <div class="pill-checkbox <?= ($topic['inactive'] ?? false) ? 'inactive' : '' ?>" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
                         <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
@@ -505,7 +515,7 @@ class Settings
             if (!empty($topic['subtitle'])) {
                 $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
             }
-            $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $html .= "<a class='topic-pill ".($topic['inactive'] ?? false ? 'inactive' : '')."' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
             if (!empty($topic['subtitle'])) {
                 $html .= '</span>';
             }

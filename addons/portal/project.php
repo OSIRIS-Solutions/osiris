@@ -144,13 +144,13 @@
                     <div id="map" class=""></div>
                 </div>
                 <p>
-                    <i class="ph ph-fill ph-circle" style="color:#f78104"></i>
+                    <i class="ph ph-duotone ph-circle" style="color:#f78104"></i>
                     <?= lang('Coordinator', 'Koordinator') ?>
                     <br>
-                    <i class="ph ph-fill ph-circle" style="color:#008083"></i>
+                    <i class="ph ph-duotone ph-circle" style="color:#008083"></i>
                     Partner
                     <br>
-                    <i class="ph ph-fill ph-circle" style="color:#cccccc"></i>
+                    <i class="ph ph-duotone ph-circle" style="color:#cccccc"></i>
                     <?= lang('Accociated', 'Beteiligt') ?>
                 </p>
                 <!-- <div style="max-height: 60rem; overflow-y:auto">

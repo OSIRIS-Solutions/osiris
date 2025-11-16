@@ -124,19 +124,42 @@ Route::get('/conference/ics/(.*)', function ($id) {
 
 Route::post('/crud/conferences/add', function () {
     include_once BASEPATH . "/php/init.php";
+    // check if json is requested from ajax
+    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+    $accept_json = strpos($accept, 'application/json') !== false;
 
     $values = $_POST['values'];
 
     // required fields:
-    // if (!isset($_POST['title']) || !isset($_POST['start']) || !isset($_POST['location'])) {
-    //     // $new = true;
-    //     // $form = $values;
-    //     // include BASEPATH . "/header.php";
-    //     // printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
-    //     // include BASEPATH . "/pages/events/edit.php";
-    //     // include BASEPATH . "/footer.php";
-    //     // die;
-    // }
+    if (!isset($values['title']) || !isset($values['start']) || !isset($values['location'])) {
+        if ($accept_json) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'msg' => lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.')]);
+            exit;
+        }
+        $new = true;
+        $form = $values;
+        include BASEPATH . "/header.php";
+        printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
+        include BASEPATH . "/pages/events/edit.php";
+        include BASEPATH . "/footer.php";
+        exit;
+    }
+    // check if title, start, location are already in the database
+    $existing = $osiris->conferences->findOne([
+        'title' => $values['title'],
+        'start' => $values['start']
+    ]);
+    if ($existing) {
+        if ($accept_json) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'warning', 'msg' => lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.'), 'id' => (string)$existing['_id']]);
+            exit;
+        }
+        $_SESSION['msg'] = lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.');
+        header("Location: " . ROOTPATH . "/conferences/view/" . $existing['_id']);
+        exit;
+    }
 
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
@@ -162,6 +185,12 @@ Route::post('/crud/conferences/add', function () {
     $added = $osiris->conferences->insertOne($values);
 
     $id = $added->getInsertedId();
+
+    if (strpos($accept, 'application/json') !== false) {
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'success', 'id' => (string)$id]);
+        exit;
+    }
 
     header("Location: " . ROOTPATH . "/conferences/view/$id?msg=update-success");
 }, 'login');

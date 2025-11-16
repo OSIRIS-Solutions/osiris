@@ -7,10 +7,10 @@
     "loadingRecords": "Wird geladen ..",
     "processing": "Bitte warten ..",
     "paginate": {
-        "first": "Erste",
-        "next": "Nächste",
-        "last": "Letzte",
-        "previous": "Vorherige"
+        "first": "«",
+        "next": "›",
+        "last": "»",
+        "previous": "‹"
     },
     "aria": {
         "sortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
@@ -147,7 +147,7 @@
     },
     "thousands": ".",
     "zeroRecords": "Keine passenden Einträge gefunden",
-    "lengthMenu": "_MENU_ Zeilen anzeigen",
+    "lengthMenu": "_MENU_ Zeilen",
     "datetime": {
         "previous": "Vorher",
         "next": "Nachher",

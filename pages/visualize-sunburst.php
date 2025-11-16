@@ -113,7 +113,7 @@ updateRecursive($flare, $activities);
 ?>
 
 <h1>
-    <i class="ph ph-graph" aria-hidden="true"></i>
+    <i class="ph-duotone ph-graph" aria-hidden="true"></i>
     <?= lang('Department overview', 'Abteilungs-Übersicht') ?>
 </h1>
 

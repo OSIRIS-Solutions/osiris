@@ -105,7 +105,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
 
 
 <h1>
-    <i class="ph ph-report"></i>
+    <i class="ph-duotone ph-clipboard-text"></i>
     <?= lang('Report Builder', 'Berichtseditor') ?>
 </h1>
 
@@ -162,7 +162,6 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                         <strong>Filter (String):</strong> <code>{"units":"{{vars.orgId}}"}</code><br>
                         <strong>Filter (Number):</strong> <code>{"year":{{vars.year}}}</code><br>
                         <strong>Filter (Boolean):</strong> <code>{"peerReviewed":{{vars.peer}}}</code><br>
-                        <strong>Date format:</strong> <code>{{vars.periodStart|date:"Y-m"}}</code> (optional)
                     </div>
                 </div>
 
@@ -186,6 +185,37 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                             </td>
                         </tr>
                 </table>
+
+                <style>
+                    .copy-to-clipboard {
+                        cursor: pointer;
+                        color: var(--muted-color);
+                    }
+
+                    .copy-to-clipboard:hover {
+                        text-decoration: underline;
+                    }
+                </style>
+
+                <p class="font-size-12">
+                    <b><?= lang('Tip', 'Tipp') ?>:</b>
+                    <?= lang('You can use the following built-in variables for the reporting period:', 'Du kannst folgende vordefinierte Variablen für den Berichtszeitraum verwenden:') ?><br>
+                    <span class="copy-to-clipboard">{{vars.startyear}}</span>: <?= lang('Start year of the reporting period', 'Startjahr des Berichtszeitraums') ?><br>
+                    <span class="copy-to-clipboard">{{vars.endyear}}</span>: <?= lang('End year of the reporting period', 'Endjahr des Berichtszeitraums') ?><br>
+                    <span class="copy-to-clipboard">{{vars.startmonth}}</span>: <?= lang('Start month of the reporting period (1-12)', 'Startmonat des Berichtszeitraums (1-12)') ?><br>
+                    <span class="copy-to-clipboard">{{vars.endmonth}}</span>: <?= lang('End month of the reporting period (1-12)', 'Endmonat des Berichtszeitraums (1-12)') ?><br>
+                </p>
+
+                <script>
+                    $('.copy-to-clipboard').on('click', function() {
+                        const text = $(this).text();
+                        navigator.clipboard.writeText(text).then(function() {
+                            toastSuccess('<?= lang('Copied to clipboard', 'In die Zwischenablage kopiert') ?>: ' + text);
+                        }, function(err) {
+                            toastError('<?= lang('Could not copy text: ', 'Konnte Text nicht kopieren: ') ?>' + err);
+                        });
+                    });
+                </script>
 
                 <div class="modal-footer">
                     <!-- save -->
@@ -360,7 +390,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     foreach ($fields_add as $f) { ?>
                         <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
                     <?php } ?>
-                </select> 
+                </select>
             </div>
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
@@ -412,9 +442,21 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     </select>
                 </div>
             </div>
-            <div class="mt-10">
-                <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
-                <label for="timelimit"><?= lang('Limit to reporting time', 'Auf den Berichtszeitraum beschränken') ?></label>
+            <div class="form-row row-eq-spacing mt-10">
+                <div class="col">
+                    <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
+                    <label for="timelimit"><?= lang('Limit to reporting time', 'Auf den Berichtszeitraum beschränken') ?></label>
+                </div>
+                <div class="col">
+                    <!-- table_sort -->
+                    <label for="field" class="d-inline-block"><?= lang('Sort by', 'Sortieren nach') ?>: </label>
+                    <select name="values[*][table_sort]" required class="form-control step-select small d-inline-block w-auto">
+                        <option value="count-desc"><?= lang('Count descending', 'Anzahl absteigend') ?></option>
+                        <option value="aggregation-asc"><?= lang('Name of aggregation asc', 'Name der Aggregation aufsteigend') ?></option>
+                        <option value="aggregation-desc"><?= lang('Name of aggregation desc', 'Name der Aggregation absteigend') ?></option>
+                        <option value="count-asc"><?= lang('Count ascending', 'Anzahl aufsteigend') ?></option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -503,6 +545,9 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                 data.sort.forEach(sortCriterion => {
                     addSortRow($tpl.find('.sort-rows'), sortCriterion);
                 });
+            } 
+            if (data.table_sort && typeof data.table_sort === 'string') {
+                $tpl.find('.step-select').val(data.table_sort);
             }
         }
         $('#report').append($tpl);
@@ -625,47 +670,10 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         console.log(steps);
         // load existing steps
         steps.forEach(step => addRow(step.type, step));
-        // steps.forEach(step => {
-        //     var tr = $('#' + step.type).clone();
 
-        //     // replace * with n
-        //     tr.html(tr.html().replace(/\*/g, n));
-        //     n++;
-
-        //     tr.find('input, textarea, select').each(function() {
-        //         var name = $(this).attr('name');
-        //         if (name) {
-        //             var parts = name.split('[');
-        //             if (parts.length < 3) return;
-        //             var key = parts[2].replace(']', '');
-        //             // checkboxes and selected
-        //             if ($(this).attr('type') == 'checkbox') {
-        //                 $(this).prop('checked', step[key] ? true : false);
-        //             }
-        //             // select
-        //             else if ($(this).is('select') && step[key]) {
-        //                 $(this).find('option[value="' + step[key] + '"]').prop('selected', true);
-        //             } else if (step[key]) {
-        //                 $(this).val(step[key]);
-        //             }
-        //         }
-        //     });
-
-        //     $('#report').append(tr);
-        // });
         $('#report').sortable({
             handle: ".handle"
         });
-
-
-        // For each loaded step: if step.sort exists -> generate rows
-        // steps.forEach((step, i) => {
-        //     const $block = $('#report .step').eq(i);
-        //     if (step.sort && Array.isArray(step.sort)) {
-        //         const $rows = $block.find('.sort-rows');
-        //         step.sort.forEach(rule => addSortRow($rows, rule));
-        //     }
-        // });
     });
 
 
@@ -675,19 +683,6 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     const existing = <?= json_encode($report['variables'] ?? []) ?>;
     if (existing.length) {
         existing.forEach(v => addVarRow(v));
-    } else {
-        // helpful defaults to start
-        addVarRow({
-            key: 'orgId',
-            type: 'string',
-            label: 'Department ID'
-        });
-        addVarRow({
-            key: 'year',
-            type: 'int',
-            label: 'Year',
-            default: (new Date()).getFullYear()
-        });
     }
 
     // simple validation before submit

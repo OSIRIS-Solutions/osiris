@@ -150,6 +150,16 @@ function toastWarning(msg = "", title = null) {
         timeShown: 10000
     })
 }
+function toastInfo(msg = "", title = null) {
+    if (title === null) title = lang("Info", "Information")
+    osirisJS.initStickyAlert({
+        content: msg,
+        title: title,
+        alertType: "primary",
+        hasDismissButton: true,
+        timeShown: 10000
+    })
+}
 function getCookie(cname) {
     let decodedCookie = decodeURIComponent(document.cookie);
     if (cname === null) {
@@ -438,7 +448,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
             updateCart(false)
         } else {
             if (favlist.length > 30) {
-                toastError(lang('You can have no more than 30 items in your cart.', 'Du kannst nicht mehr als 30 Aktivitäten in deinem Einkaufswagen haben.'))
+                toastError(lang('You can have no more than 30 items in your collection.', 'Du kannst nicht mehr als 30 Aktivitäten in deiner Sammlung haben.'))
                 return;
             }
             favlist.push(id)
@@ -455,7 +465,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
     if (el === null) {
         location.reload()
     } else {
-        $(el).find('i').toggleClass('ph ph-fill').toggleClass('ph').toggleClass('text-success')
+        $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
     }
     // setTimeout(function () {
     //     $(el).find('i').removeClass('animate__flip')

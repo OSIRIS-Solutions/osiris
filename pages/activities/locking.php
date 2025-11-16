@@ -33,7 +33,7 @@
 
 <div class="container w-800 mw-full">
     <h1>
-        <i class="ph ph-lock"></i>
+        <i class="ph-duotone ph-lock"></i>
         <?= lang('Lock a period', 'Zeitraum sperren') ?>
     </h1>
     <p>
@@ -90,11 +90,11 @@
 
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--danger-color);">
                     <input type="radio" name="action" id="action-lock" value="lock" checked="">
-                    <label for="action-lock"><i class="ph ph-fill ph-lock text-danger"></i> <?= lang('Lock', 'Sperren') ?></label>
+                    <label for="action-lock"><i class="ph ph-duotone ph-lock text-danger"></i> <?= lang('Lock', 'Sperren') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--success-color);">
                     <input type="radio" name="action" id="action-unlock" value="unlock">
-                    <label for="action-unlock"><i class="ph ph-fill ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
+                    <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
                 </div>
             </div>
             <button class="btn" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>

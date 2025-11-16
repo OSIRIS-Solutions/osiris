@@ -48,7 +48,7 @@
                                 </td>
                                 <td style="color: <?= $type['color'] ?? 'inherit' ?>">
                                     <input type="hidden" name="order[]" value="<?= $type['id'] ?>">
-                                    <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                                    <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
                                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                                 </td>
                             </tr>
@@ -77,7 +77,7 @@
 </div>
 
 <h1>
-    <i class="ph ph-gear"></i>
+    <i class="ph-duotone ph-gear"></i>
     <?= lang('Categories', 'Kategorien') ?>
 </h1>
 
@@ -112,7 +112,7 @@
 foreach ($Categories->categories as $type) { ?>
     <div class="box px-20 py-10 mb-10" style="--primary-color: <?= $type['color'] ?? 'var(--primary-color);' ?>">
         <h3 class="title text-primary">
-            <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+            <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
             <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
         </h3>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
@@ -125,7 +125,7 @@ foreach ($Categories->categories as $type) { ?>
             $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
                 <a class="btn small ml-10 text-primary" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
-                    <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
+                    <i class="ph ph-<?= $subtype['icon'] ?? 'folder-open' ?>"></i>
                     <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                 </a>
             <?php } ?>

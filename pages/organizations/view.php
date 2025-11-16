@@ -26,6 +26,7 @@ $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings-
 <div class="organization">
 
     <h1 class="title">
+        <?= Organization::getIcon($organization['type'], 'ph-duotone') ?>
         <?= lang($organization['name'], $organization['name_de'] ?? null) ?>
     </h1>
 

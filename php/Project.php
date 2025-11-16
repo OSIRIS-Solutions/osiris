@@ -528,6 +528,24 @@ class Project extends Vocabulary
         return $this->getValue('funding-type', $funder);
     }
 
+    public function isNagoyaRelevant()
+    {
+        $nagoya = $this->project['nagoya'] ?? 'unknown';
+        return ($nagoya == 'yes');
+    }
+
+    public function getNagoyaStatus()
+    {
+        $nagoya = $this->project['nagoya'] ?? 'unknown';
+        if ($nagoya == 'yes') {
+            return '<span class="badge danger"><i class="ph ph-warning"></i> ' . lang('Relevant', 'Relevant') . '</span>';
+        } elseif ($nagoya == 'no') {
+            return '<span class="badge success"><i class="ph ph-check"></i> ' . lang('Not relevant', 'Nicht relevant') . '</span>';
+        } else {
+            return '<span class="badge muted"><i class="ph ph-question"></i> ' . lang('Unknown', 'Unbekannt') . '</span>';
+        }
+    }
+
     public function getCountryRole($role)
     {
         $country_roles = [

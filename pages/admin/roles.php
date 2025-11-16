@@ -152,6 +152,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 </div>
 
 <h1>
+    <i class="ph-duotone ph-shield-check"></i>
     <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
 </h1>
 

@@ -28,7 +28,7 @@
 <?php } ?>
 
 <h1>
-    <i class="ph ph-clipboard-text"></i>
+    <i class="ph-duotone ph-clipboard-text"></i>
     <?= lang('Reports', 'Berichte') ?>
 </h1>
 

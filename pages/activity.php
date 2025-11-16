@@ -32,17 +32,6 @@ $upload_possible = $typeArr['upload'] ?? true;
 $subtypeArr = $Format->subtypeArr;
 $typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
 $typeFields = $Modules->getFields();
-// if (empty($typeFields)) {
-//     $typeFields = [];
-//     foreach ($typeModules as $m) {
-//         $req = false;
-//         if (str_ends_with($m, '*')) {
-//             $m = str_replace('*', '', $m);
-//             $req = true;
-//         }
-//         $typeFields[] = ['id' => $m, 'required' => $req];
-//     }
-// }
 
 foreach ($typeModules as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
@@ -544,7 +533,7 @@ if ($Settings->featureEnabled('tags')) {
 
         <div class="btn-group">
             <button class="btn text-primary border-primary" onclick="addToCart(this, '<?= $id ?>')">
-                <i class="<?= (in_array($id, $cart)) ? 'ph ph-fill ph-shopping-cart ph-shopping-cart-plus text-success' : 'ph ph-shopping-cart ph-shopping-cart-plus' ?>"></i>
+                <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
                 <?= lang('Collect', 'Sammeln') ?>
             </button>
             <div class=" dropdown with-arrow btn-group ">
@@ -801,7 +790,7 @@ if ($Settings->featureEnabled('tags')) {
 
                                     $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>' : '<?= lang('Visible', 'Sichtbar') ?>');
 
-                                    toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
+                                    toastSuccess(lang('Visibility status changed', 'Sichtbarkeitsstatus geändert'))
                                 },
                                 error: function(response) {
                                     console.log(response);
@@ -827,7 +816,7 @@ if ($Settings->featureEnabled('tags')) {
             </div>
         <?php } ?>
 
-        <?php if ($user_activity) {
+        <?php if ($DB->isUserActivity($doc, $_SESSION['username'], false)) {
             $highlights = DB::doc2Arr($USER['highlighted'] ?? []);
             $highlighted = in_array($id, $highlights);
         ?>
@@ -1058,7 +1047,7 @@ if ($Settings->featureEnabled('tags')) {
                             </button>
 
                             <span class="key"><?= lang('Formatted entry', 'Formatierter Eintrag') ?></span>
-                            <div id="formatted"><?= $Format->format() ?></div>
+                            <div id="formatted"><?= $doc['rendered']['print'] ?></div>
                         </td>
                     </tr>
                     <?php
@@ -1098,7 +1087,7 @@ if ($Settings->featureEnabled('tags')) {
 
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Journal') ?></span>
+                                    <span class="key"><?= $Settings->journalLabel() ?></span>
 
                                     <a class="module " href="<?= ROOTPATH ?>/journal/view/<?= $doc['journal_id'] ?>">
                                         <h6 class="m-0"><?= $journal['journal'] ?></h6>
@@ -1883,7 +1872,7 @@ if ($Settings->featureEnabled('tags')) {
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn small link" id="remove-guest" onclick="$(this).closest('tr').remove()">
-                                                        <i class="ph ph-trash text-danger"></i>
+                                                        <i class="ph-duotone ph-trash text-danger"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -2005,7 +1994,7 @@ if ($Settings->featureEnabled('tags')) {
                                     </td>
                                     <td>
                                         <button type="button" class="btn small link" id="remove-guest" onclick="$(this).closest('tr').remove()">
-                                            <i class="ph ph-trash text-danger"></i>
+                                            <i class="ph-duotone ph-trash text-danger"></i>
                                         </button>
                                     </td>
                                 `;

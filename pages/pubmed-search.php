@@ -18,7 +18,7 @@
 ?>
 
 <h1 class="my-0">
-    <i class="ph ph-plus-circle"></i>
+    <i class="ph-duotone ph-plus-circle"></i>
     <?= lang('Search in Pubmed', 'Suche in Pubmed') ?>
 </h1>
 

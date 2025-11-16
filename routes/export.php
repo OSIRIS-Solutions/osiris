@@ -31,8 +31,15 @@ Route::get('/cart', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         // ['name' => 'Export', 'path' => "/export"], 
-        ['name' => lang("Cart", "Einkaufswagen")]
+        ['name' => lang("Collection", "Sammlung")]
     ];
+    if (isset($_GET['empty']) && $_GET['empty'] == 1) {
+        // empty cart
+        emptyCart();
+        $_SESSION['msg'] = lang("Collection emptied.", "Sammlung geleert.");
+        header("Location: " . ROOTPATH . "/cart");
+        exit();
+    }
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/cart.php";

@@ -9,7 +9,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
 
-<h1><?= lang('Events') ?></h1>
+<h1>
+    <i class="ph-duotone ph-calendar-dots"></i>
+    <?= lang('Events') ?>
+</h1>
 
 
 <!-- modal for adding conference -->
@@ -114,10 +117,10 @@ $conferences = $osiris->conferences->find(
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $topic_id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $topic_id ?>" onclick="filterEvents(this, '<?= $topic_id ?>', 5)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">

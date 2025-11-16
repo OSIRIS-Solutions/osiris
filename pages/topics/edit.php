@@ -65,13 +65,13 @@ if (empty($form) || !isset($form['_id'])) {
         <div class="col-md-6 floating-form">
             <?php if (empty($form)) { ?>
                 <input type="text" id="id" class="form-control" name="values[id]" required value="<?= uniqid() ?>" placeholder="ID is a required field">
-            <label for="id" class="required">ID</label>
-            <small class="text-muted">
-                <?=lang('It it recommended to choose something short you can recognize.', 'Es wird empfohlen, etwas Kurzes, Wiedererkennbares zu nehmen.')?>
-            </small>
+                <label for="id" class="required">ID</label>
+                <small class="text-muted">
+                    <?= lang('It it recommended to choose something short you can recognize.', 'Es wird empfohlen, etwas Kurzes, Wiedererkennbares zu nehmen.') ?>
+                </small>
             <?php } else { ?>
                 <small class="font-weight-bold">ID:</small><br>
-                <?=$form['id']?>
+                <?= $form['id'] ?>
             <?php } ?>
         </div>
         <!-- <div class="col-md-5 floating-form">
@@ -83,7 +83,7 @@ if (empty($form) || !isset($form['_id'])) {
         </div> -->
         <div class="col-md-6 floating-form">
             <input type="color" id="color" class="form-control" name="values[color]" value="<?= $form['color'] ?? '' ?>" placeholder="color">
-            <label for="color"><?=lang('Color', 'Farbe')?></label>
+            <label for="color"><?= lang('Color', 'Farbe') ?></label>
         </div>
     </div>
     <div class="row row-eq-spacing mb-0">
@@ -152,5 +152,18 @@ if (empty($form) || !isset($form['_id'])) {
             quillEditor('description_de');
         </script>
     </div>
+
+    <!-- inactive -->
+    <div class="form-group">
+        <input type="hidden" name="values[inactive]" value="false">
+        <div class="custom-switch">
+            <input type="checkbox" id="inactive-check" <?= val('inactive') ? 'checked' : '' ?> name="values[inactive]" value="true">
+            <label for="inactive-check">
+                <?= lang('Mark as inactive', 'Als inaktiv markieren') ?>
+            </label>
+        </div>
+    </div>
+
+
     <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
 </form>

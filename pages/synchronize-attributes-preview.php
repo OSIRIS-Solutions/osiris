@@ -32,6 +32,7 @@ if (is_string($result)) {
 </div>
 
 <h1>
+    <i class="ph-duotone ph-arrow-clockwise"></i>
     <?= lang('Synchronized attributes from LDAP', 'Synchronisierte Attribute aus LDAP') ?>
 </h1>
 
@@ -79,7 +80,16 @@ if (is_string($result)) {
                 <td><?= $user ?></td>
                 <?php foreach ($ldap_fields as $osiris_field => $lf) { ?>
                     <td>
-                        <?php if (isset($entry[$lf])) { ?>
+                        <?php if (isset($entry[$lf])) { 
+                            // if field = department, check if department exists in OSIRIS
+                            if ($osiris_field == 'department') {
+                                $dept = $Groups->findGroup($entry[$lf][0]);
+                                if (!$dept) { ?>
+                                    <i class="ph-duotone ph-warning text-danger" title="Department not found in OSIRIS"></i>
+                                    <?php
+                                }
+                            }
+                            ?>
                             <?= $entry[$lf][0] ?>
                         <?php } else { ?>
                             <span class="text-danger">not found</span>

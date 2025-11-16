@@ -18,6 +18,7 @@
 ?>
 
 <h1>
+    <i class="ph-duotone ph-book-open"></i>
     <?= lang('Documentation', 'Dokumentation') ?>
 </h1>
 

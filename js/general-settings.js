@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     // read hash to navigate
     var hash = window.location.hash;
-    if (hash) {
+    if (hash && hash.startsWith('#section-')) {
         hash = hash.replace('#section-', '')
         // check if hash is a valid section
         if ($(`section#${hash}`).length > 0) {

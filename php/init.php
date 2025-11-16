@@ -20,6 +20,7 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
 } elseif (empty($version)) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
     <div class="align-items-center container d-flex h-full">
         <div class="alert danger mb-20 w-full">
             <h3 class="title">
@@ -46,6 +47,7 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
 } else if ($version['value'] != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
     <div class="align-items-center container d-flex h-full">
         <div class="alert danger mb-20 w-full">
             <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>

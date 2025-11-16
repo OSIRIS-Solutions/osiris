@@ -18,8 +18,8 @@
 
 ?>
 
-<h1 class="mt-0">
-    <i class="ph ph-lightbulb text-osiris" aria-hidden="true"></i>
+<h1>
+    <i class="ph-duotone ph-lightbulb" aria-hidden="true"></i>
     <?= lang('Concept', 'Konzept') ?>
     <span class="text-secondary">
         <?= $name ?>

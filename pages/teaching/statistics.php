@@ -69,7 +69,7 @@ $all = $osiris->activities->count(
 
 
 <h1>
-    <i class="ph ph-chart-line-up"></i>
+    <i class="ph-duotone ph-chart-line-up"></i>
     <?= lang("Teaching statistics", "Statistiken zu Lehrveranstaltungen") ?>
 </h1>
 
@@ -115,7 +115,7 @@ $all = $osiris->activities->count(
         <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
     </h2>
 
-    <table class="table">
+    <table class="table" id="teaching-modules-table">
         <thead>
             <tr>
                 <th>Modul</th>
@@ -159,7 +159,7 @@ $all = $osiris->activities->count(
                             <?= $t['module'] ?>
                         </a>
                     </td>
-                    <td><?= Document::translateCategory($t['category'] ?? '-') ?></td>
+                    <td><?= $Document->translateCategory($t['category'] ?? '-') ?></td>
                     <td><?= date('d.m.Y', strtotime($t['start_date'])) ?></td>
                     <td><?= date('d.m.Y', strtotime($t['end_date'])) ?></td>
                     <td>
@@ -185,7 +185,7 @@ $all = $osiris->activities->count(
 
 
 <?php
-$timelineData = array_map(function ($t) {
+$timelineData = array_map(function ($t) use ($Document) {
     $authors = DB::doc2Arr($t['authors']);
     return [
         'title' => $t['module'] ?? '',
@@ -193,7 +193,7 @@ $timelineData = array_map(function ($t) {
         'start' => $t['start_date'],
         'end'   => $t['end_date'],
         'hasAoi' => array_filter($authors, fn($a) => !empty($a['aoi'])) ? true : false,
-        'cat' => Document::translateCategory($t['category'] ?? '-'),
+        'cat' => $Document->translateCategory($t['category'] ?? '-'),
     ];
 }, $teaching);
 usort($timelineData, function ($a, $b) {
@@ -215,6 +215,10 @@ $unique_number = count($uniques);
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 
 <script>
+    $(document).ready(function() {
+        initDownloadTable('#teaching-modules-table', 'Teaching Modules <?= $selectedSemester ?>');
+    });
+
     const data = <?= json_encode($timelineData) ?>;
     const unique_number = <?= $unique_number ?? 1 ?>;
     const divSelector = '#gantt-container';

@@ -168,7 +168,7 @@ $active = function ($field) use ($data_fields) {
 
     <div class="row row-eq-spacing">
         <?php if ($active('type')) { ?>
-            <div class="col-md-6">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="type" class="required">
                     <?= lang('Category', 'Kategorie') ?>
                     <span class="badge kdsf">KDSF-B-13-5</span>
@@ -184,7 +184,7 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <?php if ($active('infrastructure_type')) { ?>
-            <div class="col-md-6">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="infrastructure_type" class="required">
                     <?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>
                     <span class="badge kdsf">KDSF-B-13-6</span>
@@ -192,6 +192,21 @@ $active = function ($field) use ($data_fields) {
                 <select name="values[infrastructure_type]" id="infrastructure_type" class="form-control" required>
                     <?php
                     $vocab = $Vocabulary->getValues('infrastructure-type');
+                    foreach ($vocab as $v) { ?>
+                        <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        <?php } ?>
+        <?php if ($active('access')) { ?>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label for="access" class="required">
+                    <?= lang('User Access', 'Art des Zugangs') ?>
+                    <span class="badge kdsf">KDSF-B-13-7</span>
+                </label>
+                <select name="values[access]" id="access" class="form-control" required>
+                    <?php
+                    $vocab = $Vocabulary->getValues('infrastructure-access');
                     foreach ($vocab as $v) { ?>
                         <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                     <?php } ?>
@@ -212,35 +227,15 @@ $active = function ($field) use ($data_fields) {
         foreach ($custom_fields as $field) {
             $key = $field['id'] ?? null;
             if ($active($key)) { ?>
-            <div class="form-group">
-<?php
-                $Modules->custom_field($key);
-            ?>
-            </div>
-            <?php
+                <div class="form-group">
+                    <?php
+                    $Modules->custom_field($key);
+                    ?>
+                </div>
+    <?php
             }
         }
     } ?>
-
-
-
-    <div class="row row-eq-spacing">
-        <?php if ($active('access')) { ?>
-            <div class="col-md-6">
-                <label for="access" class="required">
-                    <?= lang('User Access', 'Art des Zugangs') ?>
-                    <span class="badge kdsf">KDSF-B-13-7</span>
-                </label>
-                <select name="values[access]" id="access" class="form-control" required>
-                    <?php
-                    $vocab = $Vocabulary->getValues('infrastructure-access');
-                    foreach ($vocab as $v) { ?>
-                        <option value="<?= $v['id'] ?>" <?= sel('type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-        <?php } ?>
-    </div>
 
     <?php if ($active('topics')) {
         $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
@@ -249,11 +244,12 @@ $active = function ($field) use ($data_fields) {
         }
     } ?>
 
+
     <?php if ($active('collaborative')) { ?>
 
-        <h6>
+        <h5>
             <?= lang('Collaborative research infrastructure', 'Verbundforschungsinfrastruktur') ?>
-        </h6>
+        </h5>
 
         <?php
         $collaborative = $form['collaborative'] ?? false;
@@ -380,6 +376,76 @@ $active = function ($field) use ($data_fields) {
                 });
             });
         </script>
+    <?php } ?>
+
+
+    <h5>
+        <?= lang('Configure Statistics', 'Statistiken konfigurieren') ?>
+    </h5>
+
+    <div class="form-group">
+
+        <label for="statistic_frequency">
+            <?= lang('How often do you collect statistics?', 'Wie oft erhebst du Statistiken?') ?>
+        </label>
+        <select name="values[statistic_frequency]" id="statistic_frequency" class="form-control">
+            <option value="annual" <?= sel('statistic_frequency', 'annual') ?>><?= lang('Annual', 'Jährlich') ?></option>
+            <option value="quarterly" <?= sel('statistic_frequency', 'quarterly') ?>><?= lang('Quarterly', 'Vierteljährlich') ?></option>
+            <option value="monthly" <?= sel('statistic_frequency', 'monthly') ?>><?= lang('Monthly', 'Monatlich') ?></option>
+            <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('Irregularly', 'Unregelmäßig') ?></option>
+        </select>
+        <small class="text-muted">
+            <?=lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
+        </small>
+    </div>
+
+    <?php
+
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+
+    $fields = $Vocabulary->getVocabulary('infrastructure-stats');
+    if (empty($fields) || !is_array($fields) || empty($fields['values'])) {
+        $fields = [
+            [
+                "id" => "internal",
+                "en" => "Number of internal users",
+                "de" => "Anzahl interner Nutzer/-innen"
+            ],
+            [
+                "id" => "national",
+                "en" => "Number of national users",
+                "de" => "Anzahl nationaler Nutzer/-innen"
+            ],
+            [
+                "id" => "international",
+                "en" => "Number of international users",
+                "de" => "Anzahl internationaler Nutzer/-innen"
+            ],
+            [
+                "id" => "hours",
+                "en" => "Number of hours used",
+                "de" => "Anzahl der genutzten Stunden"
+            ],
+            [
+                "id" => "accesses",
+                "en" => "Number of accesses",
+                "de" => "Anzahl der Nutzungszugriffe"
+            ],
+        ];
+    } else {
+        $fields = $fields['values'] ?? [];
+    }
+    ?>
+    <?php
+    $statistic_fields = DB::doc2Arr($form['statistic_fields'] ?? []);
+    foreach ($fields as $field) { ?>
+        <div class="form-group">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="checkbox-<?= $field['id'] ?>" value="<?= $field['id'] ?>" name="values[statistic_fields][]" <?= empty($statistic_fields) || in_array($field['id'], $statistic_fields) ? 'checked' : '' ?>>
+                <label for="checkbox-<?= $field['id'] ?>"><?= lang($field['en'], $field['de']) ?></label>
+            </div>
+        </div>
     <?php } ?>
 
     <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
