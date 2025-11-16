@@ -2,7 +2,7 @@
 
 
 
-<span class="badge float-right">04.11.2025</span>
+<span class="badge float-right">16.11.2025</span>
 <a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
 
 ## Version 1.6.2
