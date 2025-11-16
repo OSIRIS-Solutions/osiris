@@ -256,8 +256,8 @@ class Modules
             "fields" => [],
             "name" => "Event Selector",
             "name_de" => "Veranstaltungsauswahl",
-            "label" => "Select an event",
-            "label_de" => "Wähle ein Event",
+            "label" => "Select an event to auto-fill date, location and event",
+            "label_de" => "Wähle ein Event aus, um Datum, Ort und Veranstaltung automatisch zu füllen",
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
             "width" => 0,
@@ -920,7 +920,7 @@ class Modules
                         $module = str_replace('*', '', $module);
                         $req = true;
                     }
-                    $fields[$module]= [
+                    $fields[$module] = [
                         'required' => $req
                     ];
                 }
@@ -992,11 +992,11 @@ class Modules
             </div>";
     }
 
-    function getFields(){
+    function getFields()
+    {
         if (!empty($this->fields)) {
             return $this->fields;
         }
-
     }
 
     function get_name($module)
@@ -1659,11 +1659,11 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
-                    
+
                     <?php if (!$req) { ?>
                         <input type="hidden" name="values[authors]" value="">
                     <?php } ?>
-                    
+
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1978,26 +1978,104 @@ class Modules
             case "event-select":
                 $events = $this->DB->db->conferences->find(
                     ['end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]],
-                    ['sort' => ['start' => -1], 'limit' => 10]
+                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1]]
+                    // ['sort' => ['start' => -1], 'limit' => 10]
                 );
             ?>
 
                 <div class="data-module col-sm-<?= $width ?>" data-module="event-select">
-                    <label class="floating-title"><?= $label ?></label>
+                    <!-- <label class="floating-title"></label> -->
 
-                    <div id="event-select-container w-full">
-                        <div class="btn-group d-flex" id="event-select-btns">
-                            <a class="btn" href="#add-event">
-                                <i class="ph ph-plus"></i>
-                            </a>
-                            <?php foreach ($events as $event) { ?>
-                                <button class="btn primary" type="button" onclick="selectEvent('<?= $event['_id'] ?>', '<?= addslashes($event['title']) ?>', '<?= $event['start'] ?>', '<?= $event['end'] ?>', '<?= $event['location'] ?>')">
-                                    <?= $event['title'] ?>
-                                    <small><?= fromToDate($event['start'], $event['end']) ?></small>
-                                </button>
-                            <?php } ?>
+                    <!-- dropdown with scroll and search, onclick -->
+                    <div class="dropdown" id="event-select-dropdown">
+                        <button id="event-select-button" class="btn primary" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                            <i class="ph ph-calendar-dots ph-2x mr-10"></i>
+                            <span>
+                                <b><?= lang('Select event', 'Veranstaltung auswählen') ?></b>
+                                <br>
+                                <small><?= lang('to fill date, event name and location fields automatically.', 'um automatisch Datum, Veranstaltungsname und Ort auszufüllen.') ?></small>
+                            </span>
+                            <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdown-1">
+                            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterEvents();" class="form-control">
+                            <div class="events-content">
+                                <?php foreach ($events as $ev) { ?>
+                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>'); return false;">
+                                        <strong><?= htmlspecialchars($ev['title']) ?></strong><br>
+                                        <small class="text-muted">
+                                            <?= date('d.m.Y', strtotime($ev['start'])) ?> - <?= date('d.m.Y', strtotime($ev['end'])) ?>
+                                            <?php if (!empty($ev['location'])) { ?>
+                                                | <?= htmlspecialchars($ev['location']) ?>
+                                            <?php } ?>
+                                        </small>
+                                    </a>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
+                    <style>
+                        #event-select-button {
+                            width: 100%;
+                            text-align: left;
+                            height: auto;
+                            line-height: 1.4;
+                            padding: .5rem 1rem;
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                        }
+
+                        #event-select-dropdown {
+                            position: relative;
+                            display: inline-block;
+                            width: 100%;
+                        }
+
+                        #event-select-dropdown .dropdown-menu {
+                            width: 100%;
+                            max-height: 300px;
+                            overflow-y: auto;
+                            padding: 0.5rem;
+                        }
+
+                        #event-select-dropdown .dropdown-menu a {
+                            display: block;
+                            padding: 0.5rem;
+                            text-decoration: none;
+                            color: var(--text-color);
+                            border-bottom: 1px solid var(--border-color);
+                        }
+
+                        #event-select-dropdown .dropdown-menu a:hover {
+                            background-color: var(--hover-bg-color);
+                        }
+
+                        #event-select-dropdown .dropdown-menu .events-content {
+                            max-height: 250px;
+                            overflow-y: auto;
+                        }
+                    </style>
+                    <script>
+                        function filterEvents() {
+                            var input, filter, div, a, i, txtValue;
+                            input = document.getElementById("myInput");
+                            filter = input.value.toUpperCase();
+                            div = document.querySelector("#event-select-dropdown .events-content");
+                            a = div.getElementsByTagName("a");
+                            for (i = 0; i < a.length; i++) {
+                                txtValue = a[i].textContent || a[i].innerText;
+                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                    a[i].style.display = "";
+                                } else {
+                                    a[i].style.display = "none";
+                                }
+                            }
+                        }
+                    </script>
+
+
+
                     <style>
                         #event-select-container {
                             border-radius: var(--border-radius);
@@ -2344,8 +2422,6 @@ class Modules
                 </div>
             <?php
                 break;
-            // case "date-range-ongoing-simple"
-
             case "software-venue":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-venue">
@@ -2431,20 +2507,19 @@ class Modules
                         }
                         ?>
                     </p>
-                    <!-- <p class="m-0 font-size-12 ">
-                        <?= lang('Latest', 'Zuletzt') ?>:
-                        <?php
-                        $conferences = $this->DB->db->conferences->find(
-                            ['start' => ['$lte' => date('Y-m-d', strtotime('today'))], 'none' => true],
-                            ['sort' => ['start' => -1], 'limit' => 5, 'projection' => ['title' => 1]]
-                        )->toArray();
-                        foreach ($conferences as $c) {
-                        ?>
-                            <a onclick="selectConference(this)" class="mr-5" data-id="<?= $c['_id'] ?>"><?= $c['title'] ?></a>
-                        <?php } ?>
-                    </p> -->
                     <script>
                         function resetConference() {
+                            // check if conference from datalist is selected
+                            var input = $('#conference').val()
+                            var option = $('#conference-list option').filter(function() {
+                                return $(this).val() === input;
+                            })
+                            if (option.length) {
+                                var id = option.data('id')
+                                $('#conference_id').val(id)
+                                $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + input)
+                                return
+                            }
                             $('#conference_id').val('')
                             $('#connected-conference').html(lang('No event connected', 'Kein Event verknüpft'))
                         }
@@ -2461,8 +2536,8 @@ class Modules
 
                 <datalist id="conference-list">
                     <?php
-                    foreach ($this->DB->db->conferences->distinct('title') as $c) { ?>
-                        <option><?= $c ?></option>
+                    foreach ($this->DB->db->conferences->find([]) as $c) { ?>
+                        <option data-id="<?= $c['_id'] ?>"><?= $c['title'] ?></option>
                     <?php } ?>
                 </datalist>
             <?php
@@ -2531,10 +2606,10 @@ class Modules
                     <?= $this->render_help($help) ?>
                 </div>
                 <datalist id="magazine-list">
-                        <?php
-                        foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
-                            <option><?= $m ?></option>
-                        <?php } ?>
+                    <?php
+                    foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
+                        <option><?= $m ?></option>
+                    <?php } ?>
                 </datalist>
             <?php
                 break;
@@ -2665,7 +2740,7 @@ class Modules
                         <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
-                    
+
                     <?php if (!$req) { ?>
                         <input type="hidden" name="values[editors]" value="">
                     <?php } ?>
@@ -3207,7 +3282,7 @@ class Modules
                 $val = $this->val('funding_type', null);
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">
-                    <select class="form-control" name="values[funding_type]" id="funding_type"  <?= $labelClass ?> autocomplete="off">
+                    <select class="form-control" name="values[funding_type]" id="funding_type" <?= $labelClass ?> autocomplete="off">
                         <?php
                         $vocab = $Vocabulary->getValues('funding-type');
                         foreach ($vocab as $v) { ?>

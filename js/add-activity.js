@@ -1603,6 +1603,11 @@ function selectEvent(id, event, start, end, location) {
     $('#date_end').val(end)
 
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
+
+    if ($('#event-select-dropdown').length > 0) {
+        $('#event-select-dropdown').removeClass('show')
+    }
+    toastSuccess(lang('Event "'+event+'" selected.', 'Veranstaltung "'+event+'" ausgewählt.'))
 }
 
 function addEvent() {
