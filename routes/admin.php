@@ -1016,6 +1016,7 @@ Route::post('/crud/admin/add-user', function () {
     if (isset($_POST['guestaccount'])) {
         $collection = $osiris->guestAccounts;
         $account['valid_until'] = $_POST['valid_until'] ?? null;
+        $person['is_guest'] = true;
     }
     // remove existing accounts with same username
     $collection->deleteMany(['username' => $username]);
@@ -1044,6 +1045,11 @@ Route::post('/crud/admin/add-user', function () {
     }
     $person['created'] = date('d.m.Y');
     $person['roles'] = array_keys($person['roles'] ?? []);
+    if (isset($_POST['guestaccount'])) {
+        if (!in_array('guest', $person['roles'])) {
+            $person['roles'][] = 'guest';
+        }
+    }
 
     $person['new'] = true;
     $person['is_active'] = true;
@@ -1111,6 +1117,12 @@ Route::post('/crud/admin/guest-account/delete', function () {
     if (!isset($_POST['username'])) die("no username given");
     $osiris->guestAccounts->deleteOne(
         ['username' => $_POST['username']]
+    );
+    // end valid and remove is_guest flag from person and remove guest role
+    $osiris->persons->updateOne(
+        ['username' => $_POST['username']],
+        ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
+        ['$pull' => ['roles' => 'guest']]
     );
     $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
     $_SESSION['msg_type'] = 'success';

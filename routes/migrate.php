@@ -30,7 +30,7 @@ Route::get('/migrate/test', function () {
 
     set_time_limit(6000);
     include BASEPATH . "/header.php";
-    include_once BASEPATH . "/routes/migration/v1.5.0.php";
+    include_once BASEPATH . "/routes/migration/v1.6.2.php";
     include BASEPATH . "/footer.php";
 });
 
