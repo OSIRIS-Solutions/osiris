@@ -115,7 +115,7 @@ $all = $osiris->activities->count(
         <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
     </h2>
 
-    <table class="table">
+    <table class="table" id="teaching-modules-table">
         <thead>
             <tr>
                 <th>Modul</th>
@@ -215,6 +215,10 @@ $unique_number = count($uniques);
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 
 <script>
+    $(document).ready(function() {
+        initDownloadTable('#teaching-modules-table', 'Teaching Modules <?= $selectedSemester ?>');
+    });
+
     const data = <?= json_encode($timelineData) ?>;
     const unique_number = <?= $unique_number ?? 1 ?>;
     const divSelector = '#gantt-container';

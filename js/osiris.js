@@ -975,6 +975,66 @@ function initActivities(selector, data = {}) {
     });
 }
 
+function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible') {
+    return [
+        {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: columns
+            },
+            className: 'btn small',
+            title: title,
+            text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+        },
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: columns,
+                // do not strip HTML tags in the links column
+                stripHtml: false
+            },
+            title: title,
+            className: 'btn small',
+            text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+        },
+        // pdf
+        {
+            extend: 'pdfHtml5',
+            exportOptions: {
+                columns: columns
+            },
+            className: 'btn small',
+            title: title,
+            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
+        }
+    ];
+}
+
+function initDownloadTable(selector, title = 'OSIRIS_data_export', columns = ':visible') {
+    // check that table exists and is not empty
+    if ($(selector).length === 0) {
+        console.warn('No table found with selector:', selector);
+        return;
+    }
+    if ($(selector).find('tbody tr').length === 0) {
+        console.warn('No data found in table with selector:', selector);
+        return;
+    }
+    // table with nothing but the download buttons
+    return $(selector).DataTable({
+        layout: {
+            topStart: {
+                buttons: downloadTableButtons(title, columns)
+            },
+            'topEnd': null,
+            'bottomStart': null,
+            'bottomEnd': null
+        },
+        paging: false,
+        searching: false,
+        info: false,
+    });
+}
 
 
 function initProjects(selector, data = {}) {
