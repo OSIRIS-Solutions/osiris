@@ -319,9 +319,18 @@ Route::get('/api/all-activities', function () {
         $filter['type'] = $_GET['type'];
     }
 
+    // stream output
+    header("Content-Type: application/json; charset=utf-8");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo '{"status":200,"data":[';
+    $i = 0;
+    $first = true;
+
     $cursor = $osiris->activities->find($filter);
     $cart = readCart();
     foreach ($cursor as $doc) {
+        $i++;
         $id = $doc['_id'];
         if (isset($doc['rendered'])) {
             $rendered = $doc['rendered'];
@@ -420,9 +429,14 @@ Route::get('/api/all-activities', function () {
             <i class='" . (in_array($id, $cart) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus') . "'></i>
         </button>";
         }
-        $result[] = $datum;
+        // $result[] = $datum;
+        if (!$first) echo ',';
+        echo json_encode($datum, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        $first = false;
+        flush();
     }
-    echo return_rest($result, count($result));
+    echo '],"count":' . $i . '}';
+    // echo return_rest_stream($result, count($result));
 });
 
 
