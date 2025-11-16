@@ -987,6 +987,15 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
         },
         {
+            extend: 'pdfHtml5',
+            exportOptions: {
+                columns: columns
+            },
+            className: 'btn small',
+            title: title,
+            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
+        },
+        {
             extend: 'print',
             exportOptions: {
                 columns: columns,
@@ -996,16 +1005,6 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             title: title,
             className: 'btn small',
             text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
-        },
-        // pdf
-        {
-            extend: 'pdfHtml5',
-            exportOptions: {
-                columns: columns
-            },
-            className: 'btn small',
-            title: title,
-            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
         }
     ];
 }
