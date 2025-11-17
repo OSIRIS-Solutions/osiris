@@ -41,7 +41,7 @@ if ($action === 'view') {
             <p>
                 <?=lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.')?>
             </p>
-            <a href="<?=ROOTPATH?>/admin/synchronize-attributes" class="btn primary">
+            <a href="<?=ROOTPATH?>/synchronize-attributes" class="btn primary">
                 <i class="ph ph-user-list"></i>
                 <?=lang('Attribute preview', 'Vorschau der Attribute')?>
             </a>
