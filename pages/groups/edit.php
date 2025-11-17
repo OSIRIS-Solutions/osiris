@@ -274,7 +274,7 @@ function sel($index, $value)
                 ?>
                 
                 <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= htmlspecialchars(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
-                <small class="text-muted"><?= lang('Separate multiple synonyms with commas.', 'Mehrere Synonyme mit Kommas trennen.') ?></small>
+                <small class="text-muted"><?= lang('Separate multiple synonyms with semi-colons.', 'Mehrere Synonyme mit Semikolons trennen.') ?></small>
             </div>
 
             <!-- cost center -->
