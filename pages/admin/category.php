@@ -93,7 +93,7 @@ $member = $osiris->activities->count(['type' => $t]);
                                 </td>
                                 <td style="color: <?= $color ?? 'inherit' ?>">
                                     <input type="hidden" name="order[]" value="<?= $ch['id'] ?>">
-                                    <i class="ph ph-<?= $ch['icon'] ?? 'placeholder' ?> mr-10"></i>
+                                    <i class="ph ph-<?= $ch['icon'] ?? 'folder-open' ?> mr-10"></i>
                                     <?= lang($ch['name'], $ch['name_de'] ?? $ch['name']) ?>
                                 </td>
                             </tr>
@@ -155,7 +155,7 @@ $member = $osiris->activities->count(['type' => $t]);
 
         <h4 class="header" style="background-color:<?= $color ?>20; color:<?= $color ?>">
             <?php if (!empty($type)) { ?>
-                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
                 <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                 <?php if ($type['disabled'] ?? false) { ?>
                     <span class="badge danger ml-20">DISABLED</span>
@@ -183,10 +183,10 @@ $member = $osiris->activities->count(['type' => $t]);
                 <div class="col-sm">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="values[icon]" required value="<?= $type['icon'] ?? 'placeholder' ?>" onchange="iconTest(this.value)">
+                        <input type="text" class="form-control" name="values[icon]" required value="<?= $type['icon'] ?? 'folder-open' ?>" onchange="iconTest(this.value)">
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?>" id="test-icon"></i>
+                                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?>" id="test-icon"></i>
                             </span>
                         </div>
                     </div>
@@ -287,7 +287,7 @@ $member = $osiris->activities->count(['type' => $t]);
                     <?php
                     foreach ($children as $subtype) { ?>
                         <a class="btn mb-5 text-<?= $type['id'] ?>" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
-                            <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
+                            <i class="ph ph-<?= $subtype['icon'] ?? 'folder-open' ?>"></i>
                             <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                         </a>
                     <?php } ?>

@@ -222,6 +222,8 @@ Route::get('/install', function () {
 
 Route::get('/migrate', function () {
     set_time_limit(6000);
+    // show all errors for debugging
+    error_reporting(E_ALL);
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -230,9 +232,6 @@ Route::get('/migrate', function () {
     // flush output buffer
     flush();
     ob_flush();
-
-    // make sure that text index is created
-    $osiris->activities->createIndex(['rendered.plain' => 'text']);
 
     $DBversion = $osiris->system->findOne(['key' => 'version']);
 
@@ -357,7 +356,7 @@ Route::get('/migrate', function () {
     // echo '<p>Rerender projects</p>';
     // renderAuthorUnitsProjects();
 
-    echo "<p>". lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
+    echo "<p>" . lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
     $osiris->system->updateOne(
         ['key' => 'version'],
         ['$set' => ['value' => OSIRIS_VERSION]],

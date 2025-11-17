@@ -26,15 +26,15 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1 class='m-0'>
     <?php if (isset($_GET['user'])) { ?>
-        <i class="ph ph-folder-user"></i>
+        <i class="ph-duotone ph-folder-user"></i>
         <?= lang("Activities of ", "Aktivitäten von ") ?>
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
     <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
-        <i class="ph ph-book-open"></i>
+        <i class="ph-duotone ph-book-open"></i>
         <?= lang("All activities", "Alle Aktivitäten") ?>
     <?php
     } elseif ($page == 'my-activities') { ?>
-        <i class="ph ph-folder-user"></i>
+        <i class="ph-duotone ph-folder-user"></i>
         <?= lang("My activities", "Meine Aktivitäten") ?>
     <?php } ?>
 </h1>
@@ -51,6 +51,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
         <?= lang('Statistics', 'Statistiken') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/activities/search" class="btn">
+        <i class="ph ph-magnifying-glass-plus"></i>
+        <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
     <?php if ($Settings->hasPermission('activities.lock')) { ?>
         <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
@@ -82,7 +86,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     <th><?= lang('Quarter', 'Quartal') ?></th>
                     <th><?= lang('Type', 'Typ') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
-                    <th></th>
+                    <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
                     <th>Start</th>
                     <th><?= lang('End', 'Ende') ?></th>
@@ -215,10 +219,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $id ?>" onclick="filterActivities(this, '<?= $id ?>', 14)" class="item" id="<?= $id ?>-btn">
                                         <span style="color: var(--highlight-color)">
@@ -359,7 +363,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             'key': 'activity'
         },
         {
-            title: '',
+            title: 'Links',
             'key': 'links'
         },
         {
@@ -403,7 +407,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             'key': 'year'
         },
         {
-            title: lang('Research topics', 'Forschungsbereiche'),
+            title: '<?= $Settings->topicLabel() ?>',
             'key': 'topics'
         },
         {
@@ -436,14 +440,22 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             language: {
                 url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
             },
-            buttons: [
-                // custom link button
-                {
-                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
-                    className: 'btn small text-primary mr-10',
-                    action: function(e, dt, node, config) {
-                        window.location.href = '<?= ROOTPATH ?>/activities/search';
-                    }
+            layout: {
+                top1Start: 'search',
+                topStart: 'buttons',
+                topEnd: 'pageLength',
+                bottomStart: 'paging',
+                bottomEnd: 'info',
+                // bottom1End: ''
+            },
+            // scrollY:        500,
+            // deferRender:    true,
+            // scroller:       true,
+            buttons: [{
+                    extend: 'colvis',
+                    className: 'btn small',
+                    text: '<i class="ph ph-columns"></i> <?= lang('Columns', 'Spalten') ?>',
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15]
                 },
                 {
                     extend: 'copyHtml5',
@@ -488,9 +500,24 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     },
                     text: '<i class="ph ph-file-csv"></i> <?= lang('CSV', 'CSV') ?>',
                 },
-
+                // {
+                //     extend: 'pdfHtml5',
+                //     exportOptions: {
+                //         columns: [4]
+                //     },
+                //     className: 'btn small pdf-btn',
+                //     title: lang('OSIRIS All Activities', 'OSIRIS Alle Aktivitäten'),
+                //     text: '<i class="ph ph-file-pdf"></i> PDF',
+                //     customize: function(doc) {
+                //         // doc.defaultStyle = doc.defaultStyle || {};
+                //         // doc.defaultStyle.fontSize = 8; // PDF body font size
+                //         // doc.styles = doc.styles || {};
+                //         // doc.styles.tableHeader = doc.styles.tableHeader || {};
+                //         // doc.styles.tableHeader.fontSize = 9; // header font size
+                //     }
+                // }
             ],
-            dom: 'fBrtip',
+            // dom: 'fBrtip',
             // dom: '<"dtsp-dataTable"frtip>',
             columnDefs: [{
                     targets: 0,
@@ -545,6 +572,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 {
                     targets: 4,
                     data: 'search-text',
+                    title: '<?= lang('Print', 'Print') ?>',
                     searchable: true,
                     visible: false,
                     searchPanes: {
@@ -634,6 +662,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 {
                     targets: 14,
                     data: 'topics',
+                    title: '<?= $Settings->topicLabel() ?>',
                     searchable: true,
                     visible: false,
                     render: function(data, type, row) {
@@ -641,7 +670,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         return data.join(', ')
                         // return `<a href="<?= ROOTPATH ?>/topics/view/${row.topics}">${data}</a>`
                     }
-
                 },
                 {
                     targets: 15,
@@ -797,10 +825,12 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
+            var search = settings.oPreviousSearch.sSearch
+            if (search == null) search = ''
             console.log(settings.oPreviousSearch.sSearch);
             writeHash({
                 page: info.page + 1,
-                search: settings.oPreviousSearch.sSearch
+                search: search
             })
         });
 

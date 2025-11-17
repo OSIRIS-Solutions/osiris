@@ -21,7 +21,7 @@ $fields = $osiris->adminFields->find()->toArray();
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
-    <i class="ph ph-textbox"></i>
+    <i class="ph-duotone ph-textbox"></i>
     Custom fields
 </h1>
 
@@ -55,7 +55,7 @@ $fields = $osiris->adminFields->find()->toArray();
                 </td>
                 <td class="unbreakable">
                     <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post" class="d-inline">
-                        <button type="submit" class="btn link"><i class="ph ph-trash text-danger"></i></button>
+                        <button type="submit" class="btn link"><i class="ph-duotone ph-trash text-danger"></i></button>
                     </form>
                     <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
                         <i class="ph ph-pencil"></i>

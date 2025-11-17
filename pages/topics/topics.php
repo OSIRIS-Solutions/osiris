@@ -15,12 +15,12 @@
  * @license     MIT
  */
 
-$topics  = $osiris->topics->find();
+$topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
 ?>
 
 
 <h1>
-    <i class="ph ph-puzzle-piece"></i>
+    <i class="ph-duotone ph-puzzle-piece"></i>
     <?= $Settings->topicLabel() ?>
 </h1>
 
@@ -37,6 +37,10 @@ $topics  = $osiris->topics->find();
                     <?=lang($topic['name'], $topic['name_de'] ?? null)?>
                 </a>
             </h4>
+            <?php if ($topic['inactive'] ?? false) { ?>
+                <span class="badge danger"><?= lang('Inactive', 'Inaktiv') ?></span>
+            <?php } ?>
+            
             <p class="text-muted">
                 <?php if (!empty($topic['subtitle'])) { ?>
                     <?= lang($topic['subtitle'], $topic['subtitle_de'] ?? null) ?>

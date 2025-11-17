@@ -119,7 +119,18 @@ if (!$Settings->featureEnabled('coins')) {
 }
 ?>
 
+<style>
+    .download-buttons {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+    }
 
+    #timeline-container {
+        position: relative;
+    }
+</style>
 
 <div class="modal modal-lg" id="coins" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -183,7 +194,7 @@ if (!$Settings->featureEnabled('coins')) {
 
                 } elseif ($approved) { ?>
                     <a href="#close-modal" class="btn disabled">
-                        <i class="ph ph-fill ph-seal-check mr-5 text-success"></i>
+                        <i class="ph ph-duotone ph-seal-check mr-5 text-success"></i>
                         <?= lang('You have already approved the currently selected quarter.', 'Du hast das aktuelle Quartal bereits bestätigt.') ?>
                     </a>
                 <?php } else { ?>
@@ -421,7 +432,7 @@ if (!$Settings->featureEnabled('coins')) {
                                             <i class="ph ph-arrow-fat-line-right"></i>
                                         </a>
                                         <button class="btn link square" onclick="addToCart(this, '<?= $id ?>')">
-                                            <i class="<?= (in_array($id, $cart)) ? 'ph ph-fill ph-shopping-cart ph-shopping-cart-plus text-success' : 'ph ph-shopping-cart ph-shopping-cart-plus' ?>"></i>
+                                            <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
                                         </button>
                                         <?php if ($currentuser) { ?>
                                             <a class="btn link square" href="<?= ROOTPATH . "/activities/edit/" . $id ?>">

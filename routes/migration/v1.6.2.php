@@ -28,3 +28,17 @@ foreach ($infrastructures as $infrastructure) {
         }
     }
 }
+
+if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
+    $roles = DB::doc2Arr($Settings->get('roles', []));
+    if (!in_array('guest', $roles)) {
+        $roles[] = 'guest';
+        $osiris->adminGeneral->updateOne(
+            ['key' => 'roles'],
+            ['$set' => ['value' => $roles]]
+        );
+        echo lang('I have added guest role to your settings. This role will be automatically assigned to the new guest accounts. It does not have any special permissions by default.', 'Ich habe die Gast-Rolle zu deiner Konfiguration hinzugefügt. Diese Rolle wird automatisch den neuen Gastkonten zugewiesen. Sie hat standardmäßig keine besonderen Berechtigungen.') . "<br>";
+    } else {
+        echo lang('A guest role already exists in your settings. It will be automatically assigned to the new guest accounts.', 'Eine Gast-Rolle existiert bereits in deiner Konfiguration. Sie wird automatisch den neuen Gastkonten zugewiesen.') . "<br>";
+    }
+}

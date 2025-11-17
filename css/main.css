@@ -526,12 +526,22 @@ h6 {
   font-weight: var(--header-weight);
   font-family: var(--header-font);
 }
-h1 i.ph,
+h1 i.ph, h1 i.ph-fill, h1 i.ph-duotone,
 h2 i.ph,
+h2 i.ph-fill,
+h2 i.ph-duotone,
 h3 i.ph,
+h3 i.ph-fill,
+h3 i.ph-duotone,
 h4 i.ph,
+h4 i.ph-fill,
+h4 i.ph-duotone,
 h5 i.ph,
-h6 i.ph {
+h5 i.ph-fill,
+h5 i.ph-duotone,
+h6 i.ph,
+h6 i.ph-fill,
+h6 i.ph-duotone {
   font-size: 1.2em;
   margin-right: 0.5rem;
   vertical-align: text-bottom;
@@ -609,10 +619,19 @@ blockquote {
   color: var(--text-color);
 }
 
-i.ph {
+i.ph, i.ph-fill, i.ph-duotone {
   line-height: 1;
   font-size: 1.5em;
   vertical-align: -0.2em;
+}
+
+h1 i.ph-duotone,
+h2 i.ph-duotone,
+h3 i.ph-duotone,
+h4 i.ph-duotone,
+h5 i.ph-duotone,
+h6 i.ph-duotone {
+  color: var(--primary-color);
 }
 
 span.secondary {
@@ -670,7 +689,7 @@ i.ph {
   content: "\e30c";
 }
 
-.fa, .fas, .fa-solid, .far, .fa-regular, .fal, .fa-light, .fat, .fa-thin, .fad, .fa-duotone, .fab, .fa-brands, .ph, .ph-fill {
+.ph, .ph-fill, .ph-duotone {
   line-height: inherit;
 }
 
@@ -3369,6 +3388,164 @@ tbody:empty {
   padding: 0.5rem 1rem;
 }
 
+div.dt-layout-row label {
+  margin-bottom: 0;
+}
+
+div.dt-container div.dt-layout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0.75em 0;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-start {
+  justify-content: flex-start;
+  margin-right: auto;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-end {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+div.dt-container div.dt-layout-row div.dt-layout-cell:empty {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) {
+    display: block;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell {
+    display: block;
+    text-align: center;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell > * {
+    margin: 0.5em 0;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell.dt-layout-start {
+    margin-right: 0;
+  }
+  div.dt-container div.dt-layout-row:not(.dt-layout-table) div.dt-layout-cell.dt-layout-end {
+    margin-left: 0;
+  }
+}
+div.dt-container div.dt-layout-start > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+div.dt-container div.dt-layout-end > *:not(:first-child) {
+  margin-left: 1em;
+}
+
+div.dt-container div.dt-layout-full {
+  width: 100%;
+}
+
+div.dt-container div.dt-layout-full > *:only-child {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.dt-container div.dt-layout-table > div {
+  display: block !important;
+}
+
+@media screen and (max-width: 767px) {
+  div.dt-container div.dt-layout-start > *:not(:last-child) {
+    margin-right: 0;
+  }
+  div.dt-container div.dt-layout-end > *:not(:first-child) {
+    margin-left: 0;
+  }
+}
+div.dt-button-collection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 0.75em 0;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background-color: white;
+  overflow: hidden;
+  z-index: 2002;
+  border-radius: 5px;
+  box-shadow: 3px 4px 10px 1px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+div.dt-button-collection .dt-button {
+  position: relative;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  float: none;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  margin: 0;
+  padding: 0.5em 1em;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+div.dt-button-collection .dt-button.dt-button-active {
+  background: none;
+  box-shadow: none;
+}
+
+div.dt-button-collection .dt-button.disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+div.dt-button-collection .dt-button:hover:not(.disabled) {
+  border: none;
+  background: rgba(153, 153, 153, 0.1);
+  box-shadow: none;
+}
+
+div.dt-button-collection .dt-button:focus {
+  outline-offset: -2px;
+}
+
+div.dt-button-collection .dt-button-active:after {
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  right: 1em;
+  display: inline-block;
+  content: "✓";
+  color: inherit;
+}
+
+.dt-button-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2001;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dt-button-down-arrow {
+  display: none;
+}
+
 /*
 -------------------------------------------------------------------------------
 11. Form elements [hm-11]
@@ -4938,6 +5115,10 @@ input[type=number] {
   left: unset;
 }
 
+.form-row.row-eq-spacing > [class^=col].floating-form:not(:first-child) label {
+  left: 1rem;
+}
+
 select.form-control[multiple] option {
   padding: 0.5rem 0.8rem;
   margin: 0 -0.8rem;
@@ -5523,8 +5704,10 @@ Alerts
   font-family: "Phosphor";
   font-size: 3rem;
   color: var(--primary-color);
-  margin-left: -4rem;
-  align-self: anchor-center;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
 }
 .alert p:first-of-type {
   margin-top: 0;
@@ -12905,7 +13088,6 @@ a.concept:hover {
 .pill-checkbox {
   display: inline-block;
 }
-
 .pill-checkbox label {
   display: inline-block;
   /* background-color: var(--primary-color); */
@@ -12916,26 +13098,36 @@ a.concept:hover {
   color: var(--primary-color);
   cursor: pointer;
 }
-
-.pill-checkbox input {
-  display: none;
-}
-
-.pill-checkbox input:checked + label {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
 .pill-checkbox label::before {
   content: "\e69a";
   font-family: "Phosphor";
   display: inline-block;
   margin-right: 0.5rem;
 }
-
+.pill-checkbox input {
+  display: none;
+}
+.pill-checkbox input:checked + label {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
 .pill-checkbox input:checked + label::before {
   content: "\e182";
+}
+.pill-checkbox.inactive {
+  opacity: 0.5;
+}
+.pill-checkbox.inactive label {
+  overflow: clip;
+  width: 2.8rem;
+  white-space: nowrap;
+}
+.pill-checkbox.inactive:hover {
+  opacity: 0.7;
+}
+.pill-checkbox.inactive:hover label {
+  width: auto;
 }
 
 .topic-pill {
@@ -12950,6 +13142,9 @@ a.concept:hover {
   align-items: center;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.topic-pill.inactive {
+  opacity: 0.6;
 }
 .topic-pill:hover {
   color: white;

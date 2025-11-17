@@ -24,7 +24,7 @@ $openalex = $Settings->featureEnabled('openalex', true);
 ?>
 
 <h1>
-    <i class="ph ph-upload text-osiris"></i>
+    <i class="ph-duotone ph-upload"></i>
     Import
 </h1>
 

@@ -1,5 +1,5 @@
 <h1>
-    <i class="ph ph-user-gear" aria-hidden="true"></i>
+    <i class="ph-duotone ph-user-gear" aria-hidden="true"></i>
     <?= lang('Distribute roles', 'Rollen verteilen') ?>
 </h1>
 

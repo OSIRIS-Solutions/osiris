@@ -53,7 +53,7 @@ $types = [
 
 
 <h1>
-    <i class="ph ph-chat-circle-text"></i>
+    <i class="ph-duotone ph-chat-circle-text"></i>
     <?= lang('Messages', 'Nachrichten') ?>
 </h1>
 

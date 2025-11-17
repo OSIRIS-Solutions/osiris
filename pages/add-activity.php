@@ -16,6 +16,8 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 
 $drafts_enabled = $Settings->featureEnabled('drafts');
 $user_drafts = 0;
@@ -86,7 +88,7 @@ function val($index, $default = '')
     .form-help {
         display: none;
         position: absolute;
-        right: 2rem;
+        left: 2rem;
         /* in d-flex row sitzt es angenehm rechts */
         top: 100%;
         margin-top: -.75rem;
@@ -101,7 +103,8 @@ function val($index, $default = '')
         color: #374151;
     }
 
-    .data-module:focus-within .form-help {
+    .data-module:focus-within .form-help,
+    .data-module:hover .form-help {
         display: block;
     }
 
@@ -109,7 +112,7 @@ function val($index, $default = '')
     .form-help::before {
         content: "";
         position: absolute;
-        right: .75rem;
+        left: .75rem;
         top: -13px;
         border: 6px solid transparent;
         border-bottom-color: var(--signal-color);
@@ -118,7 +121,7 @@ function val($index, $default = '')
     .form-help::after {
         content: "";
         position: absolute;
-        right: .75rem;
+        left: .75rem;
         top: -11px;
         border: 6px solid transparent;
         border-bottom-color: var(--signal-color-very-light);
@@ -169,6 +172,20 @@ function val($index, $default = '')
                     <input type="text" id="event-title_full" class="form-control">
                 </div>
 
+                <div class="form-group floating-form">
+                    <select id="event-type" class="form-control" required>
+                        <?php
+                        $vocab = $Vocabulary->getValues('event-type');
+                        $sel = $form['type'] ?? '';
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="event-type" class="required">
+                        <?= lang('Type', 'Typ') ?>
+                    </label>
+                </div>
+
                 <div class="form-row row-eq-spacing mb-10">
                     <div class="col">
                         <label for="start" class="required"><?= lang('Start date', 'Anfangsdatum') ?></label>
@@ -180,9 +197,23 @@ function val($index, $default = '')
                     </div>
                 </div>
 
-                <div class="form-group mb-10">
-                    <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
-                    <input type="text" id="event-location" required class="form-control">
+                <div class="form-row row-eq-spacing">
+                    <div class="col">
+                        <label for="event-location" class="required"><?= lang('Location', 'Ort') ?></label>
+                        <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
+                    </div>
+                    <div class="col">
+                        <label for="event-country"><?= lang('Country', 'Land') ?></label>
+                        <select id="event-country" class="form-control" required>
+                            <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                            <!-- germany first -->
+                            <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
+                            <?php
+                            foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                                <option value="<?= $key ?>"><?= $value ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group mb-10">
@@ -425,7 +456,7 @@ function val($index, $default = '')
 <?php if (empty($form)) { ?>
     <!-- Create new activity -->
     <h1 class="my-0">
-        <i class="ph ph-plus-circle"></i>
+        <i class="ph-duotone ph-plus-circle"></i>
         <?= lang('Add activity', 'Füge Aktivität hinzu') ?>
     </h1>
 
@@ -482,13 +513,20 @@ function val($index, $default = '')
 
 <?php } elseif ($draft) { ?>
     <h1 class="mt-0">
+        <i class="ph-duotone ph-file-text"></i>
         <?= lang('Edit draft', 'Bearbeite Entwurf') ?>
     </h1>
 <?php } elseif ($copy) { ?>
-    <h1 class="mt-0"><?= lang('Copy activity', 'Kopiere Aktivität') ?></h1>
+    <h1 class="mt-0">
+        <i class="ph-duotone ph-copy"></i>
+        <?= lang('Copy activity', 'Kopiere Aktivität') ?>
+    </h1>
 <?php } else { ?>
     <!-- Edit existing activity -->
-    <h1 class="my-0"><?= lang('Edit activity', 'Bearbeite Aktivität') ?>:</h1>
+    <h1 class="my-0">
+        <i class="ph-duotone ph-pencil"></i>
+        <?= lang('Edit activity', 'Bearbeite Aktivität') ?>:
+    </h1>
     <div class="mb-10">
         <?php
         $Format = new Document(false);

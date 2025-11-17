@@ -77,7 +77,7 @@ $pageactive = function ($p) use ($page) {
 
     <!-- Icon font -->
     <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/fill/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
     <!-- for open access icons -->
     <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
 
@@ -98,24 +98,49 @@ $pageactive = function ($p) use ($page) {
     </script>
 
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/jquery.dataTables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.responsive.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/jszip.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/dataTables.buttons.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/buttons.html5.min.js"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
 
     <script>
         $.extend($.fn.DataTable.ext.classes, {
-            sPaging: "pagination mt-10 ",
-            sPageFirst: "direction ",
-            sPageLast: "direction ",
-            sPagePrevious: "direction ",
-            sPageNext: "direction ",
-            sPageButtonActive: "active ",
-            sFilterInput: "form-control small d-inline w-auto ml-10 ",
-            sLengthSelect: "form-control small d-inline w-auto",
-            sInfo: "float-right text-muted",
-            sLength: "float-right"
+            paging: {
+                container: "pagination mt-10 ",
+                first: "direction ",
+                last: "direction ",
+                previous: "direction ",
+                next: "direction ",
+                active: "active ",
+            },
+            search: {
+                input: "form-control small d-inline w-auto ml-10 ",
+                container: "d-inline-block mr-10"
+            },
+            length: {
+                select: "form-control small d-inline w-auto mr-10",
+                container: "text-right"
+            },
+            info: {
+                container: "text-right text-muted"
+            }
+        });
+        // default layout
+        $.extend(true, $.fn.dataTable.defaults, {
+            layout: {
+                // top1Start: '',
+                topStart: ['search', 'buttons'],
+                topEnd: 'pageLength',
+                bottomStart: 'paging',
+                bottomEnd: 'info',
+                // bottom1End: ''
+            },
+            lengthMenu: [5, 10, 25, 50, 100],
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn small',
+                text: `<i class="ph ph-file-xls"></i> Excel`,
+            }]
         });
     </script>
     <script src="<?= ROOTPATH ?>/js/osiris.js?<?= filemtime(BASEPATH . '/js/osiris.js') ?>"></script>
@@ -139,7 +164,6 @@ $pageactive = function ($p) use ($page) {
         <?= $_COOKIE['D3-accessibility-dyslexia'] ?? '' ?>
     ">
         <div class="sticky-alerts"></div>
-
 
         <div class="modal" id="the-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -249,7 +273,6 @@ $pageactive = function ($p) use ($page) {
                             <?php
                             if ($n_notifications > 0) {
                                 if (isset($notifications['activity'])) {
-
                                     $issues = $notifications['activity']['values'];
                                     $n_issues = $notifications['activity']['count'];
                             ?>
@@ -518,7 +541,7 @@ $pageactive = function ($p) use ($page) {
                         <div id="sidebar-add-navigation">
 
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
-                                <?php  if ($Settings->canProposalsBeCreated()) { ?>
+                                <?php if ($Settings->canProposalsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/proposals/new" class="">
                                         <i class="ph ph-tree-structure"></i>
                                         <?= lang('Add project proposal', 'Projektantrag hinzuf.') ?>
@@ -530,18 +553,36 @@ $pageactive = function ($p) use ($page) {
                                     </a>
                                 <?php } ?>
                             <?php } ?>
-                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
+                            <?php if ($Settings->hasPermission('conferences.edit') && $Settings->featureEnabled('events', true)) { ?>
                                 <a href="<?= ROOTPATH ?>/conferences/new">
                                     <i class="ph ph-calendar-plus"></i>
                                     <?= lang('Add event', 'Event hinzufügen') ?>
                                 </a>
                             <?php } ?>
-                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) { ?>
-                                <a href="<?= ROOTPATH ?>/infrastructures/new">
-                                    <i class="ph ph-cube-transparent"></i>
-                                    <?= lang('Add infrastructure', 'Infrastruktur hinzuf.') ?>
-                                </a>
-                            <?php } ?>
+                            <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) {
+                                $header_infras = $osiris->infrastructures->find([
+                                    'statistic_frequency' => 'irregularly',
+                                    'persons' => [
+                                        '$elemMatch' => [
+                                            'user' => $_SESSION['username'],
+                                            'reporter' => true
+                                        ]
+                                    ],
+                                    'start_date' => ['$lte' => CURRENTYEAR . '-12-31'],
+                                    '$or' => [
+                                        ['end_date' => null],
+                                        ['end_date' => ['$gte' => CURRENTYEAR . '-01-01']]
+                                    ],
+                                ]);
+                                foreach ($header_infras as $inf) {
+                            ?>
+                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $inf['_id'] ?>?edit-stats=<?= date('Y-m-d') ?>">
+                                        <i class="ph ph-cube-transparent"></i>
+                                        <?= lang('Statics for ', 'Statistik für ') . $inf['name'] ?>
+                                    </a>
+                            <?php
+                                }
+                            } ?>
                         </div>
                     </nav>
 
@@ -681,7 +722,7 @@ $pageactive = function ($p) use ($page) {
 
                         <a href="<?= ROOTPATH ?>/journal" class="with-icon <?= $pageactive('journal') ?>">
                             <i class="ph ph-stack" aria-hidden="true"></i>
-                            <?= lang('Journals', 'Journale') ?>
+                            <?= $Settings->journalLabel() ?>
                         </a>
 
                         <?php if ($Settings->featureEnabled('events', true)) { ?>
@@ -720,178 +761,178 @@ $pageactive = function ($p) use ($page) {
                             </a>
                         <?php } ?>
 
-                        </nav>
+                    </nav>
 
 
-                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-users">
+                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-users">
+                        <?= lang('Users', 'Personen') ?>
+                    </div>
+
+                    <nav>
+                        <?php
+                        $active =  $pageactive('user/browse');
+                        if (empty($active) && !str_contains($uri, "profile/" . $_SESSION['username'])) {
+                            $active = $pageactive('profile');
+                        }
+                        ?>
+
+                        <a href="<?= ROOTPATH ?>/user/browse" class="with-icon <?= $active ?>">
+                            <i class="ph ph-users" aria-hidden="true"></i>
                             <?= lang('Users', 'Personen') ?>
-                        </div>
+                        </a>
+                        <a href="<?= ROOTPATH ?>/groups" class="with-icon <?= $pageactive('groups') ?>">
+                            <i class="ph ph-users-three" aria-hidden="true"></i>
+                            <?= lang('Organisational Units', 'Einheiten') ?>
+                        </a>
 
-                        <nav>
+                        <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
+                            <i class="ph ph-building-office" aria-hidden="true"></i>
+                            <?= lang('Organisations', 'Organisationen') ?>
+                        </a>
+
+                        <?php if ($Settings->featureEnabled('guests')) { ?>
+                            <a href="<?= ROOTPATH ?>/guests" class="with-icon <?= $pageactive('guests') ?>">
+                                <i class="ph ph-user-switch" aria-hidden="true"></i>
+                                <?= lang('Guests', 'Gäste') ?>
+                            </a>
+                        <?php } ?>
+
+                    </nav>
+
+                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tools">
+                        <?= lang('Analysis', 'Analyse') ?>
+                    </div>
+                    <nav>
+
+                        <a href="<?= ROOTPATH ?>/dashboard" class="with-icon <?= $pageactive('dashboard') ?>">
+                            <i class="ph ph-chart-line" aria-hidden="true"></i>
+                            <?= lang('Dashboard') ?>
+                        </a>
+
+                        <a href="<?= ROOTPATH ?>/visualize" class="with-icon <?= $pageactive('visualize') ?>">
+                            <i class="ph ph-graph" aria-hidden="true"></i>
+                            <?= lang('Visualisations', 'Visualisierung') ?>
+                        </a>
+
+                        <a href="<?= ROOTPATH ?>/pivot" class="with-icon <?= $pageactive('pivot') ?>">
+                            <i class="ph ph-table" aria-hidden="true"></i>
+                            <?= lang('Pivot table', 'Pivot-Tabelle') ?>
+                        </a>
+
+                        <?php if ($Settings->featureEnabled('trips')) { ?>
+                            <a href="<?= ROOTPATH ?>/trips" class="with-icon <?= $pageactive('trips') ?>">
+                                <i class="ph ph-map-trifold" aria-hidden="true"></i>
+                                <?= $Settings->tripLabel() ?>
+                            </a>
+                        <?php } ?>
+
+                    </nav>
+
+
+                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-export">
+                        <?= lang('Export &amp; Import') ?>
+                    </div>
+                    <nav>
+
+                        <a href="<?= ROOTPATH ?>/download" class="with-icon <?= $pageactive('download') ?>">
+                            <i class="ph ph-download" aria-hidden="true"></i>
+                            Export <?= lang('Activities', 'Aktivitäten') ?>
+                        </a>
+
+                        <a href="<?= ROOTPATH ?>/cart" class="with-icon <?= $pageactive('cart') ?>">
+                            <i class="ph ph-basket" aria-hidden="true"></i>
+                            <?= lang('Collection', 'Sammlung') ?>
                             <?php
-                            $active =  $pageactive('user/browse');
-                            if (empty($active) && !str_contains($uri, "profile/" . $_SESSION['username'])) {
-                                $active = $pageactive('profile');
-                            }
+                            $cart = readCart();
+                            if (!empty($cart)) { ?>
+                                <small class="badge secondary badge-pill ml-10" id="cart-counter">
+                                    <?= count($cart) ?>
+                                </small>
+                            <?php } else { ?>
+                                <small class="badge secondary badge-pill ml-10 hidden" id="cart-counter">
+                                    0
+                                </small>
+                            <?php } ?>
+                        </a>
+                        <a href="<?= ROOTPATH ?>/import" class="with-icon <?= $pageactive('import') ?>">
+                            <i class="ph ph-upload" aria-hidden="true"></i>
+                            <?= lang('Import') ?>
+                        </a>
+
+
+                        <?php if ($Settings->hasPermission('report.queue')) { ?>
+                            <?php
+                            $n_queue = $osiris->queue->count(['declined' => ['$ne' => true]]);
                             ?>
 
-                            <a href="<?= ROOTPATH ?>/user/browse" class="with-icon <?= $active ?>">
-                                <i class="ph ph-users" aria-hidden="true"></i>
-                                <?= lang('Users', 'Personen') ?>
+                            <a href="<?= ROOTPATH ?>/queue/editor" class="sidebar-link with-icon sidebar-link-osiris <?= $pageactive('queue/editor') ?>">
+                                <i class="ph ph-queue" aria-hidden="true"></i>
+                                <?= lang('Queue', 'Warteschlange') ?>
+                                <span class="badge secondary badge-pill ml-10" id="cart-counter">
+                                    <?= $n_queue ?>
+                                </span>
                             </a>
-                            <a href="<?= ROOTPATH ?>/groups" class="with-icon <?= $pageactive('groups') ?>">
-                                <i class="ph ph-users-three" aria-hidden="true"></i>
-                                <?= lang('Organisational Units', 'Einheiten') ?>
+                        <?php } ?>
+
+
+                        <?php if ($Settings->hasPermission('report.generate')) { ?>
+
+                            <a href="<?= ROOTPATH ?>/reports" class="with-icon <?= $pageactive('reports') ?>">
+                                <i class="ph ph-printer" aria-hidden="true"></i>
+
+                                <?= lang('Reports', 'Berichte') ?>
                             </a>
 
-                            <a href="<?= ROOTPATH ?>/organizations" class="with-icon <?= $pageactive('organizations') ?>">
-                                <i class="ph ph-building-office" aria-hidden="true"></i>
-                                <?= lang('Organisations', 'Organisationen') ?>
-                            </a>
-
-                            <?php if ($Settings->featureEnabled('guests')) { ?>
-                                <a href="<?= ROOTPATH ?>/guests" class="with-icon <?= $pageactive('guests') ?>">
-                                    <i class="ph ph-user-switch" aria-hidden="true"></i>
-                                    <?= lang('Guests', 'Gäste') ?>
+                            <?php if ($Settings->featureEnabled('ida')) { ?>
+                                <a href="<?= ROOTPATH ?>/ida/dashboard" class="with-icon <?= $pageactive('ida') ?>">
+                                    <i class="ph ph-clipboard-text" aria-hidden="true"></i>
+                                    <?= lang('IDA-Integration') ?>
                                 </a>
                             <?php } ?>
 
-                        </nav>
+                        <?php } ?>
 
-                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tools">
-                            <?= lang('Visualisation', 'Visualisierung') ?>
-                        </div>
-                        <nav>
+                    </nav>
 
-                            <a href="<?= ROOTPATH ?>/dashboard" class="with-icon <?= $pageactive('dashboard') ?>">
-                                <i class="ph ph-chart-line" aria-hidden="true"></i>
-                                <?= lang('Dashboard') ?>
+                <?php } ?>
+
+
+
+                <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
+                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
+                        ADMIN
+                    </div>
+                    <nav>
+                        <?php if ($Settings->hasPermission('admin.see')) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
+                                <i class="ph ph-gear" aria-hidden="true"></i>
+                                <?= lang('Settings', 'Einstellungen') ?>
                             </a>
-
-                            <a href="<?= ROOTPATH ?>/visualize" class="with-icon <?= $pageactive('visualize') ?>">
-                                <i class="ph ph-graph" aria-hidden="true"></i>
-                                <?= lang('Visualisations', 'Visualisierung') ?>
+                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                <?= lang('Contents', 'Inhalte') ?>
                             </a>
-
-                            <a href="<?= ROOTPATH ?>/pivot" class="with-icon <?= $pageactive('pivot') ?>">
-                                <i class="ph ph-table" aria-hidden="true"></i>
-                                <?= lang('Pivot table', 'Pivot-Tabelle') ?>
+                            <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
+                                <i class="ph ph-shield-check" aria-hidden="true"></i>
+                                <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
                             </a>
-
-                            <?php if ($Settings->featureEnabled('trips')) { ?>
-                                <a href="<?= ROOTPATH ?>/trips" class="with-icon <?= $pageactive('trips') ?>">
-                                    <i class="ph ph-map-trifold" aria-hidden="true"></i>
-                                    <?= $Settings->tripLabel() ?>
-                                </a>
-                            <?php } ?>
-
-                        </nav>
+                        <?php } ?>
 
 
-                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-export">
-                            <?= lang('Export &amp; Import') ?>
-                        </div>
-                        <nav>
-
-                            <a href="<?= ROOTPATH ?>/download" class="with-icon <?= $pageactive('download') ?>">
-                                <i class="ph ph-download" aria-hidden="true"></i>
-                                Export <?= lang('Activities', 'Aktivitäten') ?>
+                        <?php if ($Settings->hasPermission('report.templates')) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
+                                <i class="ph ph-clipboard-text"></i>
+                                <?= lang('Report templates', 'Berichtsvorlagen') ?>
                             </a>
-
-                            <a href="<?= ROOTPATH ?>/cart" class="with-icon <?= $pageactive('cart') ?>">
-                                <i class="ph ph-shopping-cart" aria-hidden="true"></i>
-                                <?= lang('Cart', 'Einkaufswagen') ?>
-                                <?php
-                                $cart = readCart();
-                                if (!empty($cart)) { ?>
-                                    <span class="badge secondary badge-pill ml-10" id="cart-counter">
-                                        <?= count($cart) ?>
-                                    </span>
-                                <?php } else { ?>
-                                    <span class="badge secondary badge-pill ml-10 hidden" id="cart-counter">
-                                        0
-                                    </span>
-                                <?php } ?>
+                        <?php } ?>
+                        <?php if ($Settings->hasPermission('user.synchronize')) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
+                                <i class="ph ph-users"></i>
+                                <?= lang('User Management', 'Nutzerverwaltung') ?>
                             </a>
-                            <a href="<?= ROOTPATH ?>/import" class="with-icon <?= $pageactive('import') ?>">
-                                <i class="ph ph-upload" aria-hidden="true"></i>
-                                <?= lang('Import') ?>
-                            </a>
-
-
-                            <?php if ($Settings->hasPermission('report.queue')) { ?>
-                                <?php
-                                $n_queue = $osiris->queue->count(['declined' => ['$ne' => true]]);
-                                ?>
-
-                                <a href="<?= ROOTPATH ?>/queue/editor" class="sidebar-link with-icon sidebar-link-osiris <?= $pageactive('queue/editor') ?>">
-                                    <i class="ph ph-queue" aria-hidden="true"></i>
-                                    <?= lang('Queue', 'Warteschlange') ?>
-                                    <span class="badge secondary badge-pill ml-10" id="cart-counter">
-                                        <?= $n_queue ?>
-                                    </span>
-                                </a>
-                            <?php } ?>
-
-
-                            <?php if ($Settings->hasPermission('report.generate')) { ?>
-
-                                <a href="<?= ROOTPATH ?>/reports" class="with-icon <?= $pageactive('reports') ?>">
-                                    <i class="ph ph-printer" aria-hidden="true"></i>
-
-                                    <?= lang('Reports', 'Berichte') ?>
-                                </a>
-
-                                <?php if ($Settings->featureEnabled('ida')) { ?>
-                                    <a href="<?= ROOTPATH ?>/ida/dashboard" class="with-icon <?= $pageactive('ida') ?>">
-                                        <i class="ph ph-clipboard-text" aria-hidden="true"></i>
-                                        <?= lang('IDA-Integration') ?>
-                                    </a>
-                                <?php } ?>
-
-                            <?php } ?>
-
-                        </nav>
-
-                    <?php } ?>
-
-
-
-                    <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
-                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
-                            ADMIN
-                        </div>
-                        <nav>
-                            <?php if ($Settings->hasPermission('admin.see')) { ?>
-                                <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
-                                    <i class="ph ph-gear" aria-hidden="true"></i>
-                                    <?= lang('Settings', 'Einstellungen') ?>
-                                </a>
-                                <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
-                                    <i class="ph ph-treasure-chest" aria-hidden="true"></i>
-                                    <?= lang('Contents', 'Inhalte') ?>
-                                </a>
-                                <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
-                                    <i class="ph ph-shield-check" aria-hidden="true"></i>
-                                    <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
-                                </a>
-                            <?php } ?>
-
-
-                            <?php if ($Settings->hasPermission('report.templates')) { ?>
-                                <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
-                                    <i class="ph ph-clipboard-text"></i>
-                                    <?= lang('Report templates', 'Berichte-Vorlagen') ?>
-                                </a>
-                            <?php } ?>
-                            <?php if ($Settings->hasPermission('user.synchronize')) { ?>
-                                <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
-                                    <i class="ph ph-users"></i>
-                                    <?= lang('User Management', 'Nutzerverwaltung') ?>
-                                </a>
-                            <?php } ?>
-                        </nav>
-                    <?php } ?>
+                        <?php } ?>
+                    </nav>
+                <?php } ?>
 
 
 

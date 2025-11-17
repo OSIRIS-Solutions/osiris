@@ -32,7 +32,7 @@ $expert = isset($_GET['expert']);
 <div class="container">
     <a href="https://wiki.osiris-app.de/users/activities/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
-        <i class="ph ph-magnifying-glass-plus text-osiris"></i>
+        <i class="ph-duotone ph-magnifying-glass-plus"></i>
         <?= lang('Advanced project search', 'Erweiterte Projekt-Suche') ?>
     </h1>
 
@@ -531,7 +531,7 @@ $expert = isset($_GET['expert']);
         }
 
         function applyFilter(id, aggregate) {
-            console.log((id));
+            // console.log((id));
             if (EXPERT) {
                 applyFilterExpert(id, aggregate)
                 return

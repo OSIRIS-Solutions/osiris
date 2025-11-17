@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="<?=ROOTPATH?>/css/frappe-gantt.css">
 
 <h1>
+    <i class="ph-duotone ph-users-rectangle"></i>
     <?=lang('Guest Overview', 'Übersicht über anstehende Gäste')?>
 </h1>
 

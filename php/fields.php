@@ -363,7 +363,7 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Journal'),
+                'label' => $Settings->journalLabel(),
                 'type' => 'string'
             ],
             [
@@ -925,7 +925,7 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Research Topics', 'Forschungsbereiche'),
+                'label' => $Settings->topicLabel(),
                 'type' => 'list',
                 'input' => 'select',
                 'values' => $topics

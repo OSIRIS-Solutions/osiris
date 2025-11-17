@@ -59,7 +59,7 @@ foreach ($typeModules as $m) {
 <div class="content">
 
     <h1>
-        <i class="ph ph-users"></i>
+        <i class="ph-duotone ph-users"></i>
         <?php if ($role == 'authors') { ?>
             <?= lang('Edit authors', 'Bearbeite die Autoren') ?>
         <?php } else { ?>

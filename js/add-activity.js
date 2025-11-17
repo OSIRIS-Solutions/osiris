@@ -26,6 +26,11 @@ function togglePubType(type, callback = () => { }) {
     type = type.trim().toLowerCase().replace(" ", "-");
     // check if type exists:
     if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
+        // check if mapped type exists
+        if (TYPES[type] === undefined) {
+            toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
+            return;
+        }
         type = TYPES[type] ?? type;
     }
     console.log(type);
@@ -289,11 +294,11 @@ function verifyForm(event, form) {
 
                 var name = input.attr('name').replace(/^values\[(.+?)\](?:\[\])?$/, '$1');
                 // try to get name of the label if available
-                if (input.attr('id')){
+                if (input.attr('id')) {
                     let label = $('label[for="' + input.attr('id') + '"]');
                     if (label.length > 0) {
                         name = label.text().trim();
-                    } 
+                    }
                 }
                 if (name == 'journal_id') return;
                 correct = false;
@@ -337,14 +342,14 @@ function verifyForm(event, form) {
     return false
 }
 
-function saveDraft(){
+function saveDraft() {
     // no validation needed, just change the route and save
     var form = $('#activity-form')
     form.attr('action', ROOTPATH + '/crud/activities/save-draft')
     form.submit()
 }
 
-function loadDrafts(){
+function loadDrafts() {
     $('#drafts-modal #content').html('<div class="loader show"></div>')
     // open modal
     $('#drafts-modal').addClass('show')
@@ -1440,18 +1445,18 @@ function fillForm(pub) {
         // console.log($('#' + element));
     });
 
-    if (pub.funding !== undefined){
+    if (pub.funding !== undefined) {
         // first: check if module projects exists
-        if ($('[data-module="projects"]').length > 0){
-            $.get(ROOTPATH + '/api/projects-by-funding-number', { number: pub.funding }, function(data){
-                if (data.data.length === 0){
+        if ($('[data-module="projects"]').length > 0) {
+            $.get(ROOTPATH + '/api/projects-by-funding-number', { number: pub.funding }, function (data) {
+                if (data.data.length === 0) {
                     toastWarning('No project found for funding number ' + pub.funding)
                     return;
                 }
-               // populate projects dropdown
-               data.data.forEach(proj => {
+                // populate projects dropdown
+                data.data.forEach(proj => {
                     addProjectRow(proj._id['$oid'], proj.name);
-               })
+                })
             })
         }
     }
@@ -1595,14 +1600,29 @@ function getDate(element) {
     return date
 }
 
-function selectEvent(id, event, start, end, location) {
+function selectEvent(id, event, start, end, location, country) {
     $('#conference_id').val(id)
-    $('#conference').val(event)
-    $('#location').val(location)
-    $('#date_start').val(start)
-    $('#date_end').val(end)
+    $('#conference').val(event).addClass('is-valid')
+    $('#location').val(location).addClass('is-valid')
+    $('#date_start').val(start).addClass('is-valid')
+    $('#date_end').val(end).addClass('is-valid')
+    $('#country').val(country).addClass('is-valid')
 
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
+
+    if ($('#event-select-dropdown').length > 0) {
+        $('#event-select-dropdown').removeClass('show')
+    }
+    toastSuccess(lang('Event "' + event + '" selected.', 'Veranstaltung "' + event + '" ausgewählt.'))
+
+    // remove is_valid after 3 seconds
+    setTimeout(function () {
+        $('#conference').removeClass('is-valid')
+        $('#location').removeClass('is-valid')
+        $('#date_start').removeClass('is-valid')
+        $('#date_end').removeClass('is-valid')
+        $('#country').removeClass('is-valid')
+    }, 3000);
 }
 
 function addEvent() {
@@ -1612,6 +1632,8 @@ function addEvent() {
         start: $('#event-start').val(),
         end: $('#event-end').val(),
         location: $('#event-location').val(),
+        country: $('#event-country').val(),
+        type: $('#event-type').val(),
         url: $('#event-url').val()
     }
 
@@ -1641,11 +1663,19 @@ function addEvent() {
         dataType: "json",
         url: ROOTPATH + '/crud/conferences/add',
         success: function (response) {
-            if (response.msg) {
+            console.log(response);
+            if (response.id && response.status == 'warning') {
+                if (response.msg) toastWarning(response.msg)
+                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
+                // close modal
+                window.location.hash = '#event-select'
+                return;
+            } else if (response.msg && response.status == 'error') {
                 toastWarning(response.msg)
                 return;
             } else {
-                selectEvent(response.id, data.title, data.start, data.end, data.location)
+                toastSuccess(lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.'))
+                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
                 // close modal
                 window.location.hash = '#event-select'
             }

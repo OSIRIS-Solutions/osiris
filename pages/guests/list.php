@@ -14,7 +14,7 @@ if (!$Settings->hasPermission('guests.view')) {
 
 
 <h1>
-    <i class="ph ph-user-switch text-osiris"></i>
+    <i class="ph-duotone ph-user-switch"></i>
     <?= $pagetitle ?>
 </h1>
 

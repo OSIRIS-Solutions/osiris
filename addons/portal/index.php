@@ -54,6 +54,12 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
     // Call Portfolio API to get entity details
     $path = $_SERVER['HTTP_HOST'] . ROOTPATH . '/portfolio';
     $total_path = $path . '/' . urlencode($type) . '/' . urlencode($id);
+    // important if https is used
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+        $total_path = 'https://' . $total_path;
+    } else {
+        $total_path = 'http://' . $total_path;
+    }
     $ch = curl_init($total_path);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);

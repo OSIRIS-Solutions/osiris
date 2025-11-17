@@ -23,6 +23,7 @@ class Groups
     public $groups = array();
     public $tree = array();
     private $DB;
+    private $osiris;
     private $UNITS = [
         'institute' => [
             'name' => 'Institute',
@@ -71,8 +72,9 @@ class Groups
     function __construct()
     {
         $this->DB = new DB;
+        $this->osiris = $this->DB->db;
 
-        $groups = $this->DB->db->groups->find(
+        $groups = $this->osiris->groups->find(
             [],
             ['sort' => ['level' => 1, 'order' => 1, 'inactive' => 1]]
         )->toArray();
@@ -140,10 +142,15 @@ class Groups
     public function findGroup($name)
     {
         if (empty($name)) return null;
-        if (isset($this->groups[$name])) return $this->groups[$name];
-        foreach ($this->groups as $g) {
-            if ($g['name'] == $name || ($g['name_de'] ?? false) == $name) return $g;
-        }
+        $result = $this->osiris->groups->findOne([
+            '$or' => [
+                ['id' => $name],
+                ['name' => $name],
+                ['name_de' => $name],
+                ['synonyms' => $name]
+            ]
+        ]);
+        if ($result) return DB::doc2Arr($result);
         return null;
     }
 

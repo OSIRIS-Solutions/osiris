@@ -107,8 +107,8 @@ function val($index, $default = '')
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
 
-<h1 class="mt-0">
-    <i class="ph ph-chalkboard-simple text-osiris mr-5"></i>
+<h1>
+    <i class="ph-duotone ph-chalkboard-simple"></i>
     <?= lang('Teaching Modules', 'Lehrveranstaltungen') ?>
 </h1>
 

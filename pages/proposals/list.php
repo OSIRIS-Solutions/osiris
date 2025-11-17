@@ -75,7 +75,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 </style>
 
 <h1 class="mt-0">
-    <i class="ph ph-tree-structure text-osiris"></i>
+    <i class="ph-duotone ph-tree-structure"></i>
     <?= lang('Project proposals', 'Projektanträge') ?>
 </h1>
 
@@ -301,10 +301,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $topic_id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">
@@ -551,7 +551,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     target: 0,
                     data: 'name',
                     render: function(data, type, row) {
-                        console.log(row);
                         let persons = '';
                         if (row.persons && row.persons.length > 0) {
                             persons = row.persons.map(a => a.name).join(', ')

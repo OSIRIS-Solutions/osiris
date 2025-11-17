@@ -18,6 +18,7 @@ $mode = $_GET['mode'] ?? 'standard';
 ?>
 
 <h1>
+    <i class="ph-duotone ph-table"></i>
     <?= lang('Pivot tables and charts', 'Pivot-Tabellen und Diagramme') ?>
     <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
 </h1>
@@ -69,7 +70,17 @@ $mode = $_GET['mode'] ?? 'standard';
                     data.data.forEach(record => {
                         let units = record.units || ["None"];
                         let positions = record.affiliated_positions || ["None"];
-
+                        let tags = record.tags || [null];
+                        // if units is an object, convert to array
+                        if (typeof units === 'object' && !Array.isArray(units)) {
+                            units = Object.values(units);
+                        }
+                        if (typeof positions === 'object' && !Array.isArray(positions)) {
+                            positions = Object.values(positions);
+                        }
+                        if (typeof tags === 'object' && !Array.isArray(tags)) {
+                            tags = Object.values(tags);
+                        }
                         units.forEach(unit => {
                             positions.forEach(position => {
                                 expandedData.push({
@@ -77,6 +88,12 @@ $mode = $_GET['mode'] ?? 'standard';
                                     "Unit": unit, // Jedes Element einzeln
                                     "Affiliated Position": position
                                 });
+                            });
+                        });
+                        tags.forEach(tag => {
+                            expandedData.push({
+                                ...record,
+                                "Tag": tag // Jedes Element einzeln
                             });
                         });
                     });

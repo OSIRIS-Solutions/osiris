@@ -17,7 +17,7 @@
 ?>
 
 <h1>
-    <i class="ph ph-file-text"></i>
+    <i class="ph-duotone ph-file-text"></i>
     <?= $draft['title'] ?? lang('Draft', 'Entwurf') ?>
 </h1>
 
@@ -160,7 +160,7 @@ include_once BASEPATH . "/php/Modules.php";
 
             <tr>
                 <td>
-                    <span class="key"><?= lang('Journal') ?></span>
+                    <span class="key"><?= $Settings->journalLabel() ?></span>
 
                     <a class="module " href="<?= ROOTPATH ?>/journal/view/<?= $draft['journal_id'] ?>">
                         <h6 class="m-0"><?= $journal['journal'] ?></h6>

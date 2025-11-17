@@ -16,15 +16,6 @@
 
 Route::get('/queue/(user|editor)', function ($role) {
     include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    if ($role == 'editor' && ($Settings->hasPermission('report.dashboard'))) {
-        $filter = ['declined' => ['$ne' => true]];
-    } else {
-        $filter = ['authors.user' => $user, 'declined' => ['$ne' => true]];
-    }
-    $n_queue = $osiris->queue->count($filter);
-    $queue = $osiris->queue->find($filter, ['sort' => ['duplicate' => 1]]);
-
     $breadcrumb = [
         ['name' => lang('Queue', 'Warteschlange')]
     ];

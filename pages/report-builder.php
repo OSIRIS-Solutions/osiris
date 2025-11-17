@@ -105,7 +105,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
 
 
 <h1>
-    <i class="ph ph-report"></i>
+    <i class="ph-duotone ph-clipboard-text"></i>
     <?= lang('Report Builder', 'Berichtseditor') ?>
 </h1>
 

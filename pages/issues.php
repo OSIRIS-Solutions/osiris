@@ -164,7 +164,7 @@ $issues = $DB->getUserIssues($user);
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
 <h1 class="mt-0">
-    <i class="ph ph-fill ph-warning text-osiris"></i>
+    <i class="ph ph-duotone ph-warning"></i>
     <?= lang('Warnings', 'Warnungen') ?>
 </h1>
 
@@ -681,17 +681,17 @@ if (array_sum($a) === 0) {
             <table class="table">
                 <?php
 
-                foreach ($issues['infrastructure'] as $id) {
-                    $doc = $osiris->infrastructures->findOne(['_id' => DB::to_ObjectID($id)]);
+                foreach ($issues['infrastructure'] as $id => $timepoint) {
+                    $doc = $osiris->infrastructures->findOne(['id' => $id]);
                 ?>
                     <tr id="tr-<?= $id ?>">
                         <td>
                             <?= lang('Please update the statistics of ', 'Bitte aktualisiere die Statistiken von ') ?>
                             <b><?= $doc['name'] ?></b>
                             <?= lang('from ', 'von ') ?>
-                            <b><?= CURRENTYEAR - 1 ?></b>
+                            <b><?= $timepoint ?></b>
                             <br>
-                            <a href="<?= ROOTPATH ?>/infrastructures/year/<?= $id ?>?year=<?= CURRENTYEAR - 1 ?>" target="_blank" rel="noopener noreferrer" class="btn small primary">
+                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $id ?>?edit-stats=<?= $timepoint ?>#statistics" target="_blank" rel="noopener noreferrer" class="btn small primary">
                                 <i class="ph ph-calendar-plus"></i>
                                 <?= lang('Update now', 'Jetzt aktualisieren') ?>
                             </a>

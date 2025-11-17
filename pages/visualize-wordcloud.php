@@ -25,7 +25,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 
 
 <h1>
-    <i class="ph ph-graph" aria-hidden="true"></i>
+    <i class="ph-duotone ph-graph" aria-hidden="true"></i>
     <?= lang('Word cloud') ?>
 </h1>
 

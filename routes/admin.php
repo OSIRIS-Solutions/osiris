@@ -49,6 +49,75 @@ Route::get('/admin/users', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/admin/guest-account', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
+        ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account']
+    ];
+    $page = 'users';
+    include BASEPATH . "/header.php";
+    if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
+        echo "<div class='alert warning mb-10'>" . lang('Guest accounts can only be added when LDAP user management is enabled.', 'Gast-Accounts können nur hinzugefügt werden, wenn die LDAP-Nutzerverwaltung aktiviert ist.') . "</div>";
+    } else {
+        include BASEPATH . "/pages/admin/guest-account.php";
+    }
+
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/admin/guest-account/add', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
+        ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
+        ['name' => lang("Add", "Hinzufügen")]
+    ];
+    $page = 'users';
+    include BASEPATH . "/header.php";
+    if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
+        echo "<div class='alert warning mb-10'>" . lang('Guest accounts can only be added when LDAP user management is enabled.', 'Gast-Accounts können nur hinzugefügt werden, wenn die LDAP-Nutzerverwaltung aktiviert ist.') . "</div>";
+    } else {
+        include BASEPATH . "/pages/admin/guest-account-add.php";
+    }
+
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+// Route::get('/admin/guest-account/edit/(.*)', function ($id) {
+//     include_once BASEPATH . "/php/init.php";
+//     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+
+//     $breadcrumb = [
+//         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+//         ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
+//         ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
+//         ['name' => $id]
+//     ];
+//     $page = 'admin/users';
+//     include BASEPATH . "/header.php";
+
+//     $data = $osiris->guestAccounts->findOne(['username' => $id]);
+//     if (empty($data)) {
+//         echo "<div class='alert danger mb-10'>" . lang('Guest account not found.', 'Gast-Account nicht gefunden.') . "</div>";
+//         include BASEPATH . "/footer.php";
+//         return;
+//     }
+//     if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
+//         echo "<div class='alert warning mb-10'>" . lang('Guest accounts can only be added when LDAP user management is enabled.', 'Gast-Accounts können nur hinzugefügt werden, wenn die LDAP-Nutzerverwaltung aktiviert ist.') . "</div>";
+//     } else {
+//         include BASEPATH . "/pages/admin/guest-account-edit.php";
+//     }
+
+//     include BASEPATH . "/footer.php";
+// }, 'login');
+
 
 Route::get('/admin/(general|roles|features|tags)', function ($page) {
     include_once BASEPATH . "/php/init.php";
@@ -229,7 +298,7 @@ Route::get('/admin/types/new', function () {
     $st = $t;
     $type = [
         "id" => '',
-        "icon" => $type['icon'] ?? 'placeholder',
+        "icon" => $type['icon'] ?? 'folder-open',
         "name" => '',
         "name_de" => '',
         "new" => true,
@@ -923,7 +992,6 @@ Route::post('/crud/admin/add-user', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
 
-
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
         $msg = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");
         include BASEPATH . "/header.php";
@@ -937,11 +1005,37 @@ Route::post('/crud/admin/add-user', function () {
     $person = $_POST['values'];
     $person['username'] = $_POST['username'];
 
+    $username = $person['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $osiris->accounts->insertOne([
-        'username' => $person['username'],
+
+    $account = [
+        'username' => $username,
         'password' => $password
-    ]);
+    ];
+    $collection = $osiris->accounts;
+    if (isset($_POST['guestaccount'])) {
+        $collection = $osiris->guestAccounts;
+        $account['valid_until'] = $_POST['valid_until'] ?? null;
+        $person['is_guest'] = true;
+    }
+    // remove existing accounts with same username
+    $collection->deleteMany(['username' => $username]);
+    $collection->insertOne($account);
+
+    $depts = [];
+    if (isset($person['depts']) && is_array($person['depts'])) {
+        foreach ($person['depts'] as $d) {
+            $depts[] = [
+                'unit' => $d,
+                'start' => null,
+                'end' => null,
+                'scientific' => true,
+                'id' => uniqid()
+            ];
+        }
+    }
+    $person['units'] = $depts;
+    unset($person['depts']);
 
     $person['displayname'] = "$person[first] $person[last]";
     $person['formalname'] = "$person[last], $person[first]";
@@ -951,13 +1045,24 @@ Route::post('/crud/admin/add-user', function () {
     }
     $person['created'] = date('d.m.Y');
     $person['roles'] = array_keys($person['roles'] ?? []);
+    if (isset($_POST['guestaccount'])) {
+        if (!in_array('guest', $person['roles'])) {
+            $person['roles'][] = 'guest';
+        }
+    }
 
     $person['new'] = true;
     $person['is_active'] = true;
 
     $osiris->persons->insertOne($person);
 
-    header("Location: " . ROOTPATH . "/admin/users?success=" . $person['username']);
+    if (isset($_POST['guestaccount'])) {
+        $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> successfully created.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> erfolgreich erstellt.");
+        header("Location: " . ROOTPATH . "/admin/guest-account");
+    } else {
+        $_SESSION['msg'] = lang("User <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> successfully created.", "Benutzer <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> erfolgreich erstellt.");
+        header("Location: " . ROOTPATH . "/admin/users");
+    }
 }, 'login');
 
 
@@ -984,6 +1089,44 @@ Route::post('/crud/admin/projects/create', function () {
 
     $_SESSION['msg'] = lang("Project <q>$id</q> successfully created.", "Projekt <q>$id</q> erfolgreich erstellt.");
     header("Location: " . ROOTPATH . "/admin/projects/2/$id");
+    die();
+});
+
+// /crud/admin/guest-account/update
+Route::post('/crud/admin/guest-account/update', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+    if (!isset($_POST['username'])) die("no username given");
+    $valid_until = $_POST['valid_until'] ?? null;
+    $osiris->guestAccounts->updateOne(
+        ['username' => $_POST['username']],
+        ['$set' => [
+            'valid_until' => $valid_until
+        ]]
+    );
+
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/guest-account");
+    die();
+});
+// /crud/admin/guest-account/delete
+Route::post('/crud/admin/guest-account/delete', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+    if (!isset($_POST['username'])) die("no username given");
+    $osiris->guestAccounts->deleteOne(
+        ['username' => $_POST['username']]
+    );
+    // end valid and remove is_guest flag from person and remove guest role
+    $osiris->persons->updateOne(
+        ['username' => $_POST['username']],
+        ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
+        ['$pull' => ['roles' => 'guest']]
+    );
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
 });
 
@@ -1167,5 +1310,3 @@ Route::post('/crud/admin/vocabularies/([a-z\-]*)', function ($id) {
     $red = ROOTPATH . "/admin/vocabulary#vocabulary-$id";
     header("Location: " . $red);
 });
-
-

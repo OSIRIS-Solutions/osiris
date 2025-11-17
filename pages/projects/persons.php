@@ -26,6 +26,7 @@ $Vocabulary = new Vocabulary();
 <div class="container">
 
     <h1>
+        <i class="ph-duotone ph-users-three"></i>
         <?= lang('Manage project staff', 'Projektmitglieder verwalten') ?>
     </h1>
 

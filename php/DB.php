@@ -741,9 +741,9 @@ class DB
      * @param string $user Username of potential author.
      * @return bool is user activity.
      */
-    public static function isUserActivity($doc, $user)
+    public static function isUserActivity($doc, $user, $include_created_by = true)
     {
-        if (isset($doc['created_by']) && $doc['created_by'] == $user) return true;
+        if ($include_created_by && isset($doc['created_by']) && $doc['created_by'] == $user) return true;
         if (isset($doc['user']) && $doc['user'] == $user) return true;
         foreach (['authors', 'editors'] as $role) {
             if (!isset($doc[$role])) continue;
@@ -960,18 +960,71 @@ class DB
         // }
 
         $y = CURRENTYEAR - 1;
-        $infrastructures = $this->db->infrastructures->find([
-            'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
+        $m = CURRENTMONTH;
+        $q = ceil($m / 3);
+        // $infrastructures = $this->db->infrastructures->find([
+        //     'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
+        //     'start_date' => ['$lte' => $y . '-12-31'],
+        //     '$or' => [
+        //         ['end_date' => null],
+        //         ['end_date' => ['$gte' => $y . '-01-01']]
+        //     ],
+        //     'statistics.year' => ['$ne' => $y]
+        // ], ['projection' => ['id' => ['$toString' => '$_id']]]);
+        // foreach ($infrastructures as $infra) {
+        //     $issues['infrastructure'][] = $infra['id'];
+        // }
+
+        // 1) Infrastrukturen holen, für die die Person Reporter ist und die im aktuellen Jahr aktiv sind
+        $infrasCursor = $this->db->infrastructures->find([
+            'persons' => [
+                '$elemMatch' => [
+                    'user' => $user,
+                    'reporter' => true
+                ]
+            ],
+            'statistic_frequency' => ['$ne' => 'irregularly'],
             'start_date' => ['$lte' => $y . '-12-31'],
             '$or' => [
                 ['end_date' => null],
                 ['end_date' => ['$gte' => $y . '-01-01']]
             ],
-            'statistics.year' => ['$ne' => $y]
-        ], ['projection' => ['id' => ['$toString' => '$_id']]]);
+        ]);
+        foreach ($infrasCursor as $infra) {
+            // adjust: je nachdem, wie du das Feld nennst
+            $mode = $infra['statistic_frequency'] ?? 'yearly';
+            $infraId = $infra['id'];
+            $filter = [
+                'infrastructure' => $infraId,
+                'year' => $y,
+            ];
+            $timepoint = "$y";
 
-        foreach ($infrastructures as $infra) {
-            $issues['infrastructure'][] = $infra['id'];
+            // 2) Filter je nach Periodizität ergänzen
+            switch ($mode) {
+                case 'quarterly':
+                    $filter['quarter'] = $q;
+                    $timepoint = "$y-Q$q";
+                    break;
+                case 'monthly':
+                    $filter['month'] = $m;
+                    $timepoint = "$y-$m";
+                    break;
+                case 'irregular':
+                    // no reminder for irregular statistics
+                    break;
+                case 'yearly':
+                default:
+                    // nur year prüfen
+                    break;
+            }
+
+            $count = $this->db->infrastructureStats->count($filter);
+
+            if ($count === 0) {
+                // Für diesen Zeitraum gibt es noch keine Statistik → Reminder nötig
+                $issues['infrastructure'][$infraId] = $timepoint;
+            }
         }
 
         // check if an activity was rejected

@@ -78,7 +78,26 @@ function return_rest($data, $count = 0, $status = 200)
             'msg' => $data
         );
     }
-    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+}
+
+function return_rest_stream($data)
+{
+    header("Content-Type: application/json; charset=utf-8");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo '{"status":200,"data":[';
+    $i = 0;
+    $first = true;
+    foreach ($data as $doc) {
+        $i++;
+        if (!$first) echo ',';
+        echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        $first = false;
+        // optional: flush() für Chunked Transfer
+        // flush();
+    }
+    echo '],"count":' . $i . '}';
 }
 
 Route::get('/api/activities', function () {
@@ -131,12 +150,17 @@ Route::get('/api/activities', function () {
     }
 
     if (isset($_GET['full'])) {
-        $result = $osiris->activities->find(
+        $cursor = $osiris->activities->find(
             $filter,
-            ['sort' => ['year' => -1]]
-        )->toArray();
-        echo return_rest($result, count($result));
-        die;
+            [
+                'sort' => ['_id' => -1],
+                // 'projection' => ['rendered' => 0, 'files' => 0],
+                'batchSize' => 500,
+                // 'noCursorTimeout' => true, // nur wenn nötig
+            ]
+        );
+        return_rest_stream($cursor);
+        return;
     }
 
     $projection = [
@@ -295,9 +319,18 @@ Route::get('/api/all-activities', function () {
         $filter['type'] = $_GET['type'];
     }
 
+    // stream output
+    header("Content-Type: application/json; charset=utf-8");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo '{"status":200,"data":[';
+    $i = 0;
+    $first = true;
+
     $cursor = $osiris->activities->find($filter);
     $cart = readCart();
     foreach ($cursor as $doc) {
+        $i++;
         $id = $doc['_id'];
         if (isset($doc['rendered'])) {
             $rendered = $doc['rendered'];
@@ -393,12 +426,17 @@ Route::get('/api/all-activities', function () {
             //     </a>";
             // }
             $datum['links'] .= "<button class='btn link square' onclick='addToCart(this, \"$id\")'>
-            <i class='" . (in_array($id, $cart) ? 'ph ph-fill ph-shopping-cart ph-shopping-cart-plus text-success' : 'ph ph-shopping-cart ph-shopping-cart-plus') . "'></i>
+            <i class='" . (in_array($id, $cart) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus') . "'></i>
         </button>";
         }
-        $result[] = $datum;
+        // $result[] = $datum;
+        if (!$first) echo ',';
+        echo json_encode($datum, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        $first = false;
+        flush();
     }
-    echo return_rest($result, count($result));
+    echo '],"count":' . $i . '}';
+    // echo return_rest_stream($result, count($result));
 });
 
 

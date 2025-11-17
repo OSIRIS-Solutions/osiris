@@ -29,6 +29,7 @@ $current_url = strtok($_SERVER["REQUEST_URI"], '?');
 
 $edit_perm = false;
 $status_perm = false;
+$prefilled = [];
 if (!$new_project) {
     // check edit permission
     $user_project = false;
@@ -46,6 +47,33 @@ if (!$new_project) {
     }
     $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
     $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
+
+    // check if status change is requested
+    if (isset($_GET['phase']) && $_GET['phase'] != $form['status']) {
+        // prefill form with old data
+        if ($_GET['phase'] == 'approved') {
+            if (isset($form['start_proposed'])) {
+                $form['start'] = $form['start_proposed'];
+                $prefilled[] = lang('Start', 'Beginn');
+            }
+            if (isset($form['end_proposed'])) {
+                $form['end'] = $form['end_proposed'];
+                $prefilled[] = lang('End', 'Ende');
+            }
+            if (isset($form['grant_sum_proposed'])) {
+                $form['grant_sum'] = $form['grant_sum_proposed'];
+                $prefilled[] = lang('Grant Sum (total)', 'Fördersumme (gesamt)');
+            }
+            if (isset($form['grant_income_proposed'])) {
+                $form['grant_income'] = $form['grant_income_proposed'];
+                $prefilled[] = lang('Grant Sum (institute)', 'Fördersumme (Institut)');
+            }
+            if (isset($form['grant_subproject_proposed'])) {
+                $form['grant_subproject'] = $form['grant_subproject_proposed'];
+                $prefilled[] = lang('Grant Sum (subproject)', 'Fördersumme (Teilprojekt)');
+            }
+        }
+    }
 }
 
 
@@ -99,6 +127,14 @@ if ($is_subproject) {
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+
+<?php if (!empty($prefilled)) { ?>
+    <script>
+        toastInfo(
+            lang('The following fields have been prefilled from the proposed data:', 'Die folgenden Felder wurden aus den vorgeschlagenen Daten vorausgefüllt:') +
+            '<br> - <?= implode("<br> - ", $prefilled) ?>');
+    </script>
+<?php } ?>
 
 <style>
     .flag {
@@ -1205,7 +1241,7 @@ if ($is_subproject) {
                 $countries = $nagoya['countries'] ?? [];
                 $enabled = $nagoya['enabled'] ?? false;
 
-                // if the form is not empty, and Nagoya was disabled just refer to the nagoya tab and do not show the fields here
+                // if the form is not empty, and Nagoya was enabled just refer to the nagoya tab and do not show the fields here
                 if (!empty($form) && $enabled && !empty($countries)) { ?>
                     <div class="alert alert-info">
                         <?= lang('Nagoya Protocol settings can be found in the Nagoya Protocol tab after saving the form.', 'Die Einstellungen zum Nagoya-Protokoll finden Sie im Nagoya-Protokoll-Tab nach dem Speichern des Formulars.') ?>
@@ -1285,6 +1321,7 @@ if ($is_subproject) {
                             </div>
                         </div>
 
+
                         <script>
                             document.getElementById('nagoya-yes').addEventListener('change', function() {
                                 document.getElementById('ressource-nagoya').style.display = 'block';
@@ -1293,7 +1330,6 @@ if ($is_subproject) {
                                 document.getElementById('ressource-nagoya').style.display = 'none';
                             });
                         </script>
-
                     </div>
                 <?php } ?>
             <?php } ?>
