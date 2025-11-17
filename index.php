@@ -161,6 +161,7 @@ if (
     include_once BASEPATH . "/routes/import.php";
     include_once BASEPATH . "/routes/journals.php";
     include_once BASEPATH . "/routes/projects.php";
+    include_once BASEPATH . "/routes/nagoya.php";
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
     include_once BASEPATH . "/routes/teaching.php";

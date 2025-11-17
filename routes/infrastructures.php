@@ -368,6 +368,7 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     $base = [
         'infrastructure' => $infrastructure['id'],
         'year' => $year,
+        'comment' => $_POST['comment'] ?? '',
     ];
     if (isset($_POST['month'])) {
         $date = explode('-', $_POST['month']);

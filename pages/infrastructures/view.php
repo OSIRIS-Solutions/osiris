@@ -407,6 +407,11 @@ $statistics = $osiris->infrastructureStats->find(
                         <?php endif; ?>
                     </div>
                 <?php } ?>
+                <!-- comment -->
+                <div class="form-group d-flex align-items-center mr-20 mb-10">
+                    <label for="comment" class="w-300 font-weight-bold"><?= lang('Comment', 'Kommentar') ?>:</label>
+                    <input type="text" name="comment" id="comment" class="form-control w-400" />
+                </div>
 
                 <small class="text-muted">
                     <?= lang('If you fill in statistics for a period that already exists, the existing entry will be overwritten. If the value is 0, the corresponding statistics will be deleted.', 'Wenn du eine Statistik für einen Zeitraum ausfüllst, der bereits existiert, wird der vorhandene Eintrag überschrieben. Wenn der Wert 0 beträgt, wird die entsprechende Statistik gelöscht.') ?>
@@ -455,6 +460,7 @@ $statistics = $osiris->infrastructureStats->find(
                                 <th><?= lang('Field', 'Feld') ?></th>
                                 <th class="text-right"><?= lang('Value', 'Wert') ?></th>
                                 <th><?= lang('Entered by', 'Eingegeben von') ?></th>
+                                <th><?= lang('Comment', 'Kommentar') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -487,6 +493,7 @@ $statistics = $osiris->infrastructureStats->find(
                                             <?= !empty($stat['updated_by']) ? ' | ' . $stat['updated_by'] : '' ?>
                                         </small>
                                     </td>
+                                    <td><?= htmlspecialchars($stat['comment'] ?? '') ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>

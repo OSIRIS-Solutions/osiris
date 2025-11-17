@@ -937,7 +937,7 @@ if ($is_subproject) {
 
                     <?php if (array_key_exists('grant_sum_proposed', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= val('grant_sum_proposed') ?>" placeholder="112345">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= val('grant_sum_proposed') ?>" placeholder="112345">
                             <label for="grant_sum_proposed" class="<?= $req('grant_sum_proposed') ?>">
                                 <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
                             </label>
@@ -945,7 +945,7 @@ if ($is_subproject) {
                     <?php } ?>
                     <?php if (array_key_exists('grant_income_proposed', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_income_proposed') ?> name="values[grant_income_proposed]" id="grant_income_proposed" value="<?= val('grant_income_proposed') ?>" placeholder="112345">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_income_proposed') ?> name="values[grant_income_proposed]" id="grant_income_proposed" value="<?= val('grant_income_proposed') ?>" placeholder="112345">
 
                             <label for="grant_income_proposed" class="<?= $req('grant_income_proposed') ?>">
                                 <?= lang('Proposed grant (institute)', 'Beantragte Fördersumme (Institut)') ?>
@@ -954,7 +954,7 @@ if ($is_subproject) {
                     <?php } ?>
                     <?php if (array_key_exists('grant_subproject_proposed', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_subproject_proposed') ?> name="values[grant_subproject_proposed]" id="grant_subproject_proposed" value="<?= val('grant_subproject_proposed') ?>" placeholder="112345">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_subproject_proposed') ?> name="values[grant_subproject_proposed]" id="grant_subproject_proposed" value="<?= val('grant_subproject_proposed') ?>" placeholder="112345">
 
                             <label for="grant_subproject_proposed" class="<?= $req('grant_subproject_proposed') ?>">
                                 <?= lang('Proposed grant (subproject)', 'Beantragte Fördersumme (Teilprojekt)') ?>
@@ -966,7 +966,7 @@ if ($is_subproject) {
                 <div class="row row-eq-spacing mt-0">
                     <?php if (array_key_exists('grant_sum', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= val('grant_sum') ?>" placeholder="1234">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= val('grant_sum') ?>" placeholder="1234">
                             <label for="grant_sum" class="<?= $req('grant_sum') ?>">
                                 <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
                             </label>
@@ -974,7 +974,7 @@ if ($is_subproject) {
                     <?php } ?>
                     <?php if (array_key_exists('grant_income', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_income') ?> name="values[grant_income]" id="grant_income" value="<?= val('grant_income') ?>" placeholder="1234">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_income') ?> name="values[grant_income]" id="grant_income" value="<?= val('grant_income') ?>" placeholder="1234">
                             <label for="grant_income" class="<?= $req('grant_income') ?>">
                                 <?= lang('Grant sum (institute)', 'Fördersumme (Institut)') ?>
                             </label>
@@ -982,7 +982,7 @@ if ($is_subproject) {
                     <?php } ?>
                     <?php if (array_key_exists('grant_subproject', $fields)) { ?>
                         <div class="col floating-form">
-                            <input type="number" step="1" class="form-control" <?= $req('grant_subproject') ?> name="values[grant_subproject]" id="grant_subproject" value="<?= val('grant_subproject') ?>" placeholder="1234">
+                            <input type="text" step="1" class="form-control money-input" <?= $req('grant_subproject') ?> name="values[grant_subproject]" id="grant_subproject" value="<?= val('grant_subproject') ?>" placeholder="1234">
                             <label for="grant_subproject" class="<?= $req('grant_subproject') ?>">
                                 <?= lang('Grant sum (subproject)', 'Fördersumme (Teilprojekt)') ?>
                             </label>
@@ -1231,91 +1231,107 @@ if ($is_subproject) {
             }
             ?>
 
-            <?php if (array_key_exists('nagoya', $fields) && $Settings->featureEnabled('nagoya')) {
-                $countries = $form['nagoya_countries'] ?? [];
-                $nagoya = $form['nagoya'] ?? 'no';
-                include_once BASEPATH . "/php/Country.php";
-            ?>
-
+            <?php if (array_key_exists('nagoya', $fields) && $Settings->featureEnabled('nagoya')) { ?>
                 <h5>
                     <?= lang('Nagoya Protocol') ?>
                 </h5>
+                <?php
 
-                <div class="form-group">
-                    <label for="nagoya">
-                        <?= lang('
+                $nagoya = $form['nagoya'] ?? [];
+                $countries = $nagoya['countries'] ?? [];
+                $enabled = $nagoya['enabled'] ?? false;
+
+                // if the form is not empty, and Nagoya was enabled just refer to the nagoya tab and do not show the fields here
+                if (!empty($form) && $enabled && !empty($countries)) { ?>
+                    <div class="alert alert-info">
+                        <?= lang('Nagoya Protocol settings can be found in the Nagoya Protocol tab after saving the form.', 'Die Einstellungen zum Nagoya-Protokoll finden Sie im Nagoya-Protokoll-Tab nach dem Speichern des Formulars.') ?>
+                    </div>
+                <?php
+                } else {
+                ?>
+
+                    <div class="form-group">
+                        <label for="nagoya">
+                            <?= lang('
                             Do you plan to collect or receive genetic resources (biological samples) from outside of Germany over the course of this project?
                             ', 'Planst du, im Rahmen dieses Projekts genetische Ressourcen (biologische Proben) von außerhalb Deutschlands zu sammeln oder zu erhalten? ') ?>
-                    </label>
-                    <div>
-                        <input type="radio" name="values[nagoya]" id="nagoya-yes" value="yes" <?= ($nagoya == 'yes') ? 'checked' : '' ?>>
-                        <label for="nagoya-yes">Yes</label>
-                        <input type="radio" name="values[nagoya]" id="nagoya-no" value="no" <?= ($nagoya == 'no') ? 'checked' : '' ?>>
-                        <label for="nagoya-no">No</label>
-                    </div>
+                        </label>
+                        <div>
+                            <input type="radio" name="values[nagoya]" id="nagoya-yes" value="yes" <?= ($enabled) ? 'checked' : '' ?>>
+                            <label for="nagoya-yes">Yes</label>
+                            <input type="radio" name="values[nagoya]" id="nagoya-no" value="no" <?= (!$enabled) ? 'checked' : '' ?>>
+                            <label for="nagoya-no">No</label>
+                        </div>
 
-                    <div id="ressource-nagoya" style="display: <?= ($nagoya == 'yes') ? 'block' : 'none' ?>;">
+                        <!-- <small class="text-muted">
+                            <?= lang('If you answer yes, you will be prompted to list all countries from which you plan to collect, obtain or utilize genetic resources (biological samples) after you have submitted the form.', 'Falls du ja auswählst, wirst du nach dem Absenden des Formulars aufgefordert, alle Länder aufzulisten, aus denen du planst, genetische Ressourcen (biologische Proben) zu sammeln, zu beschaffen oder zu nutzen.') ?>
+                        </small> -->
 
-                        <b>
-                            <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
-                        </b>
+                        <div id="ressource-nagoya" style="display: <?= ($enabled) ? 'block' : 'none' ?>;">
 
-                        <div class="author-widget" id="author-widget">
-                            <div class="author-list p-10" id="nagoya-countries-list">
-                                <?php
-                                $lang = lang('name', 'name_de');
-                                foreach ($countries as $iso) { ?>
-                                    <div class='author'>
-                                        <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
-                                        <?= $DB->getCountry($iso, $lang) ?>
-                                        <a onclick="$(this).closest('.author').remove()">&times;</a>
-                                    </div>
-                                <?php } ?>
+                            <b>
+                                <?= lang('Please list all countries:', 'Liste bitte alle Länder auf:') ?>
+                            </b>
 
-                            </div>
-                            <div class="footer">
-                                <div class="input-group sm d-inline-flex w-auto">
-                                    <select id="add-nagoya-country">
-                                        <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
-                                            <option value="<?= $iso ?>"><?= $name ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button class="btn secondary h-full" type="button" onclick="addNagoyaCountry(event);">
-                                            <i class="ph ph-plus"></i>
-                                        </button>
+                            <div class="author-widget" id="author-widget">
+                                <div class="author-list p-10" id="nagoya-countries-list">
+                                    <?php
+                                    $lang = lang('name', 'name_de');
+                                    foreach ($countries as $country) {
+                                        $iso = $country['code'] ?? '';
+                                    ?>
+                                        <div class='author'>
+                                            <input type='hidden' name='values[nagoya_countries][]' value='<?= $iso ?>'>
+                                            <?= $DB->getCountry($iso, $lang) ?>
+                                            <a onclick="$(this).closest('.author').remove()">&times;</a>
+                                        </div>
+                                    <?php } ?>
+
+                                </div>
+                                <div class="footer">
+                                    <div class="input-group sm d-inline-flex w-auto">
+                                        <select id="add-nagoya-country">
+                                            <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                                <option value="<?= $iso ?>"><?= $name ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn secondary h-full" type="button" onclick="addNagoyaCountry(event);">
+                                                <i class="ph ph-plus"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <script>
-                                function addNagoyaCountry(event) {
-                                    var el = $('#add-nagoya-country')
-                                    var data = el.val()
-                                    if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
-                                        event.preventDefault();
-                                        if (data) {
-                                            $('#nagoya-countries-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
+                                <script>
+                                    function addNagoyaCountry(event) {
+                                        var el = $('#add-nagoya-country')
+                                        var data = el.val()
+                                        if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
+                                            event.preventDefault();
+                                            if (data) {
+                                                $('#nagoya-countries-list').append('<div class="author"><input type="hidden" name="values[nagoya_countries][]" value="' + data + '">' + el.find('option:selected').text() + '<a onclick="$(this).closest(\'.author\').remove()">&times;</a></div>')
+                                            }
+                                            $(el).val('')
+                                            return false;
                                         }
-                                        $(el).val('')
-                                        return false;
                                     }
-                                }
-                            </script>
+                                </script>
 
+                            </div>
                         </div>
+
+
+                        <script>
+                            document.getElementById('nagoya-yes').addEventListener('change', function() {
+                                document.getElementById('ressource-nagoya').style.display = 'block';
+                            });
+                            document.getElementById('nagoya-no').addEventListener('change', function() {
+                                document.getElementById('ressource-nagoya').style.display = 'none';
+                            });
+                        </script>
                     </div>
-
-                    <script>
-                        document.getElementById('nagoya-yes').addEventListener('change', function() {
-                            document.getElementById('ressource-nagoya').style.display = 'block';
-                        });
-                        document.getElementById('nagoya-no').addEventListener('change', function() {
-                            document.getElementById('ressource-nagoya').style.display = 'none';
-                        });
-                    </script>
-
-                </div>
+                <?php } ?>
             <?php } ?>
 
 
@@ -1515,4 +1531,22 @@ if ($is_subproject) {
             return false;
         }
     }
+
+    $('.money-input').on('blur', function () {
+  let value = $(this).val();
+
+  // Nur Ziffern und Komma/Punkt behalten
+  value = value.replace(/[^\d,\.]/g, '');
+
+  // In float umwandeln
+  const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+
+  if (!isNaN(num)) {
+    // Formatiert anzeigen
+    const formatted = num.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    $(this).val(formatted);
+  } else {
+    $(this).val('');
+  }
+});
 </script>

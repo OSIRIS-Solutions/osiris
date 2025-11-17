@@ -115,33 +115,6 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 }, 'login');
 
 
-Route::get('/proposals/nagoya/(.*)', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $collection = 'proposals';
-
-    if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
-    } else {
-        $project = $osiris->$collection->findOne(['name' => $id]);
-        $id = strval($project['_id'] ?? '');
-    }
-    if (empty($project)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
-        die;
-    }
-    $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => $project['name']]
-    ];
-
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/$collection/nagoya.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
 Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
     include_once BASEPATH . "/php/init.php";
     require_once BASEPATH . "/php/Project.php";
@@ -204,35 +177,6 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     include BASEPATH . "/footer.php";
 }, 'login');
 
-
-Route::get('/nagoya', function () {
-    include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Project.php";
-
-    $allowed = $Settings->featureEnabled('nagoya') && $Settings->hasPermission('nagoya.view');
-    if (!$allowed) {
-        header("Location: " . ROOTPATH . "/projects?msg=no-permission");
-        die;
-    }
-    $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' => 'Nagoya Protocol']
-    ];
-
-    $nagoya = $osiris->proposals->find(
-        ['nagoya' => 'yes']
-    )->toArray();
-
-    // $nagoya_projects = $osiris->proposals->find(
-    //     ['nagoya' => 'yes']
-    // )->toArray();
-
-    // $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
-
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/nagoya.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
 
 
 Route::get('/projects/subproject/(.*)', function ($id) {
@@ -387,7 +331,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $contacts = implode(', ', $contacts);
 
-    
+
 
     $projectValues = [
         "contact" => $contacts,
@@ -545,6 +489,23 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
+    if (isset($values['nagoya'])) {
+        $nagoya = ($values['nagoya'] == 'yes');
+        $countries = [];
+        foreach ($values['nagoya_countries'] as $iso) {
+            $countries[] = [
+                'id' => uniqid(),
+                'code' => $iso,
+                "periods" => [],
+                "scope" => [],
+                "abs" => []
+            ];
+        }
+        $values['nagoya'] = [
+            'enabled' => $nagoya,
+            'countries' => $countries
+        ];
+    }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
@@ -758,6 +719,30 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
         $values['teaser_en'] = get_preview($abstract_en);
         $values['teaser_de'] = get_preview($abstract_de);
+    }
+
+    // nagoya only for proposals and if it was disabled before
+    if ($collection == 'proposals' && isset($values['nagoya'])) {
+        if (!is_string($project['nagoya']) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
+            // nagoya was already enabled before, do not change anything
+            unset($values['nagoya']);
+        } else {
+            $nagoya = ($values['nagoya'] == 'yes');
+            $countries = [];
+            foreach ($values['nagoya_countries'] as $iso) {
+                $countries[] = [
+                    'id' => uniqid(),
+                    'code' => $iso,
+                    "periods" => [],
+                    "scope" => [],
+                    "abs" => []
+                ];
+            }
+            $values['nagoya'] = [
+                'enabled' => $nagoya,
+                'countries' => $countries
+            ];
+        }
     }
 
     $Project = new Project();

@@ -533,6 +533,7 @@ class DB
     public function getNameFromId($user, $reverse = false, $abbr = false)
     {
         $USER = $this->getPerson($user, true);
+        if (empty($USER)) return "$user";
         $first = $USER['first'] ?? '';
 
         if ($abbr && !empty($first)) {
