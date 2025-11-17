@@ -608,6 +608,7 @@ class Groups
         if (empty($units)) return [];
         $depts = [];
         foreach ($units as $unit) {
+            if (!is_string($unit['unit'])) continue;
             $unit = $this->getUnitParent($unit['unit'], 1);
             if (empty($unit['id']) || in_array($unit['id'], $depts)) continue;
             $depts[] = $unit['id'];
