@@ -41,10 +41,17 @@ if ($action === 'view') {
             <p>
                 <?=lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.')?>
             </p>
-            <a href="<?=ROOTPATH?>/synchronize-attributes" class="btn primary">
+            <!-- <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn primary">
                 <i class="ph ph-user-list"></i>
                 <?=lang('Attribute preview', 'Vorschau der Attribute')?>
-            </a>
+            </a> -->
+            <form action="<?=ROOTPATH?>/synchronize-attributes" method="post">
+            <input type="hidden" name="preview" value="1">
+             <button type="submit" class="btn primary">
+                <i class="ph ph-user-list"></i>
+                <?=lang('Attribute preview', 'Vorschau der Attribute')?>
+            </button>
+           </form>
         </div>
     </div>
 
