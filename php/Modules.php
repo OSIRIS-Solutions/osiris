@@ -2337,7 +2337,7 @@ class Modules
                 </div>
                 <script>
                     // make sure the end date is always after the start date
-                    document.getElementById('date_start').addEventListener('change', function() {
+                    document.getElementById('date_start').addEventListener('blur', function() {
                         var startDate = new Date(this.value);
                         var endDate = new Date(document.getElementById('date_end').value);
                         if (endDate < startDate) {
@@ -2345,7 +2345,7 @@ class Modules
                             toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
                         }
                     });
-                    document.getElementById('date_end').addEventListener('change', function() {
+                    document.getElementById('date_end').addEventListener('blur', function() {
                         var startDate = new Date(document.getElementById('date_start').value);
                         var endDate = new Date(this.value);
                         if (endDate < startDate) {

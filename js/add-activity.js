@@ -27,10 +27,6 @@ function togglePubType(type, callback = () => { }) {
     // check if type exists:
     if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
         // check if mapped type exists
-        if (TYPES[type] === undefined) {
-            toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
-            return;
-        }
         type = TYPES[type] ?? type;
     }
     console.log(type);
@@ -55,6 +51,10 @@ function togglePubType(type, callback = () => { }) {
             // console.log(response);
             SELECTED_CAT = data.category;
             SELECTED_TYPE = data.type;
+            if (SELECTED_CAT === null || SELECTED_TYPE === null) {
+                toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
+                return;
+            }
 
             const SELECTED_MODULES = SELECTED_TYPE.modules;
 
