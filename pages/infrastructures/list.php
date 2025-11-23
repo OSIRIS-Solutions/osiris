@@ -15,7 +15,8 @@
  * @license     MIT
  */
 
-
+include_once BASEPATH . "/php/Infrastructure.php";
+$Infrastructure = new Infrastructure();
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
@@ -48,6 +49,29 @@ $active = function ($field) use ($data_fields) {
 
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 ?>
+
+<style>
+    .infrastructure-logo {
+        width: 6rem;
+        height: 6rem;
+        margin-right: 2rem;
+        object-fit: contain;
+    }
+    .infrastructure-logo-placeholder {
+        width: 7rem;
+        height: 6rem;
+        border-radius: 8px;
+        /* border: 1px solid var(--primary-color); */
+        background-color: var(--primary-color-20);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        margin-right: 2rem;
+        font-size: 2.5rem;
+    }
+
+</style>
 
 <h1>
     <i class="ph-duotone ph-cube-transparent" aria-hidden="true"></i>
@@ -85,7 +109,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             <tbody>
                 <?php foreach ($infrastructures as $infra) { ?>
                     <tr>
-                        <td>
+                        <td class="d-flex align-items-center">
                             <?php
                             $topics = '';
                             if ($topicsEnabled && !empty($infra['topics'])) {
@@ -97,21 +121,26 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             }
                             echo $topics;
                             ?>
-                            <h6 class="m-0">
-                                <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                    <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
-                                </a>
-                            </h6>
-
-                            <div class="text-muted mb-5">
-                                <?php if (!empty($infra['subtitle'])) { ?>
-                                    <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
-                                <?php } else { ?>
-                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
-                                <?php } ?>
-                            </div>
+                            <?php
+                            $Infrastructure->printLogo($infra, "infrastructure-logo", lang('Logo of', 'Logo von') . ' ' . $infra['name']);
+                            ?>
                             <div>
-                                <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                                <h6 class="m-0">
+                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
+                                        <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                    </a>
+                                </h6>
+
+                                <div class="text-muted mb-5">
+                                    <?php if (!empty($infra['subtitle'])) { ?>
+                                        <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                    <?php } else { ?>
+                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                    <?php } ?>
+                                </div>
+                                <div>
+                                    <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                                </div>
                             </div>
                         </td>
                         <td><?= lang($infra['name'], $infra['name_de'] ?? null) ?></td>

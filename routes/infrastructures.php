@@ -915,3 +915,71 @@ Route::post('/crud/infrastructures/delete/([A-Za-z0-9]*)', function ($id) {
     $_SESSION['msg'] = lang("Infrastructure has been deleted successfully.", "Infrastruktur wurde erfolgreich gelöscht.");
     header("Location: " . ROOTPATH . "/infrastructures");
 });
+
+
+Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructure_id) {
+    include_once BASEPATH . "/php/init.php";
+
+    // get infrastructure id    
+    $infrastructure = $osiris->infrastructures->findOne(['id' => $infrastructure_id]);
+    if (empty($infrastructure)) {
+        header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id?msg=not-found");
+        die;
+    }
+    if (isset($_FILES["file"])) {
+        // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
+
+        if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
+            $errorMsg = match ($_FILES['file']['error']) {
+                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
+                2 => lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt."),
+                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
+                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
+                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
+                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
+                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
+                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+            };
+            $_SESSION['msg'] = $errorMsg;
+            $_SESSION['msg_type'] = "error";
+        } else if ($_FILES["file"]["size"] > 2000000) {
+            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg_type'] = "error";
+        } else {
+            // check image settings
+            $file = file_get_contents($_FILES["file"]["tmp_name"]);
+            $type = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+            // encode image
+            $file = base64_encode($file);
+            $img = new MongoDB\BSON\Binary($file, MongoDB\BSON\Binary::TYPE_GENERIC);
+            // first: delete old image, then: insert new one
+            $updateResult = $osiris->infrastructures->updateOne(
+                ['id' => $infrastructure_id],
+                ['$set' => ['image' => [
+                    'data' => $img,
+                    'type' => $type,
+                    'extension' => $type,
+                    'uploaded_by' => $_SESSION['username'],
+                    'uploaded' => date('Y-m-d')
+                ]]]
+            );
+            $_SESSION['msg'] = lang("Infrastructure logo uploaded successfully.", "Infrastruktur-Logo erfolgreich hochgeladen.");
+            $_SESSION['msg_type'] = "success";
+            header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
+            die;
+            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+        }
+    } else if (isset($_POST['delete'])) {
+        $osiris->infrastructures->updateOne(
+            ['id' => $infrastructure_id],
+            ['$unset' => ['image' => ""]]
+        );
+        $_SESSION['msg'] = lang("Infrastructure logo deleted.", "Infrastruktur-Logo gelöscht.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
+        die;
+    }
+
+    header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
+    die;
+});
