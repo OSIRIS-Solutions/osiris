@@ -1696,6 +1696,16 @@ class Document extends Settings
             if (empty($value) && count($m) == 2) {
                 $value = $m[1];
             }
+            
+            if (empty($value)) {
+                $value = '';
+            }
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+            }
+            if ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
+                $value = implode(', ', DB::doc2Arr($value));
+            }
             $vars['{' . $match . '}'] = ($value);
         }
 
@@ -1733,7 +1743,6 @@ class Document extends Settings
                 $value = trim($this->get_field($fields));
                 if (empty($value) || $value == '-') $text = '';
             }
-
             $vars['%' . $match . '%'] = $text;
         }
         $line = strtr($template, $vars);
