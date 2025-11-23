@@ -775,8 +775,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
             if (hash.tags !== undefined) {
                 var tagId = hash.tags.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
-                var tag = document.getElementById(tagId + '-btn').getAttribute('data-type');
-                filterActivities(document.getElementById(tagId + '-btn'), tag, 17)
+                var tag = document.getElementById(tagId + '-btn')
+                if (tag !== null) {
+                    tag = tag.getAttribute('data-type')
+                    filterActivities(document.getElementById(tagId + '-btn'), tag, 17)
+                }
             }
 
             if (hash.search !== undefined) {
