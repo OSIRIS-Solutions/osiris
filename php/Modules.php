@@ -2506,7 +2506,10 @@ class Modules
             case "issn":
                 $issn = $this->val('issn');
                 if (is_array($issn)) {
-                    $issn = implode(', ', $issn);
+                    $issn = implode(', ', DB::doc2Arr($issn));
+                }
+                if ($issn instanceof MongoDB\BSON\BSONArray || is_object($issn)) {
+                    $issn = implode(', ', DB::doc2Arr($issn));
                 }
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="issn">
@@ -3260,3 +3263,4 @@ class Modules
         }
     }
 }
+
