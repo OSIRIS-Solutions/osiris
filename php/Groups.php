@@ -321,7 +321,7 @@ class Groups
         if ($ni === 0 || $depth > 1000) return ''; // Make sure not to have an endless recursion
         for ($i = 0; $i < $ni; $i++) {
             if ($datas[$i]['parent'] == $parent) {
-                $element = $datas[$i]['name'];
+                $element = lang($datas[$i]['name'], $datas[$i]['name_de'] ?? null);
                 if ($depth > 0) {
                     $element = str_repeat('-', $depth) . ' ' . $element;
                 }
