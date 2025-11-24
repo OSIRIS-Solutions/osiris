@@ -19,6 +19,10 @@
     <i class="ph-duotone ph-user-plus"></i>
     <?= lang('Manage guest accounts', 'Gast-Accounts verwalten') ?>
 </h1>
+<a href="<?= ROOTPATH ?>/admin/guest-account/add" class="btn primary">
+    <i class="ph ph-user-plus"></i>
+    <?= lang('Add guest account', 'Gast-Account hinzufügen') ?>
+</a>
 
 <?php
 $accounts = $osiris->guestAccounts->aggregate([
@@ -50,7 +54,7 @@ if (empty($accounts)) {
 } else {
 ?>
 
-    <table class="table table-striped">
+    <table class="table" id="guest-accounts-table">
         <thead>
             <tr>
                 <th><?= lang('Username', 'Benutzername') ?></th>
@@ -108,8 +112,8 @@ if (empty($accounts)) {
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/delete" method="post" class="d-inline">
                                     <input type="hidden" name="username" value="<?= htmlspecialchars($account['username']) ?>">
                                     <small>
-                                        <b><?=lang('Note:', 'Anmerkung:')?></b>
-                                        <?=lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden.')?>
+                                        <b><?= lang('Note:', 'Anmerkung:') ?></b>
+                                        <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden.') ?>
                                     </small>
                                     <button type="submit" class="btn danger" title="<?= lang('Delete', 'Löschen') ?>">
                                         <i class="ph ph-trash"></i>
@@ -127,9 +131,9 @@ if (empty($accounts)) {
 }
 ?>
 
-<p>
-    <a href="<?= ROOTPATH ?>/admin/guest-account/add" class="btn primary">
-        <i class="ph ph-user-plus"></i>
-        <?= lang('Add guest account', 'Gast-Account hinzufügen') ?>
-    </a>
-</p>
+<script>
+    // DataTables
+    $(document).ready(function() {
+        $('#guest-accounts-table').DataTable();
+    });
+</script>
