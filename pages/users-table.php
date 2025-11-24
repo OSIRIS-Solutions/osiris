@@ -283,11 +283,6 @@ if ($active('keywords')) {
                     extend: 'excelHtml5',
                     exportOptions: {
                         columns: [6, 7, 8, 9, 10, 11, 12, 2, 3, 4, 13],
-                        format: {
-                            header: function(html, index, node) {
-                                return headers[index].title ?? '';
-                            }
-                        }
                     },
                     className: 'btn small ml-10',
                     title: 'OSIRIS Users',
