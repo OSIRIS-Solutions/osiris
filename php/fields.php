@@ -1,14 +1,17 @@
 <?php
 require_once "Settings.php";
+require_once "Vocabulary.php";
 
 class Fields
 {
     public $fields = array();
+    private $Vocabulary;
 
     function __construct()
     {
         $Settings = new Settings();
         $DB = new DB();
+        $this->Vocabulary = new Vocabulary();
         $osiris = $DB->db;
         $types = $osiris->adminCategories->find()->toArray();
         $types = array_column($types, lang('name', 'name_de'), 'id');
@@ -29,6 +32,7 @@ class Fields
                 $typeModules[$module][] = $m['id'];
             }
         }
+
         $typeModules = array_merge($typeModules, [
             'print' => ['general'],
             'web' => ['general'],
@@ -58,7 +62,8 @@ class Fields
                 'id' => 'print',
                 'module_of' => $typeModules['print'] ?? [],
                 'usage' => [
-                    'columns', 'filter'
+                    'columns',
+                    'filter'
                 ],
                 'label' => lang('Print version', 'Printdarstellung'),
                 'type' => 'string'
@@ -703,6 +708,32 @@ class Fields
                 ]
             ],
             [
+                'id' => 'thesis',
+                'module_of' => $typeModules['thesis'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Thesis type', 'Art der Abschlussarbeit'),
+                'type' => 'string',
+                'input' => 'select',
+                'values' => $this->vocabularyValues('thesis')
+            ],
+            [
+                'id' => 'pub-language',
+                'module_of' => $typeModules['pub-language'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Publication language', 'Publikationssprache'),
+                'type' => 'string',
+                'input' => 'select',
+                'values' => $this->vocabularyValues('pub-language')
+            ],
+            [
                 'id' => 'status',
                 'module_of' => $typeModules['status'] ?? [],
                 'usage' => [
@@ -970,6 +1001,7 @@ class Fields
             ];
         }
 
+
         function typeConvert($type)
         {
             return match ($type) {
@@ -984,6 +1016,15 @@ class Fields
         }
 
         foreach ($osiris->adminFields->find() as $field) {
+            // make sure that id does not exist yet
+            $exists = false;
+            foreach ($FIELDS as $existingField) {
+                if ($existingField['id'] == $field['id']) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if ($exists) continue;
             $f = [
                 'id' => $field['id'],
                 'module_of' => $typeModules[$field['id']] ?? [],
@@ -1008,6 +1049,14 @@ class Fields
             $FIELDS[] = $f;
         }
 
+        // remove 'filter' from all fields where module_of is empty
+        // foreach ($FIELDS as &$f) {
+        //     if (empty($f['module_of'])) {
+        //         $f['usage'] = array_filter($f['usage'], function ($u) {
+        //             return $u != 'filter';
+        //         });
+        //     }
+        // }
         $this->fields = array_values($FIELDS);
         // Sort fields by name
         usort($this->fields, function ($a, $b) {
@@ -1024,6 +1073,16 @@ class Fields
             if ($f['id'] == $id) return $f;
         }
         return null;
+    }
+
+    private function vocabularyValues($vocabularyId)
+    {
+        $voc = $this->Vocabulary->getValues($vocabularyId);
+        $list = [];
+        foreach ($voc as $v) {
+            $list[$v['id']] = lang($v['en'], $v['de'] ?? null);
+        }
+        return $list;
     }
 }
 

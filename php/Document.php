@@ -986,6 +986,7 @@ class Document extends Settings
         if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
             return $this->formatAuthorsNew($module);
         }
+        $Vocabulary = new Vocabulary();
         switch ($module) {
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
@@ -1077,8 +1078,13 @@ class Document extends Settings
                     $files .= " <a href='$file[filepath]' target='_blank' data-toggle='tooltip' data-title='$file[filetype]: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
                 }
                 return $files;
+            case 'thesis':
+                $val = $this->getVal('thesis', null);
+                return $Vocabulary->getValue('thesis', $val);
+            case 'pub-language':
+                $val = $this->getVal('pub-language', null);
+                return $Vocabulary->getValue('pub-language', $val);
             case 'funding_type':
-                $Vocabulary = new Vocabulary();
                 $funder = $this->getVal('funding_type', null);
                 return $Vocabulary->getValue('funding-type', $funder);
             case "guest": // ["category"],

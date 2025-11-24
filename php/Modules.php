@@ -538,6 +538,17 @@ class Modules
             "width" => 12,
             "tags" => ['general', 'important']
         ],
+        "pub-language" => [
+            "fields" => ["pub_language" => 'de'],
+            "name" => "Publication Language",
+            "name_de" => "Publikationssprache",
+            "label" => "Publication Language",
+            "label_de" => "Publikationssprache",
+            "description" => "A field for the language of a publication, values defined by vocabulary. Possible values are: de, en, fr, es, it, other.",
+            "description_de" => "Ein Feld für die Sprache einer Publikation, Werte werden über das Vokabular definiert. Mögliche Werte sind: de, en, fr, es, it, other.",
+            "width" => 6,
+            "tags" => ['publication']
+        ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
             "name" => "Publisher",
@@ -708,8 +719,8 @@ class Modules
             "name_de" => "Abschlussarbeit-Kategorie",
             "label" => "Thesis type",
             "label_de" => "Art der Abschlussarbeit",
-            "description" => "A field for the category of a thesis, can be one of the following: bachelor, master, diploma, doctoral, habilitation.",
-            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation.",
+            "description" => "A field for the category of a thesis, values defined by vocabulary. Standard values are: bachelor, master, diploma, doctor, habilitation.",
+            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, Werte werden über das Vokabular definiert. Standardwerte sind: Bachelor, Master, Diplom, Doktor, Habilitation.",
             "width" => 6,
             "tags" => ['publication', 'people']
         ],
@@ -1310,6 +1321,7 @@ class Modules
         if (!array_key_exists($module, $this->all_modules)) {
             return $this->custom_field($module, $req, $props);
         }
+        $Vocabulary = new Vocabulary();
 
         $labelClass = ($req ? "required" : "");
 
@@ -2025,6 +2037,7 @@ class Modules
                             justify-content: center;
                             align-items: center;
                         }
+
                         #event-select-button {
                             width: 100%;
                             text-align: left;
@@ -2184,17 +2197,37 @@ class Modules
                 break;
 
             case "thesis":
+                $val = $this->val('thesis') ?? '';
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="thesis">
                     <select name="values[thesis]" id="thesis" class="form-control" <?= $labelClass ?>>
-                        <option value="thesis"><?= lang('Thesis', 'Abschlussarbeit') ?></option>
-                        <option value="doctor" <?= $this->val('thesis') == 'doctor' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorarbeit') ?></option>
-                        <option value="diploma" <?= $this->val('thesis') == 'diploma' ? 'selected' : '' ?>><?= lang('Diploma Thesis', 'Diplomarbeit') ?></option>
-                        <option value="master" <?= $this->val('thesis') == 'master' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Masterarbeit') ?></option>
-                        <option value="bachelor" <?= $this->val('thesis') == 'bachelor' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelorarbeit') ?></option>
-                        <option value="habilitation" <?= $this->val('thesis') == 'habilitation' ? 'selected' : '' ?>><?= lang('Habilitation', 'Habilitation') ?></option>
+                        <?php
+                        $vocab = $Vocabulary->getValues('thesis');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
                     </select>
                     <label for="thesis" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+            case "pub-language":
+                $val = $this->val('pub-language') ?? '';
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pub-language">
+                    <select name="values[pub-language]" id="pub-language" class="form-control" <?= $labelClass ?>>
+                        <?php if (!$req) { ?>
+                            <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('Select language', 'Sprache auswählen') ?></option>
+                        <?php } ?>
+                        
+                        <?php
+                        $vocab = $Vocabulary->getValues('pub-language');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="pub-language" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
@@ -2958,7 +2991,7 @@ class Modules
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
-                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" <?= $labelClass ?> />
 
                         <div id="org-<?= $rand_id ?>-value">
                             <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
@@ -3230,7 +3263,6 @@ class Modules
                 break;
 
             case 'funding_type': // funding_type
-                $Vocabulary = new Vocabulary();
                 $val = $this->val('funding_type', null);
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">
