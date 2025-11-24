@@ -236,7 +236,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
 
     if (isset($values['synonyms'])){
         if (!empty($values['synonyms'])) {
-            $values['synonyms'] = array_map('trim', explode(',', $values['synonyms']));
+            $values['synonyms'] = array_map('trim', explode(';', $values['synonyms']));
             $values['synonyms'] = array_values($values['synonyms']);
         } else {
             $values['synonyms'] = null;

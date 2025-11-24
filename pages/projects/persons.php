@@ -14,10 +14,9 @@ $Vocabulary = new Vocabulary();
 <div id="person-blanks" class="hidden">
     <select class="form-control role" required id="person-role">
         <?php
-        $role = $con['role'] ?? '';
         $vocab = $Vocabulary->getValues('project-person-role');
         foreach ($vocab as $v) { ?>
-            <option value="<?= $v['id'] ?>" <?= $role == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+            <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
         <?php } ?>
     </select>
 </div>
@@ -141,7 +140,7 @@ $Vocabulary = new Vocabulary();
                             <select id="person-select" class="form-control person">
                                 <?php
                                 foreach ($all_users as $s) { ?>
-                                    <option value="<?= $s['username'] ?>" <?= ($con['user'] == $s['username'] ? 'selected' : '') ?>>
+                                    <option value="<?= $s['username'] ?>">
                                         <?= "$s[last], $s[first] ($s[username])" ?>
                                     </option>
                                 <?php } ?>

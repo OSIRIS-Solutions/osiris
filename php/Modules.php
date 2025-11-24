@@ -2337,7 +2337,7 @@ class Modules
                 </div>
                 <script>
                     // make sure the end date is always after the start date
-                    document.getElementById('date_start').addEventListener('change', function() {
+                    document.getElementById('date_start').addEventListener('blur', function() {
                         var startDate = new Date(this.value);
                         var endDate = new Date(document.getElementById('date_end').value);
                         if (endDate < startDate) {
@@ -2345,7 +2345,7 @@ class Modules
                             toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
                         }
                     });
-                    document.getElementById('date_end').addEventListener('change', function() {
+                    document.getElementById('date_end').addEventListener('blur', function() {
                         var startDate = new Date(document.getElementById('date_start').value);
                         var endDate = new Date(this.value);
                         if (endDate < startDate) {
@@ -2812,6 +2812,7 @@ class Modules
             case "online-ahead-of-print":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="online-ahead-of-print">
+                    <input type="hidden" name="values[online_ahead_of_print]" value="0">
                     <div class="custom-checkbox <?= isset($_GET['epub']) ? 'text-danger' : '' ?>" id="epub-div">
                         <input type="checkbox" id="epub" value="1" name="values[epub]" <?= (!isset($_GET['epub']) && $this->val('epub', false)) ? 'checked' : '' ?>>
                         <label for="epub"><?= $label ?></label>
@@ -2824,6 +2825,7 @@ class Modules
             case "correction":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="correction">
+                    <input type="hidden" name="values[correction]" value="0">
                     <div class="custom-checkbox" id="correction-div">
                         <input type="checkbox" id="correction" value="1" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
                         <label for="correction"><?= $label ?></label>

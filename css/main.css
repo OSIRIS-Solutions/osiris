@@ -5850,6 +5850,12 @@ Alerts
 .alert.muted a:hover {
   color: var(--muted-color);
 }
+.alert.without-icon {
+  padding-left: 2rem;
+}
+.alert.without-icon::before {
+  display: none;
+}
 
 .card {
   position: relative;

@@ -446,6 +446,7 @@ class LDAPInterface
                 $currentUser = $osiris->persons->findOne(['$or' => [['username' => $username], ['uniqueid' => $userData['uniqueid']]]], ['projection' => ['units' => 1]]);
                 if (!empty($currentUser)) {
                     foreach ($currentUser['units'] as $unit) {
+                        if (!is_string($unit['unit'])) continue;
                         // check if unit is in the past
                         if (!empty($unit['end']) && $unit['end'] < date('Y-m-d')) {
                             $pastUnits[] = $unit;
@@ -505,7 +506,7 @@ class LDAPInterface
                                 // unit is new
                                 $updatedUnits[$u['unit']] = [
                                     'id' => uniqid(),
-                                    'unit' => $u,
+                                    'unit' => $u['unit'],
                                     'start' => $u['start'] ?? date('Y-m-d'),
                                     'end' => null,
                                     'scientific' => $u['scientific'] ?? null,

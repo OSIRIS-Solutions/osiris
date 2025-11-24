@@ -789,7 +789,11 @@ if ($Settings->featureEnabled('tags')) {
                                     var hide = $('#hide').prop('checked');
 
                                     $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>' : '<?= lang('Visible', 'Sichtbar') ?>');
-
+                                    $('#highlight').prop('disabled', hide);
+                                    if (hide) {
+                                        $('#highlight').prop('checked', false);
+                                        $('#highlight-label').text('<?= lang('Normal', 'Normal') ?>');
+                                    }
                                     toastSuccess(lang('Visibility status changed', 'Sichtbarkeitsstatus geändert'))
                                 },
                                 error: function(response) {
@@ -817,14 +821,19 @@ if ($Settings->featureEnabled('tags')) {
         <?php } ?>
 
         <?php if ($DB->isUserActivity($doc, $_SESSION['username'], false)) {
-            $highlights = DB::doc2Arr($USER['highlighted'] ?? []);
-            $highlighted = in_array($id, $highlights);
+            $disabled = $doc['hide'] ?? false;
+            if ($disabled) {
+                $highlighted = false;
+            } else {
+                $highlights = DB::doc2Arr($USER['highlighted'] ?? []);
+                $highlighted = in_array($id, $highlights);
+            }
         ?>
             <div class="mr-10 badge bg-white">
                 <small><?= lang('Displayed in your profile', 'Darstellung in deinem Profil') ?>: </small>
                 <br />
                 <div class="custom-switch">
-                    <input type="checkbox" id="highlight" <?= ($highlighted) ? 'checked' : '' ?> name="values[highlight]" onchange="fav()">
+                    <input type="checkbox" id="highlight" <?= ($highlighted) ? 'checked' : '' ?> name="values[highlight]" onchange="fav()" <?= $disabled ? 'disabled' : '' ?>>
                     <label for="highlight" id="highlight-label">
                         <?= $highlighted ? lang('Highlighted', 'Hervorgehoben') : lang('Normal', 'Normal') ?>
                     </label>
