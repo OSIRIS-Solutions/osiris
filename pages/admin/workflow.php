@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Workflow Edit Page
  * 
@@ -278,6 +279,30 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
     </div>
 </div>
 
+
+<!-- crud/workflows/delete/(.*) -->
+<?php if (empty($activities)) { ?>
+    <div class="dropdown">
+        <button class="btn danger" data-toggle="dropdown" type="button" id="delete-workflow" aria-haspopup="true" aria-expanded="false">
+            <i class="ph ph-trash"></i>
+            <?= lang('Delete workflow', 'Workflow löschen') ?>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="delete-workflow">
+            <form action="<?= ROOTPATH ?>/crud/workflows/delete/<?= ($form['_id']) ?>" method="post" class="content">
+                <?= lang('Are you sure you want to delete this workflow? This action cannot be undone.', 'Sind Sie sicher, dass Sie diesen Workflow löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
+                <button type="submit" class="btn danger block">
+                    <i class="ph ph-trash"></i>
+                    <?= lang('Yes, delete workflow', 'Ja, Workflow löschen') ?>
+                </button>
+            </form>
+        </div>
+    </div>
+<?php } else { ?>
+    <button class="btn danger" disabled title="<?= lang('Cannot delete workflow while associated to activities.', 'Workflow kann nicht gelöscht werden, solange er mit Aktivitäten verknüpft ist.') ?>">
+        <i class="ph ph-trash"></i>
+        <?= lang('Delete workflow', 'Workflow löschen') ?>
+    </button>
+<?php } ?>
 
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
