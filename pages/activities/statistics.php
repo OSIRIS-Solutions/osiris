@@ -488,10 +488,10 @@ $all = $osiris->activities->count(['affiliated' => true]);
     }
 
     let tables = {
-        '#activities-by-type-table': lang('Activities by type', 'Aktivitäten nach Typ'), 
-        '#publications-by-type-table': lang('Publications by type', 'Publikationen nach Typ'), 
-        '#oa-publications-table': lang('OA Publications', 'OA Publikationen'), 
-        '#activities-started-before-table': lang('Activities started before', 'Aktivitäten gestartet vor')
+        '#activities-by-type-table': lang('Activities by type', 'Aktivitäten nach Typ') + ', <?= $time_frame ?>', 
+        '#publications-by-type-table': lang('Publications by type', 'Publikationen nach Typ') + ', <?= $time_frame ?>', 
+        '#oa-publications-table': lang('OA Publications', 'OA Publikationen') + ', <?= $time_frame ?>', 
+        '#activities-started-before-table': lang('Activities started before', 'Aktivitäten gestartet vor') + ', <?= $time_frame ?>'
     };
 
     for (const [selector, name] of Object.entries(tables)) {
