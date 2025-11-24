@@ -21,6 +21,8 @@ $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
 $tagsEnabled = $Settings->featureEnabled('tags');
+
+$cart = readCart();
 ?>
 
 
@@ -423,6 +425,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             'key': 'tags'
         }
     ]
+    let cart = JSON.parse('<?= json_encode($cart) ?>') || [];
 
     $(document).ready(function() {
         dataTable = $('#result-table').DataTable({
@@ -540,7 +543,13 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 },
                 {
                     targets: 1,
-                    data: 'icon'
+                    data: 'icon',
+                    // className: 'w-50',
+                    sortable: false,
+                    // render: function(data, type, row) {
+                    //     var text = data + '<small class="d-block">' + row.subtype + '</small>';
+                    //     return text;
+                    // },
                 },
                 {
                     targets: 2,
@@ -565,9 +574,19 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 },
                 {
                     targets: 3,
-                    data: 'links',
+                    data: 'id',
                     sortable: false,
                     className: 'unbreakable',
+                    render: function(data, type, row) {
+                        console.log(cart);
+                        var links = `<a class='btn link square' href='${ROOTPATH}/activities/view/${data}' title='<?= lang("View activity", "Aktivität ansehen") ?>'>
+                                <i class='ph ph-arrow-fat-line-right'></i>
+                            </a>
+                            <button class='btn link square' onclick='addToCart(this, "${data}")' title='<?= lang("Add to collection", "In Sammlung ablegen") ?>'>
+                                <i class='${cart.includes(data) ? 'ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus'}'></i>
+                            </button>`;
+                        return links;
+                    }
                 },
                 {
                     targets: 4,
@@ -608,6 +627,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'departments',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     // searchPanes: {
                     //     name: 'units',
                     //     header: lang('Organizational Units', 'Organisationseinheiten'),
@@ -618,6 +638,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     targets: 8,
                     data: 'epub',
                     visible: false,
+                    defaultContent: false,
                     // searchPanes: {
                     //     name: 'epub',
                     //     header: 'Online ahead of print',
@@ -694,7 +715,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     visible: false,
                     defaultContent: '',
                     render: function(data, type, row, meta) {
-                        if (data.length == 0) return ''
+                        if (data === undefined || data.length == 0) return ''
                         return data.join(', ')
                     }
                 }

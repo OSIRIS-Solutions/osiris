@@ -284,12 +284,6 @@ Route::get('/api/all-activities', function () {
 
     $user = $_GET['user'] ?? $_SESSION['username'] ?? null;
     $page = $_GET['page'] ?? 'all-activities';
-    $highlight = true;
-    if ($page == 'my-activities') {
-        $highlight = $user;
-    }
-    // $Format = new Document($highlight);
-
 
     $filter = [];
     if (isset($_GET['filter'])) {
@@ -303,7 +297,6 @@ Route::get('/api/all-activities', function () {
         $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
 
-    $result = [];
     if ($page == "my-activities") {
         // reduced filter for my activities
         $filter = $Settings->getActivityFilter($filter, $user, true);
@@ -327,111 +320,60 @@ Route::get('/api/all-activities', function () {
     $i = 0;
     $first = true;
 
-    $cursor = $osiris->activities->find($filter);
-    $cart = readCart();
+    $display = $_GET['display_activities'] ?? 'web';
+    $activityField = $display === 'web'
+        ? '$rendered.web'
+        : '$rendered.print';
+
+    $pipeline = [];
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    $pipeline[] = ['$project' => [
+        '_id' => 0,
+        'quarter' => ['$ifNull' => ['$rendered.quarter', '']],
+        'icon' => '$rendered.icon',
+        'activity' => $activityField,
+        'links' => ['$literal' => ''],
+        'search-text' => '$rendered.print',
+        'start' => ['$ifNull' => ['$start_date', '']],
+        'end' => ['$ifNull' => ['$end_date', '']],
+        'departments' => '$units',
+        'epub' => '$epub',
+        'type' => '$rendered.type',
+        'subtype' => '$rendered.subtype',
+        'year' => ['$ifNull' => ['$year', 0]],
+        'authors' => ['$ifNull' => ['$rendered.authors', '']],
+        'editors' => ['$ifNull' => ['$rendered.editors', '']],
+        'title' => ['$ifNull' => ['$rendered.title', '']],
+        'topics' => ['$ifNull' => ['$topics', []]],
+        'raw_type' => '$type',
+        'raw_subtype' => '$subtype',
+        'affiliated' => ['$ifNull' => ['$affiliated', false]],
+        'workflow' => ['$ifNull' => ['$workflow.status', 'verif']],
+        'tags' => '$tags'
+    ]];
+
+    $cursor = $osiris->activities->aggregate($pipeline);
+
     foreach ($cursor as $doc) {
         $i++;
-        $id = $doc['_id'];
-        if (isset($doc['rendered'])) {
-            $rendered = $doc['rendered'];
-        } else {
-            $rendered = renderActivities(['_id' => $id]);
-        }
-
-        // $depts = $Groups->getDeptFromAuthors($doc['authors']??[]);
-        $depts = DB::doc2Arr($doc['units'] ?? []);
-
-        $type = $doc['type'];
-        $format_full = $rendered['print'];
-        if (($_GET['display_activities'] ?? 'web') == 'web') {
-            $format = $rendered['web'];
-        } else {
-            $format = $format_full;
-        }
+        // Pfad-Anpassung wie bisher
         if (isset($_GET['path'])) {
-            $format = str_replace(ROOTPATH . "/activities/view", $_GET['path'] . "/activity", $format);
-            $format = str_replace(ROOTPATH . "/profile", $_GET['path'] . "/person", $format);
-        } else if ($page == 'portal') {
-            $format = str_replace(ROOTPATH . "/activities/view", PORTALPATH . "/activity", $format);
-            $format = str_replace(ROOTPATH . "/profile", PORTALPATH . "/person", $format);
+            $doc['activity'] = str_replace(
+                [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
+                [$_GET['path'] . "/activity", $_GET['path'] . "/person"],
+                $doc['activity']
+            );
+        } elseif ($page === 'portal') {
+            $doc['activity'] = str_replace(
+                [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
+                [PORTALPATH . "/activity", PORTALPATH . "/person"],
+                $doc['activity']
+            );
         }
-
-        $active = false;
-        // if (!isset($doc['year'])) {dump($doc, true); die;}
-        $sm = intval($doc['month'] ?? 0);
-        $sy = intval($doc['year'] ?? 0);
-        // die;
-        $em = $sm;
-        $ey = $sy;
-
-        if (isset($doc['end']) && !empty($doc['end'])) {
-            $em = $doc['end']['month'];
-            $ey = $doc['end']['year'];
-        } elseif (
-            (
-                ($doc['type'] == 'misc' && ($doc['subtype'] ?? $doc['iteration']) == 'annual') ||
-                ($doc['type'] == 'review' && in_array($doc['subtype'] ?? $doc['role'], ['Editor', 'editorial', 'editor']))
-            ) && empty($doc['end'])
-        ) {
-            $em = CURRENTMONTH;
-            $ey = CURRENTYEAR;
-            $active = true;
-        }
-        $sq = $sy . 'Q' . ceil($sm / 3);
-        $eq = $ey . 'Q' . ceil($em / 3);
-
-        $datum = [
-            'quarter' => $sq,
-            'icon' => $rendered['icon'] . '<span style="display:none">' . $type . " " . $rendered['type'] . '</span>',
-            'activity' => $format,
-            'links' => '',
-            'search-text' => $format_full,
-            'start' => $doc['start_date'] ?? '',
-            'end' => $doc['end_date'] ?? '',
-            'departments' => $depts, //implode(', ', $depts),
-            'epub' => (isset($doc['epub']) && boolval($doc['epub']) ? 'true' : 'false'),
-            'type' => $rendered['type'],
-            'subtype' => $rendered['subtype'],
-            'year' => $doc['year'] ?? 0,
-            'authors' => $rendered['authors'] ?? '',
-            'editors' => $rendered['editors'] ?? '',
-            'title' => $rendered['title'] ?? '',
-            'topics' => $doc['topics'] ?? [],
-            'raw_type' => $doc['type'],
-            'raw_subtype' => $doc['subtype'],
-            'affiliated' => $doc['affiliated'] ?? false,
-            'workflow' => (isset($doc['workflow']) ? $doc['workflow']['status'] : 'verif'),
-            'tags' => DB::doc2Arr($doc['tags'] ?? []),
-        ];
-
-        if ($active) {
-            $datum['quarter'] .= ' - today';
-        } elseif ($sq != $eq) {
-            if ($sy == $ey) {
-                $datum['quarter'] .= ' - ' . 'Q' . ceil($em / 3);
-            } else {
-                $datum['quarter'] .= ' - ' . $eq;
-            }
-        }
-
-        if (defined('ROOTPATH')) {
-            $datum['links'] =
-                "<a class='btn link square' href='" . ROOTPATH . "/activities/view/$id'>
-                <i class='ph ph-arrow-fat-line-right'></i>
-            </a>";
-            // $useractivity = $DB->isUserActivity($doc, $user);
-            // if ($useractivity) {
-            //     $datum['links'] .= " <a class='btn link square' href='" . ROOTPATH . "/activities/edit/$id'>
-            //         <i class='ph ph-pencil-simple-line'></i>
-            //     </a>";
-            // }
-            $datum['links'] .= "<button class='btn link square' onclick='addToCart(this, \"$id\")'>
-            <i class='" . (in_array($id, $cart) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus') . "'></i>
-        </button>";
-        }
-        // $result[] = $datum;
         if (!$first) echo ',';
-        echo json_encode($datum, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
         $first = false;
         flush();
     }
