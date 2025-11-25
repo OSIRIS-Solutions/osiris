@@ -511,6 +511,10 @@ Route::get('/api/users', function () {
                     ' . $dept . '
                 </a>';
         }
+        $guest = '';
+        if (isset($user['is_guest']) && $user['is_guest']) {
+            $guest = ' <i class="ph ph-user-plus float-right text-signal" title="' . lang('Guest Account', 'Gast-Account') . '"></i>';
+        }
         $topics = '';
         if ($topicsEnabled && $user['topics'] ?? false) {
             $topics = '<span class="float-right topic-icons">';
@@ -533,7 +537,7 @@ Route::get('/api/users', function () {
             'username' => $user['username'],
             'img' => $Settings->printProfilePicture($user['username'], 'profile-img'),
             'html' =>  "<div class='w-full'>
-                    <div style='display: none;'>" . $user['first'] . " " . $user['last'] . "</div>
+                    <div style='display: none;'>" . $user['first'] . " " . $user['last'] . "</div>$guest
                     $topics
                     <h5 class='my-0'>
                         <a href='" . $path . "/profile/" . $user['_id'] . "'>

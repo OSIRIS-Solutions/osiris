@@ -62,7 +62,7 @@ if (empty($accounts)) {
                 <th><?= lang('Last name', 'Nachname') ?></th>
                 <th><?= lang('Mail', 'E-Mail') ?></th>
                 <th><?= lang('Valid until', 'Gültig bis') ?></th>
-                <th><?= lang('Actions', 'Aktionen') ?></th>
+                <th class="w-100"><?= lang('Actions', 'Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -85,12 +85,12 @@ if (empty($accounts)) {
                             <span <?= $in_past ? 'class="text-danger"' : '' ?>><?= htmlspecialchars($account['valid_until']) ?></span>
                         <?php } ?>
                     </td>
-                    <td>
+                    <td class="w-100">
                         <div class="dropdown">
                             <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-pencil"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdown-1">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/update" method="post">
                                     <input type="hidden" name="username" value="<?= htmlspecialchars($account['username']) ?>">
                                     <div class="form-group">
@@ -108,13 +108,13 @@ if (empty($accounts)) {
                             <button class="btn small danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-trash"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdown-1">
+                            <div class="dropdown-menu dropdown-menu-right w-400" aria-labelledby="dropdown-1">
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/delete" method="post" class="d-inline">
                                     <input type="hidden" name="username" value="<?= htmlspecialchars($account['username']) ?>">
                                     <small>
                                         <b><?= lang('Note:', 'Anmerkung:') ?></b>
-                                        <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden.') ?>
-                                    </small>
+                                        <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP. Otherwise, it will appear as removed in the LDAP synchronization, thus being deactivated by default. The "guest account" flag will also be removed.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden. Andernfalls erscheint er bei der LDAP-Synchronisation als entfernt und wird somit standardmäßig deaktiviert. Der Flag "Gästeaccount" wird ebenfalls entfern.') ?>
+                                    </small><br>
                                     <button type="submit" class="btn danger" title="<?= lang('Delete', 'Löschen') ?>">
                                         <i class="ph ph-trash"></i>
                                         <?= lang('Delete account', 'Account löschen') ?>

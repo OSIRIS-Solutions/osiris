@@ -258,8 +258,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <?= lang('Guest:', 'Gast:') ?>
                     <?= fromToDate($guestState['start'], $guestState['end'] ?? null) ?>
                 </span>
-        <?php }
+            <?php }
         }
+        if ($scientist['is_guest'] ?? false) { ?>
+            <span class="badge signal">
+                <?= lang('Guest Account', 'Gast-Account') ?>
+            </span>
+        <?php }
         ?>
 
         <?php if ($active('topics')) {
