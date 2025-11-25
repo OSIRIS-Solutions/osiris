@@ -3,12 +3,12 @@ include_once BASEPATH . "/php/Nagoya.php";
 $nagoya = $project['nagoya'] ?? [];
 // dump($nagoya);
 ?>
-<h1 class="mb-3">Nagoya-Projektbewertung</h1>
+<h1 class="mb-3"><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></h1>
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
-            <?= ($project['name'] ?? '') ?>
-        </a>
+        <?= ($project['name'] ?? '') ?>
+    </a>
 </h2>
 
 <form method="post" action="<?= ROOTPATH ?>/crud/nagoya/review-abs-countries/<?= $id ?>">

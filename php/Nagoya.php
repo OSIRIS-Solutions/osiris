@@ -204,6 +204,11 @@ final class Nagoya
       'incomplete'        => ['ph-list-magnifying-glass', 'text-signal'],
       'out-of-scope'      => ['ph-circle',              'text-secondary'],
       'not-relevant'      => ['ph-x-circle',            'text-muted'],
+      'abs-review'       => ['ph-users-three',         'text-signal'],
+      'awaiting-abs-evaluation' => ['ph-file-search',   'text-signal'],
+      'researcher-input' => ['ph-user-gear',           'text-signal'],
+      'researcher-required' => ['ph-user-gear',         'text-danger'],
+      'both-permits'     => ['ph-handshake',           'text-signal'],
     ];
 
     [$icon, $cls] = $map[$status] ?? ['ph-question', 'text-muted'];
@@ -235,6 +240,11 @@ final class Nagoya
       'incomplete'        => ['signal',   'ph-list-magnifying-glass', lang('Incomplete', 'Unvollständig')],
       'out-of-scope'      => ['secondary', 'ph-circle',              lang('Out of scope', 'Außerhalb des Geltungsbereichs')],
       'not-relevant'      => ['muted',    'ph-x-circle',            lang('not ABS-relevant', 'nicht ABS-relevant')],
+      'abs-review'       => ['signal',  'ph-users-three',         lang('Country review pending', 'Länderbewertung ausstehend')],
+      'awaiting-abs-evaluation' => ['signal', 'ph-file-search',   lang('Awaiting ABS evaluation', 'Wartet auf ABS-Bewertung')],
+      'researcher-input' => ['signal', 'ph-user-gear',           lang('Researcher input required', 'Eingabe durch Forschende erforderlich')],
+      'researcher-required' => ['danger', 'ph-user-gear',         lang('Researcher input required', 'Eingabe durch Forschende erforderlich')],
+      'both-permits'     => ['signal',  'ph-handshake',           lang('Permits pending', 'Genehmigungen ausstehend')],
     ];
 
     [$clr, $icon, $label] = $map[$status] ?? ['muted', 'ph-question', lang('Unknown', 'Unbekannt')];
@@ -254,6 +264,11 @@ final class Nagoya
       'incomplete'        => lang('Incomplete', 'Unvollständig'),
       'out-of-scope'      => lang('Out of scope', 'Außerhalb des Geltungsbereichs'),
       'not-relevant'      => lang('not ABS-relevant', 'nicht ABS-relevant'),
+      'abs-review'       => lang('Country review pending', 'Länderbewertung ausstehend'),
+      'awaiting-abs-evaluation' => lang('Awaiting ABS evaluation', 'Wartet auf ABS-Bewertung'),
+      'researcher-input' => lang('Researcher input required', 'Eingabe durch Forschende erforderlich'),
+      'researcher-required' => lang('Researcher input required', 'Eingabe durch Forschende erforderlich'),
+      'both-permits'     => lang('Permits pending', 'Genehmigungen ausstehend'),
     ];
     return $labels[$status] ?? lang('Unknown', 'Unbekannt');
   }
