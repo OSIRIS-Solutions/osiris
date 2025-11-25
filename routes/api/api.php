@@ -331,6 +331,7 @@ Route::get('/api/all-activities', function () {
     }
     $pipeline[] = ['$project' => [
         '_id' => 0,
+        'id' => ['$toString' => '$_id'],
         'quarter' => ['$ifNull' => ['$rendered.quarter', '']],
         'icon' => '$rendered.icon',
         'activity' => $activityField,
