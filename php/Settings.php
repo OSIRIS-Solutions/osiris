@@ -451,7 +451,7 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
-    
+
     function journalLabel()
     {
         $settings = $this->get('journals_label');
@@ -515,7 +515,7 @@ class Settings
             if (!empty($topic['subtitle'])) {
                 $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
             }
-            $html .= "<a class='topic-pill ".($topic['inactive'] ?? false ? 'inactive' : '')."' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $html .= "<a class='topic-pill " . ($topic['inactive'] ?? false ? 'inactive' : '') . "' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
             if (!empty($topic['subtitle'])) {
                 $html .= '</span>';
             }
@@ -633,5 +633,62 @@ class Settings
             'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von ')
         ];
         return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
+    }
+
+    public function getDOImappings()
+    {
+        $mappings = $this->get('doi_mappings');
+        if (empty($mappings)) {
+            return [
+                // CrossRef
+                "crossref.journal-article" => "article",
+                "crossref.magazine-article" => "magazine",
+                "crossref.book-chapter" => "chapter",
+                "crossref.publication" => "article",
+                "crossref.doctoral-thesis" => "students",
+                "crossref.master-thesis" => "students",
+                "crossref.bachelor-thesis" => "students",
+                "crossref.guest-scientist" => "guests",
+                "crossref.lecture-internship" => "guests",
+                "crossref.student-internship" => "guests",
+                "crossref.reviewer" => "review",
+                "crossref.editor" => "editorial",
+                "crossref.monograph" => "book",
+                "crossref.misc" => "misc",
+                "crossref.edited-book" => "book",
+                // DataCite
+                'datacite.book' => 'book',
+                'datacite.bookchapter' => 'chapter',
+                'datacite.journal' => 'article',
+                'datacite.journalarticle' => 'article',
+                'datacite.conferencepaper' => 'article',
+                'datacite.conferenceproceeding' => 'article',
+                'datacite.dissertation' => 'dissertation',
+                'datacite.preprint' => 'preprint',
+                'datacite.software' => 'software',
+                'datacite.computationalnotebook' => 'software',
+                'datacite.model' => 'software',
+                'datacite.datapaper' => 'dataset',
+                'datacite.dataset' => 'dataset',
+                'datacite.peerreview' => 'review',
+                'datacite.audiovisual' => 'misc',
+                'datacite.collection' => 'misc',
+                'datacite.event' => 'misc',
+                'datacite.image' => 'misc',
+                'datacite.report' => 'others',
+                'datacite.interactiveresource' => 'misc',
+                'datacite.outputmanagementplan' => 'misc',
+                'datacite.physicalobject' => 'misc',
+                'datacite.service' => 'misc',
+                'datacite.sound' => 'misc',
+                'datacite.standard' => 'misc',
+                'datacite.text' => 'misc',
+                'datacite.workflow' => 'misc',
+                'datacite.other' => 'misc',
+                'datacite.presentation' => 'lecture',
+                'datacite.poster' => 'poster'
+            ];
+        }
+        return DB::doc2Arr($mappings);
     }
 }
