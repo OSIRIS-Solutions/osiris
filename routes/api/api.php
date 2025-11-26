@@ -90,6 +90,7 @@ function return_rest_stream($data)
     $i = 0;
     $first = true;
     foreach ($data as $doc) {
+        if (empty($doc)) continue;
         $i++;
         if (!$first) echo ',';
         echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
