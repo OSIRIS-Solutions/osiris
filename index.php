@@ -42,11 +42,9 @@ define('CURRENTYEAR', intval($year));
 function lang($en, $de = null)
 {
     if ($de === null) return $en;
-    // Standard language = DE
-    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? 'de';
-    if ($lang == "en") return $en;
-    if ($lang == "de") return $de;
-    return $en;
+    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) == 'de' ? 'de' : 'en';
+    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
+    return $lang == 'de' ? $de : $en;
 }
 
 // $_SESSION['loggedin'] = true;
