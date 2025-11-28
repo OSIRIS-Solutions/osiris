@@ -1253,8 +1253,8 @@ if ($is_subproject) {
                     <div class="form-group">
                         <label for="nagoya">
                             <?= lang('
-                            Do you plan to collect or receive genetic resources (biological samples) from outside of Germany over the course of this project?
-                            ', 'Planst du, im Rahmen dieses Projekts genetische Ressourcen (biologische Proben) von außerhalb Deutschlands zu sammeln oder zu erhalten? ') ?>
+                            Do you plan to collect, abtain or utilise genetic resources (biological samples) from outside of Germany over the course of this project?
+                            ', 'Planst du, im Rahmen dieses Projekts genetische Ressourcen (biologische Proben) von außerhalb Deutschlands zu verwenden, zu sammeln oder zu erhalten? ') ?>
                         </label>
                         <div>
                             <input type="radio" name="values[nagoya]" id="nagoya-yes" value="yes" <?= ($enabled) ? 'checked' : '' ?>>

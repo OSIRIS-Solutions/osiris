@@ -6,91 +6,91 @@ final class Nagoya
     'compliant' => [
       'color' => 'success',
       'icon' => 'ph-check-circle',
-      'title_en' => 'Compliant', 
+      'title_en' => 'Compliant',
       'title_de' => 'Compliant'
     ],
     'permits-pending' => [
       'color' => 'signal',
       'icon' => 'ph-clock-countdown',
-      'title_en' => 'Permits pending', 
+      'title_en' => 'Permits pending',
       'title_de' => 'Genehmigungen ausstehend'
     ],
     'in-scope-eu' => [
       'color' => 'primary',
       'icon' => 'ph-seal-check',
-      'title_en' => 'In scope (EU)', 
+      'title_en' => 'In scope (EU)',
       'title_de' => 'Im Geltungsbereich (EU)'
     ],
     'in-scope-national' => [
       'color' => 'primary',
       'icon' => 'ph-seal-check',
-      'title_en' => 'In scope (national)', 
+      'title_en' => 'In scope (national)',
       'title_de' => 'Im Geltungsbereich (national)'
     ],
     'abs-relevant' => [
       'color' => 'danger',
       'icon' => 'ph-warning-circle',
-      'title_en' => 'ABS-relevant', 
+      'title_en' => 'ABS-relevant',
       'title_de' => 'ABS-relevant'
     ],
     'awaiting-review' => [
       'color' => 'signal',
       'icon' => 'ph-hourglass-medium',
-      'title_en' => 'Awaiting review', 
+      'title_en' => 'Awaiting review',
       'title_de' => 'Wartet auf Prüfung'
     ],
     'incomplete' => [
       'color' => 'signal',
       'icon' => 'ph-list-magnifying-glass',
-      'title_en' => 'Incomplete', 
+      'title_en' => 'Incomplete',
       'title_de' => 'Unvollständig'
     ],
     'out-of-scope' => [
       'color' => 'secondary',
       'icon' => 'ph-circle',
-      'title_en' => 'Out of scope', 
+      'title_en' => 'Out of scope',
       'title_de' => 'Außerhalb des Geltungsbereichs'
     ],
     'not-relevant' => [
       'color' => 'muted',
       'icon' => 'ph-x-circle',
-      'title_en' => 'not ABS-relevant', 
+      'title_en' => 'not ABS-relevant',
       'title_de' => 'nicht ABS-relevant'
     ],
     'abs-review' => [
       'color' => 'signal',
       'icon' => 'ph-users-three',
-      'title_en' => 'Country review pending', 
+      'title_en' => 'Country review pending',
       'title_de' => 'Länderbewertung ausstehend'
     ],
     'awaiting-abs-evaluation' => [
       'color' => 'signal',
       'icon' => 'ph-file-search',
-      'title_en' => 'Awaiting ABS evaluation', 
+      'title_en' => 'Awaiting ABS evaluation',
       'title_de' => 'Wartet auf ABS-Bewertung'
     ],
     'researcher-input' => [
       'color' => 'signal',
       'icon' => 'ph-user-gear',
-      'title_en' => 'Researcher input required', 
+      'title_en' => 'Researcher input required',
       'title_de' => 'Eingabe durch Forschende erforderlich'
     ],
     'researcher-required' => [
       'color' => 'danger',
       'icon' => 'ph-user-gear',
-      'title_en' => 'Researcher input required', 
+      'title_en' => 'Researcher input required',
       'title_de' => 'Eingabe durch Forschende erforderlich'
     ],
     'both-permits' => [
       'color' => 'signal',
       'icon' => 'ph-handshake',
-      'title_en' => 'Permits pending', 
+      'title_en' => 'Permits pending',
       'title_de' => 'Genehmigungen ausstehend'
     ],
     'unknown' => [
       'color' => 'muted',
       'icon' => 'ph-question',
-      'title_en' => 'Unknown', 
+      'title_en' => 'Unknown',
       'title_de' => 'Unbekannt'
     ],
   ];
@@ -127,10 +127,8 @@ final class Nagoya
     if ($anyUnknown) return self::out('abs-review', ['open-country-review']);
     if ($allAbsFalse) return self::out('not-relevant', ['all-countries-no-abs']);
 
-    // 2) Scope-Aggregat (für alle Länder mit abs=true)
-    $scopeOk = self::scopeComplete($n); // siehe Helper unten
 
-    // 3) Falls A/B/C bereits gesetzt → Permits/Compliant-Logik
+    // 2) Falls A/B/C bereits gesetzt → Permits/Compliant-Logik
     if ($label === 'C') return self::out('out-of-scope', ['label-C']);
     if ($label === 'A' || $label === 'B') {
       $pending = self::permitsPending($n);
@@ -138,20 +136,51 @@ final class Nagoya
         : self::out('compliant', ['permits-complete']);
     }
 
-    // 4) Noch keine A/B/C-Setzung:
-    if (!$scopeOk) return self::out('researcher-input', ['scope-incomplete']);
-    return self::out('awaiting-abs-evaluation', ['scope-complete-await-eval']);
+    // 3) Noch keine A/B/C-Setzung:
+    $scopeComplete  = self::scopeComplete($nagoya);
+    $scopeSubmitted = !empty($nagoya['scopeSubmitted']);
+    if (!$scopeComplete) {
+      // Scope noch unvollständig → Forschende dran
+      return self::out('researcher-input', ['scope-incomplete']);
+    }
+    // Scope ist vollständig, aber noch NICHT eingereicht
+    if ($scopeComplete && !$scopeSubmitted) {
+      return self::out('researcher-input', ['scope-complete-not-submitted']);
+    }
+    // Scope vollständig + eingereicht, aber noch kein A/B/C
+    if ($scopeComplete && $scopeSubmitted && $label === null) {
+      return self::out('awaiting-abs-evaluation', ['scope-submitted-await-eval']);
+    }
+    return self::out('researcher-input', ['scope-incomplete']);
   }
 
-  private static function scopeComplete(array $nagoya): bool
+  public static function scopeComplete(array $nagoya): bool
   {
     // Erwartete Struktur in Zukunft:
     // $country['scope']['geo'|'temporal'|'material'|'utilization'|'aTK']
+    if (empty($nagoya['countries'] ?? [])) return false;
     foreach ($nagoya['countries'] ?? [] as $c) {
       if (!($c['abs'] ?? false)) continue;
       $s = $c['scope'] ?? [];
-      $ok = !empty($s['geo']) && !empty($s['temporal']) && !empty($s['material']) && !empty($s['utilization']);
-      if (!$ok) return false;
+      foreach ($s['groups'] ?? [] as $g) {
+        $g = DB::doc2Arr($g);
+        if (!self::scopeGroupComplete($g)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  private static function scopeGroupComplete(array $group): bool
+  {
+    // Check required fields
+    foreach (['geo', 'material', 'utilization'] as $f) {
+      if (empty($group[$f] ?? null)) {
+        return false;
+      }
+    }
+    if (empty($group['temporal']) && !($group['temporal_ongoing'] ?? false)) {
+      return false;
     }
     return true;
   }
