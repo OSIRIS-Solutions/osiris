@@ -3,7 +3,7 @@ include_once BASEPATH . "/php/Nagoya.php";
 $nagoya = $project['nagoya'] ?? [];
 // dump($nagoya);
 ?>
-<h1 class="mb-3"><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></h1>
+<h1 class="mb-3"><?= lang('Nagoya Compliance: Scope Analysis', 'Nagoya-Compliance: Scope Analyse') ?></h1>
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
@@ -14,22 +14,10 @@ $nagoya = $project['nagoya'] ?? [];
 <div class="mb-20">
     <b><?= lang('Current Status', 'Aktueller Status') ?>:</b><br>
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
-
-    <?php if (($nagoya['status'] ?? 'unknown') === 'researcher-input' && !($nagoya['review']['researcher-notified'] ?? false)) { ?>
-        <!-- notify researcher that ABS check is complete -->
-        <form action="<?= ROOTPATH ?>/crud/nagoya/notify-researchers" method="post" class="d-inline-block ml-10">
-            <input type="hidden" name="project_id" value="<?= $id ?>">
-            <button type="submit" class="btn success">
-                <i class="ph ph-bell-ringing"></i>
-                <?= lang('Notify applicants that ABS review is complete', 'Antragstellende über abgeschlossene ABS-Bewertung benachrichtigen') ?>
-            </button>
-        </form>
-    <?php } ?>
-
 </div>
 
 
-<form method="post" action="<?= ROOTPATH ?>/crud/nagoya/review-abs-countries/<?= $id ?>">
+<form method="post" action="<?= ROOTPATH ?>/crud/nagoya/add-abs-scope/<?= $id ?>">
     <table class="table">
         <thead>
             <tr>

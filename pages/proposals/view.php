@@ -31,7 +31,13 @@ $documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArr
 
 $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
 
-include_once BASEPATH . "/php/Nagoya.php";
+$nagoyaRelevant = ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant());
+
+if ($nagoyaRelevant) {
+    require_once BASEPATH . "/php/Nagoya.php";
+    $nagoya_status_icon = Nagoya::badge($project, true);
+    $nagoya_status_color = Nagoya::statusColor($project['nagoya']['status'] ?? 'unknown');
+}
 ?>
 
 
@@ -254,6 +260,53 @@ include_once BASEPATH . "/php/Nagoya.php";
         <?php } ?>
     </nav>
 
+
+    <?php if ($nagoyaRelevant) { ?>
+        <div class="nagoya-message">
+            <?php
+            $whoIsNext = Nagoya::whoIsNext($project);
+            if ($whoIsNext === 'abs-team' && $Settings->hasPermission('nagoya.view')) { ?>
+                <div class="alert signal mt-20">
+                    <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                    <?= lang('You can now review the Nagoya Protocol compliance of this proposal.', 'Sie können nun die Nagoya-Protokoll Konformität dieses Antrags bewerten.') ?>
+                    <br>
+                    <a href="<?= ROOTPATH ?>/proposals/nagoya-editor/<?= $id ?>" class="btn signal small">
+                        <i class="ph ph-clipboard-text"></i>
+                        <?= lang('Review Nagoya Protocol compliance', 'Nagoya-Protokoll Bewertung durchführen') ?>
+                    </a>
+                </div>
+            <?php } elseif ($whoIsNext === 'researcher' && $user_project) { ?>
+                <!-- <div class="alert signal mt-20">
+                    <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                    <?= lang('You can already provide additional Nagoya Protocol information.', 'Sie können bereits zusätzliche Nagoya-Protokoll Informationen bereitstellen.') ?>
+                    <br>
+                    <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $id ?>" class="btn signal small">
+                        <i class="ph ph-clipboard-text"></i>
+                        <?= lang('Provide information', 'Informationen bereitstellen') ?>
+                    </a>
+                </div> -->
+            <?php } elseif ($whoIsNext === 'researcher-required' && $user_project) { ?>
+                <div class="alert danger mt-20">
+                    <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                    <?= lang('You are required to provide additional Nagoya Protocol information.', 'Sie sind verpflichtet, zusätzliche Nagoya-Protokoll Informationen bereitzustellen.') ?>
+                    <br>
+                    <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $id ?>" class="btn danger">
+                        <i class="ph ph-clipboard-text"></i>
+                        <?= lang('Provide information', 'Informationen bereitstellen') ?>
+                    </a>
+                </div>
+            <?php } else if ($whoIsNext === 'permits-pending' && ($user_project || $Settings->hasPermission('nagoya.view'))) { ?>
+                <div class="alert warning mt-20">
+                    <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                    <?= lang('There are pending permits related to the Nagoya Protocol.', 'Es gibt ausstehende Genehmigungen im Zusammenhang mit dem Nagoya-Protokoll.') ?>
+                </div>
+            <?php } ?>
+        </div>
+
+    <?php } ?>
+
+
+
     <section id="general">
 
         <?php
@@ -295,11 +348,10 @@ include_once BASEPATH . "/php/Nagoya.php";
                         <span class="index"><?= count($documents) ?></span>
                     </button>
 
-                    <?php if ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant()) { ?>
-                        <button class="btn font-weight-bold" onclick="selectTab('nagoya')" id="nagoya-btn">
-                            <i class="ph ph-scales"></i>
-                            <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+                    <?php if ($nagoyaRelevant) { ?>
+                        <button class="btn font-weight-bold" onclick="selectTab('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
                             <span><?= Nagoya::icon($project) ?></span>
+                            <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
                         </button>
                     <?php } ?>
 
@@ -546,7 +598,7 @@ include_once BASEPATH . "/php/Nagoya.php";
                 <?php } ?>
 
 
-                <?php if ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant()) { ?>
+                <?php if ($nagoyaRelevant) { ?>
                     <div class="box padded mt-0" id="nagoya-details" style="display:none;">
 
                         <!-- Header: Status + Actions -->

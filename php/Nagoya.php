@@ -2,21 +2,99 @@
 
 final class Nagoya
 {
-  // Canonical status values
-  public const S_NOT_RELEVANT   = 'not-relevant';
-  public const S_INCOMPLETE     = 'incomplete';
-  public const S_AWAIT_REVIEW   = 'awaiting-review';
-  public const S_ABS_RELEVANT   = 'abs-relevant';       // Phase 1 result
-  public const S_IN_SCOPE_EU    = 'in-scope-eu';        // A
-  public const S_IN_SCOPE_NAT   = 'in-scope-national';  // B
-  public const S_OUT_OF_SCOPE   = 'out-of-scope';       // C
-  public const S_PERMITS_PEND   = 'permits-pending';
-  public const S_COMPLIANT      = 'compliant';
+  private const MAP = [
+    'compliant' => [
+      'color' => 'success',
+      'icon' => 'ph-check-circle',
+      'title_en' => 'Compliant', 
+      'title_de' => 'Compliant'
+    ],
+    'permits-pending' => [
+      'color' => 'signal',
+      'icon' => 'ph-clock-countdown',
+      'title_en' => 'Permits pending', 
+      'title_de' => 'Genehmigungen ausstehend'
+    ],
+    'in-scope-eu' => [
+      'color' => 'primary',
+      'icon' => 'ph-seal-check',
+      'title_en' => 'In scope (EU)', 
+      'title_de' => 'Im Geltungsbereich (EU)'
+    ],
+    'in-scope-national' => [
+      'color' => 'primary',
+      'icon' => 'ph-seal-check',
+      'title_en' => 'In scope (national)', 
+      'title_de' => 'Im Geltungsbereich (national)'
+    ],
+    'abs-relevant' => [
+      'color' => 'danger',
+      'icon' => 'ph-warning-circle',
+      'title_en' => 'ABS-relevant', 
+      'title_de' => 'ABS-relevant'
+    ],
+    'awaiting-review' => [
+      'color' => 'signal',
+      'icon' => 'ph-hourglass-medium',
+      'title_en' => 'Awaiting review', 
+      'title_de' => 'Wartet auf Prüfung'
+    ],
+    'incomplete' => [
+      'color' => 'signal',
+      'icon' => 'ph-list-magnifying-glass',
+      'title_en' => 'Incomplete', 
+      'title_de' => 'Unvollständig'
+    ],
+    'out-of-scope' => [
+      'color' => 'secondary',
+      'icon' => 'ph-circle',
+      'title_en' => 'Out of scope', 
+      'title_de' => 'Außerhalb des Geltungsbereichs'
+    ],
+    'not-relevant' => [
+      'color' => 'muted',
+      'icon' => 'ph-x-circle',
+      'title_en' => 'not ABS-relevant', 
+      'title_de' => 'nicht ABS-relevant'
+    ],
+    'abs-review' => [
+      'color' => 'signal',
+      'icon' => 'ph-users-three',
+      'title_en' => 'Country review pending', 
+      'title_de' => 'Länderbewertung ausstehend'
+    ],
+    'awaiting-abs-evaluation' => [
+      'color' => 'signal',
+      'icon' => 'ph-file-search',
+      'title_en' => 'Awaiting ABS evaluation', 
+      'title_de' => 'Wartet auf ABS-Bewertung'
+    ],
+    'researcher-input' => [
+      'color' => 'signal',
+      'icon' => 'ph-user-gear',
+      'title_en' => 'Researcher input required', 
+      'title_de' => 'Eingabe durch Forschende erforderlich'
+    ],
+    'researcher-required' => [
+      'color' => 'danger',
+      'icon' => 'ph-user-gear',
+      'title_en' => 'Researcher input required', 
+      'title_de' => 'Eingabe durch Forschende erforderlich'
+    ],
+    'both-permits' => [
+      'color' => 'signal',
+      'icon' => 'ph-handshake',
+      'title_en' => 'Permits pending', 
+      'title_de' => 'Genehmigungen ausstehend'
+    ],
+    'unknown' => [
+      'color' => 'muted',
+      'icon' => 'ph-question',
+      'title_en' => 'Unknown', 
+      'title_de' => 'Unbekannt'
+    ],
+  ];
 
-  /**
-   * Compute canonical status from current nagoya subdoc.
-   * This function is the single source of truth for status transitions.
-   */
   public static function compute(array $project, ?array $nagoya = null): array
   {
     $n = $nagoya ?? ($project['nagoya'] ?? []);
@@ -35,11 +113,14 @@ final class Nagoya
       $rev = $c['review'] ?? [];
       $party = $rev['nagoyaParty']    ?? 'unknown';
       $own   = $rev['ownABSMeasures'] ?? 'unknown';
-      if ($party === 'unknown' && $own === 'unknown') $anyUnknown = true;
-
-      $abs = $c['abs'] ?? ($party === 'yes' || $own === 'yes');
-      if ($abs) {
+      // if one is yes -> abs=true; if both no -> abs=false; else unknown
+      if ($party === 'yes' || $own === 'yes') {
         $anyAbsTrue = true;
+        $allAbsFalse = false;
+      } elseif ($party === 'no' && $own === 'no') {
+        // abs = false
+      } else {
+        $anyUnknown = true;
         $allAbsFalse = false;
       }
     }
@@ -194,25 +275,10 @@ final class Nagoya
     }
 
     // Map statuses to icons/colors
-    $map = [
-      'compliant'         => ['ph-check-circle',        'text-success'],
-      'permits-pending'   => ['ph-clock-countdown',     'text-signal'],
-      'in-scope-eu'       => ['ph-seal-check',          'text-primary'],
-      'in-scope-national' => ['ph-seal-check',          'text-primary'],
-      'abs-relevant'      => ['ph-warning-circle',      'text-danger'],
-      'awaiting-review'   => ['ph-hourglass-medium',    'text-signal'],
-      'incomplete'        => ['ph-list-magnifying-glass', 'text-signal'],
-      'out-of-scope'      => ['ph-circle',              'text-secondary'],
-      'not-relevant'      => ['ph-x-circle',            'text-muted'],
-      'abs-review'       => ['ph-users-three',         'text-signal'],
-      'awaiting-abs-evaluation' => ['ph-file-search',   'text-signal'],
-      'researcher-input' => ['ph-user-gear',           'text-signal'],
-      'researcher-required' => ['ph-user-gear',         'text-danger'],
-      'both-permits'     => ['ph-handshake',           'text-signal'],
-    ];
-
-    [$icon, $cls] = $map[$status] ?? ['ph-question', 'text-muted'];
-    return '<i class="ph ' . $icon . ' ' . $cls . '" title="' . htmlspecialchars(self::statusLabel($status)) . '"></i>';
+    $map = self::MAP[$status] ?? self::MAP['unknown'];
+    $clr  = $map['color'] ?? 'muted';
+    $icon = $map['icon']  ?? 'ph-question';
+    return '<i class="ph ' . $icon . ' ' . $clr . '" title="' . htmlspecialchars(self::statusLabel($status)) . '"></i>';
   }
 
   /** Returns a badge (<span class="badge ...">...</span>) for the given project/nagoya. */
@@ -230,47 +296,27 @@ final class Nagoya
     }
 
     // Map statuses to badge color + icon
-    $map = [
-      'compliant'         => ['success',  'ph-check-circle',        lang('Compliant', 'Compliant')],
-      'permits-pending'   => ['signal',   'ph-clock-countdown',     lang('Permits pending', 'Genehmigungen ausstehend')],
-      'in-scope-eu'       => ['primary',  'ph-seal-check',          lang('In scope (EU)', 'Im Geltungsbereich (EU)')],
-      'in-scope-national' => ['primary',  'ph-seal-check',          lang('In scope (national)', 'Im Geltungsbereich (national)')],
-      'abs-relevant'      => ['danger',   'ph-warning-circle',      lang('ABS-relevant', 'ABS-relevant')],
-      'awaiting-review'   => ['signal',   'ph-hourglass-medium',    lang('Awaiting review', 'Wartet auf Prüfung')],
-      'incomplete'        => ['signal',   'ph-list-magnifying-glass', lang('Incomplete', 'Unvollständig')],
-      'out-of-scope'      => ['secondary', 'ph-circle',              lang('Out of scope', 'Außerhalb des Geltungsbereichs')],
-      'not-relevant'      => ['muted',    'ph-x-circle',            lang('not ABS-relevant', 'nicht ABS-relevant')],
-      'abs-review'       => ['signal',  'ph-users-three',         lang('Country review pending', 'Länderbewertung ausstehend')],
-      'awaiting-abs-evaluation' => ['signal', 'ph-file-search',   lang('Awaiting ABS evaluation', 'Wartet auf ABS-Bewertung')],
-      'researcher-input' => ['signal', 'ph-user-gear',           lang('Researcher input required', 'Eingabe durch Forschende erforderlich')],
-      'researcher-required' => ['danger', 'ph-user-gear',         lang('Researcher input required', 'Eingabe durch Forschende erforderlich')],
-      'both-permits'     => ['signal',  'ph-handshake',           lang('Permits pending', 'Genehmigungen ausstehend')],
-    ];
-
-    [$clr, $icon, $label] = $map[$status] ?? ['muted', 'ph-question', lang('Unknown', 'Unbekannt')];
+    $map = self::MAP[$status] ?? self::MAP['unknown'];
+    $clr  = $map['color'] ?? 'muted';
+    $icon = $map['icon']  ?? 'ph-question';
+    $label = self::statusLabel($status);
     return self::makeBadge($clr, $icon, $label, $large);
+  }
+
+  /** Color of the status (for badges/icons). */
+  public static function statusColor(string $status): string
+  {
+    $map = self::MAP[$status] ?? self::MAP['unknown'];
+    return $map['color'] ?? 'muted';
   }
 
   /** Human-readable label for a status (for titles/tooltips). */
   public static function statusLabel(string $status): string
   {
-    $labels = [
-      'compliant'         => lang('Compliant', 'Compliant'),
-      'permits-pending'   => lang('Permits pending', 'Genehmigungen ausstehend'),
-      'in-scope-eu'       => lang('In scope (EU)', 'Im Geltungsbereich (EU)'),
-      'in-scope-national' => lang('In scope (national)', 'Im Geltungsbereich (national)'),
-      'abs-relevant'      => lang('ABS-relevant', 'ABS-relevant'),
-      'awaiting-review'   => lang('Awaiting review', 'Wartet auf Prüfung'),
-      'incomplete'        => lang('Incomplete', 'Unvollständig'),
-      'out-of-scope'      => lang('Out of scope', 'Außerhalb des Geltungsbereichs'),
-      'not-relevant'      => lang('not ABS-relevant', 'nicht ABS-relevant'),
-      'abs-review'       => lang('Country review pending', 'Länderbewertung ausstehend'),
-      'awaiting-abs-evaluation' => lang('Awaiting ABS evaluation', 'Wartet auf ABS-Bewertung'),
-      'researcher-input' => lang('Researcher input required', 'Eingabe durch Forschende erforderlich'),
-      'researcher-required' => lang('Researcher input required', 'Eingabe durch Forschende erforderlich'),
-      'both-permits'     => lang('Permits pending', 'Genehmigungen ausstehend'),
-    ];
-    return $labels[$status] ?? lang('Unknown', 'Unbekannt');
+    $map = self::MAP[$status] ?? self::MAP['unknown'];
+    $label_en = $map['title_en'] ?? 'Unknown';
+    $label_de = $map['title_de'] ?? 'Unbekannt';
+    return lang($label_en, $label_de);
   }
 
   public static function countryBadge(array $country, bool $large = false): string

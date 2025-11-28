@@ -27,7 +27,7 @@ Route::get('/nagoya', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/proposals/nagoya/(.*)', function ($id) {
+Route::get('/proposals/nagoya-scope/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $collection = 'proposals';
@@ -50,7 +50,7 @@ Route::get('/proposals/nagoya/(.*)', function ($id) {
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/$collection/nagoya.php";
+    include BASEPATH . "/pages/$collection/nagoya-scope.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -80,7 +80,6 @@ Route::get('/proposals/nagoya-editor/(.*)', function ($id) {
     include BASEPATH . "/pages/$collection/nagoya-editor.php";
     include BASEPATH . "/footer.php";
 }, 'login');
-
 
 Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
@@ -130,7 +129,49 @@ Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
     } else {
         $_SESSION['msg'] = implode("; ", $errors);
         $_SESSION['msg_type'] = 'error';
-        
     }
     header("Location: " . ROOTPATH . "/proposals/nagoya-editor/$id");
+});
+
+Route::post('/crud/nagoya/notify-researchers', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Nagoya.php";
+
+    $project_id = $_POST['project_id'] ?? '';
+    $mongo_id = $DB->to_ObjectID($project_id);
+    $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    if (empty($project) || empty($project['nagoya'] ?? null)) {
+        header("Location: " . ROOTPATH . "/proposals/view/$project_id?error=project-not-found-or-no-nagoya");
+        die;
+    }
+
+    $nagoya = DB::doc2Arr($project['nagoya']);
+    if (($nagoya['status'] ?? 'unknown') !== 'researcher-input' || ($nagoya['review']['researcher-notified'] ?? false)) {
+        header("Location: " . ROOTPATH . "/proposals/view/$project_id?error=invalid-nagoya-status");
+        die;
+    }
+
+    // send notification to researchers
+    $applicants = [];
+    foreach ($project['persons'] ?? [] as $a) {
+        if (!in_array($a['role'], ['applicant', 'PI', 'co-PI'])) continue;
+        $applicants[] = $a['user'];
+    }
+    foreach ($applicants as $user) {
+        $DB->addMessage(
+            $user,
+            "The Nagoya Protocol review for your project proposal '" . ($project['name'] ?? '') . "' has been completed. Please view the results and take any necessary actions regarding ABS compliance.",
+            "Die Nagoya-Bewertung für deinen Projektantrag '" . ($project['name'] ?? '') . "' wurde abgeschlossen. Bitte schau dir die Ergebnisse an und ergreife gegebenenfalls erforderliche Maßnahmen zur ABS-Compliance.",
+            'nagoya',
+            "/proposals/view/$project_id"
+        );
+    }
+
+    // update nagoya.review.researcher-notified
+    $nagoya['review']['researcher-notified'] = true;
+    $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya]]);
+
+    $_SESSION['msg'] = lang("Researchers have been notified about the completed ABS review.", "Antragstellende wurden über die abgeschlossene ABS-Bewertung benachrichtigt.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/proposals/view/$project_id");
 });

@@ -64,7 +64,7 @@ CSS variables (CSS custom properties)
   --border-color: #afafaf;
   --divider-color: rgba(175, 175, 175, 0.5);
   --font-family: Rubik, Roboto, Helvetica, Arial, sans-serif;
-  --header-font: var(--font-family);
+  --header-font: TikTok Sans, Roboto, Helvetica, Arial, sans-serif;
   --icon-font: Phosphor;
   --max-page-width: 150rem;
   --base-font-size: 1.4rem;
@@ -219,17 +219,6 @@ CSS variables (CSS custom properties)
   font-weight: 300;
   font-style: italic;
   src: url("Rubik/static/Rubik-LightItalic.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Libre Baskerville";
-  src: url("LibreBaskerville/LibreBaskerville-SemiBold.ttf") format("truetype");
-  font-weight: 600;
-}
-@font-face {
-  font-family: "Libre Baskerville";
-  src: url("LibreBaskerville/LibreBaskerville-SemiBoldItalic.ttf") format("truetype");
-  font-weight: 600;
-  font-style: italic;
 }
 /*
 -------------------------------------------------------------------------------
@@ -558,11 +547,14 @@ h6 i.ph-duotone {
   vertical-align: text-bottom;
 }
 
+.title {
+  font-family: var(--header-font);
+}
+
 h1 {
-  font-size: 3.2rem;
+  font-size: 3rem;
   line-height: 1.3;
   margin-top: 3rem;
-  font-family: "Libre Baskerville", serif;
 }
 
 h1:first-of-type {
@@ -572,13 +564,11 @@ h1:first-of-type {
 h2 {
   font-size: 2.4rem;
   line-height: 1.35;
-  font-family: "Libre Baskerville", serif;
 }
 
 h3 {
   font-size: 2rem;
   line-height: 1.4;
-  font-family: "Libre Baskerville", serif;
 }
 
 h4 {
@@ -601,8 +591,12 @@ h6 {
   font-weight: 300;
 }
 
+b {
+  font-weight: bold;
+}
+
 strong {
-  font-weight: 900;
+  font-weight: bold;
 }
 
 blockquote {

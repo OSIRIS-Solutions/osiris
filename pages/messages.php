@@ -41,6 +41,11 @@ $types = [
         'de' => 'Aktivität',
         'icon' => 'book-bookmark'
     ],
+    'nagoya' => [
+        'en' => 'Nagoya Protocol',
+        'de' => 'Nagoya-Protokoll',
+        'icon' => 'scales'
+    ],
 ]
 ?>
 

@@ -20,8 +20,6 @@ class Settings
     private $features = array();
     public $continuousTypes = [];
 
-    public const FEATURES = ['coins', 'achievements', 'user-metrics', 'projects', 'guests'];
-
     function __construct($user = array())
     {
         // construct database object 

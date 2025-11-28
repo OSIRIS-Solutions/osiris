@@ -702,3 +702,35 @@ if (array_sum($a) === 0) {
 
         <?php } ?>
     <?php } ?>
+
+    <?php if (isset($issues['nagoya'])) { ?>
+        <h4 class="">
+            <?= lang(
+                'Please review the following Nagoya Protocol submissions:',
+                'Bitte überprüfe die folgenden Nagoya-Protokoll-Einreichungen:'
+            ) ?>
+        </h4>
+
+        <table class="table">
+            <?php
+            foreach ($issues['nagoya'] as $project_id) {
+                $project = $DB->getProject($project_id);
+            ?>
+                <tr id="tr-<?= $project_id ?>">
+                    <td>
+                        <?= lang('The Nagoya Protocol compliance for project', 'Die Nagoya-Protokoll-Compliance für das Projekt') ?>
+                        <b><?= $project['name'] ?></b>
+                        <?= lang('requires your input.', 'benötigt deine Eingabe.') ?><br>
+                        <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $project_id ?>" class="btn small primary">
+                            <i class="ph ph-edit"></i>
+                            <?= lang('Provide input now', 'Jetzt Eingabe machen') ?>
+                        </a>
+                        <a href="<?= ROOTPATH ?>/projects/view/<?= $project_id ?>" class="btn small">
+                            <i class="ph ph-arrow-fat-line-right"></i>
+                            <?= lang('View project', 'Projekt ansehen') ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+    <?php } ?>
+    

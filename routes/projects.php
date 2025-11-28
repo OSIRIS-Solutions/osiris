@@ -505,6 +505,16 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             'enabled' => $nagoya,
             'countries' => $countries
         ];
+        if ($nagoya && !empty($countries)) {
+            // send notification to admins about nagoya being enabled
+            $DB->addMessages(
+                'right:nagoya.view',
+                'Nagoya protocol has been enabled for project proposal: <b>' . $project['name'] . '</b>',
+                'Das Nagoya-Protokoll wurde für den Projektantrag aktiviert: <b>' . $project['name'] . '</b>',
+                'nagoya',
+                "/$collection/view/" . $id,
+            );
+        }
     }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
@@ -742,6 +752,17 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 'enabled' => $nagoya,
                 'countries' => $countries
             ];
+
+            if ($nagoya && !empty($countries)) {
+                // send notification to admins about nagoya being enabled
+                $DB->addMessages(
+                    'right:nagoya.view',
+                    'Nagoya protocol has been enabled for project proposal: <b>' . $project['name'] . '</b>',
+                    'Das Nagoya-Protokoll wurde für den Projektantrag aktiviert: <b>' . $project['name'] . '</b>',
+                    'nagoya',
+                    "/$collection/view/" . $id,
+                );
+            }
         }
     }
 
