@@ -776,6 +776,7 @@ $affiliation = $Settings->get('affiliation_details');
                             ?>
                         </div>
 
+                        <h5>Nagoya Protocol Compliance</h5>
                         <div class="form-group">
                             <label for="" class="label">
                                 <?= lang('Add Nagoya Protocol Compliance to proposals', 'Füge Nagoya-Protokoll Compliance zu Anträgen hinzu') ?>

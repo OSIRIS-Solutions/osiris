@@ -489,7 +489,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
-    if (isset($values['nagoya'])) {
+    if (isset($values['nagoya']) && $collection == 'proposals') {
         $nagoya = ($values['nagoya'] == 'yes');
         $countries = [];
         foreach ($values['nagoya_countries'] as $iso) {

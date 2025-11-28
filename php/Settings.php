@@ -449,7 +449,7 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
-    
+
     function journalLabel()
     {
         $settings = $this->get('journals_label');
@@ -513,7 +513,7 @@ class Settings
             if (!empty($topic['subtitle'])) {
                 $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
             }
-            $html .= "<a class='topic-pill ".($topic['inactive'] ?? false ? 'inactive' : '')."' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $html .= "<a class='topic-pill " . ($topic['inactive'] ?? false ? 'inactive' : '') . "' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
             if (!empty($topic['subtitle'])) {
                 $html .= '</span>';
             }
@@ -600,6 +600,33 @@ class Settings
         return false;
     }
 
+    public function getRoles()
+    {
+
+        $req = $this->osiris->adminGeneral->findOne(['key' => 'roles']);
+        $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
+
+        // if user and scientist are not in the roles, add them
+        if (!in_array('user', $roles)) {
+            $roles[] = 'user';
+        }
+        if (!in_array('scientist', $roles)) {
+            $roles[] = 'scientist';
+        }
+        // sort admin last
+        $roles = array_diff($roles, ['admin']);
+        $roles = array_merge($roles, ['admin']);
+        return $roles;
+    }
+
+    public function getRolesWithPermission($right)
+    {
+        $roles = $this->osiris->adminRights->distinct('role', [
+            'right' => $right,
+            'value' => true
+        ]);
+        return DB::doc2Arr($roles);
+    }
     public function getRegex()
     {
         $regex = $this->get('regex');

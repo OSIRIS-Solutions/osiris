@@ -608,7 +608,9 @@ class Groups
         if (empty($units)) return [];
         $depts = [];
         foreach ($units as $unit) {
-            if (!is_string($unit['unit'])) continue;
+            // if in past or future, skip
+            if (isset($unit['end']) && !empty($unit['end']) && strtotime($unit['end']) < time()) continue;
+            if (isset($unit['start']) && !empty($unit['start']) && strtotime($unit['start']) > time()) continue;
             $unit = $this->getUnitParent($unit['unit'], 1);
             if (empty($unit['id']) || in_array($unit['id'], $depts)) continue;
             $depts[] = $unit['id'];
