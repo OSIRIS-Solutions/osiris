@@ -580,7 +580,7 @@ $active = function ($field) use ($data_fields) {
                 <?= lang('Social Media', 'Soziale Medien') ?>
             </h4>
             <div id="socials">
-
+                <input type="hidden" name="values[socials]" value="">
                 <?php
                 $socials = DB::doc2Arr($data['socials'] ?? []);
                 foreach ($socials as $t => $url) {
@@ -1203,4 +1203,5 @@ $active = function ($field) use ($data_fields) {
     <button type="submit" class="btn secondary">
         Update
     </button>
+
 </form>
