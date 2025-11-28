@@ -11,14 +11,13 @@ Route::get('/nagoya', function () {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
         ['name' => 'Nagoya Protocol']
     ];
 
     $nagoya = $osiris->proposals->find(
         ['nagoya.enabled' => true]
     )->toArray();
-
 
     // $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
 

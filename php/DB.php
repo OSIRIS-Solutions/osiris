@@ -302,8 +302,6 @@ class DB
         if (empty($group) || empty($en)) return false;
 
         $users = $this->getMessageGroup($group);
-        dump($users);
-        die;
         // do not send messages if user is current user
         $users = array_filter($users, function ($user) {
             return $user != $_SESSION['username'];
@@ -332,7 +330,7 @@ class DB
             )->toArray();
         } else if (str_starts_with($group, 'right:')) {
             $right = substr($group, 6);
-            $roles = $this->db->roles->find(['right' => $right], ['projection' => ['role' => 1, '_id' => 0]]);
+            $roles = $this->db->adminRights->find(['right' => $right, 'value' => true], ['projection' => ['role' => 1, '_id' => 0]]);
             $roles = DB::doc2Arr($roles);
             $users = $this->db->persons->find(
                 ['roles' => ['$in' => array_column($roles, 'role')], 'is_active' => ['$ne' => false], $key => ['$exists' => true]],

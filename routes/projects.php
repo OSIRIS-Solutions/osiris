@@ -505,16 +505,11 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             'enabled' => $nagoya,
             'countries' => $countries
         ];
-        if ($nagoya && !empty($countries)) {
-            // send notification to admins about nagoya being enabled
-            $DB->addMessages(
-                'right:nagoya.view',
-                'Nagoya protocol has been enabled for project proposal: <b>' . $project['name'] . '</b>',
-                'Das Nagoya-Protokoll wurde für den Projektantrag aktiviert: <b>' . $project['name'] . '</b>',
-                'nagoya',
-                "/$collection/view/" . $id,
-            );
-        }
+    } else {
+        $values['nagoya'] = [
+            'enabled' => false,
+            'countries' => []
+        ];
     }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
@@ -613,6 +608,17 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
                 "/$collection/view/" . $id . '#section-history',
             );
         }
+    }
+
+    // send messages to nagoya
+    if (isset($values['nagoya']) && $values['nagoya']['enabled'] == true) {
+        $DB->addMessages(
+            'right:nagoya.view',
+            'A new project proposal with Nagoya protocol compliance has been created: <b>' . $values['name'] . '</b>',
+            'Ein neuer Projektantrag mit Nagoya-Protokoll-Konformität wurde erstellt: <b>' . $values['name'] . '</b>',
+            'nagoya',
+            "/$collection/view/" . $id,
+        );
     }
 
     // update parent project if subproject
@@ -757,8 +763,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 // send notification to admins about nagoya being enabled
                 $DB->addMessages(
                     'right:nagoya.view',
-                    'Nagoya protocol has been enabled for project proposal: <b>' . $project['name'] . '</b>',
-                    'Das Nagoya-Protokoll wurde für den Projektantrag aktiviert: <b>' . $project['name'] . '</b>',
+                    'Nagoya-relevant information has been shared for the following proposal: <b>' . $project['name'] . '</b>',
+                    'Für folgenden Antrag wurden Nagoya-relevante Informationen hinzugefügt: <b>' . $project['name'] . '</b>',
                     'nagoya',
                     "/$collection/view/" . $id,
                 );
