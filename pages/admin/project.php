@@ -349,7 +349,7 @@ if ($process == 'project') {
                             <option value="role:<?= $role ?>" <?= $notification  == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
                         <?php } ?>
                         <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
-                        <?php foreach ($osiris->users->find([], ['sort' => ['last' => 1]]) as $u) { ?>
+                        <?php foreach ($osiris->persons->find([], ['sort' => ['last' => 1]]) as $u) { ?>
                             <option value="user:<?= $u['username'] ?>" <?= $notification  == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
                         <?php } ?>
                     </select>
@@ -374,7 +374,7 @@ if ($process == 'project') {
                             <option value="role:<?= $role ?>" <?= $notification == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
                         <?php } ?>
                         <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
-                        <?php foreach ($osiris->users->find([], ['sort' => ['last' => 1]]) as $u) { ?>
+                        <?php foreach ($osiris->persons->find([], ['sort' => ['last' => 1]]) as $u) { ?>
                             <option value="user:<?= $u['username'] ?>" <?= $notification == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
                         <?php } ?>
                     </select>
