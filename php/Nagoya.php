@@ -46,7 +46,7 @@ final class Nagoya
       'title_de' => 'Unvollständig'
     ],
     'out-of-scope' => [
-      'color' => 'secondary',
+      'color' => 'muted',
       'icon' => 'ph-circle',
       'title_en' => 'Out of scope',
       'title_de' => 'Außerhalb des Geltungsbereichs'
@@ -202,14 +202,16 @@ final class Nagoya
     }
 
     foreach ($nagoya['countries'] ?? [] as $c) {
-      if (empty($c['scope'] ?? [])) return null;
       if (!($c['abs'] ?? false)) continue;
       $hasAbs = true;
+      if (empty($c['scope'] ?? []) || empty($c['scope']['groups'] ?? [])) return null;
       $label = $c['evaluation']['label'] ?? null;
+      if (!in_array($label, ['A', 'B', 'C'], true)) {
+        return null;
+      }
       if ($label === 'A') $hasA = true;
       if ($label === 'B') $hasB = true;
     }
-
     if (!$hasAbs) {
       return null; // oder 'not-relevant', je nach deiner Logik
     }
@@ -394,81 +396,81 @@ final class Nagoya
   //   }
   // }
   /**
-     * Country-level Nagoya badge.
-     * Shows ABS relevance, A/B/C label and a rough permit state.
-     */
-    public static function countryBadge(array $country): string
-    {
-        $abs      = $country['abs'] ?? null; // true/false/null
-        $eval     = $country['evaluation'] ?? [];
-        $label    = $eval['label'] ?? '';  // 'A','B','C' or ''
-        if (!is_string($label)) $label = '';
-        $permits  = $eval['permits'] ?? [];
+   * Country-level Nagoya badge.
+   * Shows ABS relevance, A/B/C label and a rough permit state.
+   */
+  public static function countryBadge(array $country): string
+  {
+    $abs      = $country['abs'] ?? null; // true/false/null
+    $eval     = $country['evaluation'] ?? [];
+    $label    = $eval['label'] ?? '';  // 'A','B','C' or ''
+    if (!is_string($label)) $label = '';
+    $permits  = $eval['permits'] ?? [];
 
-        // Determine permit state
-        $hasNeeded    = false;
-        $hasRequested = false;
-        $hasGranted   = false;
+    // Determine permit state
+    $hasNeeded    = false;
+    $hasRequested = false;
+    $hasGranted   = false;
 
-        if (is_array($permits)) {
-            foreach ($permits as $p) {
-                $status = $p['status'] ?? null;
-                if ($status === 'needed') {
-                    $hasNeeded = true;
-                } elseif ($status === 'requested') {
-                    $hasRequested = true;
-                } elseif ($status === 'granted') {
-                    $hasGranted = true;
-                }
-            }
+    if (is_array($permits)) {
+      foreach ($permits as $p) {
+        $status = $p['status'] ?? null;
+        if ($status === 'needed') {
+          $hasNeeded = true;
+        } elseif ($status === 'requested') {
+          $hasRequested = true;
+        } elseif ($status === 'granted') {
+          $hasGranted = true;
         }
-
-        // Base classes / text depending on ABS relevance
-        $classes = 'badge small ';
-        $icon    = 'ph ph-question';
-        $text    = lang('ABS unknown', 'ABS unbekannt');
-
-        if ($abs === true) {
-            $classes .= 'primary';
-            $icon    = 'ph ph-shield-check';
-            $text    = lang('ABS-relevant', 'ABS-relevant');
-        } elseif ($abs === false) {
-            $classes .= 'muted';
-            $icon    = 'ph ph-x-circle';
-            $text    = lang('Not ABS-relevant', 'Nicht ABS-relevant');
-        }
-
-        // A/B/C sublabel
-        $labelHtml = self::ABCbadge($label);
-        if ($labelHtml !== '') {
-            $classes .= ' d-inline-flex align-items-center';
-        }
-
-        // Permit state indicator (only for ABS-relevant)
-        $permitHtml = '';
-        if ($abs === true) {
-            if ($hasNeeded || $hasRequested) {
-                $permitHtml = sprintf(
-                    '<small class="badge warning ml-5">%s</small>',
-                    htmlspecialchars(lang('permits pending', 'Genehmigungen ausstehend'))
-                );
-            } elseif ($hasGranted) {
-                $permitHtml = sprintf(
-                    '<small class="badge success ml-5">%s</small>',
-                    htmlspecialchars(lang('permits granted', 'Genehmigungen erteilt'))
-                );
-            }
-        }
-
-        return sprintf(
-            '<span class="%s"><i class="%s"></i> %s%s%s</span>',
-            $classes,
-            $icon,
-            htmlspecialchars($text),
-            $labelHtml,
-            $permitHtml
-        );
+      }
     }
+
+    // Base classes / text depending on ABS relevance
+    $classes = 'badge small ';
+    $icon    = 'ph ph-question';
+    $text    = lang('ABS unknown', 'ABS unbekannt');
+
+    if ($abs === true) {
+      $classes .= 'primary';
+      $icon    = 'ph ph-shield-check';
+      $text    = lang('ABS-relevant', 'ABS-relevant');
+    } elseif ($abs === false) {
+      $classes .= 'muted';
+      $icon    = 'ph ph-x-circle';
+      $text    = lang('Not ABS-relevant', 'Nicht ABS-relevant');
+    }
+
+    // A/B/C sublabel
+    $labelHtml = self::ABCbadge($label);
+    if ($labelHtml !== '') {
+      $classes .= ' d-inline-flex align-items-center';
+    }
+
+    // Permit state indicator (only for ABS-relevant)
+    $permitHtml = '';
+    if ($abs === true) {
+      if ($hasNeeded || $hasRequested) {
+        $permitHtml = sprintf(
+          '<small class="badge warning ml-5">%s</small>',
+          htmlspecialchars(lang('permits pending', 'Genehmigungen ausstehend'))
+        );
+      } elseif ($hasGranted) {
+        $permitHtml = sprintf(
+          '<small class="badge success ml-5">%s</small>',
+          htmlspecialchars(lang('permits granted', 'Genehmigungen erteilt'))
+        );
+      }
+    }
+
+    return sprintf(
+      '<span class="%s"><i class="%s"></i> %s%s%s</span>',
+      $classes,
+      $icon,
+      htmlspecialchars($text),
+      $labelHtml,
+      $permitHtml
+    );
+  }
 
   public static function ABCbadge(string $label = ''): string
   {
