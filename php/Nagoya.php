@@ -100,7 +100,6 @@ final class Nagoya
     $n = $nagoya ?? ($project['nagoya'] ?? []);
     $enabled   = !empty($n['enabled']);
     $countries = $n['countries'] ?? [];
-    $label     = $n['label'] ?? null; // 'A'|'B'|'C' wenn ABS-Evaluation erfolgt
 
     if (!$enabled) return self::out('not-relevant', ['disabled']);
     if (empty($countries)) return self::out('incomplete', ['no-countries']);
@@ -128,13 +127,6 @@ final class Nagoya
     if ($allAbsFalse) return self::out('not-relevant', ['all-countries-no-abs']);
 
 
-    // 2) Falls A/B/C bereits gesetzt → Permits/Compliant-Logik
-    if ($label === 'C') return self::out('out-of-scope', ['label-C']);
-    if ($label === 'A' || $label === 'B') {
-      $pending = self::permitsPending($n);
-      return $pending ? self::out('permits-pending', ['permits-open'])
-        : self::out('compliant', ['permits-complete']);
-    }
 
     // 3) Noch keine A/B/C-Setzung:
     $scopeComplete  = self::scopeComplete($nagoya);
@@ -147,10 +139,24 @@ final class Nagoya
     if ($scopeComplete && !$scopeSubmitted) {
       return self::out('researcher-input', ['scope-complete-not-submitted']);
     }
+
+    $label = self::deriveProjectLabel($n);
+    // Scope vollständig + eingereicht + A/B/C gesetzt
+    if ($scopeComplete && $scopeSubmitted && $label !== null) {
+      // A/B → Genehmigungen prüfen
+      if ($label === 'C') return self::out('out-of-scope', ['label-C']);
+      if ($label === 'A' || $label === 'B') {
+        $pending = self::permitsPending($n);
+        return $pending ? self::out('permits-pending', ['permits-open'])
+          : self::out('compliant', ['permits-complete']);
+      }
+    }
+
     // Scope vollständig + eingereicht, aber noch kein A/B/C
     if ($scopeComplete && $scopeSubmitted && $label === null) {
       return self::out('awaiting-abs-evaluation', ['scope-submitted-await-eval']);
     }
+
     return self::out('researcher-input', ['scope-incomplete']);
   }
 
@@ -183,6 +189,33 @@ final class Nagoya
       return false;
     }
     return true;
+  }
+
+  private static function deriveProjectLabel(array $nagoya): ?string
+  {
+    $hasAbs = false;
+    $hasA   = false;
+    $hasB   = false;
+
+    if (empty($nagoya['countries'] ?? [])) {
+      return null;
+    }
+
+    foreach ($nagoya['countries'] ?? [] as $c) {
+      if (empty($c['scope'] ?? [])) return null;
+      if (!($c['abs'] ?? false)) continue;
+      $hasAbs = true;
+      $label = $c['evaluation']['label'] ?? null;
+      if ($label === 'A') $hasA = true;
+      if ($label === 'B') $hasB = true;
+    }
+
+    if (!$hasAbs) {
+      return null; // oder 'not-relevant', je nach deiner Logik
+    }
+    if ($hasA) return 'A';
+    if ($hasB) return 'B';
+    return 'C'; // es gibt ABS-Länder, aber nur C oder null -> C
   }
 
   public static function whoIsNext(array $project): string
@@ -230,7 +263,7 @@ final class Nagoya
     // Projections for fast filters
     $nagoya['countryCodes'] = array_values(array_unique(array_filter(array_map(
       fn($c) => $c['code'] ?? null,
-      $nagoya['countries'] ?? []
+      DB::doc2Arr($nagoya['countries'] ?? [])
     ))));
 
     // Optional permit projections (future-proof; harmless if absent)
@@ -243,6 +276,7 @@ final class Nagoya
     }
 
     // Compute canonical status and stamp metadata
+    $nagoya['label'] = self::deriveProjectLabel($nagoya);
     $calc = self::compute($project, $nagoya);
     $nagoya['status'] = $calc['status'];
     $nagoya['status_reason'] = $calc['reason'];
@@ -348,15 +382,108 @@ final class Nagoya
     return lang($label_en, $label_de);
   }
 
-  public static function countryBadge(array $country, bool $large = false): string
+  // public static function countryBadge(array $country, bool $large = false): string
+  // {
+  //   $abs = $country['abs'] ?? null;
+  //   if ($abs === true) {
+  //     return self::makeBadge('danger', 'ph-check-circle', lang('ABS-relevant', 'ABS-relevant'), $large);
+  //   } elseif ($abs === false) {
+  //     return self::makeBadge('success', 'ph-x-circle', lang('Not relevant', 'Nicht relevant'), $large);
+  //   } else {
+  //     return self::makeBadge('', 'ph-question', lang('Unknown', 'Unbekannt'), $large);
+  //   }
+  // }
+  /**
+     * Country-level Nagoya badge.
+     * Shows ABS relevance, A/B/C label and a rough permit state.
+     */
+    public static function countryBadge(array $country): string
+    {
+        $abs      = $country['abs'] ?? null; // true/false/null
+        $eval     = $country['evaluation'] ?? [];
+        $label    = $eval['label'] ?? '';  // 'A','B','C' or ''
+        if (!is_string($label)) $label = '';
+        $permits  = $eval['permits'] ?? [];
+
+        // Determine permit state
+        $hasNeeded    = false;
+        $hasRequested = false;
+        $hasGranted   = false;
+
+        if (is_array($permits)) {
+            foreach ($permits as $p) {
+                $status = $p['status'] ?? null;
+                if ($status === 'needed') {
+                    $hasNeeded = true;
+                } elseif ($status === 'requested') {
+                    $hasRequested = true;
+                } elseif ($status === 'granted') {
+                    $hasGranted = true;
+                }
+            }
+        }
+
+        // Base classes / text depending on ABS relevance
+        $classes = 'badge small ';
+        $icon    = 'ph ph-question';
+        $text    = lang('ABS unknown', 'ABS unbekannt');
+
+        if ($abs === true) {
+            $classes .= 'primary';
+            $icon    = 'ph ph-shield-check';
+            $text    = lang('ABS-relevant', 'ABS-relevant');
+        } elseif ($abs === false) {
+            $classes .= 'muted';
+            $icon    = 'ph ph-x-circle';
+            $text    = lang('Not ABS-relevant', 'Nicht ABS-relevant');
+        }
+
+        // A/B/C sublabel
+        $labelHtml = self::ABCbadge($label);
+        if ($labelHtml !== '') {
+            $classes .= ' d-inline-flex align-items-center';
+        }
+
+        // Permit state indicator (only for ABS-relevant)
+        $permitHtml = '';
+        if ($abs === true) {
+            if ($hasNeeded || $hasRequested) {
+                $permitHtml = sprintf(
+                    '<small class="badge warning ml-5">%s</small>',
+                    htmlspecialchars(lang('permits pending', 'Genehmigungen ausstehend'))
+                );
+            } elseif ($hasGranted) {
+                $permitHtml = sprintf(
+                    '<small class="badge success ml-5">%s</small>',
+                    htmlspecialchars(lang('permits granted', 'Genehmigungen erteilt'))
+                );
+            }
+        }
+
+        return sprintf(
+            '<span class="%s"><i class="%s"></i> %s%s%s</span>',
+            $classes,
+            $icon,
+            htmlspecialchars($text),
+            $labelHtml,
+            $permitHtml
+        );
+    }
+
+  public static function ABCbadge(string $label = ''): string
   {
-    $abs = $country['abs'] ?? null;
-    if ($abs === true) {
-      return self::makeBadge('success', 'ph-check-circle', lang('ABS-relevant', 'ABS-relevant'), $large);
-    } elseif ($abs === false) {
-      return self::makeBadge('danger', 'ph-x-circle', lang('Not relevant', 'Nicht relevant'), $large);
-    } else {
-      return self::makeBadge('muted', 'ph-question', lang('Unknown', 'Unbekannt'), $large);
+    switch ($label) {
+      case 'A':
+        return '<small class="badge danger ml-5" data-toggle="tooltip" data-title="' .
+          lang('Project within the scope of the EU ABS Regulation', 'Projekt im Geltungsbereich der EU-ABS-Verordnung') . '">A</small>';
+      case 'B':
+        return '<small class="badge signal ml-5" data-toggle="tooltip" data-title="' .
+          lang('Project out of the scope of the EU ABS Regulation but within the scope of ABS measures in provider countries', 'Projekt außerhalb des Geltungsbereichs der EU-ABS-Verordnung, aber innerhalb des Geltungsbereichs der ABS-Maßnahmen in den Herkunftsländern') . '">B</small>';
+      case 'C':
+        return '<small class="badge muted ml-5" data-toggle="tooltip" data-title="' .
+          lang('Project out of the scope of both, the EU ABS regulation and the ABS measures in provider countries', 'Projekt außerhalb des Geltungsbereichs sowohl der EU-ABS-Verordnung als auch der ABS-Maßnahmen in den Herkunftsländern') . '">C</small>';
+      default:
+        return '';
     }
   }
 

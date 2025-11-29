@@ -113,7 +113,7 @@ $utilizationOptions = [
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
 </div>
 
-<?php if ($nagoya['scopeSubmitted']) { ?>
+<?php if ($nagoya['scopeSubmitted'] ?? false) { ?>
     <!-- thank you -->
     <div class="alert success">
         <div class="title">
@@ -151,13 +151,13 @@ $utilizationOptions = [
         <div class="box">
             <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                 <h2>
-                    <i class="ph-duotone ph-globe"></i>
+                    <i class="ph-duotone ph-globe-stand"></i>
                     <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
                 </h2>
                 <small class="code badge primary"><?= htmlspecialchars($cid) ?></small>
             </div>
             <div class="content">
-                <?php if (isset($country['review']['comment'])) { ?>
+                <?php if (!empty($country['review']['comment'] ?? null)) { ?>
                     <p class="text-primary">
                         <i class="ph ph-chat-circle-text"></i>
                         <b>
@@ -187,14 +187,14 @@ $utilizationOptions = [
                         <div class="scope-group" data-index="<?= $gi ?>">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="title" onclick="$(this).toggleClass('open').parent().next('.scope-group-fields').toggleClass('hidden');">
-                                    <?= lang('Sample Collection', 'Probenahme') ?> <?= $gi + 1 ?>
+                                    <?= lang('Sample Collection', 'Probensammlung') ?> <?= $gi + 1 ?>
                                 </h3>
                                 <?php if ($gi > 0): ?>
                                     <button type="button"
                                         class="btn small text-danger remove-scope-group"
                                         data-country="<?= htmlspecialchars($cid) ?>">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('Remove Sample Collection', 'Probenahme entfernen') ?>
+                                        <?= lang('Remove Sample Collection', 'Probensammlung entfernen') ?>
                                     </button>
                                 <?php endif; ?>
                             </div>
@@ -332,7 +332,7 @@ $utilizationOptions = [
                     class="btn primary add-scope-group"
                     data-country="<?= htmlspecialchars($cid) ?>">
                     <i class="ph ph-plus"></i>
-                    <?= lang('Add Sample Collection', 'Probenahme hinzufügen') ?>
+                    <?= lang('Add Sample Collection', 'Probensammlung hinzufügen') ?>
                 </button>
 
                 <hr class="my-15">
@@ -404,23 +404,26 @@ $utilizationOptions = [
     </div>
 </form>
 
+<?php if (!empty($out_of_scope)) { ?>
 
-<hr class="my-20">
+    <hr class="my-20">
 
-<h5><?= lang('Countries without ABS', 'Länder ohne ABS') ?>:</h5>
-<?php foreach ($out_of_scope as $country): ?>
-    <span class="badge bg-white border mr-5 mb-5">
-        <i class="ph-duotone ph-globe"></i>
-        <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
-    </span>
-<?php endforeach; ?>
+    <h5><?= lang('Countries without ABS', 'Länder ohne ABS') ?>:</h5>
+    <?php foreach ($out_of_scope as $country): ?>
+        <span class="badge bg-white border mr-5 mb-5">
+            <i class="ph-duotone ph-globe-stand"></i>
+            <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
+        </span>
+    <?php endforeach; ?>
 
-<p class="text-muted font-size-12">
-    <?= lang(
-        'Countries listed here have been marked as out of scope for ABS compliance. No further details are required.',
-        'Die hier aufgeführten Länder wurden als außerhalb des Geltungsbereichs der ABS-Compliance eingestuft. Es sind keine weiteren Angaben erforderlich.'
-    ) ?>
-</p>
+    <p class="text-muted font-size-12">
+        <?= lang(
+            'Countries listed here have been marked as out of scope for ABS compliance. No further details are required.',
+            'Die hier aufgeführten Länder wurden als außerhalb des Geltungsbereichs der ABS-Compliance eingestuft. Es sind keine weiteren Angaben erforderlich.'
+        ) ?>
+    </p>
+
+<?php } ?>
 
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>

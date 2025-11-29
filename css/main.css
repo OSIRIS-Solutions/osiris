@@ -64,7 +64,7 @@ CSS variables (CSS custom properties)
   --border-color: #afafaf;
   --divider-color: rgba(175, 175, 175, 0.5);
   --font-family: Rubik, Roboto, Helvetica, Arial, sans-serif;
-  --header-font: TikTok Sans, Roboto, Helvetica, Arial, sans-serif;
+  --header-font: TikTok Sans, Rubik, Helvetica, Arial, sans-serif;
   --icon-font: Phosphor;
   --max-page-width: 150rem;
   --base-font-size: 1.4rem;
@@ -5692,9 +5692,11 @@ Alerts
 -------------------------------------------------------------------------------
 */
 .alert {
+  --icon: "";
+  --color: var(--primary-color);
   margin: 0;
   padding: 1rem 2rem 1rem 5rem;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--color);
   border-left-width: 8px;
   font-style: inherit;
   position: relative;
@@ -5703,15 +5705,19 @@ Alerts
   box-shadow: var(--box-shadow);
 }
 .alert .title {
-  color: var(--primary-color);
+  color: var(--color);
+  margin: 0;
+  font-size: small;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 .alert::before {
-  content: "\e2ce";
+  content: var(--icon);
   position: absolute;
   display: block;
   font-family: "Phosphor";
   font-size: 3rem;
-  color: var(--primary-color);
+  color: var(--color);
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
@@ -5722,11 +5728,6 @@ Alerts
 }
 .alert p:last-of-type {
   margin-bottom: 0;
-}
-.alert .title {
-  margin: 0;
-  font-size: small;
-  text-transform: uppercase;
 }
 .alert .close {
   position: absolute;
@@ -5748,13 +5749,7 @@ Alerts
   display: none;
 }
 .alert.secondary {
-  border-color: var(--secondary-color);
-}
-.alert.secondary::before {
-  color: var(--secondary-color);
-}
-.alert.secondary .title {
-  color: var(--secondary-color-light);
+  --color: var(--secondary-color);
 }
 .alert.secondary hr {
   background-color: var(--secondary-color-30);
@@ -5766,13 +5761,7 @@ Alerts
   color: var(--secondary-color);
 }
 .alert.primary {
-  border-color: var(--primary-color);
-}
-.alert.primary::before {
-  color: var(--primary-color);
-}
-.alert.primary .title {
-  color: var(--primary-color-light);
+  --color: var(--primary-color);
 }
 .alert.primary hr {
   background-color: var(--primary-color-30);
@@ -5784,14 +5773,8 @@ Alerts
   color: var(--primary-color);
 }
 .alert.success {
-  border-color: var(--success-color);
-}
-.alert.success::before {
-  color: var(--success-color);
-  content: "\e184";
-}
-.alert.success .title {
-  color: var(--success-color-light);
+  --color: var(--success-color);
+  --icon: "";
 }
 .alert.success hr {
   background-color: var(--success-color-30);
@@ -5803,14 +5786,8 @@ Alerts
   color: var(--success-color);
 }
 .alert.danger {
-  border-color: var(--danger-color);
-}
-.alert.danger::before {
-  color: var(--danger-color);
-  content: "\e4e0";
-}
-.alert.danger .title {
-  color: var(--danger-color-light);
+  --color: var(--danger-color);
+  --icon: "";
 }
 .alert.danger hr {
   background-color: var(--danger-color-30);
@@ -5822,14 +5799,8 @@ Alerts
   color: var(--danger-color);
 }
 .alert.signal {
-  border-color: var(--signal-color);
-}
-.alert.signal::before {
-  color: var(--signal-color);
-  content: "\e4e4";
-}
-.alert.signal .title {
-  color: var(--signal-color-light);
+  --color: var(--signal-color);
+  --icon: "";
 }
 .alert.signal hr {
   background-color: var(--signal-color-30);
@@ -5841,13 +5812,7 @@ Alerts
   color: var(--signal-color);
 }
 .alert.muted {
-  border-color: var(--muted-color);
-}
-.alert.muted::before {
-  color: var(--muted-color);
-}
-.alert.muted .title {
-  color: var(--muted-color-light);
+  --color: var(--muted-color);
 }
 .alert.muted hr {
   background-color: var(--muted-color-30);

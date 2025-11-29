@@ -1,7 +1,6 @@
 <?php
 include_once BASEPATH . "/php/Nagoya.php";
 $nagoya = $project['nagoya'] ?? [];
-// dump($nagoya);
 ?>
 <h1 class="mb-3"><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></h1>
 <h2 class="subtitle">

@@ -631,6 +631,7 @@ if ($nagoyaRelevant) {
                     $totalAbs       = count($absCountries);
                     $totalNonAbs    = count($nonAbsCountries);
                     $scopeComplete  = Nagoya::scopeComplete($nagoya);
+                    dump($nagoya['status']);
                 ?>
                     <div class="box padded mt-0" id="nagoya-details" style="display:none;">
 
@@ -650,7 +651,7 @@ if ($nagoyaRelevant) {
                                 <?php endif; ?>
                                 <?php if ($totalAbs > 0): ?>
                                     <div>
-                                        <?= lang('Sample Collections:', 'Probenahmen:') ?>
+                                        <?= lang('Sample Collections:', 'Probensammlungen:') ?>
                                         <?= $scopeBlocks ?>
                                         <?php if ($scopeBlocks > 0 && $absWithScope < $totalAbs): ?>
                                             · <?= lang('some ABS countries without scope', 'einige ABS-Länder ohne Scope') ?>
@@ -693,13 +694,24 @@ if ($nagoyaRelevant) {
                                         'Du hast die Scope-Informationen eingereicht. Das ABS-Compliance-Team bewertet nun den Antrag.'
                                     ) ?>
                                 </div>
-                            <?php elseif (in_array($status, ['in-scope-eu', 'in-scope-national', 'out-of-scope', 'permits-pending', 'compliant', 'not-relevant'])): ?>
-                                <div class="alert info mt-20 small">
+                            <?php elseif ($status === 'permits-pending'): ?>
+                                <div class="alert warning mt-20" style="--icon: '\e198';">
+                                    <?= lang(
+                                        'There are pending permits related to the Nagoya Protocol.',
+                                        'Es gibt ausstehende Genehmigungen im Zusammenhang mit dem Nagoya-Protokoll.'
+                                    ) ?>
+                                    <br>
+                                    <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $project['_id'] ?>" class="btn warning mt-5">
+                                        <i class="ph ph-pencil"></i> <?= lang('Update permit information', 'Genehmigungsinformationen aktualisieren') ?>
+                                    </a>
+                                </div>
+                            <?php elseif (in_array($status, ['in-scope-eu', 'in-scope-national', 'out-of-scope', 'compliant', 'not-relevant'])): ?>
+                                <!-- <div class="alert info mt-20 small">
                                     <?= lang(
                                         'The ABS Compliance process is in an advanced state. Please contact the ABS Compliance Team if you have questions or need to update the information.',
                                         'Der ABS-Compliance-Prozess ist bereits weit fortgeschritten. Bitte wende dich an das ABS-Compliance-Team, wenn du Fragen hast oder Angaben aktualisieren musst.'
                                     ) ?>
-                                </div>
+                                </div> -->
                             <?php endif; ?>
                         <?php endif; ?>
 
@@ -726,6 +738,17 @@ if ($nagoyaRelevant) {
                                         <i class="ph ph-checks"></i> <?= lang('Open ABS evaluation', 'ABS-Bewertung öffnen') ?>
                                     </a>
                                 </div>
+                            <?php elseif ($status === 'permits-pending'): ?>
+                                <div class="alert warning mt-20" style="--icon: '\e198';">
+                                    <?= lang(
+                                        'There are pending permits related to the Nagoya Protocol. Please review and update the permit information if necessary.',
+                                        'Es gibt ausstehende Genehmigungen im Zusammenhang mit dem Nagoya-Protokoll. Bitte überprüfe und aktualisiere die Genehmigungsinformationen bei Bedarf.'
+                                    ) ?>
+                                    <br>
+                                    <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $project['_id'] ?>" class="btn warning mt-5">
+                                        <i class="ph ph-pencil"></i> <?= lang('Review permit information', 'Genehmigungsinformationen prüfen') ?>
+                                    </a>
+                                </div>
                             <?php endif; ?>
                         <?php endif; ?>
 
@@ -740,7 +763,7 @@ if ($nagoyaRelevant) {
                         <!-- Countries and scope overview -->
 
                         <?php if ($Settings->hasPermission('nagoya.view')): ?>
-                            <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $project['_id'] ?>" class="btn primary float-right">
+                            <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $project['_id'] ?>" class="btn primary small float-right">
                                 <i class="ph ph-pencil"></i> <?= lang('Review countries', 'Länder bewerten') ?>
                             </a>
                         <?php endif; ?>
@@ -760,7 +783,7 @@ if ($nagoyaRelevant) {
                                             <div>
                                                 <strong><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></strong>
                                                 <div class="small text-muted">
-                                                    <?= lang('Sample Collections:', 'Probenahmen:') ?> <?= $numGroups ?>
+                                                    <?= lang('Sample Collections:', 'Probensammlungen:') ?> <?= $numGroups ?>
                                                     <?php if ($Settings->hasPermission('nagoya.view') && !empty($review['comment'])): ?>
                                                         · <?= htmlspecialchars($review['comment']) ?>
                                                     <?php endif; ?>
