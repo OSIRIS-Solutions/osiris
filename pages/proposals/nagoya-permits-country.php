@@ -53,18 +53,17 @@ foreach ($cursor as $doc) {
 }
 ?>
 
-<h1 class="mb-3">
+<h1 class="mb-0">
+    <i class="ph-duotone ph-file-text"></i>
     <?= lang('ABS permits for', 'ABS-Genehmigungen für') ?>
     <?= ($DB->getCountry($code, lang('name', 'name_de'))) ?>
 </h1>
-<h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
         <i class="ph ph-arrow-left"></i>
         <?= lang('Back to all countries', 'Zurück zu allen Ländern') ?>
     </a>
-</h2>
 
-<div class="d-flex align-items-center gap-10">
+<div class="d-flex align-items-center gap-10 mt-20">
     <b><?= lang('Nagoya status', 'Nagoya-Status') ?>:</b>
     <!-- <?= Nagoya::badge(DB::doc2Arr($project), false) ?> -->
     <?= Nagoya::countryBadge(DB::doc2Arr($country)) ?>
@@ -130,7 +129,13 @@ foreach ($cursor as $doc) {
                         $name      = $p['name'] ?? '';
                         $status    = $p['status'] ?? '';
                         $identifier = $p['identifier'] ?? '';
-                        $provider  = $p['provider'] ?? '';
+                        $ircc      = $p['ircc'] ?? '';
+                        $ircc_link = $p['ircc_link'] ?? '';
+                        $validity  = $p['validity'] ?? '';
+                        // $provider  = $p['provider'] ?? '';
+                        $restricts_transfer = !empty($p['restricts_transfer']);
+                        $restriction_details = $p['restriction_details'] ?? '';
+                        $benefit_sharing = $p['benefit_sharing'] ?? '';
                         $comment   = $p['comment'] ?? '';
                         $checked   = !empty($p['checked']);
                         $docs      = $docsByPermit[$pid] ?? [];
@@ -215,40 +220,121 @@ foreach ($cursor as $doc) {
                             </div>
 
                             <?php if ($status !== 'not-applicable') { ?>
-                                <div class="form-row row-eq-spacing">
-                                    <div class="col-md-4">
-                                        <label class="small mb-1"><?= lang('Identifier / reference', 'Kennung / Referenz') ?></label>
+                                <div class="row row-eq-spacing">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1"><?= lang('Permit number', 'Genehmigungsnummer') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
                                                 class="form-control"
                                                 name="permits[<?= htmlspecialchars($pid) ?>][identifier]"
+                                                placeholder="e.g. 12345-ABCD"
                                                 value="<?= htmlspecialchars($identifier) ?>">
                                         <?php else: ?>
                                             <div class="small"><?= htmlspecialchars($identifier ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="col-md-8">
-                                        <label class="small mb-1"><?= lang('Provider / authority', 'Provider / Behörde') ?></label>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1"><?= lang('IRCC number', 'IRCC-Nummer') ?> <small>(Internationally Recognized Certificate of Compliance)</small></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][provider]"
-                                                value="<?= htmlspecialchars($provider) ?>">
+                                                name="permits[<?= htmlspecialchars($pid) ?>][ircc]"
+                                                placeholder="e.g. IRCC123456"
+                                                value="<?= htmlspecialchars($ircc) ?>">
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($provider ?: '–') ?></div>
+                                            <div class="small"><?= htmlspecialchars($ircc ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
+                                <div class="row row-eq-spacing">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1"><?= lang('Link to IRCC in the ABS Clearing House', 'Link zum IRCC im ABS Clearing-House') ?></label>
+                                        <?php if ($canEditBasic): ?>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="permits[<?= htmlspecialchars($pid) ?>][ircc_link]"
+                                                placeholder="https://absch.cbd.int/ircc/..."
+                                                value="<?= htmlspecialchars($ircc_link) ?>">
+                                        <?php else: ?>
+                                            <div class="small"><?= htmlspecialchars($ircc_link ?: '–') ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1"><?= lang('Validity of the permit', 'Gültigkeit der Genehmigung') ?></label>
+                                        <?php if ($canEditBasic): ?>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="permits[<?= htmlspecialchars($pid) ?>][validity]"
+                                                placeholder="e.g. 2024-2029, indefinite…"
+                                                value="<?= htmlspecialchars($validity) ?>">
+                                        <?php else: ?>
+                                            <div class="small"><?= htmlspecialchars($validity ?: '–') ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- does the permit include restrictuons to transfer generic materials to third party?  -->
                                 <div class="form-group">
-                                    <label class="small mb-1"><?= lang('Comment', 'Kommentar') ?></label>
                                     <?php if ($canEditBasic): ?>
+                                        <input type="hidden" name="permits[<?= htmlspecialchars($pid) ?>][restricts_transfer]" value="0">
                                         <input
+                                            type="checkbox"
+                                            name="permits[<?= htmlspecialchars($pid) ?>][restricts_transfer]"
+                                            value="1"
+                                            onchange="$('#restriction-details-<?= htmlspecialchars($pid) ?>').toggleClass('hidden', !this.checked);"
+                                            <?= $restricts_transfer ? 'checked' : '' ?>>
+                                        <label class="ml-5"><?= lang('The permit includes restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?></label>
+                                    <?php else: ?>
+                                        <div class="small">
+                                            <?php if ($restricts_transfer) { ?>
+                                                <?= lang('The permit includes restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?>
+                                            <?php } else { ?>
+                                                <?= lang('The permit does not include restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält keine Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?>
+                                            <?php } ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- if yes: add comment -->
+                                    <div class="form-group mt-2 <?= $restricts_transfer ? '' : 'hidden' ?>" id="restriction-details-<?= htmlspecialchars($pid) ?>">
+                                        <label class="small mb-1"><?= lang('Please specify the restrictions', 'Bitte geben Sie die Einschränkungen an') ?></label>
+                                        <?php if ($canEditBasic): ?>
+                                            <textarea
+                                                type="text"
+                                                class="form-control"
+                                                name="permits[<?= htmlspecialchars($pid) ?>][restriction_details]"><?= htmlspecialchars($restriction_details) ?></textarea>
+                                        <?php else: ?>
+                                            <div class="small"><?= htmlspecialchars($restriction_details ?: '–') ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Main benefit sharing commitments and deadlines -->
+                                <div class="form-group">
+                                    <?php if ($canEditBasic): ?>
+                                        <label class="small mb-1"><?= lang('Main benefit-sharing commitments and deadlines', 'Hauptverpflichtungen und Fristen zur Vorteilsbeteiligung') ?></label>
+                                        <textarea
                                             type="text"
                                             class="form-control"
-                                            name="permits[<?= htmlspecialchars($pid) ?>][comment]"
-                                            value="<?= htmlspecialchars($comment) ?>">
+                                            name="permits[<?= htmlspecialchars($pid) ?>][benefit_sharing]"><?= htmlspecialchars($p['benefit_sharing'] ?? '') ?></textarea>
+                                    <?php else: ?>
+                                        <div class="small"><?= htmlspecialchars($p['benefit_sharing'] ?? '–') ?></div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <hr>
+
+
+                                <div class="form-group">
+                                    <label class="small mb-1"><?= lang('Comment from ABS team', 'Kommentar vom ABS-Team') ?></label>
+                                    <?php if ($canValidateABS): ?>
+                                        <textarea
+                                            type="text"
+                                            class="form-control"
+                                            name="permits[<?= htmlspecialchars($pid) ?>][comment]"><?= htmlspecialchars($comment) ?></textarea>
                                     <?php else: ?>
                                         <div class="small"><?= htmlspecialchars($comment ?: '–') ?></div>
                                     <?php endif; ?>

@@ -95,11 +95,13 @@ foreach ($countries as $c) {
                 <div class="content">
                     <h4><?= lang('Country review', 'Länderbewertung') ?></h4>
 
-                    <small class="text-muted">
-                        <?= lang('Review of countries as part of the ABS evaluation process was conducted by:', 'Die Bewertung der Länder im Rahmen des ABS-Bewertungsprozesses wurde durchgeführt von:') ?>
-                        <strong><?= htmlspecialchars($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?></strong>
-                        <?= lang('on', 'am') ?> <?= format_date($review['reviewed'] ?? '') ?>
-                    </small>
+                    <?php if (isset($review['reviewed_by'])) { ?>
+                        <small class="text-muted">
+                            <?= lang('Review of countries as part of the ABS evaluation process was conducted by:', 'Die Bewertung der Länder im Rahmen des ABS-Bewertungsprozesses wurde durchgeführt von:') ?>
+                            <strong><?= htmlspecialchars($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
+                            <?= lang('on', 'am') ?> <?= format_date($review['reviewed'] ?? '') ?>
+                        </small>
+                    <?php } ?>
                     <div class="mb-10">
                         <strong><?= lang('Nagoya Party', 'Nagoya-Partei') ?>:</strong>
                         <?php

@@ -3,59 +3,12 @@
 final class Nagoya
 {
   private const MAP = [
-    'compliant' => [
-      'color' => 'success',
-      'icon' => 'ph-check-circle',
-      'title_en' => 'Compliant',
-      'title_de' => 'Compliant'
-    ],
-    'permits-pending' => [
-      'color' => 'signal',
-      'icon' => 'ph-clock-countdown',
-      'title_en' => 'Permits pending',
-      'title_de' => 'Genehmigungen ausstehend'
-    ],
-    'in-scope-eu' => [
-      'color' => 'primary',
-      'icon' => 'ph-seal-check',
-      'title_en' => 'In scope (EU)',
-      'title_de' => 'Im Geltungsbereich (EU)'
-    ],
-    'in-scope-national' => [
-      'color' => 'primary',
-      'icon' => 'ph-seal-check',
-      'title_en' => 'In scope (national)',
-      'title_de' => 'Im Geltungsbereich (national)'
-    ],
-    'abs-relevant' => [
-      'color' => 'danger',
-      'icon' => 'ph-warning-circle',
-      'title_en' => 'ABS-relevant',
-      'title_de' => 'ABS-relevant'
-    ],
-    'awaiting-review' => [
-      'color' => 'signal',
-      'icon' => 'ph-hourglass-medium',
-      'title_en' => 'Awaiting review',
-      'title_de' => 'Wartet auf Prüfung'
-    ],
+    
     'incomplete' => [
       'color' => 'signal',
       'icon' => 'ph-list-magnifying-glass',
       'title_en' => 'Incomplete',
       'title_de' => 'Unvollständig'
-    ],
-    'out-of-scope' => [
-      'color' => 'muted',
-      'icon' => 'ph-circle',
-      'title_en' => 'Out of scope',
-      'title_de' => 'Außerhalb des Geltungsbereichs'
-    ],
-    'not-relevant' => [
-      'color' => 'muted',
-      'icon' => 'ph-x-circle',
-      'title_en' => 'not ABS-relevant',
-      'title_de' => 'nicht ABS-relevant'
     ],
     'abs-review' => [
       'color' => 'signal',
@@ -63,11 +16,11 @@ final class Nagoya
       'title_en' => 'Country review pending',
       'title_de' => 'Länderbewertung ausstehend'
     ],
-    'awaiting-abs-evaluation' => [
-      'color' => 'signal',
-      'icon' => 'ph-file-search',
-      'title_en' => 'Awaiting ABS evaluation',
-      'title_de' => 'Wartet auf ABS-Bewertung'
+    'not-relevant' => [
+      'color' => 'muted',
+      'icon' => 'ph-x-circle',
+      'title_en' => 'not ABS-relevant',
+      'title_de' => 'nicht ABS-relevant'
     ],
     'researcher-input' => [
       'color' => 'signal',
@@ -75,17 +28,29 @@ final class Nagoya
       'title_en' => 'Researcher input required',
       'title_de' => 'Eingabe durch Forschende erforderlich'
     ],
-    'researcher-required' => [
-      'color' => 'danger',
-      'icon' => 'ph-user-gear',
-      'title_en' => 'Researcher input required',
-      'title_de' => 'Eingabe durch Forschende erforderlich'
+    'awaiting-abs-evaluation' => [
+      'color' => 'signal',
+      'icon' => 'ph-file-search',
+      'title_en' => 'Awaiting ABS evaluation',
+      'title_de' => 'Wartet auf ABS-Bewertung'
     ],
-    'both-permits' => [
+    'out-of-scope' => [
+      'color' => 'muted',
+      'icon' => 'ph-circle',
+      'title_en' => 'Out of scope',
+      'title_de' => 'Außerhalb des Geltungsbereichs'
+    ],
+    'permits-pending' => [
       'color' => 'signal',
       'icon' => 'ph-handshake',
       'title_en' => 'Permits pending',
       'title_de' => 'Genehmigungen ausstehend'
+    ],
+    'compliant' => [
+      'color' => 'success',
+      'icon' => 'ph-check-circle',
+      'title_en' => 'Compliant',
+      'title_de' => 'Compliant'
     ],
     'unknown' => [
       'color' => 'muted',

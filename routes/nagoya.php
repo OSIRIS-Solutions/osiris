@@ -11,7 +11,8 @@ Route::get('/nagoya', function () {
 
     // alle Projekte mit nagoya.enabled = true
     $cursor = $osiris->proposals->find([
-        'nagoya.enabled' => true
+        'nagoya.enabled' => true,
+        'status' => ['$ne' => 'rejected'], // keine Ablehnungen
     ]);
 
     $projects      = [];
@@ -27,7 +28,7 @@ Route::get('/nagoya', function () {
 
     foreach ($cursor as $doc) {
         $p = DB::doc2Arr($doc);
-        $nagoya = $p['nagoya'] ?? [];
+        $nagoya = DB::doc2Arr($p['nagoya'] ?? []);
         $countries = $nagoya['countries'] ?? [];
 
         // Aggregation für Länder
@@ -75,7 +76,7 @@ Route::get('/nagoya', function () {
         }
 
         // 2) Scope fehlt / unvollständig (aber relevant)
-        if (($nagoya['relevant'] ?? false) && !($nagoya['scopeComplete'] ?? false)) {
+        if ($nagoyaStatus === 'researcher-input') {
             $cta['scope_missing'][] = [
                 'project' => $p,
                 'url'     => ROOTPATH . "/proposals/nagoya-scope/$idStr",
@@ -83,10 +84,10 @@ Route::get('/nagoya', function () {
         }
 
         // 3) Scope ist komplett, ABS-Team am Zug
-        if (($nagoya['scopeComplete'] ?? false) && $whoIsNext === 'abs-team') {
+        if ($nagoyaStatus == 'awaiting-abs-evaluation') {
             $cta['scope_review_open'][] = [
                 'project' => $p,
-                'url'     => ROOTPATH . "/proposals/nagoya-eval/$idStr",
+                'url'     => ROOTPATH . "/proposals/nagoya-evaluation/$idStr",
             ];
         }
 
