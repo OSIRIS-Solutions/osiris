@@ -31,32 +31,6 @@ Route::get('/migrate/test', function () {
     set_time_limit(6000);
     include BASEPATH . "/header.php";
 
-    // transform nagoya info from proposals
-    $proposals = $osiris->proposals->find(['nagoya' => ['$exists' => true]])->toArray();
-    foreach ($proposals as $proposal) {
-        $enabled = ($proposal['nagoya'] == 'yes');
-        $countries = [];
-        foreach ($proposal['nagoya_countries'] ?? [] as $iso) {
-            $countries[] = [
-                'id' => uniqid(),
-                'code' => $iso,
-                "periods" => [],
-                "scope" => [],
-                "abs" => []
-            ];
-        }
-        $nagoya = [
-            'enabled' => $enabled,
-            'countries' => $countries,
-        ];
-        $osiris->proposals->updateOne(
-            ['_id' => $proposal['_id']],
-            ['$set' => [
-                'nagoya' => $nagoya,
-            ]]
-        );
-    }
-    echo "Nagoya info transformed for " . count($proposals) . " proposals.";
 
     include BASEPATH . "/footer.php";
 });
