@@ -1,6 +1,19 @@
 # Neuigkeiten
 
+<span class="badge float-right">26.11.2025</span>
+<a class="anchor" href="#version-251126" id="version-251126"></a>
 
+## Build 251126
+
+**DOI-Mappings für Publikationstypen**
+
+- Admins können jetzt im Admin-Bereich unter Inhalte > Aktivitäten > DOI-Zuordnung eigene Mappings für Publikationstypen aus CrossRef und DataCite definieren.
+- Diese Mappings werden verwendet, wenn eine Aktivität über eine DOI importiert wird, um den entsprechenden Aktivitätstyp in OSIRIS zu bestimmen.
+- Dadurch können spezifische Publikationstypen besser abgebildet werden, z.B. "preprint" oder "conference-paper".
+
+> Achtung: Beta-Feature. Bitte testet es ausgiebig und gebt uns Feedback, damit wir es weiter verbessern können!
+
+---
 
 <span class="badge float-right">16.11.2025</span>
 <a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
