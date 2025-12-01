@@ -884,17 +884,6 @@ class Fields
                 'label' => lang('Imported at', 'Importiert am'),
                 'type' => 'datetime',
                 'input' => 'date'
-            ],
-            [
-                'id' => 'updated_by',
-                'module_of' => $typeModules['updated_by'] ?? [],
-                'usage' => [
-                    'aggregate',
-                    'filter',
-                    'columns'
-                ],
-                'label' => lang('Updated by (Abbreviation)', 'Aktualisiert von (Kürzel)'),
-                'type' => 'string'
             ]
         ];
 
