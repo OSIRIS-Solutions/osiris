@@ -103,79 +103,79 @@ $filters = array_map(function ($f) {
                                     <tr>
                                         <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
                                         <?php if ($expert) { ?>
-                                        <td>
-                                            <?= dump($rules) ?>
-                                        </td>
+                                            <td>
+                                                <?= dump($rules) ?>
+                                            </td>
                                         <?php } else { ?>
-                                        <td>
-                                            <ul>
-                                                <?php foreach ($rules['rules'] as $key) { ?>
-                                                    <li>
-                                                        <b class="text-primary"><?= $key['id'] ?></b>
-                                                        <code class="code"><?php
-                                                                            switch ($key['operator'] ?? '') {
-                                                                                case 'equal':
-                                                                                    echo '=';
-                                                                                    break;
-                                                                                case 'not_equal':
-                                                                                    echo '!=';
-                                                                                    break;
-                                                                                case 'less':
-                                                                                    echo '<';
-                                                                                    break;
-                                                                                case 'less_or_equal':
-                                                                                    echo '<=';
-                                                                                    break;
-                                                                                case 'greater':
-                                                                                    echo '>';
-                                                                                    break;
-                                                                                case 'greater_or_equal':
-                                                                                    echo '>=';
-                                                                                    break;
-                                                                                case 'contains':
-                                                                                    echo 'CONTAINS';
-                                                                                    break;
-                                                                                case 'not_contains':
-                                                                                    echo 'NOT CONTAINS';
-                                                                                    break;
-                                                                                case 'begins_with':
-                                                                                    echo 'BEGINS WITH';
-                                                                                    break;
-                                                                                case 'ends_with':
-                                                                                    echo 'ENDS WITH';
-                                                                                    break;
-                                                                                case 'between':
-                                                                                    echo 'BETWEEN';
-                                                                                    break;
-                                                                                case 'not_between':
-                                                                                    echo 'NOT BETWEEN';
-                                                                                    break;
-                                                                                case 'is_empty':
-                                                                                    echo 'IS EMPTY';
-                                                                                    break;
-                                                                                case 'is_not_empty':
-                                                                                    echo 'IS NOT EMPTY';
-                                                                                    break;
-                                                                                case 'is_null':
-                                                                                    echo 'IS NULL';
-                                                                                    break;
-                                                                                case 'is_not_null':
-                                                                                    echo 'IS NOT NULL';
-                                                                                    break;
-                                                                                case 'in':
-                                                                                    echo 'IN';
-                                                                                    break;
-                                                                                case 'not_in':
-                                                                                    echo 'NOT IN';
-                                                                                    break;
-                                                                            }
-                                                                            ?></code> <?php if (!empty($key['value'] ?? null)) { ?>
-                                                            <q><?= $key['value'] ?></q>
-                                                        <?php } ?>
-                                                    </li>
-                                                <?php } ?>
-                                            </ul>
-                                        </td>
+                                            <td>
+                                                <ul>
+                                                    <?php foreach ($rules['rules'] as $key) { ?>
+                                                        <li>
+                                                            <b class="text-primary"><?= $key['id'] ?></b>
+                                                            <code class="code"><?php
+                                                                                switch ($key['operator'] ?? '') {
+                                                                                    case 'equal':
+                                                                                        echo '=';
+                                                                                        break;
+                                                                                    case 'not_equal':
+                                                                                        echo '!=';
+                                                                                        break;
+                                                                                    case 'less':
+                                                                                        echo '<';
+                                                                                        break;
+                                                                                    case 'less_or_equal':
+                                                                                        echo '<=';
+                                                                                        break;
+                                                                                    case 'greater':
+                                                                                        echo '>';
+                                                                                        break;
+                                                                                    case 'greater_or_equal':
+                                                                                        echo '>=';
+                                                                                        break;
+                                                                                    case 'contains':
+                                                                                        echo 'CONTAINS';
+                                                                                        break;
+                                                                                    case 'not_contains':
+                                                                                        echo 'NOT CONTAINS';
+                                                                                        break;
+                                                                                    case 'begins_with':
+                                                                                        echo 'BEGINS WITH';
+                                                                                        break;
+                                                                                    case 'ends_with':
+                                                                                        echo 'ENDS WITH';
+                                                                                        break;
+                                                                                    case 'between':
+                                                                                        echo 'BETWEEN';
+                                                                                        break;
+                                                                                    case 'not_between':
+                                                                                        echo 'NOT BETWEEN';
+                                                                                        break;
+                                                                                    case 'is_empty':
+                                                                                        echo 'IS EMPTY';
+                                                                                        break;
+                                                                                    case 'is_not_empty':
+                                                                                        echo 'IS NOT EMPTY';
+                                                                                        break;
+                                                                                    case 'is_null':
+                                                                                        echo 'IS NULL';
+                                                                                        break;
+                                                                                    case 'is_not_null':
+                                                                                        echo 'IS NOT NULL';
+                                                                                        break;
+                                                                                    case 'in':
+                                                                                        echo 'IN';
+                                                                                        break;
+                                                                                    case 'not_in':
+                                                                                        echo 'NOT IN';
+                                                                                        break;
+                                                                                }
+                                                                                ?></code> <?php if (!empty($key['value'] ?? null)) { ?>
+                                                                <q><?= $key['value'] ?></q>
+                                                            <?php } ?>
+                                                        </li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </td>
                                         <?php } ?>
                                     </tr>
 
@@ -385,9 +385,9 @@ $filters = array_map(function ($f) {
                         <select name="aggregate" id="aggregate" class="form-control w-auto">
                             <option value=""><?= lang('Without aggregation (show all)', 'Ohne Aggregation (zeige alles)') ?></option>
                             <?php foreach ($filters as $f) { ?>
-                                <option value="<?=$f['id']?>"><?=$f['label']?></option>
+                                <option value="<?= $f['id'] ?>"><?= $f['label'] ?></option>
                             <?php } ?>
-                            
+
                         </select>
 
                         <!-- remove aggregation -->
@@ -544,6 +544,13 @@ $filters = array_map(function ($f) {
                     if (field == 'id') {
                         r.render = function(data, type, row, meta) {
                             return `<a href="<?= ROOTPATH ?>/activity/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
+                        }
+                    } else if (field == 'authors') {
+                        // in the url, replace 'person' with 'profile'
+                        r.render = function(data, type, row, meta) {
+                            let authorString = data;
+                            authorString = authorString.replace(/\/person\//g, ROOTPATH + '/profile/');
+                            return authorString;
                         }
                     } else if (array_columns[field]) {
                         var array_column = array_columns[field]
