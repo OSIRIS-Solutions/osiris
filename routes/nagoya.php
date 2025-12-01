@@ -8,6 +8,9 @@ Route::get('/nagoya', function () {
     if (!$Settings->hasPermission('nagoya.view')) {
         die("Forbidden");
     }
+    $breadcrumb = [
+        ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll')]
+    ];
 
     // alle Projekte mit nagoya.enabled = true
     $cursor = $osiris->proposals->find([
@@ -135,6 +138,10 @@ Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
     if (!$Settings->hasPermission('nagoya.view')) {
         die("Forbidden");
     }
+    $breadcrumb = [
+        ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll'), 'path' => '/nagoya'],
+        ['name' => lang('Country Overview', 'Länderübersicht')]
+    ];
 
     $code = strtoupper(trim($code));
 
@@ -772,7 +779,6 @@ Route::post('/crud/nagoya/add-permit-note/([A-Za-z0-9]*)', function ($id) {
         exit;
     }
 
-    $countryId = $_POST['country_id'] ?? null;
     $message   = trim($_POST['message'] ?? '');
 
     if ($message === '') {
@@ -792,7 +798,6 @@ Route::post('/crud/nagoya/add-permit-note/([A-Za-z0-9]*)', function ($id) {
 
     $nagoya['permitNotes'][] = [
         'id'         => uniqid('note_'),
-        'country_id' => $countryId,          // can be used later to filter per country
         'message'    => $message,
         'by'         => $username,
         'at'         => date('Y-m-d H:i'),
@@ -871,7 +876,12 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
         $name       = trim($p['name'] ?? '');
         $status     = trim($p['status'] ?? '');
         $identifier = trim($p['identifier'] ?? '');
-        $provider   = trim($p['provider'] ?? '');
+        $ircc       = trim($p['ircc'] ?? '');
+        $ircc_link  = trim($p['ircc_link'] ?? '');
+        $validity    = trim($p['validity'] ?? '');
+        $restricts_transfer = !empty($p['restricts_transfer']);
+        $restriction_details = $p['restriction_details'] ?? '';
+        $benefit_sharing = $p['benefit_sharing'] ?? '';
         $comment    = trim($p['comment'] ?? '');
         $checked    = !empty($p['checked']);
 
@@ -883,7 +893,12 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
             $name === '' &&
             $status === '' &&
             $identifier === '' &&
-            $provider === '' &&
+            $ircc === '' &&
+            $ircc_link === '' &&
+            $validity === '' &&
+            $restricts_transfer === false &&
+            $restriction_details === '' &&
+            $benefit_sharing === '' &&
             $comment === '' &&
             empty($docs)
         ) {
@@ -895,7 +910,12 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
             'name'       => $name,
             'status'     => $status !== '' ? $status : null,
             'identifier' => $identifier !== '' ? $identifier : null,
-            'provider'   => $provider !== '' ? $provider : null,
+            'ircc'       => $ircc !== '' ? $ircc : null,
+            'ircc_link'  => $ircc_link !== '' ? $ircc_link : null,
+            'validity'   => $validity !== '' ? $validity : null,
+            'restricts_transfer' => $restricts_transfer,
+            'restriction_details' => $restriction_details !== '' ? $restriction_details : null,
+            'benefit_sharing' => $benefit_sharing !== '' ? $benefit_sharing : null,
             'comment'    => $comment !== '' ? $comment : null,
             'checked'    => $checked,
             'docs'       => $docs,

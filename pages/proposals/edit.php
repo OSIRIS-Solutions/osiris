@@ -1253,7 +1253,7 @@ if ($is_subproject) {
                     <div class="form-group">
                         <label for="nagoya">
                             <?= lang('
-                            Do you plan to collect, abtain or utilise genetic resources (biological samples) from outside of Germany over the course of this project?
+                            Do you plan to collect, obtain or utilise genetic resources (biological samples) from outside of Germany over the course of this project?
                             ', 'Planst du, im Rahmen dieses Projekts genetische Ressourcen (biologische Proben) von außerhalb Deutschlands zu verwenden, zu sammeln oder zu erhalten? ') ?>
                         </label>
                         <div>

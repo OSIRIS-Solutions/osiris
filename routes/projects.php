@@ -496,14 +496,13 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             $countries[] = [
                 'id' => uniqid(),
                 'code' => $iso,
-                "periods" => [],
-                "scope" => [],
-                "abs" => []
+                'abs' => null
             ];
         }
         $values['nagoya'] = [
             'enabled' => $nagoya,
-            'countries' => $countries
+            'countries' => $countries,
+            'status' => (empty($countries) ? 'incomplete': 'abs-review')
         ];
     } else {
         $values['nagoya'] = [
@@ -749,14 +748,13 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 $countries[] = [
                     'id' => uniqid(),
                     'code' => $iso,
-                    "periods" => [],
-                    "scope" => [],
-                    "abs" => []
+                    'abs' => null
                 ];
             }
             $values['nagoya'] = [
                 'enabled' => $nagoya,
-                'countries' => $countries
+                'countries' => $countries,
+                'status' => (empty($countries) ? 'incomplete': 'abs-review')
             ];
 
             if ($nagoya && !empty($countries)) {

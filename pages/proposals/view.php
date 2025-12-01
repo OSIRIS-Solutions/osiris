@@ -23,6 +23,7 @@ if ($user_project == false && $project['created_by'] == $_SESSION['username']) {
 }
 $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
 $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
+$nagoya_perm = $Settings->hasPermission('nagoya.view');
 
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
@@ -141,7 +142,7 @@ if ($nagoyaRelevant) {
                     } ?>
                     <br>
                     <small class="text-muted">
-                        <?= lang('You don\t have permission<br>to change the status', 'Du hast keine Berechtigung,<br>um den Status zu ändern') ?>
+                        <?= lang('You don\'t have permission<br>to change the status', 'Du hast keine Berechtigung,<br>um den Status zu ändern') ?>
                     </small>
                 </div>
             <?php  } ?>
@@ -576,6 +577,8 @@ if ($nagoyaRelevant) {
                     $countries        = DB::doc2Arr($nagoya['countries'] ?? []);
                     $absCountries     = [];
                     $nonAbsCountries  = [];
+                    $openCountries    = [];
+                    $openCountries    = [];
                     $scopeBlocks      = 0;
                     $absWithScope     = 0;
                     $openCountryReviews = 0;
@@ -607,19 +610,16 @@ if ($nagoyaRelevant) {
                                 $totalPermitDocs += count($docs);
                             }
                         }
-
-                        if ($c['abs'] ?? false) {
+                        if (is_null($c['abs'] ?? null)) {
+                            // skip countries with undefined ABS relevance
+                            $openCountryReviews++;
+                            $openCountries[] = $c;
+                        } elseif ($c['abs'] ?? false) {
                             $absCountries[] = $c;
                             $groups = DB::doc2Arr($c['scope']['groups'] ?? []);
                             $scopeBlocks += count($groups);
                             if (!empty($groups)) {
                                 $absWithScope++;
-                            }
-                            $rev   = $c['review'] ?? [];
-                            $party = $rev['nagoyaParty']    ?? 'unknown';
-                            $own   = $rev['ownABSMeasures'] ?? 'unknown';
-                            if ($party === 'unknown' && $own === 'unknown') {
-                                $openCountryReviews++;
                             }
                         } else {
                             $nonAbsCountries[] = $c;
@@ -674,13 +674,14 @@ if ($nagoyaRelevant) {
                                     white-space: unset;
                                     text-align: center;
                                     line-height: 1.2;
+                                    text-overflow: inherit;
                                 }
                             </style>
                             <div class="wf-bar" id="wf-bar">
                                 <?php foreach (
                                     [
-                                        lang('Countries reviewed', 'Länder geprüft'),
-                                        lang('Scope submitted', 'Scope eingereicht'),
+                                        lang('Country Review', 'Länder-Bewertung'),
+                                        lang('Scope Analysis', 'Scope-Analyse'),
                                         lang('ABS evaluation', 'ABS-Bewertung'),
                                         lang('Permits pending', 'Genehmigungen ausstehend'),
                                         lang('Finalised', 'Abgeschlossen'),
@@ -710,7 +711,7 @@ if ($nagoyaRelevant) {
                                     <li>
                                         <?= $totalCountries ?>
                                         <?= lang('Countries', 'Länder') ?>
-                                        (<?= lang('therof', 'davon') ?> <?= $totalAbs ?> <?= lang('ABS-relevant', 'ABS-relevant') ?>)
+                                        (<?= lang('thereof', 'davon') ?> <?= $totalAbs ?> <?= lang('ABS-relevant', 'ABS-relevant') ?>)
                                     </li>
                                 <?php endif; ?>
                                 <?php if ($totalAbs > 0): ?>
@@ -784,7 +785,7 @@ if ($nagoyaRelevant) {
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if ($Settings->hasPermission('nagoya.view')): ?>
+                        <?php if ($nagoya_perm): ?>
                             <?php if ($nagoyaStatus === 'abs-review' && $openCountryReviews > 0): ?>
                                 <div class="alert signal mt-20" style="--icon: '\e40c';">
                                     <?= lang(
@@ -821,16 +822,27 @@ if ($nagoyaRelevant) {
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <!-- Intro / Hinweis -->
-                        <!-- <p class="text-muted mt-20">
-                            <?= lang(
-                                'This project may involve genetic resources from outside Germany. Below you can find the countries and related ABS information.',
-                                'Dieses Projekt beinhaltet möglicherweise genetische Ressourcen außerhalb Deutschlands. Unten sind die Länder und zugehörigen ABS-Informationen aufgeführt.'
-                            ) ?>
-                        </p> -->
-
                         <!-- Countries and scope overview -->
                         <?php if (!empty($countries)): ?>
+
+                        <?php
+                            if (!empty($openCountries)): ?>
+                                <h4 class="mt-20">
+                                    <i class="ph-duotone ph-globe-stand"></i>
+                                    <?=lang('Open ABS evaluations', 'Offene ABS-Bewertungen')?>
+                                </h4>
+                                 <ul class="list-group">
+                                    <?php foreach ($openCountries as $c): ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></strong>
+                                            </div>
+                                            <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>    
+                            <?php endif; ?>
+                        
                             <?php if ($totalAbs > 0): ?>
                                 <h4 class="mt-20">
                                     <i class="ph-duotone ph-globe-stand"></i>
@@ -861,7 +873,7 @@ if ($nagoyaRelevant) {
                                                 <div class="small text-muted">
                                                     <?= $numGroups ?>
                                                     <?= lang('Sample collection(s)', 'Probensammlung(en)') ?>
-                                                    <?php if ($Settings->hasPermission('nagoya.view') && !empty($review['comment'])): ?>
+                                                    <?php if ($nagoya_perm && !empty($review['comment'])): ?>
                                                         · <?= htmlspecialchars($review['comment']) ?>
                                                     <?php endif; ?>
                                                     <?php if ($permTotal > 0): ?>
@@ -931,7 +943,7 @@ if ($nagoyaRelevant) {
                         <hr class="my-15">
                         <h5 class="mb-5"><?= lang('ABS process history & quick links', 'ABS-Prozessverlauf & Schnellzugriff') ?></h5>
                         <ul class="horizontal small mb-0">
-                            <?php if ($totalCountries > 0): ?>
+                            <?php if ($totalCountries > 0 && $nagoya_perm ): ?>
                                 <li>
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $project['_id'] ?>">
                                         <i class="ph ph-map-trifold"></i>
@@ -947,7 +959,7 @@ if ($nagoyaRelevant) {
                                     </a>
                                 </li>
                             <?php endif; ?>
-                            <?php if ($hasAbsLabel || $Settings->hasPermission('nagoya.view')): ?>
+                            <?php if ($hasAbsLabel && $nagoya_perm): ?>
                                 <li>
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $project['_id'] ?>">
                                         <i class="ph ph-checks"></i>

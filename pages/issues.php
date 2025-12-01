@@ -714,7 +714,7 @@ if (array_sum($a) === 0) {
         <table class="table">
             <?php
             foreach ($issues['nagoya'] as $project_id) {
-                $project = $DB->getProject($project_id);
+                $project = $osiris->proposals->findOne(['_id' => DB::to_ObjectID($project_id)]);
             ?>
                 <tr id="tr-<?= $project_id ?>">
                     <td>

@@ -349,17 +349,6 @@ final class Nagoya
     return lang($label_en, $label_de);
   }
 
-  // public static function countryBadge(array $country, bool $large = false): string
-  // {
-  //   $abs = $country['abs'] ?? null;
-  //   if ($abs === true) {
-  //     return self::makeBadge('danger', 'ph-check-circle', lang('ABS-relevant', 'ABS-relevant'), $large);
-  //   } elseif ($abs === false) {
-  //     return self::makeBadge('success', 'ph-x-circle', lang('Not relevant', 'Nicht relevant'), $large);
-  //   } else {
-  //     return self::makeBadge('', 'ph-question', lang('Unknown', 'Unbekannt'), $large);
-  //   }
-  // }
   /**
    * Country-level Nagoya badge.
    * Shows ABS relevance, A/B/C label and a rough permit state.
@@ -435,6 +424,27 @@ final class Nagoya
       $labelHtml,
       $permitHtml
     );
+  }
+
+  public static function permitStatusBadge(string $status): string
+  {
+    switch ($status) {
+      case 'needed':
+        return '<span class="badge warning"><i class="ph ph-shield-exclamation"></i> ' .
+          htmlspecialchars(lang('Permit needed', 'Genehmigung erforderlich')) . '</span>';
+      case 'requested':
+        return '<span class="badge signal"><i class="ph ph-hourglass"></i> ' .
+          htmlspecialchars(lang('Permit requested', 'Genehmigung beantragt')) . '</span>';
+      case 'granted':
+        return '<span class="badge success"><i class="ph ph-shield-check"></i> ' .
+          htmlspecialchars(lang('Permit granted', 'Genehmigung erteilt')) . '</span>';
+      case 'not-applicable':
+        return '<span class="badge muted"><i class="ph ph-x-circle"></i> ' .
+          htmlspecialchars(lang('Not applicable', 'Nicht zutreffend')) . '</span>';
+      default:
+        return '<span class="badge muted"><i class="ph ph-question"></i> ' .
+          htmlspecialchars(lang('Unknown status', 'Unbekannter Status')) . '</span>';
+    }
   }
 
   public static function ABCbadge(string $label = ''): string

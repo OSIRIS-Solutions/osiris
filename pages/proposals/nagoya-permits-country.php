@@ -20,7 +20,9 @@ if (empty($permits)) {
             'name'      => '',
             'status'    => '',
             'identifier' => '',
-            'provider'  => '',
+            'ircc'      => '',
+            'ircc_link' => '',
+            'validity'  => '',
             'comment'   => '',
             'checked'   => false,
             'docs'      => []
@@ -184,10 +186,13 @@ foreach ($cursor as $doc) {
                                 </div>
 
                                 <div class="text-right small">
+                                    <label class="mb-1 font-weight-bold">
+                                        <?= lang('Status', 'Status') ?>
+                                    </label>
                                     <?php if ($canEditBasic): ?>
                                         <select
                                             name="permits[<?= htmlspecialchars($pid) ?>][status]"
-                                            class="form-control">
+                                            class="form-control d-inline-block w-auto">
                                             <option value="" disabled><?= lang('Status', 'Status') ?></option>
                                             <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                             <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
@@ -195,26 +200,7 @@ foreach ($cursor as $doc) {
                                             <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('Not applicable', 'Nicht zutreffend') ?></option>
                                         </select>
                                     <?php else: ?>
-                                        <?php
-                                        $statusLabel = '';
-                                        $statusClass = 'badge muted';
-                                        if ($status === 'needed') {
-                                            $statusLabel = lang('Needed', 'Erforderlich');
-                                            $statusClass = 'badge signal';
-                                        } elseif ($status === 'requested') {
-                                            $statusLabel = lang('Requested', 'Beantragt');
-                                            $statusClass = 'badge signal';
-                                        } elseif ($status === 'granted') {
-                                            $statusLabel = lang('Granted', 'Erteilt');
-                                            $statusClass = 'badge success';
-                                        } elseif ($status === 'not-applicable') {
-                                            $statusLabel = lang('Not applicable', 'Nicht zutreffend');
-                                            $statusClass = 'badge muted';
-                                        } else {
-                                            $statusLabel = lang('Unknown', 'Unbekannt');
-                                        }
-                                        ?>
-                                        <span class="<?= $statusClass ?>"><?= $statusLabel ?></span>
+                                        <?= Nagoya::permitStatusBadge($status) ?>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -467,7 +453,6 @@ foreach ($cursor as $doc) {
 
         <?php if ($canAddNotes): ?>
             <form method="post" action="<?= ROOTPATH ?>/crud/nagoya/add-permit-note/<?= $id ?>" class="box padded">
-                <input type="hidden" name="country_id" value="<?= htmlspecialchars($countryId) ?>">
                 <div class="form-group">
                     <label class="font-weight-bold small">
                         <?= lang('Add note', 'Notiz hinzufügen') ?>

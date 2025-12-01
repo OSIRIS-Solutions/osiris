@@ -121,11 +121,11 @@ $totalProjects     = count($projects ?? []);
             </div>
 
             <?php if ($cntScopeMissing || $cntScopeReview): ?>
-                <ul class="list-unstyled font-size-12 mb-0">
+                <ul class="list font-size-12 mb-0">
                     <?php foreach (array_slice($cta['scope_review_open'] ?? [], 0, 3) as $item):
                         $p   = $item['project'];
                     ?>
-                        <li class="mb-5">
+                        <li>
                             <a href="<?= htmlspecialchars($item['url']) ?>">
                                 <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
                             </a><br>
@@ -188,11 +188,11 @@ $totalProjects     = count($projects ?? []);
             </div>
 
             <?php if ($cntPermitsPending || $cntPermitsValid): ?>
-                <ul class="list-unstyled font-size-12 mb-0">
+                <ul class="list font-size-12 mb-0">
                     <?php foreach (array_slice($cta['permits_pending'] ?? [], 0, 3) as $item):
                         $p   = $item['project'];
                     ?>
-                        <li class="mb-5">
+                        <li>
                             <a href="<?= htmlspecialchars($item['url']) ?>">
                                 <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
                             </a><br>
@@ -226,110 +226,98 @@ $totalProjects     = count($projects ?? []);
 
 <hr class="my-20">
 
-<div class="row row-eq-spacing">
-    <!-- Projects overview -->
-    <div class="col-md-8">
-        <h2 class="title">
-            <i class="ph-duotone ph-clipboard-text"></i>
-            <?= lang('Nagoya-relevant projects', 'Nagoya-relevante Projekte') ?>
-        </h2>
-        <p class="text-muted font-size-12 mb-10">
-            <?= lang(
-                'All projects with Nagoya/ABS tracking enabled, including A/B/C labels and permit status.',
-                'Alle Projekte mit aktivierter Nagoya/ABS-Verfolgung, inkl. A/B/C-Labels und Genehmigungsstatus.'
-            ) ?>
-        </p>
+<h2 class="title">
+    <i class="ph-duotone ph-clipboard-text"></i>
+    <?= lang('Nagoya-relevant projects', 'Nagoya-relevante Projekte') ?>
+</h2>
+<p class="text-muted font-size-12 mb-10">
+    <?= lang(
+        'All projects with Nagoya/ABS tracking enabled, including A/B/C labels and permit status.',
+        'Alle Projekte mit aktivierter Nagoya/ABS-Verfolgung, inkl. A/B/C-Labels und Genehmigungsstatus.'
+    ) ?>
+</p>
 
-        <?php if (!$totalProjects): ?>
-            <div class="box padded text-muted">
-                <?= lang('No projects with Nagoya information found.', 'Keine Projekte mit Nagoya-Informationen gefunden.') ?>
-            </div>
-        <?php else: ?>
-            <table class="table small" id="nagoya-projects-overview-table">
-                <thead>
-                    <tr>
-                        <th><?= lang('Project', 'Projekt') ?></th>
-                        <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
-                        <th><?= lang('Label', 'Label') ?></th>
-                        <th><?= lang('Countries (ABS)', 'Länder (ABS)') ?></th>
-                        <th><?= lang('Permits', 'Genehmigungen') ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($projects as $p):
-                        $idStr   = (string)($p['_id'] ?? '');
-                        $nagoya  = $p['nagoya'] ?? [];
-                        $countries = $nagoya['countries'] ?? [];
-                        $labelABC  = $nagoya['labelABC'] ?? ($nagoya['label'] ?? null);
-
-                        $absCountries = 0;
-                        $permitTotal  = 0;
-                        $permitOpen   = 0;
-                        foreach ($countries as $c) {
-                            if ($c['abs'] ?? false) {
-                                $absCountries++;
-                            }
-                            foreach ($c['evaluation']['permits'] ?? [] as $perm) {
-                                $permitTotal++;
-                                if (in_array($perm['status'] ?? '', ['needed', 'requested'])) {
-                                    $permitOpen++;
-                                }
-                            }
-                        }
-                    ?>
-                        <tr>
-                            <td>
-                                <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
-                                    <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
-                                </a><br>
-                                <span class="text-muted font-size-12">
-                                    <?= htmlspecialchars($p['id'] ?? '') ?>
-                                </span>
-                            </td>
-                            <td class="font-size-12">
-                                <?= Nagoya::badge(DB::doc2Arr($p), false) ?>
-                            </td>
-                            <td class="font-size-12">
-                                <?php
-                                if ($labelABC === 'A') {
-                                    echo '<span class="badge danger">A</span>';
-                                } elseif ($labelABC === 'B') {
-                                    echo '<span class="badge warning">B</span>';
-                                } elseif ($labelABC === 'C') {
-                                    echo '<span class="badge success">C</span>';
-                                } else {
-                                    echo '<span class="badge muted">–</span>';
-                                }
-                                ?>
-                            </td>
-                            <td class="font-size-12">
-                                <?php if ($absCountries): ?>
-                                    <span class="badge">
-                                        <i class="ph ph-globe"></i> <?= $absCountries ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="text-muted">–</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="font-size-12">
-                                <?php if ($permitTotal): ?>
-                                    <span class="badge <?= $permitOpen ? 'signal' : 'success' ?>">
-                                        <?= $permitTotal ?>
-                                        <?php if ($permitOpen): ?>
-                                            (<?= $permitOpen ?> <?= lang('open', 'offen') ?>)
-                                        <?php endif; ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="text-muted">–</span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
+<?php if (!$totalProjects): ?>
+    <div class="box padded text-muted">
+        <?= lang('No projects with Nagoya information found.', 'Keine Projekte mit Nagoya-Informationen gefunden.') ?>
     </div>
+<?php else: ?>
+    <table class="table small" id="nagoya-projects-overview-table">
+        <thead>
+            <tr>
+                <th><?= lang('Project', 'Projekt') ?></th>
+                <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
+                <th><?= lang('Label', 'Label') ?></th>
+                <th><?= lang('Countries (ABS)', 'Länder (ABS)') ?></th>
+                <th><?= lang('Permits', 'Genehmigungen') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($projects as $p):
+                $p = DB::doc2Arr($p);
+                $idStr   = (string)($p['_id'] ?? '');
+                $nagoya  = $p['nagoya'] ?? [];
+                $countries = $nagoya['countries'] ?? [];
+                $labelABC  = $nagoya['label'] ?? '';
 
+                $absCountries = 0;
+                $permitTotal  = 0;
+                $permitOpen   = 0;
+                foreach ($countries as $c) {
+                    if ($c['abs'] ?? false) {
+                        $absCountries++;
+                    }
+                    foreach ($c['evaluation']['permits'] ?? [] as $perm) {
+                        $permitTotal++;
+                        if (in_array($perm['status'] ?? '', ['needed', 'requested'])) {
+                            $permitOpen++;
+                        }
+                    }
+                }
+            ?>
+                <tr>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
+                            <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                        </a><br>
+                        <span class="text-muted font-size-12">
+                            <?= htmlspecialchars($p['id'] ?? '') ?>
+                        </span>
+                    </td>
+                    <td class="font-size-12">
+                        <?= Nagoya::badge($p, false) ?>
+                    </td>
+                    <td class="font-size-12">
+                        <?= Nagoya::ABCbadge($labelABC) ?>
+                    </td>
+                    <td class="font-size-12">
+                        <?php if ($absCountries): ?>
+                            <span class="badge">
+                                <i class="ph ph-globe"></i> <?= $absCountries ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="text-muted">–</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="font-size-12">
+                        <?php if ($permitTotal): ?>
+                            <span class="badge <?= $permitOpen ? 'signal' : 'success' ?>">
+                                <?= $permitTotal ?>
+                                <?php if ($permitOpen): ?>
+                                    (<?= $permitOpen ?> <?= lang('open', 'offen') ?>)
+                                <?php endif; ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="text-muted">–</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<div class="row row-eq-spacing">
     <!-- Country overview (BfN entry point) -->
     <div class="col-md-4">
         <h2 class="title">
@@ -397,6 +385,93 @@ $totalProjects     = count($projects ?? []);
             </table>
         <?php endif; ?>
     </div>
+
+    <!-- Permits overview -->
+    <div class="col-md-8">
+        <h2 class="title">
+            <i class="ph-duotone ph-certificate"></i>
+            <?= lang('Permits overview', 'Genehmigungsübersicht') ?>
+        </h2>
+        <p class="text-muted font-size-12 mb-10">
+            <?= lang(
+                'Quick access to all permits in the system.',
+                'Schneller Zugriff auf alle vorhandenen Genehmigungen.'
+            ) ?>
+        </p>
+        <?php
+
+        $permits = $osiris->proposals->aggregate(
+            [
+                ['$match' => ['nagoya.countries.evaluation.permits' => ['$exists' => true, '$ne' => []]]],
+                ['$project' => ['name' => 1, 'nagoya.countries' => 1]],
+                ['$unwind' => '$nagoya.countries'],
+                ['$unwind' => '$nagoya.countries.evaluation.permits'],
+                ['$project' => [
+                    '_id' => 0,
+                    'projectId' => ['$toString' => '$_id'],
+                    'projectName' => '$name',
+                    'countryId' => '$nagoya.countries.id',
+                    'countryCode' => '$nagoya.countries.code',
+                    'ircc' => '$nagoya.countries.evaluation.permits.ircc',
+                    'permitId' => '$nagoya.countries.evaluation.permits.id',
+                    'permitName' => '$nagoya.countries.evaluation.permits.name',
+                    'status' => '$nagoya.countries.evaluation.permits.status',
+                    'ircc' => '$nagoya.countries.evaluation.permits.ircc'
+                ]]
+            ]
+        )->toArray();
+        if (empty($permits)):
+        ?>
+            <div class="box padded text-muted">
+                <?= lang('No permits found in the system.', 'Keine Genehmigungen im System gefunden.') ?>
+            </div>
+        <?php else: ?>
+
+            <table class="table small" id="permits-overview-table">
+                <thead>
+                    <tr>
+                        <th><?= lang('Project', 'Projekt') ?></th>
+                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('Permit', 'Genehmigung') ?></th>
+                        <th><?= lang('Status', 'Status') ?></th>
+                        <th><?= lang('IRCC', 'IRCC') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($permits as $perm):
+                        $pid = $perm['projectId'] ?? null;
+                        $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($pid)]) ?? [];
+                    ?>
+                        <tr>
+                            <td>
+                                <a href="<?= ROOTPATH ?>/proposals/view/<?= htmlspecialchars($pid) ?>#nagoya">
+                                    <strong><?= htmlspecialchars($perm['projectName'] ?? '') ?></strong>
+                                </a>
+                            </td>
+                            <td class="font-size-12">
+                                <?php
+                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('name', 'name_de'));
+                                ?>
+                                <i class="ph ph-globe"></i>
+                                <?= htmlspecialchars($countryName) ?>
+                            </td>
+                            <td class="font-size-12">
+                                <?= htmlspecialchars($perm['permitName'] ?? '–') ?>
+                            </td>
+                            <td class="font-size-12">
+                                <?= Nagoya::permitStatusBadge($perm['status'] ?? '') ?>
+                            </td>
+                            <td class="font-size-12">
+                                <?= htmlspecialchars($perm['ircc'] ?? '–') ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        <?php endif; ?>
+    </div>
 </div>
 
 <script>
@@ -416,6 +491,17 @@ $totalProjects     = count($projects ?? []);
             $('#country-overview-table').DataTable({
                 "order": [
                     [1, "desc"]
+                ],
+                "pageLength": 10,
+                "layout": {
+                    "topEnd": null
+                }
+            });
+        }
+        if ($('#permits-overview-table tbody tr').length > 1) {
+            $('#permits-overview-table').DataTable({
+                "order": [
+                    [2, "desc"]
                 ],
                 "pageLength": 10,
                 "layout": {

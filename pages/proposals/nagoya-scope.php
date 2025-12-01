@@ -203,6 +203,10 @@ $utilizationOptions = [
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Geographical scope', 'Geographischer Scope') ?>
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'geo');">
+                                            <i class="ph ph-copy"></i>
+                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                        </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
                                         <?= lang(
@@ -213,13 +217,17 @@ $utilizationOptions = [
                                     <textarea
                                         name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][geo]"
                                         rows="3"
-                                        class="form-control"><?= htmlspecialchars($g['geo'] ?? '') ?></textarea>
+                                        class="form-control geo"><?= htmlspecialchars($g['geo'] ?? '') ?></textarea>
                                 </div>
 
                                 <!-- Temporal scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Temporal scope', 'Zeitlicher Scope') ?>
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'temporal');">
+                                            <i class="ph ph-copy"></i>
+                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                        </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
                                         <?= lang(
@@ -232,7 +240,7 @@ $utilizationOptions = [
                                             <input
                                                 type="text"
                                                 name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][temporal]"
-                                                class="form-control"
+                                                class="form-control temporal"
                                                 placeholder="e.g. 2018–2020"
                                                 value="<?= htmlspecialchars($g['temporal'] ?? '') ?>">
                                         </div>
@@ -241,7 +249,7 @@ $utilizationOptions = [
                                                 <input
                                                     type="checkbox"
                                                     name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][temporal_ongoing]"
-                                                    value="1"
+                                                    value="1" class="temporal_ongoing"
                                                     <?= !empty($g['temporal_ongoing']) ? 'checked' : '' ?>>
                                                 <span class="ml-5">
                                                     <?= lang('Ongoing / still collecting samples', 'Laufend / Proben werden noch gesammelt') ?>
@@ -255,6 +263,10 @@ $utilizationOptions = [
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Material scope', 'Material-Scope') ?>
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'material');">
+                                            <i class="ph ph-copy"></i>
+                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                        </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
                                         <?= lang(
@@ -264,7 +276,7 @@ $utilizationOptions = [
                                     </small>
                                     <select
                                         name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][material][]"
-                                        class="form-control scope-multi-select"
+                                        class="form-control scope-multi-select material"
                                         multiple>
                                         <?php foreach ($materialOptions as $opt): ?>
                                             <option value="<?= htmlspecialchars($opt) ?>"
@@ -291,6 +303,10 @@ $utilizationOptions = [
                                 <div class="form-group mb-0">
                                     <label class="font-weight-bold required">
                                         <?= lang('Utilization scope', 'Nutzung / Utilisation-Scope') ?>
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'utilization');">
+                                            <i class="ph ph-copy"></i>
+                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                        </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
                                         <?= lang(
@@ -300,7 +316,7 @@ $utilizationOptions = [
                                     </small>
                                     <select
                                         name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][utilization][]"
-                                        class="form-control scope-multi-select"
+                                        class="form-control scope-multi-select utilization"
                                         multiple>
                                         <?php foreach ($utilizationOptions as $opt): ?>
                                             <option value="<?= htmlspecialchars($opt) ?>"
@@ -447,6 +463,48 @@ $utilizationOptions = [
         // Initiale Selectize-Initialisierung
         initScopeSelectize($(document));
 
+        // copy from above
+        window.copyFromAbove = function(btn, countryId, groupIndex, fieldType) {
+            var $btn = $(btn);
+            var $formGroup = $btn.closest('.form-group');
+            var $currentGroup = $btn.closest('.scope-group');
+            var $prevGroup = $currentGroup.prev('.scope-group');
+            if ($prevGroup.length === 0) return; // no previous group
+           // find field in formGroup and get equivalent field from previous group
+            var $currentField, $prevField;
+            if (fieldType === 'geo') {
+                $currentField = $formGroup.find('textarea.geo');
+                $prevField = $prevGroup.find('textarea.geo');
+            } else if (fieldType === 'temporal') {
+                $currentField = $formGroup.find('input.temporal');
+                $prevField = $prevGroup.find('input.temporal');
+                var $currentOngoing = $formGroup.find('input.temporal_ongoing');
+                var $prevOngoing = $prevGroup.find('input.temporal_ongoing');
+            } else if (fieldType === 'material') {
+                $currentField = $formGroup.find('select.material')[0].selectize;
+                $prevField = $prevGroup.find('select.material')[0].selectize;
+            } else if (fieldType === 'utilization') {
+                $currentField = $formGroup.find('select.utilization')[0].selectize;
+                $prevField = $prevGroup.find('select.utilization')[0].selectize;
+            } else {
+                return; // unknown field type
+            }
+
+            // copy value(s)
+            if (fieldType === 'material' || fieldType === 'utilization') {
+                var values = $prevField.getValue();
+                $currentField.clear();
+                $currentField.setValue(values);
+            } else if (fieldType === 'temporal') {
+                $currentField.val($prevField.val());
+                // also copy ongoing checkbox
+                var ongoingChecked = $prevOngoing.is(':checked');
+                $currentOngoing.prop('checked', ongoingChecked);
+            } else {
+                $currentField.val($prevField.val());
+            }
+        };
+
         // Neuen Scope-Block hinzufügen
         $('.add-scope-group').on('click', function() {
             var cid = $(this).data('country');
@@ -455,7 +513,7 @@ $utilizationOptions = [
 
             var $last = $wrap.find('.scope-group').last();
             var $clone = $last.clone();
-
+            $clone.find('.btn.small.hidden').removeClass('hidden');
             // Index hochzählen
             $clone.attr('data-index', next);
             $clone.find('strong').first().text('<?= lang('Scope block', 'Scope-Block') ?> ' + (next + 1));
