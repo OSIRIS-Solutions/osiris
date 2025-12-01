@@ -479,7 +479,6 @@ $cart = readCart();
                         activeFilters.find('.badge').find('span').each(function(i, el) {
                             filters.push(el.innerHTML)
                         })
-                        console.log(filters);
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
@@ -497,7 +496,6 @@ $cart = readCart();
                         activeFilters.find('.badge').find('span').each(function(i, el) {
                             filters.push(el.innerHTML)
                         })
-                        console.log(filters);
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
@@ -578,7 +576,6 @@ $cart = readCart();
                     sortable: false,
                     className: 'unbreakable',
                     render: function(data, type, row) {
-                        console.log(cart);
                         var links = `<a class='btn link square' href='${ROOTPATH}/activities/view/${data}' title='<?= lang("View activity", "Aktivität ansehen") ?>'>
                                 <i class='ph ph-arrow-fat-line-right'></i>
                             </a>
