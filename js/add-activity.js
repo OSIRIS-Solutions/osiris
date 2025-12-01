@@ -4,6 +4,17 @@ let SELECTED_CAT = null;
 let SELECTED_TYPE = null;
 let DOIDATA = null;
 
+// escape HTML special chars to avoid breaking the surrounding markup
+const escapeHtml = (str) => {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
 function togglePubType(type, callback = () => { }) {
     // type = type.trim().toLowerCase().replace(" ", "-");
     // translate type with mappings
@@ -56,11 +67,16 @@ function togglePubType(type, callback = () => { }) {
                 SELECTED_TYPE.description ?? "",
                 SELECTED_TYPE.description_de ?? ""
             );
-            if (descr != "") descr = "<i class='ph ph-info'></i> " + descr;
-            $("#type-description").html(descr);
+
+            if (descr != "") {
+                // keep the icon as HTML, but escape the description text
+                $("#type-description").html("<i class='ph ph-info'></i> " + escapeHtml(descr));
+            } else {
+                $("#type-description").empty();
+            }
 
             var examples = SELECTED_TYPE.example ?? "";
-            $("#type-examples").html(examples);
+            $("#type-examples").html(escapeHtml(examples));
 
             // show correct subtype buttons
             var form = $("#publication-form");
