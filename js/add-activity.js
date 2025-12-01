@@ -710,6 +710,8 @@ function getJournalAlex(name) {
         // issn search
         url += '/issn:' + name
     } else {
+        // escape name for URL
+        name = encodeURIComponent(name)
         url += '?search=' + name
         // show only results with ISSN
         data['filter'] = 'has_issn:true'
