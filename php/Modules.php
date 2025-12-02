@@ -2845,7 +2845,7 @@ class Modules
             case "online-ahead-of-print":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="online-ahead-of-print">
-                    <input type="hidden" name="values[online_ahead_of_print]" value="0">
+                    <input type="hidden" name="values[epub]" value="0">
                     <div class="custom-checkbox <?= isset($_GET['epub']) ? 'text-danger' : '' ?>" id="epub-div">
                         <input type="checkbox" id="epub" value="1" name="values[epub]" <?= (!isset($_GET['epub']) && $this->val('epub', false)) ? 'checked' : '' ?>>
                         <label for="epub"><?= $label ?></label>

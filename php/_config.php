@@ -134,7 +134,11 @@ function validateValues($values, $DB)
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
-        } else if (in_array($key, ['aoi', 'epub', 'correction'])) {
+        } else if ($key === 'epub'){
+            $values['epub-delay'] = endOfCurrentQuarter(true);
+            // value is boolean
+            $values[$key] = boolval($value);
+        } else if (in_array($key, ['aoi', 'correction'])) {
             $values[$key] = true;
         } else if ($value === '') {
             $values[$key] = null;
@@ -174,11 +178,6 @@ function validateValues($values, $DB)
     }
 
     if (isset($values['journal']) && !isset($values['role']) && isset($values['year'])) {
-        // it is an article
-        // since non-checked boxes are not shown in the posted data,
-        // it is necessary to get false values
-        if (!isset($values['epub'])) $values['epub'] = false;
-        else $values['epub-delay'] = endOfCurrentQuarter(true);
         if (!isset($values['open_access']) || !$values['open_access']) {
             $values['open_access'] = $DB->get_oa($values);
         }
