@@ -514,6 +514,7 @@ Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
 
     // add History entry
     $history = $project['history'] ?? [];
+    $countryName = $DB->getCountry($countryCode, 'name');
     $history[] = [
         'date'      => date('Y-m-d'),
         'user'      => $_SESSION['username'],
