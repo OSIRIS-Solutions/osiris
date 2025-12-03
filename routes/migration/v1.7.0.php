@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Migration script for OSIRIS v1.6.3
+ * Migration script for OSIRIS v1.7.0
  * Transforms Nagoya permit info in proposals to new format.
  */
 

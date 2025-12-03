@@ -318,6 +318,13 @@ Route::get('/migrate', function () {
         ob_flush();
         $rerender = false;
     }
+    
+    if (version_compare($DBversion, '1.7.0', '<')) {
+        include BASEPATH . "/routes/migration/v1.7.0.php";
+        flush();
+        ob_flush();
+        $rerender = false;
+    }
 
     if ($rerender) {
         echo "<p>Rerender activities, please wait ...</p>";
