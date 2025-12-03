@@ -18,14 +18,52 @@ function apikey_check($key = null)
 {
     $Settings = new Settings();
     $APIKEY = $Settings->get('apikey');
-    // always true if API Key is not set
-    if (!isset($APIKEY) || empty($APIKEY)) return true;
-    // return true for same page origin
-    if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') return true;
-    // check if API key is valid
-    if ($APIKEY == $key) return true;
-    // otherwise return false
+    // dump($_SERVER);
+    // 1) Logged-in user via session: always allow
+    if (($_SESSION['loggedin'] ?? false) && !empty($_SESSION['username'])) {
+        if (isset($_SERVER['HTTP_SEC_FETCH_SITE'])) {
+            if ($_SERVER['HTTP_SEC_FETCH_SITE'] === 'same-site' || $_SERVER['HTTP_SEC_FETCH_SITE'] === 'same-origin') {
+                return true;
+            }
+        } else {
+            // no Sec-Fetch-Site header (old browser/proxy) → fallback: same host via Referer
+            if (!empty($_SERVER['HTTP_REFERER'])) {
+                $refHost = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+                $host    = $_SERVER['HTTP_HOST'] ?? '';
+                if ($refHost === $host) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // 2) If no API key is configured, nothing to check
+    if (empty($APIKEY)) {
+        return true;
+    }
+
+    // 3) Check query param ?apikey=...
+    if ($APIKEY === $key) {
+        return true;
+    }
+
+    // 4) Optional: allow header X-API-Key
+    if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $APIKEY) {
+        return true;
+    }
+
+    // 5) Everything else: no access
     return false;
+    // $Settings = new Settings();
+    // $APIKEY = $Settings->get('apikey');
+    // // always true if API Key is not set
+    // if (!isset($APIKEY) || empty($APIKEY)) return true;
+    // // return true for same page origin
+    // if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') return true;
+    // // check if API key is valid
+    // if ($APIKEY == $key) return true;
+    // // otherwise return false
+    // return false;
 }
 
 function return_permission_denied()
