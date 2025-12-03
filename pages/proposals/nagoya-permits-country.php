@@ -432,18 +432,23 @@ foreach ($cursor as $doc) {
     <div class="col-md-4">
 
         <?php if (!empty($permitNotes)): ?>
-            <div class="box padded permit-notes-list mb-10" style="max-height: 60vh; overflow-y:auto;">
-                <?php foreach (array_reverse($permitNotes) as $note): ?>
-                    <div class="border rounded p-5 mb-5">
-                        <div class="d-flex justify-content-between mb-5">
-                            <strong><i class="ph-duotone ph-user text-primary"></i> <?= htmlspecialchars($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
-                            <span class="text-muted"><?= !empty($note['at']) ? format_date($note['at']) : '' ?></span>
-                        </div>
-                        <div class="">
-                            <?= nl2br(htmlspecialchars($note['message'] ?? '')) ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <div class="box permit-notes-list mb-10" style="max-height: 60vh; overflow-y:auto;">
+                <table class="table simple small">
+
+                    <?php foreach (array_reverse($permitNotes) as $note): ?>
+                        <tr>
+                            <td>
+                                <div class="d-flex justify-content-between mb-5">
+                                    <strong><i class="ph-duotone ph-user text-primary"></i> <?= htmlspecialchars($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
+                                    <span class="text-muted"><?= !empty($note['at']) ? format_date($note['at']) : '' ?></span>
+                                </div>
+                                <div class="">
+                                    <?= nl2br(htmlspecialchars($note['message'] ?? '')) ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
             </div>
         <?php else: ?>
             <div class="box padded text-muted">

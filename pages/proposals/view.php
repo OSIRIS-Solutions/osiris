@@ -537,9 +537,6 @@ if ($nagoyaRelevant) {
                                                             <?= lang('Nagoya permit for', 'Nagoya-Genehmigung für') ?> <?= $DB->getCountry($doc['country_code'], lang('name', 'name_de')) ?>
                                                     </a>
                                                     <?php } ?>
-                                                    
-                                                    
-                                                    
                                                 </div>
                                             </td>
                                         </tr>
