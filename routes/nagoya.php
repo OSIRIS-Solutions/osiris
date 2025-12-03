@@ -396,7 +396,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
     $found = false;
     $country = null;
     foreach ($countries as $c) {
-        if (($c['id'] ?? '') === $cid) {
+        if (($c['id'] ?? '') === $cid || ($c['code'] ?? '') === $cid) {
             $found = true;
             $country = $c;
             break;

@@ -28,7 +28,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
-$documents = $osiris->uploads->find(['type' => 'proposals', 'id' => $id])->toArray();
+$documents = $osiris->uploads->find(['type' => ['$in' => ['proposals', 'nagoya-permit']], 'id' => $id])->toArray();
 
 $connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
 
@@ -316,11 +316,13 @@ if ($nagoyaRelevant) {
                     <?php } ?>
 
                     <!-- documents -->
-                    <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
-                        <i class="ph ph-file-text"></i>
-                        <?= lang('Documents', 'Dokumente') ?>
-                        <span class="index"><?= count($documents) ?></span>
-                    </button>
+                    <?php if ($Settings->hasPermission('proposals.view-documents') || $user_project) { ?>
+                        <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
+                            <i class="ph ph-file-text"></i>
+                            <?= lang('Documents', 'Dokumente') ?>
+                            <span class="index"><?= count($documents) ?></span>
+                        </button>
+                    <?php } ?>
 
                     <?php if ($nagoyaRelevant) { ?>
                         <button class="btn font-weight-bold" onclick="selectTab('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
@@ -521,12 +523,24 @@ if ($nagoyaRelevant) {
                                                 </a>
                                                 <?= $doc['description'] ?? '' ?>
                                                 <br>
-                                                <small class="text-muted">
-                                                    <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
+                                                <div class="font-size-12 text-muted d-flex align-items-center justify-content-between">
+                                                    <div>
+                                                        <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
                                                     <br>
                                                     <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
                                                     <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
-                                                </small>
+                                                    </div>
+                                                    <?php if (isset($doc['country_code'])) { ?>
+                                                            
+                                                    <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>/<?= $doc['country_code'] ?>">
+                                                        <i class="ph ph-certificate"></i>
+                                                            <?= lang('Nagoya permit for', 'Nagoya-Genehmigung für') ?> <?= $DB->getCountry($doc['country_code'], lang('name', 'name_de')) ?>
+                                                    </a>
+                                                    <?php } ?>
+                                                    
+                                                    
+                                                    
+                                                </div>
                                             </td>
                                         </tr>
                                 <?php
@@ -774,7 +788,6 @@ if ($nagoyaRelevant) {
                             echo '</table>';
                         } else if (isset($h['details']) && !empty($h['details'])) {
                             echo '<div class="mt-10">' . $h['details'] . '</div>';
-
                         } else if ($h['type'] == 'edited') {
                             echo lang('No changes tracked.', 'Es wurden keine Änderungen verfolgt.');
                         }
