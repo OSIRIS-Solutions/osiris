@@ -713,7 +713,7 @@ if ($nagoyaRelevant) {
                 <?php foreach (($project['history']) as $h) {
                     if (!isset($h['type'])) continue;
                 ?>
-                    <div class="box p-20">
+                    <div class="">
                         <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
                         <h5 class="m-0">
                             <?php if ($h['type'] == 'created') {
@@ -722,6 +722,8 @@ if ($nagoyaRelevant) {
                                 echo lang('Edited by ', 'Bearbeitet von ');
                             } else if ($h['type'] == 'imported') {
                                 echo lang('Imported by ', 'Importiert von ');
+                            } else if ($h['type'] == 'nagoya') {
+                                echo lang('Nagoya Protocol update by ', 'Nagoya-Protokoll Aktualisierung von ');
                             } else {
                                 echo $h['type'] . lang(' by ', ' von ');
                             }
@@ -738,7 +740,7 @@ if ($nagoyaRelevant) {
                             echo '<div class="font-weight-bold mt-10">' .
                                 lang('Changes to the project:', 'Änderungen am Projekt:') .
                                 '</div>';
-                            echo '<table class="table simple w-auto small border px-10">';
+                            echo '<table class="table w-auto small border px-10">';
                             foreach ($h['changes'] as $key => $change) {
                                 $before = $change['before'] ?? '<em>empty</em>';
                                 $after = $change['after'] ?? '<em>empty</em>';
@@ -760,7 +762,7 @@ if ($nagoyaRelevant) {
                                 lang('Status at this time point:', 'Status zu diesem Zeitpunkt:') .
                                 '</div>';
 
-                            echo '<table class="table simple w-auto small border px-10">';
+                            echo '<table class="table w-auto small border px-10">';
                             foreach ($h['data'] as $key => $datum) {
                                 echo '<tr>
                                 <td class="pl-0">
@@ -770,6 +772,9 @@ if ($nagoyaRelevant) {
                             </tr>';
                             }
                             echo '</table>';
+                        } else if (isset($h['details']) && !empty($h['details'])) {
+                            echo '<div class="mt-10">' . $h['details'] . '</div>';
+
                         } else if ($h['type'] == 'edited') {
                             echo lang('No changes tracked.', 'Es wurden keine Änderungen verfolgt.');
                         }
