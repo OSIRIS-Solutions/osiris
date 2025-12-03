@@ -129,6 +129,10 @@ Route::get('/nagoya', function () {
 }, 'login');
 
 
+Route::get('/nagoya/proposal/([A-Za-z0-9_-]*)', function ($id) {
+
+});
+
 Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Nagoya.php";
@@ -285,6 +289,32 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    if (DB::is_ObjectID($id)) {
+        $mongo_id = $DB->to_ObjectID($id);
+        $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    } else {
+        $project = $osiris->proposals->findOne(['name' => $id]);
+        $id = strval($project['_id'] ?? '');
+    }
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
+        die;
+    }
+    $breadcrumb = [
+        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => lang('Edit Nagoya Countries', 'Nagoya-Länder bearbeiten')]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/proposals/nagoya-countries-edit.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Nagoya.php";
@@ -385,6 +415,92 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
 
 
 /** POST Routes */
+
+Route::post('/crud/nagoya/remove-country/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Nagoya.php";
+    $countryId = $_POST['countryId'] ?? '';
+
+    $errors = [];
+    $mongo_id = $DB->to_ObjectID($id);
+    $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
+        header("Location: " . ROOTPATH . "/projects/view/$id?error=project-not-found-or-no-nagoya");
+        die;
+    }
+
+    $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
+    $newCountries = [];
+    $found = false;
+    foreach ($countries as $c) {
+        if (($c['id'] ?? '') === $countryId) {
+            $found = true;
+            continue; // skip
+        }
+        $newCountries[] = $c;
+    }
+    if (!$found) {
+        header("Location: " . ROOTPATH . "/proposals/nagoya-countries/$id?error=country-not-found");
+        die;
+    }
+
+    // save
+    $nagoya = DB::doc2Arr($project['nagoya']);
+    $nagoya['countries'] = $newCountries;
+    $nagoya = Nagoya::writeThrough(DB::doc2Arr($project), $nagoya); // setzt nagoya.status etc.
+
+    $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya]]);
+    $_SESSION['msg'] = lang("Country removed from Nagoya review.", "Land aus Nagoya-Bewertung entfernt.");
+    $_SESSION['msg_type'] = 'success';
+
+    header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id");
+});
+
+Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Nagoya.php";
+    $countryCode = $_POST['countryCode'] ?? '';
+    if ($countryCode === '') {
+        header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id?error=no-country-code");
+        die;
+    }
+
+    $errors = [];
+    $mongo_id = $DB->to_ObjectID($id);
+    $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
+    if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
+        header("Location: " . ROOTPATH . "/projects/view/$id?error=project-not-found-or-no-nagoya");
+        die;
+    }
+
+    $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
+    // check if already exists
+    foreach ($countries as $c) {
+        if (($c['code'] ?? '') === $countryCode) {
+            header("Location: " . ROOTPATH . "/proposals/nagoya-countries/$id?error=country-already-added");
+            die;
+        }
+    }
+
+    // add new country
+    $newCountry = [
+        'id'   => uniqid(),
+        'code' => $countryCode,
+        'abs'  => null
+    ];
+    $countries[] = $newCountry;
+
+    // save
+    $nagoya = DB::doc2Arr($project['nagoya']);
+    $nagoya['countries'] = $countries;
+    $nagoya = Nagoya::writeThrough(DB::doc2Arr($project), $nagoya); // setzt nagoya.status etc.
+
+    $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya]]);
+    $_SESSION['msg'] = lang("Country added to Nagoya review.", "Land zur Nagoya-Bewertung hinzugefügt.");
+    $_SESSION['msg_type'] = 'success';
+
+    header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id");
+});
 
 Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";

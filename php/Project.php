@@ -530,14 +530,8 @@ class Project extends Vocabulary
 
     public function isNagoyaRelevant()
     {
-
         $nagoya = $this->project['nagoya'] ?? [];
         return ($nagoya['enabled'] ?? false);
-    }
-
-    public function getNagoyaCountries()
-    {
-        return $this->project['nagoya']['countries'] ?? [];
     }
 
     public function getCountryRole($role)

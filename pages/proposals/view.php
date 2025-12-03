@@ -823,8 +823,8 @@ if ($nagoyaRelevant) {
                         <?php endif; ?>
 
                         <!-- Countries and scope overview -->
-                        <?php if (!empty($countries)): ?>
 
+                        <?php if (!empty($countries)): ?>
                         <?php
                             if (!empty($openCountries)): ?>
                                 <h4 class="mt-20">
@@ -943,6 +943,15 @@ if ($nagoyaRelevant) {
                         <hr class="my-15">
                         <h5 class="mb-5"><?= lang('ABS process history & quick links', 'ABS-Prozessverlauf & Schnellzugriff') ?></h5>
                         <ul class="horizontal small mb-0">
+                            <!-- edit countries button -->
+                        <?php if ($user_project || $nagoya_perm): ?>
+                            <li>
+                                <a href="<?= ROOTPATH ?>/proposals/nagoya-countries-edit/<?= $project['_id'] ?>">
+                                    <i class="ph ph-globe-stand"></i>
+                                    <?= lang('Edit countries', 'Länder bearbeiten') ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                             <?php if ($totalCountries > 0 && $nagoya_perm ): ?>
                                 <li>
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $project['_id'] ?>">

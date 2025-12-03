@@ -52,6 +52,20 @@ if (isset($project['parent_id'])) {
 }
 
 $subproject = $project['subproject'] ?? false;
+
+$nagoyaRelevant = false;
+// Nagoya information might be stored in proposal
+if ($Settings->featureEnabled('nagoya') && isset($project['proposal_id'])) {
+    // 
+    $proposal = $osiris->proposals->findOne(['_id' => $project['proposal_id']]);
+    $proposal = $DB->doc2Arr($proposal);
+    $nagoyaRelevant = (isset($proposal['nagoya']) && ($proposal['nagoya']['enabled'] ?? false));
+
+    if ($nagoyaRelevant) {
+        require_once BASEPATH . "/php/Nagoya.php";
+        $nagoya_status_color = Nagoya::statusColor($proposal['nagoya']['status'] ?? 'unknown');
+    }
+}
 ?>
 
 <style>
@@ -191,6 +205,26 @@ if ($topicsEnabled) {
     <?php } ?>
 </div>
 
+<!-- Nagoya information -->
+
+<?php if ($nagoyaRelevant) { ?>
+    <div class="nagoya-message">
+        <?php
+        $whoIsNext = Nagoya::whoIsNext($proposal);
+        if ($whoIsNext === 'researcher-required' && $user_project) { ?>
+            <div class="alert danger mt-20">
+                <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                <?= lang('You are required to provide additional Nagoya Protocol information.', 'Sie sind verpflichtet, zusätzliche Nagoya-Protokoll Informationen bereitzustellen.') ?>
+                <br>
+                <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>" class="btn danger">
+                    <i class="ph ph-clipboard-text"></i>
+                    <?= lang('Provide information', 'Informationen bereitstellen') ?>
+                </a>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+
 
 <!-- TAB AREA -->
 
@@ -258,6 +292,13 @@ if ($topicsEnabled) {
                 <?= lang('Proposal', 'Antrag') ?>
             </button>
         <?php } ?>
+        <?php if ($nagoyaRelevant) { ?>
+            <a class="btn" href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>#nagoya" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
+                <span><?= Nagoya::icon($proposal) ?></span>
+                <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+            </a>
+        <?php } ?>
+
     <?php } ?>
 
     <?php
