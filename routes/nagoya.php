@@ -129,15 +129,9 @@ Route::get('/nagoya', function () {
 }, 'login');
 
 
-Route::get('/nagoya/proposal/([A-Za-z0-9_-]*)', function ($id) {
-
-});
-
 Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Nagoya.php";
-
-    global $Settings, $osiris, $DB;
 
     if (!$Settings->hasPermission('nagoya.view')) {
         die("Forbidden");

@@ -293,10 +293,10 @@ if ($topicsEnabled) {
             </button>
         <?php } ?>
         <?php if ($nagoyaRelevant) { ?>
-            <a class="btn" href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>#nagoya" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
+            <button type="button" class="btn" onclick="navigate('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
                 <span><?= Nagoya::icon($proposal) ?></span>
                 <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
-            </a>
+            </button>
         <?php } ?>
 
     <?php } ?>
@@ -1013,6 +1013,24 @@ if ($topicsEnabled) {
         </div>
     <?php } ?>
 </section>
+
+
+<!-- nagoya details -->
+<?php if ($nagoyaRelevant) {
+    $nagoya_perm = $Settings->hasPermission('nagoya.view');
+?>
+    <section id="nagoya" style="display: none;">
+        <h2 class="title">
+            <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+        </h2>
+        <div class="box padded mt-0" id="nagoya-details" style="max-width: 90rem;">
+            <?php
+            include BASEPATH . "/pages/proposals/nagoya-proposal-dashboard.php";
+            ?>
+        </div>
+    </section>
+<?php } ?>
+
 
 <!-- raw data -->
 <section id="raw-data" style="display: none;">
