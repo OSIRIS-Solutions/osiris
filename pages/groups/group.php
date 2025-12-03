@@ -187,7 +187,6 @@ $count_wordcloud = 0;
             </a>
         <?php } ?>
 
-        <?php if ($level !== 0) { ?>
 
             <?php
             $publication_filter = [
@@ -239,12 +238,11 @@ $count_wordcloud = 0;
                 <?php } ?>
             <?php } ?>
 
-
             <?php if ($Settings->featureEnabled('wordcloud')) { ?>
                 <?php
                 $count_wordcloud = $osiris->activities->count([
                     'title' => ['$exists' => true],
-                    'authors.user' => ['$in' => $users],
+                    'units' => $id,
                     'type' => 'publication'
                 ]);
                 if ($count_wordcloud > 0) { ?>
@@ -260,7 +258,6 @@ $count_wordcloud = 0;
                 <?= lang('Other units', 'Andere Einheiten')  ?>
             </a>
 
-        <?php } ?>
 
     </nav>
 
