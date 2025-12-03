@@ -502,7 +502,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['nagoya'] = [
             'enabled' => $nagoya,
             'countries' => $countries,
-            'status' => (empty($countries) ? 'incomplete': 'abs-review')
+            'status' => (empty($countries) ? 'incomplete' : 'abs-review')
         ];
     } else {
         $values['nagoya'] = [
@@ -754,7 +754,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
             $values['nagoya'] = [
                 'enabled' => $nagoya,
                 'countries' => $countries,
-                'status' => (empty($countries) ? 'incomplete': 'abs-review')
+                'status' => (empty($countries) ? 'incomplete' : 'abs-review')
             ];
 
             if ($nagoya && !empty($countries)) {
@@ -767,6 +767,20 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                     "/$collection/view/" . $id,
                 );
             }
+        }
+    }
+
+    // if status changed to approved and nagoya is enabled, send message to nagoya team
+    if ($Settings->featureEnabled('nagoya') && $collection == 'proposals' && ($values['status'] ?? null) == 'approved' && $project['status'] != 'approved') {
+        $nagoyaRelevant = ($project['nagoya']['enabled'] ?? false && $project['nagoya']['status'] != 'not-relevant');
+        if ($nagoyaRelevant) {
+            $DB->addMessages(
+                'right:nagoya.view',
+                'A project proposal with Nagoya protocol compliance has been approved: <b>' . $project['name'] . '</b>',
+                'Ein Projektantrag mit Nagoya-Protokoll-Relevanz wurde genehmigt: <b>' . $project['name'] . '</b>',
+                'nagoya',
+                "/proposals/view/" . $id,
+            );
         }
     }
 
