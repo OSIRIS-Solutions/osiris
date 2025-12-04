@@ -982,7 +982,7 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang($field['name'], $field['name_de'] ?? null) . ' ('.$field['id'].')',
+                'label' => lang($field['name'], $field['name_de'] ?? null) . ' (' . $field['id'] . ')',
                 'type' => typeConvert($field['format'] ?? 'string'),
                 'custom' => true
             ];
@@ -990,12 +990,19 @@ class Fields
             if ($field['format'] == 'list') {
                 $values = DB::doc2Arr($field['values'] ?? []);
                 if (isset($values[0])) {
-                    // convert from indexed array to associative array
-                    // if english and german values are set, use only the english as keys and lang as values
                     $newValues = [];
                     foreach ($values as $v) {
-                        if (!is_iterable($v) || !isset($v[0])) $newValues[$v] = $v;
-                        else $newValues[$v[0]] = $v[lang(0, 1)] ?? $v[0];
+                        if (is_string($v)) {
+                            // Simple case: only one string -> key = value
+                            $newValues[$v] = $v;
+                        } elseif (is_array($v) && isset($v[0])) {
+                            // Array: first value as key, language-dependent as value
+                            $key = $v[0];
+                            $langKey = lang(0, 1);  
+                            $newValues[$key] = $v[$langKey] ?? $key;
+                        } else {
+                            // ignore
+                        }
                     }
                     $values = $newValues;
                 }
