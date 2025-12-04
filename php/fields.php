@@ -994,7 +994,7 @@ class Fields
                     // if english and german values are set, use only the english as keys and lang as values
                     $newValues = [];
                     foreach ($values as $v) {
-                        if (!isset($v[0])) $newValues[$v] = $v;
+                        if (!is_iterable($v) || !isset($v[0])) $newValues[$v] = $v;
                         else $newValues[$v[0]] = $v[lang(0, 1)] ?? $v[0];
                     }
                     $values = $newValues;
