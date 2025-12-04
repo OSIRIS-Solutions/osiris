@@ -517,7 +517,11 @@ if ($nagoyaRelevant) {
                                                 </div>
                                                 <a href="<?= $file_url ?>" class="">
                                                     <h6 class="m-0">
-                                                        <?= $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Sonstiges', 'Other')) ?>
+                                                        <?php if (isset($doc['permit_id'])){
+                                                            echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', lang('Other', 'Sonstiges'));
+                                                        } else {
+                                                            echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges'));
+                                                        } ?>
                                                         <i class="ph ph-download"></i>
                                                     </h6>
                                                 </a>

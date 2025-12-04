@@ -1,5 +1,6 @@
 <?php
-
+include_once BASEPATH . '/php/Vocabulary.php';
+$Vocabulary = new Vocabulary();
 if (!$country) {
 ?>
     <div class="alert danger">
@@ -60,10 +61,10 @@ foreach ($cursor as $doc) {
     <?= lang('ABS permits for', 'ABS-Genehmigungen für') ?>
     <?= ($DB->getCountry($code, lang('name', 'name_de'))) ?>
 </h1>
-    <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
-        <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to all countries', 'Zurück zu allen Ländern') ?>
-    </a>
+<a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
+    <i class="ph ph-arrow-left"></i>
+    <?= lang('Back to all countries', 'Zurück zu allen Ländern') ?>
+</a>
 
 <div class="d-flex align-items-center gap-10 mt-20">
     <b><?= lang('Nagoya status', 'Nagoya-Status') ?>:</b>
@@ -142,7 +143,7 @@ foreach ($cursor as $doc) {
                         $checked   = !empty($p['checked']);
                         $docs      = $docsByPermit[$pid] ?? [];
                     ?>
-                        <div class="box padded permit-block" data-permit-id="<?= htmlspecialchars($pid) ?>">
+                        <div class="box padded permit-block" data-permit-id="<?= htmlspecialchars($pid) ?>" id="permit-<?= htmlspecialchars($pid) ?>">
                             <div class="dropdown float-right">
                                 <button class="btn link small text-danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                     <i class="ph-duotone ph-trash"></i>
@@ -373,7 +374,7 @@ foreach ($cursor as $doc) {
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <a href="<?= $file_url ?>" target="_blank">
                                                                     <strong>
-                                                                        <?= lang($doc['name'] ?? 'UNKNOWN', $doc['name_de'] ?? null) ?>
+                                                                        <?= $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-') ?>
                                                                         <i class="ph ph-download"></i>
                                                                     </strong>
                                                                 </a>
@@ -514,16 +515,11 @@ foreach ($cursor as $doc) {
                     <!-- Dokumenttyp über Vocabulary, z.B. eigenes Nagoya-Vocab -->
                     <div class="form-group floating-form">
                         <select class="form-control" name="values[name]" placeholder="Name" required>
-                            <option value="PIC">PIC</option>
-                            <option value="MAT">MAT</option>
-                            <option value="DD-DECL"><?= lang('Due diligence declaration', 'Sorgfaltserklärung') ?></option>
-                            <option value="EMAIL"><?= lang('Email / correspondence', 'E-Mail / Korrespondenz') ?></option>
-                            <option value="OTHER"><?= lang('Other', 'Sonstiges') ?></option>
                             <?php
-                            // entweder neues Vokabular 'nagoya-document-types'
-                            // $vocab = $Vocabulary->getValues('nagoya-document-types');
-                            // foreach ($vocab as $v) { echo "<option value=\"{$v['id']}\">" . lang($v['en'], $v['de'] ?? null) . "</option>"; }
-                            ?>
+                            $vocab = $Vocabulary->getValues('nagoya-document-types');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
                         </select>
                         <label class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
                     </div>

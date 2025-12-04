@@ -412,11 +412,13 @@ $totalProjects     = count($projects ?? []);
                     'projectName' => '$name',
                     'countryId' => '$nagoya.countries.id',
                     'countryCode' => '$nagoya.countries.code',
-                    'ircc' => '$nagoya.countries.evaluation.permits.ircc',
                     'permitId' => '$nagoya.countries.evaluation.permits.id',
                     'permitName' => '$nagoya.countries.evaluation.permits.name',
                     'status' => '$nagoya.countries.evaluation.permits.status',
-                    'ircc' => '$nagoya.countries.evaluation.permits.ircc'
+                    'ircc' => '$nagoya.countries.evaluation.permits.ircc',
+                    'irccLink' => '$nagoya.countries.evaluation.permits.ircc_link',
+                    'identifier' => '$nagoya.countries.evaluation.permits.identifier',
+                    'checked' => '$nagoya.countries.evaluation.permits.checked',
                 ]]
             ]
         )->toArray();
@@ -434,14 +436,13 @@ $totalProjects     = count($projects ?? []);
                         <th><?= lang('Country', 'Land') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
                         <th><?= lang('Status', 'Status') ?></th>
-                        <th><?= lang('IRCC', 'IRCC') ?></th>
+                        <th><?= lang('IRCC', 'IRCC') ?> / <?= lang('Identifier', 'Kennung') ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     foreach ($permits as $perm):
                         $pid = $perm['projectId'] ?? null;
-                        $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($pid)]) ?? [];
                     ?>
                         <tr>
                             <td>
@@ -457,13 +458,33 @@ $totalProjects     = count($projects ?? []);
                                 <?= htmlspecialchars($countryName) ?>
                             </td>
                             <td class="font-size-12">
-                                <?= htmlspecialchars($perm['permitName'] ?? '–') ?>
+                                <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= htmlspecialchars($pid) ?>/<?= urlencode($perm['countryCode'] ?? '') ?>#permit-<?= urlencode($perm['permitId'] ?? '') ?>">
+                                    <?= htmlspecialchars($perm['permitName'] ?? '–') ?>
+                                </a>
+                                <?php if (!empty($perm['checked'] ?? null)) { ?>
+                                    <span data-toggle="tooltip" data-title="<?= lang('Validated by ABS team', 'Vom ABS-Team validiert') ?>">
+                                        <i class="ph-duotone ph-check-circle text-success"></i>
+                                    </span>
+                                <?php } else { ?>
+                                    <span data-toggle="tooltip" data-title="<?= lang('Not yet validated by ABS team', 'Noch nicht vom ABS-Team validiert') ?>">
+                                        <i class="ph-duotone ph-clock text-muted"></i>
+                                    </span>
+                                <?php } ?>
+                                
                             </td>
                             <td class="font-size-12">
                                 <?= Nagoya::permitStatusBadge($perm['status'] ?? '') ?>
                             </td>
                             <td class="font-size-12">
-                                <?= htmlspecialchars($perm['ircc'] ?? '–') ?>
+                                <?php if (!empty($perm['irccLink'] ?? '')) { ?>
+                                    <a href="<?= htmlspecialchars($perm['irccLink']) ?>" target="_blank" rel="noopener noreferrer" class="link">
+                                        <?= htmlspecialchars($perm['ircc'] ?? '–') ?>
+                                    </a>
+                                <?php } elseif (!empty($perm['ircc'] ?? '')) { ?>
+                                    <?= htmlspecialchars($perm['ircc']) ?>
+                                <?php } else { ?>
+                                    <?= htmlspecialchars($perm['identifier'] ?? '–') ?>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

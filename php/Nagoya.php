@@ -430,19 +430,19 @@ final class Nagoya
   {
     switch ($status) {
       case 'needed':
-        return '<span class="badge warning"><i class="ph ph-shield-exclamation"></i> ' .
-          htmlspecialchars(lang('Permit needed', 'Genehmigung erforderlich')) . '</span>';
+        return '<span class="badge no-wrap danger"><i class="ph ph-seal-warning"></i> ' .
+          htmlspecialchars(lang('Open', 'Offen')) . '</span>';
       case 'requested':
-        return '<span class="badge signal"><i class="ph ph-hourglass"></i> ' .
-          htmlspecialchars(lang('Permit requested', 'Genehmigung beantragt')) . '</span>';
+        return '<span class="badge no-wrap signal"><i class="ph ph-seal-question"></i> ' .
+          htmlspecialchars(lang('Requested', 'Beantragt')) . '</span>';
       case 'granted':
-        return '<span class="badge success"><i class="ph ph-shield-check"></i> ' .
-          htmlspecialchars(lang('Permit granted', 'Genehmigung erteilt')) . '</span>';
+        return '<span class="badge no-wrap success"><i class="ph ph-seal-check"></i> ' .
+          htmlspecialchars(lang('Granted', 'Erteilt')) . '</span>';
       case 'not-applicable':
-        return '<span class="badge muted"><i class="ph ph-x-circle"></i> ' .
-          htmlspecialchars(lang('Not applicable', 'Nicht zutreffend')) . '</span>';
+        return '<span class="badge no-wrap muted"><i class="ph ph-seal"></i> ' .
+          htmlspecialchars(lang('Not needed', 'Nicht benötigt')) . '</span>';
       default:
-        return '<span class="badge muted"><i class="ph ph-question"></i> ' .
+        return '<span class="badge no-wrap muted"><i class="ph ph-seal-warning"></i> ' .
           htmlspecialchars(lang('Unknown status', 'Unbekannter Status')) . '</span>';
     }
   }
