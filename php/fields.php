@@ -58,7 +58,8 @@ class Fields
                 'id' => 'print',
                 'module_of' => $typeModules['print'] ?? [],
                 'usage' => [
-                    'columns', 'filter'
+                    'columns',
+                    'filter'
                 ],
                 'label' => lang('Print version', 'Printdarstellung'),
                 'type' => 'string'
@@ -981,13 +982,24 @@ class Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang($field['name'], $field['name_de'] ?? null),
+                'label' => lang($field['name'], $field['name_de'] ?? null) . ' ('.$field['id'].')',
                 'type' => typeConvert($field['format'] ?? 'string'),
                 'custom' => true
             ];
 
             if ($field['format'] == 'list') {
-                $f['values'] =  DB::doc2Arr($field['values']);
+                $values = DB::doc2Arr($field['values'] ?? []);
+                if (isset($values[0])) {
+                    // convert from indexed array to associative array
+                    // if english and german values are set, use only the english as keys and lang as values
+                    $newValues = [];
+                    foreach ($values as $v) {
+                        if (!isset($v[0])) $newValues[$v] = $v;
+                        else $newValues[$v[0]] = $v[lang(0, 1)] ?? $v[0];
+                    }
+                    $values = $newValues;
+                }
+                $f['values'] =  $values;
                 $f['input'] = 'select';
                 if ($field['multiple'] ?? false) {
                     $f['type'] = 'list';

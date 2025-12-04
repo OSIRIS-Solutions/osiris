@@ -8,11 +8,11 @@ let DOIDATA = null;
 const escapeHtml = (str) => {
     if (str === null || str === undefined) return '';
     return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
+        // .replace(/&/g, '&amp;')
+        // .replace(/</g, '&lt;')
+        // .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+        // .replace(/'/g, '&#39;');
 };
 
 function togglePubType(type, callback = () => { }) {
