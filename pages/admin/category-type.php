@@ -171,15 +171,14 @@ if (!empty($form) && isset($form['_id'])) {
                 </div>
             </div>
 
-
             <div class="row row-eq-spacing">
                 <div class="col-sm">
                     <label for="description"><?= lang('Description', 'Beschreibung') ?> (en)</label>
-                    <input type="text" class="form-control" name="values[description]" value="<?= $type['description'] ?? '' ?>">
+                    <textarea class="form-control" name="values[description]"><?= $type['description'] ?? '' ?></textarea>
                 </div>
                 <div class="col-sm">
                     <label for="description_de" class=""><?= lang('Description', 'Beschreibung') ?> (de)</label>
-                    <input type="text" class="form-control" name="values[description_de]" value="<?= $type['description_de'] ?? '' ?>">
+                    <textarea class="form-control" name="values[description_de]"><?= $type['description_de'] ?? '' ?></textarea>
                 </div>
             </div>
 
