@@ -44,3 +44,26 @@ if ($N_ == 0 && !$nagoyaEnabled) {
         "Nagoya-Informationen für " . count($proposals) . " Anträge wurden umgewandelt."
     );
 }
+
+
+// get queries without 'type' field
+$queries = $osiris->queries->find(['type' => ['$exists' => false]])->toArray();
+$N_ = count($queries);
+
+if ($N_ == 0) {
+    // echo lang("No queries without type field found. No changes made.", 
+    //     "Keine Abfragen ohne Typ-Feld gefunden. Es wurden keine Änderungen vorgenommen."
+    // );
+} else {
+    foreach ($queries as $query) {
+        $osiris->queries->updateOne(
+            ['_id' => $query['_id']],
+            ['$set' => [
+                'type' => 'activity',
+            ]]
+        );
+    }
+    echo lang("Type field added to " . count($queries) . " queries.", 
+        "Typ-Feld zu " . count($queries) . " Abfragen hinzugefügt."
+    );
+}

@@ -39,6 +39,7 @@ class Settings
         if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
             $this->roles[] = 'admin';
         }
+        $this->roles = array_values(array_unique($this->roles));
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],

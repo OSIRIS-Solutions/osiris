@@ -46,6 +46,54 @@ $filters = array_map(function ($f) {
     return $f;
 }, $filters);
 
+
+function printRules($rules)
+{
+    $operators = [
+        'equal' =>  '=',
+        'not_equal' =>  '!=',
+        'less' =>  '<',
+        'less_or_equal' =>  '<=',
+        'greater' =>  '>',
+        'greater_or_equal' =>  '>=',
+        'contains' => 'CONTAINS',
+        'not_contains' => 'NOT CONTAINS',
+        'begins_with' => 'BEGINS WITH',
+        'ends_with' => 'ENDS WITH',
+        'between' => 'BETWEEN',
+        'not_between' => 'NOT BETWEEN',
+        'is_empty' => 'IS EMPTY',
+        'is_not_empty' => 'IS NOT EMPTY',
+        'is_null' => 'IS NULL',
+        'is_not_null' => 'IS NOT NULL',
+        'in' => 'IN',
+        'not_in' => 'NOT IN',
+    ];
+    foreach ($rules['rules'] as $key) {
+        if (isset($key['id'])) {
+            echo '<li><b class="text-primary">' . $key['id'] . '</b> <code class="code">' . ($operators[$key['operator']] ?? $key['operator']) . '</code> ';
+            if (!empty($key['value'] ?? null)) {
+                if (is_array($key['value'])) {
+                    echo '<q>' . implode(', ', $key['value']) . '</q>';
+                } else {
+                    echo '<q>' . $key['value'] . '</q>';
+                }
+            }
+            echo '</li>';
+        } elseif (isset($key['rules'])) {
+            echo '<li>';
+            if (isset($key['condition'])) {
+                echo '<b class="text-secondary">' . strtoupper($key['condition']) . '</b>';
+            } else {
+                echo '<b class="text-secondary">GROUP</b>';
+            }
+            echo '<ul>';
+            printRules($key);
+            echo '</ul>';
+            echo '</li>';
+        }
+    }
+}
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/query-builder.default.min.css">
@@ -63,42 +111,134 @@ $filters = array_map(function ($f) {
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title">
+            <h2 class="title">
                 <?php if ($expert) { ?>
-                    <?= lang('My expert queries', 'Meine Experten-Abfragen') ?>
+                    <?= lang('Expert queries', 'Experten-Abfragen') ?>
                 <?php } else { ?>
-                    <?= lang('My saved queries', 'Meine Abfragen') ?>
+                    <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
                 <?php } ?>
-            </h5>
+            </h2>
+
+
+            <div class="mb-20">
+                <button class="btn" aria-expanded="true" onclick="$(this).next().slideToggle();">
+                    <i class="ph ph-floppy-disk"></i> <?= lang('Save current query', 'Aktuelle Abfrage speichern') ?>
+                </button>
+
+                <div style="display:none;" class="box padded mt-10">
+                    <input type="text" class="form-control" id="query-name" placeholder="<?= lang('Name of query', 'Name der Abfrage') ?>">
+                    <button class="btn primary mt-10" onclick="saveQuery()"><?= lang('Save query', 'Abfrage speichern') ?></button>
+                </div>
+            </div>
+
             <?php
-            $filter = ['user' => $_SESSION['username'], 'type' => ['$ne' => 'project']];
+            $filter = [
+                '$or' => [
+                    ['user' => $_SESSION['username']],
+                    ['global' => true],
+                    ['role' => ['$in' => $Settings->roles]]
+                ],
+                'type' => 'activity'
+            ];
             if (!$expert) {
-                $filter['$or'] = [
-                    ['expert' => false],
-                    ['expert' => ['$exists' => false]]
-                ];
+                $filter['expert'] = ['$ne' => true];
             } else {
                 $filter['expert'] = true;
             }
             $queries = $osiris->queries->find($filter)->toArray();
             if (empty($queries)) {
                 echo '<p>' . lang('You have not saved any queries yet.', 'Du hast noch keine Abfragen gespeichert.') . '</p>';
-            } else { ?>
+            } else {
+                // sort by created by current user first, then by created date
+                usort($queries, function ($a, $b) {
+                    if ($a['user'] == $_SESSION['username'] && $b['user'] != $_SESSION['username']) {
+                        return -1;
+                    } elseif ($a['user'] != $_SESSION['username'] && $b['user'] == $_SESSION['username']) {
+                        return 1;
+                    } else {
+                        return strtotime($b['created']) <=> strtotime($a['created']);
+                    }
+                });
+            ?>
+
+            <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('Search saved queries...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
+                    var summary = $(this).find('summary').text().toLowerCase();
+                    var filter = $('#query-search').val().toLowerCase();
+                    if (summary.indexOf(filter) > -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });">
                 <div class="collapse-group" id="saved-queries">
                     <?php foreach ($queries as $query) {
                         $rules = json_decode($query['rules'], true);
                         if (!$expert && empty($rules['rules'])) {
                             $rules['rules'] = ['id' => 'No rules'];
                         }
+                        $query_id = strval($query['_id']);
                     ?>
-                        <details id="query-<?= $query['_id'] ?>" class="mb-10">
-                            <summary class="collapse-header font-weight-bold">
+                        <details id="query-<?= $query_id ?>" class="mb-10">
+                            <summary class="collapse-header font-weight-bold d-flex justify-content-between align-items-center">
                                 <?= $query['name'] ?>
+                                <?php if ($query['global'] ?? false) { ?>
+                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= lang('Global', 'Global') ?></span>
+                                <?php } elseif (isset($query['role'])) { ?>
+                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= lang('Role:', 'Rolle:') ?> <?= ucfirst($query['role']) ?></span>
+                                <?php } ?>
                             </summary>
                             <div class="collapse-content">
+                                <?php if ($Settings->hasPermission('queries.global') && !($query['global'] ?? false)) { ?>
+                                    <div class="dropdown float-right">
+                                        <button class="btn" data-toggle="dropdown" type="button" id="dropdown-<?= $query_id ?>" aria-haspopup="true" aria-expanded="false">
+                                            <i class="ph ph-share-network"></i> <?= lang('Share', 'Teilen') ?>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-<?= $query_id ?>">
+                                            <!-- share globally -->
+                                            <div class="content">
+                                                <button class="btn block mb-5" onclick="shareQuery('<?= $query['_id'] ?>', 'global')">
+                                                    <i class="ph ph-globe"></i> <?= lang('Share globally', 'Global teilen') ?>
+                                                </button>
+                                                <hr>
+                                                <select class="form-control mb-5" id="role-select-<?= $query_id ?>">
+                                                    <?php foreach ($Settings->getRoles() as $role) { ?>
+                                                        <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <button class="btn block" onclick="shareQuery('<?= $query_id ?>', 'role')">
+                                                    <i class="ph ph-shield-checkered"></i> <?= lang('Share with role', 'Mit Rolle teilen') ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        function shareQuery(id, type) {
+                                            var data = {
+                                                id: id,
+                                                action: 'SHARE'
+                                            };
+                                            if (type == 'global') {
+                                                data.global = true;
+                                            } else if (type == 'role') {
+                                                var role = $('#role-select-' + id).val();
+                                                data.role = role;
+                                            }
+                                            $.post(ROOTPATH + '/crud/queries', data, function(response) {
+                                                toastSuccess('<?= lang('Query shared successfully.', 'Abfrage erfolgreich geteilt.') ?>');
+                                            });
+                                        }
+                                    </script>
+                                <?php } ?>
                                 <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
 
                                 <table class="table simple my-10">
+
+                                    <?php if ($query['user'] != $_SESSION['username']) { ?>
+                                        <tr>
+                                            <th><?= lang('Shared by', 'Geteilt von') ?>:</th>
+                                            <td><?= $DB->getNameFromId($query['user']) ?></td>
+                                        </tr>
+                                    <?php } ?>
 
                                     <tr>
                                         <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
@@ -109,71 +249,7 @@ $filters = array_map(function ($f) {
                                         <?php } else { ?>
                                             <td>
                                                 <ul>
-                                                    <?php foreach ($rules['rules'] as $key) { ?>
-                                                        <li>
-                                                            <b class="text-primary"><?= $key['id'] ?></b>
-                                                            <code class="code"><?php
-                                                                                switch ($key['operator'] ?? '') {
-                                                                                    case 'equal':
-                                                                                        echo '=';
-                                                                                        break;
-                                                                                    case 'not_equal':
-                                                                                        echo '!=';
-                                                                                        break;
-                                                                                    case 'less':
-                                                                                        echo '<';
-                                                                                        break;
-                                                                                    case 'less_or_equal':
-                                                                                        echo '<=';
-                                                                                        break;
-                                                                                    case 'greater':
-                                                                                        echo '>';
-                                                                                        break;
-                                                                                    case 'greater_or_equal':
-                                                                                        echo '>=';
-                                                                                        break;
-                                                                                    case 'contains':
-                                                                                        echo 'CONTAINS';
-                                                                                        break;
-                                                                                    case 'not_contains':
-                                                                                        echo 'NOT CONTAINS';
-                                                                                        break;
-                                                                                    case 'begins_with':
-                                                                                        echo 'BEGINS WITH';
-                                                                                        break;
-                                                                                    case 'ends_with':
-                                                                                        echo 'ENDS WITH';
-                                                                                        break;
-                                                                                    case 'between':
-                                                                                        echo 'BETWEEN';
-                                                                                        break;
-                                                                                    case 'not_between':
-                                                                                        echo 'NOT BETWEEN';
-                                                                                        break;
-                                                                                    case 'is_empty':
-                                                                                        echo 'IS EMPTY';
-                                                                                        break;
-                                                                                    case 'is_not_empty':
-                                                                                        echo 'IS NOT EMPTY';
-                                                                                        break;
-                                                                                    case 'is_null':
-                                                                                        echo 'IS NULL';
-                                                                                        break;
-                                                                                    case 'is_not_null':
-                                                                                        echo 'IS NOT NULL';
-                                                                                        break;
-                                                                                    case 'in':
-                                                                                        echo 'IN';
-                                                                                        break;
-                                                                                    case 'not_in':
-                                                                                        echo 'NOT IN';
-                                                                                        break;
-                                                                                }
-                                                                                ?></code> <?php if (!empty($key['value'] ?? null)) { ?>
-                                                                <q><?= $key['value'] ?></q>
-                                                            <?php } ?>
-                                                        </li>
-                                                    <?php } ?>
+                                                    <?php printRules($rules); ?>
                                                 </ul>
                                             </td>
                                         <?php } ?>
@@ -207,7 +283,11 @@ $filters = array_map(function ($f) {
                                     </tr>
                                 </table>
 
-                                <a class="btn danger small text-right" onclick="deleteQuery('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('Delete Query', 'Abfrage löschen') ?></a>
+                                <?php if ($query['user'] != $_SESSION['username']) { ?>
+                                    <small class="text-muted"><?= lang('Only the creator of the query can delete or modify it.', 'Nur der Ersteller der Abfrage kann sie löschen oder bearbeiten.') ?></small>
+                                <?php } else { ?>
+                                    <a class="btn danger small text-right" onclick="deleteQuery('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('Delete Query', 'Abfrage löschen') ?></a>
+                                <?php } ?>
                             </div>
                         </details>
                     <?php } ?>
@@ -221,14 +301,6 @@ $filters = array_map(function ($f) {
                 <?php } ?>
             </script>
 
-            <div class="box padded">
-                <!-- save current query -->
-                <label for="query-name" class="font-weight-bold">
-                    <?= lang('Save current query', 'Aktuelle Abfrage speichern') ?>
-                </label>
-                <input type="text" class="form-control" id="query-name" placeholder="<?= lang('Name of query', 'Name der Abfrage') ?>">
-                <button class="btn secondary mt-10" onclick="saveQuery()"><?= lang('Save query', 'Abfrage speichern') ?></button>
-            </div>
             <div class="text-right mt-20">
                 <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
             </div>
@@ -342,7 +414,6 @@ $filters = array_map(function ($f) {
                                 echo $Settings->icon($key);
                             } ?>
 
-
                         </label>
                     </div>
                 <?php } ?>
@@ -388,7 +459,7 @@ $filters = array_map(function ($f) {
             <div id="builder" class="<?= $expert ? 'hidden' : '' ?>"></div>
 
             <?php if ($expert) { ?>
-                <textarea name="expert" id="expert" cols="30" rows="5" class="form-control"></textarea>
+                <textarea name="expert" id="expert" cols="30" rows="5" class="form-control">{"type": "publication"}</textarea>
             <?php } ?>
 
         </div>
@@ -794,7 +865,7 @@ $filters = array_map(function ($f) {
                 type: 'POST',
                 data: {
                     id: id,
-                    type: 'DELETE'
+                    action: 'DELETE'
                 },
                 success: function(result) {
                     delete queries[id]
