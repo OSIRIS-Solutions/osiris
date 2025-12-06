@@ -567,8 +567,8 @@ class Fields
                 'values' => ['Q1', 'Q2', 'Q3', 'Q4']
             ],
             [
-                'id' => 'book-title',
-                'module_of' => $typeModules['book-title'] ?? [],
+                'id' => 'book',
+                'module_of' => $typeModules['book'] ?? [],
                 'usage' => [
                     'filter',
                     'columns'

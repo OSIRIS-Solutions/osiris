@@ -1202,7 +1202,10 @@ class Modules
         switch ($field['format']) {
             case 'string':
                 // make sure that value is string
-                $value = strval($value);
+                if (!is_string($value)) {
+                    $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                    $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                }
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
