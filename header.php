@@ -723,10 +723,10 @@ $pageactive = function ($p) use ($page) {
                         <?php } ?>
 
 
-                        <a href="<?= ROOTPATH ?>/journals/search" class="inline-btn  <?= $pageactive('journal') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                        <a href="<?= ROOTPATH ?>/journals/search" class="inline-btn  <?= $pageactive('journals') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                             <i class="ph-duotone ph-magnifying-glass-plus"></i>
                         </a>
-                        <a href="<?= ROOTPATH ?>/journal" class="with-icon <?= $pageactive('journal') ?>">
+                        <a href="<?= ROOTPATH ?>/journals" class="with-icon <?= $pageactive('journals') ?>">
                             <i class="ph ph-stack" aria-hidden="true"></i>
                             <?= $Settings->journalLabel() ?>
                         </a>

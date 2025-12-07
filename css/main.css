@@ -6923,10 +6923,15 @@ Sidebar content
   height: 3rem;
   font-size: 1.4rem;
   border-radius: var(--border-radius);
+  color: var(--border-color);
 }
 .sidebar-menu > a.inline-btn:hover,
 .sidebar-menu nav > a.inline-btn:hover {
   background: var(--primary-color-20);
+  color: var(--primary-color);
+}
+.sidebar-menu > a.inline-btn.active,
+.sidebar-menu nav > a.inline-btn.active {
   color: var(--primary-color);
 }
 .sidebar-menu > a.inline-btn.active:not(:first-of-type),

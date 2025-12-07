@@ -1,17 +1,73 @@
 # Neuigkeiten
 
-<span class="badge float-right">26.11.2025</span>
-<a class="anchor" href="#version-251126" id="version-251126"></a>
+<span class="badge float-right">08.12.2025</span>
+<a class="anchor" href="#version-1.7.0" id="version-1.7.0"></a>
 
-## Build 251126
+## Version 1.7.0
 
-**DOI-Mappings für Publikationstypen**
+### Neues Modul: Nagoya / ABS Compliance
+
+OSIRIS unterstützt jetzt vollständig den Prozess rund um das Nagoya-Protokoll und nationale ABS-Regelungen.
+Das neue Modul hilft Forschenden und ABS-Beauftragten, alle relevanten Schritte nachvollziehbar, vollständig und revisionssicher abzubilden.
+
+Hier die Highlights:
+
+- **Country Review:** Bewertung aller beteiligten Länder (Nagoya-Party, eigene ABS-Maßnahmen, Kommentare).
+- **Scope-Erfassung für Forschende:** Geographischer, zeitlicher, materieller und nutzungsbezogener Scope — inklusive Unterstützung fürmehrere Probensammlungen pro Land.
+- **ABS-Evaluation (A/B/C):** Klassifikation pro Land sowie automatische Projektklassifikation.
+- **Permits & Dokumente:** Erfassung von PIC, MAT, Community Consent und weiteren Genehmigungen. Upload & Verwaltung von Dokumenten direkt in OSIRIS.
+- **Geteilte Notizen:** Für Kommunikation zwischen Projektteam und ABS-Compliance-Team.
+- **Dashboard für ABS-Teams:** Überblick über offene Bewertungen, fehlende Scopes, offene Permits und eingereichte Unterlagen.
+
+Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/topics/nagoya/).
+
+
+### Erweiterte Suche für fast alles
+
+Die erweiterte Suche wurde erweitert und verbessert:
+
+- Die gespeicherten Suchen lassen sich jetzt mit einzelnen Rollen oder Global teilen (Achtung: nur mit der neuen Berechtigung `queries.global`). Geteilte Queries sind mit einem kleinen Flag gekennzeichnet, werden nach unten sortiert und können nicht bearbeitet werden. Um bei so vielen Queries den Überblick zu behalten, gibt es jetzt eine Suchfunktion.
+- Es wurden ein paar Probleme mit verschachtelten Queries behoben, die nun auch in der Vorschau korrekt angezeigt werden.
+- Der Bereich für die Auswahl der Spalten lässt sich jetzt ebenfalls durchsuchen, um schneller die gewünschten Spalten zu finden.
+- Es wurden ein paar kleinere Verbesserungen vorgenommen, durch die es jetzt noch stabiler laufen sollte.
+
+Und weil das so gut funktioniert, wurde die erweiterte Suche jetzt auch auf folgende Bereiche ausgeweitet:
+- **Projekte und Anträge**
+- **Events**
+- **Journals**
+- **Nutzende**
+
+Ihr findet dazu neu gestaltete Suchseiten, indem ihr auf die Lupe mit dem Plus in der jeweiligen Übersicht klickt.
+
+### DOI-Mappings für Publikationstypen
 
 - Admins können jetzt im Admin-Bereich unter Inhalte > Aktivitäten > DOI-Zuordnung eigene Mappings für Publikationstypen aus CrossRef und DataCite definieren.
 - Diese Mappings werden verwendet, wenn eine Aktivität über eine DOI importiert wird, um den entsprechenden Aktivitätstyp in OSIRIS zu bestimmen.
 - Dadurch können spezifische Publikationstypen besser abgebildet werden, z.B. "preprint" oder "conference-paper".
 
 > Achtung: Beta-Feature. Bitte testet es ausgiebig und gebt uns Feedback, damit wir es weiter verbessern können!
+
+### Verbesserungen & Bugfixes
+
+- Einige Verbesserungen und Bugfixes bei den neuen Gästeaccounts (z.B. Suchfunktion in der Nutzerübersicht, Markierung in Tabellen, werden beim Synchronisieren nicht mehr deaktiviert).
+- Organisationen-Feld: korrektes Layout + Möglichkeit, gesetzte Werte zu löschen
+- ISSN-Feld im Aktivitäten-Formular bricht nicht mehr das ganze Formular ab
+- Tags funktionieren wieder zuverlässig
+- „Online ahead of print“ kann wieder deaktiviert werden
+- Letzter Social-Link ist wirklich löschbar
+- Ampersands & Quotes verursachen keine Fehler mehr in Journal-/Aktivitätsfeldern
+- Projekt-/Personen-Dropdowns liefern keine leeren Auswahlen mehr
+- Wichtiger Fix im Activity-Type-Handling
+- Gruppen-Synonyme nutzen jetzt Semikolon statt Komma (Kollisionsvermeidung)
+- Portfolio: Keine Hervorhebung mehr, wenn Einträge ausgeblendet sind
+- LDAP-Sync: zuverlässige Aktualisierung von Units, inkl. Einheiten-Synonyme
+- Fix für ungültige Gastaccounts, wenn „gültig bis“ leer ist
+- Array-Dokument-Fehler beim Rendering behoben
+- Diverse Verbesserungen an der JSON-Ausgabe
+- Fix für kaputten Link zur Attribute-Preview
+- u.v.m.
+
+Eine Übersicht über alle geschlossenen Issues findet ihr [hier](https://github.com/OSIRIS-Solutions/osiris/milestone/7)
 
 ---
 
