@@ -24,6 +24,7 @@ class PersonFields extends Fields
             'updated',
             'roles'
         ];
+        
         $typeModules = array_merge($data, $typeModules);
         $typeModules = array_fill_keys($typeModules, ['general']);
         $FIELDS = [

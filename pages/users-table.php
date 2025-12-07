@@ -256,14 +256,6 @@ if ($active('keywords')) {
             pageLength: 18,
             lengthMenu: [9, 18, 36, 72, 144],
             buttons: [
-                // custom link button
-                {
-                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
-                    className: 'btn small text-primary ',
-                    action: function(e, dt, node, config) {
-                        window.location.href = '<?= ROOTPATH ?>/user/search';
-                    }
-                },
                 <?php if ($active('expertise')) { ?> {
                         text: '<i class="ph ph-barbell"></i> <?= lang('Expertise', 'Expertise') ?>',
                         className: 'btn small text-primary',
