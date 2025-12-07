@@ -6916,7 +6916,7 @@ Sidebar content
 .sidebar-menu nav > a.inline-btn {
   position: absolute;
   right: 2rem;
-  margin: 0.5rem;
+  margin: 0.5rem !important;
   background: white;
   padding: 0.5rem;
   width: 3rem;
@@ -6924,14 +6924,22 @@ Sidebar content
   font-size: 1.4rem;
   border-radius: var(--border-radius);
 }
-
+.sidebar-menu > a.inline-btn:hover,
+.sidebar-menu nav > a.inline-btn:hover {
+  background: var(--primary-color-20);
+  color: var(--primary-color);
+}
+.sidebar-menu > a.inline-btn.active:not(:first-of-type),
+.sidebar-menu nav > a.inline-btn.active:not(:first-of-type) {
+  margin-top: 1rem !important;
+}
 .sidebar-menu > a.inline-btn:not(.active),
 .sidebar-menu nav > a.inline-btn:not(.active) {
   display: none;
 }
-
-.sidebar-menu:hover > a.inline-btn:not(.active),
-.sidebar-menu:hover nav > a.inline-btn:not(.active) {
+.sidebar-menu:hover > a.inline-btn, .sidebar-menu:hover nav > a.inline-btn,
+.sidebar-menu nav:hover > a.inline-btn,
+.sidebar-menu nav:hover nav > a.inline-btn {
   display: block;
 }
 
