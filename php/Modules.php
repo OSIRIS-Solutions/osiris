@@ -2010,7 +2010,12 @@ class Modules
                             <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
+                            <small class="text-muted">
+                                <i class="ph ph-info text-signal"></i>
+                                <?= $help ?>
+                            </small>
                             <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
+
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
                                     <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
@@ -2096,7 +2101,6 @@ class Modules
                             }
                         }
                     </script>
-                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -2220,7 +2224,7 @@ class Modules
                         <?php if (!$req) { ?>
                             <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('Select language', 'Sprache auswählen') ?></option>
                         <?php } ?>
-                        
+
                         <?php
                         $vocab = $Vocabulary->getValues('pub-language');
                         foreach ($vocab as $v) { ?>
