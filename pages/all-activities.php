@@ -764,7 +764,7 @@ $cart = readCart();
             var hash = readHash();
             console.log(hash);
             if (hash.type !== undefined) {
-                filterActivities(document.getElementById(hash.type + '-btn'), hash.type, 1)
+                filterActivities(document.getElementById(hash.type + '-btn'), hash.type, 9)
             }
             if (hash.unit !== undefined) {
                 filterActivities(document.getElementById(hash.unit + '-btn'), hash.unit, 7)
@@ -880,21 +880,32 @@ $cart = readCart();
         var submenu = tr.find('.submenu')
         var table = tr.closest('table')
         $('#filter-' + column).remove()
-        const field = headers[column]
+        const field = headers[column] || { key: 'unknown', title: 'Unknown' }
         const hash = {}
         hash[field.key] = activity
 
         if (tr.hasClass('active') || activity === null) {
             hash[field.key] = null
             table.find('.active').removeClass('active')
-            dataTable.columns(column).search("", true, false, true).draw();
+            dataTable.columns(column).search("").draw();
             submenu.slideUp()
         } else {
 
             table.find('.active').removeClass('active')
 
             tr.addClass('active')
-            dataTable.columns(column).search(activity, true, false, true).draw();
+
+            let searchValue = activity;
+            let regex = false;
+            let smart = false;
+            if (column == 9 || column == 10) {
+                searchValue = '^' + activity + '$';
+                regex = true;
+                smart = false;
+            }
+                console.log(searchValue);
+
+            dataTable.column(column).search(searchValue, regex, smart).draw();
             // indicator
             const filterBtn = $('<span class="badge" id="filter-' + column + '">')
             filterBtn.html(`<b>${field.title}:</b> <span>${activity}</span>`)
@@ -927,6 +938,7 @@ $cart = readCart();
             dataTable.columns(column).search("", true, false, true).draw();
             $(btn).removeClass('active')
         } else {
+            subtype = '^' + subtype + '$';
             dataTable.columns(column).search(subtype, true, false, true).draw();
             $(btn).closest('table').find('.submenu > a').removeClass('active')
             $(btn).addClass('active')
