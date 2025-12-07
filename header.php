@@ -785,6 +785,9 @@ $pageactive = function ($p) use ($page) {
                         }
                         ?>
 
+                        <a href="<?= ROOTPATH ?>/persons/search" class="inline-btn  <?= $active ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                            <i class="ph-duotone ph-magnifying-glass-plus"></i>
+                        </a>
                         <a href="<?= ROOTPATH ?>/user/browse" class="with-icon <?= $active ?>">
                             <i class="ph ph-users" aria-hidden="true"></i>
                             <?= lang('Users', 'Personen') ?>

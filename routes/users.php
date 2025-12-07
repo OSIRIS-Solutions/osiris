@@ -26,19 +26,6 @@ Route::get('/user/browse', function () {
 }, 'login');
 
 
-Route::get('/user/search', function () {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
-        ['name' => lang("Search", "Suche")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/user-search.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
 Route::get('/image/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     $user = urldecode($user);

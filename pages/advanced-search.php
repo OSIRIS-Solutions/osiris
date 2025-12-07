@@ -39,6 +39,12 @@ if ($collection == 'projects' || $collection == 'proposals') {
     $defaultColumns = ['id', 'journal', 'issn', 'publisher'];
     $defaultFilter = 'journal';
     $expertQuery = '{}';
+} elseif ($collection == 'persons') {
+    include_once BASEPATH . "/php/person_fields.php";
+    $FIELDS = new PersonFields();
+    $defaultColumns = ['id', 'username', 'first', 'last'];
+    $defaultFilter = 'is_active';
+    $expertQuery = '{"is_active": true}';
 } else {
     include_once BASEPATH . "/php/activity_fields.php";
     $FIELDS = new ActivityFields();

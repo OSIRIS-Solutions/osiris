@@ -41,7 +41,7 @@ Route::get('/(activities|my-activities)', function ($page) {
 }, 'login');
 
 
-Route::get('/(activities|projects|proposals|conferences|journals)/search', function ($collection) {
+Route::get('/(activities|projects|proposals|conferences|journals|persons)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
@@ -60,6 +60,9 @@ Route::get('/(activities|projects|proposals|conferences|journals)/search', funct
             break;
         case 'journals':
             $colName = $Settings->journalLabel();
+            break;
+        case 'persons':
+            $colName = lang('Persons', "Personen");
             break;
     }
     $breadcrumb = [

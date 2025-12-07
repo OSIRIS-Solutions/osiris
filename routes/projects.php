@@ -63,19 +63,6 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/(projects|proposals)/oldsearch', function ($collection) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => lang("Search", "Suche")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/search.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
 Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];

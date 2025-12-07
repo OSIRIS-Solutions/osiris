@@ -969,7 +969,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
 
 
 
-Route::get('/api/search/(projects|proposals|activities|conferences|journals)', function ($type) {
+Route::get('/api/search/(projects|proposals|activities|conferences|journals|persons)', function ($type) {
 
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
@@ -1010,7 +1010,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals)', f
         }
     }
 
-    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact'];
+    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
@@ -1099,6 +1099,13 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals)', f
                 'name' => '$name',
                 'title' => '$title',
                 'type' => '$type',
+            ],
+            'persons' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'first' => '$first',
+                'last' => '$last',
+                'username' => '$username',
             ],
             default => [
                 '_id' => 0,
