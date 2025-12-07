@@ -19,15 +19,30 @@
 $Format = new Document(true);
 $expert = isset($_GET['expert']);
 
-if ($collection == 'projects') {
+$defaultColumns = ['id', 'name', 'title'];
+$defaultFilter = 'type';
+$expertQuery = '{"type": "publication"}';
+if ($collection == 'projects' || $collection == 'proposals') {
     include_once BASEPATH . "/php/project_fields.php";
-    $FIELDS = new Fields('projects');
-} elseif ($collection == 'proposals') {
-    include_once BASEPATH . "/php/project_fields.php";
-    $FIELDS = new Fields('proposals');
+    $FIELDS = new ProjectFields($collection);
+    $defaultColumns = ['type', 'name', 'title'];
+    $expertQuery = '{"funder": "EU"}';
+} elseif ($collection == 'conferences') {
+    include_once BASEPATH . "/php/event_fields.php";
+    $FIELDS = new EventFields();
+    $defaultColumns = ['id', 'title', 'start', 'location'];
+    $defaultFilter = 'type';
+    $expertQuery = '{"type": "international"}';
+} elseif ($collection == 'journals') {
+    include_once BASEPATH . "/php/journal_fields.php";
+    $FIELDS = new JournalFields();
+    $defaultColumns = ['id', 'journal', 'issn', 'publisher'];
+    $defaultFilter = 'journal';
+    $expertQuery = '{}';
 } else {
     include_once BASEPATH . "/php/activity_fields.php";
-    $FIELDS = new Fields();
+    $FIELDS = new ActivityFields();
+    $defaultColumns = ['id', 'icon', 'web', 'year'];
 }
 
 // dump($FIELDS, true);
@@ -373,19 +388,7 @@ function printRules($rules)
 
             <div id="column-select">
                 <?php
-                $default = [
-                    'icon',
-                    'web',
-                    'year'
-                ];
-                if ($collection == 'projects' || $collection == 'proposals') {
-                    $default = [
-                        'type',
-                        'name',
-                        'title'
-                    ];
-                }
-                $selected = $_GET['columns'] ?? $default;
+                $selected = $_GET['columns'] ?? $defaultColumns;
                 // $ignore = ['_id', 'authors.user', 'authors.position', 'authors.approved', 'authors.aoi', 'authors.last', 'authors.first'];
                 // $fields = array_values($FIELDS);
                 $fields = array_filter($FIELDS->fields, function ($f) {
@@ -477,7 +480,7 @@ function printRules($rules)
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
-        <?= lang('in', 'in') ?> <?= ucfirst($collection) ?>
+        <?= lang('in', 'in') ?> <?= $colName ?? $collection ?>
     </h1>
 
     <div class="box">
@@ -487,7 +490,7 @@ function printRules($rules)
             <div id="builder" class="<?= $expert ? 'hidden' : '' ?>"></div>
 
             <?php if ($expert) { ?>
-                <textarea name="expert" id="expert" cols="30" rows="5" class="form-control">{"type": "publication"}</textarea>
+                <textarea name="expert" id="expert" cols="30" rows="5" class="form-control"><?= $expertQuery ?></textarea>
             <?php } ?>
 
         </div>
@@ -597,7 +600,7 @@ function printRules($rules)
                 error: 'ph ph-warning text-danger',
             },
             allow_empty: true,
-            default_filter: 'type'
+            default_filter: '<?= $defaultFilter ?>'
         });
 
         var dataTable;
@@ -680,7 +683,7 @@ function printRules($rules)
                     }
                     if (field == 'id') {
                         r.render = function(data, type, row, meta) {
-                            return `<a href="<?= ROOTPATH ?>/activity/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
+                            return `<a href="<?= ROOTPATH ?>/<?= $collection ?>/view/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
                         }
                     } else if (array_columns[field]) {
                         var array_column = array_columns[field]
@@ -688,7 +691,13 @@ function printRules($rules)
                             if (Array.isArray(data)) {
                                 data = data[0]
                             }
-                            return data[array_column].join(', ') ?? data;
+                            if (data === undefined || data === null) {
+                                return '-'
+                            }
+                            if (Array.isArray(data[array_column])) {
+                                return data[array_column].join(', ') ?? data;
+                            }
+                            return data[array_column] ?? data;
                         }
                     }
                     return r
@@ -769,7 +778,7 @@ function printRules($rules)
 
             $('#result').html(rules)
             $.ajax({
-                url: ROOTPATH + '/api/<?= $collection ?>',
+                url: ROOTPATH + '/api/search/<?= $collection ?>',
                 method: 'GET',
                 data: data,
                 success: function(response) {
@@ -865,7 +874,7 @@ function printRules($rules)
                 return value;
             });
             if (!columns) {
-                columns = '<?= $collection == 'activities' ? 'icon;web;year' : 'type;name;title' ?>';
+                columns = "<?= implode(';', $defaultColumns) ?>";
             }
             $('#column-select input').prop('checked', false)
             columns.split(';').forEach(column => {

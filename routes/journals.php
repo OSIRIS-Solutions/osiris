@@ -15,7 +15,7 @@
  */
 
 
-Route::get('/journal', function () {
+Route::get('/journals?', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
@@ -43,7 +43,7 @@ Route::get('/journal/metrics', function () {
 
 
 
-Route::get('/journal/view/([a-zA-Z0-9]*)', function ($id) {
+Route::get('/journals?/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $id = $DB->to_ObjectID($id);

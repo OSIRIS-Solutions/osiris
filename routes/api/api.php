@@ -897,7 +897,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
         foreach ($columns as $c) {
             $projection[$c] = '$' . $c;
         }
-    } else if (isset($_GET['table'])) {
+    } else if ($type == 'projects') {
         $projection = [
             '_id' => 0,
             'id' => ['$toString' => '$_id'],
@@ -919,13 +919,25 @@ Route::get('/api/(projects|proposals)', function ($type) {
             'timeline' => '$timeline',
             'tags' => '$tags',
         ];
-    } else {
+    } else if ($type == 'proposals') {
         $projection = [
             '_id' => 0,
             'id' => ['$toString' => '$_id'],
             'name' => '$name',
-            'title' => '$title',
             'type' => '$type',
+            'funder' => '$funder',
+            'start_date' => '$start_date',
+            'end_date' => '$end_date',
+            'role' => '$role',
+            'applicant' => '$applicant',
+            'status' => '$status',
+            'units' => '$units',
+            'topics' => '$topics',
+            'funder' => '$funder',
+            'name' => '$name',
+            'title' => '$title',
+            'tags' => '$tags',
+            'persons' => '$persons',
         ];
     }
 
@@ -954,6 +966,177 @@ Route::get('/api/(projects|proposals)', function ($type) {
 
     echo return_rest($result, count($result));
 });
+
+
+
+Route::get('/api/search/(projects|proposals|activities|conferences|journals)', function ($type) {
+
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $collection = $osiris->$type;
+
+    $filter = [];
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    }
+    if (isset($_GET['json'])) {
+        $filter = json_decode($_GET['json'], true);
+    }
+    if (isset($filter['public'])) $filter['public'] = boolval($filter['public']);
+
+    if (isset($_GET['search'])) {
+        $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
+        $filter = ['title' => ['$regex' => $j]];
+    }
+
+    if ($type == 'projects' || $type == 'proposals') {
+        include_once BASEPATH . "/php/Project.php";
+        $Project = new Project();
+        if (!$Settings->hasPermission($type . '.view')) {
+            $filter['$or'] = [
+                ['persons.user' => $_SESSION['username']],
+                ['created_by' => $_SESSION['username']]
+            ];
+        }
+    } elseif ($type == 'activities') {
+        if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+            $filter = $Settings->getActivityFilter($filter);
+        }
+    }
+
+    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact'];
+
+    if (isset($_GET['aggregate'])) {
+        // aggregate by one column
+        $group = $_GET['aggregate'];
+        $aggregate = [
+            ['$match' => $filter],
+        ];
+        $group_parts = explode('.', $group);
+        $first_part = $group_parts[0];
+        if (in_array($first_part, $unwinds)) {
+            // preserve null and empty arrays
+            $aggregate[] = ['$unwind' => ['$path' => '$' . $first_part, 'preserveNullAndEmptyArrays' => true]];
+        }
+        $aggregate[] =
+            ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
+
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => '$_id', 'count' => 1]];
+        // $aggregate[] = ['$limit' => 10];
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => 1, 'count' => 1]];
+        // $aggregate = array_merge($filter);
+
+        $result = $collection->aggregate(
+            $aggregate
+        )->toArray();
+        echo return_rest($result, count($result));
+        die;
+    }
+
+    $projection = [
+        '_id' => 0,
+        'id' => ['$toString' => '$_id'],
+    ];
+    $unwind = [];
+    if (isset($_GET['columns'])) {
+        $columns = $_GET['columns'];
+        foreach ($columns as $c) {
+            if ($c == 'id') continue;
+            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'title', 'departments'])) {
+                $projection[$c] = '$rendered.' . $c;
+                continue;
+            }
+            if (in_array(explode('.', $c)[0], $unwinds)) {
+                $unwind[] = ['$unwind' => '$' . explode('.', $c)[0]];
+            }
+            $projection[$c] = '$' . $c;
+        }
+    } else {
+        // default projection
+        $projection = match ($type) {
+            'activities' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'activity' => '$rendered.web',
+                'icon' => '$rendered.icon',
+                'type' => '$rendered.type',
+                'subtype' => '$rendered.subtype',
+                'year' => '$year',
+            ],
+            'conferences' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'location' => '$location',
+                'start' => '$start',
+                'end' => '$end',
+            ],
+            'journals' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'journal' => '$journal',
+                'issn' => '$issn',
+                'publisher' => '$publisher',
+            ],
+            'projects' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'title' => '$title',
+                'type' => '$type',
+            ],
+            'proposals' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'title' => '$title',
+                'type' => '$type',
+            ],
+            default => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+            ]
+        };
+    }
+
+    $pipeline = [];
+    if (!empty($unwind)) {
+        $pipeline = array_merge($pipeline, $unwind);
+    }
+    // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    // Füge das Sortieren und die Projektion hinzu
+    $pipeline[] = ['$sort' => ['year' => -1]];
+    $pipeline[] = [
+        '$project' => $projection
+    ];
+
+    // Führe die Aggregation aus
+    $result = $collection->aggregate($pipeline)->toArray();
+
+    if (!isset($_GET['raw']) && ($type == 'projects' || $type == 'proposals')) {
+        foreach ($result as &$row) {
+            $Project->setProject($row);
+            foreach ($row as $key => $value) {
+                $row[$key] = $Project->printField($key, $value);
+            }
+        }
+    }
+
+    echo return_rest($result, count($result));
+});
+
+
 
 // get projects by funding number
 Route::get('/api/projects-by-funding-number', function () {

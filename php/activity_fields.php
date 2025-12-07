@@ -1,17 +1,14 @@
 <?php
-require_once "Settings.php";
-require_once "Vocabulary.php";
+require_once "fields.php";
 
-class Fields
+class ActivityFields extends Fields
 {
-    public $fields = array();
-    private $Vocabulary;
 
     function __construct()
     {
+        parent::__construct();
         $Settings = new Settings();
         $DB = new DB();
-        $this->Vocabulary = new Vocabulary();
         $osiris = $DB->db;
         $types = $osiris->adminCategories->find()->toArray();
         $types = array_column($types, lang('name', 'name_de'), 'id');
@@ -58,6 +55,16 @@ class Fields
         ]);
 
         $FIELDS = [
+            [
+                'id' => 'id',
+                'module_of' => ['general'],
+                'label' => lang('ID', 'ID'),
+                'type' => 'string',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+            ],
             [
                 'id' => 'print',
                 'module_of' => $typeModules['print'] ?? [],
@@ -1002,19 +1009,6 @@ class Fields
         }
 
 
-        function typeConvert($type)
-        {
-            return match ($type) {
-                'int' => 'integer',
-                'float' => 'double',
-                'bool', 'bool-check' => 'boolean',
-                'list' => 'string',
-                'url' => 'string',
-                'text' => 'string',
-                default => 'string',
-            };
-        }
-
         foreach ($osiris->adminFields->find() as $field) {
             // make sure that id does not exist yet
             $exists = false;
@@ -1034,7 +1028,7 @@ class Fields
                     'columns'
                 ],
                 'label' => lang($field['name'], $field['name_de'] ?? null),
-                'type' => typeConvert($field['format'] ?? 'string'),
+                'type' => parent::typeConvert($field['format'] ?? 'string'),
                 'custom' => true
             ];
 
@@ -1065,24 +1059,6 @@ class Fields
             if (!isset($a['label']) && !isset($b['label'])) return 0;
             return strnatcmp($a['label'], $b['label']);
         });
-    }
-
-    public function getField($id)
-    {
-        foreach ($this->fields as $f) {
-            if ($f['id'] == $id) return $f;
-        }
-        return null;
-    }
-
-    private function vocabularyValues($vocabularyId)
-    {
-        $voc = $this->Vocabulary->getValues($vocabularyId);
-        $list = [];
-        foreach ($voc as $v) {
-            $list[$v['id']] = lang($v['en'], $v['de'] ?? null);
-        }
-        return $list;
     }
 }
 

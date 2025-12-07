@@ -503,6 +503,9 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
         if (empty($topics) || empty($topics[0])) return '';
+        if (!is_array($topics)) {
+            $topics = DB::doc2Arr(explode(',', $topics));
+        }
 
         $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
         $html = '<div class="topics ' . $class . '">';

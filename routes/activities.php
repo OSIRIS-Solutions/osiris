@@ -41,23 +41,31 @@ Route::get('/(activities|my-activities)', function ($page) {
 }, 'login');
 
 
-Route::get('/(activities|projects|proposals)/search', function ($collection) {
+Route::get('/(activities|projects|proposals|conferences|journals)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
 
-    $breadcrumb = [];
     switch ($collection) {
         case 'activities':
-            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"];
+            $colName = lang('Activities', "Aktivitäten");
             break;
         case 'projects':
-            $breadcrumb[] = ['name' => lang('Projects', "Projekte"), 'path' => "/projects"];
+            $colName = lang('Projects', "Projekte");
             break;
         case 'proposals':
-            $breadcrumb[] = ['name' => lang('Proposals', "Anträge"), 'path' => "/proposals"];
+            $colName = lang('Proposals', "Anträge");
+            break;
+        case 'conferences':
+            $colName = lang('Events', "Veranstaltungen");
+            break;
+        case 'journals':
+            $colName = $Settings->journalLabel();
             break;
     }
-    $breadcrumb[] = ['name' => lang("Advanced search", "Erweiterte Suche")];
+    $breadcrumb = [
+        ['name' => $colName, 'path' => "/" . $collection],
+        ['name' => lang("Advanced search", "Erweiterte Suche")]
+    ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/advanced-search.php";
     include BASEPATH . "/footer.php";

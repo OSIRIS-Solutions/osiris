@@ -1,19 +1,16 @@
 <?php
-require_once "Settings.php";
-require_once "Vocabulary.php";
+require_once "fields.php";
 
-class Fields
+class ProjectFields extends Fields
 {
-    public $fields = array();
     private $type = 'projects';
-    private $Vocabulary;
 
     function __construct($type = 'projects')
     {
+        parent::__construct();
         $this->type = $type;
         $Settings = new Settings();
         $DB = new DB();
-        $this->Vocabulary = new Vocabulary();
         $osiris = $DB->db;
         $adminCategories = $osiris->adminProjects->find()->toArray();
         $types = array_column($adminCategories, lang('name', 'name_de'), 'id');
@@ -65,6 +62,16 @@ class Fields
 
 
         $FIELDS = [
+            [
+                'id' => 'id',
+                'module_of' => ['general'],
+                'label' => lang('ID', 'ID'),
+                'type' => 'string',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+            ],
             [
                 "id" => "type",
                 "module_of" => $typeModules["type"] ?? [],
@@ -179,6 +186,12 @@ class Fields
                 "module_of" => $typeModules["status"] ?? [],
                 "label" => lang("Status", "Status"),
                 'type' => 'string',
+                'input' => 'select',
+                'values' => [
+                    'proposed' => lang('Proposed', 'Beantragt'),
+                    'approved' => lang('Approved', 'Bewilligt'),
+                    'rejected' => lang('Rejected', 'Abgelehnt'),
+                ],
                 'usage' => [
                     'aggregate',
                     'filter',
@@ -883,19 +896,6 @@ class Fields
             ];
         }
 
-        function typeConvert($type)
-        {
-            return match ($type) {
-                'int' => 'integer',
-                'float' => 'double',
-                'bool', 'bool-check' => 'boolean',
-                'list' => 'string',
-                'url' => 'string',
-                'text' => 'string',
-                default => 'string',
-            };
-        }
-
         foreach ($osiris->adminFields->find() as $field) {
             // make sure that id does not exist yet
             $exists = false;
@@ -915,7 +915,7 @@ class Fields
                     'columns'
                 ],
                 'label' => lang($field['name'], $field['name_de'] ?? null),
-                'type' => typeConvert($field['format'] ?? 'string'),
+                'type' => parent::typeConvert($field['format'] ?? 'string'),
                 'custom' => true
             ];
 
@@ -948,23 +948,6 @@ class Fields
         });
     }
 
-    public function getField($id)
-    {
-        foreach ($this->fields as $f) {
-            if ($f['id'] == $id) return $f;
-        }
-        return null;
-    }
-
-    private function vocabularyValues($vocabularyId)
-    {
-        $voc = $this->Vocabulary->getValues($vocabularyId);
-        $list = [];
-        foreach ($voc as $v) {
-            $list[$v['id']] = lang($v['en'], $v['de'] ?? null);
-        }
-        return $list;
-    }
 }
 
 // dump($FIELDS);
