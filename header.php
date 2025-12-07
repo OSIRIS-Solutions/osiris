@@ -695,6 +695,10 @@ $pageactive = function ($p) use ($page) {
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
                             <?php if ($Settings->canProposalsBeCreated()) { ?>
+                                
+                            <a href="<?= ROOTPATH ?>/proposals/search" class="inline-btn mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                                <i class="ph ph-magnifying-glass-plus"></i>
+                            </a>
                                 <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
                                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
                                     <?= lang('Proposals', 'Anträge') ?>
@@ -702,7 +706,7 @@ $pageactive = function ($p) use ($page) {
                             <?php } ?>
 
 
-                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
                                 <i class="ph ph-magnifying-glass-plus"></i>
                             </a>
                             <a href="<?= ROOTPATH ?>/projects" class="with-icon <?= $pageactive('projects') ?>">

@@ -10,13 +10,14 @@ $nagoyaEnabled = $Settings->get('features.nagoya.enabled', false);
 
 
 // transform nagoya info from proposals
-$proposals = $osiris->proposals->find(['nagoya' => ['$exists' => true]])->toArray();
+$proposals = $osiris->proposals->find(['nagoya' => ['$in' => ['yes', 'no']]])->toArray();
 $N_ = count($proposals);
 
 if ($N_ == 0 && !$nagoyaEnabled) {
-    echo lang("No proposals with Nagoya info found and Nagoya feature is disabled. No changes made.", 
+    echo "<p>". lang(
+        "No proposals with Nagoya info found and Nagoya feature is disabled. No changes made.",
         "Keine Anträge mit Nagoya-Informationen gefunden und Nagoya-Funktion ist deaktiviert. Es wurden keine Änderungen vorgenommen."
-    );
+    ) . "</p>";
 } else {
     foreach ($proposals as $proposal) {
         $enabled = ($proposal['nagoya'] == 'yes');
@@ -31,7 +32,7 @@ if ($N_ == 0 && !$nagoyaEnabled) {
         $nagoya = [
             'enabled' => $enabled,
             'countries' => $countries,
-            'status' => (empty($countries) ? 'incomplete': 'abs-review')
+            'status' => (empty($countries) ? 'incomplete' : 'abs-review')
         ];
         $osiris->proposals->updateOne(
             ['_id' => $proposal['_id']],
@@ -40,30 +41,34 @@ if ($N_ == 0 && !$nagoyaEnabled) {
             ]]
         );
     }
-    echo lang("Nagoya info transformed for " . count($proposals) . " proposals.", 
+    echo "<p>". lang(
+        "Nagoya info transformed for " . count($proposals) . " proposals.",
         "Nagoya-Informationen für " . count($proposals) . " Anträge wurden umgewandelt."
-    );
+    ) . "</p>";
 }
 
 
 // get queries without 'type' field
-$queries = $osiris->queries->find(['type' => ['$exists' => false]])->toArray();
+$queries = $osiris->queries->find()->toArray();
 $N_ = count($queries);
 
-if ($N_ == 0) {
-    // echo lang("No queries without type field found. No changes made.", 
-    //     "Keine Abfragen ohne Typ-Feld gefunden. Es wurden keine Änderungen vorgenommen."
-    // );
-} else {
-    foreach ($queries as $query) {
-        $osiris->queries->updateOne(
-            ['_id' => $query['_id']],
-            ['$set' => [
-                'type' => 'activity',
-            ]]
-        );
+foreach ($queries as $query) {
+    $type = $query['type'] ?? 'activities';
+    if ($type == 'activity') {
+        $type = 'activities';
+    } elseif ($type == 'project') {
+        $type = 'projects';
+    } elseif ($type == 'proposal') {
+        $type = 'proposals';
     }
-    echo lang("Type field added to " . count($queries) . " queries.", 
-        "Typ-Feld zu " . count($queries) . " Abfragen hinzugefügt."
+    $osiris->queries->updateOne(
+        ['_id' => $query['_id']],
+        ['$set' => [
+            'type' => $type,
+        ]]
     );
 }
+echo "<p>" . lang(
+    "Type field added to " . $N_ . " queries.",
+    "Typ-Feld zu " . $N_ . " Abfragen hinzugefügt."
+) . "</p>";

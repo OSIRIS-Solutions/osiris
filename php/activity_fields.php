@@ -29,7 +29,7 @@ class Fields
             $modules = array_unique($modules);
             foreach ($modules as $module) {
                 if (!isset($typeModules[$module])) $typeModules[$module] = [];
-                $typeModules[$module][] = $m['id'];
+                if (!in_array($m['id'], $typeModules[$module])) $typeModules[$module][] = $m['id'];
             }
         }
 

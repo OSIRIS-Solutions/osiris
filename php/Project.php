@@ -251,20 +251,7 @@ class Project extends Vocabulary
             case 'approval_date':
             case 'rejection_date':
                 return Document::format_date($value);
-            case 'nagoya':
-                if ($value == 'no') {
-                    return lang('Not relevant', 'Nicht relevant');
-                }
-                $lang = lang('name', 'name_de');
-                $countriesList = '';
-                foreach ($this->project['nagoya_countries'] ?? [] as $c) {
-                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . '</li>';
-                }
-                return '<div class="alert signal">'
-                    . '<h6 class="title">' . lang('Countries', 'Länder:') . '</h6>'
-                    . '<ul class="list signal mb-0">' . $countriesList . '</ul>'
-                    . '</div>';
-
+            
             case 'countries':
             case 'research-countries':
                 $lang = lang('name', 'name_de');

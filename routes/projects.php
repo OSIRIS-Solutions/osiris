@@ -63,7 +63,7 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/(projects|proposals)/search', function ($collection) {
+Route::get('/(projects|proposals)/oldsearch', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [

@@ -19,8 +19,16 @@
 $Format = new Document(true);
 $expert = isset($_GET['expert']);
 
-include_once BASEPATH . "/php/fields.php";
-$FIELDS = new Fields();
+if ($collection == 'projects') {
+    include_once BASEPATH . "/php/project_fields.php";
+    $FIELDS = new Fields('projects');
+} elseif ($collection == 'proposals') {
+    include_once BASEPATH . "/php/project_fields.php";
+    $FIELDS = new Fields('proposals');
+} else {
+    include_once BASEPATH . "/php/activity_fields.php";
+    $FIELDS = new Fields();
+}
 
 // dump($FIELDS, true);
 
@@ -138,7 +146,7 @@ function printRules($rules)
                     ['global' => true],
                     ['role' => ['$in' => $Settings->roles]]
                 ],
-                'type' => 'activity'
+                'type' => $collection
             ];
             if (!$expert) {
                 $filter['expert'] = ['$ne' => true];
@@ -161,7 +169,7 @@ function printRules($rules)
                 });
             ?>
 
-            <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('Search saved queries...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
+                <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('Search saved queries...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
                     var summary = $(this).find('summary').text().toLowerCase();
                     var filter = $('#query-search').val().toLowerCase();
                     if (summary.indexOf(filter) > -1) {
@@ -365,11 +373,19 @@ function printRules($rules)
 
             <div id="column-select">
                 <?php
-                $selected = $_GET['columns'] ?? [
+                $default = [
                     'icon',
                     'web',
                     'year'
                 ];
+                if ($collection == 'projects' || $collection == 'proposals') {
+                    $default = [
+                        'type',
+                        'name',
+                        'title'
+                    ];
+                }
+                $selected = $_GET['columns'] ?? $default;
                 // $ignore = ['_id', 'authors.user', 'authors.position', 'authors.approved', 'authors.aoi', 'authors.last', 'authors.first'];
                 // $fields = array_values($FIELDS);
                 $fields = array_filter($FIELDS->fields, function ($f) {
@@ -391,6 +407,17 @@ function printRules($rules)
                     return count($b['module_of'] ?? []) <=> count($a['module_of'] ?? []);
                 });
 
+                $icons = [];
+                if ($collection == 'activities') {
+                    $iconsRaw = $osiris->adminCategories->find([], ['projection' => ['icon' => 1, 'id' => 1, 'color' => 1, 'name' => 1]])->toArray();
+                } else {
+                    $iconsRaw = $osiris->adminProjects->find([], ['projection' => ['icon' => 1, 'id' => 1, 'color' => 1, 'name' => 1]])->toArray();
+                }
+                foreach ($iconsRaw as $icon) {
+                    $iconClass = 'ph ph-cube';
+                    $icons[$icon['id']] = '<span data-toggle="tooltip" data-title="' . ($icon['name'] ?? $icon['id']) . '"><i class="ph ph-' . ($icon['icon'] ?? $iconClass) . '" style="color:' . ($icon['color'] ?? '#6c757d') . '"></i></span>';
+                }
+
                 foreach ($fields as $field) {
                     $modules = $field['module_of'] ?? [];
                 ?>
@@ -411,7 +438,7 @@ function printRules($rules)
                             <?php
                                     continue;
                                 }
-                                echo $Settings->icon($key);
+                                echo $icons[$key] ?? '<span data-toggle="tooltip" data-title="' . $key . '"><i class="ph ph-question text-muted"></i></span>';
                             } ?>
 
                         </label>
@@ -449,7 +476,8 @@ function printRules($rules)
     <a href="https://wiki.osiris-app.de/users/activities/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced activity search', 'Erweiterte Aktivitäten-Suche') ?>
+        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('in', 'in') ?> <?= ucfirst($collection) ?>
     </h1>
 
     <div class="box">
@@ -489,7 +517,11 @@ function printRules($rules)
                     <div class="input-group" style="display:none;" id="aggregate-form">
                         <select name="aggregate" id="aggregate" class="form-control w-auto">
                             <option value=""><?= lang('Without aggregation (show all)', 'Ohne Aggregation (zeige alles)') ?></option>
-                            <?php foreach ($filters as $f) { ?>
+                            <?php
+                            $aggregate_filter = array_filter($FIELDS->fields, function ($f) {
+                                return in_array('aggregate', $f['usage'] ?? []);
+                            });
+                            foreach ($aggregate_filter as $f) { ?>
                                 <option value="<?= $f['id'] ?>"><?= $f['label'] ?></option>
                             <?php } ?>
 
@@ -592,7 +624,7 @@ function printRules($rules)
 
             if (aggregate !== "") {
                 data = data.map(row => ({
-                    value: row.value || lang('No Activity', 'Keine Aktivität'),
+                    value: row.value || '<em>' + lang('empty', 'leer') + '</em>',
                     count: row.count || 0
                 }));
 
@@ -737,7 +769,7 @@ function printRules($rules)
 
             $('#result').html(rules)
             $.ajax({
-                url: ROOTPATH + '/api/activities', // Deine API-URL
+                url: ROOTPATH + '/api/<?= $collection ?>',
                 method: 'GET',
                 data: data,
                 success: function(response) {
@@ -796,7 +828,8 @@ function printRules($rules)
                 created: new Date(),
                 aggregate: $('#aggregate').val(),
                 columns: columns,
-                expert: EXPERT
+                expert: EXPERT,
+                type: '<?= $collection ?>'
             }
 
             $.post(ROOTPATH + '/crud/queries', query, function(data) {
@@ -831,9 +864,8 @@ function printRules($rules)
                 }
                 return value;
             });
-
             if (!columns) {
-                columns = 'icon;web;year';
+                columns = '<?= $collection == 'activities' ? 'icon;web;year' : 'type;name;title' ?>';
             }
             $('#column-select input').prop('checked', false)
             columns.split(';').forEach(column => {

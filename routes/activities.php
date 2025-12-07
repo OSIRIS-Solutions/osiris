@@ -41,15 +41,25 @@ Route::get('/(activities|my-activities)', function ($page) {
 }, 'login');
 
 
-Route::get('/activities/search', function () {
+Route::get('/(activities|projects|proposals)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-        ['name' => lang("Search", "Suche")]
-    ];
+
+    $breadcrumb = [];
+    switch ($collection) {
+        case 'activities':
+            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"];
+            break;
+        case 'projects':
+            $breadcrumb[] = ['name' => lang('Projects', "Projekte"), 'path' => "/projects"];
+            break;
+        case 'proposals':
+            $breadcrumb[] = ['name' => lang('Proposals', "Anträge"), 'path' => "/proposals"];
+            break;
+    }
+    $breadcrumb[] = ['name' => lang("Advanced search", "Erweiterte Suche")];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/activity-search.php";
+    include BASEPATH . "/pages/advanced-search.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
