@@ -126,6 +126,22 @@
         </div>
 
 
+        <!-- sort -->
+        <div class="form-group">
+            <label for="sort-by"><?= lang('Sort by', 'Sortieren nach') ?></label>
+            <select name="sortby" id="sort-by" class="form-control w-auto">
+                <option value="date_desc"><?= lang('Date (newest first)', 'Datum (neueste zuerst)') ?></option>
+                <option value="date_asc"><?= lang('Date (oldest first)', 'Datum (älteste zuerst)') ?></option>
+                <option value="type_asc"><?= lang('Type (A-Z)', 'Art (A-Z)') ?></option>
+                <option value="type_desc"><?= lang('Type (Z-A)', 'Art (Z-A)') ?></option>
+                <option value="title_asc"><?= lang('Title (A-Z)', 'Titel (A-Z)') ?></option>
+                <option value="title_desc"><?= lang('Title (Z-A)', 'Titel (Z-A)') ?></option>
+                <option value="print_asc"><?= lang('Formatted output (A-Z)', 'Formattierte Ausgabe (A-Z)') ?></option>
+                <option value="print_desc"><?= lang('Formatted output (Z-A)', 'Formattierte Ausgabe (Z-A)') ?></option>
+            </select>
+        </div>
+
+
         <div class="form-group">
 
             <?= lang('Highlight:', 'Hervorheben:') ?>
@@ -163,7 +179,6 @@
             </div>
 
         </div>
-
 
 
         <button class="btn secondary">Download</button>

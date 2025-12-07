@@ -196,7 +196,37 @@ Route::post('/download', function () {
     // select data
     $collection = $osiris->activities;
     $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
+    // date_desc
+    // date_asc
+    // type_asc
+    // type_desc
+    // title_asc
+    // title_desc
+    if (isset($_POST['sortby']) && !empty($_POST['sortby'])) {
+        $sortfield = 'year';
+        $sortorder = 1;
+        if ($_POST['sortby'] == 'date_desc') {
+            $sortorder = -1;
+        } elseif ($_POST['sortby'] == 'type_asc') {
+            $sortfield = 'type';
+        } elseif ($_POST['sortby'] == 'type_desc') {
+            $sortfield = 'type';
+            $sortorder = -1;
+        } elseif ($_POST['sortby'] == 'title_asc') {
+            $sortfield = 'title';
+        } elseif ($_POST['sortby'] == 'title_desc') {
+            $sortfield = 'title';
+            $sortorder = -1;
+        } else if ($_POST['sortby'] == 'print_asc') {
+            $sortfield = 'rendered.print';
+            $sortorder = 1;
+        } else if ($_POST['sortby'] == 'print_desc') {
+            $sortfield = 'rendered.print';
+            $sortorder = -1;
+        }
 
+        $options['sort'] = [$sortfield => $sortorder];
+    }
     // dump($params, true);
     $filter = [];
     if (isset($params['type']) && !empty($params['type'])) {
