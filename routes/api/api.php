@@ -705,10 +705,15 @@ Route::get('/api/reviews', function () {
 
     $reviews = [];
     foreach ($result as $doc) {
-        if (!array_key_exists($doc['user'], $reviews)) {
-            $u = $DB->getNameFromId($doc['user']);
-            $reviews[$doc['user']] = [
-                'User' => $doc['user'],
+        $authors = DB::doc2Arr($doc['authors'] ?? []);
+        $user = $authors[0]['user'] ?? null;
+        if (empty($user) && isset($doc['user'])) {
+            $user = $doc['user'];
+        }
+        if (!array_key_exists($user, $reviews)) {
+            $u = $DB->getNameFromId($user);
+            $reviews[$user] = [
+                'User' => $user,
                 'Name' => $u,
                 'Editor' => 0,
                 'Editorials' => [],
@@ -719,7 +724,7 @@ Route::get('/api/reviews', function () {
         switch (strtolower($doc['subtype'] ?? $doc['role'] ?? 'review')) {
             case 'editor':
             case 'editorial':
-                $reviews[$doc['user']]['Editor']++;
+                $reviews[$user]['Editor']++;
                 $date = format_date($doc['start'] ?? $doc);
                 if (isset($doc['end']) && !empty($doc['end'])) {
                     $date .= " - " . format_date($doc['end']);
@@ -727,7 +732,7 @@ Route::get('/api/reviews', function () {
                     $date .= " - today";
                 }
 
-                $reviews[$doc['user']]['Editorials'][] = [
+                $reviews[$user]['Editorials'][] = [
                     'id' => strval($doc['_id']),
                     'date' => $date,
                     'details' => $doc['editor_type'] ?? ''
@@ -736,15 +741,15 @@ Route::get('/api/reviews', function () {
 
             case 'reviewer':
             case 'review':
-                $reviews[$doc['user']]['Reviewer']++;
-                $reviews[$doc['user']]['Reviews'][] = [
+                $reviews[$user]['Reviewer']++;
+                $reviews[$user]['Reviews'][] = [
                     'id' => strval($doc['_id']),
                     'date' => format_date($doc)
                 ];
                 break;
             default:
-                $reviews[$doc['user']]['Reviewer']++;
-                $reviews[$doc['user']]['Reviews'][] = [
+                $reviews[$user]['Reviewer']++;
+                $reviews[$user]['Reviews'][] = [
                     'id' => strval($doc['_id']),
                     'date' => format_date($doc)
                 ];

@@ -259,11 +259,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 }
             <?php } ?>
         });
-
-        // spark('spark', {
-        //     journal_id: '<?= $id ?>',
-        //     type: 'publication'
-        // });
     });
 </script>
 
