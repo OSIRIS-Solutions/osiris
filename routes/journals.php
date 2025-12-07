@@ -336,6 +336,10 @@ Route::post('/crud/journal/create', function () {
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
 
+    if (isset($values['oa']) && $values['oa'] == 0) {
+        $values['oa'] = true;
+    }
+
     // check if issn already exists:
     if (isset($values['issn']) && !empty($values['issn'])) {
         $issn_exist = $collection->findOne(['issn' => ['$in' => $values['issn']]]);
