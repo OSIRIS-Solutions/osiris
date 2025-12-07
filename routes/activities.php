@@ -279,32 +279,17 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $no_container = true;
     include BASEPATH . "/header.php";
 
-    if (empty($activity)) {
-        echo "Activity not found!";
+    if (empty($activity)) { ?>
+        <div class="content-container">
+            <div class="alert alert-danger">
+                <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
+            </div>
+        </div>
+<?php
     } else {
         include BASEPATH . "/pages/activity.php";
     }
     include BASEPATH . "/footer.php";
-}, 'login');
-
-
-// @deprecated 1.2.0
-Route::get('/activities/view/([a-zA-Z0-9]*)/file', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-
-    $id = $DB->to_ObjectID($id);
-
-    $activity = $osiris->activities->findOne(['_id' => $id]);
-
-    if (empty($activity)) {
-        echo "Activity not found!";
-    } else if (!isset($activity['file']) || empty($activity['file'])) {
-        echo "No file found.";
-    } else {
-        header('Content-type: application/pdf');
-        // header('Content-Disposition: attachment; filename="my.pdf"');
-        echo $activity['file']->serialize();
-    }
 }, 'login');
 
 
