@@ -1990,7 +1990,7 @@ class Modules
             case "event-select":
                 $events = $this->DB->db->conferences->find(
                     ['end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]],
-                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1]]
+                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1, 'country' => 1]]
                     // ['sort' => ['start' => -1], 'limit' => 10]
                 );
             ?>
@@ -2013,7 +2013,7 @@ class Modules
                             <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
-                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>'); return false;">
+                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
                                         <strong><?= htmlspecialchars($ev['title']) ?></strong><br>
                                         <small class="text-muted">
                                             <?= date('d.m.Y', strtotime($ev['start'])) ?> - <?= date('d.m.Y', strtotime($ev['end'])) ?>
