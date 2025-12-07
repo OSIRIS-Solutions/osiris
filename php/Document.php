@@ -760,17 +760,17 @@ class Document extends Settings
     {
         switch ($cat) {
             case 'doctoral thesis':
-                return "Doktorand:in";
+                return $this->lang("Doctoral thesis", "Doktorand:in");
             case 'master thesis':
-                return "Master-Thesis";
+                return $this->lang("Master thesis", "Master-Thesis");
             case 'bachelor thesis':
-                return "Bachelor-Thesis";
+                return $this->lang("Bachelor thesis", "Bachelor-Thesis");
             case 'guest scientist':
-                return "Gastwissenschaftler:in";
+                return $this->lang("Guest scientist", "Gastwissenschaftler:in");
             case 'lecture internship':
-                return "Pflichtpraktikum im Rahmen des Studium";
+                return $this->lang("Lecture internship", "Pflichtpraktikum im Rahmen des Studium");
             case 'student internship':
-                return "Schülerpraktikum";
+                return $this->lang("Student internship", "Schülerpraktikum");
             case 'lecture':
                 return $this->lang('Lecture', 'Vorlesung');
             case 'practical':
@@ -1379,13 +1379,13 @@ class Document extends Settings
                     $val = $this->getVal($module, $default);
                 }
                 // only in german because standard is always english
-                if ($this->lang('en', 'de') == 'de' && isset($this->custom_field_values[$module])) {
+                if (isset($this->custom_field_values[$module])) {
                     if (is_array($val)) {
                         $values = [];
                         foreach ($val as $v) {
                             // check if the value is in the custom field values
                             foreach ($this->custom_field_values[$module] as $field) {
-                                if ($v == $field[0] ?? '') {
+                                if (in_array($v, DB::doc2Arr($field))) {
                                     $values[] = $this->lang(...$field);
                                     continue 2;
                                 }
@@ -1395,7 +1395,7 @@ class Document extends Settings
                         return implode(", ", $values);
                     } else {
                         foreach ($this->custom_field_values[$module] as $field) {
-                            if ($val == $field[0] ?? '') return $this->lang(...$field);
+                            if (in_array($val, DB::doc2Arr($field))) return $this->lang(...$field);
                         }
                     }
                 }
@@ -1702,7 +1702,7 @@ class Document extends Settings
             if (empty($value) && count($m) == 2) {
                 $value = $m[1];
             }
-            
+
             if (empty($value)) {
                 $value = '';
             }
@@ -1746,7 +1746,8 @@ class Document extends Settings
                 if (!$anyFilled) $text = '';
             } else {
                 // single field as before
-                $value = trim($this->get_field($fields));
+                $value = $this->get_field($fields, '');
+                if (!empty($value)) $value = trim($value);
                 if (empty($value) || $value == '-') $text = '';
             }
             $vars['%' . $match . '%'] = $text;
