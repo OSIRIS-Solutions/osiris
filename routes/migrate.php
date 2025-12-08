@@ -323,7 +323,7 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/v1.7.0.php";
         flush();
         ob_flush();
-        $rerender = false;
+        $rerender = true;
     }
 
     if ($rerender) {
