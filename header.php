@@ -578,7 +578,7 @@ $pageactive = function ($p) use ($page) {
                             ?>
                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $inf['_id'] ?>?edit-stats=<?= date('Y-m-d') ?>">
                                         <i class="ph ph-cube-transparent"></i>
-                                        <?= lang('Statics for ', 'Statistik für ') . $inf['name'] ?>
+                                        <?= lang('Statistics for ', 'Statistik für ') . $inf['name'] ?>
                                     </a>
                             <?php
                                 }

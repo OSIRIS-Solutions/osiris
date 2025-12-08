@@ -992,7 +992,9 @@ class Document extends Settings
                 return $this->getVal('affiliation');
             case "authors": // ["authors"],
             case "supervisor": // ["authors"],
+            case "supervisor-thesis": // ["authors"],
             case "scientist": // ["authors"],
+            case "author-table": // ["authors"],
                 return $this->formatAuthorsNew('authors-last-f.');
             case "book-series": // ["series"],
                 return $this->getVal('series');
