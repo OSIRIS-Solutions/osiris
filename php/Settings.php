@@ -20,8 +20,6 @@ class Settings
     private $features = array();
     public $continuousTypes = [];
 
-    public const FEATURES = ['coins', 'achievements', 'user-metrics', 'projects', 'guests'];
-
     function __construct($user = array())
     {
         // construct database object 
@@ -41,6 +39,7 @@ class Settings
         if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
             $this->roles[] = 'admin';
         }
+        $this->roles = array_values(array_unique($this->roles));
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],
@@ -504,6 +503,9 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
         if (empty($topics) || empty($topics[0])) return '';
+        if (!is_array($topics)) {
+            $topics = DB::doc2Arr(explode(',', $topics));
+        }
 
         $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
         $html = '<div class="topics ' . $class . '">';
@@ -602,6 +604,33 @@ class Settings
         return false;
     }
 
+    public function getRoles()
+    {
+
+        $req = $this->osiris->adminGeneral->findOne(['key' => 'roles']);
+        $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
+
+        // if user and scientist are not in the roles, add them
+        if (!in_array('user', $roles)) {
+            $roles[] = 'user';
+        }
+        if (!in_array('scientist', $roles)) {
+            $roles[] = 'scientist';
+        }
+        // sort admin last
+        $roles = array_diff($roles, ['admin']);
+        $roles = array_merge($roles, ['admin']);
+        return $roles;
+    }
+
+    public function getRolesWithPermission($right)
+    {
+        $roles = $this->osiris->adminRights->distinct('role', [
+            'right' => $right,
+            'value' => true
+        ]);
+        return DB::doc2Arr($roles);
+    }
     public function getRegex()
     {
         $regex = $this->get('regex');

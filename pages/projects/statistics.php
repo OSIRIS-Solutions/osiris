@@ -592,9 +592,9 @@ $all = $osiris->projects->count();
                     [1, "desc"]
                 ],
             });
-            initDownloadTable('#projects-by-type-table', 'Projects by type <?= $reportyear ?>');
-            initDownloadTable('#proposals-by-type-table', 'Proposals by type <?= $reportyear ?>');
-            initDownloadTable('#collaborative-partners-by-type', 'Collaboration partners by type <?= $reportyear ?>');
+            initDownloadTable('#projects-by-type-table', 'Projects by type, <?= $time_frame ?>');
+            initDownloadTable('#proposals-by-type-table', 'Proposals by type, <?= $time_frame ?>');
+            initDownloadTable('#collaborative-partners-by-type', 'Collaboration partners by type, <?= $time_frame ?>');
 
 
             var collaboratorRows = <?= json_encode($collaborations_by_country) ?>;

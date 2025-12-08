@@ -18,14 +18,52 @@ function apikey_check($key = null)
 {
     $Settings = new Settings();
     $APIKEY = $Settings->get('apikey');
-    // always true if API Key is not set
-    if (!isset($APIKEY) || empty($APIKEY)) return true;
-    // return true for same page origin
-    if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') return true;
-    // check if API key is valid
-    if ($APIKEY == $key) return true;
-    // otherwise return false
+    // dump($_SERVER);
+    // 1) Logged-in user via session: always allow
+    if (($_SESSION['loggedin'] ?? false) && !empty($_SESSION['username'])) {
+        if (isset($_SERVER['HTTP_SEC_FETCH_SITE'])) {
+            if ($_SERVER['HTTP_SEC_FETCH_SITE'] === 'same-site' || $_SERVER['HTTP_SEC_FETCH_SITE'] === 'same-origin') {
+                return true;
+            }
+        } else {
+            // no Sec-Fetch-Site header (old browser/proxy) → fallback: same host via Referer
+            if (!empty($_SERVER['HTTP_REFERER'])) {
+                $refHost = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+                $host    = $_SERVER['HTTP_HOST'] ?? '';
+                if ($refHost === $host) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // 2) If no API key is configured, nothing to check
+    if (empty($APIKEY)) {
+        return true;
+    }
+
+    // 3) Check query param ?apikey=...
+    if ($APIKEY === $key) {
+        return true;
+    }
+
+    // 4) Optional: allow header X-API-Key
+    if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $APIKEY) {
+        return true;
+    }
+
+    // 5) Everything else: no access
     return false;
+    // $Settings = new Settings();
+    // $APIKEY = $Settings->get('apikey');
+    // // always true if API Key is not set
+    // if (!isset($APIKEY) || empty($APIKEY)) return true;
+    // // return true for same page origin
+    // if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') return true;
+    // // check if API key is valid
+    // if ($APIKEY == $key) return true;
+    // // otherwise return false
+    // return false;
 }
 
 function return_permission_denied()
@@ -286,12 +324,6 @@ Route::get('/api/all-activities', function () {
 
     $user = $_GET['user'] ?? $_SESSION['username'] ?? null;
     $page = $_GET['page'] ?? 'all-activities';
-    $highlight = true;
-    if ($page == 'my-activities') {
-        $highlight = $user;
-    }
-    // $Format = new Document($highlight);
-
 
     $filter = [];
     if (isset($_GET['filter'])) {
@@ -305,7 +337,6 @@ Route::get('/api/all-activities', function () {
         $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
 
-    $result = [];
     if ($page == "my-activities") {
         // reduced filter for my activities
         $filter = $Settings->getActivityFilter($filter, $user, true);
@@ -329,111 +360,61 @@ Route::get('/api/all-activities', function () {
     $i = 0;
     $first = true;
 
-    $cursor = $osiris->activities->find($filter);
-    $cart = readCart();
+    $display = $_GET['display_activities'] ?? 'web';
+    $activityField = $display === 'web'
+        ? '$rendered.web'
+        : '$rendered.print';
+
+    $pipeline = [];
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    $pipeline[] = ['$project' => [
+        '_id' => 0,
+        'id' => ['$toString' => '$_id'],
+        'quarter' => ['$ifNull' => ['$rendered.quarter', '']],
+        'icon' => '$rendered.icon',
+        'activity' => $activityField,
+        'links' => ['$literal' => ''],
+        'search-text' => '$rendered.print',
+        'start' => ['$ifNull' => ['$start_date', '']],
+        'end' => ['$ifNull' => ['$end_date', '']],
+        'departments' => '$units',
+        'epub' => '$epub',
+        'type' => '$rendered.type',
+        'subtype' => '$rendered.subtype',
+        'year' => ['$ifNull' => ['$year', 0]],
+        'authors' => ['$ifNull' => ['$rendered.authors', '']],
+        'editors' => ['$ifNull' => ['$rendered.editors', '']],
+        'title' => ['$ifNull' => ['$rendered.title', '']],
+        'topics' => ['$ifNull' => ['$topics', []]],
+        'raw_type' => '$type',
+        'raw_subtype' => '$subtype',
+        'affiliated' => ['$ifNull' => ['$affiliated', false]],
+        'workflow' => ['$ifNull' => ['$workflow.status', 'verif']],
+        'tags' => '$tags'
+    ]];
+
+    $cursor = $osiris->activities->aggregate($pipeline);
+
     foreach ($cursor as $doc) {
         $i++;
-        $id = $doc['_id'];
-        if (isset($doc['rendered'])) {
-            $rendered = $doc['rendered'];
-        } else {
-            $rendered = renderActivities(['_id' => $id]);
-        }
-
-        // $depts = $Groups->getDeptFromAuthors($doc['authors']??[]);
-        $depts = DB::doc2Arr($doc['units'] ?? []);
-
-        $type = $doc['type'];
-        $format_full = $rendered['print'];
-        if (($_GET['display_activities'] ?? 'web') == 'web') {
-            $format = $rendered['web'];
-        } else {
-            $format = $format_full;
-        }
+        // Pfad-Anpassung wie bisher
         if (isset($_GET['path'])) {
-            $format = str_replace(ROOTPATH . "/activities/view", $_GET['path'] . "/activity", $format);
-            $format = str_replace(ROOTPATH . "/profile", $_GET['path'] . "/person", $format);
-        } else if ($page == 'portal') {
-            $format = str_replace(ROOTPATH . "/activities/view", PORTALPATH . "/activity", $format);
-            $format = str_replace(ROOTPATH . "/profile", PORTALPATH . "/person", $format);
+            $doc['activity'] = str_replace(
+                [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
+                [$_GET['path'] . "/activity", $_GET['path'] . "/person"],
+                $doc['activity']
+            );
+        } elseif ($page === 'portal') {
+            $doc['activity'] = str_replace(
+                [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
+                [PORTALPATH . "/activity", PORTALPATH . "/person"],
+                $doc['activity']
+            );
         }
-
-        $active = false;
-        // if (!isset($doc['year'])) {dump($doc, true); die;}
-        $sm = intval($doc['month'] ?? 0);
-        $sy = intval($doc['year'] ?? 0);
-        // die;
-        $em = $sm;
-        $ey = $sy;
-
-        if (isset($doc['end']) && !empty($doc['end'])) {
-            $em = $doc['end']['month'];
-            $ey = $doc['end']['year'];
-        } elseif (
-            (
-                ($doc['type'] == 'misc' && ($doc['subtype'] ?? $doc['iteration']) == 'annual') ||
-                ($doc['type'] == 'review' && in_array($doc['subtype'] ?? $doc['role'], ['Editor', 'editorial', 'editor']))
-            ) && empty($doc['end'])
-        ) {
-            $em = CURRENTMONTH;
-            $ey = CURRENTYEAR;
-            $active = true;
-        }
-        $sq = $sy . 'Q' . ceil($sm / 3);
-        $eq = $ey . 'Q' . ceil($em / 3);
-
-        $datum = [
-            'quarter' => $sq,
-            'icon' => $rendered['icon'] . '<span style="display:none">' . $type . " " . $rendered['type'] . '</span>',
-            'activity' => $format,
-            'links' => '',
-            'search-text' => $format_full,
-            'start' => $doc['start_date'] ?? '',
-            'end' => $doc['end_date'] ?? '',
-            'departments' => $depts, //implode(', ', $depts),
-            'epub' => (isset($doc['epub']) && boolval($doc['epub']) ? 'true' : 'false'),
-            'type' => $rendered['type'],
-            'subtype' => $rendered['subtype'],
-            'year' => $doc['year'] ?? 0,
-            'authors' => $rendered['authors'] ?? '',
-            'editors' => $rendered['editors'] ?? '',
-            'title' => $rendered['title'] ?? '',
-            'topics' => $doc['topics'] ?? [],
-            'raw_type' => $doc['type'],
-            'raw_subtype' => $doc['subtype'],
-            'affiliated' => $doc['affiliated'] ?? false,
-            'workflow' => (isset($doc['workflow']) ? $doc['workflow']['status'] : 'verif'),
-            'tags' => DB::doc2Arr($doc['tags'] ?? []),
-        ];
-
-        if ($active) {
-            $datum['quarter'] .= ' - today';
-        } elseif ($sq != $eq) {
-            if ($sy == $ey) {
-                $datum['quarter'] .= ' - ' . 'Q' . ceil($em / 3);
-            } else {
-                $datum['quarter'] .= ' - ' . $eq;
-            }
-        }
-
-        if (defined('ROOTPATH')) {
-            $datum['links'] =
-                "<a class='btn link square' href='" . ROOTPATH . "/activities/view/$id'>
-                <i class='ph ph-arrow-fat-line-right'></i>
-            </a>";
-            // $useractivity = $DB->isUserActivity($doc, $user);
-            // if ($useractivity) {
-            //     $datum['links'] .= " <a class='btn link square' href='" . ROOTPATH . "/activities/edit/$id'>
-            //         <i class='ph ph-pencil-simple-line'></i>
-            //     </a>";
-            // }
-            $datum['links'] .= "<button class='btn link square' onclick='addToCart(this, \"$id\")'>
-            <i class='" . (in_array($id, $cart) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus') . "'></i>
-        </button>";
-        }
-        // $result[] = $datum;
         if (!$first) echo ',';
-        echo json_encode($datum, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
         $first = false;
         flush();
     }
@@ -571,6 +552,10 @@ Route::get('/api/users', function () {
                     ' . $dept . '
                 </a>';
         }
+        $guest = '';
+        if (isset($user['is_guest']) && $user['is_guest']) {
+            $guest = ' <i class="ph ph-user-plus float-right text-signal" title="' . lang('Guest Account', 'Gast-Account') . '"></i>';
+        }
         $topics = '';
         if ($topicsEnabled && $user['topics'] ?? false) {
             $topics = '<span class="float-right topic-icons">';
@@ -593,7 +578,7 @@ Route::get('/api/users', function () {
             'username' => $user['username'],
             'img' => $Settings->printProfilePicture($user['username'], 'profile-img'),
             'html' =>  "<div class='w-full'>
-                    <div style='display: none;'>" . $user['first'] . " " . $user['last'] . "</div>
+                    <div style='display: none;'>" . $user['first'] . " " . $user['last'] . "</div>$guest
                     $topics
                     <h5 class='my-0'>
                         <a href='" . $path . "/profile/" . $user['_id'] . "'>
@@ -722,10 +707,15 @@ Route::get('/api/reviews', function () {
 
     $reviews = [];
     foreach ($result as $doc) {
-        if (!array_key_exists($doc['user'], $reviews)) {
-            $u = $DB->getNameFromId($doc['user']);
-            $reviews[$doc['user']] = [
-                'User' => $doc['user'],
+        $authors = DB::doc2Arr($doc['authors'] ?? []);
+        $user = $authors[0]['user'] ?? null;
+        if (empty($user) && isset($doc['user'])) {
+            $user = $doc['user'];
+        }
+        if (!array_key_exists($user, $reviews)) {
+            $u = $DB->getNameFromId($user);
+            $reviews[$user] = [
+                'User' => $user,
                 'Name' => $u,
                 'Editor' => 0,
                 'Editorials' => [],
@@ -736,7 +726,7 @@ Route::get('/api/reviews', function () {
         switch (strtolower($doc['subtype'] ?? $doc['role'] ?? 'review')) {
             case 'editor':
             case 'editorial':
-                $reviews[$doc['user']]['Editor']++;
+                $reviews[$user]['Editor']++;
                 $date = format_date($doc['start'] ?? $doc);
                 if (isset($doc['end']) && !empty($doc['end'])) {
                     $date .= " - " . format_date($doc['end']);
@@ -744,7 +734,7 @@ Route::get('/api/reviews', function () {
                     $date .= " - today";
                 }
 
-                $reviews[$doc['user']]['Editorials'][] = [
+                $reviews[$user]['Editorials'][] = [
                     'id' => strval($doc['_id']),
                     'date' => $date,
                     'details' => $doc['editor_type'] ?? ''
@@ -753,15 +743,15 @@ Route::get('/api/reviews', function () {
 
             case 'reviewer':
             case 'review':
-                $reviews[$doc['user']]['Reviewer']++;
-                $reviews[$doc['user']]['Reviews'][] = [
+                $reviews[$user]['Reviewer']++;
+                $reviews[$user]['Reviews'][] = [
                     'id' => strval($doc['_id']),
                     'date' => format_date($doc)
                 ];
                 break;
             default:
-                $reviews[$doc['user']]['Reviewer']++;
-                $reviews[$doc['user']]['Reviews'][] = [
+                $reviews[$user]['Reviewer']++;
+                $reviews[$user]['Reviews'][] = [
                     'id' => strval($doc['_id']),
                     'date' => format_date($doc)
                 ];
@@ -798,18 +788,18 @@ Route::get('/api/teaching', function () {
 
 
 Route::get('/api/(projects|proposals)', function ($type) {
+
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    $Project = new Project();
 
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
     }
-    if ($type == 'projects') {
-        $collection = $osiris->projects;
-    } else {
-        $collection = $osiris->proposals;
-    }
+
+    $collection = $osiris->$type;
 
     $filter = [];
     if (isset($_GET['filter'])) {
@@ -832,12 +822,52 @@ Route::get('/api/(projects|proposals)', function ($type) {
         ];
     }
 
-    $result = $collection->find($filter)->toArray();
+    if (isset($_GET['aggregate'])) {
+        // aggregate by one column
+        $group = $_GET['aggregate'];
+        $aggregate = [
+            ['$match' => $filter],
+        ];
+        if (strpos($group, 'persons') !== false) {
+            $aggregate[] = ['$unwind' => '$persons'];
+        } elseif (strpos($group, 'collaborators') !== false) {
+            $aggregate[] = ['$unwind' => '$collaborators'];
+        }
+        $aggregate[] =
+            ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
+
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => '$_id', 'count' => 1]];
+        // $aggregate[] = ['$limit' => 10];
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => 1, 'count' => 1]];
+        // $aggregate = array_merge($filter);
+
+        $result = $collection->aggregate(
+            $aggregate
+        )->toArray();
+        echo return_rest($result, count($result));
+        die;
+    }
+
+    if (isset($_GET['full'])) {
+        $cursor = $collection->find(
+            $filter,
+            [
+                'sort' => ['_id' => -1],
+                // 'projection' => ['rendered' => 0, 'files' => 0],
+                'batchSize' => 500,
+                // 'noCursorTimeout' => true, // nur wenn nötig
+            ]
+        );
+        return_rest_stream($cursor);
+        return;
+    }
+
 
     if (isset($_GET['formatted'])) {
+        $result = $collection->find($filter)->toArray();
         $data = [];
-        include_once BASEPATH . "/php/Project.php";
-        $Project = new Project();
         foreach ($result as $project) {
             $Project->setProject($project);
             $data[] = [
@@ -861,10 +891,266 @@ Route::get('/api/(projects|proposals)', function ($type) {
                 'tags' => $project['tags'] ?? [],
             ];
         }
-        $result = $data;
+        echo return_rest($data, count($data));
     }
+
+    $projection = [
+        '_id' => 0,
+        'id' => ['$toString' => '$_id'],
+    ];
+
+    if (isset($_GET['columns'])) {
+        $columns = $_GET['columns'];
+        foreach ($columns as $c) {
+            $projection[$c] = '$' . $c;
+        }
+    } else if ($type == 'projects') {
+        $projection = [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'type' => '$type',
+            'funder' => '$funder',
+            'scholarship' => '$scholarship',
+            'start_date' => '$start_date',
+            'end_date' => '$end_date',
+            'role' => '$role',
+            'applicant' => '$applicant',
+            'proposal_id' => '$proposal_id',
+            'units' => '$units',
+            'topics' => '$topics',
+            'funding_organization' => '$funding_organization',
+            'name' => '$name',
+            'title' => '$title',
+            'persons' => '$persons',
+            'subproject' => '$subproject',
+            'timeline' => '$timeline',
+            'tags' => '$tags',
+        ];
+    } else if ($type == 'proposals') {
+        $projection = [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'name' => '$name',
+            'type' => '$type',
+            'funder' => '$funder',
+            'start_date' => '$start_date',
+            'end_date' => '$end_date',
+            'role' => '$role',
+            'applicant' => '$applicant',
+            'status' => '$status',
+            'units' => '$units',
+            'topics' => '$topics',
+            'funder' => '$funder',
+            'name' => '$name',
+            'title' => '$title',
+            'tags' => '$tags',
+            'persons' => '$persons',
+        ];
+    }
+
+    $pipeline = [];
+    // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    // Füge das Sortieren und die Projektion hinzu
+    $pipeline[] = ['$sort' => ['year' => -1]];
+    $pipeline[] = [
+        '$project' => $projection
+    ];
+
+    // Führe die Aggregation aus
+    $result = $collection->aggregate($pipeline)->toArray();
+
+    if (!isset($_GET['raw'])) {
+        foreach ($result as &$row) {
+            $Project->setProject($row);
+            foreach ($row as $key => $value) {
+                $row[$key] = $Project->printField($key, $value);
+            }
+        }
+    }
+
     echo return_rest($result, count($result));
 });
+
+
+
+Route::get('/api/search/(projects|proposals|activities|conferences|journals|persons)', function ($type) {
+
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $collection = $osiris->$type;
+
+    $filter = [];
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    }
+    if (isset($_GET['json'])) {
+        $filter = json_decode($_GET['json'], true);
+    }
+    if (isset($filter['public'])) $filter['public'] = boolval($filter['public']);
+
+    if (isset($_GET['search'])) {
+        $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
+        $filter = ['title' => ['$regex' => $j]];
+    }
+
+    if ($type == 'projects' || $type == 'proposals') {
+        include_once BASEPATH . "/php/Project.php";
+        $Project = new Project();
+        if (!$Settings->hasPermission($type . '.view')) {
+            $filter['$or'] = [
+                ['persons.user' => $_SESSION['username']],
+                ['created_by' => $_SESSION['username']]
+            ];
+        }
+    } elseif ($type == 'activities') {
+        if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+            $filter = $Settings->getActivityFilter($filter);
+        }
+    }
+
+    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
+
+    if (isset($_GET['aggregate'])) {
+        // aggregate by one column
+        $group = $_GET['aggregate'];
+        $aggregate = [
+            ['$match' => $filter],
+        ];
+        $group_parts = explode('.', $group);
+        $first_part = $group_parts[0];
+        if (in_array($first_part, $unwinds)) {
+            // preserve null and empty arrays
+            $aggregate[] = ['$unwind' => ['$path' => '$' . $first_part, 'preserveNullAndEmptyArrays' => true]];
+        }
+        $aggregate[] =
+            ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
+
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => '$_id', 'count' => 1]];
+        // $aggregate[] = ['$limit' => 10];
+        $aggregate[] = ['$sort' => ['count' => -1]];
+        $aggregate[] = ['$project' => ['_id' => 0, 'value' => 1, 'count' => 1]];
+        // $aggregate = array_merge($filter);
+
+        $result = $collection->aggregate(
+            $aggregate
+        )->toArray();
+        echo return_rest($result, count($result));
+        die;
+    }
+
+    $projection = [
+        '_id' => 0,
+        'id' => ['$toString' => '$_id'],
+    ];
+    $unwind = [];
+    if (isset($_GET['columns'])) {
+        $columns = $_GET['columns'];
+        foreach ($columns as $c) {
+            if ($c == 'id') continue;
+            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'title', 'departments'])) {
+                $projection[$c] = '$rendered.' . $c;
+                continue;
+            }
+            if (in_array(explode('.', $c)[0], $unwinds)) {
+                $unwind[] = ['$unwind' => '$' . explode('.', $c)[0]];
+            }
+            $projection[$c] = '$' . $c;
+        }
+    } else {
+        // default projection
+        $projection = match ($type) {
+            'activities' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'activity' => '$rendered.web',
+                'icon' => '$rendered.icon',
+                'type' => '$rendered.type',
+                'subtype' => '$rendered.subtype',
+                'year' => '$year',
+            ],
+            'conferences' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'location' => '$location',
+                'start' => '$start',
+                'end' => '$end',
+            ],
+            'journals' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'journal' => '$journal',
+                'issn' => '$issn',
+                'publisher' => '$publisher',
+            ],
+            'projects' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'title' => '$title',
+                'type' => '$type',
+            ],
+            'proposals' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => '$name',
+                'title' => '$title',
+                'type' => '$type',
+            ],
+            'persons' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'first' => '$first',
+                'last' => '$last',
+                'username' => '$username',
+            ],
+            default => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+            ]
+        };
+    }
+
+    $pipeline = [];
+    if (!empty($unwind)) {
+        $pipeline = array_merge($pipeline, $unwind);
+    }
+    // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    // Füge das Sortieren und die Projektion hinzu
+    $pipeline[] = ['$sort' => ['year' => -1]];
+    $pipeline[] = [
+        '$project' => $projection
+    ];
+
+    // Führe die Aggregation aus
+    $result = $collection->aggregate($pipeline)->toArray();
+
+    if (!isset($_GET['raw']) && ($type == 'projects' || $type == 'proposals')) {
+        foreach ($result as &$row) {
+            $Project->setProject($row);
+            foreach ($row as $key => $value) {
+                $row[$key] = $Project->printField($key, $value);
+            }
+        }
+    }
+
+    echo return_rest($result, count($result));
+});
+
+
 
 // get projects by funding number
 Route::get('/api/projects-by-funding-number', function () {

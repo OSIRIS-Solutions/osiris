@@ -516,6 +516,8 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 data: {
                     json: '<?= json_encode($filter) ?>',
                     // formatted: true
+                    table: true,
+                    raw: true
                 },
             },
             type: 'GET',
@@ -561,7 +563,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/proposals/view/${row._id['$oid']}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">
@@ -758,14 +760,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             }
         });
 
-
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            console.log(settings.oPreviousSearch.sSearch);
+            var search = settings.oPreviousSearch.sSearch;
+            if (search) {
+                search = encodeURIComponent(search);
+            } else {
+                search = null;
+            }
             writeHash({
                 page: info.page + 1,
-                search: settings.oPreviousSearch.sSearch
+                search: search
             })
         });
 

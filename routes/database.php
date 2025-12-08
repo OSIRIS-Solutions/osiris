@@ -157,6 +157,16 @@ Route::post('/data/upload', function () {
         'name'         => $values['name'] ?? null,
         'description'  => $values['description'] ?? null,
     ];
+    // optional fields
+    if (isset($values['context'])) {
+        $document['context'] = $values['context'];
+    }
+    if (isset($values['permit_id'])) {
+        $document['permit_id'] = $values['permit_id'];
+    }
+    if (isset($values['country_code'])) {
+        $document['country_code'] = $values['country_code'];
+    }
 
     // Save the document to MongoDB
     $result = $osiris->uploads->insertOne($document);
@@ -176,7 +186,11 @@ Route::post('/data/upload', function () {
 
     // redirect
     $_SESSION['msg'] = lang('Document uploaded successfully.', 'Dokument erfolgreich hochgeladen.');
-    $redirectUrl = ROOTPATH . "/". $values['type'] . "/view/" . $values['id'] . "?tab=documents";
+    if (!empty($values['redirect'])) {
+        $redirectUrl = $values['redirect'];
+    } else {
+        $redirectUrl = ROOTPATH . "/" . $values['type'] . "/view/" . $values['id'] . "?tab=documents";
+    }
     header("Location: $redirectUrl");
 });
 
@@ -209,6 +223,6 @@ Route::post('/data/delete', function () {
 
     // redirect
     $_SESSION['msg'] = lang('Document deleted successfully.', 'Dokument erfolgreich gelöscht.');
-    $redirectUrl = ROOTPATH . "/". $document['type'] . "/view/" . $document['id'] . "?tab=documents";
+    $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "?tab=documents";
     header("Location: $redirectUrl");
 });

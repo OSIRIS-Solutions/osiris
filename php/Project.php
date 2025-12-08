@@ -251,20 +251,7 @@ class Project extends Vocabulary
             case 'approval_date':
             case 'rejection_date':
                 return Document::format_date($value);
-            case 'nagoya':
-                if ($value == 'no') {
-                    return lang('Not relevant', 'Nicht relevant');
-                }
-                $lang = lang('name', 'name_de');
-                $countriesList = '';
-                foreach ($this->project['nagoya_countries'] ?? [] as $c) {
-                    $countriesList .= '<li>' . $this->getCountry($c, $lang) . '</li>';
-                }
-                return '<div class="alert signal">'
-                    . '<h6 class="title">' . lang('Countries', 'Länder:') . '</h6>'
-                    . '<ul class="list signal mb-0">' . $countriesList . '</ul>'
-                    . '</div>';
-
+            
             case 'countries':
             case 'research-countries':
                 $lang = lang('name', 'name_de');
@@ -530,20 +517,8 @@ class Project extends Vocabulary
 
     public function isNagoyaRelevant()
     {
-        $nagoya = $this->project['nagoya'] ?? 'unknown';
-        return ($nagoya == 'yes');
-    }
-
-    public function getNagoyaStatus()
-    {
-        $nagoya = $this->project['nagoya'] ?? 'unknown';
-        if ($nagoya == 'yes') {
-            return '<span class="badge danger"><i class="ph ph-warning"></i> ' . lang('Relevant', 'Relevant') . '</span>';
-        } elseif ($nagoya == 'no') {
-            return '<span class="badge success"><i class="ph ph-check"></i> ' . lang('Not relevant', 'Nicht relevant') . '</span>';
-        } else {
-            return '<span class="badge muted"><i class="ph ph-question"></i> ' . lang('Unknown', 'Unbekannt') . '</span>';
-        }
+        $nagoya = $this->project['nagoya'] ?? [];
+        return ($nagoya['enabled'] ?? false);
     }
 
     public function getCountryRole($role)

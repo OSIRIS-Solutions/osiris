@@ -63,19 +63,6 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::get('/(projects|proposals)/search', function ($collection) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => lang("Search", "Suche")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/projects/search.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
 Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
@@ -111,33 +98,6 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/view.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
-Route::get('/proposals/nagoya/(.*)', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $collection = 'proposals';
-
-    if (DB::is_ObjectID($id)) {
-        $mongo_id = $DB->to_ObjectID($id);
-        $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
-    } else {
-        $project = $osiris->$collection->findOne(['name' => $id]);
-        $id = strval($project['_id'] ?? '');
-    }
-    if (empty($project)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
-        die;
-    }
-    $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => $project['name']]
-    ];
-
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/$collection/nagoya.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -204,35 +164,6 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     include BASEPATH . "/footer.php";
 }, 'login');
 
-
-Route::get('/nagoya', function () {
-    include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Project.php";
-
-    $allowed = $Settings->featureEnabled('nagoya') && $Settings->hasPermission('nagoya.view');
-    if (!$allowed) {
-        header("Location: " . ROOTPATH . "/projects?msg=no-permission");
-        die;
-    }
-    $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' => 'Nagoya Protocol']
-    ];
-
-    $nagoya = $osiris->proposals->find(
-        ['nagoya' => 'yes']
-    )->toArray();
-
-    // $nagoya_projects = $osiris->proposals->find(
-    //     ['nagoya' => 'yes']
-    // )->toArray();
-
-    // $nagoya = array_merge($nagoya_proposals, $nagoya_projects);
-
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/nagoya.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
 
 
 Route::get('/projects/subproject/(.*)', function ($id) {
@@ -387,7 +318,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $contacts = implode(', ', $contacts);
 
-    
+
 
     $projectValues = [
         "contact" => $contacts,
@@ -545,6 +476,27 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
+    if (isset($values['nagoya']) && $collection == 'proposals') {
+        $nagoya = ($values['nagoya'] == 'yes');
+        $countries = [];
+        foreach ($values['nagoya_countries'] as $iso) {
+            $countries[] = [
+                'id' => uniqid(),
+                'code' => $iso,
+                'abs' => null
+            ];
+        }
+        $values['nagoya'] = [
+            'enabled' => $nagoya,
+            'countries' => $countries,
+            'status' => (empty($countries) ? 'incomplete' : 'abs-review')
+        ];
+    } else {
+        $values['nagoya'] = [
+            'enabled' => false,
+            'countries' => []
+        ];
+    }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
         $values['funding_organization'] = $DB->to_ObjectID($values['funding_organization']);
@@ -642,6 +594,17 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
                 "/$collection/view/" . $id . '#section-history',
             );
         }
+    }
+
+    // send messages to nagoya
+    if (isset($values['nagoya']) && $values['nagoya']['enabled'] == true) {
+        $DB->addMessages(
+            'right:nagoya.view',
+            'A new project proposal with Nagoya protocol compliance has been created: <b>' . $values['name'] . '</b>',
+            'Ein neuer Projektantrag mit Nagoya-Protokoll-Konformität wurde erstellt: <b>' . $values['name'] . '</b>',
+            'nagoya',
+            "/$collection/view/" . $id,
+        );
     }
 
     // update parent project if subproject
@@ -758,6 +721,54 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
         $values['teaser_en'] = get_preview($abstract_en);
         $values['teaser_de'] = get_preview($abstract_de);
+    }
+
+    // nagoya only for proposals and if it was disabled before
+    if ($collection == 'proposals' && isset($values['nagoya'])) {
+        if (!is_string($project['nagoya']) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
+            // nagoya was already enabled before, do not change anything
+            unset($values['nagoya']);
+        } else {
+            $nagoya = ($values['nagoya'] == 'yes');
+            $countries = [];
+            foreach ($values['nagoya_countries'] as $iso) {
+                $countries[] = [
+                    'id' => uniqid(),
+                    'code' => $iso,
+                    'abs' => null
+                ];
+            }
+            $values['nagoya'] = [
+                'enabled' => $nagoya,
+                'countries' => $countries,
+                'status' => (empty($countries) ? 'incomplete' : 'abs-review')
+            ];
+
+            if ($nagoya && !empty($countries)) {
+                // send notification to admins about nagoya being enabled
+                $DB->addMessages(
+                    'right:nagoya.view',
+                    'Nagoya-relevant information has been shared for the following proposal: <b>' . $project['name'] . '</b>',
+                    'Für folgenden Antrag wurden Nagoya-relevante Informationen hinzugefügt: <b>' . $project['name'] . '</b>',
+                    'nagoya',
+                    "/$collection/view/" . $id,
+                );
+            }
+        }
+    }
+
+    // if status changed to approved and nagoya is enabled, send message to nagoya team
+    if ($Settings->featureEnabled('nagoya') && $collection == 'proposals' && ($values['status'] ?? null) == 'approved' && $project['status'] != 'approved') {
+        $nagoyaRelevant = ($project['nagoya']['enabled'] ?? false && $project['nagoya']['status'] != 'not-relevant');
+        if ($nagoyaRelevant) {
+            $DB->addMessages(
+                'right:nagoya.view',
+                'A project proposal with Nagoya protocol compliance has been approved: <b>' . $project['name'] . '</b>',
+                'Ein Projektantrag mit Nagoya-Protokoll-Relevanz wurde genehmigt: <b>' . $project['name'] . '</b>',
+                'nagoya',
+                "/proposals/view/" . $id,
+            );
+        }
     }
 
     $Project = new Project();

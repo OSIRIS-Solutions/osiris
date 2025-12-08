@@ -21,6 +21,8 @@ $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
 $tagsEnabled = $Settings->featureEnabled('tags');
+
+$cart = readCart();
 ?>
 
 
@@ -423,6 +425,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             'key': 'tags'
         }
     ]
+    let cart = JSON.parse('<?= json_encode($cart) ?>') || [];
 
     $(document).ready(function() {
         dataTable = $('#result-table').DataTable({
@@ -476,7 +479,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         activeFilters.find('.badge').find('span').each(function(i, el) {
                             filters.push(el.innerHTML)
                         })
-                        console.log(filters);
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
@@ -494,7 +496,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         activeFilters.find('.badge').find('span').each(function(i, el) {
                             filters.push(el.innerHTML)
                         })
-                        console.log(filters);
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
@@ -540,7 +541,13 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 },
                 {
                     targets: 1,
-                    data: 'icon'
+                    data: 'icon',
+                    // className: 'w-50',
+                    sortable: false,
+                    // render: function(data, type, row) {
+                    //     var text = data + '<small class="d-block">' + row.subtype + '</small>';
+                    //     return text;
+                    // },
                 },
                 {
                     targets: 2,
@@ -565,9 +572,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 },
                 {
                     targets: 3,
-                    data: 'links',
+                    data: 'id',
                     sortable: false,
                     className: 'unbreakable',
+                    render: function(data, type, row) {
+                        var links = `<a class='btn link square' href='${ROOTPATH}/activities/view/${data}' title='<?= lang("View activity", "Aktivität ansehen") ?>'>
+                                <i class='ph ph-arrow-fat-line-right'></i>
+                            </a>
+                            <button class='btn link square' onclick='addToCart(this, "${data}")' title='<?= lang("Add to collection", "In Sammlung ablegen") ?>'>
+                                <i class='${cart.includes(data) ? 'ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus'}'></i>
+                            </button>`;
+                        return links;
+                    }
                 },
                 {
                     targets: 4,
@@ -608,6 +624,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'departments',
                     searchable: true,
                     visible: false,
+                    defaultContent: '',
                     // searchPanes: {
                     //     name: 'units',
                     //     header: lang('Organizational Units', 'Organisationseinheiten'),
@@ -618,6 +635,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     targets: 8,
                     data: 'epub',
                     visible: false,
+                    defaultContent: false,
                     // searchPanes: {
                     //     name: 'epub',
                     //     header: 'Online ahead of print',
@@ -694,7 +712,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     visible: false,
                     defaultContent: '',
                     render: function(data, type, row, meta) {
-                        if (data.length == 0) return ''
+                        if (data === undefined || data.length == 0) return ''
                         return data.join(', ')
                     }
                 }
@@ -746,7 +764,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             var hash = readHash();
             console.log(hash);
             if (hash.type !== undefined) {
-                filterActivities(document.getElementById(hash.type + '-btn'), hash.type, 1)
+                filterActivities(document.getElementById(hash.type + '-btn'), hash.type, 9)
             }
             if (hash.unit !== undefined) {
                 filterActivities(document.getElementById(hash.unit + '-btn'), hash.unit, 7)
@@ -862,21 +880,32 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         var submenu = tr.find('.submenu')
         var table = tr.closest('table')
         $('#filter-' + column).remove()
-        const field = headers[column]
+        const field = headers[column] || { key: 'unknown', title: 'Unknown' }
         const hash = {}
         hash[field.key] = activity
 
         if (tr.hasClass('active') || activity === null) {
             hash[field.key] = null
             table.find('.active').removeClass('active')
-            dataTable.columns(column).search("", true, false, true).draw();
+            dataTable.columns(column).search("").draw();
             submenu.slideUp()
         } else {
 
             table.find('.active').removeClass('active')
 
             tr.addClass('active')
-            dataTable.columns(column).search(activity, true, false, true).draw();
+
+            let searchValue = activity;
+            let regex = false;
+            let smart = false;
+            if (column == 9 || column == 10) {
+                searchValue = '^' + activity + '$';
+                regex = true;
+                smart = false;
+            }
+                console.log(searchValue);
+
+            dataTable.column(column).search(searchValue, regex, smart).draw();
             // indicator
             const filterBtn = $('<span class="badge" id="filter-' + column + '">')
             filterBtn.html(`<b>${field.title}:</b> <span>${activity}</span>`)
@@ -909,6 +938,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             dataTable.columns(column).search("", true, false, true).draw();
             $(btn).removeClass('active')
         } else {
+            subtype = '^' + subtype + '$';
             dataTable.columns(column).search(subtype, true, false, true).draw();
             $(btn).closest('table').find('.submenu > a').removeClass('active')
             $(btn).addClass('active')

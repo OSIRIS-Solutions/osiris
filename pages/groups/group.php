@@ -187,7 +187,6 @@ $count_wordcloud = 0;
             </a>
         <?php } ?>
 
-        <?php if ($level !== 0) { ?>
 
             <?php
             $publication_filter = [
@@ -239,12 +238,11 @@ $count_wordcloud = 0;
                 <?php } ?>
             <?php } ?>
 
-
             <?php if ($Settings->featureEnabled('wordcloud')) { ?>
                 <?php
                 $count_wordcloud = $osiris->activities->count([
                     'title' => ['$exists' => true],
-                    'authors.user' => ['$in' => $users],
+                    'units' => $id,
                     'type' => 'publication'
                 ]);
                 if ($count_wordcloud > 0) { ?>
@@ -255,12 +253,12 @@ $count_wordcloud = 0;
                 <?php } ?>
             <?php } ?>
 
+            <?php if ($level != 0) { ?>
             <a onclick="navigate('collab')" id="btn-collab" class="btn">
                 <i class="ph ph-users-three" aria-hidden="true"></i>
                 <?= lang('Other units', 'Andere Einheiten')  ?>
             </a>
-
-        <?php } ?>
+            <?php } ?>
 
     </nav>
 
@@ -305,7 +303,7 @@ $count_wordcloud = 0;
         <?php } ?>
 
         <div class="row row-eq-spacing">
-            <div class="col-md-3">
+            <div class="col-lg-3 order-last order-lg-first">
                 <table class="table">
                     <tbody>
                         <tr>
@@ -359,7 +357,7 @@ $count_wordcloud = 0;
                     </tbody>
                 </table>
             </div>
-            <div class="col">
+            <div class="col-lg-9">
                 <?php
                 $head = $group['head'] ?? [];
                 if (is_string($head)) $head = [$head];

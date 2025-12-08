@@ -538,6 +538,17 @@ class Modules
             "width" => 12,
             "tags" => ['general', 'important']
         ],
+        "pub-language" => [
+            "fields" => ["pub_language" => 'de'],
+            "name" => "Publication Language",
+            "name_de" => "Publikationssprache",
+            "label" => "Publication Language",
+            "label_de" => "Publikationssprache",
+            "description" => "A field for the language of a publication, values defined by vocabulary. Possible values are: de, en, fr, es, it, other.",
+            "description_de" => "Ein Feld für die Sprache einer Publikation, Werte werden über das Vokabular definiert. Mögliche Werte sind: de, en, fr, es, it, other.",
+            "width" => 6,
+            "tags" => ['publication']
+        ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
             "name" => "Publisher",
@@ -708,8 +719,8 @@ class Modules
             "name_de" => "Abschlussarbeit-Kategorie",
             "label" => "Thesis type",
             "label_de" => "Art der Abschlussarbeit",
-            "description" => "A field for the category of a thesis, can be one of the following: bachelor, master, diploma, doctoral, habilitation.",
-            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation.",
+            "description" => "A field for the category of a thesis, values defined by vocabulary. Standard values are: bachelor, master, diploma, doctor, habilitation.",
+            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, Werte werden über das Vokabular definiert. Standardwerte sind: Bachelor, Master, Diplom, Doktor, Habilitation.",
             "width" => 6,
             "tags" => ['publication', 'people']
         ],
@@ -1313,6 +1324,7 @@ class Modules
         if (!array_key_exists($module, $this->all_modules)) {
             return $this->custom_field($module, $req, $props);
         }
+        $Vocabulary = new Vocabulary();
 
         $labelClass = ($req ? "required" : "");
 
@@ -1981,7 +1993,7 @@ class Modules
             case "event-select":
                 $events = $this->DB->db->conferences->find(
                     ['end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]],
-                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1]]
+                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1, 'country' => 1]]
                     // ['sort' => ['start' => -1], 'limit' => 10]
                 );
             ?>
@@ -2001,10 +2013,15 @@ class Modules
                             <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
+                            <small class="text-muted">
+                                <i class="ph ph-info text-signal"></i>
+                                <?= $help ?>
+                            </small>
                             <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
+
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
-                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>'); return false;">
+                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
                                         <strong><?= htmlspecialchars($ev['title']) ?></strong><br>
                                         <small class="text-muted">
                                             <?= date('d.m.Y', strtotime($ev['start'])) ?> - <?= date('d.m.Y', strtotime($ev['end'])) ?>
@@ -2028,6 +2045,7 @@ class Modules
                             justify-content: center;
                             align-items: center;
                         }
+
 
                         #event-select-button {
                             width: 100%;
@@ -2087,7 +2105,6 @@ class Modules
                             }
                         }
                     </script>
-                    <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
@@ -2188,17 +2205,37 @@ class Modules
                 break;
 
             case "thesis":
+                $val = $this->val('thesis') ?? '';
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="thesis">
                     <select name="values[thesis]" id="thesis" class="form-control" <?= $labelClass ?>>
-                        <option value="thesis"><?= lang('Thesis', 'Abschlussarbeit') ?></option>
-                        <option value="doctor" <?= $this->val('thesis') == 'doctor' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorarbeit') ?></option>
-                        <option value="diploma" <?= $this->val('thesis') == 'diploma' ? 'selected' : '' ?>><?= lang('Diploma Thesis', 'Diplomarbeit') ?></option>
-                        <option value="master" <?= $this->val('thesis') == 'master' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Masterarbeit') ?></option>
-                        <option value="bachelor" <?= $this->val('thesis') == 'bachelor' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelorarbeit') ?></option>
-                        <option value="habilitation" <?= $this->val('thesis') == 'habilitation' ? 'selected' : '' ?>><?= lang('Habilitation', 'Habilitation') ?></option>
+                        <?php
+                        $vocab = $Vocabulary->getValues('thesis');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
                     </select>
                     <label for="thesis" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+            case "pub-language":
+                $val = $this->val('pub-language') ?? '';
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pub-language">
+                    <select name="values[pub-language]" id="pub-language" class="form-control" <?= $labelClass ?>>
+                        <?php if (!$req) { ?>
+                            <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('Select language', 'Sprache auswählen') ?></option>
+                        <?php } ?>
+
+                        <?php
+                        $vocab = $Vocabulary->getValues('pub-language');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="pub-language" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
@@ -2819,7 +2856,7 @@ class Modules
             case "online-ahead-of-print":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="online-ahead-of-print">
-                    <input type="hidden" name="values[online_ahead_of_print]" value="0">
+                    <input type="hidden" name="values[epub]" value="0">
                     <div class="custom-checkbox <?= isset($_GET['epub']) ? 'text-danger' : '' ?>" id="epub-div">
                         <input type="checkbox" id="epub" value="1" name="values[epub]" <?= (!isset($_GET['epub']) && $this->val('epub', false)) ? 'checked' : '' ?>>
                         <label for="epub"><?= $label ?></label>
@@ -2965,6 +3002,7 @@ class Modules
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" <?= $labelClass ?> />
                         <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
                             <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
                         </span>
@@ -3245,7 +3283,6 @@ class Modules
                 break;
 
             case 'funding_type': // funding_type
-                $Vocabulary = new Vocabulary();
                 $val = $this->val('funding_type', null);
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">

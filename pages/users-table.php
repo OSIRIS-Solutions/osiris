@@ -256,14 +256,6 @@ if ($active('keywords')) {
             pageLength: 18,
             lengthMenu: [9, 18, 36, 72, 144],
             buttons: [
-                // custom link button
-                {
-                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
-                    className: 'btn small text-primary ',
-                    action: function(e, dt, node, config) {
-                        window.location.href = '<?= ROOTPATH ?>/user/search';
-                    }
-                },
                 <?php if ($active('expertise')) { ?> {
                         text: '<i class="ph ph-barbell"></i> <?= lang('Expertise', 'Expertise') ?>',
                         className: 'btn small text-primary',
@@ -283,11 +275,6 @@ if ($active('keywords')) {
                     extend: 'excelHtml5',
                     exportOptions: {
                         columns: [6, 7, 8, 9, 10, 11, 12, 2, 3, 4, 13],
-                        format: {
-                            header: function(html, index, node) {
-                                return headers[index].title ?? '';
-                            }
-                        }
                     },
                     className: 'btn small ml-10',
                     title: 'OSIRIS Users',

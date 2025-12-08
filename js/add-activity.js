@@ -1533,12 +1533,22 @@ function getDate(element) {
 }
 
 function selectEvent(id, event, start, end, location, country) {
+    console.log(country);
     $('#conference_id').val(id)
     $('#conference').val(event).addClass('is-valid')
     $('#location').val(location).addClass('is-valid')
-    $('#date_start').val(start).addClass('is-valid')
+    if ($('#date_start').length > 0)
+        $('#date_start').val(start).addClass('is-valid')
+    else if ($('#year').length > 0) {
+        var date_start = start.split('-')
+        $('#year').val(date_start[0]).addClass('is-valid')
+        $('#month').val(date_start.length > 1 ? date_start[1] : '').addClass('is-valid')
+        $('#day').val(date_start.length > 2 ? date_start[2] : '').addClass('is-valid')
+    }
     $('#date_end').val(end).addClass('is-valid')
+    // select country in dropdown
     $('#country').val(country).addClass('is-valid')
+
 
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
 

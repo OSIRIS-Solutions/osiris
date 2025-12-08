@@ -142,6 +142,7 @@ class DB
             'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
             'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
+            'nagoya' => lang('Nagoya Protocol Compliance', 'Nagoya-Protokoll Bewertungen'),
         ];
 
         $now = time();
@@ -327,6 +328,14 @@ class DB
                 ['username' => $user, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
                 ['projection' => [$key => 1, '_id' => 0]]
             )->toArray();
+        } else if (str_starts_with($group, 'right:')) {
+            $right = substr($group, 6);
+            $roles = $this->db->adminRights->find(['right' => $right, 'value' => true], ['projection' => ['role' => 1, '_id' => 0]]);
+            $roles = DB::doc2Arr($roles);
+            $users = $this->db->persons->find(
+                ['roles' => ['$in' => array_column($roles, 'role')], 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
         }
         $users = array_column($users, $key);
         // do not send messages if user is current user
@@ -344,7 +353,7 @@ class DB
         if (!empty($type)) $filter['type'] = $type;
         $doc = $this->db->notifications->findOne($filter, ['projection' => ['messages' => 1], 'sort' => ['created_at' => -1]]);
         if (empty($doc)) return array();
-        return DB::doc2Arr($doc['messages']);
+        return DB::doc2Arr($doc['messages'] ?? []);
     }
 
     function getLastQuarter()
@@ -533,6 +542,7 @@ class DB
     public function getNameFromId($user, $reverse = false, $abbr = false)
     {
         $USER = $this->getPerson($user, true);
+        if (empty($USER)) return "$user";
         $first = $USER['first'] ?? '';
 
         if ($abbr && !empty($first)) {
@@ -877,6 +887,12 @@ class DB
         return $result;
     }
 
+    private function featureEnabled($feature, $default = false)
+    {
+        $f = $this->db->adminFeatures->findOne(['feature' => $feature]);
+        return boolval($f['enabled'] ?? $default);
+    }
+
     public function getUserIssues($user = null)
     {
         if ($user === null) $user = $_SESSION['username'];
@@ -1041,6 +1057,23 @@ class DB
                 'id' => strval($doc['_id']),
                 'details' => $doc['workflow']['rejectedDetails'] ?? []
             ];
+        }
+
+        if ($this->featureEnabled('nagoya', false)){
+            $proposals = $this->db->proposals->find(
+                [
+                    'persons.user' => $user,
+                    'nagoya.enabled' => true,
+                    'nagoya.status' => 'researcher-input',
+                    'status' => 'approved'
+                ],
+                [
+                    'projection' => ['id' => ['$toString' => '$_id']]
+                ]
+            );
+            foreach ($proposals as $proposal) {
+                $issues['nagoya'][] = $proposal['id'];
+            }
         }
 
         return $issues;

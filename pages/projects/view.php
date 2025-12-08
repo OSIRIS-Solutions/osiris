@@ -52,6 +52,20 @@ if (isset($project['parent_id'])) {
 }
 
 $subproject = $project['subproject'] ?? false;
+
+$nagoyaRelevant = false;
+// Nagoya information might be stored in proposal
+if ($Settings->featureEnabled('nagoya') && isset($project['proposal_id'])) {
+    // 
+    $proposal = $osiris->proposals->findOne(['_id' => $project['proposal_id']]);
+    $proposal = $DB->doc2Arr($proposal);
+    $nagoyaRelevant = (isset($proposal['nagoya']) && ($proposal['nagoya']['enabled'] ?? false));
+
+    if ($nagoyaRelevant) {
+        require_once BASEPATH . "/php/Nagoya.php";
+        $nagoya_status_color = Nagoya::statusColor($proposal['nagoya']['status'] ?? 'unknown');
+    }
+}
 ?>
 
 <style>
@@ -191,6 +205,26 @@ if ($topicsEnabled) {
     <?php } ?>
 </div>
 
+<!-- Nagoya information -->
+
+<?php if ($nagoyaRelevant) { ?>
+    <div class="nagoya-message">
+        <?php
+        $whoIsNext = Nagoya::whoIsNext($proposal);
+        if ($whoIsNext === 'researcher-required' && $user_project) { ?>
+            <div class="alert danger mt-20">
+                <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
+                <?= lang('You are required to provide additional Nagoya Protocol information.', 'Sie sind verpflichtet, zusätzliche Nagoya-Protokoll Informationen bereitzustellen.') ?>
+                <br>
+                <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>" class="btn danger">
+                    <i class="ph ph-clipboard-text"></i>
+                    <?= lang('Provide information', 'Informationen bereitstellen') ?>
+                </a>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+
 
 <!-- TAB AREA -->
 
@@ -258,6 +292,13 @@ if ($topicsEnabled) {
                 <?= lang('Proposal', 'Antrag') ?>
             </button>
         <?php } ?>
+        <?php if ($nagoyaRelevant) { ?>
+            <button type="button" class="btn" onclick="navigate('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
+                <span><?= Nagoya::icon($proposal) ?></span>
+                <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+            </button>
+        <?php } ?>
+
     <?php } ?>
 
     <?php
@@ -972,6 +1013,24 @@ if ($topicsEnabled) {
         </div>
     <?php } ?>
 </section>
+
+
+<!-- nagoya details -->
+<?php if ($nagoyaRelevant) {
+    $nagoya_perm = $Settings->hasPermission('nagoya.view');
+?>
+    <section id="nagoya" style="display: none;">
+        <h2 class="title">
+            <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+        </h2>
+        <div class="box padded mt-0" id="nagoya-details" style="max-width: 90rem;">
+            <?php
+            include BASEPATH . "/pages/proposals/nagoya-proposal-dashboard.php";
+            ?>
+        </div>
+    </section>
+<?php } ?>
+
 
 <!-- raw data -->
 <section id="raw-data" style="display: none;">

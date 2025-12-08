@@ -77,6 +77,11 @@
                 "id": "report.templates",
                 "de": "Vorlagen bearbeiten",
                 "en": "Edit templates"
+            },
+            {
+                "id": "queries.global",
+                "de": "Globale Abfragen speichern",
+                "en": "Save global queries"
             }
         ]
     },

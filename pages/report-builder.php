@@ -7,7 +7,7 @@
 
 // report is defined in the controller
 
-include_once BASEPATH . "/php/fields.php";
+include_once BASEPATH . "/php/activity_fields.php";
 $FIELDS = new Fields();
 $fields_aggregate = array_filter($FIELDS->fields, function ($f) {
     return !empty($f['module_of']) && in_array('aggregate', $f['usage']);

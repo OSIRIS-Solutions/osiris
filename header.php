@@ -578,7 +578,7 @@ $pageactive = function ($p) use ($page) {
                             ?>
                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $inf['_id'] ?>?edit-stats=<?= date('Y-m-d') ?>">
                                         <i class="ph ph-cube-transparent"></i>
-                                        <?= lang('Statics for ', 'Statistik für ') . $inf['name'] ?>
+                                        <?= lang('Statistics for ', 'Statistik für ') . $inf['name'] ?>
                                     </a>
                             <?php
                                 }
@@ -685,8 +685,8 @@ $pageactive = function ($p) use ($page) {
                     </div>
                     <nav>
 
-                        <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn <?= $pageactive('activities') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
-                            <i class="ph ph-magnifying-glass-plus"></i>
+                        <a href="<?= ROOTPATH ?>/activities/search" class="inline-btn  <?= $pageactive('activities') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                            <i class="ph-duotone ph-magnifying-glass-plus"></i>
                         </a>
                         <a href="<?= ROOTPATH ?>/activities" class="with-icon <?= $pageactive('activities') ?>">
                             <i class="ph ph-folders" aria-hidden="true"></i>
@@ -695,6 +695,9 @@ $pageactive = function ($p) use ($page) {
 
                         <?php if ($Settings->featureEnabled('projects')) { ?>
                             <?php if ($Settings->canProposalsBeCreated()) { ?>
+                                <a href="<?= ROOTPATH ?>/proposals/search" class="inline-btn  <?= $pageactive('proposals') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                                    <i class="ph-duotone ph-magnifying-glass-plus"></i>
+                                </a>
                                 <a href="<?= ROOTPATH ?>/proposals" class="with-icon <?= $pageactive('proposals') ?>">
                                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
                                     <?= lang('Proposals', 'Anträge') ?>
@@ -702,8 +705,8 @@ $pageactive = function ($p) use ($page) {
                             <?php } ?>
 
 
-                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn mt-10 <?= $pageactive('projects') ?>" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
-                                <i class="ph ph-magnifying-glass-plus"></i>
+                            <a href="<?= ROOTPATH ?>/projects/search" class="inline-btn  <?= $pageactive('projects') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                                <i class="ph-duotone ph-magnifying-glass-plus"></i>
                             </a>
                             <a href="<?= ROOTPATH ?>/projects" class="with-icon <?= $pageactive('projects') ?>">
                                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
@@ -713,19 +716,25 @@ $pageactive = function ($p) use ($page) {
                             <?php if ($Settings->featureEnabled('nagoya') && $Settings->hasPermission('nagoya.view')) { ?>
                                 <a href="<?= ROOTPATH ?>/nagoya" class="with-icon <?= $pageactive('nagoya') ?>">
                                     <i class="ph ph-scales" aria-hidden="true"></i>
-                                    <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+                                    <?= lang('Nagoya Dashboard', 'Nagoya-Dashboard') ?>
                                 </a>
                             <?php } ?>
 
                         <?php } ?>
 
 
-                        <a href="<?= ROOTPATH ?>/journal" class="with-icon <?= $pageactive('journal') ?>">
+                        <a href="<?= ROOTPATH ?>/journals/search" class="inline-btn  <?= $pageactive('journals') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                            <i class="ph-duotone ph-magnifying-glass-plus"></i>
+                        </a>
+                        <a href="<?= ROOTPATH ?>/journals" class="with-icon <?= $pageactive('journals') ?>">
                             <i class="ph ph-stack" aria-hidden="true"></i>
                             <?= $Settings->journalLabel() ?>
                         </a>
 
                         <?php if ($Settings->featureEnabled('events', true)) { ?>
+                            <a href="<?= ROOTPATH ?>/conferences/search" class="inline-btn  <?= $pageactive('conferences') ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                                <i class="ph-duotone ph-magnifying-glass-plus"></i>
+                            </a>
                             <a href="<?= ROOTPATH ?>/conferences" class="with-icon <?= $pageactive('conferences') ?>">
                                 <i class="ph ph-calendar-dots" aria-hidden="true"></i>
                                 <?= lang('Events') ?>
@@ -776,6 +785,9 @@ $pageactive = function ($p) use ($page) {
                         }
                         ?>
 
+                        <a href="<?= ROOTPATH ?>/persons/search" class="inline-btn  <?= $active ?> mt-10" title="<?= lang('Advanced Search', 'Erweiterte Suche') ?>">
+                            <i class="ph-duotone ph-magnifying-glass-plus"></i>
+                        </a>
                         <a href="<?= ROOTPATH ?>/user/browse" class="with-icon <?= $active ?>">
                             <i class="ph ph-users" aria-hidden="true"></i>
                             <?= lang('Users', 'Personen') ?>

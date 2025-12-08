@@ -13,7 +13,7 @@ if ($action === 'view') {
         <?= lang('User Management', 'Nutzerverwaltung') ?>
     </h1>
 
-    <?=lang('Please find general settings on user data fields and LDAP attribute synchronization in the', 'Allgemeine Einstellungen zu Nutzerfeldern und LDAP-Attribut-Synchronisation findest du in den')?> <a href="<?=ROOTPATH?>/admin/persons"><?=lang('Person Settings', 'Nutzereinstellungen')?></a>.
+    <?= lang('Please find general settings on user data fields and LDAP attribute synchronization in the', 'Allgemeine Einstellungen zu Nutzerfeldern und LDAP-Attribut-Synchronisation findest du in den') ?> <a href="<?= ROOTPATH ?>/admin/persons"><?= lang('Person Settings', 'Nutzereinstellungen') ?></a>.
 
     <div class="box">
         <div class="content">
@@ -36,22 +36,22 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-list text-secondary"></i>
-                <?=lang('Attribute synchronization', 'Attribut-Synchronisation')?>
+                <?= lang('Attribute synchronization', 'Attribut-Synchronisation') ?>
             </h2>
             <p>
-                <?=lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.')?>
+                <?= lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.') ?>
             </p>
-            <!-- <a href="<?=ROOTPATH?>/admin/persons#section-auth" class="btn primary">
+            <!-- <a href="<?= ROOTPATH ?>/admin/persons#section-auth" class="btn primary">
                 <i class="ph ph-user-list"></i>
-                <?=lang('Attribute preview', 'Vorschau der Attribute')?>
+                <?= lang('Attribute preview', 'Vorschau der Attribute') ?>
             </a> -->
-            <form action="<?=ROOTPATH?>/synchronize-attributes" method="post">
-            <input type="hidden" name="preview" value="1">
-             <button type="submit" class="btn primary">
-                <i class="ph ph-user-list"></i>
-                <?=lang('Attribute preview', 'Vorschau der Attribute')?>
-            </button>
-           </form>
+            <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post">
+                <input type="hidden" name="preview" value="1">
+                <button type="submit" class="btn primary">
+                    <i class="ph ph-user-list"></i>
+                    <?= lang('Attribute preview', 'Vorschau der Attribute') ?>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -59,14 +59,14 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-plus text-secondary"></i>
-                <?=lang('Guest accounts', 'Gast-Accounts')?>
+                <?= lang('Guest accounts', 'Gast-Accounts') ?>
             </h2>
             <p>
-                <?=lang('You can add a guest account that allows temporary access to OSIRIS for users who are not in your LDAP directory.', 'Du kannst einen Gast-Account hinzufügen, der temporären Zugang zu OSIRIS für Nutzer:innen ermöglicht, die nicht in deinem LDAP-Verzeichnis sind.')?>
+                <?= lang('You can add a guest account that allows temporary access to OSIRIS for users who are not in your LDAP directory.', 'Du kannst einen Gast-Account hinzufügen, der temporären Zugang zu OSIRIS für Nutzer:innen ermöglicht, die nicht in deinem LDAP-Verzeichnis sind.') ?>
             </p>
-            <a href="<?=ROOTPATH?>/admin/guest-account" class="btn primary">
+            <a href="<?= ROOTPATH ?>/admin/guest-account" class="btn primary">
                 <i class="ph ph-user-plus"></i>
-                <?=lang('Manage guest accounts', 'Gast-Accounts verwalten')?>
+                <?= lang('Manage guest accounts', 'Gast-Accounts verwalten') ?>
             </a>
         </div>
     </div>
@@ -75,9 +75,6 @@ if ($action === 'view') {
 } elseif ($action === 'synchronize') {
 
     echo "<h1>" . lang('Synchronize users', 'Synchronisiere Nutzer:innen') . "</h1>";
-
-    // link to synchronize attributes
-    echo "<p><a href='" . ROOTPATH . "/admin/persons#section-auth' class='btn primary float-right'> " . lang('Synchronize attributes', 'Synchronisiere Attribute') . "</a></p>";
 
     // get all users from LDAP
     $blacklist = [];
@@ -97,6 +94,17 @@ if ($action === 'view') {
         echo "<p> There are " . count($whitelist) . " usernames on your whitelist.</p>";
     } else {
         echo "<p>Your whitelist is empty, ignored users are not synchronized.</p>";
+    }
+
+    $guestAccounts = $osiris->guestAccounts->find([], ['projection' => ['username' => 1, 'valid_until' => 1]])->toArray();
+    $activeGuests = [];
+    $inactiveGuests = [];
+    foreach ($guestAccounts as $ga) {
+        if (!empty($ga['valid_until'] ?? null) && strtotime($ga['valid_until']) < time()) {
+            $inactiveGuests[] = $ga['username'];
+            continue;
+        }
+        $activeGuests[] = $ga['username'];
     }
 
     $users = getUsers();
@@ -129,7 +137,10 @@ if ($action === 'view') {
     foreach ($removed as $del) {
         $username = $del['username'];
         $name = $del['displayname'] ?? $username;
-        if (in_array($username, $blacklist)) {
+        if (in_array($username, $activeGuests)) {
+            // ignore guest accounts
+            continue;
+        } elseif (in_array($username, $blacklist)) {
             $actions['blacklisted'][$username] = $name;
         } else {
             $actions['inactivate'][$username] = $name;
@@ -177,8 +188,50 @@ if ($action === 'view') {
 
     <form action="<?= ROOTPATH ?>/synchronize-users" method="post">
 
-        <?php
 
+        <?php if (!empty($inactiveGuests) || !empty($activeGuests)) { ?>
+            <h2><?= lang('Guest accounts', 'Gast-Accounts') ?></h2>
+
+            <?php
+            // inactive guest accounts
+            if (!empty($inactiveGuests)) {
+            ?>
+                <!-- list of inactive guest accounts -->
+                <p>
+                    <?= lang('The following guest accounts are <b>inactive</b> (valid until date in the past) and will be treated like regular inactive users during synchronization.', 'Die folgenden Gast-Accounts sind <b>inaktiv</b> (Gültig-bis-Datum in der Vergangenheit) und werden bei der Synchronisation wie reguläre inaktive Nutzer behandelt.') ?>
+                </p>
+                <ul>
+                    <?php
+                    foreach ($inactiveGuests as $u) {
+                        echo "<li>" . $DB->getNameFromId($u) . " ($u)</li>";
+                    }
+                    ?>
+                </ul>
+            <?php
+            }
+
+            // active guest accounts
+            if (!empty($activeGuests)) {
+            ?>
+                <!-- list of active guest accounts -->
+                <p>
+                    <?= lang('The following guest accounts are <b>active</b> and will be ignored during synchronization.', 'Die folgenden Gast-Accounts sind <b>aktiv</b> und werden bei der Synchronisation ignoriert.') ?>
+                </p>
+                <ul>
+                    <?php
+                    foreach ($activeGuests as $u) {
+                        echo "<li>" . $DB->getNameFromId($u) . " ($u)</li>";
+                    }
+                    ?>
+                </ul>
+            <?php
+            }
+            ?>
+
+        <?php } ?>
+
+
+        <?php
         // inactivated users
         if (!empty($actions['inactivate'])) {
             // interface to inactivate users
@@ -198,7 +251,6 @@ if ($action === 'view') {
         }
 
         // deleted users
-
         if (!empty($actions['reactivate'])) {
             // interface to reactivate users
         ?>
@@ -244,9 +296,13 @@ if ($action === 'view') {
         // unchanged users (as collapsed list)
         if (!empty($actions['unchanged'])) {
         ?>
-            <details class="collapse-panel">
+            <h2><?= lang('Unchanged users', 'Unveränderte Nutzer') ?></h2>
+            <p>
+                <?= lang('The following users are unchanged and will not be affected by the synchronization.', 'Die folgenden Nutzer:innen sind unverändert und werden von der Synchronisation nicht betroffen sein.') ?>
+            </p>
+            <details class="collapse-panel mb-20">
                 <summary class="collapse-header">
-                    <?= lang('Unchanged users', 'Unveränderte Nutzer') ?>
+                    <?= lang('Click here to view unchanged users', 'Unveränderte Nutzer anzeigen') ?>
                 </summary>
                 <div class="collapse-content">
                     <ul>
