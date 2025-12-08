@@ -534,6 +534,7 @@ function printRules($rules)
                                 <option value="<?= $f['id'] ?>"><?= $f['label'] ?></option>
                             <?php } ?>
 
+
                         </select>
 
                         <!-- remove aggregation -->

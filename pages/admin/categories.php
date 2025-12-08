@@ -78,13 +78,17 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('Categories', 'Kategorien') ?>
+    <?= lang('Activity Categories', 'Aktivitätskategorien') ?>
 </h1>
 
 <div class="btn-toolbar">
-    <a class="btn" href="<?= ROOTPATH ?>/admin/categories/new">
+    <a class="btn primary" href="<?= ROOTPATH ?>/admin/categories/new">
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/admin/doi-mappings" class="btn primary">
+        <i class="ph ph-link-simple"></i>
+        <?= lang('DOI Mappings', 'DOI Zuordnungen') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">

@@ -221,6 +221,21 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/admin/doi-mappings', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang("DOI Mappings", "DOI Zuordnungen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/doi-mappings.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
@@ -369,8 +384,8 @@ Route::get('/settings/activities', function () {
         $type = $osiris->adminTypes->findOne(['parent' => $t]);
     }
     if (empty($type)) {
-        header("Location: " . ROOTPATH . "/admin/categories?msg=not-found");
-        die;
+        echo return_rest(['error' => lang('Type not found. Please select the correct type manually.', 'Typ nicht gefunden. Bitte wähle den korrekten Typ manuell aus.')]);
+        die();
     }
     $parent = $osiris->adminCategories->findone(['id' => $type['parent']]);
     echo return_rest([

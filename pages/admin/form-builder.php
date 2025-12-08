@@ -677,7 +677,7 @@ $tagLabels = [
                                 if ($field_type === 'field' || $field_type === 'custom'):
                                     $module = $all[$it['id']] ?? [];
                             ?>
-                                    <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?>"
+                                    <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?? 12 ?>"
                                         data-type="field"
                                         data-id="<?= htmlspecialchars($it['id']) ?>"
                                         data-props='<?= json_encode($props ?? []) ?>'>

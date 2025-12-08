@@ -1213,7 +1213,10 @@ class Modules
         switch ($field['format']) {
             case 'string':
                 // make sure that value is string
-                $value = strval($value);
+                if (!is_string($value)) {
+                    $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                    $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                }
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
@@ -2043,6 +2046,7 @@ class Modules
                             align-items: center;
                         }
 
+
                         #event-select-button {
                             width: 100%;
                             text-align: left;
@@ -2543,7 +2547,10 @@ class Modules
             case "issn":
                 $issn = $this->val('issn');
                 if (is_array($issn)) {
-                    $issn = implode(', ', $issn);
+                    $issn = implode(', ', DB::doc2Arr($issn));
+                }
+                if ($issn instanceof MongoDB\BSON\BSONArray || is_object($issn)) {
+                    $issn = implode(', ', DB::doc2Arr($issn));
                 }
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="issn">
@@ -2989,18 +2996,25 @@ class Modules
                 $org_id = $this->val('organization', null);
                 $rand_id = rand(1000, 9999);
             ?>
-                <div class="data-module" data-module="organization">
+                <div class="data-module col-sm-<?= $width ?>" data-module="organization">
                     <label for="organization" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" <?= $labelClass ?> />
+                        <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
+                            <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                        </span>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
 
                         <div id="org-<?= $rand_id ?>-value">
                             <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
-                                <b><?= $org_id ?></b>
-                                <br><small class="text-muted"><?= lang('No organization connected', 'Keine Organisation verknüpft') ?></small>
+
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php if (!empty($org_id)) { ?>
+                                    <br><small class="text-muted"><?= $org_id ?></small>
+                                <?php } ?>
                                 <?php } else {
                                 $org_id = DB::to_ObjectID($org_id);
                                 $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
@@ -3051,6 +3065,8 @@ class Modules
                     <label for="organization" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
                     </label>
+                    <!-- for empty save -->
+                    <input type="hidden" name="values[organizations]" value="">
                     <table class="table">
                         <tbody id="collaborators">
                             <?php

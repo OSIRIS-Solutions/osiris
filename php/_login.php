@@ -44,7 +44,7 @@ function loginGuest($username, $password)
         $return["msg"] = lang("Account not found or password incorrect.", "Account nicht gefunden oder Passwort falsch.");
         return $return;
     }
-    if (isset($USER['valid_until']) && $USER['valid_until'] < date('Y-m-d')) {
+    if (!empty($USER['valid_until']) && $USER['valid_until'] < date('Y-m-d')) {
         $return["msg"] = lang("Account has expired.", "Account ist abgelaufen.");
         return $return;
     }

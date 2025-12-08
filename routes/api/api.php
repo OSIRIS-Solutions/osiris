@@ -126,14 +126,16 @@ function return_rest_stream($data)
     header("Expires: 0");
     echo '{"status":200,"data":[';
     $i = 0;
-    $first = true;
+    $output = '';
     foreach ($data as $doc) {
+        if (empty($doc)) continue;
         $i++;
-        if (!$first) echo ',';
-        echo json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
-        $first = false;
+        // ensure no double commas
+        if ($i > 1 && !empty($output)) echo ',';
+        $output = json_encode($doc, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+        echo $output;
         // optional: flush() für Chunked Transfer
-        // flush();
+        flush();
     }
     echo '],"count":' . $i . '}';
 }

@@ -151,6 +151,10 @@ function val($index, $default = '')
 </style>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
+<script>
+const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
+console.log(TYPES);
+</script>
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 

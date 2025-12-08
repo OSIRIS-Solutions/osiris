@@ -1,34 +1,29 @@
 let SETTINGS = {};
-const TYPES = {
-    "journal-article": "article",
-    "magazine-article": "magazine",
-    "book-chapter": "chapter",
-    publication: "article",
-    "doctoral-thesis": "students",
-    "master-thesis": "students",
-    "bachelor-thesis": "students",
-    "guest-scientist": "guests",
-    "lecture-internship": "guests",
-    "student-internship": "guests",
-    reviewer: "review",
-    editor: "editorial",
-    monograph: "book",
-    misc: "misc",
-    "edited-book": "book",
-};
-
 
 let SELECTED_CAT = null;
 let SELECTED_TYPE = null;
 let DOIDATA = null;
 
+// escape HTML special chars to avoid breaking the surrounding markup
+const escapeHtml = (str) => {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        // .replace(/&/g, '&amp;')
+        // .replace(/</g, '&lt;')
+        // .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        // .replace(/'/g, '&#39;');
+};
+
 function togglePubType(type, callback = () => { }) {
-    type = type.trim().toLowerCase().replace(" ", "-");
+    // type = type.trim().toLowerCase().replace(" ", "-");
+    // translate type with mappings
+    // type = TYPES['crossref.' + type] ?? TYPES['datacite.' + type] ?? type;
     // check if type exists:
-    if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
-        // check if mapped type exists
-        type = TYPES[type] ?? type;
-    }
+    // if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
+    //     // check if mapped type exists
+    //     type = TYPES[type] ?? type;
+    // }
     console.log(type);
 
     $("#type").val(type);
@@ -48,9 +43,14 @@ function togglePubType(type, callback = () => { }) {
         dataType: "json",
         success: function (response) {
             const data = response.data
+            if (data.error) {
+                toastWarning(data.error);
+                return;
+            }
             // console.log(response);
             SELECTED_CAT = data.category;
             SELECTED_TYPE = data.type;
+            console.log(SELECTED_TYPE)
             if (SELECTED_CAT === null || SELECTED_TYPE === null) {
                 toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
                 return;
@@ -67,11 +67,16 @@ function togglePubType(type, callback = () => { }) {
                 SELECTED_TYPE.description ?? "",
                 SELECTED_TYPE.description_de ?? ""
             );
-            if (descr != "") descr = "<i class='ph ph-info'></i> " + descr;
-            $("#type-description").html(descr);
+
+            if (descr != "") {
+                // keep the icon as HTML, but escape the description text
+                $("#type-description").html("<i class='ph ph-info'></i> " + escapeHtml(descr));
+            } else {
+                $("#type-description").empty();
+            }
 
             var examples = SELECTED_TYPE.example ?? "";
-            $("#type-examples").html(examples);
+            $("#type-examples").html(escapeHtml(examples));
 
             // show correct subtype buttons
             var form = $("#publication-form");
@@ -129,6 +134,10 @@ function togglePubType(type, callback = () => { }) {
 
             form.slideDown();
             return;
+        },
+        error: function (response) {
+            console.log(response);
+            toastError(response.responseText);
         },
     });
 
@@ -701,6 +710,8 @@ function getJournalAlex(name) {
         // issn search
         url += '/issn:' + name
     } else {
+        // escape name for URL
+        name = encodeURIComponent(name)
         url += '?search=' + name
         // show only results with ISSN
         data['filter'] = 'has_issn:true'
@@ -885,7 +896,7 @@ function getPubmed(id) {
 
         url: url,
         success: function (data) {
-            // console.log(data);
+            console.log(data);
             var pmid = data.result.uids[0]
             var pub = data.result[pmid]
 
@@ -916,7 +927,12 @@ function getPubmed(id) {
                 }
             });
 
-
+            var type = pub.pubtype[0].replace(/\s+/g, '-').toLowerCase()
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            } else {
+                type = 'article'
+            }
             var pubdata = {
                 title: pub.title,
                 // first_authors: pub.first_authors,
@@ -924,9 +940,9 @@ function getPubmed(id) {
                 year: date.getFullYear(),
                 month: date.getMonth() + 1,
                 day: date.getDate(),
-                type: pub.doctype == 'chapter' ? 'book' : pub.pubtype[0],
+                type: type,
                 journal: pub.fulljournalname,
-                // issn: (pub.ISSN ?? []).join(' '),
+                issn: pub.ISSN ?? '',
                 issue: pub.issue,
                 volume: pub.volume,
                 pages: pub.pages,
@@ -940,7 +956,7 @@ function getPubmed(id) {
                 // open_access: pub.open_access,
                 epub: pub.pubstatus == 10,
             }
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
             $('.loader').removeClass('show')
         },
         error: function (response) {
@@ -1043,6 +1059,11 @@ function getDOI(doi) {
                 abstract = abstract.replace(/^abstract/i, '').trim()
             }
 
+            var type = pub.type
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            }
+
             var pubdata = {
                 title: pub.title[0],
                 first_authors: first,
@@ -1051,7 +1072,7 @@ function getDOI(doi) {
                 year: date[0],
                 month: date[1],
                 day: date[2],
-                type: pub.type,
+                type: type,
                 journal: pub['container-title'][0],
                 issn: (pub.ISSN ?? []).join(' '),
                 issue: issue,
@@ -1072,14 +1093,14 @@ function getDOI(doi) {
             }
             // update form data in case of selecting another type
             DOIDATA = pubdata
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
             getOpenAccessStatus(doi)
             $('.loader').removeClass('show')
         },
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning('DOI was not found in CrossRef. I am looking in DataCite now.')
+            toastWarning(lang('DOI was not found in CrossRef. I am looking in DataCite now.', 'DOI wurde nicht in CrossRef gefunden. Ich suche jetzt in DataCite.'))
             getDataciteDOI(doi)
         }
     })
@@ -1104,7 +1125,7 @@ function getOpenAccessStatus(doi) {
 
 function getOpenAlexDOI(doi) {
     var url = 'https://api.openalex.org/works'
-    var data = { mailto: 'juk20@dsmz.de' }
+    var data = { mailto: 'julia.koblitz@osiris-solutions.de' }
     url += '/https://doi.org/' + doi
 
     $.ajax({
@@ -1114,10 +1135,7 @@ function getOpenAlexDOI(doi) {
         url: url,
         success: function (pub) {
             // var pub = data
-            // console.log(pub);
-
             var date = pub.publication_date.split('-')
-
 
             var authors = [];
             // var editors = [];
@@ -1129,9 +1147,6 @@ function getOpenAlexDOI(doi) {
                 pub.authorships.forEach((a, i) => {
                     var aoi = false
                     a.institutions.forEach(e => {
-                        // if (e.display_name.includes(AFFILIATION)) {
-                        //     aoi = true
-                        // }
                         // check if AFFILIATION_REGEX matches the affiliation
                         if (AFFILIATION_REGEX.test(e.display_name)) {
                             aoi = true
@@ -1154,6 +1169,12 @@ function getOpenAlexDOI(doi) {
             var journal = pub.primary_location
             var pages = pub.biblio.first_page
             if (pub.biblio.last_page) pages += '-' + pub.biblio.last_page
+
+            var type = pub.type
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            }
+
             var pubdata = {
                 title: pub.title,
                 first_authors: first,
@@ -1161,7 +1182,7 @@ function getOpenAlexDOI(doi) {
                 year: date[0],
                 month: date[1] ?? null,
                 day: date[2] ?? null,
-                type: pub.type,
+                type: type,
                 journal: journal.source.display_name,
                 issn: (journal.source.issn ?? []).join(' '),
                 issue: pub.biblio.issue,
@@ -1176,69 +1197,45 @@ function getOpenAlexDOI(doi) {
                 open_access: pub.open_access.oa_status,
                 epub: (journal.version !== 'publishedVersion'),
             }
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
+            DOIDATA = pubdata
             $('.loader').removeClass('show')
         },
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning('DOI was not found in CrossRef. I am looking in DataCite now.')
+            toastWarning(lang('DOI was not found in OpenAlex. I am looking in DataCite now.', 'DOI wurde nicht in OpenAlex gefunden. Ich suche jetzt in DataCite.'))
             getDataciteDOI(doi)
         }
     })
 }
 
 function getDataciteDOI(doi) {
-    url = "https://api.datacite.org/dois/" + doi //+ '?mailto=juk20@dsmz.de'
+    url = "https://api.datacite.org/dois/" + doi
     $('.loader').addClass('show')
-
-    var dataCiteTypes = {
-        'book': 'book',
-        'bookchapter': 'chapter',
-        'journal': 'article',
-        'journalarticle': 'article',
-        'conferencepaper': 'article',
-        'conferenceproceeding': 'article',
-        'dissertation': 'dissertation',
-        'preprint': 'preprint',
-        'software': 'software',
-        'computationalnotebook': 'software',
-        'model': 'software',
-        'datapaper': 'dataset',
-        'dataset': 'dataset',
-        'peerreview': 'review',
-        'audiovisual': 'misc',
-        'collection': 'misc',
-        'event': 'misc',
-        'image': 'misc',
-        'report': 'others',
-        'interactiveresource': 'misc',
-        'outputmanagementplan': 'misc',
-        'physicalobject': 'misc',
-        'service': 'misc',
-        'sound': 'misc',
-        'standard': 'misc',
-        'text': 'misc',
-        'workflow': 'misc',
-        'other': 'misc',
-        'presentation': 'lecture',
-        'poster': 'poster'
-    }
 
     $.ajax({
         type: "GET",
-        // data: data,
         dataType: "json",
-        // cors: true ,
-        //   contentType:'application/json',
-        //   secure: true,
-        //   headers: {
-        //     'Access-Control-Allow-Origin': '*',
-        //   },
         url: url,
         success: function (data) {
             var pub = data.data.attributes
-            // console.log(pub);
+            console.log(pub);
+            var type = null
+            if (pub.types.resourceTypeGeneral !== undefined) {
+                type = pub.types.resourceTypeGeneral.toLowerCase()
+            }
+            if (type === null || TYPES['datacite.' + type] === undefined) {
+                var resType = pub.types.resourceType
+                if (resType !== undefined && TYPES[resType.toLowerCase()] !== undefined) {
+                    type = resType.toLowerCase()
+                }
+            }
+            console.log(type);
+            if (TYPES['datacite.' + type] !== undefined) {
+                type = TYPES['datacite.' + type]
+            }
+            console.info(type);
 
             var date = ''
             if (pub.dates[0] !== undefined) {
@@ -1248,17 +1245,12 @@ function getDataciteDOI(doi) {
                 dateSplit = [pub.publicationYear, 1, null]
                 date = pub.publicationYear + "-01-01"
             }
-            // console.log(dateSplit, date);
 
             var authors = [];
-            // var editors = [];
             var first = 1
             pub.creators.forEach((a, i) => {
                 var aoi = false
                 a.affiliation.forEach(e => {
-                    // if (e.includes(AFFILIATION)) {
-                    //     aoi = true
-                    // }
                     // check if AFFILIATION_REGEX matches the affiliation
                     if (AFFILIATION_REGEX.test(e)) {
                         aoi = true
@@ -1270,7 +1262,6 @@ function getDataciteDOI(doi) {
                 var pos = a.sequence ?? 'middle'
                 if (i === 0) pos = 'first'
                 else if (pub.creator && pub.creator.length && i == pub.creator.length - 1) pos = 'last'
-                // console.log(pos);
                 var name = {
                     family: a.familyName,
                     given: a.givenName,
@@ -1279,17 +1270,6 @@ function getDataciteDOI(doi) {
                 }
                 authors.push(name)
             });
-            var type = ''
-            if (pub.types.resourceTypeGeneral !== undefined) {
-                type = pub.types.resourceTypeGeneral.toLowerCase()
-            }
-            type = dataCiteTypes[type] ?? type;
-
-            var resType = pub.types.resourceType
-            if (resType !== undefined && dataCiteTypes[resType.toLowerCase()] !== undefined) {
-                type = dataCiteTypes[resType.toLowerCase()]
-            }
-            console.info(type);
             let title = pub.titles[0].title
             if (title === undefined) {
                 title = ''
@@ -1314,20 +1294,18 @@ function getDataciteDOI(doi) {
                 link: pub.url,
                 date_start: date,
                 doctype: pub.types.resourceTypeGeneral,
+                'date_start': date,
+                'software_version': pub.version,
+                'software_doi': pub.doi,
+                'software_venue': pub.publisher,
+                'year': dateSplit[0] ?? null,
+                'month': dateSplit[1] ?? null,
+                'day': dateSplit[2] ?? null,
             }
 
-            if (type == 'software' || type == 'dataset') {
-                pubdata['date_start'] = date
-                pubdata['software_version'] = pub.version
-                pubdata['software_doi'] = pub.doi
-                pubdata['software_venue'] = pub.publisher
-            } else {
-                pubdata['year'] = dateSplit[0] ?? null
-                pubdata['month'] = dateSplit[1] ?? null
-                pubdata['day'] = dateSplit[2] ?? null
-            }
-
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
+            DOIDATA = pubdata
+            console.log(pubdata);
             $('.loader').removeClass('show')
         },
         error: function (response) {
@@ -1338,58 +1316,12 @@ function getDataciteDOI(doi) {
     })
 }
 
-function toggleForm(pub) {
-
-    var selectedType = 'misc';
-
-    switch (pub.type.toLowerCase()) {
-        case 'journal-article':
-            selectedType = 'article';
-            break;
-        case 'magazine-article':
-            selectedType = 'magazine';
-            break;
-        case 'book-chapter':
-        case 'chapter':
-            selectedType = 'chapter';
-            pub.book = pub.journal;
-            delete pub.journal
-            break;
-        case 'book':
-            if (pub.editors !== undefined && pub.editors.length > 0 && pub.authors.length > 0) {
-                selectedType = 'chapter';
-            } else if (pub.editors !== undefined && pub.editors.length > 0) {
-                selectedType = 'editor';
-                pub.book = pub.journal;
-            } else {
-                selectedType = 'book';
-                pub.series = pub.journal;
-            }
-            delete pub.journal
-            break;
-        case 'software':
-        case 'dataset':
-        case 'report':
-            selectedType = 'software';
-            $('#software_type option[value="' + pub.type + '"]').prop("selected", true);
-            break;
-        // case 'book-chapter':
-        //     selectedType = 'chapter';
-        //     break;
-        case 'posted-content':
-            selectedType = 'preprint'
-            break
-        default:
-            selectedType = pub.type;
-            break;
-    }
-
+function toggleForm(selectedType, pub) {
     if (UPDATE) {
         $('#publication-form').find('input:not(.hidden)').removeClass('is-valid')
     } else {
         $('#publication-form').find('input:not(.hidden):not([type=radio]):not([type=checkbox])').val('').removeClass('is-valid')
     }
-
     togglePubType(selectedType, function () { fillForm(pub) })
 }
 
@@ -1471,7 +1403,7 @@ function fillForm(pub) {
     if (pub.journal) {
         // prefer ISSN to look journal up:
         var j_val = pub.journal
-        if (pub.issn !== undefined && pub.issn.length !== 0) {
+        if (pub.issn !== undefined && pub.issn.length > 0) {
             j_val = pub.issn.split(' ')
             j_val = j_val[0]
         }
