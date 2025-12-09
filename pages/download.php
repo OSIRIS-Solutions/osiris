@@ -48,33 +48,43 @@
             </select>
         </div>
 
-        <div class="row position-relative mb-20">
-            <div class="col">
-                <div class="mr-20">
-                    <label for="filter-user"><?= lang('Filter by user', 'Filter nach Nutzer') ?></label>
-                    <select name="filter[user]" id="filter-user" class="form-control">
-                        <option value="">Alle Nutzer</option>
-                        <option value="<?= $_SESSION['username'] ?>"><?= lang('Only my own activities', 'Nur meine eigenen Aktivitäten') ?></option>
-                    </select>
+
+        <?php if ($Settings->hasPermission('download.all', true)) { ?>
+
+            <div class="row position-relative mb-20">
+                <div class="col">
+                    <div class="mr-20">
+
+                        <label for="filter-user"><?= lang('Filter by user', 'Filter nach Nutzer') ?></label>
+                        <select name="filter[user]" id="filter-user" class="form-control">
+                            <option value="">Alle Nutzer</option>
+                            <option value="<?= $_SESSION['username'] ?>"><?= lang('Only my own activities', 'Nur meine eigenen Aktivitäten') ?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
+
+                <div class="col">
+                    <div class="ml-20">
+                        <label for="dept"><?= lang('Department', 'Abteilung') ?></label>
+                        <select name="filter[dept]" id="dept" class="form-control">
+                            <option value=""><?= lang('All departments', 'Alle Abteilungen') ?></option>
+                            <?php
+                            foreach ($Departments as $d => $dept) { ?>
+                                <option value="<?= $d ?>"><?= $dept ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
             </div>
-
-            <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
-
-
-            <div class="col">
-                <div class="ml-20">
-                    <label for="dept"><?= lang('Department', 'Abteilung') ?></label>
-                    <select name="filter[dept]" id="dept" class="form-control">
-                        <option value=""><?= lang('All departments', 'Alle Abteilungen') ?></option>
-                        <?php
-                        foreach ($Departments as $d => $dept) { ?>
-                            <option value="<?= $d ?>"><?= $dept ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
-        </div>
+        <?php } else { ?>
+            <input type="hidden" name="filter[user]" value="<?= $_SESSION['username'] ?>" class="hidden">
+            <p>
+                <i class="ph-duotone ph-warning text-primary"></i>
+                <?= lang('You can only download your own activities.', 'Sie können nur Ihre eigenen Aktivitäten herunterladen.') ?>
+            </p>
+        <?php } ?>
 
         <?php if ($Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view')) { ?>
             <div class="form-group">

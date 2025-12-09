@@ -79,6 +79,13 @@
                 "en": "Edit templates"
             },
             {
+                "id": "download.all",
+                "de": "Alle Aktivitäten herunterladen",
+                "en": "Download all activities",
+                "comment_de": "Erlaubt es, alle Aktivitäten im Download-Bereich herunterzuladen. Ohne diese Berechtigung können nur eigene Aktivitäten heruntergeladen werden.",
+                "comment_en": "Allows downloading all activities in the download area. Without this permission, only own activities can be downloaded."
+            },
+            {
                 "id": "queries.global",
                 "de": "Globale Abfragen speichern",
                 "en": "Save global queries"
