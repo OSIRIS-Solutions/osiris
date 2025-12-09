@@ -202,6 +202,9 @@ $canAddNotes = true; // later
                                                             $statusClass = 'badge signal';
                                                         } elseif ($status === 'granted') {
                                                             $statusLabel = lang('Granted', 'Erteilt');
+                                                            // if ($checked) {
+                                                            //     $statusLabel .= ' ' . '<i class="ph ph-check-circle"></i>';
+                                                            // } 
                                                             $statusClass = 'badge success';
                                                         } elseif ($status === 'not-applicable') {
                                                             $statusLabel = lang('Not applicable', 'Nicht zutreffend');

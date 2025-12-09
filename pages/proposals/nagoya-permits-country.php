@@ -23,6 +23,7 @@ if (empty($permits)) {
             'identifier' => '',
             'ircc'      => '',
             'ircc_link' => '',
+            'declared'  => false,
             'validity'  => '',
             'comment'   => '',
             'checked'   => false,
@@ -54,6 +55,8 @@ foreach ($cursor as $doc) {
     if (!$pid) continue;
     $docsByPermit[$pid][] = $doc;
 }
+
+$countryLabel = $evaluation['label'] ?? '';
 ?>
 
 <h1 class="mb-0">
@@ -134,6 +137,7 @@ foreach ($cursor as $doc) {
                         $identifier = $p['identifier'] ?? '';
                         $ircc      = $p['ircc'] ?? '';
                         $ircc_link = $p['ircc_link'] ?? '';
+                        $declared  = !empty($p['declared']);
                         $validity  = $p['validity'] ?? '';
                         // $provider  = $p['provider'] ?? '';
                         $restricts_transfer = !empty($p['restricts_transfer']);
@@ -311,6 +315,41 @@ foreach ($cursor as $doc) {
                                         <div class="small"><?= htmlspecialchars($p['benefit_sharing'] ?? '–') ?></div>
                                     <?php endif; ?>
                                 </div>
+
+                                <!-- only if label is A: declare? Please upload -->
+
+                                <?php if ($countryLabel === 'A') { ?>
+                                    <div class="form-group">
+                                        <?= lang('Have you submitted the Due Diligence Declaration for this permit to the ABS Clearing-House?', 'Hast du die <em>Due Diligence Declaration</em> für diese Genehmigung im ABS Clearing-House eingereicht?') ?>
+                                        <a href="https://nagoyaprotocol-hub.de/my-obligations/#obligation-2" target="_blank" rel="noopener noreferrer"><i class="ph ph-info"></i></a>
+                                        <?php if ($canEditBasic): ?>
+                                            <input type="hidden" name="permits[<?= htmlspecialchars($pid) ?>][declared]" value="0">
+                                            <div class="mt-5">
+                                                <input
+                                                    type="checkbox"
+                                                    name="permits[<?= htmlspecialchars($pid) ?>][declared]"
+                                                    value="1"
+                                                    id="declared-<?= htmlspecialchars($pid) ?>"
+                                                    <?= $declared ? 'checked' : '' ?>>
+                                                <label class="ml-5" for="declared-<?= htmlspecialchars($pid) ?>"><?= lang('Yes, I have submitted the declaration.', 'Ja, ich habe die Erklärung eingereicht.') ?></label>
+                                            </div>
+                                            <small class="text-muted">
+                                                <?= lang('If you have submitted the declaration, please upload a copy of the confirmation received from the ABS Clearing-House in the documents section below.', 'Falls du die Erklärung eingereicht hast, lade bitte eine Kopie der Bestätigung, die du vom ABS Clearing-House erhalten hast, im untenstehenden Dokumentenbereich hoch.') ?>
+                                            </small>
+                                        <?php else: ?>
+                                            <div class="small">
+                                                <?php if ($declared) { ?>
+                                                    <?= lang('Yes, the declaration has been submitted.', 'Ja, die Erklärung wurde eingereicht.') ?>
+                                                <?php } else { ?>
+                                                    <?= lang('No, the declaration has not yet been submitted.', 'Nein, die Erklärung wurde noch nicht eingereicht.') ?>
+                                            </div>
+                                        <?php } ?>
+                                    <?php endif; ?>
+                                    </div>
+
+
+                                <?php } ?>
+
 
                                 <hr>
 
