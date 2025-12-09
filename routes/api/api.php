@@ -342,19 +342,22 @@ Route::get('/api/all-activities', function () {
     //     $filter = ['$and' => [$filter]];
     // }
 
+    $perm_filter = $Settings->getActivityFilter($filter);
     if ($page == "my-activities") {
         // reduced filter for my activities
-        $filter = $Settings->getActivityFilter($filter);
+        if (!empty($perm_filter)) {
+            $filter = ['$and' => [$perm_filter]];
+        } else {
+            $filter = [];
+        }
         $filter['$and'][] = [
             '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
         ];
-    } else {
+    } else if (!empty($perm_filter)) {
         if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
-            $filter['$and'][] = $Settings->getActivityFilter($filter);
+            $filter['$and'][] = $perm_filter;
         }
     }
-    // dump($filter);
-    // die;
     // stream output
     header("Content-Type: application/json; charset=utf-8");
     header("Pragma: no-cache");
