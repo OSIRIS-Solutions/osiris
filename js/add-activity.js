@@ -12,7 +12,7 @@ const escapeHtml = (str) => {
         // .replace(/</g, '&lt;')
         // .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        // .replace(/'/g, '&#39;');
+    // .replace(/'/g, '&#39;');
 };
 
 function togglePubType(type, callback = () => { }) {
@@ -335,7 +335,10 @@ function verifyForm(event, form) {
         if ($('#topic-widget').find('input:checked').length === 0) {
             $('#topic-widget').addClass('is-invalid').removeClass('is-valid')
             correct = false
-            errors.push("Topics")
+
+            var topicName = $('#topic-widget h5').first().text().trim();
+            errors.push(topicName)
+
         }
     }
 
