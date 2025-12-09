@@ -82,7 +82,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
             </div>
             <div class="col floating-form">
-                <select name="values[country]" class="form-control" required>
+                <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                     <?php 
                     $c = $form['country'] ?? '';

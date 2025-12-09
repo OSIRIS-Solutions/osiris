@@ -208,7 +208,7 @@ console.log(TYPES);
                     </div>
                     <div class="col">
                         <label for="event-country"><?= lang('Country', 'Land') ?></label>
-                        <select id="event-country" class="form-control" required>
+                        <select id="event-country" class="form-control">
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                             <!-- germany first -->
                             <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
