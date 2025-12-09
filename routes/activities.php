@@ -501,25 +501,26 @@ Route::post('/crud/activities/create', function () {
 
     // add projects if possible
     if ($Settings->featureEnabled('projects')) {
-        $values['projects'] = [];
+        $projects = [];
         if (isset($values['projects']) && !empty($values['projects'])) {
-            $values['projects'] = array_values($values['projects']);
+            $projects = array_values($values['projects']);
             // convert values to ObjectID
-            $values['projects'] = array_map(function ($v) use ($DB) {
+            $projects = array_map(function ($v) use ($DB) {
                 return $DB->to_ObjectID($v);
-            }, $values['projects']);
+            }, $projects);
             // make sure that there are no duplicates
-            $values['projects'] = array_values(array_unique($values['projects'], SORT_REGULAR));
+            $projects = array_values(array_unique($projects, SORT_REGULAR));
         }
         if (isset($values['funding']) && !empty($values['funding'])) {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['_id']) && !in_array($project['_id'], $values['projects'])) {
-                    $values['projects'][] = $project['_id'];
+                if (isset($project['_id']) && !in_array($project['_id'], $projects)) {
+                    $projects[] = $project['_id'];
                 }
             }
         }
+        $values['projects'] = $projects;
     }
 
     if (isset($values['authors'])) {

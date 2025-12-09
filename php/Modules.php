@@ -3211,6 +3211,7 @@ class Modules
                     <script>
                         function addProjectRow(projectId = null, projectName = null) {
                             const row = $('<tr>')
+                            console.log(projectId);
                             if (!projectId) projectId = $('#project-select').val();
                             if (!projectName) projectName = $('#project-select option:selected').text();
 
@@ -3220,7 +3221,7 @@ class Modules
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                // toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
