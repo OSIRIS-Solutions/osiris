@@ -310,17 +310,14 @@ Route::get('/api/all-activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
 
     include_once BASEPATH . "/php/Render.php";
     include_once BASEPATH . "/php/Document.php";
 
-    header("Content-Type: application/json");
-    header("Pragma: no-cache");
-    header("Expires: 0");
 
     $user = $_GET['user'] ?? $_SESSION['username'] ?? null;
     $page = $_GET['page'] ?? 'all-activities';
@@ -336,22 +333,28 @@ Route::get('/api/all-activities', function () {
     if (isset($filter['projects'])) {
         $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
+    // if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
+
+    if (isset($_GET['type']) && $_GET['type'] !== '') {
+        $filter['type'] = $_GET['type'];
+    }
+    // if (!empty($filter)){
+    //     $filter = ['$and' => [$filter]];
+    // }
 
     if ($page == "my-activities") {
         // reduced filter for my activities
-        $filter = $Settings->getActivityFilter($filter, $user, true);
-        $filter = array_merge($filter, [
+        $filter = $Settings->getActivityFilter($filter);
+        $filter['$and'][] = [
             '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
-        ]);
+        ];
     } else {
         if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
-            $filter = $Settings->getActivityFilter($filter);
+            $filter['$and'][] = $Settings->getActivityFilter($filter);
         }
     }
-    if (isset($_GET['type'])) {
-        $filter['type'] = $_GET['type'];
-    }
-
+    // dump($filter);
+    // die;
     // stream output
     header("Content-Type: application/json; charset=utf-8");
     header("Pragma: no-cache");

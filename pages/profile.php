@@ -547,7 +547,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $publication_filter = [
-        'authors.user' => "$user",
+        '$or' => [['authors.user' => $user], ['editors.user' => $user]],
         'type' => 'publication'
     ];
     $count_publications = $osiris->activities->count($publication_filter);
@@ -562,7 +562,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $coauthors = $osiris->activities->aggregate([
-        ['$match' => ['type' => 'publication', 'authors.user' => $user, 'year' => ['$gte' => CURRENTYEAR - 4]]],
+        ['$match' => ['type' => 'publication', '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'year' => ['$gte' => CURRENTYEAR - 4]]],
         ['$unwind' => '$authors'],
         ['$match' => ['authors.user' => ['$ne' => null], 'authors.aoi' => ['$ne' => null]]],
         [
@@ -650,7 +650,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <!-- Teaching activities -->
     <?php
     $teaching = $osiris->activities->aggregate([
-        ['$match' => ['authors.user' => $user, 'type' => 'teaching', 'module_id' => ['$ne' => null]]],
+        ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'teaching', 'module_id' => ['$ne' => null]]],
         [
             '$group' => [
                 '_id' => '$module_id',
@@ -674,7 +674,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php if ($Settings->featureEnabled('wordcloud')) { ?>
         <?php
-        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], 'authors.user' => $user, 'type' => 'publication']);
+        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'publication']);
         if ($count_wordcloud > 0) { ?>
             <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
                 <i class="ph ph-cloud" aria-hidden="true"></i>
@@ -688,7 +688,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         $concepts = [];
         $concepts = $osiris->activities->aggregate(
             [
-                ['$match' => ['authors.user' => $user, 'concepts' => ['$exists' => true]]],
+                ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'concepts' => ['$exists' => true]]],
                 ['$project' => ['concepts' => 1]],
                 [
                     '$group' => [
@@ -758,6 +758,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     </script>
                 <?php } ?>
 
+                <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
                 <div class="box">
                     <div class="content">
                         <h4 class="title">
@@ -794,6 +795,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         </a>
                     </div>
                 </div>
+                <?php } ?>
             </div>
             <div class="col-md-6 h-full">
 
