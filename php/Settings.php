@@ -75,7 +75,7 @@ class Settings
      */
     function getActivityFilter($filter, $user = null, $reduced = false)
     {
-        $user = $user ?? ($_GET['user'] ?? $_SESSION['username']);
+        $user = $user ?? ($_SESSION['username']);
         // check if allowed types are actually all types
         $all_types = $this->osiris->adminCategories->distinct('id', []);
         if (count($this->allowedTypes) == count($all_types)) {
