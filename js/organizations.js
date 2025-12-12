@@ -192,7 +192,7 @@ function getRORid(ror, msg = true) {
         toastError('Please provide a ROR ID')
         return
     }
-    var url = 'https://api.ror.org/v1/organizations/' + ror.trim()
+    var url = 'https://api.ror.org/v2/organizations/' + ror.trim()
     $.ajax({
         type: "GET",
         url: url,
@@ -203,18 +203,17 @@ function getRORid(ror, msg = true) {
                 toastError(', '.join(response.errors))
                 return
             }
-            let o = response
-            let address = o.addresses[0] ?? {}
+            var org = translateROR(response)
             selectOrganization({
-                name: o.name,
-                location: `${address.city}, ${o.country.country_name}`,
-                ror_id: o.id,
-                country: o.country.country_code,
-                types: o.types,
-                type: o.types[0],
-                lat: address.lat ?? null,
-                lng: address.lng ?? null,
-                url: o.links[0] ?? null,
+                name: org.name,
+                location: `${org.location}`,
+                ror: org.ror,
+                country: org.country,
+                types: org.types,
+                type: org.type,
+                lat: org.lat ?? null,
+                lng: org.lng ?? null,
+                url: org.url ?? null,
                 chosen: true,
             }, true)
             $('#organizations-ror-id').val('')
@@ -254,7 +253,7 @@ function searchROR(name) {
         return;
     }
 
-    var url = 'https://api.ror.org/v1/organizations'
+    var url = 'https://api.ror.org/v2/organizations'
     var data = {
         affiliation: name
     }
@@ -267,21 +266,7 @@ function searchROR(name) {
         success: function (response) {
             console.log(response);
             let organizations = response.items.map(item => {
-                let o = item.organization
-                let address = o.addresses[0] ?? {}
-                return {
-                    id: o.id,
-                    name: o.name,
-                    location: `${address.city}, ${o.country.country_name}`,
-                    ror_id: o.id,
-                    country: o.country.country_code,
-                    types: o.types,
-                    type: o.types[0],
-                    lat: address.lat ?? null,
-                    lng: address.lng ?? null,
-                    url: o.links[0] ?? null,
-                    chosen: item.chosen,
-                }
+                return translateROR(item.organization);
             }
             )
             suggestOrganization(organizations, true)
@@ -294,3 +279,37 @@ function searchROR(name) {
 }
 
 
+
+function translateROR(o) {
+    let name = ""
+    o.names.forEach(n => {
+        if (n.types.includes("ror_display")) {
+            name = n.value
+        }
+    })
+    if (name == "") {
+        name = o.names[0].value ?? o.id
+    }
+    let location = o.locations[0] ?? {}
+    let location_name = null;
+    if (location && location.geonames_details) {
+        location = location.geonames_details
+        location_name = location.name ?? '';
+        if (location.country_name) {
+            location_name += ', ' + location.country_name
+        }
+    }
+    let org = {
+        ror: o.id,
+        name: name,
+        location: location_name,
+        country: location.country_code ?? null,
+        lat: location.lat ?? null,
+        lng: location.lng ?? null,
+        type: o.types[0],
+        types: o.types,
+        url: o.links[0] ?? null,
+        chosen: false
+    }
+    return org
+}

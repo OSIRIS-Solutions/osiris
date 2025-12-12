@@ -997,7 +997,7 @@ Route::post('/crud/admin/mail-test', function () {
 
     sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
 
-    header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg);
+    header("Location: " . ROOTPATH . "/admin/general");
 }, 'login');
 
 
