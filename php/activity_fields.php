@@ -1008,41 +1008,7 @@ class ActivityFields extends Fields
             ];
         }
 
-
-        foreach ($osiris->adminFields->find() as $field) {
-            // make sure that id does not exist yet
-            $exists = false;
-            foreach ($FIELDS as $existingField) {
-                if ($existingField['id'] == $field['id']) {
-                    $exists = true;
-                    break;
-                }
-            }
-            if ($exists) continue;
-            $f = [
-                'id' => $field['id'],
-                'module_of' => $typeModules[$field['id']] ?? [],
-                'usage' => [
-                    'aggregate',
-                    'filter',
-                    'columns'
-                ],
-                'label' => lang($field['name'], $field['name_de'] ?? null),
-                'type' => parent::typeConvert($field['format'] ?? 'string'),
-                'custom' => true
-            ];
-
-            if ($field['format'] == 'list') {
-                $f['values'] =  DB::doc2Arr($field['values']);
-                $f['input'] = 'select';
-                if ($field['multiple'] ?? false) {
-                    $f['type'] = 'list';
-                }
-            }
-
-            $FIELDS[] = $f;
-        }
-
+        $FIELDS = parent::addCustomFields($FIELDS, $osiris, $typeModules);
         // remove 'filter' from all fields where module_of is empty
         // foreach ($FIELDS as &$f) {
         //     if (empty($f['module_of'])) {
