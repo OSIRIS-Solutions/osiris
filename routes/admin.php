@@ -1058,7 +1058,7 @@ Route::post('/crud/admin/add-user', function () {
     foreach (explode(" ", $person['first']) as $name) {
         $person['first_abbr'] .= " " . $name[0] . ".";
     }
-    $person['created'] = date('d.m.Y');
+    $person['created'] = date('Y-m-d');
     $person['roles'] = array_keys($person['roles'] ?? []);
     if (isset($_POST['guestaccount'])) {
         if (!in_array('guest', $person['roles'])) {

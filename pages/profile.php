@@ -811,7 +811,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             </p>
                             <?php
                             $new_colleagues = $osiris->persons->find(
-                                ['created' => ['$exists' => true]],
+                                ['created' => ['$exists' => true], 'active' => ['$ne' => false]],
                                 [
                                     'sort' => ['created' => -1],
                                     'limit' => 3,
