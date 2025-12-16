@@ -784,7 +784,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Details (Students/guests)', 'Details (Studenten/Gäste)'),
+                'label' => lang('Details', 'Details'),
                 'type' => 'string'
             ],
             [
