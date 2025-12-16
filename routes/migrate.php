@@ -25,12 +25,12 @@ Route::get('/migrate/countries', function () {
     include BASEPATH . "/footer.php";
 });
 
-Route::get('/migrate/test', function () {
+Route::get('/migrate/teaching', function () {
     include_once BASEPATH . "/php/init.php";
 
     set_time_limit(6000);
     include BASEPATH . "/header.php";
-    include_once BASEPATH . "/routes/migration/v1.7.0.php";
+    include_once BASEPATH . "/routes/migration/v1.7.1.php";
 
     include BASEPATH . "/footer.php";
 });
@@ -324,6 +324,12 @@ Route::get('/migrate', function () {
         flush();
         ob_flush();
         $rerender = true;
+    }
+    if (version_compare($DBversion, '1.7.1', '<')) {
+        include BASEPATH . "/routes/migration/v1.7.1.php";
+        flush();
+        ob_flush();
+        $rerender = false;
     }
 
     if ($rerender) {
