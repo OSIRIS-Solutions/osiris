@@ -1090,6 +1090,7 @@ class Document extends Settings
                 $funder = $this->getVal('funding_type', null);
                 return $Vocabulary->getValue('funding-type', $funder);
             case "guest": // ["category"],
+            case "guest-category": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
             case "isbn": // ["isbn"],
                 return $this->getVal('isbn');

@@ -20,6 +20,9 @@ $Modules = new Modules();
 $all = [];
 $tags = [];
 foreach ($Modules->all_modules as $key => $value) {
+    if (($value['show'] ?? true) === false) {
+        continue;
+    }
     $all[$key] = [
         'name' => $value['name'] ?? $key,
         'name_de' => $value['name_de'] ?? null,
@@ -525,6 +528,10 @@ $tagLabels = [
                             // skip elements that are in the form already
                             if (in_array($id, array_column($fields, 'id'))) {
                                 continue; // bereits im Formular enthalten
+                            }
+                            // skip elements that are hidden
+                            if (($def['show'] ?? true) === false) {
+                                continue;
                             }
                         ?>
                             <li class="drag-item"

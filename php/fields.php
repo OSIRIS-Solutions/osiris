@@ -73,7 +73,7 @@ class Fields
             ];
 
             if ($field['format'] == 'list') {
-                $values =  DB::doc2Arr($field['values'] ?? []);
+                $values = DB::doc2Arr($field['values'] ?? []);
                 // convert from indexed array to associative array
                 // if english and german values are set, use only the english as keys and lang as values
                 $newValues = [];

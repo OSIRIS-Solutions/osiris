@@ -274,6 +274,18 @@ class Modules
             "width" => 6,
             "tags" => ['general']
         ],
+        "guest" => [
+            "fields" => ["category" => 'guest scientist'],
+            "name" => "Guest Category",
+            "name_de" => "Gäste-Kategorie",
+            "label" => "Category of the guest",
+            "label_de" => "Art des Gastes",
+            "description" => "A field for the category of a guest, can be one of the following: guest scientist, lecture internship, student internship, other.",
+            "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
+            "width" => 6,
+            "tags" => ['people'],
+            "show" => false
+        ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
             "name" => "Guest Category",
