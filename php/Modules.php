@@ -2103,7 +2103,7 @@ class Modules
                     <script>
                         function filterEvents() {
                             var input, filter, div, a, i, txtValue;
-                            input = document.getElementById("myInput");
+                            input = document.getElementById("event-select-search");
                             filter = input.value.toUpperCase();
                             div = document.querySelector("#event-select-dropdown .events-content");
                             a = div.getElementsByTagName("a");
