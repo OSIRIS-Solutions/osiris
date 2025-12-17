@@ -1098,6 +1098,97 @@ class Modules
                     break;
             }
         }
+        // Add XOR validation script
+        ?>
+        <script>
+        $(document).ready(function() {
+            // XOR field validation
+            var xorGroups = {};
+
+            // Group fields by xor_group
+            $('[data-xor-group]').each(function() {
+                var group = $(this).data('xor-group');
+                if (!xorGroups[group]) {
+                    xorGroups[group] = [];
+                }
+                xorGroups[group].push($(this));
+            });
+
+            // Add interaction handlers for XOR groups
+            Object.keys(xorGroups).forEach(function(groupName) {
+                var $fields = xorGroups[groupName];
+
+                // When a field in XOR group is filled, disable others
+                $fields.forEach(function($field) {
+                    $field.find('input, select, textarea').on('change input', function() {
+                        var $currentField = $(this).closest('[data-xor-group]');
+                        var hasValue = false;
+
+                        // Check if current field has a value
+                        $currentField.find('input, select, textarea').each(function() {
+                            if ($(this).attr('type') === 'radio' || $(this).attr('type') === 'checkbox') {
+                                if ($(this).is(':checked')) hasValue = true;
+                            } else if ($(this).val() && $(this).val() !== '') {
+                                hasValue = true;
+                            }
+                        });
+
+                        // Enable/disable other fields in the group
+                        $fields.forEach(function($otherField) {
+                            if ($otherField[0] !== $currentField[0]) {
+                                if (hasValue) {
+                                    $otherField.css('opacity', '0.5');
+                                    $otherField.find('input, select, textarea').prop('disabled', true);
+                                } else {
+                                    $otherField.css('opacity', '1');
+                                    $otherField.find('input, select, textarea').prop('disabled', false);
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+
+            // Validate XOR groups on form submit
+            $('form').on('submit', function(e) {
+                var isValid = true;
+                var errorMessages = [];
+
+                Object.keys(xorGroups).forEach(function(groupName) {
+                    var $fields = xorGroups[groupName];
+                    var filledCount = 0;
+
+                    $fields.forEach(function($field) {
+                        var hasValue = false;
+                        $field.find('input, select, textarea').each(function() {
+                            if ($(this).attr('type') === 'radio' || $(this).attr('type') === 'checkbox') {
+                                if ($(this).is(':checked')) hasValue = true;
+                            } else if ($(this).val() && $(this).val() !== '' && $(this).val() !== '-') {
+                                hasValue = true;
+                            }
+                        });
+                        if (hasValue) filledCount++;
+                    });
+
+                    // Check if exactly one field is filled
+                    if (filledCount === 0) {
+                        isValid = false;
+                        errorMessages.push('<?= lang('Please fill exactly one field in group', 'Bitte fülle genau ein Feld in der Gruppe aus') ?>: "' + groupName + '"');
+                    } else if (filledCount > 1) {
+                        isValid = false;
+                        errorMessages.push('<?= lang('Only one field can be filled in group', 'Nur ein Feld kann in der Gruppe ausgefüllt werden') ?>: "' + groupName + '"');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    toastError(errorMessages.join('<br>'));
+                    return false;
+                }
+            });
+        });
+        </script>
+        <?php
     }
 
 
@@ -1128,8 +1219,13 @@ class Modules
             $labelClass .= " has-help";
         }
 
+        $xorGroup = '';
+        if (isset($props['xor_group']) && !empty($props['xor_group'])) {
+            $xorGroup = 'data-xor-group="' . htmlspecialchars($props['xor_group']) . '"';
+        }
+
         if ($field['format'] == 'bool') {
-            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '">';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '" ' . $xorGroup . '>';
             echo '<label for="' . $module . '" class="' . $labelClass . ' floating-title">' . $label . '</label>';
 
             $val = boolval($this->val($module, $field['default'] ?? ''));
@@ -1146,7 +1242,7 @@ class Modules
             echo '</div>';
             return;
         } elseif ($field['format'] == 'bool-check') {
-            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '">';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '" ' . $xorGroup . '>';
             echo '<input type="hidden" name="values[' . $module . ']" value="false">';
             echo '<div class="custom-checkbox">';
             echo '<input type="checkbox" id="' . $module . '" name="values[' . $module . ']" value="true" ' . ($this->val($module, $field['default'] ?? '') == 'true' ? 'checked' : '') . '>';
@@ -1163,7 +1259,7 @@ class Modules
 
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
 ?>
-            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>" <?= $xorGroup ?>>
                 <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?>
 
                     <?= $this->render_help($help) ?>
@@ -1208,7 +1304,7 @@ class Modules
             return;
         }
 
-        echo '<div class="data-module floating-form col-sm-' . $width . '" data-module="' . $module . '">';
+        echo '<div class="data-module floating-form col-sm-' . $width . '" data-module="' . $module . '" ' . $xorGroup . '>';
 
         switch ($field['format']) {
             case 'string':
@@ -1352,11 +1448,16 @@ class Modules
             $labelClass .= ' has-help';
         }
 
+        $xorGroup = '';
+        if (isset($props['xor_group']) && !empty($props['xor_group'])) {
+            $xorGroup = 'data-xor-group="' . htmlspecialchars($props['xor_group']) . '"';
+        }
+
         switch ($module) {
             case 'gender':
                 $val = $this->val('gender');
             ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender" <?= $xorGroup ?>>
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
                         <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('female', 'weiblich') ?></option>
@@ -1373,7 +1474,7 @@ class Modules
             case 'country':
                 $val = $this->val('country');
             ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country" <?= $xorGroup ?>>
                     <select name="values[country]" id="country" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
                         <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
@@ -1391,7 +1492,7 @@ class Modules
                 $countries = $this->val('countries', []);
             ?>
 
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="countries">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="countries" <?= $xorGroup ?>>
                     <b>
                         <?= $label ?>
                     </b>

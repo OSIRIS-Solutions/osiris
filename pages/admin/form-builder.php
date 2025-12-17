@@ -597,6 +597,19 @@ $tagLabels = [
                         </div>
 
                         <div class="mb-10">
+                            <b>
+                                <?= lang('Mutual Exclusivity (XOR)', 'Gegenseitige Exklusivität (XOR)') ?>
+                                <small data-toggle="tooltip" data-title="<?= lang('Fields with the same XOR group name are mutually exclusive - only one can be filled. Leave empty if not needed.', 'Felder mit dem gleichen XOR-Gruppennamen schließen sich gegenseitig aus - nur eines kann ausgefüllt werden. Leer lassen, falls nicht benötigt.') ?>">
+                                    <i class="ph ph-info"></i>
+                                </small>
+                            </b>
+                            <input type="text" class="form-control" placeholder="<?= lang('e.g., "event_selection"', 'z. B. „event_selection"') ?>" id="prop-xor-group">
+                            <small class="text-muted">
+                                <?= lang('Give the same group name to fields that should be mutually exclusive.', 'Vergib den gleichen Gruppennamen für Felder, die sich gegenseitig ausschließen sollen.') ?>
+                            </small>
+                        </div>
+
+                        <div class="mb-10">
                             <label class="form-label"><?= lang('Help text (en)', 'Hilfetext (en)') ?></label>
                             <textarea class="form-control" rows="3" placeholder="Short help text …" id="prop-help"></textarea>
 
@@ -707,6 +720,11 @@ $tagLabels = [
                                                 <?php endif; ?>
                                                 <?php if (!empty($props['portfolio'])): ?>
                                                     <span class="badge primary"><i class="ph ph-globe m-0"></i></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($props['xor_group'])): ?>
+                                                    <span class="badge warning" data-toggle="tooltip" data-title="XOR Group: <?= htmlspecialchars($props['xor_group']) ?>">
+                                                        <i class="ph ph-arrows-left-right m-0"></i>
+                                                    </span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -952,6 +970,7 @@ $tagLabels = [
                 $('#prop-required').prop('checked', props.required || false);
                 $('#prop-label-en').val(props.label || '');
                 $('#prop-label-de').val(props.label_de || '');
+                $('#prop-xor-group').val(props.xor_group || '');
                 // Weitere Logik für Felder…
             } else if (type === 'layout-heading') {
                 $('#props-heading').show();
@@ -969,7 +988,7 @@ $tagLabels = [
         });
 
         // on change of properties: update the selected item
-        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-width, #prop-required, #prop-portfolio, #prop-paragraph, #prop-paragraph-de, #prop-heading, #prop-heading-de', function() {
+        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-width, #prop-required, #prop-portfolio, #prop-xor-group, #prop-paragraph, #prop-paragraph-de, #prop-heading, #prop-heading-de', function() {
             var $selected = $('#canvas-list .canvas-item.is-selected');
             if ($selected.length === 0) return; // Nichts ausgewählt
 
@@ -1017,6 +1036,10 @@ $tagLabels = [
                     $subtitle.append(' <span class="badge primary"><i class="ph ph-globe m-0"></i></span>');
                 } else {
                     props.portfolio = false;
+                }
+                if ($('#prop-xor-group').val()) {
+                    props.xor_group = $('#prop-xor-group').val();
+                    $subtitle.append(' <span class="badge warning"><i class="ph ph-arrows-left-right m-0"></i></span>');
                 }
                 $selected.data('props', props);
                 // $selected.find('.title').text($('#prop-label-en').val() || '—');
@@ -1323,7 +1346,44 @@ $tagLabels = [
             $('#field-count').text('Felder: ' + count);
         }
 
+        function highlightXorGroups() {
+            var xorGroups = {};
+            // Reset all XOR styling first
+            $('#canvas-list .canvas-item').css('border-left', '');
+
+            // Group fields by xor_group
+            $('#canvas-list .canvas-item').each(function() {
+                var props = $(this).data('props') || {};
+                if (props.xor_group) {
+                    if (!xorGroups[props.xor_group]) {
+                        xorGroups[props.xor_group] = [];
+                    }
+                    xorGroups[props.xor_group].push($(this));
+                }
+            });
+
+            // Apply visual styling to groups
+            var colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+            Object.keys(xorGroups).forEach(function(group, index) {
+                var color = colors[index % colors.length];
+                xorGroups[group].forEach(function($item) {
+                    $item.css('border-left', '3px solid ' + color);
+                });
+            });
+        }
+
+        // Update XOR highlighting when canvas changes
+        $('#activity-form').on('change', '#prop-xor-group', function() {
+            highlightXorGroups();
+        });
+
+        // Also update on sort
+        $('#canvas-list').on('sortupdate', function() {
+            highlightXorGroups();
+        });
+
         // init count (falls serverseitig Items vorhanden)
         updateFieldCount();
+        highlightXorGroups();
     });
 </script>

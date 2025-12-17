@@ -468,6 +468,18 @@ Route::post('/crud/activities/create', function () {
 
     $values = validateValues($_POST['values'], $DB);
 
+    // Validate XOR groups
+    $typeSchema = $osiris->adminTypes->findOne(['id' => $activityType]);
+    if ($typeSchema && isset($typeSchema['fields'])) {
+        $schema = ['items' => DB::doc2Arr($typeSchema['fields'])];
+        try {
+            validateXorGroups($values, $schema, $DB);
+        } catch (Exception $e) {
+            printMsg($e->getMessage(), 'error');
+            die();
+        }
+    }
+
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['created_by'] = ($_SESSION['username']);
@@ -698,6 +710,21 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->activities;
     $values = validateValues($_POST['values'], $DB);
+
+    // Validate XOR groups
+    if (isset($_POST['values']['type'])) {
+        $activityType = $_POST['values']['type'];
+        $typeSchema = $osiris->adminTypes->findOne(['id' => $activityType]);
+        if ($typeSchema && isset($typeSchema['fields'])) {
+            $schema = ['items' => DB::doc2Arr($typeSchema['fields'])];
+            try {
+                validateXorGroups($values, $schema, $DB);
+            } catch (Exception $e) {
+                printMsg($e->getMessage(), 'error');
+                die();
+            }
+        }
+    }
 
     if (isset($_POST['minor']) && $_POST['minor'] == 1) {
         unset($values['authors']);

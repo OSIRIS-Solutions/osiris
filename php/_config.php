@@ -198,6 +198,60 @@ function validateValues($values, $DB)
     return $values;
 }
 
+function validateXorGroups($values, $schema, $DB)
+{
+    // Get XOR groups from schema
+    $xorGroups = [];
+
+    if (!isset($schema['items']) || !is_array($schema['items'])) {
+        return; // No schema items, skip validation
+    }
+
+    // Group fields by xor_group
+    foreach ($schema['items'] as $item) {
+        if (isset($item['props']['xor_group']) && !empty($item['props']['xor_group'])) {
+            $group = $item['props']['xor_group'];
+            $fieldId = $item['id'] ?? null;
+
+            if ($fieldId) {
+                if (!isset($xorGroups[$group])) {
+                    $xorGroups[$group] = [];
+                }
+                $xorGroups[$group][] = $fieldId;
+            }
+        }
+    }
+
+    // Validate each XOR group
+    foreach ($xorGroups as $groupName => $fieldIds) {
+        $filledFields = [];
+
+        foreach ($fieldIds as $fieldId) {
+            // Check if field has a value
+            if (isset($values[$fieldId])) {
+                $val = $values[$fieldId];
+
+                // Check if value is not empty
+                if ($val !== null && $val !== '' && $val !== [] && $val !== '-') {
+                    // For arrays, check if not empty
+                    if (is_array($val) && count($val) > 0) {
+                        $filledFields[] = $fieldId;
+                    } elseif (!is_array($val)) {
+                        $filledFields[] = $fieldId;
+                    }
+                }
+            }
+        }
+
+        // Exactly one field must be filled
+        if (count($filledFields) === 0) {
+            throw new Exception("Please fill exactly one field in XOR group '$groupName'. Fields: " . implode(', ', $fieldIds));
+        } elseif (count($filledFields) > 1) {
+            throw new Exception("Only one field can be filled in XOR group '$groupName'. You filled: " . implode(', ', $filledFields));
+        }
+    }
+}
+
 function shortenName($name, $maxLength = 30)
 {
     return get_preview($name, $maxLength);
