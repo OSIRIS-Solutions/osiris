@@ -1396,7 +1396,7 @@ function fillForm(pub) {
         }
     }
 
-    if (pub.epub !== undefined && (!UPDATE || !pub.epub || !pub.epub.length))
+    if (pub.epub !== undefined && pub.epub === true)
         $('#epub').attr('checked', pub.epub).addClass('is-valid')
 
 
