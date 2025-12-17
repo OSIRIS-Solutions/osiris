@@ -62,3 +62,39 @@ if ($N_ == 0) {
         "Erstellungsdaten von d.m.Y zu Y-m-d für " . $updated . " von " . $N_ . " Personen umgewandelt."
     ) . "</p>";
 }
+
+
+// migrate authors field to supervisors field in activities for activities with the supervisor module
+$types = $osiris->adminTypes->find(['modules' => ['$in' => ['supervisor-thesis', 'supervisor-thesis*', 'supervisor', 'supervisor*']]], ['projection' => ['id' => 1]])->toArray();
+$types = DB::doc2Arr($types);
+$typeIds = array_column($types, 'id');
+
+$activities = $osiris->activities->find(['subtype' => ['$in' => $typeIds], 'authors' => ['$exists' => true]])->toArray();
+$N_ = count($activities);
+$updated = 0;
+foreach ($activities as $activity) {
+    $authors = $activity['authors'] ?? [];
+    if (!empty($authors)) {
+        $updated++;
+        $osiris->activities->updateOne(
+            ['_id' => $activity['_id']],
+            ['$set' => [
+                'supervisors' => $authors,
+            ], '$unset' => [
+                'authors' => "",
+            ]]
+        );
+    }
+}
+
+if ($N_ == 0) {
+    echo "<p>". lang(
+        "No activities found with authors field to migrate. No changes made.",
+        "Keine Aktivitäten mit Autoren-Feld zum Migrieren gefunden. Es wurden keine Änderungen vorgenommen."
+    ) . "</p>";
+} else {
+    echo "<p>". lang(
+        "Migrated authors field to supervisors field for " . $updated . " out of " . $N_ . " activities.",
+        "Autoren-Feld für " . $updated . " von " . $N_ . " Aktivitäten in Betreuende-Feld migriert."
+    ) . "</p>";
+}

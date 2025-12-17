@@ -617,9 +617,9 @@ if ($Settings->featureEnabled('tags')) {
 
     <!-- check for basic things -->
     <?php
-    if (!isset($doc['authors']) || empty($doc['authors'])) {
+    if (!isset($doc['authors']) || empty($doc['authors'] )) {
         $doc['authors'] = [];
-        if (!isset($doc['editors']) || empty($doc['editors'])) {
+        if ((!isset($doc['editors']) || empty($doc['editors'])) && (!isset($doc['supervisors']) || empty($doc['supervisors']))) {
     ?>
             <div class="alert danger mb-20">
                 <h3 class="title">
@@ -628,7 +628,7 @@ if ($Settings->featureEnabled('tags')) {
                 <p>
                     <?= lang(
                         'This activity has no authors or editors assigned. Please add at least one author or editor to this activity, otherwise it cannot be linked to persons.',
-                        'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor oder Herausgeber zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
+                        'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor, Herausgeber oder Betreuenden zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
                     ) ?>
                 </p>
             </div>
@@ -765,11 +765,17 @@ if ($Settings->featureEnabled('tags')) {
 
         <?php if ($Settings->featureEnabled('portal')) {
             $doc['hide'] = $doc['hide'] ?? false;
+            $visible_subtypes = $Settings->getActivitiesPortfolio(true);
         ?>
             <div class="mr-10 badge bg-white">
                 <small><?= lang('Online Visibility', 'Online-Sichtbarkeit') ?>: </small>
                 <br />
-                <?php if ($edit_perm) { ?>
+                <?php if (!in_array($doc['subtype'], $visible_subtypes)) { ?>
+                    <span class="badge warning" data-toggle="tooltip" data-title="<?= lang('This activity subtype is not visible on the portal due to general settings of your institute.', 'Dieser Aktivitätstyp ist aufgrund genereller Instituts-Einstellungen im Portal nicht sichtbar.') ?>">
+                        <i class="ph ph-eye-slash m-0"></i>
+                        <?= lang('Activity type not visible', 'Aktivitätstyp nicht sichtbar') ?>
+                    </span>
+                <?php } else if ($edit_perm) { ?>
                     <div class="custom-switch">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
@@ -1302,7 +1308,12 @@ if ($Settings->featureEnabled('tags')) {
                     if (!in_array($field_id, $authorModules)) {
                         continue;
                     }
-                    $role = ($field_id == 'editor') ? 'editors' : 'authors';
+                    $role = 'authors';
+                    if ($field_id == 'supervisor' || $field_id == 'supervisor-thesis') {
+                        $role = 'supervisors';
+                    } elseif ($field_id == 'editor') {
+                        $role = 'editors';
+                    }
                 ?>
 
                     <div class="btn-toolbar mb-10 float-sm-right">
@@ -1317,6 +1328,8 @@ if ($Settings->featureEnabled('tags')) {
                     <h2 class="mt-0">
                         <!-- <?php if ($role == 'authors') {
                                     echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
+                                } elseif ($role == 'supervisors') {
+                                    echo lang('Supervisor(s)', 'Betreuer');
                                 } else {
                                     echo lang('Editor(s)', 'Herausgeber');
                                 } ?> -->

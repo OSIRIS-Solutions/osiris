@@ -554,7 +554,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('internal_number', $fields)) { ?>
                     <div class="form-group floating-form">
-                        <input type="number" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234" <?= $req('internal_number') ?>>
+                        <input type="text" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234" <?= $req('internal_number') ?>>
 
                         <label for="internal_number" class="<?= $req('internal_number') ?>">
                             <?= lang('Internal ID', 'Interne ID') ?>

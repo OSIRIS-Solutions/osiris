@@ -352,9 +352,9 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
     if (isset($_POST['start'])) {
-        renderAuthorUnitsMany(['authors.user' => $user, 'date' => ['$gte' => $_POST['start']]]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user, 'date' => ['$gte' => $_POST['start']]]);
     } else {
-        renderAuthorUnitsMany(['authors.user' => $user]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
     }
 
 

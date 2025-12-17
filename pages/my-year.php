@@ -59,21 +59,22 @@ foreach ($Categories->categories as $value) {
 
 $timeline = [];
 //, 'editors.user' => $user
-$filter = ['authors.user' => $user];
-$filter['$or'] =   array(
-    [
-        "start.year" => array('$lte' => $YEAR),
-        '$or' => array(
-            ['end.year' => array('$gte' => $YEAR)],
-            [
-                'end' => null,
-                'subtype' => ['$in' => $Settings->continuousTypes]
-            ]
-        )
-    ],
-    ['year' => $YEAR]
-);
-
+$filter = [
+    'rendered.users' => $user,
+    '$or' => [
+        [
+            "start.year" => array('$lte' => $YEAR),
+            '$or' => array(
+                ['end.year' => array('$gte' => $YEAR)],
+                [
+                    'end' => null,
+                    'subtype' => ['$in' => $Settings->continuousTypes]
+                ]
+            )
+        ],
+        ['year' => $YEAR]
+    ]
+];
 $options = [
     'sort' => ["year" => -1, "month" => -1],
     // 'projection' => ['file' => -1]

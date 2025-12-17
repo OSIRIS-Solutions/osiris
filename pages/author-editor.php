@@ -61,9 +61,11 @@ foreach ($typeModules as $m) {
     <h1>
         <i class="ph-duotone ph-users"></i>
         <?php if ($role == 'authors') { ?>
-            <?= lang('Edit authors', 'Bearbeite die Autoren') ?>
+            <?= lang('Edit authors', 'Bearbeite die Autor:innen') ?>
+        <?php } elseif ($role == 'supervisors') { ?>
+            <?= lang('Edit supervisors', 'Bearbeite die Betreuenden') ?>
         <?php } else { ?>
-            <?= lang('Edit editors', 'Bearbeite die Editoren') ?>
+            <?= lang('Edit editors', 'Bearbeite die Editor:innen') ?>
         <?php } ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/activities/update-<?= $role ?>/<?= $id ?>" method="post">

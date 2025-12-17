@@ -351,7 +351,7 @@ Route::get('/api/all-activities', function () {
             $filter = [];
         }
         $filter['$and'][] = [
-            '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
+            'rendered.users' => $user
         ];
     } else if (!empty($perm_filter)) {
         if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {

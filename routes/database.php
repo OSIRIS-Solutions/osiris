@@ -60,7 +60,7 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     set_time_limit(6000);
     include_once BASEPATH . "/php/Render.php";
     $filter = [];
-    if (!empty($username)) $filter['authors.user'] = $username;
+    if (!empty($username)) $filter['rendered.affiliated_users'] = $username;
 
     include BASEPATH . "/header.php";
     renderAuthorUnitsMany($filter);

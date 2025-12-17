@@ -425,7 +425,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
 }, 'login');
 
 
-Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors)', function ($id, $role) {
+Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', function ($id, $role) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
@@ -946,7 +946,7 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
 });
 
 
-Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function ($type, $id) {
+Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*)', function ($type, $id) {
     include_once BASEPATH . "/php/init.php";
     // prepare id
     if (!isset($_POST['authors']) || empty($_POST['authors'])) {
@@ -1069,6 +1069,20 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     );
 
     $updateCount = ($resA->getModifiedCount() ?? 0) + ($resE->getModifiedCount() ?? 0);
+
+    // supervisor update
+    $updateSupervisors = key($u) === '$set'
+        ? ['$set' => array_combine(
+            array_map(fn($k) => str_replace('$.', 'supervisors.$[s].', $k), array_keys($u['$set'])),
+            array_values($u['$set'])
+        )]
+        : $u;
+    $resS = $collection->updateOne(
+        ['_id' => $id, 'supervisors.user' => $user],
+        $updateSupervisors,
+        ['arrayFilters' => [['s.user' => $user]]]
+    );
+    $updateCount += ($resS->getModifiedCount() ?? 0);
 
     // force update of user notifications
     $DB->notifications(true);

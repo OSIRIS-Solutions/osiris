@@ -40,6 +40,8 @@ function renderActivities($filter = [])
             'title' => $Format->getTitle(),
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
+            'users' => $Format->getUsers(false),
+            'affiliated_users' => $Format->getUsers(true),
         ];
         $values = ['rendered' => $rendered];
 
@@ -68,6 +70,11 @@ function renderActivities($filter = [])
                 return $a['aoi'] ?? false;
             });
         }
+        if (empty($aoi_authors) && isset($doc['supervisors'])) {
+            $aoi_authors = array_filter(DB::doc2Arr($doc['supervisors']), function ($a) {
+                return $a['aoi'] ?? false;
+            });
+        }
         $values['affiliated'] = !empty($aoi_authors);
         $values['affiliated_positions'] = $Format->getAffiliationTypes('authors');
         $values['cooperative'] = $Format->getCooperationType($values['affiliated_positions'], $doc['units'] ?? []);
@@ -83,12 +90,7 @@ function renderActivities($filter = [])
         if (isset($doc['end']) && !empty($doc['end'])) {
             $em = $doc['end']['month'];
             $ey = $doc['end']['year'];
-        } elseif (
-            (
-                ($doc['type'] == 'misc' && ($doc['subtype'] ?? $doc['iteration']) == 'annual') ||
-                ($doc['type'] == 'review' && in_array($doc['subtype'] ?? $doc['role'], ['Editor', 'editorial', 'editor']))
-            ) && empty($doc['end'])
-        ) {
+        } elseif (in_array($doc['subtype'], $Settings->continuousTypes) && empty($doc['end'])) {
             $em = CURRENTMONTH;
             $ey = CURRENTYEAR;
             $active = true;

@@ -735,15 +735,25 @@ console.log(TYPES);
     <?php } ?>
 </datalist>
 
+<?php
+    $user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1, 'username' => 1], 'sort' => ['last' => 1]])->toArray();
+?>
+
 <datalist id="scientist-list">
     <?php
-    foreach ($osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1], 'sort' => ['last' => 1]]) as $s) {
+    foreach ($user_list as $s) {
         if (empty($s['last'])) continue;
     ?>
         <option><?= $s['last'] ?>, <?= $s['first'] ?></option>
     <?php } ?>
 </datalist>
 
+<datalist id="user-list">
+    <?php
+    foreach ($user_list as $s) { ?>
+        <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+    <?php } ?>
+</datalist>
 
 
 <script>

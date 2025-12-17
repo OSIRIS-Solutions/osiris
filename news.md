@@ -1,5 +1,25 @@
 # Neuigkeiten
 
+
+
+<span class="badge float-right">17.12.2025</span>
+<a class="anchor" href="#version-1.7.1" id="version-1.7.1"></a>
+
+## Version 1.7.1
+
+In dieser Version wurden im Wesentlichen Fehler behoben und kleinere Verbesserungen vorgenommen:
+
+- Die Module `supervisors` und `supervisor-thesis` speichern jetzt nicht mehr in die Autorenliste. Dadurch lassen sich jetzt bei einer Aktivität sowohl Betreuer:innen als auch Autor:innen unabhängig voneinander erfassen. Dazu wurden im gesamten Code überall Optimierungen vorgenommen, um diese Trennung zu gewährleisten. Nach Betreuenden kann jetzt auch in der erweiterten Suche gefiltert werden.
+- Es wurde ein Fehler behoben durch den Aktivitätstypen, die nicht öffentlich sichtbar sein sollten, trotzdem über die exakte ID aufgerufen werden konnten.
+- Für Aktivitätstypen, die nicht im Portfolio angezeigt werden sollen, gibt es jetzt auch nicht mehr die Option, sie auszublenden. Dies verhindert Verwirrung, da sie ohnehin nicht sichtbar sind.
+- Die **Templates** wurden erweitert:
+  - Die Conditional Templates unterstützen jetzt auch mehrere Bedingungen mit `&` (und) bzw. `|` (oder).
+  - Es gibt nun die Möglichkeit, im Falle das ein Feld leer ist ein anderes Feld zu nutzen (z.B. `{field1|field2}`). Sollte field1 leer sein, wird field2 genutzt. Sollte field2 kein Name eines Feldes sein, wird der Text so ausgegeben. Die Textausgabe kann mit Anführungszeichen erzwungen werden: `{field1| "Default Text"}`
+- 
+
+
+---
+
 <span class="badge float-right">08.12.2025</span>
 <a class="anchor" href="#version-1.7.0" id="version-1.7.0"></a>
 

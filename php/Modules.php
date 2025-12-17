@@ -1688,7 +1688,7 @@ class Modules
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
 
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
 
                     <div class="module p-0">
@@ -1711,22 +1711,22 @@ class Modules
                                 foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
+                                            <input type="number" step="0.1" class="form-control" name="values[supervisors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
                                             <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
@@ -1782,11 +1782,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[supervisors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
                             var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
@@ -1794,13 +1794,6 @@ class Modules
                             $('#supervisors').append(tr)
                         }
                     </script>
-
-                    <datalist id="user-list">
-                        <?php
-                        foreach ($this->userlist as $s) { ?>
-                            <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
-                        <?php } ?>
-                    </datalist>
 
                 </div>
             <?php
@@ -1813,7 +1806,7 @@ class Modules
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
 
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
 
                     <div class="module p-0">
@@ -1825,8 +1818,7 @@ class Modules
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
-                                    <th>
-                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
@@ -1837,22 +1829,22 @@ class Modules
                                 ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <select name="values[authors][<?= $i ?>][role]" class="form-control">
+                                            <select name="values[supervisors][<?= $i ?>][role]" class="form-control">
                                                 <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
                                                 <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
                                                 <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
@@ -1896,7 +1888,7 @@ class Modules
 
                         function selectUsernameSupervisor(el) {
                             let username = el.value
-                            let user = $('#user-list-thesis option[value=' + username + ']')
+                            let user = $('#user-list-thesis option[value="' + username + '"]')
                             if (!user || user === undefined || user.length === 0) return;
 
                             console.log(user);
@@ -1917,11 +1909,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
                             var roles = {
                                 'supervisor': lang('Supervisor', 'Betreuer'),
                                 'first-reviewer': lang('First reviewer', 'Erster Gutachter'),

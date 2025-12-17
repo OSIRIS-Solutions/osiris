@@ -39,7 +39,7 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $values[$key] = "10." . $value[1];
             }
-        } else if ($key == 'authors' || $key == "editors") {
+        } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;
             foreach ($value as $author) {

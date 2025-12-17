@@ -547,7 +547,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $publication_filter = [
-        '$or' => [['authors.user' => $user], ['editors.user' => $user]],
+        'rendered.users' => $user,
         'type' => 'publication'
     ];
     $count_publications = $osiris->activities->count($publication_filter);
@@ -562,12 +562,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $coauthors = $osiris->activities->aggregate([
-        ['$match' => ['type' => 'publication', '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'year' => ['$gte' => CURRENTYEAR - 4]]],
-        ['$unwind' => '$authors'],
-        ['$match' => ['authors.user' => ['$ne' => null], 'authors.aoi' => ['$ne' => null]]],
+        ['$match' => ['type' => 'publication', 'rendered.users' => $user, 'year' => ['$gte' => CURRENTYEAR - 4]]],
+        ['$unwind' => '$rendered.users'],
+        ['$match' => ['rendered.users' => ['$ne' => null]]],
         [
             '$group' => [
-                '_id' => '$authors.user',
+                '_id' => '$rendered.users',
                 'count' => ['$sum' => 1]
             ]
         ],
@@ -583,7 +583,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $activities_filter = [
-        'authors.user' => "$user",
+        'rendered.users' => $user,
         'type' => ['$ne' => 'publication']
     ];
     $count_activities = $osiris->activities->count($activities_filter);
@@ -598,14 +598,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $membership_filter = [
-        'authors.user' => "$user",
+        'rendered.users' => $user,
         'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $count_memberships = $osiris->activities->count($membership_filter);
     if ($count_memberships > 0) { ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
-            <?= lang('Committee work', 'Gremienarbeit')  ?>
+            <?= lang('Ongoing works', 'Laufende Arbeiten')  ?>
             <span class="index"><?= $count_memberships ?></span>
         </a>
     <?php } ?>
@@ -650,7 +650,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <!-- Teaching activities -->
     <?php
     $teaching = $osiris->activities->aggregate([
-        ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'teaching', 'module_id' => ['$ne' => null]]],
+        ['$match' => [
+            'rendered.users' => $user,
+            'type' => 'teaching',
+            'module_id' => ['$ne' => null]
+        ]],
         [
             '$group' => [
                 '_id' => '$module_id',
@@ -674,7 +678,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php if ($Settings->featureEnabled('wordcloud')) { ?>
         <?php
-        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'publication']);
+        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], 'rendered.users' => $user, 'type' => 'publication']);
         if ($count_wordcloud > 0) { ?>
             <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
                 <i class="ph ph-cloud" aria-hidden="true"></i>
@@ -688,7 +692,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         $concepts = [];
         $concepts = $osiris->activities->aggregate(
             [
-                ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'concepts' => ['$exists' => true]]],
+                ['$match' => ['rendered.users' => $user, 'concepts' => ['$exists' => true]]],
                 ['$project' => ['concepts' => 1]],
                 [
                     '$group' => [
@@ -759,42 +763,42 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php } ?>
 
                 <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
-                <div class="box">
-                    <div class="content">
-                        <h4 class="title">
-                            <?= lang('Newest publications', 'Neuste Publikationen') ?>
-                        </h4>
-                        <p class="text-muted">
-                            <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
-                        </p>
+                    <div class="box">
+                        <div class="content">
+                            <h4 class="title">
+                                <?= lang('Newest publications', 'Neuste Publikationen') ?>
+                            </h4>
+                            <p class="text-muted">
+                                <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
+                            </p>
 
-                        <?php
-                        $pubs = $osiris->activities->find(
-                            ['authors.aoi' => true, 'type' => 'publication'],
-                            [
-                                'sort' => ['start_date' => -1],
-                                'limit' => 5,
-                                'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
-                            ]
-                        )->toArray();
-                        ?>
-                        <table class="table simple">
-                            <?php foreach ($pubs as $doc) { ?>
-                                <tr>
-                                    <td>
-                                        <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
-                                        <?= $doc['html'] ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
+                            <?php
+                            $pubs = $osiris->activities->find(
+                                ['authors.aoi' => true, 'type' => 'publication'],
+                                [
+                                    'sort' => ['start_date' => -1],
+                                    'limit' => 5,
+                                    'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
+                                ]
+                            )->toArray();
+                            ?>
+                            <table class="table simple">
+                                <?php foreach ($pubs as $doc) { ?>
+                                    <tr>
+                                        <td>
+                                            <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
+                                            <?= $doc['html'] ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
 
-                        </table>
+                            </table>
 
-                        <a href="<?= ROOTPATH ?>/activities" class="btn primary">
-                            <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
-                        </a>
+                            <a href="<?= ROOTPATH ?>/activities" class="btn primary">
+                                <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
+                            </a>
+                        </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
             <div class="col-md-6 h-full">
@@ -1487,7 +1491,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($ongoing)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Ongoing committee works', 'Laufende Gremienarbeit') ?></h4>
+                        <h4 class="title"><?= lang('Ongoing works', 'Laufende Arbeiten') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>
@@ -1515,7 +1519,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($past)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Past committee works', 'Vergangene Gremienarbeiten') ?></h4>
+                        <h4 class="title"><?= lang('Past works', 'Vergangene Arbeiten') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>

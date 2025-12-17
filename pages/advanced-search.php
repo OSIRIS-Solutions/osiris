@@ -395,8 +395,6 @@ function printRules($rules)
             <div id="column-select">
                 <?php
                 $selected = $_GET['columns'] ?? $defaultColumns;
-                // $ignore = ['_id', 'authors.user', 'authors.position', 'authors.approved', 'authors.aoi', 'authors.last', 'authors.first'];
-                // $fields = array_values($FIELDS);
                 $fields = array_filter($FIELDS->fields, function ($f) {
                     return in_array('columns', $f['usage'] ?? []);
                 });

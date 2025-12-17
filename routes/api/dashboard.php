@@ -332,20 +332,26 @@ Route::get('/api/dashboard/author-role', function () {
                 'x' => 'editor',
                 'y' => $editorials
             ];
+        $supervisorships = $osiris->activities->count(['supervisors.user' => $user]);
+        if ($supervisorships !== 0)
+            $data[] = [
+                'x' => 'supervisor',
+                'y' => $supervisorships
+            ];
     }
 
     foreach ($data as $el) {
         switch ($el['x']) {
             case 'first':
-                $label = lang("First author", "Erstautor");
+                $label = lang("First author", "Erstautor:in");
                 $color = '#006EB799';
                 break;
             case 'last':
-                $label = lang("Last author", "Letztautor");
+                $label = lang("Last author", "Letztautor:in");
                 $color = '#004d8099';
                 break;
             case 'middle':
-                $label = lang("Middle author", "Mittelautor");
+                $label = lang("Middle author", "Mittelautor:in");
                 $color = '#cce2f099';
                 break;
             case 'editor':
@@ -353,8 +359,12 @@ Route::get('/api/dashboard/author-role', function () {
                 $color = '#002c4999';
                 break;
             case 'corresponding':
-                $label = lang("Corresponding", "Korrespondierender Autor");
+                $label = lang("Corresponding", "Korrespondierend");
                 $color = '#4c99cc99';
+                break;
+            case 'supervisor':
+                $label = lang("Supervisorship", "Betreuerschaft");
+                $color = '#99336699';
                 break;
             default:
                 $label = $el['x'];
@@ -382,7 +392,7 @@ Route::get('/api/dashboard/impact-factor-hist', function () {
 
     $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'impact' => ['$ne' => null], 'type' => 'publication'];
     if (isset($_GET['user'])) {
-        $filter['authors.user'] = $_GET['user'];
+        $filter['rendered.users'] = $_GET['user'];
     }
     $max = $osiris->activities->find(
         $filter,
@@ -437,7 +447,7 @@ Route::get('/api/dashboard/activity-chart', function () {
 
     $filter = ['year' => ['$gte' => $Settings->get('startyear')]];
     if (isset($_GET['user'])) {
-        $filter['authors.user'] = $_GET['user'];
+        $filter['rendered.users'] = $_GET['user'];
     }
 
     $result = [];
@@ -554,11 +564,11 @@ Route::get('/api/dashboard/wordcloud', function () {
 
     $filter = ['type' => 'publication'];
     if (isset($_GET['user'])) {
-        $filter['authors.user'] = $_GET['user'];
+        $filter['rendered.users'] = $_GET['user'];
     } else if (isset($_GET['units'])) {
         $units = $_GET['units'];
         if (!is_array($units)) $units = [$units];
-        $filter['authors.units'] = ['$in' => $units];
+        $filter['units'] = ['$in' => $units];
     } else if (isset($_GET['topics'])) {
         $filter['topics'] = $_GET['topics'];
     }
@@ -811,7 +821,7 @@ Route::get('/api/dashboard/author-network', function () {
     $depts = null;
     $filter = ['type' => 'publication'];
     if (isset($_GET['user'])){
-        $filter['authors.user'] = $_GET['user'];
+        $filter['rendered.users'] = $_GET['user'];
     } else if (isset($_GET['dept'])) {
         $depts = $Groups->getChildren($_GET['dept'], 1);
         $filter['units'] = $_GET['dept'];
@@ -1058,17 +1068,17 @@ Route::get('/api/dashboard/department-graph', function () {
                         'aoi' => ['$in' => ['true', true, 1]]
                     ]
                 ],
-                // 'authors.user' => ['$in' => $users],
+                // 'rendered.users' => ['$in' => $users],
                 'type' => 'publication'
             ]],
-            ['$unwind' => '$authors'],
+            ['$unwind' => '$rendered.users'],
             ['$match' => [
-                'authors.user' => ['$in' => $users],
+                'rendered.users' => ['$in' => $users],
                 // 'authors.user' => ['$ne' => null],
                 'authors.aoi' => ['$in' => ['true', true, 1]]
             ]],
             ['$group' => [
-                '_id' => '$authors.user',
+                '_id' => '$rendered.users',
                 'count' => ['$sum' => 1]
             ]]
         ])->toArray();
@@ -1217,7 +1227,7 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
     }
 
     if (isset($_GET['user'])) {
-        $filter['authors.user'] = $_GET['user'];
+        $filter['rendered.users'] = $_GET['user'];
     }
     // TODO: add filter for department
     // if (isset($_GET['unit'])) {
@@ -1298,8 +1308,9 @@ Route::get('/api/calendar', function () {
     if (isset($_GET['start']) && isset($_GET['end'])) {
         $start = $_GET['start'];
         $end = $_GET['end'];
+        $user = $_GET['user'] ?? $_SESSION['username'] ?? '';
         $filter = [
-            'authors.user' => $_GET['user'] ?? $_SESSION['username'] ?? '',
+            'rendered.users' => $user,
             '$or' => [
                 ['start_date' => ['$gte' => $start, '$lte' => $end]],
                 ['end_date' => ['$gte' => $start, '$lte' => $end]],
@@ -1310,7 +1321,7 @@ Route::get('/api/calendar', function () {
     if (isset($_GET['unit'])){
         $filter['units'] = $_GET['unit'];
     } else {
-        $filter['authors.user'] = $_SESSION['username'] ?? '';
+        $filter['rendered.users'] = $_SESSION['username'] ?? '';
     }
 
 

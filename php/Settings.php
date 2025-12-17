@@ -88,8 +88,7 @@ class Settings
         if (empty($filter)) return [
             '$or' => [
                 $filterAllowed,
-                ['authors.user' => $user],
-                ['editors.user' => $user],
+                ['rendered.users' => $user],
                 ['user' => $user]
             ]
         ];
@@ -98,8 +97,7 @@ class Settings
                 $filter,
                 ['$or' => [
                     $filterAllowed,
-                    ['authors.user' => $user],
-                    ['editors.user' => $user],
+                    ['rendered.users' => $user],
                     ['user' => $user]
                 ]]
             ]

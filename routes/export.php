@@ -234,7 +234,7 @@ Route::post('/download', function () {
         $filename .= "_" . trim($params['type']);
     }
     if (isset($params['user']) && !empty($params['user'])) {
-        $filter['$and'][] = array('$or' => [['authors.user' => $params['user']], ['editors.user' => $params['user']]]);
+        $filter['$and'][] = array('rendered.users' => $params['user']);
         $filename .= "_" . trim($params['user']);
     }
     if (isset($params['dept']) && !empty($params['dept'])) {

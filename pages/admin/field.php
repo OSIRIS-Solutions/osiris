@@ -253,3 +253,8 @@ if (!empty($form) && isset($form['id'])) {
         });
     })
 </script>
+
+
+<?php if (isset($_GET['verbose'])) { 
+    dump($form);
+ } ?>
