@@ -504,6 +504,7 @@ class ActivityFields extends Fields
                 'module_of' => $typeModules['license'] ?? [],
                 'usage' => [
                     'filter',
+                    'aggregate',
                     'columns'
                 ],
                 'label' => lang('License', 'Lizenz'),
