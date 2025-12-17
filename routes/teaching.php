@@ -55,7 +55,7 @@ Route::get('/teaching/statistics', function () {
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
 
-
+    $values['module'] = trim(strval($_POST['values']['module'] ?? ''));
     // check if module already exists:
     if (isset($values['module']) && !empty($values['module'])) {
         $module_exist = $collection->findOne(['module' => $values['module']]);

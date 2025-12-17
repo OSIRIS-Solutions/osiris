@@ -41,15 +41,36 @@ Route::get('/(activities|my-activities)', function ($page) {
 }, 'login');
 
 
-Route::get('/activities/search', function () {
+Route::get('/(activities|projects|proposals|conferences|journals|persons)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
+
+    switch ($collection) {
+        case 'activities':
+            $colName = lang('Activities', "Aktivitäten");
+            break;
+        case 'projects':
+            $colName = lang('Projects', "Projekte");
+            break;
+        case 'proposals':
+            $colName = lang('Proposals', "Anträge");
+            break;
+        case 'conferences':
+            $colName = lang('Events', "Veranstaltungen");
+            break;
+        case 'journals':
+            $colName = $Settings->journalLabel();
+            break;
+        case 'persons':
+            $colName = lang('Persons', "Personen");
+            break;
+    }
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-        ['name' => lang("Search", "Suche")]
+        ['name' => $colName, 'path' => "/" . $collection],
+        ['name' => lang("Advanced search", "Erweiterte Suche")]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/activity-search.php";
+    include BASEPATH . "/pages/advanced-search.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -261,32 +282,17 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $no_container = true;
     include BASEPATH . "/header.php";
 
-    if (empty($activity)) {
-        echo "Activity not found!";
+    if (empty($activity)) { ?>
+        <div class="content-container">
+            <div class="alert alert-danger">
+                <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
+            </div>
+        </div>
+<?php
     } else {
         include BASEPATH . "/pages/activity.php";
     }
     include BASEPATH . "/footer.php";
-}, 'login');
-
-
-// @deprecated 1.2.0
-Route::get('/activities/view/([a-zA-Z0-9]*)/file', function ($id) {
-    include_once BASEPATH . "/php/init.php";
-
-    $id = $DB->to_ObjectID($id);
-
-    $activity = $osiris->activities->findOne(['_id' => $id]);
-
-    if (empty($activity)) {
-        echo "Activity not found!";
-    } else if (!isset($activity['file']) || empty($activity['file'])) {
-        echo "No file found.";
-    } else {
-        header('Content-type: application/pdf');
-        // header('Content-Disposition: attachment; filename="my.pdf"');
-        echo $activity['file']->serialize();
-    }
 }, 'login');
 
 
@@ -419,7 +425,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
 }, 'login');
 
 
-Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors)', function ($id, $role) {
+Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', function ($id, $role) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
@@ -495,25 +501,26 @@ Route::post('/crud/activities/create', function () {
 
     // add projects if possible
     if ($Settings->featureEnabled('projects')) {
-        $values['projects'] = [];
+        $projects = [];
         if (isset($values['projects']) && !empty($values['projects'])) {
-            $values['projects'] = array_values($values['projects']);
+            $projects = array_values($values['projects']);
             // convert values to ObjectID
-            $values['projects'] = array_map(function ($v) use ($DB) {
+            $projects = array_map(function ($v) use ($DB) {
                 return $DB->to_ObjectID($v);
-            }, $values['projects']);
+            }, $projects);
             // make sure that there are no duplicates
-            $values['projects'] = array_values(array_unique($values['projects'], SORT_REGULAR));
+            $projects = array_values(array_unique($projects, SORT_REGULAR));
         }
         if (isset($values['funding']) && !empty($values['funding'])) {
             $values['funding'] = explode(',', $values['funding']);
             foreach ($values['funding'] as $key) {
                 $project = $osiris->projects->findOne(['funding_number' => $key]);
-                if (isset($project['_id']) && !in_array($project['_id'], $values['projects'])) {
-                    $values['projects'][] = $project['_id'];
+                if (isset($project['_id']) && !in_array($project['_id'], $projects)) {
+                    $projects[] = $project['_id'];
                 }
             }
         }
+        $values['projects'] = $projects;
     }
 
     if (isset($values['authors'])) {
@@ -939,7 +946,7 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
 });
 
 
-Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function ($type, $id) {
+Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*)', function ($type, $id) {
     include_once BASEPATH . "/php/init.php";
     // prepare id
     if (!isset($_POST['authors']) || empty($_POST['authors'])) {
@@ -1062,6 +1069,20 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     );
 
     $updateCount = ($resA->getModifiedCount() ?? 0) + ($resE->getModifiedCount() ?? 0);
+
+    // supervisor update
+    $updateSupervisors = key($u) === '$set'
+        ? ['$set' => array_combine(
+            array_map(fn($k) => str_replace('$.', 'supervisors.$[s].', $k), array_keys($u['$set'])),
+            array_values($u['$set'])
+        )]
+        : $u;
+    $resS = $collection->updateOne(
+        ['_id' => $id, 'supervisors.user' => $user],
+        $updateSupervisors,
+        ['arrayFilters' => [['s.user' => $user]]]
+    );
+    $updateCount += ($resS->getModifiedCount() ?? 0);
 
     // force update of user notifications
     $DB->notifications(true);

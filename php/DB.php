@@ -142,6 +142,7 @@ class DB
             'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
             'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
+            'nagoya' => lang('Nagoya Protocol Compliance', 'Nagoya-Protokoll Bewertungen'),
         ];
 
         $now = time();
@@ -327,6 +328,14 @@ class DB
                 ['username' => $user, 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
                 ['projection' => [$key => 1, '_id' => 0]]
             )->toArray();
+        } else if (str_starts_with($group, 'right:')) {
+            $right = substr($group, 6);
+            $roles = $this->db->adminRights->find(['right' => $right, 'value' => true], ['projection' => ['role' => 1, '_id' => 0]]);
+            $roles = DB::doc2Arr($roles);
+            $users = $this->db->persons->find(
+                ['roles' => ['$in' => array_column($roles, 'role')], 'is_active' => ['$ne' => false], $key => ['$exists' => true]],
+                ['projection' => [$key => 1, '_id' => 0]]
+            )->toArray();
         }
         $users = array_column($users, $key);
         // do not send messages if user is current user
@@ -344,7 +353,7 @@ class DB
         if (!empty($type)) $filter['type'] = $type;
         $doc = $this->db->notifications->findOne($filter, ['projection' => ['messages' => 1], 'sort' => ['created_at' => -1]]);
         if (empty($doc)) return array();
-        return DB::doc2Arr($doc['messages']);
+        return DB::doc2Arr($doc['messages'] ?? []);
     }
 
     function getLastQuarter()
@@ -533,6 +542,7 @@ class DB
     public function getNameFromId($user, $reverse = false, $abbr = false)
     {
         $USER = $this->getPerson($user, true);
+        if (empty($USER)) return "$user";
         $first = $USER['first'] ?? '';
 
         if ($abbr && !empty($first)) {
@@ -744,7 +754,7 @@ class DB
     {
         if ($include_created_by && isset($doc['created_by']) && $doc['created_by'] == $user) return true;
         if (isset($doc['user']) && $doc['user'] == $user) return true;
-        foreach (['authors', 'editors'] as $role) {
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
             if (!isset($doc[$role])) continue;
             foreach ($doc[$role] as $author) {
                 if (isset($author['user']) && !empty($author['user'])) {
@@ -877,6 +887,12 @@ class DB
         return $result;
     }
 
+    private function featureEnabled($feature, $default = false)
+    {
+        $f = $this->db->adminFeatures->findOne(['feature' => $feature]);
+        return boolval($f['enabled'] ?? $default);
+    }
+
     public function getUserIssues($user = null)
     {
         if ($user === null) $user = $_SESSION['username'];
@@ -889,7 +905,8 @@ class DB
             '_id',
             ['$or' => [
                 ['authors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
-                ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]]
+                ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
+                ['supervisors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
             ]]
         );
         if (!empty($docs)) $issues['approval'] = array_map('strval', $docs);
@@ -897,7 +914,7 @@ class DB
         // CHECK status issue
         $docs = $this->db->activities->find(
             [
-                'authors.user' => $user,
+                'rendered.affiliated_users' => $user,
                 '$or' => [
                     ['status' => 'in progress', '$or' => [['end_date' => null], ['end_date' => ['$lt' => $today]]]],
                     ['status' => 'preparation', 'start_date' => ['$lt' => $today]],
@@ -912,7 +929,7 @@ class DB
         }
 
         // check EPUB issue
-        $docs = $this->db->activities->find(['authors.user' => $user, 'epub' => true], ['projection' => ['epub-delay' => 1]]);
+        $docs = $this->db->activities->find(['rendered.affiliated_users' => $user, 'epub' => true], ['projection' => ['epub-delay' => 1]]);
         foreach ($docs as $doc) {
             if (isset($doc['epub-delay']) && $now < new DateTime($doc['epub-delay'])) continue;
             $issues['epub'][] = strval($doc['_id']);
@@ -933,7 +950,7 @@ class DB
         }
         // }
         // then find all documents that belong to this
-        $docs = $this->db->activities->find(['authors.user' => $user, 'end' => null, 'subtype' => ['$in' => $openendtypes]], ['projection' => ['end-delay' => 1]]);
+        $docs = $this->db->activities->find(['rendered.affiliated_users' => $user, 'end' => null, 'subtype' => ['$in' => $openendtypes]], ['projection' => ['end-delay' => 1]]);
         foreach ($docs as $doc) {
             if (isset($doc['end-delay']) && $now < new DateTime($doc['end-delay'])) continue;
             $issues['openend'][] = strval($doc['_id']);
@@ -959,24 +976,77 @@ class DB
         // }
 
         $y = CURRENTYEAR - 1;
-        $infrastructures = $this->db->infrastructures->find([
-            'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
+        $m = CURRENTMONTH;
+        $q = ceil($m / 3);
+        // $infrastructures = $this->db->infrastructures->find([
+        //     'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
+        //     'start_date' => ['$lte' => $y . '-12-31'],
+        //     '$or' => [
+        //         ['end_date' => null],
+        //         ['end_date' => ['$gte' => $y . '-01-01']]
+        //     ],
+        //     'statistics.year' => ['$ne' => $y]
+        // ], ['projection' => ['id' => ['$toString' => '$_id']]]);
+        // foreach ($infrastructures as $infra) {
+        //     $issues['infrastructure'][] = $infra['id'];
+        // }
+
+        // 1) Infrastrukturen holen, für die die Person Reporter ist und die im aktuellen Jahr aktiv sind
+        $infrasCursor = $this->db->infrastructures->find([
+            'persons' => [
+                '$elemMatch' => [
+                    'user' => $user,
+                    'reporter' => true
+                ]
+            ],
+            'statistic_frequency' => ['$ne' => 'irregularly'],
             'start_date' => ['$lte' => $y . '-12-31'],
             '$or' => [
                 ['end_date' => null],
                 ['end_date' => ['$gte' => $y . '-01-01']]
             ],
-            'statistics.year' => ['$ne' => $y]
-        ], ['projection' => ['id' => ['$toString' => '$_id']]]);
+        ]);
+        foreach ($infrasCursor as $infra) {
+            // adjust: je nachdem, wie du das Feld nennst
+            $mode = $infra['statistic_frequency'] ?? 'yearly';
+            $infraId = $infra['id'];
+            $filter = [
+                'infrastructure' => $infraId,
+                'year' => $y,
+            ];
+            $timepoint = "$y";
 
-        foreach ($infrastructures as $infra) {
-            $issues['infrastructure'][] = $infra['id'];
+            // 2) Filter je nach Periodizität ergänzen
+            switch ($mode) {
+                case 'quarterly':
+                    $filter['quarter'] = $q;
+                    $timepoint = "$y-Q$q";
+                    break;
+                case 'monthly':
+                    $filter['month'] = $m;
+                    $timepoint = "$y-$m";
+                    break;
+                case 'irregular':
+                    // no reminder for irregular statistics
+                    break;
+                case 'yearly':
+                default:
+                    // nur year prüfen
+                    break;
+            }
+
+            $count = $this->db->infrastructureStats->count($filter);
+
+            if ($count === 0) {
+                // Für diesen Zeitraum gibt es noch keine Statistik → Reminder nötig
+                $issues['infrastructure'][$infraId] = $timepoint;
+            }
         }
 
         // check if an activity was rejected
         $docs = $this->db->activities->find(
             [
-                'authors' => ['$elemMatch' => ['user' => $user]],
+                'rendered.affiliated_users' => $user,
                 'workflow.status' => 'rejected'
             ],
             [
@@ -988,6 +1058,23 @@ class DB
                 'id' => strval($doc['_id']),
                 'details' => $doc['workflow']['rejectedDetails'] ?? []
             ];
+        }
+
+        if ($this->featureEnabled('nagoya', false)){
+            $proposals = $this->db->proposals->find(
+                [
+                    'persons.user' => $user,
+                    'nagoya.enabled' => true,
+                    'nagoya.status' => 'researcher-input',
+                    'status' => 'approved'
+                ],
+                [
+                    'projection' => ['id' => ['$toString' => '$_id']]
+                ]
+            );
+            foreach ($proposals as $proposal) {
+                $issues['nagoya'][] = $proposal['id'];
+            }
         }
 
         return $issues;

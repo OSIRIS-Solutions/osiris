@@ -151,6 +151,10 @@ function val($index, $default = '')
 </style>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
+<script>
+const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
+console.log(TYPES);
+</script>
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
 
 
@@ -197,9 +201,23 @@ function val($index, $default = '')
                     </div>
                 </div>
 
-                <div class="form-group mb-10">
-                    <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
-                    <input type="text" id="event-location" required class="form-control">
+                <div class="form-row row-eq-spacing">
+                    <div class="col">
+                        <label for="event-location" class="required"><?= lang('Location', 'Ort') ?></label>
+                        <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
+                    </div>
+                    <div class="col">
+                        <label for="event-country"><?= lang('Country', 'Land') ?></label>
+                        <select id="event-country" class="form-control">
+                            <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                            <!-- germany first -->
+                            <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
+                            <?php
+                            foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                                <option value="<?= $key ?>"><?= $value ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group mb-10">
@@ -717,15 +735,25 @@ function val($index, $default = '')
     <?php } ?>
 </datalist>
 
+<?php
+    $user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1, 'username' => 1], 'sort' => ['last' => 1]])->toArray();
+?>
+
 <datalist id="scientist-list">
     <?php
-    foreach ($osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1], 'sort' => ['last' => 1]]) as $s) {
+    foreach ($user_list as $s) {
         if (empty($s['last'])) continue;
     ?>
         <option><?= $s['last'] ?>, <?= $s['first'] ?></option>
     <?php } ?>
 </datalist>
 
+<datalist id="user-list">
+    <?php
+    foreach ($user_list as $s) { ?>
+        <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+    <?php } ?>
+</datalist>
 
 
 <script>

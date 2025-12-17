@@ -48,7 +48,7 @@
                                 </td>
                                 <td style="color: <?= $type['color'] ?? 'inherit' ?>">
                                     <input type="hidden" name="order[]" value="<?= $type['id'] ?>">
-                                    <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                                    <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
                                     <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                                 </td>
                             </tr>
@@ -78,13 +78,17 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('Categories', 'Kategorien') ?>
+    <?= lang('Activity Categories', 'Aktivitätskategorien') ?>
 </h1>
 
 <div class="btn-toolbar">
-    <a class="btn" href="<?= ROOTPATH ?>/admin/categories/new">
+    <a class="btn primary" href="<?= ROOTPATH ?>/admin/categories/new">
         <i class="ph ph-plus-circle"></i>
         <?= lang('Add category', 'Kategorie hinzufügen') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/admin/doi-mappings" class="btn primary">
+        <i class="ph ph-link-simple"></i>
+        <?= lang('DOI Mappings', 'DOI Zuordnungen') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">
@@ -112,7 +116,7 @@
 foreach ($Categories->categories as $type) { ?>
     <div class="box px-20 py-10 mb-10" style="--primary-color: <?= $type['color'] ?? 'var(--primary-color);' ?>">
         <h3 class="title text-primary">
-            <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+            <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
             <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
         </h3>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
@@ -125,7 +129,7 @@ foreach ($Categories->categories as $type) { ?>
             $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
                 <a class="btn small ml-10 text-primary" href="<?= ROOTPATH ?>/admin/types/<?= $subtype['id'] ?>">
-                    <i class="ph ph-<?= $subtype['icon'] ?? 'placeholder' ?>"></i>
+                    <i class="ph ph-<?= $subtype['icon'] ?? 'folder-open' ?>"></i>
                     <?= lang($subtype['name'], $subtype['name_de'] ?? $subtype['name']) ?>
                 </a>
             <?php } ?>

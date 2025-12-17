@@ -409,7 +409,7 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
             'hide' => ['$ne' => true],
             'authors.aoi' => ['$in' => [1, '1', true, 'true']]
         ];
-    } else {
+    } elseif ($context == 'person') {
         $id = DB::to_ObjectID($id);
         $person = $osiris->persons->findOne(['_id' => $id]);
         if (empty($person)) {
@@ -418,9 +418,12 @@ Route::get('/portfolio/(unit|person|project)/([^/]*)/(publications|activities|al
         }
         $id = $person['username'];
         $filter = [
-            'authors.user' => $id,
+            'rendered.users' => $id,
             'hide' => ['$ne' => true]
         ];
+    } else {
+        echo rest('Context not found', 0, 400);
+        die;
     }
     if ($type == 'publications') {
         $filter['type'] = 'publication';
@@ -474,19 +477,21 @@ Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id)
         die;
     }
 
-    $filter = ['type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]];
+    $filter = [
+        '$and' => [['type' => 'teaching', 'module_id' => ['$ne' => null], 'hide' => ['$ne' => true]]]
+    ];
     if ($context == 'unit') {
         if ($id == 0) {
             $group = $osiris->groups->findOne(['level' => 0]);
             $id = $group['id'];
         }
         $child_ids = $Groups->getChildren($id);
-        $filter['units'] = ['$in' => $child_ids];
+        $filter['$and'][] = ['units' => ['$in' => $child_ids]];
     } else {
         $id = DB::to_ObjectID($id);
         $person = $osiris->persons->findOne(['_id' => $id]);
         $id = $person['username'];
-        $filter['authors.user'] =  $id;
+        $filter['$and'][] = ['rendered.users' => $id];
     }
 
     if ($Settings->featureEnabled('quality-workflow')) {
@@ -494,10 +499,12 @@ Route::get('/portfolio/(unit|person)/([^/]*)/teaching', function ($context, $id)
         if ($visibility == 'only-approved') {
             $filter['workflow.status'] = 'verified';
         } elseif ($visibility == 'approved-or-empty') {
-            $filter['$or'] = [
-                ['workflow' => ['$exists' => false]],
-                ['workflow.status' => 'verified'],
-                ['workflow.status' => ['$exists' => false]]
+            $filter['$and'][] = [
+                '$or' => [
+                    ['workflow' => ['$exists' => false]],
+                    ['workflow.status' => 'verified'],
+                    ['workflow.status' => ['$exists' => false]]
+                ]
             ];
         }
     }
@@ -747,7 +754,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $doc = $osiris->activities->findOne(
         ['_id' => $id]
     );
-    if (empty($doc) || ($doc['hide'] ?? false)) {
+    if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $Settings->getActivitiesPortfolio(true))) {
         echo rest('Activity not found', 0, 404);
         die;
     }
@@ -1130,7 +1137,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $docs = [];
         foreach ($person['highlighted'] as $id) {
             $doc = $DB->getActivity($id);
-            if (!empty($doc)) {
+            if (!empty($doc) && !($doc['hide'] ?? false)) {
                 if ($visibility == 'only-approved' && ($doc['workflow']['status'] ?? '') != 'verified') {
                     continue;
                 } elseif ($visibility == 'approved-or-empty' && isset($doc['workflow']['status']) && $doc['workflow']['status'] != 'verified') {

@@ -221,6 +221,21 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/admin/doi-mappings', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang("DOI Mappings", "DOI Zuordnungen")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/doi-mappings.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
@@ -298,7 +313,7 @@ Route::get('/admin/types/new', function () {
     $st = $t;
     $type = [
         "id" => '',
-        "icon" => $type['icon'] ?? 'placeholder',
+        "icon" => $type['icon'] ?? 'folder-open',
         "name" => '',
         "name_de" => '',
         "new" => true,
@@ -369,8 +384,8 @@ Route::get('/settings/activities', function () {
         $type = $osiris->adminTypes->findOne(['parent' => $t]);
     }
     if (empty($type)) {
-        header("Location: " . ROOTPATH . "/admin/categories?msg=not-found");
-        die;
+        echo return_rest(['error' => lang('Type not found. Please select the correct type manually.', 'Typ nicht gefunden. Bitte wähle den korrekten Typ manuell aus.')]);
+        die();
     }
     $parent = $osiris->adminCategories->findone(['id' => $type['parent']]);
     echo return_rest([
@@ -982,7 +997,7 @@ Route::post('/crud/admin/mail-test', function () {
 
     sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
 
-    header("Location: " . ROOTPATH . "/admin/general?msg=" . $msg);
+    header("Location: " . ROOTPATH . "/admin/general");
 }, 'login');
 
 
@@ -1016,6 +1031,7 @@ Route::post('/crud/admin/add-user', function () {
     if (isset($_POST['guestaccount'])) {
         $collection = $osiris->guestAccounts;
         $account['valid_until'] = $_POST['valid_until'] ?? null;
+        $person['is_guest'] = true;
     }
     // remove existing accounts with same username
     $collection->deleteMany(['username' => $username]);
@@ -1042,8 +1058,13 @@ Route::post('/crud/admin/add-user', function () {
     foreach (explode(" ", $person['first']) as $name) {
         $person['first_abbr'] .= " " . $name[0] . ".";
     }
-    $person['created'] = date('d.m.Y');
+    $person['created'] = date('Y-m-d');
     $person['roles'] = array_keys($person['roles'] ?? []);
+    if (isset($_POST['guestaccount'])) {
+        if (!in_array('guest', $person['roles'])) {
+            $person['roles'][] = 'guest';
+        }
+    }
 
     $person['new'] = true;
     $person['is_active'] = true;
@@ -1111,6 +1132,12 @@ Route::post('/crud/admin/guest-account/delete', function () {
     if (!isset($_POST['username'])) die("no username given");
     $osiris->guestAccounts->deleteOne(
         ['username' => $_POST['username']]
+    );
+    // end valid and remove is_guest flag from person and remove guest role
+    $osiris->persons->updateOne(
+        ['username' => $_POST['username']],
+        ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
+        ['$pull' => ['roles' => 'guest']]
     );
     $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
     $_SESSION['msg_type'] = 'success';

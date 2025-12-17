@@ -45,11 +45,11 @@ if ($Settings->featureEnabled('projects')) {
 }
 // which page is active?
 $active_page = $_GET['page'] ?? 'general';
-if ($count_groups > 0){
+if ($count_groups > 0) {
     $active_page = 'groups';
 } elseif ($count_persons > 0) {
     $active_page = 'persons';
-// } elseif ($count_publications > 0) {
+    // } elseif ($count_publications > 0) {
     // $active_page = 'publications';
 } elseif ($count_activities > 0) {
     $active_page = 'activities';
@@ -183,8 +183,13 @@ if ($count_groups > 0){
     </h1>
 
     <h2 class="subtitle">
-        <?= lang($topic['subtitle'], $topic['subtitle_de'] ?? null) ?>
+        <?= lang($topic['subtitle'] ?? '', $topic['subtitle_de'] ?? null) ?>
+        <?php if ($topic['inactive'] ?? false) { ?>
+            <small class="badge danger"><?= lang('Inactive', 'Inaktiv') ?></small>
+        <?php } ?>
     </h2>
+
+
 
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
@@ -198,7 +203,7 @@ if ($count_groups > 0){
     <?php
 
     if ($count_groups > 0) { ?>
-        <a onclick="navigate('groups')" id="btn-groups" class="btn <?=$active_page == 'groups' ? 'active':''?>">
+        <a onclick="navigate('groups')" id="btn-groups" class="btn <?= $active_page == 'groups' ? 'active' : '' ?>">
             <i class="ph ph-users-three" aria-hidden="true"></i>
             <?= lang('Groups', 'Gruppen') ?>
             <span class="index"><?= $count_groups ?></span>
@@ -208,7 +213,7 @@ if ($count_groups > 0){
     <?php
 
     if ($count_persons > 0) { ?>
-        <a onclick="navigate('persons')" id="btn-persons" class="btn  <?=$active_page == 'persons' ? 'active':''?>">
+        <a onclick="navigate('persons')" id="btn-persons" class="btn  <?= $active_page == 'persons' ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>
             <?= lang('Persons', 'Personen') ?>
             <span class="index"><?= $count_persons ?></span>
@@ -228,7 +233,7 @@ if ($count_groups > 0){
     <?php
 
     if ($count_activities > 0) { ?>
-        <a onclick="navigate('activities')" id="btn-activities" class="btn  <?=$active_page == 'activities' ? 'active':''?>">
+        <a onclick="navigate('activities')" id="btn-activities" class="btn  <?= $active_page == 'activities' ? 'active' : '' ?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
             <?= lang('Activities', 'Aktivitäten')  ?>
             <span class="index"><?= $count_activities ?></span>
@@ -239,7 +244,7 @@ if ($count_groups > 0){
     <?php
 
     if ($count_projects > 0) { ?>
-        <a onclick="navigate('projects')" id="btn-projects" class="btn <?=$active_page == 'projects' ? 'active':''?>">
+        <a onclick="navigate('projects')" id="btn-projects" class="btn <?= $active_page == 'projects' ? 'active' : '' ?>">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
             <?= lang('Projects', 'Projekte')  ?>
             <span class="index"><?= $count_projects ?></span>
@@ -257,7 +262,7 @@ if ($count_groups > 0){
         </a>
     <?php } ?>
 
-    <a onclick="navigate('general')" id="btn-general" class="btn  <?=$active_page == 'general' ? 'active':''?>">
+    <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
         <i class="ph ph-info" aria-hidden="true"></i>
         <?= lang('General', 'Allgemein') ?>
     </a>

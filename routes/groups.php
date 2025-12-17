@@ -236,7 +236,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
 
     if (isset($values['synonyms'])){
         if (!empty($values['synonyms'])) {
-            $values['synonyms'] = array_map('trim', explode(',', $values['synonyms']));
+            $values['synonyms'] = array_map('trim', explode(';', $values['synonyms']));
             $values['synonyms'] = array_values($values['synonyms']);
         } else {
             $values['synonyms'] = null;
@@ -352,9 +352,9 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
     if (isset($_POST['start'])) {
-        renderAuthorUnitsMany(['authors.user' => $user, 'date' => ['$gte' => $_POST['start']]]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user, 'date' => ['$gte' => $_POST['start']]]);
     } else {
-        renderAuthorUnitsMany(['authors.user' => $user]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
     }
 
 

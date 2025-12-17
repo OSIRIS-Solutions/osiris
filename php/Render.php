@@ -40,6 +40,8 @@ function renderActivities($filter = [])
             'title' => $Format->getTitle(),
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
+            'users' => $Format->getUsers(false),
+            'affiliated_users' => $Format->getUsers(true),
         ];
         $values = ['rendered' => $rendered];
 
@@ -68,9 +70,46 @@ function renderActivities($filter = [])
                 return $a['aoi'] ?? false;
             });
         }
+        if (empty($aoi_authors) && isset($doc['supervisors'])) {
+            $aoi_authors = array_filter(DB::doc2Arr($doc['supervisors']), function ($a) {
+                return $a['aoi'] ?? false;
+            });
+        }
         $values['affiliated'] = !empty($aoi_authors);
         $values['affiliated_positions'] = $Format->getAffiliationTypes('authors');
         $values['cooperative'] = $Format->getCooperationType($values['affiliated_positions'], $doc['units'] ?? []);
+
+        $active = false;
+        // if (!isset($doc['year'])) {dump($doc, true); die;}
+        $sm = intval($doc['month'] ?? 0);
+        $sy = intval($doc['year'] ?? 0);
+        // die;
+        $em = $sm;
+        $ey = $sy;
+
+        if (isset($doc['end']) && !empty($doc['end'])) {
+            $em = $doc['end']['month'];
+            $ey = $doc['end']['year'];
+        } elseif (in_array($doc['subtype'], $Settings->continuousTypes) && empty($doc['end'])) {
+            $em = CURRENTMONTH;
+            $ey = CURRENTYEAR;
+            $active = true;
+        }
+        $sq = $sy . 'Q' . ceil($sm / 3);
+        $eq = $ey . 'Q' . ceil($em / 3);
+        $quarter = $sq;
+        if ($active) {
+            $quarter .= ' - today';
+        } elseif ($sq != $eq) {
+            if ($sy == $ey) {
+                $quarter .= ' - ' . 'Q' . ceil($em / 3);
+            } else {
+                $quarter .= ' - ' . $eq;
+            }
+        }
+        $values['rendered']['quarter'] = $quarter;
+        $values['rendered']['active'] = $active;
+
         $DB->db->activities->updateOne(
             ['_id' => $id],
             ['$set' => $values]

@@ -75,7 +75,6 @@ $statistics = $osiris->infrastructureStats->find(
         'sort' => ['year' => -1]
     ]
 )->toArray();
-
 ?>
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 
@@ -91,17 +90,123 @@ $statistics = $osiris->infrastructureStats->find(
         opacity: 1;
         color: var(--text-color);
     }
+
+    .infrastructure-logo {
+        max-width: 15rem;
+        max-height: 10rem;
+        object-fit: contain;
+        border-radius: 8px;
+
+        /* border: 1px solid var(--border-color); */
+        background-color: white;
+    }
+
+    .infrastructure-logo-placeholder {
+        width: 10rem;
+        height: 10rem;
+        border-radius: 8px;
+        border: 1px solid var(--primary-color);
+        background-color: var(--primary-color-20);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+    }
+
+    .infrastructure-logo-placeholder i {
+        font-size: 5rem;
+    }
+
+    .edit-picture {
+        position: absolute;
+        padding: 1rem;
+        bottom: 0;
+        right: 0;
+        color: var(--muted-color);
+        font-size: 1rem;
+    }
 </style>
+
+
+<?php
+
+
+if ($edit_perm) { ?>
+    <!-- Modal for updating the profile picture -->
+    <div class="modal modal-lg" id="change-picture" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content w-600 mw-full">
+                <a href="#close-modal" class="btn float-right" role="button" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+
+                <h2 class="title">
+                    <?= lang('Change infrastructure logo', 'Infrastruktur-Logo ändern') ?>
+                </h2>
+
+                <form action="<?= ROOTPATH ?>/crud/infrastructures/upload-picture/<?= $infrastructure['id'] ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
+                    <div class="custom-file mb-20" id="file-input-div">
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
+                        <label for="profile-input"><?= lang('Select new logo', 'Wähle ein neues Logo') ?></label>
+                        <br><small class="text-danger">Max. 2 MB.</small>
+                    </div>
+
+                    <script>
+                        var uploadField = document.getElementById("profile-input");
+
+                        uploadField.onchange = function() {
+                            if (this.files[0].size > 2097152) {
+                                toastError(lang("File is too large! Max. 2MB is supported!", "Die Datei ist zu groß! Max. 2MB werden unterstützt."));
+                                this.value = "";
+                            };
+                        };
+                    </script>
+                    <button class="btn primary">
+                        <i class="ph ph-upload"></i>
+                        <?= lang('Upload', 'Hochladen') ?>
+                    </button>
+                </form>
+
+                <hr>
+                <form action="<?= ROOTPATH ?>/crud/infrastructures/upload-picture/<?= $infrastructure['id'] ?>" method="post">
+                    <input type="hidden" name="delete" value="true">
+                    <button class="btn danger">
+                        <i class="ph ph-trash"></i>
+                        <?= lang('Delete current picture', 'Aktuelles Bild löschen') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+
 
 <div class="infrastructure container">
 
-    <h1 class="title">
-        <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
-    </h1>
+    <div class="row align-items-center my-0">
+        <div class="col flex-grow-0">
+            <div class="position-relative">
+                <?php
+                $Infra->printLogo($infrastructure, 'infrastructure-logo', lang('Logo of', 'Logo von ') . ' ' . $infrastructure['name']);
+                ?>
 
-    <h2 class="subtitle">
-        <?= lang($infrastructure['subtitle'], $infrastructure['subtitle_de'] ?? null) ?>
-    </h2>
+                <?php if ($edit_perm) { ?>
+                    <a href="#change-picture" class="edit-picture"><i class="ph ph-edit"></i></a>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="col ml-20">
+            <h1 class="title m-0">
+                <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+            </h1>
+
+            <h2 class="subtitle">
+                <?= lang($infrastructure['subtitle'], $infrastructure['subtitle_de'] ?? null) ?>
+            </h2>
+        </div>
+    </div>
 
 
     <!-- show research topics -->
@@ -408,6 +513,11 @@ $statistics = $osiris->infrastructureStats->find(
                         <?php endif; ?>
                     </div>
                 <?php } ?>
+                <!-- comment -->
+                <div class="form-group d-flex align-items-center mr-20 mb-10">
+                    <label for="comment" class="w-300 font-weight-bold"><?= lang('Comment', 'Kommentar') ?>:</label>
+                    <input type="text" name="comment" id="comment" class="form-control w-400" />
+                </div>
 
                 <small class="text-muted">
                     <?= lang('If you fill in statistics for a period that already exists, the existing entry will be overwritten. If the value is 0, the corresponding statistics will be deleted.', 'Wenn du eine Statistik für einen Zeitraum ausfüllst, der bereits existiert, wird der vorhandene Eintrag überschrieben. Wenn der Wert 0 beträgt, wird die entsprechende Statistik gelöscht.') ?>
@@ -456,6 +566,7 @@ $statistics = $osiris->infrastructureStats->find(
                                 <th><?= lang('Field', 'Feld') ?></th>
                                 <th class="text-right"><?= lang('Value', 'Wert') ?></th>
                                 <th><?= lang('Entered by', 'Eingegeben von') ?></th>
+                                <th><?= lang('Comment', 'Kommentar') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -488,6 +599,7 @@ $statistics = $osiris->infrastructureStats->find(
                                             <?= !empty($stat['updated_by']) ? ' | ' . $stat['updated_by'] : '' ?>
                                         </small>
                                     </td>
+                                    <td><?= htmlspecialchars($stat['comment'] ?? '') ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -546,25 +658,25 @@ $statistics = $osiris->infrastructureStats->find(
         <!-- table with all yearly statistics ordered by year -->
         <div class="table-responsive-not">
             <table class="table small my-20" id="yearly-statistics">
-            <thead>
-                <tr>
-                    <th><?= lang('Year', 'Jahr') ?></th>
-                    <?php foreach ($fields as $field) { ?>
-                        <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
-                    <?php } ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($aggregated as $stat) { ?>
+                <thead>
                     <tr>
-                        <th><?= $stat['year'] ?></th>
+                        <th><?= lang('Year', 'Jahr') ?></th>
                         <?php foreach ($fields as $field) { ?>
-                            <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
                         <?php } ?>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($aggregated as $stat) { ?>
+                        <tr>
+                            <th><?= $stat['year'] ?></th>
+                            <?php foreach ($fields as $field) { ?>
+                                <td class="text-right"><?= number_format($stat[$field['id']] ?? 0, 0, ',', '.') ?></td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
 
 
@@ -580,7 +692,6 @@ $statistics = $osiris->infrastructureStats->find(
 
         <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
         <script>
-            
             // Load & render
             async function loadStats() {
                 //   const infra = $('#infra-select').val();
@@ -793,3 +904,30 @@ $statistics = $osiris->infrastructureStats->find(
         dump($infrastructure, true);
     } ?>
 </div>
+
+<?php if (isset($_GET['edit-stats'])) {
+    $timeparam = $_GET['edit-stats'];
+?>
+    <script>
+        // scroll to statistics edit box
+        document.getElementById('infra-stat-edit-box').classList.remove('hidden');
+        document.getElementById('infra-stat-edit-box').scrollIntoView();
+        // prefill time parameters
+        <?php
+        switch ($stat_frequency) {
+            case 'annual':
+                echo "document.getElementById('add-stat-year').value = '$timeparam';";
+                break;
+            case 'monthly':
+                echo "document.getElementById('add-stat-month').value = '$timeparam';";
+                break;
+            case 'quarterly':
+                echo "document.getElementById('add-stat-quarter').value = '$timeparam';";
+                break;
+            case 'irregularly':
+                echo "document.getElementById('add-stat-date').value = '$timeparam';";
+                break;
+        }
+        ?>
+    </script>
+<?php } ?>

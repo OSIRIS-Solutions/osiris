@@ -20,8 +20,6 @@ class Settings
     private $features = array();
     public $continuousTypes = [];
 
-    public const FEATURES = ['coins', 'achievements', 'user-metrics', 'projects', 'guests'];
-
     function __construct($user = array())
     {
         // construct database object 
@@ -41,6 +39,7 @@ class Settings
         if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
             $this->roles[] = 'admin';
         }
+        $this->roles = array_values(array_unique($this->roles));
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],
@@ -76,7 +75,7 @@ class Settings
      */
     function getActivityFilter($filter, $user = null, $reduced = false)
     {
-        $user = $user ?? ($_GET['user'] ?? $_SESSION['username']);
+        $user = $user ?? ($_SESSION['username']);
         // check if allowed types are actually all types
         $all_types = $this->osiris->adminCategories->distinct('id', []);
         if (count($this->allowedTypes) == count($all_types)) {
@@ -89,8 +88,7 @@ class Settings
         if (empty($filter)) return [
             '$or' => [
                 $filterAllowed,
-                ['authors.user' => $user],
-                ['editors.user' => $user],
+                ['rendered.users' => $user],
                 ['user' => $user]
             ]
         ];
@@ -99,8 +97,7 @@ class Settings
                 $filter,
                 ['$or' => [
                     $filterAllowed,
-                    ['authors.user' => $user],
-                    ['editors.user' => $user],
+                    ['rendered.users' => $user],
                     ['user' => $user]
                 ]]
             ]
@@ -264,7 +261,7 @@ class Settings
             'name' => $type,
             'name_de' => $type,
             'color' => '#cccccc',
-            'icon' => 'placeholder'
+            'icon' => 'folder-open'
         ];
     }
 
@@ -317,7 +314,7 @@ class Settings
     function icon($cat, $type = null, $tooltip = true)
     {
         $act = $this->getActivity($cat, $type);
-        $icon = $act['icon'] ?? 'placeholder';
+        $icon = $act['icon'] ?? 'folder-open';
 
         $icon = "<i class='ph text-$cat ph-$icon'></i>";
         if ($tooltip) {
@@ -451,7 +448,7 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
         return lang($settings['en'], $settings['de'] ?? null);
     }
-    
+
     function journalLabel()
     {
         $settings = $this->get('journals_label');
@@ -471,7 +468,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find();
+        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);
@@ -489,7 +486,7 @@ class Settings
                         $subtitle = 'data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '"';
                     }
                 ?>
-                    <div class="pill-checkbox" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
+                    <div class="pill-checkbox <?= ($topic['inactive'] ?? false) ? 'inactive' : '' ?>" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
                         <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
@@ -504,6 +501,9 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
         if (empty($topics) || empty($topics[0])) return '';
+        if (is_string($topics) ) {
+            $topics = DB::doc2Arr(explode(',', $topics));
+        }
 
         $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
         $html = '<div class="topics ' . $class . '">';
@@ -515,7 +515,7 @@ class Settings
             if (!empty($topic['subtitle'])) {
                 $html .= '<span data-toggle="tooltip" data-title="' . lang($topic['subtitle'], $topic['subtitle_de'] ?? null) . '">';
             }
-            $html .= "<a class='topic-pill' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
+            $html .= "<a class='topic-pill " . ($topic['inactive'] ?? false ? 'inactive' : '') . "' href='" . ROOTPATH . "/topics/view/$topic[_id]' style='--primary-color:$topic[color]' $subtitle>" . lang($topic['name'], $topic['name_de'] ?? null) . "</a>";
             if (!empty($topic['subtitle'])) {
                 $html .= '</span>';
             }
@@ -602,6 +602,33 @@ class Settings
         return false;
     }
 
+    public function getRoles()
+    {
+
+        $req = $this->osiris->adminGeneral->findOne(['key' => 'roles']);
+        $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
+
+        // if user and scientist are not in the roles, add them
+        if (!in_array('user', $roles)) {
+            $roles[] = 'user';
+        }
+        if (!in_array('scientist', $roles)) {
+            $roles[] = 'scientist';
+        }
+        // sort admin last
+        $roles = array_diff($roles, ['admin']);
+        $roles = array_merge($roles, ['admin']);
+        return $roles;
+    }
+
+    public function getRolesWithPermission($right)
+    {
+        $roles = $this->osiris->adminRights->distinct('role', [
+            'right' => $right,
+            'value' => true
+        ]);
+        return DB::doc2Arr($roles);
+    }
     public function getRegex()
     {
         $regex = $this->get('regex');
@@ -633,5 +660,62 @@ class Settings
             'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von ')
         ];
         return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
+    }
+
+    public function getDOImappings()
+    {
+        $mappings = $this->get('doi_mappings');
+        if (empty($mappings)) {
+            return [
+                // CrossRef
+                "crossref.journal-article" => "article",
+                "crossref.magazine-article" => "magazine",
+                "crossref.book-chapter" => "chapter",
+                "crossref.publication" => "article",
+                "crossref.doctoral-thesis" => "students",
+                "crossref.master-thesis" => "students",
+                "crossref.bachelor-thesis" => "students",
+                "crossref.guest-scientist" => "guests",
+                "crossref.lecture-internship" => "guests",
+                "crossref.student-internship" => "guests",
+                "crossref.reviewer" => "review",
+                "crossref.editor" => "editorial",
+                "crossref.monograph" => "book",
+                "crossref.misc" => "misc",
+                "crossref.edited-book" => "book",
+                // DataCite
+                'datacite.book' => 'book',
+                'datacite.bookchapter' => 'chapter',
+                'datacite.journal' => 'article',
+                'datacite.journalarticle' => 'article',
+                'datacite.conferencepaper' => 'article',
+                'datacite.conferenceproceeding' => 'article',
+                'datacite.dissertation' => 'dissertation',
+                'datacite.preprint' => 'preprint',
+                'datacite.software' => 'software',
+                'datacite.computationalnotebook' => 'software',
+                'datacite.model' => 'software',
+                'datacite.datapaper' => 'dataset',
+                'datacite.dataset' => 'dataset',
+                'datacite.peerreview' => 'review',
+                'datacite.audiovisual' => 'misc',
+                'datacite.collection' => 'misc',
+                'datacite.event' => 'misc',
+                'datacite.image' => 'misc',
+                'datacite.report' => 'others',
+                'datacite.interactiveresource' => 'misc',
+                'datacite.outputmanagementplan' => 'misc',
+                'datacite.physicalobject' => 'misc',
+                'datacite.service' => 'misc',
+                'datacite.sound' => 'misc',
+                'datacite.standard' => 'misc',
+                'datacite.text' => 'misc',
+                'datacite.workflow' => 'misc',
+                'datacite.other' => 'misc',
+                'datacite.presentation' => 'lecture',
+                'datacite.poster' => 'poster'
+            ];
+        }
+        return DB::doc2Arr($mappings);
     }
 }

@@ -40,7 +40,7 @@
     foreach ($types as $type) { ?>
         <a class="" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type['id'] ?>" style="--secondary-color: <?= $type['color'] ?? '#000' ?>">
             <b style="color: <?= $type['color'] ?? 'inherit' ?>">
-                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
                 <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
             </b>
 

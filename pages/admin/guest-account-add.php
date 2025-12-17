@@ -113,6 +113,39 @@
 
     </div>
 
+    <div class="form-group">
+        <h5><?= lang('Current Position', 'Aktuelle Position') ?></h5>
+        <?php
+        $staff = $Settings->get('staff');
+        $staffPos = $staff['positions'] ?? [];
+        $staffFree = $staff['free'] ?? true;
+        ?>
+        <?php if ($staffFree) { ?>
+            <div class="row row-eq-spacing my-0">
+                <div class="col-md-6">
+                    <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>">
+                </div>
+            </div>
+        <?php } else { ?>
+            <!-- select list from predifined pos -->
+            <select name="values[position_both]" id="position" class="form-control">
+                <option value=""> -- <?= lang('no position selected', 'keine Position gewählt') ?> --- </option>
+                <?php foreach ($staffPos as $pos) {
+                    $en = $pos[0] ?? '-';
+                    $de = $pos[1] ?? '-';
+                ?>
+                    <option value="<?= $en ?>;;<?= $de ?>" <?= ($data['position'] ?? '') == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
+                <?php } ?>
+            </select>
+        <?php } ?>
+
+    </div>
+
 
     <div>
         <h5><?= lang('Roles', 'Rollen') ?></h5>

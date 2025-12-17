@@ -289,7 +289,7 @@ Route::post('/auth/new-user', function () {
     foreach (explode(" ", $person['first']) as $name) {
         $person['first_abbr'] .= " " . $name[0] . ".";
     }
-    $person['created'] = date('d.m.Y');
+    $person['created'] = date('Y-m-d');
     $person['roles'] = [];
     if (boolval($person['is_scientist'] ?? false)) $person['roles'][] = 'scientist';
 

@@ -2,10 +2,103 @@
 
 
 
-<span class="badge float-right">04.11.2025</span>
+<span class="badge float-right">17.12.2025</span>
+<a class="anchor" href="#version-1.7.1" id="version-1.7.1"></a>
+
+## Version 1.7.1
+
+In dieser Version wurden im Wesentlichen Fehler behoben und kleinere Verbesserungen vorgenommen:
+
+- Die Module `supervisors` und `supervisor-thesis` speichern jetzt nicht mehr in die Autorenliste. Dadurch lassen sich jetzt bei einer Aktivität sowohl Betreuer:innen als auch Autor:innen unabhängig voneinander erfassen. Dazu wurden im gesamten Code überall Optimierungen vorgenommen, um diese Trennung zu gewährleisten. Nach Betreuenden kann jetzt auch in der erweiterten Suche gefiltert werden.
+- Es wurde ein Fehler behoben durch den Aktivitätstypen, die nicht öffentlich sichtbar sein sollten, trotzdem über die exakte ID aufgerufen werden konnten.
+- Für Aktivitätstypen, die nicht im Portfolio angezeigt werden sollen, gibt es jetzt auch nicht mehr die Option, sie auszublenden. Dies verhindert Verwirrung, da sie ohnehin nicht sichtbar sind.
+- Die **Templates** wurden erweitert:
+  - Die Conditional Templates unterstützen jetzt auch mehrere Bedingungen mit `&` (und) bzw. `|` (oder).
+  - Es gibt nun die Möglichkeit, im Falle das ein Feld leer ist ein anderes Feld zu nutzen (z.B. `{field1|field2}`). Sollte field1 leer sein, wird field2 genutzt. Sollte field2 kein Name eines Feldes sein, wird der Text so ausgegeben. Die Textausgabe kann mit Anführungszeichen erzwungen werden: `{field1| "Default Text"}`
+- 
+
+
+---
+
+<span class="badge float-right">08.12.2025</span>
+<a class="anchor" href="#version-1.7.0" id="version-1.7.0"></a>
+
+## Version 1.7.0
+
+### Neues Modul: Nagoya / ABS Compliance
+
+OSIRIS unterstützt jetzt vollständig den Prozess rund um das Nagoya-Protokoll und nationale ABS-Regelungen.
+Das neue Modul hilft Forschenden und ABS-Beauftragten, alle relevanten Schritte nachvollziehbar, vollständig und revisionssicher abzubilden.
+
+Hier die Highlights:
+
+- **Country Review:** Bewertung aller beteiligten Länder (Nagoya-Party, eigene ABS-Maßnahmen, Kommentare).
+- **Scope-Erfassung für Forschende:** Geographischer, zeitlicher, materieller und nutzungsbezogener Scope — inklusive Unterstützung fürmehrere Probensammlungen pro Land.
+- **ABS-Evaluation (A/B/C):** Klassifikation pro Land sowie automatische Projektklassifikation.
+- **Permits & Dokumente:** Erfassung von PIC, MAT, Community Consent und weiteren Genehmigungen. Upload & Verwaltung von Dokumenten direkt in OSIRIS.
+- **Geteilte Notizen:** Für Kommunikation zwischen Projektteam und ABS-Compliance-Team.
+- **Dashboard für ABS-Teams:** Überblick über offene Bewertungen, fehlende Scopes, offene Permits und eingereichte Unterlagen.
+
+Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/topics/nagoya/).
+
+
+### Erweiterte Suche für fast alles
+
+Die erweiterte Suche wurde erweitert und verbessert:
+
+- Die gespeicherten Suchen lassen sich jetzt mit einzelnen Rollen oder Global teilen (Achtung: nur mit der neuen Berechtigung `queries.global`). Geteilte Queries sind mit einem kleinen Flag gekennzeichnet, werden nach unten sortiert und können nicht bearbeitet werden. Um bei so vielen Queries den Überblick zu behalten, gibt es jetzt eine Suchfunktion.
+- Es wurden ein paar Probleme mit verschachtelten Queries behoben, die nun auch in der Vorschau korrekt angezeigt werden.
+- Der Bereich für die Auswahl der Spalten lässt sich jetzt ebenfalls durchsuchen, um schneller die gewünschten Spalten zu finden.
+- Es wurden ein paar kleinere Verbesserungen vorgenommen, durch die es jetzt noch stabiler laufen sollte.
+
+Und weil das so gut funktioniert, wurde die erweiterte Suche jetzt auch auf folgende Bereiche ausgeweitet:
+- **Projekte und Anträge**
+- **Events**
+- **Journals**
+- **Nutzende**
+
+Ihr findet dazu neu gestaltete Suchseiten, indem ihr auf die Lupe mit dem Plus in der jeweiligen Übersicht klickt.
+
+### DOI-Mappings für Publikationstypen
+
+- Admins können jetzt im Admin-Bereich unter Inhalte > Aktivitäten > DOI-Zuordnung eigene Mappings für Publikationstypen aus CrossRef und DataCite definieren.
+- Diese Mappings werden verwendet, wenn eine Aktivität über eine DOI importiert wird, um den entsprechenden Aktivitätstyp in OSIRIS zu bestimmen.
+- Dadurch können spezifische Publikationstypen besser abgebildet werden, z.B. "preprint" oder "conference-paper".
+
+> Achtung: Beta-Feature. Bitte testet es ausgiebig und gebt uns Feedback, damit wir es weiter verbessern können!
+
+### Verbesserungen & Bugfixes
+
+- Einige Verbesserungen und Bugfixes bei den neuen Gästeaccounts (z.B. Suchfunktion in der Nutzerübersicht, Markierung in Tabellen, werden beim Synchronisieren nicht mehr deaktiviert).
+- Organisationen-Feld: korrektes Layout + Möglichkeit, gesetzte Werte zu löschen
+- ISSN-Feld im Aktivitäten-Formular bricht nicht mehr das ganze Formular ab
+- Tags funktionieren wieder zuverlässig
+- „Online ahead of print“ kann wieder deaktiviert werden
+- Letzter Social-Link ist wirklich löschbar
+- Ampersands & Quotes verursachen keine Fehler mehr in Journal-/Aktivitätsfeldern
+- Projekt-/Personen-Dropdowns liefern keine leeren Auswahlen mehr
+- Wichtiger Fix im Activity-Type-Handling
+- Gruppen-Synonyme nutzen jetzt Semikolon statt Komma (Kollisionsvermeidung)
+- Portfolio: Keine Hervorhebung mehr, wenn Einträge ausgeblendet sind
+- LDAP-Sync: zuverlässige Aktualisierung von Units, inkl. Einheiten-Synonyme
+- Fix für ungültige Gastaccounts, wenn „gültig bis“ leer ist
+- Array-Dokument-Fehler beim Rendering behoben
+- Diverse Verbesserungen an der JSON-Ausgabe
+- Fix für kaputten Link zur Attribute-Preview
+- u.v.m.
+
+Eine Übersicht über alle geschlossenen Issues findet ihr [hier](https://github.com/OSIRIS-Solutions/osiris/milestone/7)
+
+---
+
+<span class="badge float-right">16.11.2025</span>
 <a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
 
 ## Version 1.6.2
+
+Dieses Update bringt viele Verbesserungen in Performance, Formularlogik, LDAP-Synchronisation, Journals, Events, Reports und UI-Design. Hier die wichtigsten Änderungen:
+
+### Verbesserte Infrastruktur-Statistiken
 
 In diesem Update haben wir die Handhabung der Infrastruktur-Statistiken überarbeitet und ein Migrationsskript hinzugefügt, um bestehende Statistiken in ein neues Format zu überführen.
 
@@ -14,6 +107,95 @@ Infrastruktur-Statistiken sind jetzt deutlich flexibler. Man konnte zuvor bereit
 Außerdem ist es möglich, den Zeitraum für die Erhebung der Statistiken festzulegen, z.B. jährlich, vierteljährlich, monatlich oder unregelmäßig. Dies ermöglicht eine genauere und kontextbezogenere Erfassung der Daten. Bei der unregelmäßigen Erfassung wird das Datum der Erhebung gespeichert, sodass man im Nachhinein nachvollziehen kann, wann die Daten erfasst wurden. Wenn der Zeitpunkt der Erhebung erneut verwendet wird, dann werden die bestehenden Daten überschrieben.
 
 Diese neue Flexibilität ermöglicht es, die Statistiken besser an die spezifischen Anforderungen und Gegebenheiten der jeweiligen Infrastruktur anzupassen. Die Abbildungen wurden entsprechend angepasst, um die neuen Möglichkeiten zu unterstützen.
+
+Diese neuen Statistiken reflektieren sich auch in den Benachrichtigungen, die Reporter erhalten, wenn sie ihre Statistiken aktualisieren müssen. Irreguläre Statistiken werden dabei nicht in den Benachrichtigungen angezeigt, es wurde jedoch ein Shortcut zum Hinzufügen-Menü hinzugefügt, um die Erfassung zu erleichtern.
+
+
+### Tabellen & Downloads
+- Verbesserte Tabellenfunktionalität:
+  - bessere Stabilität
+  - mehr Download-Optionen (z.B. PDF), Excel mehr verbreitet (z.B. bei Journalen, Events, ...)
+  - Teilweise Drucken-Funktionalität hinzugefügt
+  - Seitenlänge kann angepasst werden
+  - Statistik-Tabellen haben jetzt ebenfalls Download- und Druck-Buttons
+- Viele Abbildungen lassen sich jetzt ebenfalls als PNG oder SVG herunterladen (z.B. Konfetti-Timelines, Koautoren-Netzwerke, Wordclouds), weitere folgen in kommenden Versionen
+
+
+### LDAP, Nutzer & Rollen
+
+**Guest Accounts**
+
+Neu: Vollständiges Management für Gastkonten
+- Anlegen, Bearbeiten & Löschen von Gastaccounts
+- Neue UI-Seiten zur Verwaltung
+- Gäste können sich anmelden, wenn LDAP fehlschlägt
+- Gastkonten können ein Ablaufdatum haben
+- Gastkonten bekommen automatisch die "guest"-Rolle zugewiesen. Diese wurde angelegt, hat aber per Default keine Rechte.
+
+**LDAP-Synchronisation**
+
+- UI der Synchronisation verbessert
+- Ein LDAP-Timeout führt dazu, dass die Synchronisation abgebrochen wird, sollte LDAP nicht erreichbar sein
+- Synchronisation von Einheiten wurde verbessert: 
+  - Synonyme für Einheiten hinzugefügt und berücksichtigt
+  - Wiederaktivierte Einheiten werden nicht gelöscht
+  - Bei neuen Einheiten wird jetzt nicht mehr angenommen, dass der aktuelle Tag der Start der Zugehörigkeit ist
+  - In der Synchronisations-Vorschau gibt es jetzt eine Warnung, wenn Einheiten nicht gefunden werden
+  - Neue Sync-Zeitstempel in der UI
+
+
+### Events
+- Events können jetzt zentral deaktiviert werden (Einstellungen > Features)
+- Länder wurden zu Events hinzugefügt
+- Event-Handling in "Aktivität hinzufügen" wurde verbessert: 
+  - Duplikate werden jetzt anhand von Titel und Startdatum erkannt und verhindert
+  - Fehlermeldungen werden jetzt korrekt ausgegeben (#253)
+  - Typauswahl und Länder wurden ebenfalls hinzugefügt
+  - Der Event-Select wurde deutlich verbessert, zeigt jetzt alle verfügbaren Events in einem durchsuchbaren Dropdown an
+  - Beim Auswählen eines Events werden automatisch Titel, Datum, Ort und Land vorausgefüllt. Dies wird jetzt im UI deutlicher kommuniziert mit einem Hinweistext und einer kurzzeitigen Markierung der Datenfelder
+
+
+### Formulare & Eingaben
+- Checkboxen in Personen-Feldern funktionieren wieder korrekt (#240)
+- Hilfe-Texte werden jetzt per Hover angezeigt und erscheinen links (#288)
+- Bei Forschungsinteressen werden jetzt auch deutsche Vorschläge korrekt gezeigt (#286)
+- Nutzer:innen können Aktivitäten nicht mehr highlighten, wenn sie keine Autor:innen sind (#290)
+- Wenn eine hervorgehobene Aktivität versteckt wird, wird sie nicht mehr über die Portfolio-API ausgeliefert
+- Das Label für Forschungsreisen erscheint jetzt auch, wenn Forschungsbereiche deaktiviert sind (#282)
+- Man kann jetzt auch Zeitschriften ohne ISSN hinzufügen
+- Magazine (nicht-standardisierte Journals) haben eine Vorschlagsliste bekommen
+- Journale können jetzt zentral umbenannt werden (Einstellungen > Features)
+- Bei Projektanträgen werden jetzt die Formularfelder von "Bewilligt" durch die Felder aus "Beantragt" vorausgefüllt
+- Wenn eine Aktivität über eine DOI geladen wird, deren Typ es aber nicht gibt, wird stattdessen jetzt eine Warnmeldung angezeigt, die den Nutzenden auffordert, einen passenden Typ auszuwählen
+- Affiliation-Check berücksichtigt nun auch affiliierte Herausgeber:innen (#292)
+- Das Default-Icon von Aktivitäten wurde angepasst
+- Der volle Link ist nun der Standard in Templates, der abgekürzte Link kann als "link-short" verwendet werden und ist Standard in der Tabellen-Ansicht
+
+
+### Warteschlange
+- Problem behoben: persönliche Warteschlange war nicht für alle Nutzer:innen sichtbar
+- Warteschlange wird nicht mehr versteckt, wenn Nutzer:innen eine Warteschlange-Warnung in ihren Benachrichtigungen haben
+- Gesamte Warteschlange nur noch für Editor-Berechtigte sichtbar
+- Editoren können jetzt trotzdem ihre eigene Warteschlange sehen
+
+### Reports & Report Builder
+- Neue Standardvariablen für Zeitfilter im Report Builder
+- Tabellen im Report Builder können jetzt sortiert werden
+- Zeitlimit im Report Builder verbessert, um langfristige Aktivitäten zu erfassen
+
+
+### Einstellungen, UI & Design
+- Rendering-Sprache als globale Einstellung hinzugefügt (#267)
+- Layout der Feature-Einstellung wurde angepasst und verbessert
+- Icons auf Duotone umgestellt
+- Typografie vereinheitlicht, Header mit Icons versehen
+
+### Weitere Verbesserungen
+- Man kann Forschungsbereiche jetzt inaktivieren
+- Backend-Admin erhält garantiert Admin-Rechte
+- Wenn Journal-Namen Klammern enthalten, bricht das Rendern nicht mehr ab
+- Icons in Hinweis- und Fehlermeldungen werden jetzt in allen Browsern korrekt angezeigt
+- Die Portfolio-Vorschau funktioniert jetzt auch mit HTTPS
 
 ---
 

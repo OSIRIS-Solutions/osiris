@@ -107,7 +107,7 @@
     <table class="table">
         <tbody>
             <?php 
-            $n = $osiris->activities->count(['$or' => [['authors.user' => $user], ['editors.user' => $user]]]);
+            $n = $osiris->activities->count(['rendered.users' => $user]);
             ?>
                 <tr>
                     <th><?= lang('Activities', 'Aktivitäten') ?></th>

@@ -301,10 +301,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $topic_id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">
@@ -516,6 +516,8 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 data: {
                     json: '<?= json_encode($filter) ?>',
                     // formatted: true
+                    table: true,
+                    raw: true
                 },
             },
             type: 'GET',
@@ -561,7 +563,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/proposals/view/${row._id['$oid']}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">
@@ -758,14 +760,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             }
         });
 
-
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            console.log(settings.oPreviousSearch.sSearch);
+            var search = settings.oPreviousSearch.sSearch;
+            if (search) {
+                search = encodeURIComponent(search);
+            } else {
+                search = null;
+            }
             writeHash({
                 page: info.page + 1,
-                search: settings.oPreviousSearch.sSearch
+                search: search
             })
         });
 

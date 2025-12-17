@@ -21,7 +21,7 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '14');
+define('CSS_JS_VERSION', '15');
 
 // error_reporting(E_ERROR);
 
@@ -42,11 +42,9 @@ define('CURRENTYEAR', intval($year));
 function lang($en, $de = null)
 {
     if ($de === null) return $en;
-    // Standard language = DE
-    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? 'de';
-    if ($lang == "en") return $en;
-    if ($lang == "de") return $de;
-    return $en;
+    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) == 'de' ? 'de' : 'en';
+    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
+    return $lang == 'de' ? $de : $en;
 }
 
 // $_SESSION['loggedin'] = true;
@@ -161,6 +159,7 @@ if (
     include_once BASEPATH . "/routes/import.php";
     include_once BASEPATH . "/routes/journals.php";
     include_once BASEPATH . "/routes/projects.php";
+    include_once BASEPATH . "/routes/nagoya.php";
     include_once BASEPATH . "/routes/topics.php";
     include_once BASEPATH . "/routes/queue.php";
     include_once BASEPATH . "/routes/teaching.php";

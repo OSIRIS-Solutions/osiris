@@ -70,6 +70,9 @@ $all = $osiris->projects->count();
     tfoot th:last-child {
         border-bottom-right-radius: var(--border-radius);
     }
+    div.dt-container div.dt-layout-full {
+        width: auto;
+    }
 </style>
 
 <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
@@ -170,7 +173,7 @@ $all = $osiris->projects->count();
     $projects_created = array_column($projects_created, 'count', '_id');
     ?>
 
-    <table class="table w-auto">
+    <table class="table w-auto" id="projects-by-type-table">
         <thead>
             <tr>
                 <th><?= lang('Type', 'Typ') ?></th>
@@ -252,7 +255,7 @@ $all = $osiris->projects->count();
         }
     }
     ?>
-    <table class="table w-auto">
+    <table class="table w-auto" id="proposals-by-type-table">
         <thead>
             <tr>
                 <th><?= lang('Type', 'Typ') ?></th>
@@ -572,20 +575,27 @@ $all = $osiris->projects->count();
 
         $(document).ready(function() {
             $('#research-countries-table').DataTable({
+                buttons: downloadTableButtons(),
                 "order": [
                     [1, "desc"]
                 ],
             });
             $('#collaborative-partners').DataTable({
+                buttons: downloadTableButtons(),
                 "order": [
                     [3, "desc"]
                 ],
             });
             $('#collaborative-partners-by-country').DataTable({
+                buttons: downloadTableButtons(),
                 "order": [
                     [1, "desc"]
                 ],
             });
+            initDownloadTable('#projects-by-type-table', 'Projects by type, <?= $time_frame ?>');
+            initDownloadTable('#proposals-by-type-table', 'Proposals by type, <?= $time_frame ?>');
+            initDownloadTable('#collaborative-partners-by-type', 'Collaboration partners by type, <?= $time_frame ?>');
+
 
             var collaboratorRows = <?= json_encode($collaborations_by_country) ?>;
             console.log(collaboratorRows);

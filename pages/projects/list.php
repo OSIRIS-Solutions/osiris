@@ -17,8 +17,6 @@
  * @license     MIT
  */
 
-//  TODO: rowGroup nach Mittelgeber bzw. status
-
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project();
 
@@ -283,10 +281,10 @@ $Vocabulary = new Vocabulary();
 
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
-                        <?php foreach ($osiris->topics->find([], ['sort' => ['order' => 1]]) as $a) {
+                        <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
                             $topic_id = $a['id'];
                         ?>
-                            <tr style="--highlight-color:  <?= $a['color'] ?>;">
+                            <tr style="--highlight-color:  <?= $a['color'] ?>; <?= ($a['inactive'] ?? false) ? 'opacity: 0.5;' : '' ?>">
                                 <td>
                                     <a data-type="<?= $topic_id ?>" onclick="filterProjects(this, '<?= $topic_id ?>', 9)" class="item" id="<?= $topic_id ?>-btn">
                                         <span style="color: var(--highlight-color)">
@@ -550,7 +548,7 @@ $Vocabulary = new Vocabulary();
 
     function renderTopic(data) {
         let topics = '';
-        if (topicsEnabled && data && data.length > 0) {
+        if (topicsEnabled && data && data.length > 0 && Array.isArray(data)) {
             topics = '<span class="float-right topic-icons">'
             data.forEach(function(topic) {
                 topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
@@ -605,6 +603,8 @@ $Vocabulary = new Vocabulary();
                 data: {
                     json: '<?= json_encode($filter) ?>',
                     // formatted: true
+                    table: true,
+                    raw: true
                 },
             },
             type: 'GET',
@@ -651,12 +651,14 @@ $Vocabulary = new Vocabulary();
                         let persons = '';
                         if (Array.isArray(row.persons)) {
                             persons = row.persons.map(a => a.name).join(', ')
+                        } else if (row.persons) {
+                            persons = row.persons;
                         }
                         return `
-                        ${renderTopic(row.topics)}
+                        ${renderTopic(row.topics ?? [])}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/projects/view/${row._id['$oid']}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/projects/view/${row.id}">${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">
@@ -897,7 +899,7 @@ $Vocabulary = new Vocabulary();
                         let type = $(el).data('type')
                         const count = dataTable.column(key).data().filter(function(d) {
                             if (key == 8 || key == 9 || key == 16) {
-                                return d.includes(type)
+                                return d !== null && d.includes(type)
                             }
                             return d == type
                         }).length
@@ -911,10 +913,15 @@ $Vocabulary = new Vocabulary();
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            console.log(settings.oPreviousSearch.sSearch);
+            var search = settings.oPreviousSearch.sSearch;
+            if (search) {
+                search = encodeURIComponent(search)
+            } else {
+                search = null
+            }
             writeHash({
                 page: info.page + 1,
-                search: settings.oPreviousSearch.sSearch
+                search: search
             })
         });
 
@@ -922,7 +929,6 @@ $Vocabulary = new Vocabulary();
 
 
     function filterProjects(btn, activity = null, column = 1) {
-        console.log(column);
         var tr = $(btn).closest('tr')
         var table = tr.closest('table')
         $('#filter-' + column).remove()

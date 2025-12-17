@@ -75,38 +75,6 @@ function addCollaboratorROR(ror, msg = true) {
         }
     })
 }
-function translateROR(o) {
-    let name = ""
-    o.names.forEach(n => {
-        if (n.types.includes("ror_display")) {
-            name = n.value
-        }
-    })
-    if (name == "") {
-        name = o.names[0].value ?? o.id
-    }
-    let location = o.locations[0]
-    let location_name = null;
-    if (location && location.geonames_details) {
-        location = location.geonames_details
-        location_name = location.name ?? '';
-        if (location.country_name) {
-            location_name += ', ' + location.country_name
-        }
-    }
-    let org = {
-        ror: o.id,
-        name: name,
-        location: location_name,
-        country: location.country_code ?? null,
-        lat: location.lat ?? null,
-        lng: location.lng ?? null,
-        type: o.types[0],
-        chosen: false
-    }
-    return org
-}
-
 function getCollaborators(name) {
     console.log(name);
     const SUGGEST = $('#collaborators-suggest')

@@ -194,4 +194,8 @@ function timeline(year, quarter, typeInfo, events, clickEvent = false) {
         .attr('rx', 3)
         // .attr('y', -radius)
         .attr('y', (d) => Math.random() * distance - distance / 2)
+
+        let svgNode = d3.select(divSelector).select('svg').node();
+        console.log('test');
+        registerDownloadHandlers(svgNode, divSelector);
 }

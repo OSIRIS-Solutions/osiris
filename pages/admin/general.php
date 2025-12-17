@@ -776,6 +776,7 @@ $affiliation = $Settings->get('affiliation_details');
                             ?>
                         </div>
 
+                        <h5>Nagoya Protocol Compliance</h5>
                         <div class="form-group">
                             <label for="" class="label">
                                 <?= lang('Add Nagoya Protocol Compliance to proposals', 'Füge Nagoya-Protokoll Compliance zu Anträgen hinzu') ?>
@@ -1137,8 +1138,24 @@ $affiliation = $Settings->get('affiliation_details');
 
                 <div class="box" id="guest-management-features">
                     <h3 class="header">
-                        <?= lang('People and Guests', 'Personen und Gäste') ?>
+                        <?= lang('Profiles and Guests', 'Profile und Gäste') ?>
                     </h3>
+
+                    
+                    <div class="content">
+                        <h4 id="new-publications">
+                            <?= lang('New Publications', 'Neue Publikationen') ?>
+                        </h4>
+
+                        <div class="form-group mt-10">
+                            <label for="" class="label">
+                                <?= lang('Show new publications in the news section of peoples profile page', 'Zeige neue Publikationen im News-Bereich der Personen-Profilseite') ?>
+                            </label>
+                            <?php
+                            renderCheckbox('new-publications', true);
+                            ?>
+                        </div>
+                    </div>
 
                     <div class="content">
                         <h4 id="new-colleagues">

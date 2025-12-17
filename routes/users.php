@@ -26,19 +26,6 @@ Route::get('/user/browse', function () {
 }, 'login');
 
 
-Route::get('/user/search', function () {
-    include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
-    $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
-        ['name' => lang("Search", "Suche")]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/user-search.php";
-    include BASEPATH . "/footer.php";
-}, 'login');
-
-
 Route::get('/image/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     $user = urldecode($user);
@@ -662,7 +649,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         if ($old['hide'] != $person['hide']) {
             // rerender all activities
             include_once BASEPATH . "/php/Render.php";
-            renderActivities(['authors.user' => $user]);
+            renderActivities(['rendered.users' => $user]);
         }
     }
 
@@ -1012,12 +999,31 @@ Route::post('/crud/users/approve', function () {
 
 Route::post('/crud/queries', function () {
     include_once BASEPATH . "/php/init.php";
-    if (isset($_POST['id'])) {
+    
+    $action = $_POST['action'] ?? 'ADD';
+
+    if (isset($_POST['id']) && $action == 'DELETE') {
         // delete query with _id
         $deleteResult = $osiris->queries->deleteOne(['_id' => DB::to_ObjectID($_POST['id'])]);
         return $deleteResult->getDeletedCount();
         die;
     }
+    if ($action == 'SHARE'){
+        if (isset($_POST['global'])) {
+            $values = ['global' => true];
+        } else if (isset($_POST['role'])) {
+            $values = ['global' => false, 'role' => $_POST['role']];
+        } else {
+            die("no visibility given");
+        }
+        $updateResult = $osiris->queries->updateOne(
+            ['_id' => DB::to_ObjectID($_POST['id'])],
+            ['$set' => $values]
+        );
+        return $updateResult->getModifiedCount();
+        die;
+    }
+
     if (!isset($_POST['name'])) die("no name given");
     if (!isset($_POST['rules'])) die("no rules given");
     if (!isset($_SESSION['username'])) die("no user given");

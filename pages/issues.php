@@ -681,17 +681,17 @@ if (array_sum($a) === 0) {
             <table class="table">
                 <?php
 
-                foreach ($issues['infrastructure'] as $id) {
-                    $doc = $osiris->infrastructures->findOne(['_id' => DB::to_ObjectID($id)]);
+                foreach ($issues['infrastructure'] as $id => $timepoint) {
+                    $doc = $osiris->infrastructures->findOne(['id' => $id]);
                 ?>
                     <tr id="tr-<?= $id ?>">
                         <td>
                             <?= lang('Please update the statistics of ', 'Bitte aktualisiere die Statistiken von ') ?>
                             <b><?= $doc['name'] ?></b>
                             <?= lang('from ', 'von ') ?>
-                            <b><?= CURRENTYEAR - 1 ?></b>
+                            <b><?= $timepoint ?></b>
                             <br>
-                            <a href="<?= ROOTPATH ?>/infrastructures/year/<?= $id ?>?year=<?= CURRENTYEAR - 1 ?>" target="_blank" rel="noopener noreferrer" class="btn small primary">
+                            <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $id ?>?edit-stats=<?= $timepoint ?>#statistics" target="_blank" rel="noopener noreferrer" class="btn small primary">
                                 <i class="ph ph-calendar-plus"></i>
                                 <?= lang('Update now', 'Jetzt aktualisieren') ?>
                             </a>
@@ -702,3 +702,35 @@ if (array_sum($a) === 0) {
 
         <?php } ?>
     <?php } ?>
+
+    <?php if (isset($issues['nagoya'])) { ?>
+        <h4 class="">
+            <?= lang(
+                'Please review the following Nagoya Protocol submissions:',
+                'Bitte überprüfe die folgenden Nagoya-Protokoll-Einreichungen:'
+            ) ?>
+        </h4>
+
+        <table class="table">
+            <?php
+            foreach ($issues['nagoya'] as $project_id) {
+                $project = $osiris->proposals->findOne(['_id' => DB::to_ObjectID($project_id)]);
+            ?>
+                <tr id="tr-<?= $project_id ?>">
+                    <td>
+                        <?= lang('The Nagoya Protocol compliance for project', 'Die Nagoya-Protokoll-Compliance für das Projekt') ?>
+                        <b><?= $project['name'] ?></b>
+                        <?= lang('requires your input.', 'benötigt deine Eingabe.') ?><br>
+                        <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $project_id ?>" class="btn small primary">
+                            <i class="ph ph-edit"></i>
+                            <?= lang('Provide input now', 'Jetzt Eingabe machen') ?>
+                        </a>
+                        <a href="<?= ROOTPATH ?>/projects/view/<?= $project_id ?>" class="btn small">
+                            <i class="ph ph-arrow-fat-line-right"></i>
+                            <?= lang('View project', 'Projekt ansehen') ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+    <?php } ?>
+    

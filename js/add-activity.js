@@ -1,33 +1,29 @@
 let SETTINGS = {};
-const TYPES = {
-    "journal-article": "article",
-    "magazine-article": "magazine",
-    "book-chapter": "chapter",
-    publication: "article",
-    "doctoral-thesis": "students",
-    "master-thesis": "students",
-    "bachelor-thesis": "students",
-    "guest-scientist": "guests",
-    "lecture-internship": "guests",
-    "student-internship": "guests",
-    reviewer: "review",
-    editor: "editorial",
-    monograph: "book",
-    misc: "misc",
-    "edited-book": "book",
-};
-
 
 let SELECTED_CAT = null;
 let SELECTED_TYPE = null;
 let DOIDATA = null;
 
+// escape HTML special chars to avoid breaking the surrounding markup
+const escapeHtml = (str) => {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        // .replace(/&/g, '&amp;')
+        // .replace(/</g, '&lt;')
+        // .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+    // .replace(/'/g, '&#39;');
+};
+
 function togglePubType(type, callback = () => { }) {
-    type = type.trim().toLowerCase().replace(" ", "-");
+    // type = type.trim().toLowerCase().replace(" ", "-");
+    // translate type with mappings
+    // type = TYPES['crossref.' + type] ?? TYPES['datacite.' + type] ?? type;
     // check if type exists:
-    if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
-        type = TYPES[type] ?? type;
-    }
+    // if ($(".select-btns").find('.btn[data-subtype="' + type + '"]').length === 0) {
+    //     // check if mapped type exists
+    //     type = TYPES[type] ?? type;
+    // }
     console.log(type);
 
     $("#type").val(type);
@@ -47,9 +43,18 @@ function togglePubType(type, callback = () => { }) {
         dataType: "json",
         success: function (response) {
             const data = response.data
+            if (data.error) {
+                toastWarning(data.error);
+                return;
+            }
             // console.log(response);
             SELECTED_CAT = data.category;
             SELECTED_TYPE = data.type;
+            console.log(SELECTED_TYPE)
+            if (SELECTED_CAT === null || SELECTED_TYPE === null) {
+                toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
+                return;
+            }
 
             const SELECTED_MODULES = SELECTED_TYPE.modules;
 
@@ -62,11 +67,16 @@ function togglePubType(type, callback = () => { }) {
                 SELECTED_TYPE.description ?? "",
                 SELECTED_TYPE.description_de ?? ""
             );
-            if (descr != "") descr = "<i class='ph ph-info'></i> " + descr;
-            $("#type-description").html(descr);
+
+            if (descr != "") {
+                // keep the icon as HTML, but escape the description text
+                $("#type-description").html("<i class='ph ph-info'></i> " + escapeHtml(descr));
+            } else {
+                $("#type-description").empty();
+            }
 
             var examples = SELECTED_TYPE.example ?? "";
-            $("#type-examples").html(examples);
+            $("#type-examples").html(escapeHtml(examples));
 
             // show correct subtype buttons
             var form = $("#publication-form");
@@ -124,6 +134,10 @@ function togglePubType(type, callback = () => { }) {
 
             form.slideDown();
             return;
+        },
+        error: function (response) {
+            console.log(response);
+            toastError(response.responseText);
         },
     });
 
@@ -289,11 +303,11 @@ function verifyForm(event, form) {
 
                 var name = input.attr('name').replace(/^values\[(.+?)\](?:\[\])?$/, '$1');
                 // try to get name of the label if available
-                if (input.attr('id')){
+                if (input.attr('id')) {
                     let label = $('label[for="' + input.attr('id') + '"]');
                     if (label.length > 0) {
                         name = label.text().trim();
-                    } 
+                    }
                 }
                 if (name == 'journal_id') return;
                 correct = false;
@@ -321,7 +335,10 @@ function verifyForm(event, form) {
         if ($('#topic-widget').find('input:checked').length === 0) {
             $('#topic-widget').addClass('is-invalid').removeClass('is-valid')
             correct = false
-            errors.push("Topics")
+
+            var topicName = $('#topic-widget h5').first().text().trim();
+            errors.push(topicName)
+
         }
     }
 
@@ -337,14 +354,14 @@ function verifyForm(event, form) {
     return false
 }
 
-function saveDraft(){
+function saveDraft() {
     // no validation needed, just change the route and save
     var form = $('#activity-form')
     form.attr('action', ROOTPATH + '/crud/activities/save-draft')
     form.submit()
 }
 
-function loadDrafts(){
+function loadDrafts() {
     $('#drafts-modal #content').html('<div class="loader show"></div>')
     // open modal
     $('#drafts-modal').addClass('show')
@@ -696,6 +713,8 @@ function getJournalAlex(name) {
         // issn search
         url += '/issn:' + name
     } else {
+        // escape name for URL
+        name = encodeURIComponent(name)
         url += '?search=' + name
         // show only results with ISSN
         data['filter'] = 'has_issn:true'
@@ -880,7 +899,7 @@ function getPubmed(id) {
 
         url: url,
         success: function (data) {
-            // console.log(data);
+            console.log(data);
             var pmid = data.result.uids[0]
             var pub = data.result[pmid]
 
@@ -911,7 +930,12 @@ function getPubmed(id) {
                 }
             });
 
-
+            var type = pub.pubtype[0].replace(/\s+/g, '-').toLowerCase()
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            } else {
+                type = 'article'
+            }
             var pubdata = {
                 title: pub.title,
                 // first_authors: pub.first_authors,
@@ -919,9 +943,9 @@ function getPubmed(id) {
                 year: date.getFullYear(),
                 month: date.getMonth() + 1,
                 day: date.getDate(),
-                type: pub.doctype == 'chapter' ? 'book' : pub.pubtype[0],
+                type: type,
                 journal: pub.fulljournalname,
-                // issn: (pub.ISSN ?? []).join(' '),
+                issn: pub.ISSN ?? '',
                 issue: pub.issue,
                 volume: pub.volume,
                 pages: pub.pages,
@@ -935,7 +959,7 @@ function getPubmed(id) {
                 // open_access: pub.open_access,
                 epub: pub.pubstatus == 10,
             }
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
             $('.loader').removeClass('show')
         },
         error: function (response) {
@@ -1038,6 +1062,11 @@ function getDOI(doi) {
                 abstract = abstract.replace(/^abstract/i, '').trim()
             }
 
+            var type = pub.type
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            }
+
             var pubdata = {
                 title: pub.title[0],
                 first_authors: first,
@@ -1046,7 +1075,7 @@ function getDOI(doi) {
                 year: date[0],
                 month: date[1],
                 day: date[2],
-                type: pub.type,
+                type: type,
                 journal: pub['container-title'][0],
                 issn: (pub.ISSN ?? []).join(' '),
                 issue: issue,
@@ -1067,14 +1096,14 @@ function getDOI(doi) {
             }
             // update form data in case of selecting another type
             DOIDATA = pubdata
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
             getOpenAccessStatus(doi)
             $('.loader').removeClass('show')
         },
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning('DOI was not found in CrossRef. I am looking in DataCite now.')
+            toastWarning(lang('DOI was not found in CrossRef. I am looking in DataCite now.', 'DOI wurde nicht in CrossRef gefunden. Ich suche jetzt in DataCite.'))
             getDataciteDOI(doi)
         }
     })
@@ -1099,7 +1128,7 @@ function getOpenAccessStatus(doi) {
 
 function getOpenAlexDOI(doi) {
     var url = 'https://api.openalex.org/works'
-    var data = { mailto: 'juk20@dsmz.de' }
+    var data = { mailto: 'julia.koblitz@osiris-solutions.de' }
     url += '/https://doi.org/' + doi
 
     $.ajax({
@@ -1109,10 +1138,7 @@ function getOpenAlexDOI(doi) {
         url: url,
         success: function (pub) {
             // var pub = data
-            // console.log(pub);
-
             var date = pub.publication_date.split('-')
-
 
             var authors = [];
             // var editors = [];
@@ -1124,9 +1150,6 @@ function getOpenAlexDOI(doi) {
                 pub.authorships.forEach((a, i) => {
                     var aoi = false
                     a.institutions.forEach(e => {
-                        // if (e.display_name.includes(AFFILIATION)) {
-                        //     aoi = true
-                        // }
                         // check if AFFILIATION_REGEX matches the affiliation
                         if (AFFILIATION_REGEX.test(e.display_name)) {
                             aoi = true
@@ -1149,6 +1172,12 @@ function getOpenAlexDOI(doi) {
             var journal = pub.primary_location
             var pages = pub.biblio.first_page
             if (pub.biblio.last_page) pages += '-' + pub.biblio.last_page
+
+            var type = pub.type
+            if (TYPES['crossref.' + type] !== undefined) {
+                type = TYPES['crossref.' + type]
+            }
+
             var pubdata = {
                 title: pub.title,
                 first_authors: first,
@@ -1156,7 +1185,7 @@ function getOpenAlexDOI(doi) {
                 year: date[0],
                 month: date[1] ?? null,
                 day: date[2] ?? null,
-                type: pub.type,
+                type: type,
                 journal: journal.source.display_name,
                 issn: (journal.source.issn ?? []).join(' '),
                 issue: pub.biblio.issue,
@@ -1171,69 +1200,45 @@ function getOpenAlexDOI(doi) {
                 open_access: pub.open_access.oa_status,
                 epub: (journal.version !== 'publishedVersion'),
             }
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
+            DOIDATA = pubdata
             $('.loader').removeClass('show')
         },
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning('DOI was not found in CrossRef. I am looking in DataCite now.')
+            toastWarning(lang('DOI was not found in OpenAlex. I am looking in DataCite now.', 'DOI wurde nicht in OpenAlex gefunden. Ich suche jetzt in DataCite.'))
             getDataciteDOI(doi)
         }
     })
 }
 
 function getDataciteDOI(doi) {
-    url = "https://api.datacite.org/dois/" + doi //+ '?mailto=juk20@dsmz.de'
+    url = "https://api.datacite.org/dois/" + doi
     $('.loader').addClass('show')
-
-    var dataCiteTypes = {
-        'book': 'book',
-        'bookchapter': 'chapter',
-        'journal': 'article',
-        'journalarticle': 'article',
-        'conferencepaper': 'article',
-        'conferenceproceeding': 'article',
-        'dissertation': 'dissertation',
-        'preprint': 'preprint',
-        'software': 'software',
-        'computationalnotebook': 'software',
-        'model': 'software',
-        'datapaper': 'dataset',
-        'dataset': 'dataset',
-        'peerreview': 'review',
-        'audiovisual': 'misc',
-        'collection': 'misc',
-        'event': 'misc',
-        'image': 'misc',
-        'report': 'others',
-        'interactiveresource': 'misc',
-        'outputmanagementplan': 'misc',
-        'physicalobject': 'misc',
-        'service': 'misc',
-        'sound': 'misc',
-        'standard': 'misc',
-        'text': 'misc',
-        'workflow': 'misc',
-        'other': 'misc',
-        'presentation': 'lecture',
-        'poster': 'poster'
-    }
 
     $.ajax({
         type: "GET",
-        // data: data,
         dataType: "json",
-        // cors: true ,
-        //   contentType:'application/json',
-        //   secure: true,
-        //   headers: {
-        //     'Access-Control-Allow-Origin': '*',
-        //   },
         url: url,
         success: function (data) {
             var pub = data.data.attributes
-            // console.log(pub);
+            console.log(pub);
+            var type = null
+            if (pub.types.resourceTypeGeneral !== undefined) {
+                type = pub.types.resourceTypeGeneral.toLowerCase()
+            }
+            if (type === null || TYPES['datacite.' + type] === undefined) {
+                var resType = pub.types.resourceType
+                if (resType !== undefined && TYPES[resType.toLowerCase()] !== undefined) {
+                    type = resType.toLowerCase()
+                }
+            }
+            console.log(type);
+            if (TYPES['datacite.' + type] !== undefined) {
+                type = TYPES['datacite.' + type]
+            }
+            console.info(type);
 
             var date = ''
             if (pub.dates[0] !== undefined) {
@@ -1243,17 +1248,12 @@ function getDataciteDOI(doi) {
                 dateSplit = [pub.publicationYear, 1, null]
                 date = pub.publicationYear + "-01-01"
             }
-            // console.log(dateSplit, date);
 
             var authors = [];
-            // var editors = [];
             var first = 1
             pub.creators.forEach((a, i) => {
                 var aoi = false
                 a.affiliation.forEach(e => {
-                    // if (e.includes(AFFILIATION)) {
-                    //     aoi = true
-                    // }
                     // check if AFFILIATION_REGEX matches the affiliation
                     if (AFFILIATION_REGEX.test(e)) {
                         aoi = true
@@ -1265,7 +1265,6 @@ function getDataciteDOI(doi) {
                 var pos = a.sequence ?? 'middle'
                 if (i === 0) pos = 'first'
                 else if (pub.creator && pub.creator.length && i == pub.creator.length - 1) pos = 'last'
-                // console.log(pos);
                 var name = {
                     family: a.familyName,
                     given: a.givenName,
@@ -1274,17 +1273,6 @@ function getDataciteDOI(doi) {
                 }
                 authors.push(name)
             });
-            var type = ''
-            if (pub.types.resourceTypeGeneral !== undefined) {
-                type = pub.types.resourceTypeGeneral.toLowerCase()
-            }
-            type = dataCiteTypes[type] ?? type;
-
-            var resType = pub.types.resourceType
-            if (resType !== undefined && dataCiteTypes[resType.toLowerCase()] !== undefined) {
-                type = dataCiteTypes[resType.toLowerCase()]
-            }
-            console.info(type);
             let title = pub.titles[0].title
             if (title === undefined) {
                 title = ''
@@ -1309,20 +1297,18 @@ function getDataciteDOI(doi) {
                 link: pub.url,
                 date_start: date,
                 doctype: pub.types.resourceTypeGeneral,
+                'date_start': date,
+                'software_version': pub.version,
+                'software_doi': pub.doi,
+                'software_venue': pub.publisher,
+                'year': dateSplit[0] ?? null,
+                'month': dateSplit[1] ?? null,
+                'day': dateSplit[2] ?? null,
             }
 
-            if (type == 'software' || type == 'dataset') {
-                pubdata['date_start'] = date
-                pubdata['software_version'] = pub.version
-                pubdata['software_doi'] = pub.doi
-                pubdata['software_venue'] = pub.publisher
-            } else {
-                pubdata['year'] = dateSplit[0] ?? null
-                pubdata['month'] = dateSplit[1] ?? null
-                pubdata['day'] = dateSplit[2] ?? null
-            }
-
-            toggleForm(pubdata)
+            toggleForm(type, pubdata)
+            DOIDATA = pubdata
+            console.log(pubdata);
             $('.loader').removeClass('show')
         },
         error: function (response) {
@@ -1333,58 +1319,12 @@ function getDataciteDOI(doi) {
     })
 }
 
-function toggleForm(pub) {
-
-    var selectedType = 'misc';
-
-    switch (pub.type.toLowerCase()) {
-        case 'journal-article':
-            selectedType = 'article';
-            break;
-        case 'magazine-article':
-            selectedType = 'magazine';
-            break;
-        case 'book-chapter':
-        case 'chapter':
-            selectedType = 'chapter';
-            pub.book = pub.journal;
-            delete pub.journal
-            break;
-        case 'book':
-            if (pub.editors !== undefined && pub.editors.length > 0 && pub.authors.length > 0) {
-                selectedType = 'chapter';
-            } else if (pub.editors !== undefined && pub.editors.length > 0) {
-                selectedType = 'editor';
-                pub.book = pub.journal;
-            } else {
-                selectedType = 'book';
-                pub.series = pub.journal;
-            }
-            delete pub.journal
-            break;
-        case 'software':
-        case 'dataset':
-        case 'report':
-            selectedType = 'software';
-            $('#software_type option[value="' + pub.type + '"]').prop("selected", true);
-            break;
-        // case 'book-chapter':
-        //     selectedType = 'chapter';
-        //     break;
-        case 'posted-content':
-            selectedType = 'preprint'
-            break
-        default:
-            selectedType = pub.type;
-            break;
-    }
-
+function toggleForm(selectedType, pub) {
     if (UPDATE) {
         $('#publication-form').find('input:not(.hidden)').removeClass('is-valid')
     } else {
         $('#publication-form').find('input:not(.hidden):not([type=radio]):not([type=checkbox])').val('').removeClass('is-valid')
     }
-
     togglePubType(selectedType, function () { fillForm(pub) })
 }
 
@@ -1440,18 +1380,18 @@ function fillForm(pub) {
         // console.log($('#' + element));
     });
 
-    if (pub.funding !== undefined){
+    if (pub.funding !== undefined) {
         // first: check if module projects exists
-        if ($('[data-module="projects"]').length > 0){
-            $.get(ROOTPATH + '/api/projects-by-funding-number', { number: pub.funding }, function(data){
-                if (data.data.length === 0){
+        if ($('[data-module="projects"]').length > 0) {
+            $.get(ROOTPATH + '/api/projects-by-funding-number', { number: pub.funding }, function (data) {
+                if (data.data.length === 0) {
                     toastWarning('No project found for funding number ' + pub.funding)
                     return;
                 }
-               // populate projects dropdown
-               data.data.forEach(proj => {
+                // populate projects dropdown
+                data.data.forEach(proj => {
                     addProjectRow(proj._id['$oid'], proj.name);
-               })
+                })
             })
         }
     }
@@ -1466,7 +1406,7 @@ function fillForm(pub) {
     if (pub.journal) {
         // prefer ISSN to look journal up:
         var j_val = pub.journal
-        if (pub.issn !== undefined && pub.issn.length !== 0) {
+        if (pub.issn !== undefined && pub.issn.length > 0) {
             j_val = pub.issn.split(' ')
             j_val = j_val[0]
         }
@@ -1595,14 +1535,39 @@ function getDate(element) {
     return date
 }
 
-function selectEvent(id, event, start, end, location) {
+function selectEvent(id, event, start, end, location, country) {
+    console.log(country);
     $('#conference_id').val(id)
-    $('#conference').val(event)
-    $('#location').val(location)
-    $('#date_start').val(start)
-    $('#date_end').val(end)
+    $('#conference').val(event).addClass('is-valid')
+    $('#location').val(location).addClass('is-valid')
+    if ($('#date_start').length > 0)
+        $('#date_start').val(start).addClass('is-valid')
+    else if ($('#year').length > 0) {
+        var date_start = start.split('-')
+        $('#year').val(date_start[0]).addClass('is-valid')
+        $('#month').val(date_start.length > 1 ? date_start[1] : '').addClass('is-valid')
+        $('#day').val(date_start.length > 2 ? date_start[2] : '').addClass('is-valid')
+    }
+    $('#date_end').val(end).addClass('is-valid')
+    // select country in dropdown
+    $('#country').val(country).addClass('is-valid')
+
 
     $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
+
+    if ($('#event-select-dropdown').length > 0) {
+        $('#event-select-dropdown').removeClass('show')
+    }
+    toastSuccess(lang('Event "' + event + '" selected.', 'Veranstaltung "' + event + '" ausgewählt.'))
+
+    // remove is_valid after 3 seconds
+    setTimeout(function () {
+        $('#conference').removeClass('is-valid')
+        $('#location').removeClass('is-valid')
+        $('#date_start').removeClass('is-valid')
+        $('#date_end').removeClass('is-valid')
+        $('#country').removeClass('is-valid')
+    }, 3000);
 }
 
 function addEvent() {
@@ -1612,6 +1577,7 @@ function addEvent() {
         start: $('#event-start').val(),
         end: $('#event-end').val(),
         location: $('#event-location').val(),
+        country: $('#event-country').val(),
         type: $('#event-type').val(),
         url: $('#event-url').val()
     }
@@ -1645,7 +1611,7 @@ function addEvent() {
             console.log(response);
             if (response.id && response.status == 'warning') {
                 if (response.msg) toastWarning(response.msg)
-                selectEvent(response.id, data.title, data.start, data.end, data.location)
+                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
                 // close modal
                 window.location.hash = '#event-select'
                 return;
@@ -1654,7 +1620,7 @@ function addEvent() {
                 return;
             } else {
                 toastSuccess(lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.'))
-                selectEvent(response.id, data.title, data.start, data.end, data.location)
+                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
                 // close modal
                 window.location.hash = '#event-select'
             }

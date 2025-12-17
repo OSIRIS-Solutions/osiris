@@ -600,4 +600,13 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             }
         });
     }
+
+    $(document).ready(function() {
+        initDownloadTable('#infrastructures', lang('Infrastructures - Overview', 'Infrastrukturen - Übersicht') + ' <?= $reportdate ?>');
+        initDownloadTable('#user-stats', lang('Infrastructures - User Statistics', 'Infrastrukturen - Nutzerstatistiken') + ' <?= $year ?>');
+        initDownloadTable('#action-stats', lang('Infrastructures - Usage Statistics', 'Infrastrukturen - Nutzungsstatistiken') + ' <?= $year ?>');
+        initDownloadTable('#person-stats', lang('Infrastructures - Personnel Statistics', 'Infrastrukturen - Personalstatistiken') + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborations', lang('Infrastructures - Collaborative Infrastructures', 'Infrastrukturen - Verbundinfrastrukturen') + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborative-partners', lang('Infrastructures - Collaborative Partners', 'Infrastrukturen - Kooperationspartner') + ' <?= $reportdate ?>');
+    });
 </script>

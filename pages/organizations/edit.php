@@ -29,7 +29,7 @@ function val($index, $default = '')
 
 function sel($index, $value)
 {
-    return val($index) == $value ? 'selected' : '';
+    return strtolower(val($index)) == strtolower($value) ? 'selected' : '';
 }
 
 $form = $GLOBALS['form'] ?? [];
@@ -70,7 +70,7 @@ if (empty($form) || !isset($form['_id'])) {
             <div class="input-group">
                 <input type="text" class="form-control" name="values[ror]" id="ror" value="<?= $form['ror'] ?? '' ?>">
                 <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('Retreive updated information from ROR', 'Aktualisiere die Daten von ROR') ?>">
-                    <button class="btn" type="button" onclick="getRORid($('#ror').val())"><i class="ph ph-arrows-clockwise"></i></button>
+                    <button class="btn" type="button" onclick="updateOrgByROR($('#ror').val())"><i class="ph ph-arrows-clockwise"></i></button>
                 </div>
             </div>
         </div>
@@ -90,15 +90,15 @@ if (empty($form) || !isset($form['_id'])) {
             </label>
             <select name="values[type]" id="type" class="form-control" required>
                 <option value="" disabled <?= sel('type', '') ?>><?= lang('Select type', 'Art auswählen') ?></option>
-                <option value="Education" <?= sel('type', 'Education') ?>><?= lang('Education', 'Bildung') ?></option>
-                <option value="Funder" <?= sel('type', 'Funder') ?>><?= lang('Funder', 'Förderer') ?></option>
-                <option value="Healthcare" <?= sel('type', 'Healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
-                <option value="Company" <?= sel('type', 'Company') ?>><?= lang('Company', 'Unternehmen') ?></option>
-                <option value="Archive" <?= sel('type', 'Archive') ?>><?= lang('Archive', 'Archiv') ?></option>
-                <option value="Nonprofit" <?= sel('type', 'Nonprofit') ?>><?= lang('Non-profit', 'Gemeinnützig') ?></option>
-                <option value="Government" <?= sel('type', 'Government') ?>><?= lang('Government', 'Regierung') ?></option>
-                <option value="Facility" <?= sel('type', 'Facility') ?>><?= lang('Facility', 'Einrichtung') ?></option>
-                <option value="Other" <?= sel('type', 'Other') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                <option value="education" <?= sel('type', 'education') ?>><?= lang('Education', 'Bildung') ?></option>
+                <option value="funder" <?= sel('type', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
+                <option value="healthcare" <?= sel('type', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
+                <option value="company" <?= sel('type', 'company') ?>><?= lang('Company', 'Unternehmen') ?></option>
+                <option value="archive" <?= sel('type', 'archive') ?>><?= lang('Archive', 'Archiv') ?></option>
+                <option value="nonprofit" <?= sel('type', 'nonprofit') ?>><?= lang('Non-profit', 'Gemeinnützig') ?></option>
+                <option value="government" <?= sel('type', 'government') ?>><?= lang('Government', 'Regierung') ?></option>
+                <option value="facility" <?= sel('type', 'facility') ?>><?= lang('Facility', 'Einrichtung') ?></option>
+                <option value="other" <?= sel('type', 'other') ?>><?= lang('Other', 'Sonstiges') ?></option>
             </select>
         </div>
 
@@ -131,21 +131,22 @@ if (empty($form) || !isset($form['_id'])) {
                 <label for="lat">
                     <?= lang('Latitude', 'Breitengrad') ?>
                 </label>
-                <input type="number" class="form-control" name="values[lat]" id="lat" value="<?= $form['lat'] ?? '' ?>" step="0.00001">
+                <input type="number" class="form-control" name="values[lat]" id="lat" value="<?= $form['lat'] ?? '' ?>" step="any">
             </div>
             <div class="col-sm">
                 <label for="lng">
                     <?= lang('Longitude', 'Längengrad') ?>
                 </label>
-                <input type="number" class="form-control" name="values[lng]" id="lng" value="<?= $form['lng'] ?? '' ?>" step="0.00001">
+                <input type="number" class="form-control" name="values[lng]" id="lng" value="<?= $form['lng'] ?? '' ?>" step="any">
             </div>
         </div>
         <small class="text-muted">
-            <?=lang('Geographical coordinates are required to correctly display the organisation on a map.', 'Die geografischen Koordinaten werden benötigt, um die Organisation auf einer Karte korrekt darzustellen.')?>
+            <?= lang('Geographical coordinates are required to correctly display the organisation on a map.', 'Die geografischen Koordinaten werden benötigt, um die Organisation auf einer Karte korrekt darzustellen.') ?>
         </small>
         <br>
         <br>
 
+        <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
         <script>
             $('#ror').on('change', function() {
                 const ror = $(this).val();
@@ -174,13 +175,13 @@ if (empty($form) || !isset($form['_id'])) {
             });
 
 
-            function getRORid(ror) {
-                console.info('getRORid')
+            function updateOrgByROR(ror) {
+                console.info('updateOrgByROR')
                 if (!ror) {
                     toastError('Please provide a ROR ID')
                     return
                 }
-                var url = 'https://api.ror.org/v1/organizations/' + ror.trim()
+                var url = 'https://api.ror.org/v2/organizations/' + ror.trim()
                 $.ajax({
                     type: "GET",
                     url: url,
@@ -190,15 +191,15 @@ if (empty($form) || !isset($form['_id'])) {
                     },
                     success: function(response) {
                         $('.loader').removeClass('show')
-                        console.log(response);
-                        if (response.id) {
-                            let address = response.addresses[0] ?? {}
-                            $('#name').val(response.name)
-                            $('#type').val(response.types[0])
-                            $('#location').val(address.city + ', ' + response.country.country_name)
-                            $('#country').val(response.country.country_code)
-                            $('#lat').val(address.lat)
-                            $('#lng').val(address.lng)
+                        var org = translateROR(response)
+                        console.log(org);
+                        if (org.ror) {
+                            $('#name').val(org.name)
+                            $('#type').val(org.type)
+                            $('#location').val(org.location)
+                            $('#country').val(org.country)
+                            $('#lat').val(org.lat)
+                            $('#lng').val(org.lng)
                         } else {
                             toastError('ROR ID not found')
                         }

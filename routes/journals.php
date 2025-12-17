@@ -15,7 +15,7 @@
  */
 
 
-Route::get('/journal', function () {
+Route::get('/journals?', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
@@ -43,7 +43,7 @@ Route::get('/journal/metrics', function () {
 
 
 
-Route::get('/journal/view/([a-zA-Z0-9]*)', function ($id) {
+Route::get('/journals?/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $id = $DB->to_ObjectID($id);
@@ -335,6 +335,10 @@ Route::post('/crud/journal/create', function () {
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
+
+    if (isset($values['oa']) && $values['oa'] == 0) {
+        $values['oa'] = true;
+    }
 
     // check if issn already exists:
     if (isset($values['issn']) && !empty($values['issn'])) {

@@ -256,8 +256,8 @@ class Modules
             "fields" => [],
             "name" => "Event Selector",
             "name_de" => "Veranstaltungsauswahl",
-            "label" => "Select an event",
-            "label_de" => "Wähle ein Event",
+            "label" => "Select an event to auto-fill date, location and event",
+            "label_de" => "Wähle ein Event aus, um Datum, Ort und Veranstaltung automatisch zu füllen",
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
             "width" => 0,
@@ -273,6 +273,18 @@ class Modules
             "description_de" => "Ein Feld für die Art der Finanzierung, z.B. für ein Stipendium. Die Werte werden über das Vokabular verwaltet und sind identisch zu den Werten aus dem Datenfeld in Projekten.",
             "width" => 6,
             "tags" => ['general']
+        ],
+        "guest" => [
+            "fields" => ["category" => 'guest scientist'],
+            "name" => "Guest Category",
+            "name_de" => "Gäste-Kategorie",
+            "label" => "Category of the guest",
+            "label_de" => "Art des Gastes",
+            "description" => "A field for the category of a guest, can be one of the following: guest scientist, lecture internship, student internship, other.",
+            "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
+            "width" => 6,
+            "tags" => ['people'],
+            "show" => false
         ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
@@ -538,6 +550,17 @@ class Modules
             "width" => 12,
             "tags" => ['general', 'important']
         ],
+        "pub-language" => [
+            "fields" => ["pub_language" => 'de'],
+            "name" => "Publication Language",
+            "name_de" => "Publikationssprache",
+            "label" => "Publication Language",
+            "label_de" => "Publikationssprache",
+            "description" => "A field for the language of a publication, values defined by vocabulary. Possible values are: de, en, fr, es, it, other.",
+            "description_de" => "Ein Feld für die Sprache einer Publikation, Werte werden über das Vokabular definiert. Mögliche Werte sind: de, en, fr, es, it, other.",
+            "width" => 6,
+            "tags" => ['publication']
+        ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
             "name" => "Publisher",
@@ -708,8 +731,8 @@ class Modules
             "name_de" => "Abschlussarbeit-Kategorie",
             "label" => "Thesis type",
             "label_de" => "Art der Abschlussarbeit",
-            "description" => "A field for the category of a thesis, can be one of the following: bachelor, master, diploma, doctoral, habilitation.",
-            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, kann eine der folgenden sein: Bachelor, Master, Diplom, Doktor, Habilitation.",
+            "description" => "A field for the category of a thesis, values defined by vocabulary. Standard values are: bachelor, master, diploma, doctor, habilitation.",
+            "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, Werte werden über das Vokabular definiert. Standardwerte sind: Bachelor, Master, Diplom, Doktor, Habilitation.",
             "width" => 6,
             "tags" => ['publication', 'people']
         ],
@@ -920,7 +943,7 @@ class Modules
                         $module = str_replace('*', '', $module);
                         $req = true;
                     }
-                    $fields[$module]= [
+                    $fields[$module] = [
                         'required' => $req
                     ];
                 }
@@ -992,11 +1015,11 @@ class Modules
             </div>";
     }
 
-    function getFields(){
+    function getFields()
+    {
         if (!empty($this->fields)) {
             return $this->fields;
         }
-
     }
 
     function get_name($module)
@@ -1202,7 +1225,10 @@ class Modules
         switch ($field['format']) {
             case 'string':
                 // make sure that value is string
-                $value = strval($value);
+                if (!is_string($value)) {
+                    $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                    $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                }
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'text':
@@ -1310,6 +1336,7 @@ class Modules
         if (!array_key_exists($module, $this->all_modules)) {
             return $this->custom_field($module, $req, $props);
         }
+        $Vocabulary = new Vocabulary();
 
         $labelClass = ($req ? "required" : "");
 
@@ -1659,11 +1686,11 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
-                    
+
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
-                    
+
                     <div class="module p-0">
                         <table class="table simple small">
                             <thead>
@@ -1684,22 +1711,22 @@ class Modules
                                 foreach ($this->preset ?? [] as $i => $author) { ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
+                                            <input type="number" step="0.1" class="form-control" name="values[supervisors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
                                             <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
@@ -1755,11 +1782,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[supervisors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
                             var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
@@ -1767,13 +1794,6 @@ class Modules
                             $('#supervisors').append(tr)
                         }
                     </script>
-
-                    <datalist id="user-list">
-                        <?php
-                        foreach ($this->userlist as $s) { ?>
-                            <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
-                        <?php } ?>
-                    </datalist>
 
                 </div>
             <?php
@@ -1786,7 +1806,7 @@ class Modules
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
 
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
 
                     <div class="module p-0">
@@ -1798,8 +1818,7 @@ class Modules
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
-                                    <th>
-                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
@@ -1810,22 +1829,22 @@ class Modules
                                 ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <select name="values[authors][<?= $i ?>][role]" class="form-control">
+                                            <select name="values[supervisors][<?= $i ?>][role]" class="form-control">
                                                 <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
                                                 <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
                                                 <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
@@ -1869,7 +1888,7 @@ class Modules
 
                         function selectUsernameSupervisor(el) {
                             let username = el.value
-                            let user = $('#user-list-thesis option[value=' + username + ']')
+                            let user = $('#user-list-thesis option[value="' + username + '"]')
                             if (!user || user === undefined || user.length === 0) return;
 
                             console.log(user);
@@ -1890,11 +1909,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
                             var roles = {
                                 'supervisor': lang('Supervisor', 'Betreuer'),
                                 'first-reviewer': lang('First reviewer', 'Erster Gutachter'),
@@ -1978,84 +1997,118 @@ class Modules
             case "event-select":
                 $events = $this->DB->db->conferences->find(
                     ['end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]],
-                    ['sort' => ['start' => -1], 'limit' => 10]
+                    ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1, 'country' => 1]]
+                    // ['sort' => ['start' => -1], 'limit' => 10]
                 );
             ?>
 
-                <div class="data-module col-sm-<?= $width ?>" data-module="event-select">
-                    <label class="floating-title"><?= $label ?></label>
+                <div class="data-module col-sm-12 d-flex" data-module="event-select">
+                    <!-- <label class="floating-title"></label> -->
 
-                    <div id="event-select-container w-full">
-                        <div class="btn-group d-flex" id="event-select-btns">
-                            <a class="btn" href="#add-event">
-                                <i class="ph ph-plus"></i>
-                            </a>
-                            <?php foreach ($events as $event) { ?>
-                                <button class="btn primary" type="button" onclick="selectEvent('<?= $event['_id'] ?>', '<?= addslashes($event['title']) ?>', '<?= $event['start'] ?>', '<?= $event['end'] ?>', '<?= $event['location'] ?>')">
-                                    <?= $event['title'] ?>
-                                    <small><?= fromToDate($event['start'], $event['end']) ?></small>
-                                </button>
-                            <?php } ?>
+                    <!-- dropdown with scroll and search, onclick -->
+                    <div class="dropdown" id="event-select-dropdown">
+                        <button id="event-select-button" class="btn primary" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                            <i class="ph ph-calendar-dots ph-2x mr-10"></i>
+                            <span>
+                                <b><?= lang('Select event', 'Veranstaltung auswählen') ?></b>
+                                <br>
+                                <small><?= lang('to fill date, event name and location fields automatically.', 'um automatisch Datum, Veranstaltungsname und Ort auszufüllen.') ?></small>
+                            </span>
+                            <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdown-1">
+                            <small class="text-muted">
+                                <i class="ph ph-info text-signal"></i>
+                                <?= $help ?>
+                            </small>
+                            <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
+
+                            <div class="events-content">
+                                <?php foreach ($events as $ev) { ?>
+                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
+                                        <strong><?= htmlspecialchars($ev['title']) ?></strong><br>
+                                        <small class="text-muted">
+                                            <?= date('d.m.Y', strtotime($ev['start'])) ?> - <?= date('d.m.Y', strtotime($ev['end'])) ?>
+                                            <?php if (!empty($ev['location'])) { ?>
+                                                | <?= htmlspecialchars($ev['location']) ?>
+                                            <?php } ?>
+                                        </small>
+                                    </a>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
+                    <a href="#add-event" class="btn" id="add-event-button" data-toggle="tooltip" data-title="<?= lang('Add new event', 'Neue Veranstaltung hinzufügen') ?>">
+                        <i class="ph ph-calendar-plus ph-2x"></i>
+                    </a>
                     <style>
-                        #event-select-container {
-                            border-radius: var(--border-radius);
-                            position: relative;
-                            margin: 0 -2rem;
+                        #add-event-button {
+                            margin-left: 10px;
+                            height: auto;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
                         }
 
-                        /* white scrim */
-                        #event-select-container::after {
-                            content: '';
-                            position: absolute;
-                            right: 0;
-                            bottom: 0;
-                            width: 2rem;
-                            height: 100%;
-                            background: linear-gradient(270deg, #fff, #ffffff 30%, transparent);
-                            z-index: 1;
-                        }
 
-                        #event-select-container::before {
-                            content: '';
-                            position: absolute;
-                            left: 0;
-                            bottom: 0;
-                            width: 2rem;
-                            height: 100%;
-                            background: linear-gradient(90deg, #fff, #ffffff 30%, transparent);
-                            z-index: 1;
-                        }
-
-                        #event-select-btns {
-                            overflow-x: auto;
-                            padding: 0 2rem;
-                        }
-
-                        #event-select-btns .btn {
+                        #event-select-button {
                             width: 100%;
                             text-align: left;
-                            display: flex;
-                            flex-direction: column;
                             height: auto;
-                            line-height: 1.6;
-                            padding: .5rem 1.5rem;
-                            justify-content: center;
+                            line-height: 1.4;
+                            padding: .5rem 1rem;
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
                         }
 
-                        .btn-group .btn:not(.disabled):not(:disabled):focus,
-                        .btn-group .btn:not(.disabled):not(:disabled).active {
-                            box-shadow: none;
+                        #event-select-dropdown {
+                            position: relative;
+                            display: inline-block;
+                            width: 100%;
                         }
 
-                        #event-select-btns .btn small {
+                        #event-select-dropdown .dropdown-menu {
+                            width: 100%;
+                            max-height: 300px;
+                            overflow-y: auto;
+                            padding: 0.5rem;
+                        }
+
+                        #event-select-dropdown .dropdown-menu a {
                             display: block;
-                            font-size: 0.8em;
-                            color: var(--muted-color);
+                            padding: 0.5rem;
+                            text-decoration: none;
+                            color: var(--text-color);
+                            border-bottom: 1px solid var(--border-color);
+                        }
+
+                        #event-select-dropdown .dropdown-menu a:hover {
+                            background-color: var(--hover-bg-color);
+                        }
+
+                        #event-select-dropdown .dropdown-menu .events-content {
+                            max-height: 250px;
+                            overflow-y: auto;
                         }
                     </style>
-                    <?= $this->render_help($help) ?>
+                    <script>
+                        function filterEvents() {
+                            var input, filter, div, a, i, txtValue;
+                            input = document.getElementById("event-select-search");
+                            filter = input.value.toUpperCase();
+                            div = document.querySelector("#event-select-dropdown .events-content");
+                            a = div.getElementsByTagName("a");
+                            for (i = 0; i < a.length; i++) {
+                                txtValue = a[i].textContent || a[i].innerText;
+                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                    a[i].style.display = "";
+                                } else {
+                                    a[i].style.display = "none";
+                                }
+                            }
+                        }
+                    </script>
                 </div>
             <?php
                 break;
@@ -2156,17 +2209,37 @@ class Modules
                 break;
 
             case "thesis":
+                $val = $this->val('thesis') ?? '';
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="thesis">
                     <select name="values[thesis]" id="thesis" class="form-control" <?= $labelClass ?>>
-                        <option value="thesis"><?= lang('Thesis', 'Abschlussarbeit') ?></option>
-                        <option value="doctor" <?= $this->val('thesis') == 'doctor' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorarbeit') ?></option>
-                        <option value="diploma" <?= $this->val('thesis') == 'diploma' ? 'selected' : '' ?>><?= lang('Diploma Thesis', 'Diplomarbeit') ?></option>
-                        <option value="master" <?= $this->val('thesis') == 'master' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Masterarbeit') ?></option>
-                        <option value="bachelor" <?= $this->val('thesis') == 'bachelor' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelorarbeit') ?></option>
-                        <option value="habilitation" <?= $this->val('thesis') == 'habilitation' ? 'selected' : '' ?>><?= lang('Habilitation', 'Habilitation') ?></option>
+                        <?php
+                        $vocab = $Vocabulary->getValues('thesis');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
                     </select>
                     <label for="thesis" class="<?= $labelClass ?> "><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+            case "pub-language":
+                $val = $this->val('pub-language') ?? '';
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pub-language">
+                    <select name="values[pub-language]" id="pub-language" class="form-control" <?= $labelClass ?>>
+                        <?php if (!$req) { ?>
+                            <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('Select language', 'Sprache auswählen') ?></option>
+                        <?php } ?>
+
+                        <?php
+                        $vocab = $Vocabulary->getValues('pub-language');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                        <?php } ?>
+                    </select>
+                    <label for="pub-language" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
@@ -2309,7 +2382,7 @@ class Modules
                 </div>
                 <script>
                     // make sure the end date is always after the start date
-                    document.getElementById('date_start').addEventListener('change', function() {
+                    document.getElementById('date_start').addEventListener('blur', function() {
                         var startDate = new Date(this.value);
                         var endDate = new Date(document.getElementById('date_end').value);
                         if (endDate < startDate) {
@@ -2317,7 +2390,7 @@ class Modules
                             toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
                         }
                     });
-                    document.getElementById('date_end').addEventListener('change', function() {
+                    document.getElementById('date_end').addEventListener('blur', function() {
                         var startDate = new Date(document.getElementById('date_start').value);
                         var endDate = new Date(this.value);
                         if (endDate < startDate) {
@@ -2344,8 +2417,6 @@ class Modules
                 </div>
             <?php
                 break;
-            // case "date-range-ongoing-simple"
-
             case "software-venue":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="software-venue">
@@ -2431,20 +2502,19 @@ class Modules
                         }
                         ?>
                     </p>
-                    <!-- <p class="m-0 font-size-12 ">
-                        <?= lang('Latest', 'Zuletzt') ?>:
-                        <?php
-                        $conferences = $this->DB->db->conferences->find(
-                            ['start' => ['$lte' => date('Y-m-d', strtotime('today'))], 'none' => true],
-                            ['sort' => ['start' => -1], 'limit' => 5, 'projection' => ['title' => 1]]
-                        )->toArray();
-                        foreach ($conferences as $c) {
-                        ?>
-                            <a onclick="selectConference(this)" class="mr-5" data-id="<?= $c['_id'] ?>"><?= $c['title'] ?></a>
-                        <?php } ?>
-                    </p> -->
                     <script>
                         function resetConference() {
+                            // check if conference from datalist is selected
+                            var input = $('#conference').val()
+                            var option = $('#conference-list option').filter(function() {
+                                return $(this).val() === input;
+                            })
+                            if (option.length) {
+                                var id = option.data('id')
+                                $('#conference_id').val(id)
+                                $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + input)
+                                return
+                            }
                             $('#conference_id').val('')
                             $('#connected-conference').html(lang('No event connected', 'Kein Event verknüpft'))
                         }
@@ -2461,8 +2531,8 @@ class Modules
 
                 <datalist id="conference-list">
                     <?php
-                    foreach ($this->DB->db->conferences->distinct('title') as $c) { ?>
-                        <option><?= $c ?></option>
+                    foreach ($this->DB->db->conferences->find([]) as $c) { ?>
+                        <option data-id="<?= $c['_id'] ?>"><?= $c['title'] ?></option>
                     <?php } ?>
                 </datalist>
             <?php
@@ -2481,7 +2551,10 @@ class Modules
             case "issn":
                 $issn = $this->val('issn');
                 if (is_array($issn)) {
-                    $issn = implode(', ', $issn);
+                    $issn = implode(', ', DB::doc2Arr($issn));
+                }
+                if ($issn instanceof MongoDB\BSON\BSONArray || is_object($issn)) {
+                    $issn = implode(', ', DB::doc2Arr($issn));
                 }
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="issn">
@@ -2531,10 +2604,10 @@ class Modules
                     <?= $this->render_help($help) ?>
                 </div>
                 <datalist id="magazine-list">
-                        <?php
-                        foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
-                            <option><?= $m ?></option>
-                        <?php } ?>
+                    <?php
+                    foreach ($this->DB->db->activities->distinct('magazine') as $m) { ?>
+                        <option><?= $m ?></option>
+                    <?php } ?>
                 </datalist>
             <?php
                 break;
@@ -2665,7 +2738,7 @@ class Modules
                         <?= $label ?>
                         <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
                     </label>
-                    
+
                     <?php if (!$req) { ?>
                         <input type="hidden" name="values[editors]" value="">
                     <?php } ?>
@@ -2787,6 +2860,7 @@ class Modules
             case "online-ahead-of-print":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="online-ahead-of-print">
+                    <input type="hidden" name="values[epub]" value="0">
                     <div class="custom-checkbox <?= isset($_GET['epub']) ? 'text-danger' : '' ?>" id="epub-div">
                         <input type="checkbox" id="epub" value="1" name="values[epub]" <?= (!isset($_GET['epub']) && $this->val('epub', false)) ? 'checked' : '' ?>>
                         <label for="epub"><?= $label ?></label>
@@ -2799,6 +2873,7 @@ class Modules
             case "correction":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="correction">
+                    <input type="hidden" name="values[correction]" value="0">
                     <div class="custom-checkbox" id="correction-div">
                         <input type="checkbox" id="correction" value="1" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
                         <label for="correction"><?= $label ?></label>
@@ -2925,18 +3000,24 @@ class Modules
                 $org_id = $this->val('organization', null);
                 $rand_id = rand(1000, 9999);
             ?>
-                <div class="data-module" data-module="organization">
+                <div class="data-module col-sm-<?= $width ?>" data-module="organization">
                     <label for="organization" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
-                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization"/>
+                        <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
+                            <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                        </span>
 
                         <div id="org-<?= $rand_id ?>-value">
                             <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
-                                <b><?= $org_id ?></b>
-                                <br><small class="text-muted"><?= lang('No organization connected', 'Keine Organisation verknüpft') ?></small>
+
+                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?php if (!empty($org_id)) { ?>
+                                    <br><small class="text-muted"><?= $org_id ?></small>
+                                <?php } ?>
                                 <?php } else {
                                 $org_id = DB::to_ObjectID($org_id);
                                 $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
@@ -2987,6 +3068,8 @@ class Modules
                     <label for="organization" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
                     </label>
+                    <!-- for empty save -->
+                    <input type="hidden" name="values[organizations]" value="">
                     <table class="table">
                         <tbody id="collaborators">
                             <?php
@@ -3131,6 +3214,7 @@ class Modules
                     <script>
                         function addProjectRow(projectId = null, projectName = null) {
                             const row = $('<tr>')
+                            console.log(projectId);
                             if (!projectId) projectId = $('#project-select').val();
                             if (!projectName) projectName = $('#project-select option:selected').text();
 
@@ -3140,7 +3224,7 @@ class Modules
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                // toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -3203,11 +3287,10 @@ class Modules
                 break;
 
             case 'funding_type': // funding_type
-                $Vocabulary = new Vocabulary();
                 $val = $this->val('funding_type', null);
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="funding_type">
-                    <select class="form-control" name="values[funding_type]" id="funding_type"  <?= $labelClass ?> autocomplete="off">
+                    <select class="form-control" name="values[funding_type]" id="funding_type" <?= $labelClass ?> autocomplete="off">
                         <?php
                         $vocab = $Vocabulary->getValues('funding-type');
                         foreach ($vocab as $v) { ?>

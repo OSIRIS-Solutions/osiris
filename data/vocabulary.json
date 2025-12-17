@@ -315,6 +315,66 @@
         ]
     },
     {
+        "id": "nagoya-document-types",
+        "category": "Project",
+        "name": "Nagoya Permit Documents",
+        "name_de": "Nagoya-Genehmigungsdokumente",
+        "description": "This controlled vocabulary defines standardized document types related to Nagoya Protocol permits for research projects.",
+        "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen im Zusammenhang mit Nagoya-Protokoll-Genehmigungen für Forschungsprojekte.",
+        "values": [
+            {
+                "id": "PIC",
+                "en": "Prior Informed Consent (PIC)",
+                "de": "Prior Informed Consent (PIC)"
+            },
+            {
+                "id": "MAT",
+                "en": "Mutually Agreed Terms (MAT)",
+                "de": "Mutually Agreed Terms (MAT)"
+            },
+            {
+                "id": "DDD",
+                "en": "Due Diligence Declaration (DDD)",
+                "de": "Due Diligence Declaration (DDD)"
+            },
+            {
+                "id": "MTA",
+                "en": "Material Transfer Agreement (MTA)",
+                "de": "Material Transfer Agreement (MTA)"
+            },
+            {
+                "id": "EXPORT-PERMIT",
+                "en": "Export Permit",
+                "de": "Export Permit"
+            },
+            {
+                "id": "RESEARCH-PERMIT",
+                "en": "Research Permit",
+                "de": "Research Permit"
+            },
+            {
+                "id": "CRUISE-PERMIT",
+                "en": "Diplomatic Cruise Permit",
+                "de": "Diplomatic Cruise Permit"
+            },
+            {
+                "id": "EMAIL",
+                "en": "Relevant Emails with Authorities",
+                "de": "Relevante E-Mails mit Behörden"
+            },
+            {
+                "id": "SAMPLE-LIST",
+                "en": "Sample List",
+                "de": "Probensammlung"
+            },
+            {
+                "id": "OTHER",
+                "en": "Other",
+                "de": "Sonstiges"
+            }
+        ]
+    },
+    {
         "id": "infrastructure-category",
         "category": "Infrastructure",
         "name": "Category of an Infrastructure",
@@ -457,6 +517,86 @@
                 "id": "international",
                 "en": "International",
                 "de": "International"
+            }
+        ]
+    },
+    {
+        "id": "thesis",
+        "category": "Activity",
+        "name": "Thesis Category",
+        "name_de": "Abschlussarbeit-Kategorie",
+        "description": "The type of thesis.",
+        "description_de": "Die Art der Abschlussarbeit.",
+        "values": [
+            {
+                "id": "thesis",
+                "en": "Thesis",
+                "de": "Abschlussarbeit"
+            },
+            {
+                "id": "doctor",
+                "en": "Doctoral Thesis",
+                "de": "Doktorarbeit"
+            },
+            {
+                "id": "diploma",
+                "en": "Diploma Thesis",
+                "de": "Diplomarbeit"
+            },
+            {
+                "id": "master",
+                "en": "Master Thesis",
+                "de": "Masterarbeit"
+            },
+            {
+                "id": "bachelor",
+                "en": "Bachelor Thesis",
+                "de": "Bachelorarbeit"
+            },
+            {
+                "id": "habilitation",
+                "en": "Habilitation",
+                "de": "Habilitation"
+            }
+        ]
+    },
+    {
+        "id": "pub-language",
+        "category": "Activity",
+        "name": "Publication Language",
+        "name_de": "Publikationssprache",
+        "description": "The language in which the publication is written, according to ISO 639-1 codes.",
+        "description_de": "Die Sprache, in der die Publikation verfasst ist, gemäß ISO 639-1 Codes.",
+        "values": [
+            {
+                "id": "de",
+                "en": "German",
+                "de": "Deutsch"
+            },
+            {
+                "id": "en",
+                "en": "English",
+                "de": "Englisch"
+            },
+            {
+                "id": "fr",
+                "en": "French",
+                "de": "Französisch"
+            },
+            {
+                "id": "es",
+                "en": "Spanish",
+                "de": "Spanisch"
+            },
+            {
+                "id": "it",
+                "en": "Italian",
+                "de": "Italienisch"
+            },
+            {
+                "id": "other",
+                "en": "Other",
+                "de": "Andere"
             }
         ]
     }

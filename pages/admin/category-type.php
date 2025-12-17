@@ -110,7 +110,7 @@ if (!empty($form) && isset($form['_id'])) {
     <div class="box subtype" style="border-color:<?= $color ?>;">
         <h4 class="header" style="background-color:<?= $color ?>20; color:<?= $color ?>">
             <?php if (!isset($type['new'])) { ?>
-                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?> mr-10"></i>
+                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
                 <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>
                 <?php if ($type['disabled'] ?? false) { ?>
                     <span class="badge danger ml-20">DISABLED</span>
@@ -153,10 +153,10 @@ if (!empty($form) && isset($form['_id'])) {
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
 
                     <div class="input-group">
-                        <input type="text" class="form-control" name="values[icon]" required value="<?= $type['icon'] ?? 'placeholder' ?>" onchange="iconTest(this.value)">
+                        <input type="text" class="form-control" name="values[icon]" required value="<?= $type['icon'] ?? 'folder-open' ?>" onchange="iconTest(this.value)">
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                <i class="ph ph-<?= $type['icon'] ?? 'placeholder' ?>" id="test-icon"></i>
+                                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?>" id="test-icon"></i>
                             </span>
                         </div>
                     </div>
@@ -171,15 +171,14 @@ if (!empty($form) && isset($form['_id'])) {
                 </div>
             </div>
 
-
             <div class="row row-eq-spacing">
                 <div class="col-sm">
                     <label for="description"><?= lang('Description', 'Beschreibung') ?> (en)</label>
-                    <input type="text" class="form-control" name="values[description]" value="<?= $type['description'] ?? '' ?>">
+                    <textarea class="form-control" name="values[description]"><?= $type['description'] ?? '' ?></textarea>
                 </div>
                 <div class="col-sm">
                     <label for="description_de" class=""><?= lang('Description', 'Beschreibung') ?> (de)</label>
-                    <input type="text" class="form-control" name="values[description_de]" value="<?= $type['description_de'] ?? '' ?>">
+                    <textarea class="form-control" name="values[description_de]"><?= $type['description_de'] ?? '' ?></textarea>
                 </div>
             </div>
 
@@ -270,7 +269,7 @@ if (!empty($form) && isset($form['_id'])) {
                                 break;
                             default:
                                 $name = '';
-                                $icon = 'ph-placeholder';
+                                $icon = 'ph-folder-open';
                         }
                         if ($tooltip) {
                             $tooltip = get_preview($tooltip, 30);

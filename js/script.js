@@ -446,6 +446,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
             favlist.splice(index, 1);
             console.info("remove");
             updateCart(false)
+            toastInfo(lang('Item removed from your collection.', 'Aktivität aus deiner Sammlung entfernt.'))
         } else {
             if (favlist.length > 30) {
                 toastError(lang('You can have no more than 30 items in your collection.', 'Du kannst nicht mehr als 30 Aktivitäten in deiner Sammlung haben.'))
@@ -453,6 +454,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
             }
             favlist.push(id)
             console.info("add");
+            toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
             updateCart(true)
         }
         fav = favlist.join(',')
@@ -460,6 +462,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
         fav = id
         console.info("add");
         updateCart(true)
+        toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
     }
     osirisJS.createCookie('osiris-cart', fav, 30)
     if (el === null) {
@@ -467,10 +470,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
     } else {
         $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
     }
-    // setTimeout(function () {
-    //     $(el).find('i').removeClass('animate__flip')
-    //     // animate__headShake
-    // }, 1000)
+    
 }
 
 

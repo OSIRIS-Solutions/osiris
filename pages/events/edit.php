@@ -75,16 +75,30 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             </div>
         </div>
 
-        <div class="form-group floating-form">
-            <input type="text" name="values[location]" required class="form-control" value="<?= $form['location'] ?? '' ?>" placeholder="location">
-            <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
+
+        <div class="form-row row-eq-spacing">
+            <div class="col floating-form">
+                <input type="text" name="values[location]" required class="form-control" value="<?= $form['location'] ?? '' ?>" placeholder="location">
+                <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
+            </div>
+            <div class="col floating-form">
+                <select name="values[country]" class="form-control">
+                    <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                    <?php 
+                    $c = $form['country'] ?? '';
+                    foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                        <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
+                    <?php } ?>
+                </select>
+                <label for="country"><?= lang('Country', 'Land') ?></label>
+            </div>
         </div>
 
         <div class="form-group floating-form">
             <input type="url" name="values[url]" class="form-control" value="<?= $form['url'] ?? '' ?>" placeholder="url">
             <label for="url"><?= lang('URL', 'URL') ?></label>
         </div>
-        
+
         <?php if ($Settings->featureEnabled('topics') && $osiris->topics->count() > 0) {
             $Settings->topicChooser($form['topics'] ?? []);
         } ?>

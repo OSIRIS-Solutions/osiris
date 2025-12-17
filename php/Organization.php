@@ -34,6 +34,16 @@ class Organization
             'Other' => 'house',
             'default' => 'house',
             'Funder' => 'hand-coins',
+            'education' => 'graduation-cap',
+            'healthcare' => 'heartbeat',
+            'company' => 'buildings',
+            'archive' => 'archive',
+            'nonprofit' => 'hand-heart',
+            'government' => 'bank',
+            'facility' => 'warehouse',
+            'other' => 'house',
+            'default' => 'house',
+            'funder' => 'hand-coins',
         ];
         $icon = $icons[$ico] ?? $icons['default'];
         return '<i class="ph ph-' . $icon . ' ' . $cls . '" aria-hidden="true"></i>';
