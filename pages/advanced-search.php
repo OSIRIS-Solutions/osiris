@@ -632,7 +632,7 @@ function printRules($rules)
 
             if (aggregate !== "") {
                 data = data.map(row => ({
-                    value: row.value || '<em>' + lang('empty', 'leer') + '</em>',
+                    value: row.value ?? '<em>' + lang('empty', 'leer') + '</em>',
                     count: row.count || 0
                 }));
 
