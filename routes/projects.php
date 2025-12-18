@@ -321,7 +321,6 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $clean_name = clean_comment_export(strip_tags($project['name'] ?? 'NA'), false);
     $clean_title = clean_comment_export(strip_tags($project['title'] ?? 'NA'), false);
 
-
     $projectValues = [
         "contact" => $contacts,
         "applicants" => $contacts,

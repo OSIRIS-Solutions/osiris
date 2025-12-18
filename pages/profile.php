@@ -381,41 +381,41 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
-                <i class="ph ph-plus-circle ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
+                <i class="ph-duotone ph-plus-circle ph-fw"></i>
                 <!-- <?= lang('Add activity', 'Aktivität hinzufügen') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
-                <i class="ph ph-folder-user ph-fw"></i>
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
+                <i class="ph-duotone ph-folder-user ph-fw"></i>
                 <!-- <?= lang('My activities', 'Meine Aktivitäten ') ?> -->
             </a>
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
-                <i class="ph ph-calendar ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
+                <i class="ph-duotone ph-calendar ph-fw"></i>
                 <!-- <?= lang('My Year', 'Mein Jahr') ?> -->
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
-                    <i class="ph ph-eye ph-fw"></i>
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                    <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
 
         </div>
         <div class="btn-group btn-group-lg">
             <?php if ($show_achievements) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('My Achievements', 'Meine Errungenschaften') ?>">
-                    <i class="ph ph-trophy ph-fw"></i>
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('My Achievements', 'Meine Errungenschaften') ?>">
+                    <i class="ph-duotone ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
-                <i class="ph ph-edit ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+                <i class="ph-duotone ph-note-pencil ph-fw"></i>
                 <!-- <?= lang('Edit user profile', 'Bearbeite Profil') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/claim" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
-                <i class="ph ph-hand ph-fw"></i>
+            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
+                <i class="ph-duotone ph-hand ph-fw"></i>
                 <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
@@ -426,8 +426,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <input type="hidden" name="format" value="word">
             <input type="hidden" name="type" value="cv">
 
-            <button class="btn text-primary border-primary large" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
-                <i class="ph ph-identification-card text-primary ph-fw"></i>
+            <button class="btn primary outline large" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
+                <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
     </div>
@@ -453,19 +453,19 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <?php } else { ?>
     <div class="btn-toolbar">
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('The year of ', 'Das Jahr von ') . $scientist['first'] ?> ">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('The year of ', 'Das Jahr von ') . $scientist['first'] ?> ">
                 <i class="ph ph-calendar ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
+            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
                 <i class="ph ph-folder-user ph-fw"></i>
             </a>
             <?php if ($show_achievements) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
                     <i class="ph ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>

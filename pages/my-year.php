@@ -224,7 +224,7 @@ if (!$Settings->featureEnabled('coins')) {
                         <a href="?year=<?= $lastY ?>&quarter=<?= $lastQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Previous quarter', 'Vorheriges Quartal') ?>">
                             <i class="ph ph-caret-left"></i>
                         </a>
-                        <a class="btn text-primary border-primary" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('Select quarter in detail', 'Wähle ein Quartal aus') ?>">
+                        <a class="btn primary outline" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('Select quarter in detail', 'Wähle ein Quartal aus') ?>">
                             <!-- <i class="ph ph-circle"></i> -->
                             <?= $YEAR ?>
                             Q<?= $QUARTER ?>

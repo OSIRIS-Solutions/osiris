@@ -510,19 +510,19 @@ if ($Settings->featureEnabled('tags')) {
 
         <div class="btn-group">
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
-                <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn text-primary border-primary">
+                <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
                     <?= lang('Edit', 'Bearbeiten') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
-                <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn text-primary border-primary">
+                <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-copy"></i>
                     <?= lang("Copy", "Kopie") ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('tags')) { ?>
-                <a href="#add-tags" class="btn text-primary border-primary">
+                <a href="#add-tags" class="btn primary outline">
                     <i class="ph ph-tag"></i>
                     <?= $tagName ?>
                 </a>
@@ -532,12 +532,12 @@ if ($Settings->featureEnabled('tags')) {
 
 
         <div class="btn-group">
-            <button class="btn text-primary border-primary" onclick="addToCart(this, '<?= $id ?>')">
+            <button class="btn primary outline" onclick="addToCart(this, '<?= $id ?>')">
                 <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
                 <?= lang('Collect', 'Sammeln') ?>
             </button>
             <div class=" dropdown with-arrow btn-group ">
-                <button class="btn text-primary border-primary" data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
+                <button class="btn primary outline" data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-download"></i> Download
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
@@ -584,7 +584,7 @@ if ($Settings->featureEnabled('tags')) {
                                 </div>
 
                             </div>
-                            <button class="btn text-primary border-primary">Download</button>
+                            <button class="btn primary outline">Download</button>
                         </form>
                     </div>
                 </div>
@@ -592,7 +592,7 @@ if ($Settings->featureEnabled('tags')) {
         </div>
 
         <?php if ($Settings->featureEnabled('portal')) { ?>
-            <a class="btn text-primary border-primary ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
+            <a class="btn primary outline ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                 <i class="ph ph-eye ph-fw"></i>
                 <?= lang('Preview', 'Vorschau') ?>
             </a>
