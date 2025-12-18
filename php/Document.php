@@ -113,6 +113,7 @@ public $templates = [
         "pages" => ["pages"],
         "peer-reviewed" => ["peer-reviewed"],
         "person" => ["name", "affiliation", "academic_title"],
+        "person-only" => ["name"],
         "political_consultation" => ["political_consultation"],
         "projects" => ["projects"],
         "pub-language" => ["pub-language"],
@@ -1285,7 +1286,13 @@ public $templates = [
                 }
                 return "p. " . $val;
             case "person": // ["name", "affiliation", "academic_title"],
-                return $this->getVal('name');
+            case "person-only": // ["name"],
+            case "name": // ["name"],
+                $val = $this->getVal('name');
+                if (($module == 'person') && isset($this->doc['academic_title']) && !empty($this->doc['academic_title'])) {
+                    $val = $this->doc['academic_title'] . ' ' . $val;
+                }
+                return $val;
             case "publisher":; // ["publisher"],
                 return $this->getVal('publisher');
             case "pubmed": // ["pubmed"],

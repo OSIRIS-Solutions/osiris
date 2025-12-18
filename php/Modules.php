@@ -532,10 +532,21 @@ class Modules
             "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
             "name" => "Person",
             "name_de" => "Person",
-            "label" => "Name of the person (last name, given name)",
-            "label_de" => "Name der Person (Nachname, Vorname)",
+            "label" => "Details about the person",
+            "label_de" => "Details über die Person",
             "description" => "A fieldset for a person, including name, affiliation and academic title.",
             "description_de" => "Ein Feldset für eine Person, einschließlich Name, Affiliation und akademischem Titel.",
+            "width" => 0,
+            "tags" => ['people']
+        ],
+        "person-only" => [
+            "fields" => ["name" => "Koblitz, Julia"],
+            "name" => "Person",
+            "name_de" => "Person",
+            "label" => "Name of the person (last name, given name)",
+            "label_de" => "Name der Person (Nachname, Vorname)",
+            "description" => "A field for a person with only the name.",
+            "description_de" => "Ein Feld für eine Person nur mit dem Namen.",
             "width" => 0,
             "tags" => ['people']
         ],
@@ -2170,13 +2181,13 @@ class Modules
             case "person":
             ?>
                 <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
-                    <?= lang('Details about the person', 'Angaben zu der Person') ?>
+                   <?= $label ?>
                 </h6>
                 <div class="data-module col-sm-<?= $width ?> row" data-module="person">
                     <div class="col-sm-5 floating-form">
                         <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $labelClass ?> element-other">
-                            <?= $label ?>
+                            <?=lang('Name (last name, given name)', 'Name (Nachname, Vorname)')?>
                         </label>
                     </div>
                     <div class="col-sm-5 floating-form">
@@ -2187,6 +2198,16 @@ class Modules
                         <input type="text" class="form-control" name="values[academic_title]" id="guest-academic_title" value="<?= $this->val('academic_title') ?>" placeholder="academic_title">
                         <label for="guest-academic_title"><?= lang('Academ. title', 'Akadem. Titel') ?></label>
                     </div>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
+            case "person-only":
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="person-only">
+                    <input type="text" class="form-control" name="values[name]" id="guest-name-only" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
+                    <label for="guest-name-only" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
