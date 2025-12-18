@@ -318,13 +318,15 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $contacts = implode(', ', $contacts);
 
+    $clean_name = clean_comment_export(strip_tags($project['name'] ?? 'NA'), false);
+    $clean_title = clean_comment_export(strip_tags($project['title'] ?? 'NA'), false);
 
 
     $projectValues = [
         "contact" => $contacts,
         "applicants" => $contacts,
-        "name" => $project['name'],
-        "title" => $project['title'],
+        "name" => $clean_name,
+        "title" => $clean_title,
         "funder" => $project['funder'],
         "funding_organization" => $funding_organization,
         "role" => $Project->getRoleRaw(),
