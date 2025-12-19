@@ -139,7 +139,7 @@ function validateValues($values, $DB)
             // value is boolean
             $values[$key] = boolval($value);
         } else if (in_array($key, ['aoi', 'correction'])) {
-            $values[$key] = true;
+            $values[$key] = boolval($value);
         } else if ($value === '') {
             $values[$key] = null;
         } else if ($key === 'epub-delay' || $key === 'end-delay') {

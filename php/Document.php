@@ -70,6 +70,7 @@ public $templates = [
         "doctype" => ["doc_type"],
         "doctype" => ["doctype"],
         "doi-link" => ["doi"],
+        "doi-prefix" => ["doi"],
         "doi-text" => ["doi"],
         "doi" => ["doi"],
         "edition-ed" => ["edition"],
@@ -102,7 +103,6 @@ public $templates = [
         "month" => ["start"],
         "nationality" => ["nationality"],
         "online-ahead-of-print" => ["epub"],
-        "online-ahead-of-print" => ["online-ahead-of-print"],
         "openaccess-status" => ["oa_status"],
         "openaccess-text" => ["open_access"],
         "openaccess" => ["open_access"],
@@ -1057,7 +1057,7 @@ public $templates = [
             case "correction": // ["correction"],
                 $val = $this->getVal('correction', false);
                 if ($this->usecase == 'list')
-                    return bool_icon($val);
+                    return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
                 if ($val)
                     return "<span style='color:#B61F29;'>[Correction]</span>";
                 else return '';
@@ -1093,14 +1093,17 @@ public $templates = [
             case "doi": // ["doi"],
             case "doi-link": // ["doi"],
             case "doi-text": // ["doi"],
+            case "doi-prefix": // ["doi"],
                 $val = $this->getVal('doi');
                 if ($val == $default || empty($val)) return $default;
                 if ($module == 'doi-link') {
                     return "<a target='_blank' href='https://doi.org/$val'>https://doi.org/$val</a>";
                 } elseif ($module == 'doi-text') {
                     return $val;
+                } elseif ($module == 'doi-prefix') {
+                    return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
                 }
-                return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
+                return "<a target='_blank' href='https://doi.org/$val'>$val</a>";
             case "edition": // ["edition"],
             case "edition-ed": // ["edition"],
                 $val = $this->getVal('edition', $default);
@@ -1194,7 +1197,7 @@ public $templates = [
                 return $this->getVal('magazine');
             case "online-ahead-of-print": // ["epub"],
                 if ($this->usecase == 'list')
-                    return bool_icon($this->getVal('epub', false));
+                    return $this->getVal('epub', false) ? lang('Yes', 'Ja') : lang('No', 'Nein');
                 if ($this->getVal('epub', false))
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
@@ -1202,11 +1205,13 @@ public $templates = [
             case "open_access": // ["open_access"],
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
-                    $oa = '<i class="icon-open-access text-success" title="Open Access (' . $status . ')"></i>';
+                    $status = 'Open Access (' . $status . ')';
+                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
                 } else {
-                    $oa = '<i class="icon-closed-access text-danger" title="Closed Access"></i>';
+                    $status = 'Closed Access';
+                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
                 }
-                if ($this->usecase == 'list') return $oa . " (" . $status . ")";
+                if ($this->usecase == 'list') return $status;
                 return $oa;
             case "openaccess-text": // ["open_access"],
                 if ($this->getVal('open_access', false)) {
@@ -1326,6 +1331,8 @@ public $templates = [
                 return $this->getVal('review-type');
             case "semester-select": // [],
                 return '';
+            case "type":
+                return $this->activity_type();
             case "subtype":
                 return $this->activity_subtype();
             case "software-type": // ["software_type"],
@@ -1458,7 +1465,7 @@ public $templates = [
                 }
 
                 if ($val === true || $val === false) {
-                    if ($this->usecase == 'list') return bool_icon($val);
+                    if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
                     $field = $this->custom_fields[$module];
                     if (!isset($field['name'])) {
                         $field['name'] = $module;

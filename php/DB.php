@@ -1134,7 +1134,16 @@ class DB
                     $val = json_encode($val);
                 }
             }
-            $val = strip_tags($val);
+            // serialize boolean
+            if (is_bool($val)) {
+                $val = $val ? 'yes' : 'no';
+            }
+            if (is_string($val)) {
+                $val = trim($val);
+                $val = strip_tags($val);
+            }
+            // make sure that empty is really empty
+            if (empty($val) || $val === '' || $val === '[]' || $val === null) $val = '';
             $result[$key] = $val;
         }
         return $result;

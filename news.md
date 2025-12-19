@@ -16,6 +16,7 @@ In dieser Version wurden im Wesentlichen Fehler behoben und kleinere Verbesserun
   - Die Conditional Templates unterstützen jetzt auch mehrere Bedingungen mit `&` (und) bzw. `|` (oder).
   - Es gibt nun die Möglichkeit, im Falle das ein Feld leer ist ein anderes Feld zu nutzen (z.B. `{field1|field2}`). Sollte field1 leer sein, wird field2 genutzt. Sollte field2 kein Name eines Feldes sein, wird der Text so ausgegeben. Die Textausgabe kann mit Anführungszeichen erzwungen werden: `{field1| "Default Text"}`
 - In der Personen-Übersicht kann jetzt auch nach Rollen gefiltert werden.
+- Die Historie wurde verbessert und sollte jetzt zwei unterschiedlich leere Werte nicht mehr als Unterschied erkennen (z.B. "" und []). Außerdem können einige Werte jetzt besser dargestellt werden (z.B. Open Access), da hier keine Icons mehr für die Darstellung in Listen verwendet werden. Des Weiteren können jetzt auch boolsche Werte in der Historie angezeigt werden.
 
 
 ---
