@@ -610,6 +610,7 @@ Route::get('/api/users', function () {
             'public_image' => $user['public_image'] ?? true,
             'topics' => $user['topics'] ?? array(),
             'keywords' => $user['keywords'] ?? array(),
+            'roles' => $user['roles'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));

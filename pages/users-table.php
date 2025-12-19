@@ -111,6 +111,25 @@ if ($active('keywords')) {
                 </table>
             </div>
 
+            <h6>
+                <?= lang('By Role', 'Nach Rolle') ?>
+                <a class="float-right" onclick="filterUsers('#filter-role .active', null, 15)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-role" class="table simple">
+                    <?php foreach ($Settings->getRoles() as $role) {
+                    ?>
+                        <tr>
+                            <td>
+                                <a data-type="<?= $role ?>" onclick="filterUsers(this, '<?= $role ?>', 15)" class="item d-block colorless" id="<?= $role ?>-btn">
+                                    <span><?= strtoupper($role) ?></span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+
 
             <?php if ($topicsEnabled) { ?>
                 <h6><?= $Settings->topicLabel() ?>
@@ -231,6 +250,10 @@ if ($active('keywords')) {
         {
             title: lang('Keywords', 'Schlagwörter'),
             'key': 'keywords'
+        },
+        {
+            title: lang('Roles', 'Rollen'),
+            'key': 'roles'
         }
     ]
 
@@ -405,6 +428,13 @@ if ($active('keywords')) {
                     visible: false,
                     defaultContent: ''
                 },
+                {
+                    target: 15,
+                    data: 'roles',
+                    title: '<?= lang('Roles', 'Rollen') ?>',
+                    visible: false,
+                    defaultContent: ''
+                }
             ],
             "order": [
                 [1, 'asc'],
