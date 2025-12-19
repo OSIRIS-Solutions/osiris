@@ -1347,6 +1347,7 @@ class Modules
         if (!array_key_exists($module, $this->all_modules)) {
             return $this->custom_field($module, $req, $props);
         }
+        global $Settings;
         $Vocabulary = new Vocabulary();
 
         $labelClass = ($req ? "required" : "");
@@ -2181,13 +2182,13 @@ class Modules
             case "person":
             ?>
                 <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
-                   <?= $label ?>
+                    <?= $label ?>
                 </h6>
                 <div class="data-module col-sm-<?= $width ?> row" data-module="person">
                     <div class="col-sm-5 floating-form">
                         <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $labelClass ?> element-other">
-                            <?=lang('Name (last name, given name)', 'Name (Nachname, Vorname)')?>
+                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
                         </label>
                     </div>
                     <div class="col-sm-5 floating-form">
@@ -3027,7 +3028,7 @@ class Modules
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
-                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization"/>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
                         <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
                             <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
                         </span>
@@ -3071,7 +3072,19 @@ class Modules
                                     <tbody id="org-<?= $rand_id ?>-suggest">
                                     </tbody>
                                 </table>
-                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+
+                                <p>
+                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                        <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                    <?php } else { ?>
+                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                        <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                        </a>
+                                    <?php } ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -3127,6 +3140,17 @@ class Modules
                                         </tbody>
                                     </table>
                                     <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                    <p>
+                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                            <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                        <?php } else { ?>
+                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                            <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                            </a>
+                                        <?php } ?>
+                                    </p>
                                     <script>
                                         $(document).ready(function() {
                                             SUGGEST = $('#organization-suggest')
@@ -3161,7 +3185,6 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="projects">
                     <label for="project" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <?php
-                    global $Settings;
                     $full_permission = $Settings->hasPermission('projects.edit') || $Settings->hasPermission('projects.connect');
                     $filter = [];
                     if (!$full_permission) {

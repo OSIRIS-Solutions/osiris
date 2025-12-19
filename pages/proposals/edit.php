@@ -727,7 +727,17 @@ if ($is_subproject) {
                                     </tbody>
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-
+                                <p>
+                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                        <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                    <?php } else { ?>
+                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                        <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                        </a>
+                                    <?php } ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -778,6 +788,17 @@ if ($is_subproject) {
                                     </tbody>
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                 <p>
+                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                        <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                    <?php } else { ?>
+                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                        <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <?=lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann')?>
+                                        </a>
+                                    <?php } ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -852,6 +873,17 @@ if ($is_subproject) {
                                     </tbody>
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                 <p>
+                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                        <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                    <?php } else { ?>
+                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                        <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <?=lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann')?>
+                                        </a>
+                                    <?php } ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1532,21 +1564,24 @@ if ($is_subproject) {
         }
     }
 
-    $('.money-input').on('blur', function () {
-  let value = $(this).val();
+    $('.money-input').on('blur', function() {
+        let value = $(this).val();
 
-  // Nur Ziffern und Komma/Punkt behalten
-  value = value.replace(/[^\d,\.]/g, '');
+        // Nur Ziffern und Komma/Punkt behalten
+        value = value.replace(/[^\d,\.]/g, '');
 
-  // In float umwandeln
-  const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+        // In float umwandeln
+        const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
 
-  if (!isNaN(num)) {
-    // Formatiert anzeigen
-    const formatted = num.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-    $(this).val(formatted);
-  } else {
-    $(this).val('');
-  }
-});
+        if (!isNaN(num)) {
+            // Formatiert anzeigen
+            const formatted = num.toLocaleString('de-DE', {
+                style: 'currency',
+                currency: 'EUR'
+            });
+            $(this).val(formatted);
+        } else {
+            $(this).val('');
+        }
+    });
 </script>

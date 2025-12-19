@@ -344,6 +344,17 @@ $active = function ($field) use ($data_fields) {
                             </tbody>
                         </table>
                         <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                        <p>
+                            <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                            <?php } else { ?>
+                                <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                    <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                </a>
+                            <?php } ?>
+                        </p>
                         <script>
                             function handleKeyDown(event) {
                                 if (event.key === 'Enter') {
@@ -395,7 +406,7 @@ $active = function ($field) use ($data_fields) {
             <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('Irregularly', 'Unregelmäßig') ?></option>
         </select>
         <small class="text-muted">
-            <?=lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
+            <?= lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
         </small>
     </div>
 
