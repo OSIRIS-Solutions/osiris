@@ -203,32 +203,34 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
         }
     }
 
-    // Check for editors if the key is 'authors'
+    // Check for editors and supervisors if the key is 'authors'
     if ($author_key == 'authors') {
-        $editors = $doc['editors'] ?? [];
-        foreach ($editors as $i => $editor) {
-            if (!isset($editor['user']) || !($editor['aoi'] ?? false)) continue; // skip if no user or not an aoi editor
-            $user = $editor['user'];
-            $person = $DB->getPerson($user);
+        foreach (['editors', 'supervisors'] as $role) {
+            $editors = $doc[$role] ?? [];
+            foreach ($editors as $i => $editor) {
+                if (!isset($editor['user']) || !($editor['aoi'] ?? false)) continue; // skip if no user or not an aoi editor
+                $user = $editor['user'];
+                $person = $DB->getPerson($user);
 
-            if ($editor['manually'] ?? false) {
-                $units = array_merge($units, DB::doc2Arr($editors[$i]['units']));
-                continue;
+                if ($editor['manually'] ?? false) {
+                    $units = array_merge($units, DB::doc2Arr($editors[$i]['units']));
+                    continue;
+                }
+                if (isset($person['units']) && !empty($person['units'])) {
+                    $u = DB::doc2Arr($person['units']);
+                    // filter units that have been active at the time of activity
+                    $u = array_filter($u, function ($unit) use ($startdate) {
+                        if (!$unit['scientific']) return false; // we are only interested in scientific units
+                        if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
+                        return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
+                    });
+                    $u = array_column($u, 'unit');
+                    $editors[$i]['units'] = $u;
+                    $units = array_merge($units, $u);
+                }
             }
-            if (isset($person['units']) && !empty($person['units'])) {
-                $u = DB::doc2Arr($person['units']);
-                // filter units that have been active at the time of activity
-                $u = array_filter($u, function ($unit) use ($startdate) {
-                    if (!$unit['scientific']) return false; // we are only interested in scientific units
-                    if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
-                    return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
-                });
-                $u = array_column($u, 'unit');
-                $editors[$i]['units'] = $u;
-                $units = array_merge($units, $u);
-            }
+            $doc[$role] = $editors;
         }
-        $doc['editors'] = $editors;
     }
 
     $units = array_unique($units);
@@ -245,7 +247,7 @@ function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
 function renderAuthorUnitsMany($filter = [])
 {
     $DB = new DB;
-    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'units' => 1, 'start_date' => 1, 'subtype' => 1]]);
+    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'supervisors' => 1, 'units' => 1, 'start_date' => 1, 'subtype' => 1]]);
     foreach ($cursor as $doc) {
         $doc = renderAuthorUnits($doc);
         $DB->db->activities->updateOne(
