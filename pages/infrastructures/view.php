@@ -97,7 +97,7 @@ $statistics = $osiris->infrastructureStats->find(
         object-fit: contain;
         border-radius: 8px;
 
-        /* border: 1px solid var(--border-color); */
+        /* border: var(--border-width) solid var(--border-color); */
         background-color: white;
     }
 
@@ -105,7 +105,7 @@ $statistics = $osiris->infrastructureStats->find(
         width: 10rem;
         height: 10rem;
         border-radius: 8px;
-        border: 1px solid var(--primary-color);
+        border: var(--border-width) solid var(--primary-color);
         background-color: var(--primary-color-20);
         display: flex;
         align-items: center;

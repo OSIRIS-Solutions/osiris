@@ -66,7 +66,7 @@ if (!empty($form) && isset($form['_id'])) {
 
 <style>
     #data-fields .badge {
-        border: 1px solid var(--text-color);
+        border: var(--border-width) solid var(--text-color);
         margin: .25rem;
     }
 

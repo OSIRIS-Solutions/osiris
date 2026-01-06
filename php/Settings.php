@@ -329,44 +329,20 @@ class Settings
 
     function generateStyleSheet()
     {
-        $style = "";
+        $style = '';
+        $root = "--affiliation: " . $this->get('affiliation') . ";";
 
-        // foreach ($this->settings['departments'] as $val) {
-        //     $style .= "
-        //     .text-$val[id] {
-        //         color: $val[color] !important;
-        //     }
-        //     .row-$val[id] {
-        //         border-left: 3px solid $val[color] !important;
-        //     }
-        //     .badge-$val[id] {
-        //         color:  $val[color] !important;
-        //         background-color:  $val[color]20 !important;
-        //     }
-        //     ";
-        // }
         foreach ($this->getActivities() as $val) {
             $style .= "
-            .text-$val[id] {
-                color: $val[color] !important;
-            }
-            .box-$val[id] {
-                border-left: 4px solid $val[color] !important;
-            }
-            .badge-$val[id] {
-                color:  $val[color] !important;
-                border-color:  $val[color] !important;
-            }
+            .text-$val[id] { color: $val[color] !important; }
+            .box-$val[id] { border-left: 4px solid $val[color] !important; }
+            .badge-$val[id] { color:  $val[color] !important; border-color:  $val[color] !important; }
             ";
         }
         $style = preg_replace('/\s+/', ' ', $style);
 
         foreach ($this->osiris->topics->find() as $t) {
-            $style .= "
-            .topic-" . $t['id'] . " {
-                --topic-color: " . $t['color'] . ";
-            }
-            ";
+            $style .= " .topic-" . $t['id'] . " { --topic-color: " . $t['color'] . "; } ";
         }
 
         $colors = $this->get('colors');
@@ -375,30 +351,214 @@ class Settings
             $secondary = $colors['secondary'] ?? '#f78104';
             $primary_hex = sscanf($primary, "#%02x%02x%02x");
             $secondary_hex = sscanf($secondary, "#%02x%02x%02x");
-
-            $style .= "
-            :root {
-                --primary-color: $primary;
-                --primary-color-light: " . adjustBrightness($primary, 20) . ";
-                --primary-color-very-light: " . adjustBrightness($primary, 200) . ";
-                --primary-color-dark: " . adjustBrightness($primary, -20) . ";
-                --primary-color-very-dark: " . adjustBrightness($primary, -200) . ";
-                --primary-color-20: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.2);
-                --primary-color-30: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.3);
-                --primary-color-60: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.6);
-
-                --secondary-color: $secondary;
-                --secondary-color-light: " . adjustBrightness($secondary, 20) . ";
-                --secondary-color-very-light: " . adjustBrightness($secondary, 200) . ";
-                --secondary-color-dark: " . adjustBrightness($secondary, -20) . ";
-                --secondary-color-very-dark: " . adjustBrightness($secondary, -200) . ";
-                --secondary-color-20: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.2);
-                --secondary-color-30: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.3);
-                --secondary-color-60: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.6);
-            }";
+            $root .= "--primary-color: $primary; --primary-color-light: " . adjustBrightness($primary, 20) . "; --primary-color-very-light: " . adjustBrightness($primary, 200) . "; --primary-color-dark: " . adjustBrightness($primary, -20) . "; --primary-color-very-dark: " . adjustBrightness($primary, -200) . "; --primary-color-20: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.2); --primary-color-30: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.3); --primary-color-60: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.6);";
+            $root .= "--secondary-color: $secondary; --secondary-color-light: " . adjustBrightness($secondary, 20) . "; --secondary-color-very-light: " . adjustBrightness($secondary, 200) . "; --secondary-color-dark: " . adjustBrightness($secondary, -20) . "; --secondary-color-very-dark: " . adjustBrightness($secondary, -200) . "; --secondary-color-20: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.2); --secondary-color-30: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.3); --secondary-color-60: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.6); ";
         }
 
-        return "<style>$style</style>";
+        $design = $this->get('design');
+
+        if (!empty($design)) {
+
+
+            $font = $design['font_preset'] ?? 'rubik';
+            switch ($font) {
+                case 'rubik':
+                    $root .= "--font-family:'Rubik', Helvetica, sans-serif;";
+                    break;
+                case 'tiktok':
+                    $root .= "--font-family:'TikTok Sans', Helvetica, sans-serif;";
+                    break;
+                case 'system':
+                    $root .= "--font-family:-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;";
+                    break;
+                case 'custom':
+                    if (!empty($design['font_family'])) {
+                        $root .= '--font-family: "' . $design['font_family'] . '", Rubik, Helvetica, sans-serif;';
+                        if (($design['font_headers'] ?? 'no') == 'yes') {
+                            $root .= "--header-font: " . $design['font_family'] . ", Rubik, Helvetica, sans-serif;";
+                        }
+                    }
+                    break;
+            }
+
+
+            if (!empty($design['border_width'])) {
+                switch ($design['border_width']) {
+                    case 'normal':
+                        $root .= "--border-width: 1px;";
+                        break;
+                    case 'thick':
+                        $root .= "--border-width: 2px;";
+                        break;
+                    case 'none':
+                        $root .= "--border-width: 0px;";
+                        break;
+                }
+            }
+            if (!empty($design['border_corners'])) {
+                switch ($design['border_corners']) {
+                    case 'sharp':
+                        $root .= "--border-radius: 0px; --padding-threshold: 0.5rem;";
+                        break;
+                    case 'rounded':
+                        $root .= "--border-radius: 0.5rem; --padding-threshold: 0.5rem;";
+                        break;
+                    case 'more-rounded':
+                        $root .= "--border-radius: 1rem; --padding-threshold: 1rem;";
+                        break;
+                    case 'very-rounded':
+                        $root .= "--border-radius: 1.5rem; --padding-threshold: 1.5rem;";
+                        break;
+                }
+            }
+            if (!empty($design['border_color'])) {
+                $root .= "--border-color: " . $design['border_color'] . ";";
+            }
+
+            if (isset($design['logo_filter']) ) {
+                switch ($design['logo_filter']) {
+                    case 'none':
+                        // $style .= "#osiris-logo { filter: none;} ";
+                        break;
+                    case 'grayscale':
+                        $style .= "#osiris-logo { filter: grayscale(1);} ";
+                        break;
+                    case 'invert':
+                        $style .= "#osiris-logo { filter: invert(1);} ";
+                        break;
+                    case 'sepia':
+                        $style .= "#osiris-logo { filter: sepia(1);} ";
+                        break;
+                    case 'black':
+                        $style .= "#osiris-logo { filter: brightness(0);} ";
+                        break;
+                    case 'green':
+                        $style .= "#osiris-logo { filter: hue-rotate(62deg);} ";
+                        break;
+                    case 'blue':
+                        $style .= "#osiris-logo { filter: hue-rotate(182deg);} ";
+                        break;
+                    case 'red':
+                        $style .= "#osiris-logo { filter: hue-rotate(327deg);} ";
+                        break;
+                    case "pink":
+                        $style .= "#osiris-logo { filter: hue-rotate(300deg);} ";
+                        break;
+                    default:
+                        // $style .= "#osiris-logo { filter: none;} ";
+                        break;
+                }
+            }
+            if (isset($design['navbar_height'])) {
+                switch ($design['navbar_height']) {
+                    case 'narrow':
+                        $root .= "--navbar-height: 6rem;";
+                        break;
+                    case 'default':
+                        $root .= "--navbar-height: 8rem;";
+                        break;
+                    case 'wide':
+                        $root .= "--navbar-height: 10rem;";
+                        break;
+                    case 'none':
+                        $root .= "--navbar-height: 0rem;--footer-logo-display: block; ";
+                        break;
+                }
+            }
+            if (isset($design['table_striped'])){
+                switch ($design['table_striped']) {
+                    case 'enabled':
+                        $root .= "--table-stripe-color: var(--gray-color-very-light);";
+                        break;
+                    case 'disabled':
+                        $root .= "--table-stripe-color: white;";
+                        break;
+                }
+            }
+            if (isset($design['box_shadow'])){
+                switch ($design['box_shadow']) {
+                    case 'strong':
+                        $root .= "--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);";
+                        break;
+                    case 'disabled':
+                        $root .= "--box-shadow: none;";
+                        break;
+                }
+            }
+            if (isset($design['icon_style'])){
+                switch ($design['icon_style']) {
+                    case 'filled':
+                        $root .= "--icon-font: 'Phosphor-Fill';";
+                        $style .= '.ph {font-family: "Phosphor-Fill" !important;} ' ;
+                        break;
+                    case 'duotone':
+                        $root .= "--icon-font: 'Phosphor';";
+                        // $style .= '.ph {font-family: "Phosphor-Duotone" !important;} ' ;
+                        break;
+                    default:
+                        $root .= "--icon-font: 'Phosphor';";
+                        break;
+                }
+            }
+            if (isset($design['link_style'])){
+                switch ($design['link_style']) {
+                    case 'underline':
+                        $style .= "a:not(.btn, .link, .item) { text-decoration: underline; }";
+                        break;
+                    case 'underline-hover':
+                        $style .= "a:not(.btn, .link, .item):hover { text-decoration: underline; }";
+                        break;
+                }
+            }
+        }
+
+        if (!empty($root)) {
+            $style = ":root { $root } " . $style;
+        }
+
+        return $style;
+    }
+
+    /**
+     * Build <link> tags for webfonts based on design settings.
+     * Returns an empty string if no external font stylesheet is needed.
+     */
+    function renderAdditionalStylesheetLinks(): string
+    {
+        $design = $this->get('design');
+        $out = '';
+
+        $iconStyle = $design['icon_style'] ?? 'ph';
+        if ($iconStyle == 'filled') {
+            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/fill/style_general.css?v=' . CSS_JS_VERSION . '">' . "\n";
+        } elseif ($iconStyle == 'duotone') {
+            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/duotone/style_general.css?v=' . CSS_JS_VERSION . '">' . "\n";
+        } else {
+            // $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/regular/style.css?v=' . CSS_JS_VERSION . '">' . "\n";
+        }
+
+        $preset = $design['font_preset'] ?? 'rubik';
+        if (empty($preset) || $preset != 'custom') {
+            return $out;
+        }
+
+        // Determine which CSS URL to load (if any)
+        $cssUrl = trim((string)($design['font_css_url'] ?? ''));
+
+        // Basic validation: https only, no whitespace, no quotes, no "<" / ">"
+        if ($cssUrl === '') return '';
+        if (!preg_match('~^https://[^\s"\'<>]+$~i', $cssUrl)) return '';
+
+        $cssUrlEsc = htmlspecialchars($cssUrl, ENT_QUOTES, 'UTF-8');
+
+        // Preconnect only makes sense for Google Fonts
+        if (strpos($cssUrl, 'fonts.googleapis.com') !== false) {
+            $out  .= '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+            $out .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+        }
+        $out .= '<link rel="stylesheet" href="' . $cssUrlEsc . '">' . "\n";
+
+        return $out;
     }
 
     private function adjustBrightness($hex, $steps)
@@ -501,7 +661,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
         if (empty($topics) || empty($topics[0])) return '';
-        if (is_string($topics) ) {
+        if (is_string($topics)) {
             $topics = DB::doc2Arr(explode(',', $topics));
         }
 

@@ -81,15 +81,10 @@ $pageactive = function ($p) use ($page) {
     <!-- for open access icons -->
     <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
 
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?<?= filemtime(BASEPATH . '/css/main.css') ?>">
-    <?php
-    echo $Settings->generateStyleSheet();
-    ?>
-    <style>
-        :root {
-            --affiliation: "<?= $Settings->get('affiliation') ?>";
-        }
-    </style>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?v=<?= CSS_JS_VERSION ?>">
+    <?= $Settings->renderAdditionalStylesheetLinks() ?>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/custom_style.css?v=<?= uniqid() ?>" no-cache>
+
 
     <script>
         const ROOTPATH = "<?= ROOTPATH ?>";
@@ -194,7 +189,7 @@ $pageactive = function ($p) use ($page) {
                         margin: 1rem 0rem 1rem 1rem;
                         padding: 1rem;
                         border-radius: var(--border-radius);
-                        border: 1px solid var(--signal-color);
+                        border: var(--border-width) solid var(--signal-color);
                     }
 
                     .maintenance-msg .title {
@@ -217,9 +212,9 @@ $pageactive = function ($p) use ($page) {
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
-                    <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
+                    <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS" id="osiris-logo">
                     <?php if (defined('LIVE') && LIVE === false) { ?>
-                        <span class=" position-absolute bottom-0 left-0 secondary" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
+                        <span class=" position-absolute bottom-0 left-0 danger" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
                     <?php } ?>
                 </a>
 

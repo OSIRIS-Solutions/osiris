@@ -98,7 +98,7 @@ if ($process == 'project') {
     .required-badge {
         margin-bottom: 0.5rem;
         background: white;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         padding: 0.25rem 0.5rem;
         background-color: var(--danger-color-20);

@@ -21,7 +21,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     .step {
         margin-bottom: 1rem;
         padding: 1rem;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         background-color: white;
     }

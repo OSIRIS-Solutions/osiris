@@ -94,7 +94,7 @@ if ($count_groups > 0) {
     .table.cards#group-table tr {
         width: 100%;
         margin: 0.5em;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: 0.5em;
         box-shadow: var(--box-shadow);
         background: white;

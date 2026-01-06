@@ -52,19 +52,19 @@ if ($nagoyaRelevant) {
     }
 
     .badge.status.success {
-        border: 1px solid var(--success-color);
+        border: var(--border-width) solid var(--success-color);
     }
 
     .badge.status.signal {
-        border: 1px solid var(--signal-color);
+        border: var(--border-width) solid var(--signal-color);
     }
 
     .badge.status.danger {
-        border: 1px solid var(--danger-color);
+        border: var(--border-width) solid var(--danger-color);
     }
 
     .badge.status.muted {
-        border: 1px solid var(--muted-color);
+        border: var(--border-width) solid var(--muted-color);
     }
 </style>
 <script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>

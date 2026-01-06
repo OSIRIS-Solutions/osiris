@@ -19,8 +19,18 @@
 <?php } ?>
 
 <footer class="page-footer">
+    <div class="logo-parade pb-0" style="display: var(--footer-logo-display, none);">
+        <a href="<?= ROOTPATH ?>/" class="footer-brand">
+            <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
+        </a>
 
-    <div class="link-parade">
+        <a href="<?= $Settings->get('affiliation_details')['link'] ?? '#' ?>" class="footer-brand" target="_blank">
+            <?= $Settings->printLogo("") ?>
+        </a>
+    </div>
+    <hr style="display: var(--footer-logo-display, none);">
+
+    <div class="link-parade pt-0">
         <div class="row">
             <div class="col">
                 <h3 class="title">
@@ -68,7 +78,6 @@
                 ?>
             </div>
         </div>
-
     </div>
 
 </footer>

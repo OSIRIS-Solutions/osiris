@@ -129,7 +129,7 @@ $tagLabels = [
     }
 
     .panel {
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: .5rem;
         background: #fff
     }
@@ -166,7 +166,7 @@ $tagLabels = [
 
     .canvas-item,
     #canvas-list .drag-item {
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: .5rem;
         padding: .75rem;
         background: #fff;
@@ -208,7 +208,7 @@ $tagLabels = [
 
     #canvas-list .drag-item::before {
         content: "\E3D6";
-        font-family: "Phosphor";
+        font-family: var(--icon-font);
         font-size: 1.6rem;
         color: var(--primary-color);
         /* opacity: 0.3; */
@@ -222,7 +222,7 @@ $tagLabels = [
 
     .list-group li {
         cursor: grab;
-        border-top: 1px solid var(--border-color) !important;
+        border-top: var(--border-width) solid var(--border-color) !important;
         margin-top: -1px;
         /* display: flex;
         justify-content: space-between;
@@ -275,7 +275,7 @@ $tagLabels = [
         background: white;
         margin: 0rem -2rem;
         padding: 2rem 2rem 1rem;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: var(--border-width) solid var(--border-color);
     }
 
 
@@ -289,7 +289,7 @@ $tagLabels = [
         max-width: 28rem;
         z-index: 10;
         background: var(--signal-color-very-light);
-        border: 1px solid var(--signal-color);
+        border: var(--border-width) solid var(--signal-color);
         border-radius: .5rem;
         box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
         padding: .5rem .75rem;
@@ -322,7 +322,7 @@ $tagLabels = [
 
     label.has-help::before {
         content: "\E2CE";
-        font-family: "Phosphor";
+        font-family: var(--icon-font);
         font-size: .85em;
         margin-right: .4rem;
         color: var(--signal-color);

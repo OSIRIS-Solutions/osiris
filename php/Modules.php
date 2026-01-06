@@ -2092,7 +2092,7 @@ class Modules
                             padding: 0.5rem;
                             text-decoration: none;
                             color: var(--text-color);
-                            border-bottom: 1px solid var(--border-color);
+                            border-bottom: var(--border-width) solid var(--border-color);
                         }
 
                         #event-select-dropdown .dropdown-menu a:hover {
@@ -2126,6 +2126,7 @@ class Modules
                 break;
 
             case "authors":
+            case "authors-first-last":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="authors">
                     <a class="float-right" href="#author-help"><i class="ph ph-question" style="line-height:0;"></i> <?= lang('Help', 'Hilfe') ?></a>
@@ -2144,21 +2145,22 @@ class Modules
                         </div>
                         <div class="footer">
 
-                            <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
+                            <div class="input-group d-inline-flex w-auto">
+                                <input type="text" class="form-control" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
-                                    <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
+                                    <button class="btn secondary" type="button" onclick="addAuthor(event);">
                                         <i class="ph ph-plus"></i>
                                     </button>
                                 </div>
                             </div>
-
+                        <?php if ($module == 'authors-first-last') : ?>
                             <div class="ml-auto" id="author-numbers">
                                 <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
                                 <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
                                 <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
                                 <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <?= $this->render_help($help) ?>

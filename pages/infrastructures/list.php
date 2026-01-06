@@ -61,7 +61,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         width: 7rem;
         height: 6rem;
         border-radius: 8px;
-        /* border: 1px solid var(--primary-color); */
+        /* border: var(--border-width) solid var(--primary-color); */
         background-color: var(--primary-color-20);
         display: flex;
         align-items: center;

@@ -95,7 +95,7 @@ function val($index, $default = '')
         max-width: 28rem;
         z-index: 10;
         background: var(--signal-color-very-light);
-        border: 1px solid var(--signal-color);
+        border: var(--border-width) solid var(--signal-color);
         border-radius: .5rem;
         box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
         padding: .5rem .75rem;
@@ -129,7 +129,7 @@ function val($index, $default = '')
 
     label.has-help::before {
         content: "\E2CE";
-        font-family: "Phosphor";
+        font-family: var(--icon-font);
         font-size: .85em;
         margin-right: .4rem;
         color: var(--signal-color);

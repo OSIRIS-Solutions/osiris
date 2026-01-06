@@ -32,7 +32,7 @@
             <style>
                 tr.ui-sortable-helper {
                     background-color: white;
-                    border: 1px solid var(--border-color);
+                    border: var(--border-width) solid var(--border-color);
                 }
             </style>
 

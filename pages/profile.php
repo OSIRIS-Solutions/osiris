@@ -66,7 +66,7 @@ if (!isset($scientist['is_active'])) {
     .expertise {
         border-radius: var(--border-radius);
         background-color: white;
-        border: 1px solid #afafaf;
+        border: var(--border-width) solid #afafaf;
         display: inline-block;
         padding: .2rem .8rem;
         box-shadow: var(--box-shadow);
@@ -76,7 +76,7 @@ if (!isset($scientist['is_active'])) {
     .user-role {
         border-radius: var(--border-radius);
         background-color: white;
-        border: 1px solid #afafaf;
+        border: var(--border-width) solid #afafaf;
         display: inline-block;
         padding: .2rem .8rem;
         box-shadow: var(--box-shadow);

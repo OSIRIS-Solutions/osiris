@@ -284,7 +284,7 @@ editors-{Namensformat}-{Optionen}
 
             <style>
                 .template-editor {
-                    border: 1px solid var(--border-color);
+                    border: var(--border-width) solid var(--border-color);
                     box-sizing: border-box;
                     padding: 0;
                     border-radius: var(--border-radius);
@@ -298,8 +298,8 @@ editors-{Namensformat}-{Optionen}
 
                 .template-editor textarea {
                     border: none;
-                    border-top: 1px solid var(--border-color);
-                    border-bottom: 1px solid var(--border-color);
+                    border-top: var(--border-width) solid var(--border-color);
+                    border-bottom: var(--border-width) solid var(--border-color);
                     background-color: var(--primary-color-20);
                     border-radius: 0;
                     font-family: 'Source Code Pro', Courier, monospace;

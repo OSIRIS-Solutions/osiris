@@ -74,7 +74,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         .table.cards tr {
             width: 100%;
             margin: 0.5em;
-            border: 1px solid var(--border-color);
+            border: var(--border-width) solid var(--border-color);
             border-radius: 0.5em;
             box-shadow: var(--box-shadow);
             background: white;
@@ -299,7 +299,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             }px;border-radius:2px;overflow:visible">
               <div style="height:${
                 d.height - 32
-              }px;padding-top:0px;background-color:white;border:1px solid var(--border-color);">
+              }px;padding-top:0px;background-color:white;border:var(--border-width) solid var(--border-color);">
 
                <div style="margin-right:10px;margin-top:15px;float:right">${
                  d.data.id

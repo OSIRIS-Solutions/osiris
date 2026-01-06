@@ -395,7 +395,7 @@ if ($Settings->featureEnabled('tags')) {
 
     .filelink {
         display: block;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         color: inherit !important;
         padding: .5rem 1rem;
