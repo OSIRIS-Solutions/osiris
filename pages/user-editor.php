@@ -406,24 +406,44 @@ $active = function ($field) use ($data_fields) {
                 </div>
             <?php } ?>
 
-            <?php if ($active('public_image')) { ?>
-                <!-- show profile picture -->
                 <p class="text-danger">
                     <?= lang(
                         'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
                         'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
                     ) ?>
                 </p>
+            <?php if ($active('public_image')) { ?>
+                <!-- show profile picture -->
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_image" value="1" name="values[public_image]" <?= ($data['public_image'] ?? false) ? 'checked' : '' ?>>
                     <label for="public_image"><?= lang('Show profile picture', 'Zeige Profilbild') ?></label>
                 </div>
             <?php } ?>
 
+            <?php if ($active('public_other_activities')) { ?>
+                <!-- show profile picture -->
+                 <input type="hidden" name="values[public_other_activities]" value="false">
+                <div class="custom-checkbox mb-20">
+                    <input type="checkbox" id="public_other_activities" value="true" name="values[public_other_activities]" <?= ($data['public_other_activities'] ?? true) ? 'checked' : '' ?>>
+                    <label for="public_other_activities"><?= lang('Show other activities (not publications) as a separate section in the profile', 'Zeige sonstige Aktivitäten (nicht Publikationen) als eigene Sektion im Profil') ?></label>
+                </div>
+            <?php } ?>
+
+            <?php if ($active('public_teaching')) { ?>
+                <!-- show profile picture -->
+                 <input type="hidden" name="values[public_teaching]" value="false">
+                <div class="custom-checkbox mb-20">
+                    <input type="checkbox" id="public_teaching" value="true" name="values[public_teaching]" <?= ($data['public_teaching'] ?? true) ? 'checked' : '' ?>>
+                    <label for="public_teaching"><?= lang('Show teaching activities as a separate section in the profile', 'Zeige Lehraktivitäten als eigene Sektion im Profil') ?></label>
+                </div>
+            <?php } ?>
+
+            <?php if ($active('public_email')) { ?>
             <div class="custom-checkbox mb-20">
                 <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
                 <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
             </div>
+            <?php } ?>
 
             <div class="custom-checkbox mb-20">
                 <input type="checkbox" id="public_phone" value="1" name="values[public_phone]" <?= ($data['public_phone'] ?? false) ? 'checked' : '' ?>>

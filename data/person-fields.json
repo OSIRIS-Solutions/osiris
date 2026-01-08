@@ -83,6 +83,42 @@
         }
     },
     {
+        "id": "public_email",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Public email",
+        "de": "Öffentliche E-Mail",
+        "description": {
+            "en": "If this data field is active, users will have the option to hide their email address in Portfolio.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihre E-Mail-Adresse im Portfolio zu deaktivieren."
+        }
+    },
+    {
+        "id": "public_other_activities",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Public other activities",
+        "de": "Öffentliche sonstige Aktivitäten",
+        "description": {
+            "en": "If this data field is active, users will have the option to disable their other activities in Portfolio.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihre sonstigen Aktivitäten im Portfolio zu deaktivieren."
+        }
+    },
+    {
+        "id": "public_teaching",
+        "default": true,
+        "searchable": false,
+        "type": "string",
+        "en": "Public teaching",
+        "de": "Öffentliche Lehre",
+        "description": {
+            "en": "If this data field is active, users will have the option to hide their teaching activities in Portfolio.",
+            "de": "Wenn dieses Datenfeld aktiv ist, haben die Benutzer die Möglichkeit, ihre Lehraktivitäten im Portfolio zu deaktivieren."
+        }
+    },
+    {
         "id": "socials",
         "default": true,
         "searchable": false,

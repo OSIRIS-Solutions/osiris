@@ -1040,8 +1040,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
 
     $id = DB::to_ObjectID($id);
     $person = $osiris->persons->findOne(
-        ['_id' => $id],
-        // ['projection' => ['_id' => 0, 'html' => '$rendered.portfolio', 'doc'=> '$$ROOT']]
+        ['_id' => $id]
     );
     if (empty($person)) {
         echo rest('Person not found', 0, 404);
@@ -1172,12 +1171,20 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         }
     }
 
+// public_other_activities
+// public_teaching
     $result['numbers'] = [
         'publications' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'publication'])),
-        'activities' => $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]])),
-        'teaching' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'teaching', 'module_id' => ['$ne' => null]])),
+        // 'activities' => $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]])),
+        // 'teaching' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'teaching', 'module_id' => ['$ne' => null]])),
         'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true,]),
     ];
+    if ($person['public_other_activities'] ?? true) {
+        $result['numbers']['activities'] = $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]]));
+    }
+    if ($person['public_teaching'] ?? true) {
+        $result['numbers']['teaching'] = $osiris->activities->count(array_merge($defaultFilter, ['module_id' => ['$ne' => null]]));
+    }
 
     if ($result['numbers']['projects'] > 0) {
         $raw = $osiris->projects->find(['persons.user' => $person['username'], "public" => true,])->toArray();

@@ -98,3 +98,22 @@ if ($N_ == 0) {
         "Autoren-Feld für " . $updated . " von " . $N_ . " Aktivitäten in Betreuende-Feld migriert."
     ) . "</p>";
 }
+
+// append public_email, public_other_activities, public_teaching to person-data settings if not present
+$Settings = new Settings();
+$personData = DB::doc2Arr($Settings->get('person-data'));
+$fieldsToAdd = ['public_email', 'public_other_activities', 'public_teaching'];
+$updated = 0;
+foreach ($fieldsToAdd as $field) {
+    if (!in_array($field, $personData ?? [])) {
+        $personData[] = $field;
+        $updated++;
+    }
+}
+if ($updated > 0) {
+    $Settings->set('person-data', $personData);
+    echo "<p>". lang(
+        "Added " . $updated . " fields to person-data settings.",
+        "Es wurden " . $updated . " Felder zu den Personendaten-Einstellungen hinzugefügt."
+    ) . "</p>";
+} 
