@@ -1,6 +1,6 @@
 <?php
 require_once "init.php";
-include_once 'fields.php';
+include_once "activity_fields.php";
 
 use Amenadiel\JpGraph\Graph;
 use Amenadiel\JpGraph\Plot;
@@ -31,7 +31,7 @@ class Report
         $this->variables['endmonth'] = $this->endmonth;
 
         // we need fields for labels
-        $Fields = new Fields();
+        $Fields = new ActivityFields();
         // field array with id as key
         $this->fields = array_column($Fields->fields, null, 'id');
     }

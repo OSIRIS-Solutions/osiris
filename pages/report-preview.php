@@ -9,6 +9,7 @@ require_once BASEPATH . "/php/Report.php";
 $Report = new Report($report);
 
 $year = $_GET['year'] ?? CURRENTYEAR - 1;
+$variables = $report['variables'] ?? [];
 
 ?>
 
@@ -45,7 +46,7 @@ $year = $_GET['year'] ?? CURRENTYEAR - 1;
                         </small>
                     </td>
                 </tr>
-                <?php foreach ($report['variables'] as $var) {  ?>
+                <?php foreach ($variables as $var) {  ?>
                     <tr>
                         <td>
                             <span class="key"><?= ($var['label'] ?? $var['key']) ?></span>
@@ -74,7 +75,7 @@ $year = $_GET['year'] ?? CURRENTYEAR - 1;
             <?php
             $Report->setYear($year);
             $vars = [];
-            foreach ($report['variables'] as $var) {
+            foreach ($variables as $var) {
                 $vars[$var['key']] = $_GET['var'][$var['key']] ?? ($var['default'] ?? null);
             }
             $Report->setVariables($vars);
