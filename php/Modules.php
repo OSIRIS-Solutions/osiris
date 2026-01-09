@@ -911,7 +911,7 @@ class Modules
                     'last' => $USER['last'],
                     'first' => $USER['first'],
                     'aoi' => true,
-                    'user' => strtolower($USER['username'])
+                    'user' => $USER['username']
                 ]
             );
 
@@ -3324,3 +3324,4 @@ class Modules
         }
     }
 }
+
