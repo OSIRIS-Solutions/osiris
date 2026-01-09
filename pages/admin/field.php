@@ -38,7 +38,7 @@ if (!empty($form) && isset($form['id'])) {
                 <li class="font-weight-bold">--- <?=lang('OSIRIS Fields', 'OSIRIS-Felder')?> ---</li>
                 <?php 
                 require_once BASEPATH . '/php/activity_fields.php';
-                $Fields = new Fields();
+                $Fields = new ActivityFields();
                 $field_ids = array_column($Fields->fields, 'id');
                 sort($field_ids);
                 foreach ($field_ids as $k) { 
