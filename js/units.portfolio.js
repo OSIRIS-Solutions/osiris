@@ -13,8 +13,10 @@ function navigate(key) {
     $('section').hide()
     $('section#' + key).show()
 
-    $('.pills .btn').removeClass('active')
-    $('.pills .btn#btn-' + key).addClass('active')
+    // $('.pills .btn').removeClass('active')
+    // $('.pills .btn#btn-' + key).addClass('active')
+    $('#group-pills a').removeClass('active')
+    $('#group-pills a#btn-' + key).addClass('active')
 
     switch (key) {
         case 'publications':
@@ -136,45 +138,45 @@ function navigate(key) {
             if (personsExists) break;
             personsExists = true;
             // console.log(personsExists);
-            return $('#user-table').DataTable({
-                "ajax": {
-                    "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/staff',
-                    dataSrc: 'data'
-                },
+            return $('#users-table').DataTable({
+                // "ajax": {
+                //     "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/staff',
+                //     dataSrc: 'data'
+                // },
                 dom: 'frtipP',
                 deferRender: true,
                 responsive: true,
                 language: {
                     url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
                 },
-                columnDefs: [
-                    {
-                        targets: 0,
-                        data: 'img',
-                        searchable: false,
-                        sortable: false,
-                        visible: true
-                    },
-                    {
-                        targets: 1,
-                        data: 'displayname',
-                        className: 'flex-grow-1',
-                        render: function (data, type, row) {
-                            return `<div class="w-full">
-                  <div style="display: none;">${row.displayname}</div>
-                  <h5 class="my-0">
-                      <a href="${ROOTPATH}/review/person/651cecd8b3c97f11cc28cc45">
-                        ${row.academic_title ?? ''} ${row.displayname}
-                      </a>
-                  </h5>
-                  <small>
-                      ${lang(row.position ?? '', row.position_de ?? null)}
-                  </small>
-              </div>`;
-                        }
-                    }
+            //     columnDefs: [
+            //         {
+            //             targets: 0,
+            //             data: 'img',
+            //             searchable: false,
+            //             sortable: false,
+            //             visible: true
+            //         },
+            //         {
+            //             targets: 1,
+            //             data: 'displayname',
+            //             className: 'flex-grow-1',
+            //             render: function (data, type, row) {
+            //                 return `<div class="w-full">
+            //       <div style="display: none;">${row.displayname}</div>
+            //       <h5 class="my-0">
+            //           <a href="${ROOTPATH}/review/person/651cecd8b3c97f11cc28cc45">
+            //             ${row.academic_title ?? ''} ${row.displayname}
+            //           </a>
+            //       </h5>
+            //       <small>
+            //           ${lang(row.position ?? '', row.position_de ?? null)}
+            //       </small>
+            //   </div>`;
+            //             }
+            //         }
 
-                ],
+            //     ],
                 "order": [
                     [1, 'asc'],
                 ],

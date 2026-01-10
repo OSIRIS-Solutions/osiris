@@ -15,39 +15,16 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
-
-$ch = curl_init($total_path . '/numbers');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-
-$numbers = json_decode($response, true);
-$numbers = $numbers['data'] ?? [];
+$baseUnit = false;
+if ($id == '0') {
+    // id
+    $baseUnit = true;
+}
+$preselect = $_GET['open'] ?? null;
 
 ?>
 <div class="container">
     <style>
-        .filter {
-            overflow-y: auto;
-            padding: 1rem 2rem;
-            max-height: 100%;
-        }
-
-        .filter tr td {
-            border-left: 3px solid transparent;
-            border-bottom: none;
-        }
-
-        .filter tr td:hover {
-            border-left-color: var(--primary-color);
-        }
-
-        .filter tr td.active {
-            background: var(--primary-color-20);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-        }
-
-
         #research p,
         #general p {
             text-align: justify;
@@ -68,341 +45,710 @@ $numbers = $numbers['data'] ?? [];
             color: var(--muted-color);
             font-style: italic;
         }
+
         .description img {
             max-width: 100%;
             height: auto;
         }
-    </style>
 
 
-    <!-- all necessary javascript -->
-    <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-
-    <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
-
-
-    <!-- <script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script> -->
-    <!-- <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script> -->
-
-    <!-- all variables for this page -->
-
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
-    <script>
-        const PORTALPATH = '<?= PORTALPATH ?>';
-        const DEPT = '<?=$id?>';
-    </script>
-    <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?= CSS_JS_VERSION ?>"></script>
-
-
-    <style>
-        .unit-name {
-            margin: 0;
+        .filter {
+            overflow-y: auto;
+            padding: .5rem 1rem;
+            max-height: 100% !important;
+            background-color: var(--box-bg-color);
+            overflow-x: hidden;
         }
 
-        .unit-type {
-            margin: 0 0 1rem 0;
-            font-size: 1.4rem;
+        .filter tr:hover {
+            background-color: inherit;
+        }
+
+        .filter tr td {
+            border-left: 3px solid transparent;
+            border-bottom: none;
+            border-radius: var(--border-radius);
+        }
+
+        .filter tr td span {
+            position: relative;
+            display: block;
+            padding-left: 1rem;
+        }
+
+        .filter tr td span::before {
+            content: "\ECE0";
+            font-family: "phosphor";
+            color: var(--muted-color);
+            position: absolute;
+            left: -1rem;
+        }
+
+        .filter tr td.openable span::before {
+            content: "\E13A";
+        }
+
+        .filter tr td.level-0 {
+            padding-left: 1rem !important;
+        }
+
+        .filter tr td.level-1 {
+            padding-left: 2rem !important;
+        }
+
+        .filter tr td.level-2 {
+            padding-left: 3rem !important;
+        }
+
+        .filter tr td.level-3 {
+            padding-left: 4rem !important;
+        }
+
+
+        .filter tr td:hover {
+            background: inherit;
+            background: var(--primary-color-20);
+        }
+
+        .filter tr td span::before {
             color: var(--primary-color);
         }
-    </style>
 
-    <h2 class="unit-name"><?= lang($data['name'], $data['name_de'] ?? null) ?></h2>
-    <h4 class="unit-type"><?= lang($data['unit']['name'] ?? '', $data['unit']['name_de'] ?? null) ?></h4>
+        .filter tr td.active {
+            background: var(--primary-color-20);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
 
-    <!-- TAB AREA -->
-    <style>
-        .pills.small .btn,
-        .pills.small .badge {
+        .filter tr td span::before {
+            color: var(--primary-color);
+        }
+
+        .filter tr td.open.openable span::before {
+            content: "\E136";
+        }
+
+        /* #filter-column {
+            transition: width 0.3s ease;
+            width: 500px;
+        }
+        #filter-column.collapsed {
+            display: none;
+            width: 0;
+        } */
+
+        .scope-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .45rem .75rem;
+            border-radius: 999px;
+            border: 1px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            font-weight: 500;
             font-size: 1.2rem;
+            background: var(--primary-color-20);
         }
 
-        .pills.small .index {
-            font-size: 1rem;
+        .scope-chip:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            /* text-shadow bold hack */
+            text-shadow: 0 0 1px white;
+        }
+
+        .scope-chip.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            /* text-shadow bold hack */
+            text-shadow: 0 0 1px white;
+        }
+
+        #filter-column {
+            max-width: 30rem;
+            width: 30rem;
+        }
+
+        #filter-column #filter-toggle {
+            background-color: var(--gray-color);
+            width: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            font-size: .9em;
+            position: relative;
+        }
+
+
+        #filter-column #filter-toggle span {
+            /* writing-mode: vertical-rl;
+            transform: rotate(180deg); */
+            display: none;
+            position: absolute;
+            left: 100%;
+            background-color: var(--primary-color);
+            padding: .2rem .5rem;
+            border-radius: .5rem;
+            z-index: 10;
+            margin-left: .5rem;
+            font-size: 1.2rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        #filter-column.hidden-state #filter-toggle:hover span {
+            display: block;
+        }
+
+
+        #filter-column.hidden-state #filter-toggle {
+            background-color: var(--primary-color-20);
+            width: 1.5rem;
+        }
+
+        #filter-column.hidden-state #filter-toggle:hover {
+            background-color: var(--primary-color-30);
+        }
+
+        #filter-column.hidden-state #filter-toggle i {
+            transform: rotate(180deg);
+        }
+
+        #filter-column {
+            display: flex;
+            max-height: 80vh;
+        }
+
+        #filter-column .filter {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        #filter-column.hidden-state {
+            width: 3rem;
+        }
+
+        #filter-column.hidden-state .filter {
+            display: none;
         }
     </style>
 
-    <nav class="pills small mb-10">
-        <a onclick="navigate('general')" id="btn-general" class="btn active">
-            <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('Info', 'Info') ?>
-        </a>
 
-        <?php if (!empty($data['research'] ?? null)) { ?>
-            <a onclick="navigate('research')" id="btn-research" class="btn">
-                <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research', 'Forschung') ?>
-            </a>
-        <?php } ?>
+    <?php if ($Portfolio->isPreview()) { ?>
+        <!-- all necessary javascript -->
+        <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
+        <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
+        <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
+        <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 
-        <a onclick="navigate('persons')" id="btn-persons" class="btn">
-            <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Team', 'Team') ?>
-            <span class="index"><?= $numbers['persons'] ?></span>
-        </a>
+        <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
 
-        <?php
-        if ($numbers['publications'] > 0) { ?>
-            <a onclick="navigate('publications')" id="btn-publications" class="btn">
-                <i class="ph ph-books" aria-hidden="true"></i>
-                <?= lang('Publications', 'Publikationen')  ?>
-                <span class="index"><?= $numbers['publications'] ?></span>
-            </a>
-        <?php } ?>
+        <!-- all variables for this page -->
+        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
+        <script>
+            const $base = '<?= $base ?>';
+            const DEPT = '<?= $id ?>';
+        </script>
+        <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?= CSS_JS_VERSION ?>"></script>
 
-        <?php
-        if ($numbers['activities'] > 0) { ?>
-            <a onclick="navigate('activities')" id="btn-activities" class="btn">
-                <i class="ph ph-briefcase" aria-hidden="true"></i>
-                <?= lang('Activities', 'Aktivitäten')  ?>
-                <span class="index"><?= $numbers['activities'] ?></span>
-            </a>
-        <?php } ?>
+    <?php } ?>
 
+    <script>
+        function toggleUnitFilter() {
+            const filterColumn = document.getElementById('filter-column');
+            // const toggleColumn = document.getElementById('filter-toggle');
+            if (!filterColumn.classList.contains('hidden-state')) {
+                // filterColumn.style.display = 'block';
+                // toggleColumn.style.display = 'none';
+                filterColumn.classList.add('hidden-state');
+            } else {
+                // filterColumn.style.display = 'none';
+                // toggleColumn.style.display = 'block';
+                filterColumn.classList.remove('hidden-state');
+            }
+        }
+    </script>
+    <?php if ($baseUnit) { ?>
+        <!-- filter by unit -->
+        <!-- <button class="scope-chip" onclick="$('#filter-column').toggle(); $(this).addClass('active');">
+            <i class="ph ph-list" aria-hidden="true"></i>
+            <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+        </button> -->
+        <!-- <button class="scope-chip" onclick="toggleUnitFilter();">
+            <i class="ph ph-list" aria-hidden="true"></i>
+            <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+        </button> -->
+    <?php } ?>
+
+    <div class="row row-eq-spacing">
+
+        <div class="col-sm flex-grow-0 flex-reset <?= $baseUnit ? 'hidden-state' : '' ?>" id="filter-column">
+            <div id="filter-toggle" onclick="toggleUnitFilter();">
+                <i class="ph ph-caret-left" aria-hidden="true"></i>
+                <span>
+                    <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+                </span>
+            </div>
             <?php
-            if ($numbers['projects'] > 0) { ?>
-                <a onclick="navigate('projects')" id="btn-projects" class="btn">
-                    <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('Projects', 'Projekte')  ?>
-                    <span class="index"><?= $numbers['projects'] ?></span>
+            $hierarchy = $Portfolio->build_unit_hierarchy($id);
+            if (!empty($hierarchy) && is_array($hierarchy)): ?>
+                <div class="filter">
+                    <table id="filter-unit" class="table small simple">
+                        <?php foreach ($hierarchy as $el): ?>
+                            <?php
+                            // Comments in English.
+                            $hide = (bool)($el['hide'] ?? false);
+                            $active = (bool)($el['active'] ?? false);
+                            $open = (bool)($el['open'] ?? false);
+                            $openable = (bool)($el['openable'] ?? false);
+
+                            // Vue condition: !el.hide || el.active || el.open
+                            if ($hide && !$active && !$open) {
+                                continue;
+                            }
+
+                            $level = (int)($el['level'] ?? 0);
+
+                            // Vue RouterLink target:
+                            // id = (el.active ? el.parent : el.id)
+                            $targetId = $active ? ($el['parent'] ?? $el['id'] ?? '') : ($el['id'] ?? '');
+
+                            $classes = [];
+                            $classes[] = 'level-' . $level;
+                            if ($active) $classes[] = 'active';
+                            if ($open) $classes[] = 'open';
+                            if ($openable) $classes[] = 'openable';
+
+                            $nameEn = $el['name'] ?? '';
+                            $nameDe = $el['name_de'] ?? null;
+                            $href = $base . '/group/' . urlencode((string)$targetId);
+                            if ($el['level'] === 0 && $targetId === '') {
+                                $href = '#';
+                            }
+                            ?>
+                            <tr>
+                                <td class="<?= htmlspecialchars(implode(' ', $classes), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <a
+                                        class="item d-block colorless"
+                                        href="<?= $href ?>">
+                                        <span><?= htmlspecialchars(lang($nameEn, $nameDe), ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="col-sm">
+
+            <style>
+                .unit-name {
+                    margin: 0;
+                }
+
+                .unit-type {
+                    margin: 0 0 1rem 0;
+                    font-size: 1.4rem;
+                    color: var(--primary-color);
+                }
+            </style>
+
+            <h2 class="unit-name"><?= lang($data['name'], $data['name_de'] ?? null) ?></h2>
+            <h4 class="unit-type"><?= lang($data['unit']['name'] ?? '', $data['unit']['name_de'] ?? null) ?></h4>
+
+            <style>
+                nav#group-pills {
+                    margin: 2rem 0;
+                }
+
+                nav#group-pills a {
+                    position: relative;
+                    color: #4e4e4e;
+                    display: inline-block;
+                    margin-right: 30px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                    text-align: center;
+                }
+
+                nav#group-pills a:after {
+                    content: "";
+                    position: absolute;
+                    width: 100%;
+                    transform: scaleX(0);
+                    height: 4px;
+                    bottom: 0;
+                    left: 0;
+                    background-color: var(--primary-color);
+                    transform-origin: bottom left;
+                    transition: transform 0.25s ease-out;
+                }
+
+                nav#group-pills a:hover {
+                    color: var(--primary-color);
+                }
+
+                nav#group-pills a:hover:after {
+                    transform: scaleX(1);
+                }
+
+                nav#group-pills a.active {
+                    color: var(--primary-color);
+                    font-weight: 600;
+
+                }
+
+                nav#group-pills a.active:after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+
+                nav#group-pills i {
+                    font-size: 3rem;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                nav#group-pills span {
+                    position: absolute;
+                    left: calc(50% + 6px);
+                    top: 0px;
+                    line-height: 24px;
+                    height: 24px;
+                    background-color: var(--box-bg-color);
+                    font-size: 14px;
+                    border-radius: 12px;
+                    min-width: 3rem;
+                    text-align: center;
+                    padding: 0 5px;
+                }
+            </style>
+
+            <nav id="group-pills">
+                <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'general' ? 'active' : '' ?>">
+                    <i class="ph ph-info" aria-hidden="true"></i>
+                    <?= lang('Info', 'Info') ?>
                 </a>
-            <?php } ?>
-    </nav>
+
+                <?php if (!empty($data['research'] ?? null)) { ?>
+                    <a onclick="navigate('research')" id="btn-research">
+                        <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                        <?= lang('Research', 'Forschung') ?>
+                    </a>
+                <?php } ?>
+
+                <a onclick="navigate('persons')" id="btn-persons" class="<?= $preselect === 'persons' ? 'active' : '' ?>">
+                    <i class="ph ph-users" aria-hidden="true"></i>
+                    <?= lang('Team', 'Team') ?>
+                    <span class="index"><?= $numbers['persons'] ?></span>
+                </a>
+
+                <?php
+                if ($numbers['publications'] > 0) { ?>
+                    <a onclick="navigate('publications')" id="btn-publications" class="<?= $preselect === 'publications' ? 'active' : '' ?>">
+                        <i class="ph ph-books" aria-hidden="true"></i>
+                        <?= lang('Publications', 'Publikationen')  ?>
+                        <span class="index"><?= $numbers['publications'] ?></span>
+                    </a>
+                <?php } ?>
+
+                <?php
+                if ($numbers['activities'] > 0) { ?>
+                    <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
+                        <i class="ph ph-briefcase" aria-hidden="true"></i>
+                        <?= lang('Activities', 'Aktivitäten')  ?>
+                        <span class="index"><?= $numbers['activities'] ?></span>
+                    </a>
+                <?php } ?>
+
+                <?php
+                if ($numbers['projects'] > 0) { ?>
+                    <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
+                        <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                        <?= lang('Projects', 'Projekte')  ?>
+                        <span class="index"><?= $numbers['projects'] ?></span>
+                    </a>
+                <?php } ?>
+            </nav>
 
 
-    <section id="general">
-        <!-- head -->
-        <?php
-        $head = $data['heads'] ?? [];
-        if (is_string($head)) $head = [$head];
-        else $head = DB::doc2Arr($head);
-        if (!empty($head)) { ?>
-            <div class="head">
-                <h5 class="mt-0"><?= lang($data['unit']['head'] ?? '', $data['unit']['head_de'] ?? null) ?></h5>
-                <div>
-                    <?php foreach ($head as $h) { ?>
-                        <a href="<?= ROOTPATH ?>/profile/<?= $h['id'] ?>" class="colorless d-flex align-items-center border bg-white p-10 rounded mt-10">
-                            <?= $h['img'] ?>
-                            <div class="ml-20">
-                                <h5 class="my-0">
-                                    <?= $h['name'] ?>
-                                </h5>
-                                <small>
-                                    <?=lang($h['position'], $h['position_de'] ?? null)?>
-                                </small>
-                            </div>
-                        </a>
-                    <?php } ?>
-                </div>
+            <section id="general" <?= empty($preselect) || $preselect === 'general' ? '' : 'style="display:none"' ?>>
+                <!-- head -->
+                <?php
+                $head = $data['heads'] ?? [];
+                if (is_string($head)) $head = [$head];
+                else $head = Portfolio::doc2Arr($head);
+                if (!empty($head)) { ?>
+                    <div class="head">
+                        <h5 class="mt-0"><?= lang($data['unit']['head'] ?? '', $data['unit']['head_de'] ?? null) ?></h5>
+                        <div>
+                            <?php foreach ($head as $h) { ?>
+                                <a href="<?= $base ?>/person/<?= $h['id'] ?>" class="colorless d-flex align-items-center border bg-white p-10 rounded mt-10">
+                                    <?= $h['img'] ?>
+                                    <div class="ml-20">
+                                        <h5 class="my-0">
+                                            <?= $h['name'] ?>
+                                        </h5>
+                                        <small>
+                                            <?= lang($h['position'], $h['position_de'] ?? null) ?>
+                                        </small>
+                                    </div>
+                                </a>
+                            <?php } ?>
+                        </div>
 
-            </div>
-        <?php } ?>
-
-
-
-        <?php if (isset($data['description']) || isset($data['description_de'])) { ?>
-
-            <h5>
-                <?= lang('About', 'Information') ?>
-            </h5>
-            <div class="description">
-                <?= lang($data['description'] ?? '-', $data['description_de'] ?? null) ?>
-            </div>
-        <?php } ?>
-
-
-
-
-
-    </section>
-
-    <section id="research" style="display:none;">
-
-        <h3><?= lang('Research interests', 'Forschungsinteressen') ?></h3>
-
-        <?php if (isset($data['research']) && !empty($data['research'])) { ?>
-            <?php foreach ($data['research'] as $r) { ?>
-                <div class="box">
-                    <h5 class="header">
-                        <?= lang($r['title'], $r['title_de'] ?? null) ?>
-                    </h5>
-                    <div class="content description">
-                        <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
                     </div>
-                </div>
-
-            <?php } ?>
-        <?php } ?>
-
-    </section>
+                <?php } ?>
 
 
-    <section id="persons" style="display: none;">
 
-        <!-- <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3> -->
+                <?php if (isset($data['description']) || isset($data['description_de'])) { ?>
 
-        <table class="table cards w-full" id="user-table">
-            <thead>
-                <th></th>
-                <th></th>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </section>
+                    <h5>
+                        <?= lang('About', 'Information') ?>
+                    </h5>
+                    <div class="description">
+                        <?= lang($data['description'] ?? '-', $data['description_de'] ?? null) ?>
+                    </div>
+                <?php } ?>
 
 
-    <section id="publications" style="display:none">
-
-        <!-- <h2><?= lang('Publications', 'Publikationen') ?></h2> -->
-
-        <div class="w-full">
-            <table class="table dataTable responsive" id="publication-table">
-                <thead>
-                    <tr>
-                        <th><?= lang('Type', 'Typ') ?></th>
-                        <th><?= lang('Activity', 'Aktivität') ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </section>
 
 
-    <section id="activities" style="display:none">
+
+            </section>
+
+            <section id="research" style="display:none;">
+
+                <h3><?= lang('Research interests', 'Forschungsinteressen') ?></h3>
+
+                <?php if (isset($data['research']) && !empty($data['research'])) { ?>
+                    <?php foreach ($data['research'] as $r) { ?>
+                        <div class="box">
+                            <h5 class="header">
+                                <?= lang($r['title'], $r['title_de'] ?? null) ?>
+                            </h5>
+                            <div class="content description">
+                                <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
+                            </div>
+                        </div>
+
+                    <?php } ?>
+                <?php } ?>
+
+            </section>
 
 
-        <!-- <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2> -->
+            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?>>
 
-        <div class="w-full">
-            <table class="table dataTable responsive" id="activities-table">
-                <thead>
-                    <tr>
-                        <th><?= lang('Type', 'Typ') ?></th>
-                        <th><?= lang('Activity', 'Aktivität') ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
+                <!-- <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3> -->
 
-            </table>
-        </div>
+                <table class="table cards w-full datatable" id="users-table" data-page-length="18">
+                    <thead>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $staff = $Portfolio->fetch_entity('unit', $id, 'staff');
+                        foreach ($staff as $s) {
+                        ?>
+                            <tr>
+                                <td><?= $s['img'] ?></td>
+                                <td>
+                                    <div class="w-full">
+                                        <div style="display: none;"><?= $s['lastname'] ?></div>
+                                        <h5 class="my-0">
+                                            <a href="<?= $base ?>/person/<?= $s['id'] ?>">
+                                                <?= ($s['academic_title'] ?? '') . ' ' . $s['displayname'] ?>
+                                            </a>
+                                        </h5>
+                                        <small>
+                                            <?= lang($s['position'] ?? '', $s['position_de'] ?? null) ?>
+                                        </small>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </section>
 
 
-    </section>
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?>>
+
+                <!-- <h2><?= lang('Publications', 'Publikationen') ?></h2> -->
 
 
-        <section id="projects" style="display:none">
+                <table class="table datatable" id="publication-table"
+                    data-table="publications"
+                    data-source="./publications.json"
+                    data-lang="<?= lang('en', 'de') ?>">
+                    <thead>
+                        <tr>
+                            <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
+                            <th data-col="html" data-search-col="search">Title</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
 
-            <?php if ($numbers['projects'] > 0) { ?>
-                <!-- collaborators -->
-                <h1>
-                    <?= lang('Projects', 'Projekte') ?>
-                </h1>
+            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?>>
+
+
+                <!-- <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2> -->
 
                 <div class="w-full">
-                    <table class="table dataTable responsive" id="projects-table">
-                        <thead >
+
+                    <table class="table datatable" id="activities-table"
+                        data-table="activities"
+                        data-source="./activities.json"
+                        data-lang="<?= lang('en', 'de') ?>">
+                        <thead>
                             <tr>
-                                <th><?= lang('Project', 'Projekt') ?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
+                                <th data-col="html" data-search-col="search">Title</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
 
 
+            </section>
 
-                <div id="collaborators">
-                    <div class="box mt-0 ">
-                        <div id="map" class="h-300"></div>
+
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?>>
+
+
+                <?php if ($numbers['projects'] > 0) { ?>
+                    <!-- collaborators -->
+                    <h1>
+                        <?= lang('Projects', 'Projekte') ?>
+                    </h1>
+
+                    <div class="w-full">
+                        <table class="table datatable responsive" id="projects-table"
+                            data-table="projects"
+                            data-source="./projects.json"
+                            data-lang="<?= lang('en', 'de') ?>">
+                            <thead>
+                                <tr>
+                                    <th data><?= lang('Project', 'Projekt') ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
 
 
-                <style>
-               #projects-table {
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  display: block;
-}
 
-#projects-table thead {
-  display: none;
-}
+                    <div id="collaborators">
+                        <div class="box mt-0">
+                            <div id="map"
+                                class="portfolio-map map h-300 w-full"
+                                data-source="./collaborators-map.json"
+                                data-context="unit"
+                                data-lang="<?= lang('en', 'de') ?>">
+                            </div>
+                        </div>
+                        <p>
+                            <span style="color:var(--secondary-color)">&#9673;</span> <?= lang("This institution", "Diese Einrichtung") ?><br>
+                            <span style="color:var(--primary-color)">&#9673;</span> <?= lang("Cooperation partner", "Kooperationspartner") ?>
+                        </p>
+                    </div>
 
-#projects-table tbody {
-  display: flex;
-  flex-grow: column;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 
-#projects-table tbody tr {
-  width: 100%;
-  margin: 0.5rem;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  background: var(--box-bg-color);
-  display: flex;
-  align-items: center;
-}
+                    <style>
+                        #projects-table {
+                            border: none;
+                            background: transparent;
+                            box-shadow: none;
+                            display: block;
+                        }
 
-#projects-table tbody tr td {
-  border: 0;
-  box-shadow: none;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+                        #projects-table thead {
+                            display: none;
+                        }
 
-#projects-table tbody tr small, #projects-table tbody tr p {
-  display: block;
-  margin: 0;
-}
+                        #projects-table tbody {
+                            display: flex;
+                            flex-grow: column;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                        }
 
-#projects-table tbody tr td {
-  display: flex;
-  /* align-items: center; */
-  border: 0;
-}
+                        #projects-table tbody tr {
+                            width: 100%;
+                            margin: 0.5rem;
+                            border: var(--border-width) solid var(--border-color);
+                            border-radius: var(--border-radius);
+                            box-shadow: var(--box-shadow);
+                            background: var(--box-bg-color);
+                            display: flex;
+                            align-items: center;
+                        }
 
-@media (min-width: 768px) {
-  #projects-table tbody tr {
-    width: 48%;
-  }
-}
-/* 
+                        #projects-table tbody tr td {
+                            border: 0;
+                            box-shadow: none;
+                            width: 100%;
+                            height: 100%;
+                            display: block;
+                        }
+
+                        #projects-table tbody tr small,
+                        #projects-table tbody tr p {
+                            display: block;
+                            margin: 0;
+                        }
+
+                        #projects-table tbody tr td {
+                            display: flex;
+                            /* align-items: center; */
+                            border: 0;
+                        }
+
+                        @media (min-width: 768px) {
+                            #projects-table tbody tr {
+                                width: 48%;
+                            }
+                        }
+
+                        /* 
 @media (min-width: 1200px) {
   .table.cards tbody tr {
     width: calc(33.3% - 1rem);
   }
 } */
 
- span.link {
-  color: var(--primary-color);
-  cursor: pointer;
-  display: inline-block;
-}
-span.link::after {
-  content: " »";
-}
+                        span.link {
+                            color: var(--primary-color);
+                            cursor: pointer;
+                            display: inline-block;
+                        }
+
+                        span.link::after {
+                            content: " »";
+                        }
+                    </style>
+
+                <?php } ?>
 
 
-                </style>
+            </section>
+        </div>
 
-            <?php } ?>
-
-
-        </section>
-
-
+    </div>
 </div>

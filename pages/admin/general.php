@@ -920,36 +920,54 @@ $affiliation = $Settings->get('affiliation_details');
             <div class="content">
                 <h2 class="title"><?= lang('Portfolio Settings', 'Portfolio Einstellungen') ?></h2>
 
-                <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
-                    <?= lang('You can specify here, if only workflow-approved activities should be shown in the portfolio.', 'Hier kannst du festlegen, ob nur workflow-genehmigte Aktivitäten im Portfolio angezeigt werden sollen.') ?>
-                <?php } ?>
 
+                <!-- portfolio url -->
                 <div class="form-group">
-                    <?php
-                    $portfolio = $Settings->get('portfolio-workflow-visibility', 'all');
-                    ?>
-
-                    <div class="custom-radio">
-                        <input type="radio" id="portfolio-workflow-visibility-approved" value="only-approved" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'only-approved' ? 'checked' : '' ?>>
-                        <label for="portfolio-workflow-visibility-approved">
-                            <?= lang('Only approved activities', 'Nur genehmigte Aktivitäten') ?>
-                        </label>
-                    </div>
-
-                    <div class="custom-radio">
-                        <input type="radio" id="portfolio-workflow-visibility-approved-or-empty" value="approved-or-empty" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'approved-or-empty' ? 'checked' : '' ?>>
-                        <label for="portfolio-workflow-visibility-approved-or-empty">
-                            <?= lang('Approved activities and activities without workflow', 'Genehmigte Aktivitäten und Aktivitäten ohne Workflow') ?>
-                        </label>
-                    </div>
-
-                    <div class="custom-radio">
-                        <input type="radio" id="portfolio-workflow-visibility-all" value="all" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'all' ? 'checked' : '' ?>>
-                        <label for="portfolio-workflow-visibility-all">
-                            <?= lang('All activities', 'Alle Aktivitäten') ?>
-                        </label>
-                    </div>
+                    <label for="portfolio_url">
+                        <?= lang('Portfolio URL', 'Portfolio URL') ?>
+                    </label>
+                    <input type="url" class="form-control" name="general[portfolio_url]" value="<?= $Settings->get('portfolio_url') ?>">
+                    <span class="text-muted">
+                        <?= lang(
+                            'The portfolio URL is used to link to the portfolio from various places in OSIRIS. Make sure to include the full URL (e.g. https://research.institute.edu). If you do not provide a URL, Portfolio will try to use relative links.',
+                            'Die Portfolio-URL wird verwendet, um von verschiedenen Stellen in OSIRIS auf das Portfolio zu verlinken. Achte darauf, die vollständige URL anzugeben (z.B. https://portfolio.institute.de). Falls keine URL angegeben wird, versucht das Portfolio, relative Links zu verwenden.'
+                        ) ?>
+                    </span>
                 </div>
+
+                <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
+                    <h5>
+                        <?= lang('Portfolio Workflow Visibility', 'Sichtbarkeit im Portfolio-Workflow') ?>
+                    </h5>
+                    <?= lang('You can specify here, if only workflow-approved activities should be shown in the portfolio.', 'Hier kannst du festlegen, ob nur workflow-genehmigte Aktivitäten im Portfolio angezeigt werden sollen.') ?>
+
+                    <div class="form-group">
+                        <?php
+                        $portfolio = $Settings->get('portfolio-workflow-visibility', 'all');
+                        ?>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="portfolio-workflow-visibility-approved" value="only-approved" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'only-approved' ? 'checked' : '' ?>>
+                            <label for="portfolio-workflow-visibility-approved">
+                                <?= lang('Only approved activities', 'Nur genehmigte Aktivitäten') ?>
+                            </label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="portfolio-workflow-visibility-approved-or-empty" value="approved-or-empty" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'approved-or-empty' ? 'checked' : '' ?>>
+                            <label for="portfolio-workflow-visibility-approved-or-empty">
+                                <?= lang('Approved activities and activities without workflow', 'Genehmigte Aktivitäten und Aktivitäten ohne Workflow') ?>
+                            </label>
+                        </div>
+
+                        <div class="custom-radio">
+                            <input type="radio" id="portfolio-workflow-visibility-all" value="all" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'all' ? 'checked' : '' ?>>
+                            <label for="portfolio-workflow-visibility-all">
+                                <?= lang('All activities', 'Alle Aktivitäten') ?>
+                            </label>
+                        </div>
+                    </div>
+                <?php } ?>
 
                 <h5>
                     <?= lang('Portfolio-API Key') ?>
@@ -1422,6 +1440,18 @@ $affiliation = $Settings->get('affiliation_details');
                                 <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
                             </p>
                         </div>
+                        <!-- <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Enable impact factors', 'Aktiviere Impact Faktoren') ?>
+                                <?= badgeBeta() ?>
+                            </label>
+                            <?php
+                            renderCheckbox('journal-impact-factors', true);
+                            ?>
+                            <p class="description">
+                                <?= lang('Impact factors will be displayed in the journal information and in corresponding activities.', 'Impact Faktoren werden in den Journal-Informationen angezeigt. Wenn du diese Option deaktivierst, werden nur Quartile angezeigt.') ?>
+                            </p>
+                        </div> -->
                     </div>
                     <hr>
                     <div class="content">

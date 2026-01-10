@@ -653,6 +653,8 @@ Route::get('/portfolio/unit/([^/]*)/staff', function ($id) {
             'position' => $person['position'],
             'position_de' => $person['position_de'],
             'depts' => $units,
+            'lastname' => $person['last'],
+            'firstname' => $person['first'] ?? ''
         ];
         if ($person['public_image'] ?? false) {
             $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img');

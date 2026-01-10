@@ -59,8 +59,8 @@ if (!defined('ORCID_APP_ID'))
 if (!defined('ORCID_SECRET_KEY'))
     define("ORCID_SECRET_KEY", null);
 
-if (!defined('PORTALPATH'))
-    define('PORTALPATH', $_GET['path']??(ROOTPATH.'/preview'));
+// if (!defined('$base'))
+//     define('$base', $_GET['path']??(ROOTPATH.'/preview'));
 
 if (!defined('CRON_SECRET'))
     define('CRON_SECRET', 'please-change-this-secret');

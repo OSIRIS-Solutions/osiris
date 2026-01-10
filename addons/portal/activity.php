@@ -9,7 +9,7 @@
                         <?php foreach ($data['authors'] as $i => $author): ?>
                             <li style="<?= $i > 10 ? 'display:none;' : '' ?>">
                                 <?php if (!empty($author['id'])): ?>
-                                    <a href="<?= ROOTPATH ?>/preview/person/<?= $author['id'] ?>">
+                                    <a href="<?= $base ?>/person/<?= $author['id'] ?>">
                                         <?= $author['name']; ?>
                                     </a>
                                 <?php else: ?>
@@ -28,7 +28,7 @@
                 <?php if (!empty($data['depts'])): ?>
                     <p><b><?= lang("Departments", "Abteilungen"); ?>:</b><br />
                         <?php foreach ($data['depts'] as $deptId => $d): ?>
-                            <a href="<?= ROOTPATH ?>/preview/group/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
+                            <a href="<?= $base ?>/group/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
                                 <?= lang($d['en'], $d['de'] ?? null); ?>
                             </a>
                         <?php endforeach; ?>
@@ -79,9 +79,9 @@
                         <div class="project-card">
                             <div>
                                 <h5 class="my-0">
-                                    <a href="<?= PORTALPATH ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
+                                    <a href="<?= $base ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
                                 </h5>
-                                <small class="text-muted" v-html="project.title ?? ''"></small>
+                                <small class="text-muted"><?= $project['title'] ?? '' ?></small>
                                 <hr />
                                 <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
                                 <p><?= fromToDate($project['start'], $project['end']) ?></p>
@@ -189,4 +189,4 @@
         margin: 0;
     }
 
-    </style=>
+    </style>

@@ -5,8 +5,10 @@
  * Preview and API
  */
 
-
 Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($type, $id) {
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio(true);
+    $base = $Portfolio->getBasePath();
     if ($type == 'profile') {
         $type = 'person';
     }
@@ -41,6 +43,8 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
                 ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
                 ['name' => $id, 'path' => "/groups/view/$id"],
             ];
+
+            $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
             break;
         default:
             die('Unknown type: ' . $type);
@@ -52,32 +56,19 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
     include BASEPATH . "/header.php";
 
     // Call Portfolio API to get entity details
-    $path = $_SERVER['HTTP_HOST'] . ROOTPATH . '/portfolio';
-    $total_path = $path . '/' . urlencode($type) . '/' . urlencode($id);
-    // important if https is used
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
-        $total_path = 'https://' . $total_path;
-    } else {
-        $total_path = 'http://' . $total_path;
-    }
-    $ch = curl_init($total_path);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    if (!$ch || curl_errno($ch)) {
+    $data = $Portfolio->fetch_entity($type, $id, '', 'de');
+    if ($data === null) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
         echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("Error fetching data: " . curl_error($ch), "Fehler beim Abrufen der Daten: " . curl_error($ch));
+        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";
         die;
     }
-    curl_close($ch);
 
-    $data = json_decode($response, true);
-    $status = $data['status'] ?? 200;
-    if (empty($data) || $status != 200) {
+    if (empty($data)) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
         echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
@@ -87,10 +78,150 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
         include BASEPATH . "/footer.php";
         die;
     }
-    $data = $data['data'] ?? null;
+    // echo $Portfolio->renderBreadCrumb($type, $data, $base);
     include BASEPATH . "/addons/portal/$type.php";
     include BASEPATH . "/footer.php";
 });
+
+
+Route::get('/render/(activity|person|profile|project|group|unit)/(.*)', function ($type, $id) {
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio(false);
+
+    $lang = $_GET['lang'] ?? 'de';
+    $base = $_GET['base'] ?? $Portfolio->getBasePath();
+    $view = $_GET['view'] ?? ''; // optional: publications/projects/...
+    if ($type == 'profile') {
+        $type = 'person';
+    }
+    if ($type == 'group') {
+        $type = 'unit';
+    }
+
+    // 1) Fetch data from Portfolio API (same logic you already have)
+    $data = $Portfolio->fetch_entity($type, $id, $view, $lang);
+    // dump($data);
+    if (!$data) {
+        http_response_code(404);
+        exit;
+    }
+    if ($type == 'unit') {
+        // fetch additional numbers data
+        $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', $lang);
+        $data['numbers'] = $numbers;
+    }
+    // 3) Render content (no OSIRIS header/footer)
+    ob_start();
+    echo $Portfolio->renderBreadCrumb($type, $data, $base);
+    include BASEPATH . "/addons/portal/{$type}.php"; // uses $data + url helper
+    $content = ob_get_clean();
+
+    header('Content-Type: text/html; charset=utf-8');
+    echo $content;
+});
+
+
+Route::get('/portfolio-index', function () {
+
+    require_once BASEPATH . '/php/Portfolio.php';
+
+    $portfolio = new Portfolio(false);
+
+    $pages = [];
+    $now = date('c');
+
+    /* ---------- Units (Groups) ---------- */
+
+    $units = $portfolio->fetch_entity('units', '');
+    if (is_array($units)) {
+        foreach ($units as $unit) {
+            $id = $unit['id'] ?? null;
+            if (!$id) continue;
+
+            $unitViews = [
+                '' => '',
+                'research' => 'research',
+                'projects' => 'projects',
+                'collaborators-map' => 'collaborators-map',
+                'cooperation' => 'cooperation',
+                'publications' => 'publications',
+                'activities' => 'activities',
+                'numbers' => 'numbers',
+                'staff' => 'staff',
+            ];
+
+            foreach ($unitViews as $path => $view) {
+                $pages[] = "/units/{$id}" . ($path ? "/{$path}/" : "/");
+            }
+        }
+    }
+
+    /* ---------- Persons ---------- */
+
+    $persons = $portfolio->fetch_entity('persons', '');
+    if (is_array($persons)) {
+        foreach ($persons as $person) {
+            $id = $person['_id']['$oid'] ?? null;
+            if (!$id) continue;
+
+            $personViews = [
+                '' => '',
+                'publications' => 'publications',
+                'activities' => 'activities',
+                'all-activities' => 'all-activities',
+                'teaching' => 'teaching',
+                'projects' => 'projects',
+            ];
+
+            foreach ($personViews as $path => $view) {
+                $pages[] = "/people/{$id}" . ($path ? "/{$path}/" : "/");
+            }
+        }
+    }
+
+    /* ---------- Projects ---------- */
+
+    $projects = $portfolio->fetch_entity('projects', '');
+    if (is_array($projects)) {
+        foreach ($projects as $project) {
+            $id = $project['_id']['$oid'] ?? null;
+            if (!$id) continue;
+
+            $projectViews = [
+                '' => '',
+                'staff' => 'staff',
+                'collaborators-map' => 'collaborators-map',
+                'all-activities' => 'all-activities',
+            ];
+
+            foreach ($projectViews as $path => $view) {
+                $pages[] = "/projects/{$id}" . ($path ? "/{$path}/" : "/");
+            }
+        }
+    }
+
+    /* ---------- Activities ---------- */
+
+    $activities = $portfolio->fetch_entity('all-activities', '');
+    if (is_array($activities)) {
+        foreach ($activities as $activity) {
+            $id = $activity['_id']['$oid'] ?? null;
+            if (!$id) continue;
+
+            $pages[] = "/activities/{$id}/";
+        }
+    }
+
+    /* ---------- Response ---------- */
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'generated_at' => $now,
+        'count' => count($pages),
+        'pages' => $pages,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+});
+
 
 // Route::get('/preview/(activities|persons|projects|groups)', function ($type) {
 //     // display correct breadcrumb

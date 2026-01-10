@@ -1535,7 +1535,7 @@ public $templates = [
         }
 
         if ($this->usecase == 'portal') {
-            $line = "<a class='colorless' href='" . PORTALPATH . "/activity/$id'>$title</a>";
+            $line = "<a class='colorless' href='" . $base . "/activity/$id'>$title</a>";
         } else if ($link) {
             $line = "<a class='colorless' href='" . ROOTPATH . "/activities/view/$id'>$title</a>";
         } else {

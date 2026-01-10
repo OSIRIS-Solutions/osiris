@@ -415,7 +415,7 @@ Route::get('/api/all-activities', function () {
         } elseif ($page === 'portal') {
             $doc['activity'] = str_replace(
                 [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
-                [PORTALPATH . "/activity", PORTALPATH . "/person"],
+                ["/activity", "/person"],
                 $doc['activity']
             );
         }
