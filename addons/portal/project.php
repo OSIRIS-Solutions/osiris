@@ -20,8 +20,10 @@
     const PROJECT = '<?= $id ?>';
     const $base = '<?= $base ?>';
 </script>
+<?php if ($Portfolio->isPreview()) { ?>
+    <script src="<?= ROOTPATH ?>/js/projects.js"></script>
+<?php } ?>
 
-<script src="<?= ROOTPATH ?>/js/projects.js"></script>
 
 <style>
     @media (min-width: 768px) {
@@ -38,9 +40,29 @@
         color: var(--muted-color);
         font-style: italic;
     }
+
+    .on-this-page-nav {
+        z-index: 10;
+        top: 0;
+    }
 </style>
 
-<div class="container-lg mt-20">
+<?php if ($Portfolio->isPreview()) { ?>
+    <!-- adjust style for a top margin of 4rem for all links and fixed -->
+    <style>
+        .content-wrapper {
+            scroll-padding-top: 6rem;
+
+        }
+
+        .on-this-page-nav {
+            top: 9rem !important;
+        }
+    </style>
+<?php } ?>
+
+
+<section class="container-lg mt-20">
     <h1>
         <?= lang($data['name'], $data['name_de'] ?? null) ?>
     </h1>
@@ -51,7 +73,7 @@
 
     <!-- abstract -->
     <div class="row row-eq-spacing">
-        <div class="col-md-8">
+        <div class="col-sm-8 order-sm-first order-last" id="about">
             <?php if (!empty($data['abstract'])) { ?>
                 <h2 class="title">
                     <?= lang('About this project', 'Über das Projekt') ?>
@@ -71,11 +93,50 @@
                 </a>
             <?php } ?>
 
+
+            <h2 class="title" id="team">
+                <?= lang('Team', 'Team') ?>
+            </h2>
+            <?php if (!empty($data['persons'] ?? array())) { ?>
+                <div class="row row-eq-spacing">
+                    <?php
+                    $persons = DB::doc2Arr($data['persons']);
+                    foreach ($persons as $person) {
+                    ?>
+                        <div class="col-lg-6">
+                            <div class="d-flex align-items-center box mt-0 p-10" style="height: calc(100% - 2rem);">
+
+                                <?= $person['img'] ?>
+                                <div class="">
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/person/<?= $person['id'] ?>" class="colorless">
+                                            <?= $person['name'] ?>
+                                        </a>
+                                    </h5>
+                                    <?= lang($person['role']['en'] ?? '', $person['role']['de'] ?? null) ?>
+                                    <?php
+                                    if (!empty($person['depts'])) {
+                                        foreach ($person['depts'] as $d => $dept) {
+                                    ?>
+                                            <br>
+                                            <a href="<?= $base ?>/group/<?= $d ?>">
+                                                <?= lang($dept['en'] ?? '', $dept['de'] ?? null) ?>
+                                            </a>
+                                        <?php } ?>
+                                    <?php } ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+
             <!-- activities -->
             <?php
             if ($data['activities'] > 0) { ?>
 
-                <h3>
+                <h3 class="title mt-40" id="research-output">
                     <?= lang('Research Output', 'Forschungsergebnisse') ?>
                 </h3>
 
@@ -138,17 +199,23 @@
                     <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
                 <?php } ?>
 
-                <div id="collaborators">
+                <div id="collaborators" class="mt-40">
                     <a class="btn primary float-right" href="#cooperation-partners">Zeige Liste</a>
 
-                    <h2 class="mb-0">
+                    <h2>
                         <?= lang('Collaborators', 'Kooperationspartner') ?>
                         (<?= count($data['collaborators']) ?>)
                     </h2>
 
 
                     <div class="box mt-0">
-                        <div id="map" class=""></div>
+                        <!-- <div id="map" class="portfolio-map"></div> -->
+                        <div id="collaborator-map"
+                            class="portfolio-map map h-500 w-full"
+                            data-source="./collaborators-map.json"
+                            data-context="project"
+                            data-lang="<?= lang('en', 'de') ?>">
+                        </div>
                     </div>
                     <p>
                         <i class="ph ph-duotone ph-circle" style="color:#f78104"></i>
@@ -179,26 +246,45 @@
                                                         <?= lang('No collaborators connected.', 'Keine Partner verknüpft.') ?>
                                                     </td>
                                                 </tr>
-                                            <?php
-                                            } else foreach ($data['collaborators'] as $collab) {
-                                            ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
+                                                <?php
+                                            } else {
 
-                                                            <span data-toggle="tooltip" data-title="<?= $collab['type'] ?>" class="badge mr-10">
-                                                            </span>
-                                                            <div class="">
-                                                                <h5 class="my-0">
-                                                                    <?= $collab['name'] ?>
-                                                                </h5>
-                                                                <?= $collab['location'] ?>
-                                                                <a href="<?= $collab['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                                // order by role: coordinator, partner, others
+                                                usort($data['collaborators'], function ($a, $b) {
+                                                    $order = ['coordinator' => 1, 'partner' => 2];
+                                                    $a_order = $order[$a['role']] ?? 3;
+                                                    $b_order = $order[$b['role']] ?? 3;
+                                                    return $a_order - $b_order;
+                                                });
+                                                foreach ($data['collaborators'] as $collab) {
+                                                ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+
+                                                                <span title="<?= $collab['role'] ?>" class="mr-10">
+                                                                    <?php
+                                                                    $color = '#cccccc';
+                                                                    if ($collab['role'] == 'coordinator') {
+                                                                        $color = '#f78104';
+                                                                    } elseif ($collab['role'] == 'partner') {
+                                                                        $color = '#008083';
+                                                                    }
+                                                                    ?>
+                                                                    <i class="ph ph-duotone ph-circle ph-2x" style="color:<?= $color ?>"></i>
+                                                                </span>
+                                                                <div class="">
+                                                                    <h5 class="my-0">
+                                                                        <?= $collab['name'] ?>
+                                                                    </h5>
+                                                                    <?= $collab['location'] ?>
+                                                                    <a href="<?= $collab['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
                                             <?php
+                                                }
                                             } ?>
 
                                         </tbody>
@@ -306,12 +392,12 @@
 
                                     layout.mapbox.zoom = zoom;
 
-                                    Plotly.newPlot("map", [data], layout);
+                                    Plotly.newPlot("collaborator-map", [data], layout);
 
                                 });
                             } catch (error) {
                                 console.error("Error fetching collaborators map data:", error);
-                                document.getElementById("map").innerHTML = "<p>Error loading map data.</p>";
+                                document.getElementById("collaborator-map").innerHTML = "<p>Error loading map data.</p>";
                             }
                         });
                     </script>
@@ -319,126 +405,139 @@
             <?php } ?>
 
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <h2>
-            <?= lang('Details', 'Details') ?>
-        </h2>
-        <table class="table ">
-            <tbody>
-                <tr>
-                    <td>
-                        <!-- timeline progress bar -->
-                        <?php
-                        $progress = 0;
-                        if (!empty($data['start_date']) && !empty($data['end_date'])) {
-                            $start = strtotime($data['start_date']);
-                            $end = strtotime($data['end_date']);
-                            $now = time();
-
-                            if ($now < $start) {
-                                $progress = 0;
-                            } elseif ($now > $end) {
-                                $progress = 100;
-                            } else {
-                                $progress = round((($now - $start) / ($end - $start)) * 100);
-                            }
-                        }
-
-                        ?>
-
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <span class="key">Start</span>
-                                <b><?= format_date($data['start_date']) ?></b>
-                            </div>
-                            <div>
-                                <span class="key"><?= lang('End', 'Ende') ?></span>
-                                <b><?= format_date($data['end_date']) ?></b>
-                            </div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> <?php if ($progress == 100) { ?>
-                            <small class="text-secondary">
-                                <?= lang('Completed', 'Abgeschlossen') ?>
-                            </small>
-                        <?php } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
-                        <b><?= $data['funder'] ?? '-' ?></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>
-                        <b><?= $data['funding_organization'] ?? '-' ?></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Funding reference number(s)', 'Förderkennzeichen') ?></span>
-                        <b><?= implode(', ', $data['funding_number'] ?? []) ?></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('Coordinator facility', 'Koordinator-Einrichtung') ?></span>
-                        <b><?= $data['coordinator'] ?? '-' ?></b>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2 class="title">
-            <?= lang('Team', 'Team') ?>
-        </h2>
-        <?php if (!empty($data['persons'] ?? array())) { ?>
+        <div class="col-md-4 position-relative">
+            <h2>
+                <?= lang('Details', 'Details') ?>
+            </h2>
             <table class="table ">
                 <tbody>
-                    <?php
-                    $persons = DB::doc2Arr($data['persons']);
-                    foreach ($persons as $person) {
+                    <tr>
+                        <td>
+                            <!-- timeline progress bar -->
+                            <?php
+                            $progress = 0;
+                            if (!empty($data['start_date']) && !empty($data['end_date'])) {
+                                $start = strtotime($data['start_date']);
+                                $end = strtotime($data['end_date']);
+                                $now = time();
+
+                                if ($now < $start) {
+                                    $progress = 0;
+                                } elseif ($now > $end) {
+                                    $progress = 100;
+                                } else {
+                                    $progress = round((($now - $start) / ($end - $start)) * 100);
+                                }
+                            }
+
+                            ?>
+
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span class="key">Start</span>
+                                    <b><?= format_date($data['start_date']) ?></b>
+                                </div>
+                                <div>
+                                    <span class="key"><?= lang('End', 'Ende') ?></span>
+                                    <b><?= format_date($data['end_date']) ?></b>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div> <?php if ($progress == 100) { ?>
+                                <small class="text-secondary">
+                                    <?= lang('Completed', 'Abgeschlossen') ?>
+                                </small>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Project type', 'Projekttyp') ?></span>
+                            <b><?= lang($data['type'] ?? '-') ?></b>
+                        </td>
+                    </tr>
+                    <?php if (isset($data['funder'])): ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
+                                <b><?= $data['funder'] ?? '-' ?></b>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if (isset($data['funding_organization'])): ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>
+                                <b><?= $data['funding_organization'] ?? '-' ?></b>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if (isset($data['funding_number'])): ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= lang('Funding reference number(s)', 'Förderkennzeichen') ?></span>
+                                <b><?= implode(', ', $data['funding_number'] ?? []) ?></b>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if (isset($data['coordinator'])): ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= lang('Coordinator facility', 'Koordinator-Einrichtung') ?></span>
+                                <b><?= $data['coordinator'] ?? '-' ?></b>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if (isset($data['img'])) {
+                        if ($Portfolio->isPreview()) {
+                            $img_path = $data['img'];
+                        } else {
+                            $ext = pathinfo($data['img'], PATHINFO_EXTENSION);
+                            $img_path = './image.' . $ext;
+                        }
                     ?>
                         <tr>
                             <td>
-                                <div class="d-flex align-items-center">
-
-                                    <?= $person['img'] ?>
-                                    <div class="">
-                                        <h5 class="my-0">
-                                            <a href="<?= $base ?>/person/<?= $person['id'] ?>" class="colorless">
-                                                <?= $person['name'] ?>
-                                            </a>
-                                        </h5>
-                                        <?= lang($person['role']['en'] ?? '', $person['role']['de'] ?? null) ?>
-                                        <?php
-                                        if (!empty($person['depts'])) {
-                                            foreach ($person['depts'] as $d => $dept) {
-                                        ?>
-                                                <br>
-                                                <a href="<?= $base ?>/group/<?= $d ?>">
-                                                    <?= lang($dept['en'] ?? '', $dept['de'] ?? null) ?>
-                                                </a>
-                                            <?php } ?>
-                                        <?php } ?>
-
-                                    </div>
+                                <span class="key"><?= lang('Project logo', 'Projektlogo') ?></span>
+                                <div>
+                                    <img src="<?= $img_path ?>" class="img-fluid" alt="<?= lang('Project image', 'Projektbild') ?>">
                                 </div>
                             </td>
                         </tr>
                     <?php } ?>
-
                 </tbody>
             </table>
-        <?php } ?>
 
 
+            <!-- on this page navigation -->
+
+            <nav class="on-this-page-nav">
+                <div class="content">
+                    <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
+
+                    <a href="#about">
+                        <?= lang('About this project', 'Über das Projekt') ?>
+                    </a>
+                    <a href="#team">
+                        <?= lang('Team', 'Team') ?>
+                    </a>
+                    <?php if ($data['activities'] > 0) { ?>
+                        <a href="#research-output">
+                            <?= lang('Research Output', 'Forschungsergebnisse') ?>
+                        </a>
+                    <?php } ?>
+                    <?php if (!empty($data['collaborators'] ?? [])) { ?>
+                        <a href="#collaborators">
+                            <?= lang('Collaborators', 'Kooperationspartner') ?>
+                        </a>
+                    <?php } ?>
+
+                </div>
+            </nav>
+
+        </div>
     </div>
-</div>
 
-</div>
+</section>

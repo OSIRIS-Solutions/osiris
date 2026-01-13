@@ -56,13 +56,40 @@
                         </li>
                     <?php endif; ?>
                 </ul>
+
+
+
+                <h3><?= lang("Cite this activity", "Zitiere diese Aktivität"); ?></h3>
+                <nav class="pills">
+                    <a class="btn active" onclick="nav('citation')">Citation</a>
+                    <?php if (!empty($data['bibtex'])): ?>
+                        <a class="btn" onclick="nav('bibtex')">BibTeX</a>
+                    <?php endif; ?>
+                    <?php if (!empty($data['ris'])): ?>
+                        <a class="btn" onclick="nav('ris')">RIS</a>
+                    <?php endif; ?>
+                </nav>
+                
+                <div id="tabs">
+                    <div class="box padded" id="citation-box">
+                        <span><?= $data['print'] ?></span>
+                    </div>
+                    <div class="box padded" id="bibtex-box" style="display: none;">
+                        <pre><?= $data['bibtex'] ?? '' ?></pre>
+                    </div>
+                    <div class="box padded" id="ris-box" style="display: none;">
+                        <pre><?= $data['ris'] ?? '' ?></pre>
+                    </div>
+
+                </div>
             </div>
 
             <div class="col-md-4">
                 <h3 class="title"><?= lang("Details"); ?></h3>
                 <table class="table" id="detail-table">
                     <tbody>
-                        <?php foreach ($data['fields'] as $field): ?>
+                        <?php foreach ($data['fields'] as $field):
+                            if (empty($field['value'])) continue; ?>
                             <tr>
                                 <td>
                                     <b class="key"><?= lang($field['key_en'], $field['key_de']); ?></b>
@@ -73,8 +100,24 @@
                     </tbody>
                 </table>
 
-                <h3 class="title"><?= lang("Associated Projects", "Assoziierte Projekte"); ?></h3>
+                <?php if (!empty($data['infrastructures'])): ?>
+                    <h3 class="title">
+                        <?= lang("Associated Infrastructures", "Assoziierte Infrastrukturen"); ?>
+                    </h3>
+                    <?php foreach ($data['infrastructures'] as $infrastructure): ?>
+                        <div class="project-card">
+                            <div>
+                                <h5 class="my-0">
+                                    <a href="<?= $base ?>/infrastructure/<?= $infrastructure['id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                                </h5>
+                                <small class="text-muted"><?= $infrastructure['subtitle'] ?? '' ?></small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
                 <?php if (!empty($data['projects'])): ?>
+                    <h3 class="title"><?= lang("Associated Projects", "Assoziierte Projekte"); ?></h3>
                     <?php foreach ($data['projects'] as $project): ?>
                         <div class="project-card">
                             <div>
@@ -88,35 +131,10 @@
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <p><?= lang("No projects connected.", "Keine Projekte verknüpft."); ?></p>
                 <?php endif; ?>
             </div>
         </div>
 
-        <h3><?= lang("Cite this data", "Zitiere diese Aktivität"); ?></h3>
-        <nav class="pills">
-            <a class="btn active" onclick="nav('citation')">Citation</a>
-            <?php if (!empty($data['bibtex'])): ?>
-                <a class="btn" onclick="nav('bibtex')">BibTeX</a>
-            <?php endif; ?>
-            <?php if (!empty($data['ris'])): ?>
-                <a class="btn" onclick="nav('ris')">RIS</a>
-            <?php endif; ?>
-        </nav>
-        <div id="tabs">
-
-            <div class="box padded" id="citation-box">
-                <span><?= $data['print'] ?></span>
-            </div>
-            <div class="box padded" id="bibtex-box" style="display: none;">
-                <pre><?= $data['bibtex'] ?? '' ?></pre>
-            </div>
-            <div class="box padded" id="ris-box" style="display: none;">
-                <pre><?= $data['ris'] ?? '' ?></pre>
-            </div>
-
-        </div>
         <p id="disclaimer" class="text-muted">
             <?= lang(
                 "The content on this page is maintained by the authors.",
@@ -188,5 +206,4 @@
         display: block;
         margin: 0;
     }
-
-    </style>
+</style>

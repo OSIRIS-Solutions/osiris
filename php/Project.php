@@ -232,8 +232,9 @@ class Project extends Vocabulary
         return lang($field['en'], $field['de'] ?? null);
     }
 
-    public function printField($field, $value)
+    public function printField($field, $value, $portfolio = false)
     {
+        $DB = new DB();
         if (empty($value)) return '-';
         switch ($field) {
             case 'type':
@@ -282,6 +283,10 @@ class Project extends Vocabulary
             case 'stipendiate':
             case 'scholar':
             case 'supervisor':
+                if ($portfolio) {
+                    $userid = $DB->getIDfromUsername($value);
+                    return '<a href="' . ROOTPATH . '/person/' . ($userid) . '">' . $this->getNameFromId($value) . '</a>';
+                }
                 return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
             case 'persons':
                 $value = DB::doc2Arr($value);
@@ -294,7 +299,11 @@ class Project extends Vocabulary
                 $applicants = DB::doc2Arr($value);
                 $applicantsList = '';
                 foreach ($applicants as $a) {
-                    $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                    if ($portfolio) {
+                        $applicantsList .= '<li>'.$DB->portfolioPersonLink($a).'</li>';
+                    } else {
+                        $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                    }
                 }
                 return '<ul class="list mb-0">' . $applicantsList . '</ul>';
             case 'grant_sum_proposed':
@@ -370,6 +379,9 @@ class Project extends Vocabulary
             case 'university':
                 $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
                 if (empty($org)) return $value;
+                if ($portfolio) {
+                    return $org['name'];
+                }
                 return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
             default:
                 if (is_string($value)) {

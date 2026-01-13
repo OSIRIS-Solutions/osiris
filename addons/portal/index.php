@@ -5,7 +5,7 @@
  * Preview and API
  */
 
-Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($type, $id) {
+Route::get('/preview/(activity|person|profile|project|group|infrastructure)/(.*)', function ($type, $id) {
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(true);
     $base = $Portfolio->getBasePath();
@@ -46,6 +46,12 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
 
             $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
             break;
+        case 'infrastructure':
+            $breadcrumb = [
+                ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+                ['name' => $id, 'path' => "/infrastructures/view/$id"],
+            ];
+            break;
         default:
             die('Unknown type: ' . $type);
             break;
@@ -84,11 +90,12 @@ Route::get('/preview/(activity|person|profile|project|group)/(.*)', function ($t
 });
 
 
-Route::get('/render/(activity|person|profile|project|group|unit)/(.*)', function ($type, $id) {
+Route::get('/render/(activity|person|profile|project|group|unit|infrastructure)/(.*)', function ($type, $id) {
+    include BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(false);
 
-    $lang = $_GET['lang'] ?? 'de';
+    $lang = $_GET['lang'] ?? 'en';
     $base = $_GET['base'] ?? $Portfolio->getBasePath();
     $view = $_GET['view'] ?? ''; // optional: publications/projects/...
     if ($type == 'profile') {

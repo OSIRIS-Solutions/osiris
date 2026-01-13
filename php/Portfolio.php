@@ -34,6 +34,7 @@ class Portfolio extends Settings
         // basepath for links depends on portfolio settings
         if ($this->preview) {
             $this->basepath = ROOTPATH . '/preview';
+            $this->lang = lang('en', 'de');
         } else {
             $this->basepath = $this->get('portfolio_url', ROOTPATH . '/');
             if (substr($this->basepath, -1) === '/') {
@@ -269,8 +270,12 @@ class Portfolio extends Settings
             case 'unit':
                 // $items[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"];
                 $items[] = ['name' => $name, 'path' => "/groups/view/$id"];
+                break;
 
-                // Add more types as needed
+            case 'infrastructure':
+                $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => "/infrastructures"];
+                $items[] = ['name' => $name, 'path' => "/infrastructure/$id"];
+                break;
         }
 
         // Render breadcrumb HTML

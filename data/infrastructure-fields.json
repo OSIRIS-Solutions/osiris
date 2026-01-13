@@ -65,5 +65,25 @@
             "en": "If the feature research topics is enabled globally, those can be added to infrastructures. Please keep in mind that topics might be named differently in your organisation.",
             "de": "Wenn die Funktion Forschungsbereiche global aktiviert ist, können diese den Infrastrukturen hinzugefügt werden. Bitte beachte, dass Bereiche in deiner Organisation anders benannt sein können."
         }
+    },
+    {
+        "id": "link",
+        "default": true,
+        "en": "Website",
+        "de": "Webseite",
+        "description": {
+            "en": "This enables a field to add the website URL of the infrastructure.",
+            "de": "Dies aktiviert ein Feld zum Hinzufügen der Website-URL der Infrastruktur."
+        }
+    },
+    {
+        "id": "contact_email",
+        "default": true,
+        "en": "Contact Email",
+        "de": "Kontakt E-Mail",
+        "description": {
+            "en": "This enables a field to add the contact email of the infrastructure.",
+            "de": "Dies aktiviert ein Feld zum Hinzufügen der Kontakt-E-Mail der Infrastruktur."
+        }
     }
 ]

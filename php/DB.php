@@ -531,6 +531,25 @@ class DB
         return $fn;
     }
 
+    public function getIDfromUsername($username)
+    {
+        $person = $this->db->persons->findOne(['username' => $username], ['projection' => ['_id' => 1]]);
+        if (empty($person)) return null;
+        return strval($person['_id']);
+    }
+
+    public function portfolioPersonLink($username, $basepath = null)
+    {
+        if (empty($basepath)){
+            $basepath = $this->db->adminGeneral->findOne(['key' => 'portfolio_url'], ['projection' => ['value' => 1]]);
+            $basepath = $basepath['value'] ?? ROOTPATH;
+        }
+        $person = $this->db->persons->findOne(['username' => $username], ['projection' => ['_id' => 1]]);
+        if (empty($person)) return '';
+        $userid = strval($person['_id']);
+        $name = $person['displayname'] ?? $this->getNameFromId($username);
+        return '<a href="' . $basepath . '/person/' . ($userid) . '">' . $name . '</a>';
+    }
 
     /**
      * Returns full name from username.

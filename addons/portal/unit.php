@@ -247,7 +247,7 @@ $preselect = $_GET['open'] ?? null;
         <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
         <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 
-        <script src="<?= ROOTPATH ?>/js/plotly-2.27.1.min.js" charset="utf-8"></script>
+        <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
 
         <!-- all variables for this page -->
         <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
@@ -477,10 +477,19 @@ $preselect = $_GET['open'] ?? null;
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
+
+                <?php
+                if ($numbers['infrastructures'] > 0) { ?>
+                    <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="<?= $preselect === 'infrastructures' ? 'active' : '' ?>">
+                        <i class="ph ph-cube" aria-hidden="true"></i>
+                        <?= $Settings->infrastructureLabel() ?>
+                        <span class="index"><?= $numbers['infrastructures'] ?></span>
+                    </a>
+                <?php } ?>
             </nav>
 
 
-            <section id="general" <?= empty($preselect) || $preselect === 'general' ? '' : 'style="display:none"' ?>>
+            <section id="general" <?= empty($preselect) || $preselect === 'general' ? '' : 'style="display:none"' ?> data-title="<?= lang('General information', 'Allgemeine Informationen') ?>">
                 <!-- head -->
                 <?php
                 $head = $data['heads'] ?? [];
@@ -512,9 +521,9 @@ $preselect = $_GET['open'] ?? null;
 
                 <?php if (isset($data['description']) || isset($data['description_de'])) { ?>
 
-                    <h5>
+                    <!-- <h5>
                         <?= lang('About', 'Information') ?>
-                    </h5>
+                    </h5> -->
                     <div class="description">
                         <?= lang($data['description'] ?? '-', $data['description_de'] ?? null) ?>
                     </div>
@@ -526,17 +535,21 @@ $preselect = $_GET['open'] ?? null;
 
             </section>
 
-            <section id="research" style="display:none;">
+            <section id="research" style="display:none;" data-title="<?= lang('Research topics', 'Forschungsschwerpunkte') ?>">
 
-                <h3><?= lang('Research interests', 'Forschungsinteressen') ?></h3>
+                <!-- <h3><?= lang('Research topics', 'Forschungsschwerpunkte') ?></h3> -->
 
                 <?php if (isset($data['research']) && !empty($data['research'])) { ?>
                     <?php foreach ($data['research'] as $r) { ?>
-                        <div class="box">
-                            <h5 class="header">
+                        <div class="box padded">
+                            <h5 class="title">
                                 <?= lang($r['title'], $r['title_de'] ?? null) ?>
                             </h5>
-                            <div class="content description">
+                            <div class="subtitle font-size-14 text-secondary">
+                                <?= lang($r['subtitle'] ?? '', $r['subtitle_de'] ?? null) ?>
+                            </div>
+                            
+                            <div class="description">
                                 <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
                             </div>
                         </div>
@@ -547,7 +560,7 @@ $preselect = $_GET['open'] ?? null;
             </section>
 
 
-            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?>>
+            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('Employees', 'Mitarbeitende Personen') ?>">
 
                 <!-- <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3> -->
 
@@ -583,14 +596,16 @@ $preselect = $_GET['open'] ?? null;
             </section>
 
 
-            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?>>
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('Publications', 'Publikationen') ?>">
 
                 <!-- <h2><?= lang('Publications', 'Publikationen') ?></h2> -->
 
 
                 <table class="table datatable" id="publication-table"
                     data-table="publications"
+                    data-tab="publications"
                     data-source="./publications.json"
+                    data-page-length="20"
                     data-lang="<?= lang('en', 'de') ?>">
                     <thead>
                         <tr>
@@ -603,7 +618,7 @@ $preselect = $_GET['open'] ?? null;
             </section>
 
 
-            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?>>
+            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= lang('Other activities', 'Andere Aktivitäten') ?>">
 
 
                 <!-- <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2> -->
@@ -612,7 +627,9 @@ $preselect = $_GET['open'] ?? null;
 
                     <table class="table datatable" id="activities-table"
                         data-table="activities"
+                        data-tab="activities"
                         data-source="./activities.json"
+                        data-page-length="20"
                         data-lang="<?= lang('en', 'de') ?>">
                         <thead>
                             <tr>
@@ -628,19 +645,17 @@ $preselect = $_GET['open'] ?? null;
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?>>
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('Projects', 'Projekte') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>
                     <!-- collaborators -->
-                    <h1>
-                        <?= lang('Projects', 'Projekte') ?>
-                    </h1>
-
                     <div class="w-full">
                         <table class="table datatable responsive" id="projects-table"
                             data-table="projects"
+                            data-tab="projects"
                             data-source="./projects.json"
+                            data-page-length="8"
                             data-lang="<?= lang('en', 'de') ?>">
                             <thead>
                                 <tr>
@@ -656,9 +671,10 @@ $preselect = $_GET['open'] ?? null;
 
                     <div id="collaborators">
                         <div class="box mt-0">
-                            <div id="map"
-                                class="portfolio-map map h-300 w-full"
+                            <div id="collaborator-map"
+                                class="portfolio-map map h-500 w-full"
                                 data-source="./collaborators-map.json"
+                                data-tab="projects"
                                 data-context="unit"
                                 data-lang="<?= lang('en', 'de') ?>">
                             </div>
@@ -747,6 +763,78 @@ $preselect = $_GET['open'] ?? null;
                 <?php } ?>
 
 
+            </section>
+
+
+
+            <section id="infrastructures" <?= $preselect === 'infrastructures' ? '' : 'style="display:none"' ?> data-title="<?= lang('Infrastructures', 'Infrastrukturen') ?>">
+
+                <?php if ($numbers['infrastructures'] > 0) {
+                    $infrastructures = $Portfolio->fetch_entity('infrastructures');
+                ?>
+                    <style>
+                        .infra-card {
+                            width: 100%;
+                            margin: 0.5rem 0;
+                            display: flex;
+                            gap: 1rem;
+                            padding: 1rem;
+                        }
+
+                        .infra-card img,
+                        .infra-card .infrastructure-logo-placeholder {
+                            width: 120px;
+                            height: 120px;
+                            flex-shrink: 0;
+                            object-fit: contain;
+                        }
+                    </style>
+                    <!-- infrastructures -->
+                    <div class="w-full">
+                        <table class="table datatable responsive" id="infrastructures-table"
+                            data-lang="<?= lang('en', 'de') ?>">
+                            <thead class="hidden">
+                                <tr>
+                                    <th data><?= lang('Infrastructure', 'Infrastruktur') ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($infrastructures as $infra) { ?>
+                                    <tr>
+                                        <td>
+                                            <div class="infra-card">
+
+                                                <?php
+                                                echo $infra['logo'] ?? '';
+                                                ?>
+                                                <div>
+                                                    <h5 class="m-0">
+                                                        <a href="<?= $base ?>/infrastructure/<?= $infra['id'] ?>" class="link">
+                                                            <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                                        </a>
+                                                    </h5>
+
+                                                    <div class="text-muted mb-5">
+                                                        <?php if (!empty($infra['subtitle'])) { ?>
+                                                            <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                                        <?php } ?>
+                                                    </div>
+                                                    <p>
+                                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                                    </p>
+                                                    <div>
+                                                        <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                <?php } ?>
             </section>
         </div>
 

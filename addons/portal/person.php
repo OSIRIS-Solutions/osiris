@@ -1,34 +1,71 @@
 <style>
-    .project-card {
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .card {
         width: 100%;
         margin: 0.5rem 0;
         border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         background: var(--box-bg-color);
-        display: flex;
-        align-items: center;
+        /* display: flex;
+        flex-direction: column;
+        align-items: center; */
         padding: 1rem 1.4rem;
     }
 
-    .project-card div {
+    .card h5 a {
+        color: var(--link-color) !important;
+    }
+
+    .card div {
         border: 0;
         box-shadow: none;
         /* width: 100%; */
-        height: 100%;
+        /* height: 100%; */
         display: block;
     }
 
-    .project-card small,
-    .project-card p {
+    .card small,
+    .card p {
         display: block;
         margin: 0;
     }
+
+    /* two columns on larger screens */
+    @media (min-width: 768px) {
+        .card {
+            width: calc(50% - 0.5rem);
+        }
+    }
+
+    .on-this-page-nav {
+        z-index: 10;
+        top: 0;
+    }
 </style>
 
-<div class="container-lg">
+<?php if ($Portfolio->isPreview()) { ?>
+    <!-- adjust style for a top margin of 4rem for all links and fixed -->
+    <style>
+        .content-wrapper {
+            scroll-padding-top: 6rem;
+
+        }
+
+        .on-this-page-nav {
+            top: 9rem !important;
+        }
+    </style>
+<?php } ?>
+
+<section class="container-lg">
     <?php if (!$data): ?>
-        <p><?= lang("Person not found", "Person nicht gefunden"); ?></p>
+        <p><?= lang("Person not found", "Person nicht gefunden") ?></p>
     <?php else: ?>
 
         <div class="profile-header" style="display: flex; align-items: center">
@@ -40,15 +77,15 @@
                 </div>
             <?php endif; ?>
             <div class="col" id="person">
-                <div class="academic-title"><?= $data['academic_title'] ?? ""; ?></div>
+                <div class="academic-title"><?= $data['academic_title'] ?? "" ?></div>
                 <h1 class="m-0 person-name">
-                    <?= $data['first'] ?? ""; ?> <?= $data['last']; ?>
+                    <?= $data['first'] ?? "" ?> <?= $data['last'] ?>
                 </h1>
                 <p class="my-0 lead text-secondary position">
                     <?php if (!empty($data['inactive'])): ?>
-                        <?= lang("Former Employee", "Ehemalige Beschäftigte"); ?>
+                        <?= lang("Former Employee", "Ehemalige Beschäftigte") ?>
                     <?php else: ?>
-                        <?= lang($data['position'], $data['position_de'] ?? null); ?>
+                        <?= lang($data['position'], $data['position_de'] ?? null) ?>
                     <?php endif; ?>
                 </p>
             </div>
@@ -57,33 +94,37 @@
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm-8 order-sm-first order-last" id="research">
                 <?php if (!empty($data['research'])): ?>
-                    <h2 class="title"><?= lang("Research interest", "Forschungsinteressen"); ?></h2>
+                    <h2 class="title" id="research">
+                        <?= lang("Research interest", "Forschungsinteressen") ?>
+                    </h2>
                     <ul class="list">
                         <?php foreach ($data['research'] as $item): ?>
-                            <li><?= lang($item['en'] ?? $item, $item['de'] ?? null); ?></li>
+                            <li><?= lang($item['en'] ?? $item, $item['de'] ?? null) ?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
 
                 <?php if (!empty($data['cv'])): ?>
-                    <h2 class="title"><?= lang("Curriculum Vitae"); ?></h2>
+                    <h2 class="title" id="cv">
+                        <?= lang("Curriculum Vitae") ?>
+                    </h2>
                     <div class="biography">
-                        <?php foreach ($data['cv'] as $entry): if (!empty($entry['hide'])) continue; ?>
+                        <?php foreach ($data['cv'] as $entry): if (!empty($entry['hide'])) continue ?>
                             <div class="cv">
-                                <span class="time"><?= $entry['time']; ?></span>
-                                <h5 class="title"><?= $entry['position']; ?></h5>
-                                <span class="affiliation"><?= $entry['affiliation']; ?></span>
+                                <span class="time"><?= $entry['time'] ?></span>
+                                <h5 class="title"><?= $entry['position'] ?></h5>
+                                <span class="affiliation"><?= $entry['affiliation'] ?></span>
                             </div>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if (!empty($data['highlighted'])): ?>
-                    <h2><?= lang("Highlighted research", "Hervorgehobene Forschung"); ?></h2>
+                    <h2><?= lang("Highlighted research", "Hervorgehobene Forschung") ?></h2>
                     <table class="table">
                         <?php foreach ($data['highlighted'] as $h): ?>
                             <tr>
-                                <td class="w-50"><?= $h['icon']; ?></td>
+                                <td class="w-50"><?= $h['icon'] ?></td>
                                 <td><?= $Portfolio->replaceLink($h['html']) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -93,7 +134,7 @@
 
                 <?php if (!empty($data['numbers']['publications'])): ?>
                     <div class="pb-10">
-                        <h2><?= lang("Publications", "Publikationen"); ?></h2>
+                        <h2 id="publications"><?= lang("Publications", "Publikationen") ?></h2>
 
                         <table class="table datatable"
                             id="publication-table"
@@ -146,7 +187,7 @@
 
                 <?php if (!empty($data['numbers']['activities'])): ?>
                     <div class="pb-10">
-                        <h2><?= lang("Other Activities", "Weitere Aktivitäten"); ?></h2>
+                        <h2 id="activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></h2>
 
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
@@ -198,7 +239,7 @@
 
                 <?php if (!empty($data['numbers']['teaching'])): ?>
                     <div class="pb-10">
-                        <h2><?= lang("Teaching activity", "Lehrbeteiligung"); ?></h2>
+                        <h2 id="teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></h2>
                         <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-source="./teaching.json" data-table="teaching">
                             <thead>
                                 <tr>
@@ -226,50 +267,96 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- 
-                    <script>
-                        $(document).ready(function() {
-                            $('#teaching-table').DataTable({
-                                "ajax": {
-                                    "url": ROOTPATH + '/portfolio/person/<?= $id ?>/teaching',
-                                    dataSrc: 'data'
-                                },
-                                "sort": false,
-                                "pageLength": 6,
-                                "lengthChange": false,
-                                "searching": false,
-                                "pagingType": "numbers",
-                                columnDefs: [{
-                                    targets: 0,
-                                    data: 'name',
-                                    render: function(data, type, row) {
-                                        data = `
-                                                <h5 class="mt-0">
-                                                    ${ row.title }
-                                                </h5>
-
-                                                <em>${ row.affiliation }</em>
-                                                `;
-                                        return data;
-                                    }
-                                }, ],
-                            });
-                        });
-                    </script> -->
                 <?php endif; ?>
+
+
+                <?php if (!empty($data['numbers']['infrastructures'])):
+                    $infrastructures = $Portfolio->fetch_entity('person', $id, 'infrastructures');
+                ?>
+                    <div id="infrastructures">
+                        <h2 class="title">
+                            <?= lang('Involved in', 'Beteiligt an') ?>
+                            <?= $Settings->infrastructureLabel() ?>
+                        </h2>
+                        <div class="cards">
+                            <?php foreach ($infrastructures as $i) { ?>
+                                <div class="card">
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/infrastructure/<?= $i['id'] ?>"> <?= $i['name'] ?> </a>
+                                    </h5>
+                                    <small class="text-muted" v-html="i.title ?? ''"></small>
+                                    <hr />
+                                    <div>
+                                        <b> <?= $i['role'] ?> </b> &nbsp;
+                                    </div>
+                                    <p><?= fromToDate($i['start'], $i['end'], true) ?></p>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+
+                <div id="projects">
+                    <?php if (!empty($data['projects']['current'])): ?>
+                        <h2><?= lang("Current Projects", "Aktuelle Projekte") ?></h2>
+                        <div class="cards">
+                            <?php foreach ($data['projects']['current'] as $project): ?>
+                                <div class="card">
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/project/<?= $project['id'] ?>"> <?= $project['name'] ?> </a>
+                                    </h5>
+                                    <small class="text-muted" v-html="project.title ?? ''"></small>
+                                    <hr />
+                                    <?php if ($project['personRole']) { ?>
+                                        <div>
+                                            <b> <?= lang($project['personRole']['en'], $project['personRole']['de'] ?? '') ?> </b> &nbsp;
+                                        </div>
+                                    <?php } else { ?>
+                                        <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
+                                    <?php } ?>
+                                    <p><?= fromToDate($project['start'], $project['end']) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($data['projects']['past'])): ?>
+                        <h2><?= lang("Past Projects", "Abgeschlossene Projekte") ?></h2>
+                        <div class="cards">
+                            <?php foreach ($data['projects']['past'] as $project): ?>
+                                <div class="card">
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/project/<?= $project['id'] ?>"> <?= $project['name'] ?> </a>
+                                    </h5>
+                                    <small class="text-muted" v-html="project.title ?? ''"></small>
+                                    <hr />
+                                    <?php if ($project['personRole']) { ?>
+                                        <div>
+                                            <b> <?= lang($project['personRole']['en'], $project['personRole']['de'] ?? '') ?> </b> &nbsp;
+                                        </div>
+                                    <?php } else { ?>
+                                        <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
+                                    <?php } ?>
+                                    <p><?= fromToDate($project['start'], $project['end']) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-sm-4 position-relative">
                 <?php if (!empty($data['depts']) && empty($data['inactive'])): ?>
-                    <h2><?= lang("Affiliation", "Zugehörigkeit"); ?></h2>
+                    <h2><?= lang("Affiliation", "Zugehörigkeit") ?></h2>
                     <table class="table small unit-table w-full">
                         <tbody>
                             <?php foreach ($data['depts'] as $d): ?>
                                 <tr>
-                                    <td class="indent-<?= $d['indent']; ?>">
-                                        <a href="<?= $base ?>/group/<?= $d['id']; ?>" class="d-block">
-                                            <b><?= lang($d['name_en'], $d['name_de'] ?? null); ?></b><br />
-                                            <small class="text-muted"><?= lang($d['unit_en'], $d['unit_de']); ?></small>
+                                    <td class="indent-<?= $d['indent'] ?>">
+                                        <a href="<?= $base ?>/group/<?= $d['id'] ?>" class="d-block">
+                                            <b><?= lang($d['name_en'], $d['name_de'] ?? null) ?></b><br />
+                                            <small class="text-muted"><?= lang($d['unit_en'], $d['unit_de']) ?></small>
                                         </a>
                                     </td>
                                 </tr>
@@ -394,51 +481,36 @@
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($data['projects']['current'])): ?>
-                    <h2><?= lang("Current Projects", "Aktuelle Projekte"); ?></h2>
-                    <?php foreach ($data['projects']['current'] as $project): ?>
-                        <div class="project-card">
-                            <div>
-                                <h5 class="my-0">
-                                    <a href="<?= $base ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
-                                </h5>
-                                <small class="text-muted" v-html="project.title ?? ''"></small>
-                                <hr />
-                                <?php if ($project['personRole']) { ?>
-                                    <div>
-                                        <b> <?= lang($project['personRole']['en'], $project['personRole']['de'] ?? '') ?> </b> &nbsp;
-                                    </div>
-                                <?php } else { ?>
-                                    <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
-                                <?php } ?>
-                                <p><?= fromToDate($project['start'], $project['end']) ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
 
-                <?php if (!empty($data['projects']['past'])): ?>
-                    <h2><?= lang("Past Projects", "Abgeschlossene Projekte"); ?></h2>
-                    <?php foreach ($data['projects']['past'] as $project): ?>
-                        <div class="project-card">
-                            <div>
-                                <h5 class="my-0">
-                                    <a href="<?= $base ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
-                                </h5>
-                                <small class="text-muted" v-html="project.title ?? ''"></small>
-                                <hr />
-                                <?php if ($project['personRole']) { ?>
-                                    <div>
-                                        <b> <?= lang($project['personRole']['en'], $project['personRole']['de'] ?? '') ?> </b> &nbsp;
-                                    </div>
-                                <?php } else { ?>
-                                    <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
-                                <?php } ?>
-                                <p><?= fromToDate($project['start'], $project['end']) ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <nav class="on-this-page-nav">
+                    <div class="content">
+                        <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
+                        <?php if (!empty($data['research'])): ?>
+                            <a href="#research"><?= lang("Research interest", "Forschungsinteressen") ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['cv'])): ?>
+                            <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['numbers']['publications'])): ?>
+                            <a href="#publications"><?= lang("Publications", "Publikationen") ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['numbers']['activities'])): ?>
+                            <a href="#activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['numbers']['teaching'])): ?>
+                            <a href="#teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['numbers']['infrastructures'])): ?>
+                            <a href="#infrastructures">
+                                <?= $Settings->infrastructureLabel() ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($data['projects']['current']) || !empty($data['projects']['past'])): ?>
+                            <a href="#projects"><?= lang("Projects", "Projekte") ?></a>
+                        <?php endif; ?>
+                    </div>
+                </nav>
+
             </div>
         </div>
 
@@ -446,7 +518,7 @@
             <?= lang(
                 "The content on this page is maintained by the individual and is not official information from the institute.",
                 "Die Inhalte auf dieser Seite werden von der Person selbst gepflegt und sind keine offiziellen Informationen des Instituts."
-            ); ?>
+            ) ?>
         </p>
     <?php endif; ?>
-</div>
+</section>

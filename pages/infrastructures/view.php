@@ -185,6 +185,11 @@ if ($edit_perm) { ?>
 
 <div class="infrastructure container">
 
+    <a href="<?= ROOTPATH ?>/preview/infrastructure/<?= $infrastructure['id'] ?>" class="btn float-right">
+        <i class="ph ph-eye"></i>
+        <?= lang('Preview', 'Vorschau') ?>
+    </a>
+
     <div class="row align-items-center my-0">
         <div class="col flex-grow-0">
             <div class="position-relative">
@@ -253,7 +258,7 @@ if ($edit_perm) { ?>
         <?php if ($active('type')) { ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('Type', 'Typ') ?>: </span>
+                    <span class="key"><?= lang('Category', 'Kategorie') ?>: </span>
                     <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                 </td>
             </tr>
@@ -261,7 +266,7 @@ if ($edit_perm) { ?>
         <?php if ($active('infrastructure_type')) { ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>: </span>
+                    <span class="key"><?= lang('Type', 'Art') ?>: </span>
                     <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
                 </td>
             </tr>
@@ -282,7 +287,22 @@ if ($edit_perm) { ?>
                 </td>
             </tr>
         <?php } ?>
-
+        <?php if ($active('link') && !empty($infrastructure['link'])) : ?>
+        <tr>
+            <td>
+                <span class="key"><?= lang('Link', 'Link') ?>: </span>
+                <a href="<?= htmlspecialchars($infrastructure['link']) ?>" target="_blank"><?= htmlspecialchars($infrastructure['link']) ?></a>
+            </td>
+        </tr>
+        <?php endif; ?>
+        <?php if ($active('contact_email') && !empty($infrastructure['contact_email'])) : ?>
+            <tr>
+                <td>
+                    <span class="key"><?= lang('Contact Email', 'Kontakt E-Mail') ?>: </span>
+                    <a href="mailto:<?= htmlspecialchars($infrastructure['contact_email']) ?>"><?= htmlspecialchars($infrastructure['contact_email']) ?></a>
+                </td>
+            </tr>
+        <?php endif; ?>
         <?php
         // check if user has custom fields
         $custom_fields = $osiris->adminFields->find()->toArray();

@@ -52,17 +52,16 @@ class Infrastructure extends DB
         return $this->roles[$role] ?? $role;
     }
 
-    public function printLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
+
+    public function getLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
     {
         $placeholder = '<div class="infrastructure-logo-placeholder"><i class="ph-duotone ph-cube-transparent"></i></div> ';
         if (!isset($infrastructure) || empty($infrastructure) || !isset($infrastructure['image'])) {
-            echo $placeholder;
-            return false;
+            return $placeholder;
         }
         $img = $infrastructure['image'];
         if (!isset($img) || empty($img)) {
-            echo $placeholder;
-            return false;
+            return $placeholder;
         }
         $type = $img['type'];
         if ($img['type'] == 'svg') {
@@ -71,7 +70,11 @@ class Infrastructure extends DB
             $type = 'image/' . $img['type'];
         }
         $img = $img['data']->getData();
-        echo "<img src='data:$type;base64,$img' alt='" . htmlspecialchars($alt) . "' class='$class'>";
-        return true;
+        return "<img src='data:$type;base64,$img' alt='" . htmlspecialchars($alt) . "' class='$class'>";
+    }
+
+    public function printLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
+    {
+        echo $this->getLogo($infrastructure, $class, $alt);
     }
 }

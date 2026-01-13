@@ -5321,7 +5321,7 @@ input[type=number] {
   top: 0;
   left: 0;
   height: 100%;
-  padding: 2rem 0.8rem;
+  padding: 1rem 0.8rem;
   pointer-events: none;
   border: 1px solid transparent;
   transform-origin: 0 0;
@@ -5337,7 +5337,7 @@ input[type=number] {
   color: var(--danger-color);
 }
 .floating-form > .form-control {
-  padding: 2rem 0.8rem;
+  padding: 1rem 0.8rem;
 }
 .floating-form > .form-control::placeholder {
   color: transparent;

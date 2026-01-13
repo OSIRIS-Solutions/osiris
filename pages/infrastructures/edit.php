@@ -215,6 +215,26 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
     </div>
 
+    <!-- link -->
+     <?php if ($active('link')) { ?>
+    <div class="form-group">
+        <label for="link">
+            <?= lang('Website', 'Webseite') ?>
+        </label>
+        <input type="url" class="form-control" name="values[link]" id="link" value="<?= $form['link'] ?? '' ?>">
+    </div>
+    <?php } ?>
+
+    <!-- contact email -->
+     <?php if ($active('contact_email')) { ?>
+    <div class="form-group">
+        <label for="contact_email">
+            <?= lang('Contact Email', 'Kontakt E-Mail') ?>
+        </label>
+        <input type="email" class="form-control" name="values[contact_email]" id="contact_email" value="<?= $form['contact_email'] ?? '' ?>">
+    </div>
+    <?php } ?>
+
 
     <!-- check if there are active custom fields -->
     <?php
@@ -458,6 +478,26 @@ $active = function ($field) use ($data_fields) {
             </div>
         </div>
     <?php } ?>
+
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <h5>
+            <?= lang('Portal Settings', 'Portal Einstellungen') ?>
+        </h5>
+
+        <div class="form-group">
+            <?php
+            $public = $form['public'] ?? false;
+            ?>
+            <input type="hidden" name="values[public]" value="false">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
+                <label for="public">
+                    <?= lang('Show this infrastructure in the public Portfolio', 'Diese Infrastruktur im öffentlichen Portfolio anzeigen') ?>
+                </label>
+            </div>
+        </div>
+    <?php } ?>
+    
 
     <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
 </form>
