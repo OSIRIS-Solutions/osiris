@@ -23,10 +23,6 @@ $numbers = $data['numbers'] ?? [
     'projects' => 0,
 ];
 $baseUnit = false;
-if ($id == '0') {
-    // id
-    $baseUnit = true;
-}
 $preselect = $open ?? $_GET['open'] ?? null;
 
 ?>
@@ -300,9 +296,8 @@ $preselect = $open ?? $_GET['open'] ?? null;
 
             <section id="units" <?= $preselect === 'units' ? '' : 'style="display:none"' ?> data-title="<?= lang('Units', 'Einheiten') ?>">
 
-                <table class="table cards w-full datatable" id="users-table" data-page-length="18">
+                <table class="table cards w-full datatable" id="units-table" data-page-length="18">
                     <thead>
-                        <th></th>
                         <th></th>
                     </thead>
                     <tbody>
@@ -321,7 +316,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                         <small>
                                             <?= lang($s['unit']['name'] ?? '', $s['unit']['name_de'] ?? null) ?>
                                         </small>
-
                                     </div>
                                 </td>
                             </tr>

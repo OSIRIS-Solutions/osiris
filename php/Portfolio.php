@@ -344,6 +344,11 @@ class Portfolio extends Settings
                 $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => $base . "/infrastructures"];
                 $items[] = ['name' => $name, 'path' => $base . "/infrastructure/$id"];
                 break;
+            
+            case 'topic':
+                // $items[] = ['name' => lang('All Topics', 'Alle Themen'), 'path' => $base . "/topics"];
+                $items[] = ['name' => $name, 'path' => $base . "/topic/$id"];
+                break;
             default:
                 break;
         }

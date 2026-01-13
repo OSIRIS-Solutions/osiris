@@ -157,7 +157,7 @@ Route::get('/portal/(info|activities|persons|projects|groups|infrastructures|top
 
 
 
-Route::get('/render/(activity|person|profile|project|group|unit|infrastructure)/(.*)', function ($type, $id) {
+Route::get('/render/(activity|person|profile|project|group|unit|infrastructure|topic)/(.*)', function ($type, $id) {
     include BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(false);

@@ -832,7 +832,7 @@ Route::get('/portfolio/topic/([^/]*)/units', function ($id) {
         $filter,
         ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'parent' => 1, 'unit' => 1, 'level' => 1, 'hide' => 1, 'order' => 1]]
     )->toArray();
-    
+
     // add head info and unit details
     foreach ($units as &$unit) {
         $u = $Groups->getUnit($unit['unit'] ?? null);
@@ -842,13 +842,13 @@ Route::get('/portfolio/topic/([^/]*)/units', function ($id) {
         if (is_string($head)) $head = [$head];
         else $head = DB::doc2Arr($head);
         unset($unit['head']);
-    
+
         if (!empty($head)) {
             $unit['heads'] = [];
             foreach ($head as $h) {
                 $p = $DB->getPerson($h);
                 if (empty($p) || ($p['hide'] ?? false)) continue;
-    
+
                 if ($p['public_image'] ?? false) {
                     $img = $Settings->printProfilePicture($p['username'], 'profile-img small');
                 } else {
@@ -1526,7 +1526,7 @@ Route::get('/portfolio/unit/([^/]*)/collaborators-by-country', function ($id) {
 });
 
 
-Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($context, $id) {
+Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function ($context, $id) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
     if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
@@ -1577,17 +1577,15 @@ Route::get('/portfolio/(unit|project)/([^/]*)/collaborators-map', function ($con
     } else {
         $filter = ['collaborators' => ['$exists' => 1]];
         // only for portal
-        if ($id == '0') {
-            $filter = ['collaborators' => ['$exists' => 1]];
-        } else {
-            $dept = $id;
-
-            $child_ids = $Groups->getChildren($dept);
-            $filter = [
-                'units' => ['$in' => $child_ids],
-                // "public" => true,
-                'collaborators' => ['$exists' => 1]
-            ];
+        if ($context == 'unit') {
+            if ($id == '0') {
+                // all units
+            } else {
+                $child_ids = $Groups->getChildren($id);
+                $filter['units'] = ['$in' => $child_ids];
+            }
+        } elseif ($context == 'topic') {
+            $filter['topics'] = $id;
         }
         $result = $osiris->projects->aggregate([
             ['$match' => $filter],

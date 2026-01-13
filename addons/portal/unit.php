@@ -20,7 +20,7 @@ if ($id == '0') {
     // id
     $baseUnit = true;
 }
-$preselect = null;
+$preselect = $open ?? $_GET['open'] ?? null;
 
 ?>
 <div class="container">
@@ -281,8 +281,10 @@ $preselect = null;
 
                 <!-- <h3><?= lang('Research topics', 'Forschungsschwerpunkte') ?></h3> -->
 
-                <?php if (isset($data['research']) && !empty($data['research'])) { ?>
-                    <?php foreach ($data['research'] as $r) { ?>
+                <?php if (isset($data['research']) && !empty($data['research'])) { 
+                    $research = $Portfolio->fetch_entity('unit', $id, 'research');
+                    ?>
+                    <?php foreach ($research as $r) { ?>
                         <div class="box padded">
                             <h5 class="title">
                                 <?= lang($r['title'], $r['title_de'] ?? null) ?>
@@ -294,6 +296,26 @@ $preselect = null;
                             <div class="description">
                                 <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
                             </div>
+                            <?php if (!empty($r['activities'] ?? null)) { ?>
+                                <hr>
+                                <h6 class="m-0"><?= lang('Related activities', 'Zugehörige Aktivitäten') ?>:</h6>
+                                <table class="table simple">
+                                    <tbody>
+                                        <?php foreach ($r['activities'] as $a) { ?>
+                                            <tr>
+                                                <td class="w-50">
+                                                    <?= $a['icon'] ?>
+                                                </td>
+                                                <td>
+                                                    <a href="<?= $base ?>/activity/<?= $a['id'] ?>" class="colorless">
+                                                        <?= $a['html'] ?>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            <?php } ?>
                         </div>
 
                     <?php } ?>
