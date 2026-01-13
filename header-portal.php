@@ -211,7 +211,7 @@ $pageactive = function ($p) use ($page) {
                             <?php
                             $breadcrumb = $breadcrumb ?? [];
                             if (!empty($breadcrumb)) {
-                                echo '<li class=""><a href="' . ROOTPATH . '/"><i class="ph ph-house" aria-label="Home"></i></a></li>';
+                                echo '<li class=""><a href="' . ROOTPATH . '/"><i class="ph ph-house" aria-label="Home"></i> OSIRIS</a></li>';
                                 foreach ($breadcrumb as $crumb) {
                                     $displayName = shortenName($crumb['name'] ?? '');
                                     if (!isset($crumb['path'])) {

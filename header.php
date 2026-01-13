@@ -519,7 +519,7 @@ $pageactive = function ($p) use ($page) {
                         </a>
                     <?php } ?>
 
-                    <?php if ($Settings->featureEnabled('portal')) { ?>
+                    <?php if ($Settings->featureEnabled('portal-public')) { ?>
                         <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
                             <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
                             <?= lang('Go to portal', 'Zum Portal') ?>
@@ -678,6 +678,14 @@ $pageactive = function ($p) use ($page) {
                             <i class="ph ph-sign-out" aria-hidden="true"></i>
                             Logout
                         </a>
+
+                        
+                    <?php if ($Settings->featureEnabled('portal-public')) { ?>
+                        <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>" style="--primary-color:var(--muted-color);--primary-color-20:var(--muted-color-20);">
+                            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+                            <?= lang('Go to portal', 'Zum Portal') ?>
+                        </a>
+                    <?php } ?>
 
                     </nav>
 

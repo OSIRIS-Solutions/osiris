@@ -6,9 +6,16 @@
  */
 
 Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastructure)/(.*)', function ($section, $type, $id) {
+    include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
+    if (! $Settings->featureEnabled('portal')) {
+        die('Portal feature is disabled.');
+    }
     $Portfolio = new Portfolio(true);
     if ($section == 'portal') {
+        if (!$Settings->featureEnabled('portal-public')) {
+            die('Public portal is disabled.');
+        }
         $base = ROOTPATH . '/portal';
         $Portfolio->setBasePath($base);
     } else {
@@ -66,6 +73,13 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
 
 Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', function ($open) {
+    include_once BASEPATH . "/php/init.php";
+    if (! $Settings->featureEnabled('portal')) {
+        die('Portal feature is disabled.');
+    }
+    if (!$Settings->featureEnabled('portal-public')) {
+        die('Public portal is disabled.');
+    }
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(true);
     $base = ROOTPATH . '/portal';

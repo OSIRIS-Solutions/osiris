@@ -1151,6 +1151,15 @@ $affiliation = $Settings->get('affiliation_details');
                             renderCheckbox('portal');
                             ?>
                         </div>
+
+                        <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Public Portal without Login on start page', 'Öffentliches Portal ohne Anmeldung auf der Startseite') ?>
+                            </label>
+                            <?php
+                            renderCheckbox('portal-public');
+                            ?>
+                        </div>
                     </div>
                     <hr>
                     <div class="content">
