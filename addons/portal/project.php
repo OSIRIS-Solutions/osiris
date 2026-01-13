@@ -59,6 +59,7 @@
             top: 9rem !important;
         }
     </style>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
 <?php } ?>
 
 
@@ -452,6 +453,24 @@
                             <?php } ?>
                         </td>
                     </tr>
+
+                    <!-- topics -->
+                    <?php if (!empty($data['topics'])) { ?>
+                        <tr>
+                            <td>
+                                <span class="key"><?= $Settings->topicLabel() ?></span>
+                                <div class="topics">
+                                    <?php foreach ($data['topics'] as $t) { ?>
+                                        <a href="<?= $base ?>/topic/<?= $t['id'] ?>" class="topic-badge" style="--primary-color: <?= $t['color'] ?? 'var(--primary-color)' ?>; --primary-color-20: <?= isset($t['color']) ? $t['color'] . '33' : 'var(--primary-color-20)' ?>">
+                                            <i class="ph ph-arrow-circle-right"></i>
+                                            <?= lang($t['name'], $t['name_de'] ?? null) ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
                     <tr>
                         <td>
                             <span class="key"><?= lang('Project type', 'Projekttyp') ?></span>

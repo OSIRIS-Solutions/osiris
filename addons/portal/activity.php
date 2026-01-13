@@ -1,6 +1,10 @@
+<?php if ($Portfolio->isPreview()) { ?>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+<?php } ?>
+
 <div class="container-lg">
     <?php if ($data): ?>
-        <h2 class="title"><?= $data['title']; ?></h2>
+        <h1 class="title"><?= $data['title']; ?></h1>
 
         <div class="row row-eq-spacing my-0">
             <div class="col-md-8">
@@ -26,7 +30,8 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['depts'])): ?>
-                    <p><b><?= lang("Departments", "Abteilungen"); ?>:</b><br />
+                    <h3 class="title"><?= lang("Departments", "Abteilungen") ?></h3>
+                    <p>
                         <?php foreach ($data['depts'] as $deptId => $d): ?>
                             <a href="<?= $base ?>/group/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
                                 <?= lang($d['en'], $d['de'] ?? null); ?>
@@ -59,6 +64,44 @@
 
 
 
+                <?php if (!empty($data['infrastructures'])): ?>
+                    <h3 class="title">
+                        <?= lang("Associated Infrastructures", "Assoziierte Infrastrukturen"); ?>
+                    </h3>
+                    <div class="cards">
+                        <?php foreach ($data['infrastructures'] as $infrastructure): ?>
+                            <div class="card">
+                                <div>
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/infrastructure/<?= $infrastructure['id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                                    </h5>
+                                    <small class="text-muted"><?= $infrastructure['subtitle'] ?? '' ?></small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($data['projects'])): ?>
+                    <h3 class="title"><?= lang("Associated Projects", "Assoziierte Projekte"); ?></h3>
+                    <div class="cards">
+                        <?php foreach ($data['projects'] as $project): ?>
+                            <div class="card">
+                                <div>
+                                    <h5 class="my-0">
+                                        <a href="<?= $base ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
+                                    </h5>
+                                    <small class="text-muted"><?= $project['title'] ?? '' ?></small>
+                                    <hr />
+                                    <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
+                                    <p><?= fromToDate($project['start'], $project['end']) ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+
                 <h3><?= lang("Cite this activity", "Zitiere diese Aktivität"); ?></h3>
                 <nav class="pills">
                     <a class="btn active" onclick="nav('citation')">Citation</a>
@@ -69,7 +112,7 @@
                         <a class="btn" onclick="nav('ris')">RIS</a>
                     <?php endif; ?>
                 </nav>
-                
+
                 <div id="tabs">
                     <div class="box padded" id="citation-box">
                         <span><?= $data['print'] ?></span>
@@ -88,6 +131,23 @@
                 <h3 class="title"><?= lang("Details"); ?></h3>
                 <table class="table" id="detail-table">
                     <tbody>
+                        <!-- topics -->
+                        <?php if (!empty($data['topics'])) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= $Settings->topicLabel() ?></span>
+                                    <div class="topics">
+                                        <?php foreach ($data['topics'] as $t) { ?>
+                                            <a href="<?= $base ?>/topic/<?= $t['id'] ?>" class="topic-badge" style="--primary-color: <?= $t['color'] ?? 'var(--primary-color)' ?>; --primary-color-20: <?= isset($t['color']) ? $t['color'] . '33' : 'var(--primary-color-20)' ?>">
+                                                <i class="ph ph-arrow-circle-right"></i>
+                                                <?= lang($t['name'], $t['name_de'] ?? null) ?>
+                                            </a>
+                                        <?php } ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
                         <?php foreach ($data['fields'] as $field):
                             if (empty($field['value'])) continue; ?>
                             <tr>
@@ -100,38 +160,6 @@
                     </tbody>
                 </table>
 
-                <?php if (!empty($data['infrastructures'])): ?>
-                    <h3 class="title">
-                        <?= lang("Associated Infrastructures", "Assoziierte Infrastrukturen"); ?>
-                    </h3>
-                    <?php foreach ($data['infrastructures'] as $infrastructure): ?>
-                        <div class="project-card">
-                            <div>
-                                <h5 class="my-0">
-                                    <a href="<?= $base ?>/infrastructure/<?= $infrastructure['id']; ?>"> <?= $infrastructure['name']; ?> </a>
-                                </h5>
-                                <small class="text-muted"><?= $infrastructure['subtitle'] ?? '' ?></small>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-                <?php if (!empty($data['projects'])): ?>
-                    <h3 class="title"><?= lang("Associated Projects", "Assoziierte Projekte"); ?></h3>
-                    <?php foreach ($data['projects'] as $project): ?>
-                        <div class="project-card">
-                            <div>
-                                <h5 class="my-0">
-                                    <a href="<?= $base ?>/project/<?= $project['id']; ?>"> <?= $project['name']; ?> </a>
-                                </h5>
-                                <small class="text-muted"><?= $project['title'] ?? '' ?></small>
-                                <hr />
-                                <b> <?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?> </b> &nbsp;
-                                <p><?= fromToDate($project['start'], $project['end']) ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
             </div>
         </div>
 
@@ -155,55 +183,3 @@
         </script>
     <?php endif; ?>
 </div>
-
-<style>
-    #tabs pre {
-        white-space: pre-wrap;
-        margin: 0;
-    }
-
-    ul.authors {
-        list-style: none;
-        padding: 0;
-    }
-
-    ul.authors>li {
-        display: inline-block;
-        margin-right: .5rem;
-        margin-bottom: .2rem;
-    }
-
-    ul.authors>li::after {
-        content: ",";
-    }
-
-    ul.authors>li:last-child::after {
-        content: "";
-    }
-
-    .project-card {
-        width: 100%;
-        margin: 0.5rem 0;
-        border: var(--border-width) solid var(--border-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-        background: var(--box-bg-color);
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.4rem;
-    }
-
-    .project-card div {
-        border: 0;
-        box-shadow: none;
-        /* width: 100%; */
-        height: 100%;
-        display: block;
-    }
-
-    .project-card small,
-    .project-card p {
-        display: block;
-        margin: 0;
-    }
-</style>

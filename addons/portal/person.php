@@ -1,54 +1,3 @@
-<style>
-    .cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .card {
-        width: 100%;
-        margin: 0.5rem 0;
-        border: var(--border-width) solid var(--border-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-        background: var(--box-bg-color);
-        /* display: flex;
-        flex-direction: column;
-        align-items: center; */
-        padding: 1rem 1.4rem;
-    }
-
-    .card h5 a {
-        color: var(--link-color) !important;
-    }
-
-    .card div {
-        border: 0;
-        box-shadow: none;
-        /* width: 100%; */
-        /* height: 100%; */
-        display: block;
-    }
-
-    .card small,
-    .card p {
-        display: block;
-        margin: 0;
-    }
-
-    /* two columns on larger screens */
-    @media (min-width: 768px) {
-        .card {
-            width: calc(50% - 0.5rem);
-        }
-    }
-
-    .on-this-page-nav {
-        z-index: 10;
-        top: 0;
-    }
-</style>
-
 <?php if ($Portfolio->isPreview()) { ?>
     <!-- adjust style for a top margin of 4rem for all links and fixed -->
     <style>
@@ -61,6 +10,7 @@
             top: 9rem !important;
         }
     </style>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
 <?php } ?>
 
 <section class="container-lg">
@@ -347,11 +297,27 @@
             </div>
 
             <div class="col-sm-4 position-relative">
-                <?php if (!empty($data['depts']) && empty($data['inactive'])): ?>
+                <?php if ((!empty($data['depts']) || !empty($data['topics'])) && empty($data['inactive'])): ?>
                     <h2><?= lang("Affiliation", "Zugehörigkeit") ?></h2>
                     <table class="table small unit-table w-full">
                         <tbody>
-                            <?php foreach ($data['depts'] as $d): ?>
+                            <!-- topics -->
+                            <?php if (!empty($data['topics'])) { ?>
+                                <tr>
+                                    <td>
+                                        <div class="topics">
+                                            <?php foreach ($data['topics'] as $t) { ?>
+                                                <a href="<?= $base ?>/topic/<?= $t['id'] ?>" class="topic-badge simple" style="--primary-color: <?= $t['color'] ?? 'var(--primary-color)' ?>; --primary-color-20: <?= isset($t['color']) ? $t['color'] . '33' : 'var(--primary-color-20)' ?>">
+                                                    <i class="ph ph-arrow-circle-right"></i>
+                                                    <?= lang($t['name'], $t['name_de'] ?? null) ?>
+                                                </a>
+                                            <?php } ?>
+                                        </div>
+                                        <span class="key"><?= $Settings->topicLabel() ?></span>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            <?php foreach (($data['depts'] ?? []) as $d): ?>
                                 <tr>
                                     <td class="indent-<?= $d['indent'] ?>">
                                         <a href="<?= $base ?>/group/<?= $d['id'] ?>" class="d-block">
@@ -361,6 +327,8 @@
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+
+
                         </tbody>
                     </table>
                 <?php endif; ?>
@@ -482,34 +450,38 @@
                 <?php endif; ?>
 
 
-                <nav class="on-this-page-nav">
-                    <div class="content">
-                        <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
-                        <?php if (!empty($data['research'])): ?>
-                            <a href="#research"><?= lang("Research interest", "Forschungsinteressen") ?></a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['cv'])): ?>
-                            <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['numbers']['publications'])): ?>
-                            <a href="#publications"><?= lang("Publications", "Publikationen") ?></a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['numbers']['activities'])): ?>
-                            <a href="#activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['numbers']['teaching'])): ?>
-                            <a href="#teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['numbers']['infrastructures'])): ?>
-                            <a href="#infrastructures">
-                                <?= $Settings->infrastructureLabel() ?>
-                            </a>
-                        <?php endif; ?>
-                        <?php if (!empty($data['projects']['current']) || !empty($data['projects']['past'])): ?>
-                            <a href="#projects"><?= lang("Projects", "Projekte") ?></a>
-                        <?php endif; ?>
-                    </div>
-                </nav>
+                <?php
+                $numbers = array_sum(array_values($data['numbers'] ?? []));
+                if (!empty($data['research']) || !empty($data['cv']) || !empty($numbers)) { ?>
+                    <nav class="on-this-page-nav">
+                        <div class="content">
+                            <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
+                            <?php if (!empty($data['research'])): ?>
+                                <a href="#research"><?= lang("Research interest", "Forschungsinteressen") ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['cv'])): ?>
+                                <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['numbers']['publications'])): ?>
+                                <a href="#publications"><?= lang("Publications", "Publikationen") ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['numbers']['activities'])): ?>
+                                <a href="#activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['numbers']['teaching'])): ?>
+                                <a href="#teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['numbers']['infrastructures'])): ?>
+                                <a href="#infrastructures">
+                                    <?= $Settings->infrastructureLabel() ?>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (!empty($data['numbers']['projects'])): ?>
+                                <a href="#projects"><?= lang("Projects", "Projekte") ?></a>
+                            <?php endif; ?>
+                        </div>
+                    </nav>
+                <?php } ?>
 
             </div>
         </div>

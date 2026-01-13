@@ -5,7 +5,7 @@
  * Preview and API
  */
 
-Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastructure)/(.*)', function ($section, $type, $id) {
+Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastructure|topic)/(.*)', function ($section, $type, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
     if (! $Settings->featureEnabled('portal')) {
@@ -72,7 +72,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
 
 
-Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', function ($open) {
+Route::get('/portal/(info|activities|persons|projects|groups|infrastructures|topics)', function ($pagename) {
     include_once BASEPATH . "/php/init.php";
     if (! $Settings->featureEnabled('portal')) {
         die('Portal feature is disabled.');
@@ -84,18 +84,18 @@ Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', 
     $Portfolio = new Portfolio(true);
     $base = ROOTPATH . '/portal';
     $Portfolio->setBasePath($base);
-    if ($open == 'profiles') {
-        $open = 'persons';
+    if ($pagename == 'profiles') {
+        $pagename = 'persons';
     }
-    if ($open == 'groups') {
-        $open = 'units';
+    if ($pagename == 'groups') {
+        $pagename = 'units';
     }
     // display correct breadcrumb
     global $breadcrumb;
     $breadcrumb = [
         ['name' => lang('Portal', 'Portal'), 'path' => "/portal/info"],
     ];
-    switch ($open) {
+    switch ($pagename) {
         case 'activities':
             $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/portal/activities"];
             break;
@@ -110,8 +110,8 @@ Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', 
 
         case 'units':
             $breadcrumb[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/portal/groups"];
-
             break;
+
         case 'infrastructures':
             $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/portal/infrastructures"];
             break;
@@ -150,6 +150,9 @@ Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', 
     // echo $Portfolio->renderBreadCrumb($type, $data, $base);
     include BASEPATH . "/addons/portal/$type.php";
     include BASEPATH . "/footer.php";
+    // navigate to correct tab
+    if (!empty($pagename) && $pagename != 'info')
+        echo "<script> document.addEventListener('DOMContentLoaded', function() { navigate('" . $pagename . "'); } ); </script>";
 });
 
 

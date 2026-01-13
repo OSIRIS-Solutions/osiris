@@ -124,6 +124,16 @@ class Portfolio extends Settings
         return $doc;
     }
 
+
+    function getTopics()
+    {
+        $topics = $this->fetch_entity('topics');
+        if (empty($topics) || !is_array($topics)) {
+            return [];
+        }
+        return $topics;
+    }
+
     /**
      * Build hierarchy array similar to the Vue implementation.
      *
@@ -198,10 +208,15 @@ class Portfolio extends Settings
         $parents = array_reverse($parents);
 
         // Helper that produces the "hierarchy value" object
-        $getHierarchyValue = function (array $g, bool $isOpen = false, int $level = 0, string $activeId = '') {
+        $getHierarchyValue = function (array $g, bool $isOpen = false, int $level = 0, string $activeId = '') use ($childrenByParent) {
             $isActive = ((string)($g['id'] ?? '') === $activeId);
             if ($activeId === '0' && $g['level'] === 0) {
                 $isActive = true;
+            }
+            // check if group has children
+            $hasChildren = false;
+            if (isset($childrenByParent[(string)($g['id'] ?? '')])) {
+                $hasChildren = count($childrenByParent[(string)($g['id'] ?? '')]) > 0;
             }
             return [
                 'id' => (string)($g['id'] ?? ''),
@@ -213,8 +228,8 @@ class Portfolio extends Settings
                 'level' => $level,
                 'active' => $isActive,
                 'open' => $isOpen,          // corresponds to Vue "true" in parents + active group
-                'openable' => $isOpen,      // tweak if you want only some items to be openable
-                'hide' => false,            // set true if you later want to hide non-relevant nodes
+                'openable' => $hasChildren,      // tweak if you want only some items to be openable
+                'hide' => $g['hide'] ?? false,            // set true if you later want to hide non-relevant nodes
             ];
         };
 

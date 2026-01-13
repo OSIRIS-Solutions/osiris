@@ -18,29 +18,10 @@
 
 $name = $data['name'];
 ?>
-<style>
-    .infrastructure-logo {
-        width: 200px;
-        height: 150px;
-        object-fit: contain;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        background-color: #fff;
-        padding: 10px;
-    }
-
-    img.profile-img.small {
-        max-width: 10rem;
-        max-height: 10rem;
-    }
-
-    .on-this-page-nav {
-        z-index: 10;
-        top: 0;
-    }
-</style>
 
 <?php if ($Portfolio->isPreview()) { ?>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+
     <!-- adjust style for a top margin of 4rem for all links and fixed -->
     <style>
         .content-wrapper {
@@ -54,7 +35,7 @@ $name = $data['name'];
     </style>
 <?php } ?>
 
-<div class="container-lg">
+<div class="container-lg" id="infrastructure-page">
     <?php if (!$data): ?>
         <p><?= lang("Infrastructure not found", "Infrastruktur nicht gefunden"); ?></p>
     <?php else: ?>

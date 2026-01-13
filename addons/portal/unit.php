@@ -20,227 +20,14 @@ if ($id == '0') {
     // id
     $baseUnit = true;
 }
-$preselect = $open ?? $_GET['open'] ?? null;
+$preselect = null;
 
 ?>
 <div class="container">
-    <style>
-        #research p,
-        #general p {
-            text-align: justify;
-        }
-
-        @media (min-width: 768px) {
-
-            #research figure,
-            #general .head {
-                max-width: 100%;
-                float: right;
-                margin: 0 0 1rem 2rem;
-            }
-        }
-
-        #research figure figcaption {
-            font-size: 1.2rem;
-            color: var(--muted-color);
-            font-style: italic;
-        }
-
-        .description img {
-            max-width: 100%;
-            height: auto;
-        }
-
-
-        .filter {
-            overflow-y: auto;
-            padding: .5rem 1rem;
-            max-height: 100% !important;
-            background-color: var(--box-bg-color);
-            overflow-x: hidden;
-        }
-
-        .filter tr:hover {
-            background-color: inherit;
-        }
-
-        .filter tr td {
-            border-left: 3px solid transparent;
-            border-bottom: none;
-            border-radius: var(--border-radius);
-        }
-
-        .filter tr td span {
-            position: relative;
-            display: block;
-            padding-left: 1rem;
-        }
-
-        .filter tr td span::before {
-            content: "\ECE0";
-            font-family: "phosphor";
-            color: var(--muted-color);
-            position: absolute;
-            left: -1rem;
-        }
-
-        .filter tr td.openable span::before {
-            content: "\E13A";
-        }
-
-        .filter tr td.level-0 {
-            padding-left: 1rem !important;
-        }
-
-        .filter tr td.level-1 {
-            padding-left: 2rem !important;
-        }
-
-        .filter tr td.level-2 {
-            padding-left: 3rem !important;
-        }
-
-        .filter tr td.level-3 {
-            padding-left: 4rem !important;
-        }
-
-
-        .filter tr td:hover {
-            background: inherit;
-            background: var(--primary-color-20);
-        }
-
-        .filter tr td span::before {
-            color: var(--primary-color);
-        }
-
-        .filter tr td.active {
-            background: var(--primary-color-20);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-        }
-
-        .filter tr td span::before {
-            color: var(--primary-color);
-        }
-
-        .filter tr td.open.openable span::before {
-            content: "\E136";
-        }
-
-        /* #filter-column {
-            transition: width 0.3s ease;
-            width: 500px;
-        }
-        #filter-column.collapsed {
-            display: none;
-            width: 0;
-        } */
-
-        .scope-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            padding: .45rem .75rem;
-            border-radius: 999px;
-            border: 1px solid var(--primary-color);
-            background: transparent;
-            color: var(--primary-color);
-            font-weight: 500;
-            font-size: 1.2rem;
-            background: var(--primary-color-20);
-        }
-
-        .scope-chip:hover {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-            /* text-shadow bold hack */
-            text-shadow: 0 0 1px white;
-        }
-
-        .scope-chip.active {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-            /* text-shadow bold hack */
-            text-shadow: 0 0 1px white;
-        }
-
-        #filter-column {
-            max-width: 30rem;
-            width: 30rem;
-        }
-
-        #filter-column #filter-toggle {
-            background-color: var(--gray-color);
-            width: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.5s ease;
-            font-size: .9em;
-            position: relative;
-        }
-
-
-        #filter-column #filter-toggle span {
-            /* writing-mode: vertical-rl;
-            transform: rotate(180deg); */
-            display: none;
-            position: absolute;
-            left: 100%;
-            background-color: var(--primary-color);
-            padding: .2rem .5rem;
-            border-radius: .5rem;
-            z-index: 10;
-            margin-left: .5rem;
-            font-size: 1.2rem;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-        }
-
-        #filter-column.hidden-state #filter-toggle:hover span {
-            display: block;
-        }
-
-
-        #filter-column.hidden-state #filter-toggle {
-            background-color: var(--primary-color-20);
-            width: 1.5rem;
-        }
-
-        #filter-column.hidden-state #filter-toggle:hover {
-            background-color: var(--primary-color-30);
-        }
-
-        #filter-column.hidden-state #filter-toggle i {
-            transform: rotate(180deg);
-        }
-
-        #filter-column {
-            display: flex;
-            max-height: 80vh;
-        }
-
-        #filter-column .filter {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        #filter-column.hidden-state {
-            width: 3rem;
-        }
-
-        #filter-column.hidden-state .filter {
-            display: none;
-        }
-    </style>
-
 
     <?php if ($Portfolio->isPreview()) { ?>
+        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+
         <!-- all necessary javascript -->
         <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
         <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
@@ -274,40 +61,62 @@ $preselect = $open ?? $_GET['open'] ?? null;
             }
         }
     </script>
-    <?php if ($baseUnit) { ?>
-        <!-- filter by unit -->
-        <!-- <button class="scope-chip" onclick="$('#filter-column').toggle(); $(this).addClass('active');">
-            <i class="ph ph-list" aria-hidden="true"></i>
-            <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
-        </button> -->
-        <!-- <button class="scope-chip" onclick="toggleUnitFilter();">
-            <i class="ph ph-list" aria-hidden="true"></i>
-            <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
-        </button> -->
-    <?php } ?>
 
     <div class="row row-eq-spacing">
+        <?php
+        $topics = $Portfolio->getTopics();
+        $hierarchy = $Portfolio->build_unit_hierarchy($id);
+        $topics_and_groups = !empty($topics) && !empty($hierarchy);
+        ?>
 
         <div class="col-sm flex-grow-0 flex-reset <?= $baseUnit ? 'hidden-state' : '' ?>" id="filter-column">
             <div id="filter-toggle" onclick="toggleUnitFilter();">
                 <i class="ph ph-caret-left" aria-hidden="true"></i>
                 <span>
-                    <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+                    <?php if ($topics_and_groups) { ?>
+                        <?= lang('Explore by topic & unit', 'Erkunden nach Schwerpunkt & Einheit') ?>
+                    <?php } else if (!empty($topics)) { ?>
+                        <?= lang('Explore by topic', 'Erkunden nach Schwerpunkt') ?>
+                    <?php } else if (!empty($hierarchy)) { ?>
+                        <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+                    <?php } ?>
                 </span>
             </div>
-            <?php
-            $hierarchy = $Portfolio->build_unit_hierarchy($id);
-            if (!empty($hierarchy) && is_array($hierarchy)): ?>
-                <div class="filter">
-                    <table id="filter-unit" class="table small simple">
+            <div class="filter">
+                <table id="filter-unit" class="table small simple">
+                    <?php if (!empty($topics) && is_array($topics)): ?>
+                        <?php foreach ($topics as $el): ?>
+                            <?php
+                            $classes = [];
+                            if (isset($el['active']) && $el['active']) $classes[] = 'active';
+                            ?>
+                            <tr style="--primary-color: <?= $el['color'] ?? 'var(--primary-color)'; ?>;  --primary-color-20: <?= $el['color'] ? $el['color'] . '33' : 'var(--primary-color-20)'; ?>;">
+                                <td class="<?= implode(' ', $classes); ?> topic">
+                                    <a
+                                        href="<?= $base . '/topic/' . urlencode((string)($el['id'] ?? '')); ?>">
+                                        <span><?= lang($el['name'] ?? '', $el['name_de'] ?? null); ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif;
+
+                    if (!empty($hierarchy) && !empty($topics)): ?>
+                        <tr>
+                            <td class="disabled">
+                                <hr>
+                            </td>
+                        </tr>
+                    <?php
+                    endif;
+
+                    if (!empty($hierarchy) && is_array($hierarchy)): ?>
                         <?php foreach ($hierarchy as $el): ?>
                             <?php
-                            // Comments in English.
                             $hide = (bool)($el['hide'] ?? false);
                             $active = (bool)($el['active'] ?? false);
                             $open = (bool)($el['open'] ?? false);
                             $openable = (bool)($el['openable'] ?? false);
-
                             // Vue condition: !el.hide || el.active || el.open
                             if ($hide && !$active && !$open) {
                                 continue;
@@ -315,8 +124,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
 
                             $level = (int)($el['level'] ?? 0);
 
-                            // Vue RouterLink target:
-                            // id = (el.active ? el.parent : el.id)
                             $targetId = $active ? ($el['parent'] ?? $el['id'] ?? '') : ($el['id'] ?? '');
 
                             $classes = [];
@@ -342,95 +149,16 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    </table>
-                </div>
-            <?php endif; ?>
+                    <?php endif; ?>
+                </table>
+            </div>
         </div>
 
         <div class="col-sm">
 
-            <style>
-                .unit-name {
-                    margin: 0;
-                }
-
-                .unit-type {
-                    margin: 0 0 1rem 0;
-                    font-size: 1.4rem;
-                    color: var(--primary-color);
-                }
-            </style>
-
             <h2 class="unit-name"><?= lang($data['name'], $data['name_de'] ?? null) ?></h2>
             <h4 class="unit-type"><?= lang($data['unit']['name'] ?? '', $data['unit']['name_de'] ?? null) ?></h4>
 
-            <style>
-                nav#group-pills {
-                    margin: 2rem 0;
-                }
-
-                nav#group-pills a {
-                    position: relative;
-                    color: #4e4e4e;
-                    display: inline-block;
-                    margin-right: 30px;
-                    padding-top: 4px;
-                    padding-bottom: 4px;
-                    text-align: center;
-                }
-
-                nav#group-pills a:after {
-                    content: "";
-                    position: absolute;
-                    width: 100%;
-                    transform: scaleX(0);
-                    height: 4px;
-                    bottom: 0;
-                    left: 0;
-                    background-color: var(--primary-color);
-                    transform-origin: bottom left;
-                    transition: transform 0.25s ease-out;
-                }
-
-                nav#group-pills a:hover {
-                    color: var(--primary-color);
-                }
-
-                nav#group-pills a:hover:after {
-                    transform: scaleX(1);
-                }
-
-                nav#group-pills a.active {
-                    color: var(--primary-color);
-                    font-weight: 600;
-
-                }
-
-                nav#group-pills a.active:after {
-                    transform: scaleX(1);
-                    transform-origin: bottom left;
-                }
-
-                nav#group-pills i {
-                    font-size: 3rem;
-                    display: block;
-                    margin-bottom: 10px;
-                }
-
-                nav#group-pills span {
-                    position: absolute;
-                    left: calc(50% + 6px);
-                    top: 0px;
-                    line-height: 24px;
-                    height: 24px;
-                    background-color: var(--box-bg-color);
-                    font-size: 14px;
-                    border-radius: 12px;
-                    min-width: 3rem;
-                    text-align: center;
-                    padding: 0 5px;
-                }
-            </style>
             <nav id="group-pills">
                 <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'info' ? 'active' : '' ?>">
                     <i class="ph ph-info" aria-hidden="true"></i>
@@ -478,7 +206,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 <?php } ?>
 
                 <?php
-                if ($numbers['infrastructures'] > 0) { ?>
+                if (($numbers['infrastructures'] ?? 0) > 0) { ?>
                     <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="<?= $preselect === 'infrastructures' ? 'active' : '' ?>">
                         <i class="ph ph-cube" aria-hidden="true"></i>
                         <?= $Settings->infrastructureLabel() ?>
@@ -499,7 +227,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         <h5 class="mt-0"><?= lang($data['unit']['head'] ?? '', $data['unit']['head_de'] ?? null) ?></h5>
                         <div>
                             <?php foreach ($head as $h) { ?>
-                                <a href="<?= $base ?>/person/<?= $h['id'] ?>" class="colorless d-flex align-items-center border bg-white p-10 rounded mt-10">
+                                <a href="<?= $base ?>/person/<?= $h['id'] ?>" class="person-card">
                                     <?= $h['img'] ?>
                                     <div class="ml-20">
                                         <h5 class="my-0">
@@ -517,12 +245,27 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 <?php } ?>
 
 
+                <!-- topics -->
+                <?php
+                $unit_topics = null;
+                if ($baseUnit) {
+                    $unit_topics = $topics ?? null;
+                } else {
+                    $unit_topics = $data['topics'] ?? null;
+                }
+                if (!empty($unit_topics)) { ?>
+                    <h6 class="m-0"><?= $Settings->topicLabel() ?>:</h6>
+                    <div class="topics">
+                        <?php foreach ($unit_topics as $t) { ?>
+                            <a href="<?= $base ?>/topic/<?= $t['id'] ?>" class="topic-badge" style="--primary-color: <?= $t['color'] ?? 'var(--primary-color)' ?>; --primary-color-20: <?= isset($t['color']) ? $t['color'] . '33' : 'var(--primary-color-20)' ?>">
+                                <i class="ph ph-arrow-circle-right"></i>
+                                <?= lang($t['name'], $t['name_de'] ?? null) ?>
+                            </a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
 
                 <?php if (isset($data['description']) || isset($data['description_de'])) { ?>
-
-                    <!-- <h5>
-                        <?= lang('About', 'Information') ?>
-                    </h5> -->
                     <div class="description">
                         <?= lang($data['description'] ?? '-', $data['description_de'] ?? null) ?>
                     </div>
@@ -684,81 +427,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         </p>
                     </div>
 
-
-                    <style>
-                        #projects-table {
-                            border: none;
-                            background: transparent;
-                            box-shadow: none;
-                            display: block;
-                        }
-
-                        #projects-table thead {
-                            display: none;
-                        }
-
-                        #projects-table tbody {
-                            display: flex;
-                            flex-grow: column;
-                            flex-direction: row;
-                            flex-wrap: wrap;
-                        }
-
-                        #projects-table tbody tr {
-                            width: 100%;
-                            margin: 0.5rem;
-                            border: var(--border-width) solid var(--border-color);
-                            border-radius: var(--border-radius);
-                            box-shadow: var(--box-shadow);
-                            background: var(--box-bg-color);
-                            display: flex;
-                            align-items: center;
-                        }
-
-                        #projects-table tbody tr td {
-                            border: 0;
-                            box-shadow: none;
-                            width: 100%;
-                            height: 100%;
-                            display: block;
-                        }
-
-                        #projects-table tbody tr small,
-                        #projects-table tbody tr p {
-                            display: block;
-                            margin: 0;
-                        }
-
-                        #projects-table tbody tr td {
-                            display: flex;
-                            /* align-items: center; */
-                            border: 0;
-                        }
-
-                        @media (min-width: 768px) {
-                            #projects-table tbody tr {
-                                width: 48%;
-                            }
-                        }
-
-                        /* 
-@media (min-width: 1200px) {
-  .table.cards tbody tr {
-    width: calc(33.3% - 1rem);
-  }
-} */
-
-                        span.link {
-                            color: var(--primary-color);
-                            cursor: pointer;
-                            display: inline-block;
-                        }
-
-                        span.link::after {
-                            content: " »";
-                        }
-                    </style>
-
                 <?php } ?>
 
 
@@ -771,23 +439,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 <?php if ($numbers['infrastructures'] > 0) {
                     $infrastructures = $Portfolio->fetch_entity('infrastructures');
                 ?>
-                    <style>
-                        .infra-card {
-                            width: 100%;
-                            margin: 0.5rem 0;
-                            display: flex;
-                            gap: 1rem;
-                            padding: 1rem;
-                        }
-
-                        .infra-card img,
-                        .infra-card .infrastructure-logo-placeholder {
-                            width: 120px;
-                            max-height: 120px;
-                            flex-shrink: 0;
-                            object-fit: contain;
-                        }
-                    </style>
                     <!-- infrastructures -->
                     <div class="w-full">
                         <table class="table datatable responsive" id="infrastructures-table"
