@@ -37,7 +37,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
         <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
 
         <!-- all variables for this page -->
-        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
         <script>
             const BASE = '<?= $base ?>';
             const DEPT = '<?= $id ?>';
@@ -228,7 +227,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         <div>
                             <?php foreach ($head as $h) { ?>
                                 <a href="<?= $base ?>/person/<?= $h['id'] ?>" class="person-card">
-                                    <?= $h['img'] ?>
+                                    <?= $Portfolio->printProfilePicture($h['id'], null, 'profile-img') ?>
                                     <div class="ml-20">
                                         <h5 class="my-0">
                                             <?= $h['name'] ?>
@@ -270,10 +269,6 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         <?= lang($data['description'] ?? '-', $data['description_de'] ?? null) ?>
                     </div>
                 <?php } ?>
-
-
-
-
 
             </section>
 
@@ -339,7 +334,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         foreach ($staff as $s) {
                         ?>
                             <tr>
-                                <td><?= $s['img'] ?></td>
+                                <td><?= $Portfolio->printProfilePicture($s['id'], null, 'profile-img') ?></td>
                                 <td>
                                     <div class="w-full">
                                         <div style="display: none;"><?= $s['lastname'] ?></div>

@@ -88,9 +88,9 @@ $name = $data['name'];
                         foreach ($persons as $person) {
                         ?>
                             <div class="col-md-6">
-                                <div class="d-flex align-items-center box mt-0 p-10">
+                                <div class="person-card">
 
-                                    <?= $person['img'] ?>
+                                    <?= $Portfolio->printProfilePicture($person['id'], null, 'profile-img') ?>
                                     <div class="">
                                         <h5 class="my-0">
                                             <a href="<?= $base ?>/person/<?= $person['id'] ?>" class="colorless">

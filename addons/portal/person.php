@@ -3,7 +3,6 @@
     <style>
         .content-wrapper {
             scroll-padding-top: 6rem;
-
         }
 
         .on-this-page-nav {
@@ -22,7 +21,7 @@
             <?php if (empty($data['inactive'])): ?>
                 <div class="col mr-20" style="flex-grow: 0">
                     <?php
-                    echo $data['img'];
+                        echo $Portfolio->printProfilePicture($id, null, 'profile-img');
                     ?>
                 </div>
             <?php endif; ?>

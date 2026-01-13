@@ -16,7 +16,7 @@ class Settings
     public $roles = array();
     public $allowedTypes = array();
     public $allowedFilter = array();
-    private $osiris = null;
+    public $osiris = null;
     private $features = array();
     public $continuousTypes = [];
 

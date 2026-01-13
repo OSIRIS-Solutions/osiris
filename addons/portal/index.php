@@ -72,7 +72,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
 
 
-Route::get('/portal/(info|activities|persons|projects|groups|infrastructures|topics)', function ($pagename) {
+Route::get('/portal/(info|activities|publications|persons|projects|groups|infrastructures|topics)', function ($pagename) {
     include_once BASEPATH . "/php/init.php";
     if (! $Settings->featureEnabled('portal')) {
         die('Portal feature is disabled.');
@@ -98,6 +98,10 @@ Route::get('/portal/(info|activities|persons|projects|groups|infrastructures|top
     switch ($pagename) {
         case 'activities':
             $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/portal/activities"];
+            break;
+
+        case 'publications':
+            $breadcrumb[] = ['name' => lang('Publications', 'Publikationen'), 'path' => "/portal/publications"];
             break;
 
         case 'persons':

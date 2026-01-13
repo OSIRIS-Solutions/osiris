@@ -1,6 +1,6 @@
 <?php
 
-require_once BASEPATH . '/vendor/autoload.php';
+require_once BASEPATH . '/php/DB.php';
 require_once BASEPATH . '/php/Settings.php';
 
 class Portfolio extends Settings
@@ -40,6 +40,54 @@ class Portfolio extends Settings
             if (substr($this->basepath, -1) === '/') {
                 $this->basepath = substr($this->basepath, 0, -1);
             }
+        }
+    }
+
+    function printProfilePicture($user, $root = null, $class = "")
+    {
+        if ($root === null) {
+            $root = $this->get('portfolio_url', ROOTPATH);
+        }
+        if ($this->isPreview()) {
+            $path = ROOTPATH . '/img';
+        } else {
+            $path = $root . '/assets/img';
+        }
+        $default = '<img src="' . $path . '/no-photo.png" alt="Profilbild" class="' . $class . '">';
+        $userId = null;
+        if (is_array($user)) {
+            $userId = $user['id'] ?? null;
+        } else {
+            $userId = $user;
+        }
+        if (empty($userId)) return $default;
+        $user = $this->osiris->persons->findOne(['_id' => DB::to_ObjectID($userId)]);
+        if (empty($user)) return $default;
+        if (!($user['public_image'] ?? false)) {
+            return $default;
+        }
+        if ($this->featureEnabled('db_pictures')) {
+            $img = $this->osiris->userImages->findOne(['user' => $user['username']]);
+            if (empty($img)) {
+                return $default;
+            }
+            if ($img['ext'] == 'svg') {
+                $img['ext'] = 'svg+xml';
+            }
+            return '<img src="data:image/' . $img['ext'] . ';base64,' . base64_encode($img['img']) . ' " class="' . $class . '" />';
+        } else {
+            $img_exist = file_exists(BASEPATH . "/img/users/{$user['username']}.jpg");
+            if (!$img_exist) {
+                return $default;
+            }
+            // make sure that caching is not an issue
+            $v = filemtime(BASEPATH . "/img/users/{$user['username']}.jpg");
+            $id = $user['_id'];
+            if ($this->isPreview()) {
+                $id = $user['username'];
+            }
+            $img = $path . "/users/{$id}.jpg?v=$v";
+            return ' <img src="' . $img . '" alt="Profilbild" class="' . $class . '">';
         }
     }
 
@@ -344,7 +392,7 @@ class Portfolio extends Settings
                 $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => $base . "/infrastructures"];
                 $items[] = ['name' => $name, 'path' => $base . "/infrastructure/$id"];
                 break;
-            
+
             case 'topic':
                 // $items[] = ['name' => lang('All Topics', 'Alle Themen'), 'path' => $base . "/topics"];
                 $items[] = ['name' => $name, 'path' => $base . "/topic/$id"];

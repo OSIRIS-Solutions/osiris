@@ -105,9 +105,9 @@
                     foreach ($persons as $person) {
                     ?>
                         <div class="col-lg-6">
-                            <div class="d-flex align-items-center box mt-0 p-10" style="height: calc(100% - 2rem);">
+                            <div class="person-card" style="height: calc(100% - 2rem);">
 
-                                <?= $person['img'] ?>
+                                <?= $Portfolio->printProfilePicture($person['id'], null, 'profile-img') ?>
                                 <div class="">
                                     <h5 class="my-0">
                                         <a href="<?= $base ?>/person/<?= $person['id'] ?>" class="colorless">
