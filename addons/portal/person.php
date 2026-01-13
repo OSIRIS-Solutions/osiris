@@ -190,7 +190,7 @@
                 <?php if (!empty($data['numbers']['teaching'])): ?>
                     <div class="pb-10">
                         <h2 id="teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></h2>
-                        <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-source="./teaching.json" data-table="teaching">
+                        <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-table="teaching">
                             <thead>
                                 <tr>
                                     <th data-><?= lang('Title', 'Titel') ?></th>
@@ -198,8 +198,8 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', $lang);
-                                foreach ($teaching['data'] as $t):
+                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('en', 'de'));
+                                foreach (($teaching) as $t):
                                     $title = str_replace("href='/", "href='" . $base . "/",  $t['title']);
                                 ?>
                                     <tr>
