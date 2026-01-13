@@ -519,6 +519,12 @@ $pageactive = function ($p) use ($page) {
                         </a>
                     <?php } ?>
 
+                    <?php if ($Settings->featureEnabled('portal')) { ?>
+                        <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
+                            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+                            <?= lang('Go to portal', 'Zum Portal') ?>
+                        </a>
+                    <?php } ?>
 
                 <?php } else { ?>
 
@@ -901,46 +907,46 @@ $pageactive = function ($p) use ($page) {
 
                     </nav>
 
+
+
+                    <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
+                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
+                            ADMIN
+                        </div>
+                        <nav>
+                            <?php if ($Settings->hasPermission('admin.see')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
+                                    <i class="ph ph-gear" aria-hidden="true"></i>
+                                    <?= lang('Settings', 'Einstellungen') ?>
+                                </a>
+                                <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                    <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                    <?= lang('Contents', 'Inhalte') ?>
+                                </a>
+                                <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
+                                    <i class="ph ph-shield-check" aria-hidden="true"></i>
+                                    <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
+                                </a>
+                            <?php } ?>
+
+
+                            <?php if ($Settings->hasPermission('report.templates')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
+                                    <i class="ph ph-clipboard-text"></i>
+                                    <?= lang('Report templates', 'Berichtsvorlagen') ?>
+                                </a>
+                            <?php } ?>
+                            <?php if ($Settings->hasPermission('user.synchronize')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
+                                    <i class="ph ph-users"></i>
+                                    <?= lang('User Management', 'Nutzerverwaltung') ?>
+                                </a>
+                            <?php } ?>
+                        </nav>
+                    <?php } ?>
+
+
                 <?php } ?>
-
-
-
-                <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
-                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
-                        ADMIN
-                    </div>
-                    <nav>
-                        <?php if ($Settings->hasPermission('admin.see')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
-                                <i class="ph ph-gear" aria-hidden="true"></i>
-                                <?= lang('Settings', 'Einstellungen') ?>
-                            </a>
-                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
-                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
-                                <?= lang('Contents', 'Inhalte') ?>
-                            </a>
-                            <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
-                                <i class="ph ph-shield-check" aria-hidden="true"></i>
-                                <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
-                            </a>
-                        <?php } ?>
-
-
-                        <?php if ($Settings->hasPermission('report.templates')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
-                                <i class="ph ph-clipboard-text"></i>
-                                <?= lang('Report templates', 'Berichtsvorlagen') ?>
-                            </a>
-                        <?php } ?>
-                        <?php if ($Settings->hasPermission('user.synchronize')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
-                                <i class="ph ph-users"></i>
-                                <?= lang('User Management', 'Nutzerverwaltung') ?>
-                            </a>
-                        <?php } ?>
-                    </nav>
-                <?php } ?>
-
 
 
             </div>

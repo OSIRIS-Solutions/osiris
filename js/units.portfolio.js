@@ -8,6 +8,23 @@ var activitiesTable = false,
     personsExists = false,
     wordcloudExists = false;
 
+// check if BASE is defined else set to ROOTPATH
+if (typeof BASE === 'undefined') {
+    const BASE = ROOTPATH + '/preview';
+}
+$.extend(true, $.fn.dataTable.defaults, {
+    layout: {
+        // top1Start: '',
+        topStart: 'search',
+        topEnd: 'pageLength',
+        bottomStart: 'paging',
+        bottomEnd: 'info',
+        // bottom1End: ''
+    },
+    lengthMenu: [5, 10, 25, 50, 100],
+    buttons: null
+});
+
 function navigate(key) {
     console.log(key);
     $('section').hide()
@@ -27,9 +44,9 @@ function navigate(key) {
                     dataSrc: 'data'
                 },
                 "sort": false,
-                "pageLength": 6,
+                "pageLength": 10,
                 "lengthChange": false,
-                "searching": false,
+                "searching": true,
                 "pagingType": "numbers",
                 columnDefs: [{
                     targets: 0,
@@ -41,7 +58,7 @@ function navigate(key) {
                     data: 'html',
                     render: function (data, type, row) {
                         // replace links to activities with links to the activity page
-                        data = data.replace(/href='\/activity/g, "href='" + ROOTPATH + "/preview/activity");
+                        data = data.replace(/href='\/activity/g, "href='" + BASE + "/activity");
                         return data;
                     }
                 },
@@ -59,9 +76,9 @@ function navigate(key) {
                     dataSrc: 'data'
                 },
                 "sort": false,
-                "pageLength": 6,
+                "pageLength": 10,
                 "lengthChange": false,
-                "searching": false,
+                "searching": true,
                 "pagingType": "numbers",
                 columnDefs: [{
                     targets: 0,
@@ -73,7 +90,7 @@ function navigate(key) {
                     data: 'html',
                     render: function (data, type, row) {
                         // replace links to activities with links to the activity page
-                        data = data.replace(/href='\/activity/g, "href='" + ROOTPATH + "/preview/activity");
+                        data = data.replace(/href='\/activity/g, "href='" + BASE + "/activity");
                         return data;
                     }
                 },
@@ -96,15 +113,13 @@ function navigate(key) {
                         data: 'name',
                         render: function (data, type, row) {
                             let teaser = lang(row.teaser_en ?? '', row.teaser_de ?? null);
-                            if (teaser.length > 1) {
-                                teaser = `<hr><p class="">
-                    ${teaser}...
-                    <span class="link">Weiterlesen</span>
-                  </p>
-                    `;
+                            if (teaser.length > 140) {
+                                teaser = `<hr><p class="">${teaser}...<span class="link">Weiterlesen</span></p>`;
                             }
+                            let start = new Date(row.start_date);
+                            let end = new Date(row.end_date);
 
-                            return `<a class="d-block w-full colorless" href="${ROOTPATH}/preview/project/${row.id}">
+                            return `<a class="d-block w-full colorless" href="${BASE}/project/${row.id}">
                   <div style="display: none;">${row.name}</div>
                   <span class="float-right text-primary">${lang(row.type_details.name ?? '', row.type_details.name_de ?? null)}</span>
                   <h5 class="my-0 text-primary">
@@ -114,7 +129,7 @@ function navigate(key) {
                       ${lang(row.title, row.title_de ?? null)}
                   </small>
                   <p class="d-flex justify-content-between">
-                      <span class="text-secondary">${lang(row.start_date ?? '', row.start_date_de ?? null)} - 31.12.2026</span>
+                      <span class="text-secondary">${start.toLocaleDateString()} - ${end.toLocaleDateString()}</span>
 
                   </p>
                     ${teaser}
@@ -139,44 +154,12 @@ function navigate(key) {
             personsExists = true;
             // console.log(personsExists);
             return $('#users-table').DataTable({
-                // "ajax": {
-                //     "url": ROOTPATH + '/portfolio/unit/' + DEPT + '/staff',
-                //     dataSrc: 'data'
-                // },
                 dom: 'frtipP',
                 deferRender: true,
                 responsive: true,
                 language: {
                     url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
                 },
-                //     columnDefs: [
-                //         {
-                //             targets: 0,
-                //             data: 'img',
-                //             searchable: false,
-                //             sortable: false,
-                //             visible: true
-                //         },
-                //         {
-                //             targets: 1,
-                //             data: 'displayname',
-                //             className: 'flex-grow-1',
-                //             render: function (data, type, row) {
-                //                 return `<div class="w-full">
-                //       <div style="display: none;">${row.displayname}</div>
-                //       <h5 class="my-0">
-                //           <a href="${ROOTPATH}/review/person/651cecd8b3c97f11cc28cc45">
-                //             ${row.academic_title ?? ''} ${row.displayname}
-                //           </a>
-                //       </h5>
-                //       <small>
-                //           ${lang(row.position ?? '', row.position_de ?? null)}
-                //       </small>
-                //   </div>`;
-                //             }
-                //         }
-
-                //     ],
                 "order": [
                     [1, 'asc'],
                 ],
@@ -345,9 +328,7 @@ function collaboratorChart(selector, data) {
                 trace.lat.push(Number(d.lat));
 
                 let text = `<b>${d.name || ""}</b>`;
-                if (context === "unit" && !d.current) {
-                    text += `<br>${count} Projects`;
-                }
+                text += `<br>${count} Projects`;
                 if (d.location) text += `<br>${d.location}`;
                 trace.text.push(text);
             });

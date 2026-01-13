@@ -20,7 +20,7 @@ if ($id == '0') {
     // id
     $baseUnit = true;
 }
-$preselect = $_GET['open'] ?? null;
+$preselect = $open ?? $_GET['open'] ?? null;
 
 ?>
 <div class="container">
@@ -252,7 +252,7 @@ $preselect = $_GET['open'] ?? null;
         <!-- all variables for this page -->
         <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css">
         <script>
-            const $base = '<?= $base ?>';
+            const BASE = '<?= $base ?>';
             const DEPT = '<?= $id ?>';
         </script>
         <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?= CSS_JS_VERSION ?>"></script>
@@ -431,9 +431,8 @@ $preselect = $_GET['open'] ?? null;
                     padding: 0 5px;
                 }
             </style>
-
             <nav id="group-pills">
-                <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'general' ? 'active' : '' ?>">
+                <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'info' ? 'active' : '' ?>">
                     <i class="ph ph-info" aria-hidden="true"></i>
                     <?= lang('Info', 'Info') ?>
                 </a>
@@ -489,7 +488,7 @@ $preselect = $_GET['open'] ?? null;
             </nav>
 
 
-            <section id="general" <?= empty($preselect) || $preselect === 'general' ? '' : 'style="display:none"' ?> data-title="<?= lang('General information', 'Allgemeine Informationen') ?>">
+            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= lang('General information', 'Allgemeine Informationen') ?>">
                 <!-- head -->
                 <?php
                 $head = $data['heads'] ?? [];
@@ -548,7 +547,7 @@ $preselect = $_GET['open'] ?? null;
                             <div class="subtitle font-size-14 text-secondary">
                                 <?= lang($r['subtitle'] ?? '', $r['subtitle_de'] ?? null) ?>
                             </div>
-                            
+
                             <div class="description">
                                 <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
                             </div>
@@ -670,7 +669,7 @@ $preselect = $_GET['open'] ?? null;
 
 
                     <div id="collaborators">
-                        <div class="box mt-0">
+                        <div class="">
                             <div id="collaborator-map"
                                 class="portfolio-map map h-500 w-full"
                                 data-source="./collaborators-map.json"
@@ -784,7 +783,7 @@ $preselect = $_GET['open'] ?? null;
                         .infra-card img,
                         .infra-card .infrastructure-logo-placeholder {
                             width: 120px;
-                            height: 120px;
+                            max-height: 120px;
                             flex-shrink: 0;
                             object-fit: contain;
                         }
@@ -820,7 +819,17 @@ $preselect = $_GET['open'] ?? null;
                                                         <?php } ?>
                                                     </div>
                                                     <p>
-                                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                                        <?php
+                                                        $descr = lang($infra['description'], $infra['description_de'] ?? null);
+                                                        if (!empty($descr)) {
+                                                        ?>
+                                                            <?= get_preview($descr, 300) ?>
+                                                            <?php if (strlen($descr) > 300) { ?>
+                                                                <a href="<?= $base ?>/infrastructure/<?= $infra['id'] ?>" class="link">
+                                                                    <?= lang('Read more', 'Weiterlesen') ?>
+                                                                </a>
+                                                            <?php } ?>
+                                                        <?php } ?>
                                                     </p>
                                                     <div>
                                                         <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>

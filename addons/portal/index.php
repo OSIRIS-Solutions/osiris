@@ -5,64 +5,38 @@
  * Preview and API
  */
 
-Route::get('/preview/(activity|person|profile|project|group|infrastructure)/(.*)', function ($type, $id) {
+Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastructure)/(.*)', function ($section, $type, $id) {
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(true);
-    $base = $Portfolio->getBasePath();
+    if ($section == 'portal') {
+        $base = ROOTPATH . '/portal';
+        $Portfolio->setBasePath($base);
+    } else {
+        $base = $Portfolio->getBasePath();
+    }
     if ($type == 'profile') {
         $type = 'person';
     }
     if ($type == 'group') {
         $type = 'unit';
     }
-    // display correct breadcrumb
-    switch ($type) {
-        case 'activity':
-            $breadcrumb = [
-                ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-                ['name' => $id, 'path' => "/activities/view/$id"],
-            ];
-            break;
-
-        case 'person':
-            $breadcrumb = [
-                ['name' => lang('User', 'Personen'), 'path' => "/user/browse"],
-                ['name' => $id, 'path' => "/profile/$id"],
-            ];
-            break;
-
-        case 'project':
-            $breadcrumb = [
-                ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-                ['name' => $id, 'path' => "/projects/view/$id"],
-            ];
-            break;
-
-        case 'unit':
-            $breadcrumb = [
-                ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
-                ['name' => $id, 'path' => "/groups/view/$id"],
-            ];
-
-            $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
-            break;
-        case 'infrastructure':
-            $breadcrumb = [
-                ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
-                ['name' => $id, 'path' => "/infrastructures/view/$id"],
-            ];
-            break;
-        default:
-            die('Unknown type: ' . $type);
-            break;
-    }
-    $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
-
-    // important: NO database connection
-    include BASEPATH . "/header.php";
 
     // Call Portfolio API to get entity details
-    $data = $Portfolio->fetch_entity($type, $id, '', 'de');
+    $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
+    if ($type == 'unit') {
+        // fetch additional numbers data
+        $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', lang('en', 'de'));
+        $data['numbers'] = $numbers;
+    }
+    // display correct breadcrumb
+    $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
+
+    // important: NO database connection
+    if ($section == 'portal') {
+        include BASEPATH . "/header-portal.php";
+    } else {
+        include BASEPATH . "/header.php";
+    }
     if ($data === null) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
@@ -88,6 +62,82 @@ Route::get('/preview/(activity|person|profile|project|group|infrastructure)/(.*)
     include BASEPATH . "/addons/portal/$type.php";
     include BASEPATH . "/footer.php";
 });
+
+
+
+Route::get('/portal/(info|activities|persons|projects|groups|infrastructures)', function ($open) {
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio(true);
+    $base = ROOTPATH . '/portal';
+    $Portfolio->setBasePath($base);
+    if ($open == 'profiles') {
+        $open = 'persons';
+    }
+    if ($open == 'groups') {
+        $open = 'units';
+    }
+    // display correct breadcrumb
+    global $breadcrumb;
+    $breadcrumb = [
+        ['name' => lang('Portal', 'Portal'), 'path' => "/portal/info"],
+    ];
+    switch ($open) {
+        case 'activities':
+            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/portal/activities"];
+            break;
+
+        case 'persons':
+            $breadcrumb[] = ['name' => lang('User', 'Personen'), 'path' => "/portal/persons"];
+            break;
+
+        case 'projects':
+            $breadcrumb[] = ['name' => lang('Projects', 'Projekte'), 'path' => "/portal/projects"];
+            break;
+
+        case 'units':
+            $breadcrumb[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/portal/groups"];
+
+            break;
+        case 'infrastructures':
+            $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/portal/infrastructures"];
+            break;
+    }
+
+    // important: NO database connection
+    include BASEPATH . "/header-portal.php";
+
+    // Call Portfolio API to get entity details
+    $type = 'unit';
+    $id = '0';
+    $data = $Portfolio->fetch_entity($type, $id, '', lang('de', 'de'));
+    if ($data === null) {
+        echo "<div class='container w-400 mw-full'>";
+        echo "<div class='alert danger'>";
+        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
+        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo "</div>";
+        echo "</div>";
+        include BASEPATH . "/footer.php";
+        die;
+    }
+
+    if (empty($data)) {
+        echo "<div class='container w-400 mw-full'>";
+        echo "<div class='alert danger'>";
+        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
+        echo lang("This dataset could not be found or is not publicly visible.", "Dieser Datensatz wurde nicht gefunden oder ist nicht öffentlich sichtbar.");
+        echo "</div>";
+        echo "</div>";
+        include BASEPATH . "/footer.php";
+        die;
+    }
+    $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
+    $data['numbers'] = $numbers;
+    // echo $Portfolio->renderBreadCrumb($type, $data, $base);
+    include BASEPATH . "/addons/portal/$type.php";
+    include BASEPATH . "/footer.php";
+});
+
 
 
 Route::get('/render/(activity|person|profile|project|group|unit|infrastructure)/(.*)', function ($type, $id) {

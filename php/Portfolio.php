@@ -48,6 +48,11 @@ class Portfolio extends Settings
         return str_replace("href='/", "href='" . $this->basepath . "/",  $a);
     }
 
+    public function setBasePath($path)
+    {
+        $this->basepath = $path;
+    }
+
     public function getBasePath()
     {
         return $this->basepath;
@@ -233,60 +238,115 @@ class Portfolio extends Settings
         return $hierarchy;
     }
 
-    function renderBreadCrumb($type, $data, $base = null)
+    function getBreadCrumb($type, $data, $base = null, $usecase = 'portfolio')
     {
         $items = [];
         if ($base === null)
             $base = $this->getBasePath();
 
-        // Home
-        $items[] = [
-            'name' => lang('Research', 'Forschung'),
-            'path' => '/',
-        ];
         $id = $data['id'] ?? '';
         $name = lang($data['name'] ?? $id, $data['name_de'] ?? null);
+
+        // Home
+        if ($usecase === 'portfolio') {
+            $items[] = [
+                'name' => lang('Research', 'Forschung'),
+                'path' => $base . '/',
+            ];
+        } else if ($usecase === 'portal') {
+            $items[] = [
+                'name' => lang('Portal', 'Portal'),
+                'path' => $base . '/info',
+            ];
+        } else {
+            switch ($type) {
+                case 'activity':
+                    $breadcrumb = [
+                        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+                        ['name' => $name, 'path' => "/activities/view/$id"],
+                    ];
+                    break;
+
+                case 'person':
+                    $breadcrumb = [
+                        ['name' => lang('User', 'Personen'), 'path' => "/user/browse"],
+                        ['name' => $name, 'path' => "/profile/$id"],
+                    ];
+                    break;
+
+                case 'project':
+                    $breadcrumb = [
+                        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+                        ['name' => $name, 'path' => "/projects/view/$id"],
+                    ];
+                    break;
+
+                case 'unit':
+                    $breadcrumb = [
+                        ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
+                        ['name' => $name, 'path' => "/groups/view/$id"],
+                    ];
+                    break;
+                case 'infrastructure':
+                    $breadcrumb = [
+                        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+                        ['name' => $name, 'path' => "/infrastructures/view/$id"],
+                    ];
+                    break;
+                default:
+                    break;
+            }
+            $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
+            return $breadcrumb;
+        }
         // Type-specific
         switch ($type) {
             case 'activity':
                 if ($data['type'] == 'publication') {
-                    $items[] = ['name' => lang('All Publications', "Alle Publikationen"), 'path' => "/publications"];
+                    $items[] = ['name' => lang('All Publications', "Alle Publikationen"), 'path' => $base . "/publications"];
                 } else {
-                    $items[] = ['name' => lang('All Activities', "Alle Aktivitäten"), 'path' => "/activities"];
+                    $items[] = ['name' => lang('All Activities', "Alle Aktivitäten"), 'path' => $base . "/activities"];
                 }
-                $items[] = ['name' => $name, 'path' => "/activities/view/$id"];
+                $items[] = ['name' => $name, 'path' => $base . "/activities/view/$id"];
                 break;
 
             case 'person':
-                $items[] = ['name' => lang('All Staff', 'Alle Mitarbeitende'), 'path' => "/persons"];
-                $items[] = ['name' => $data['displayname'] ?? $name, 'path' => "/person/$id"];
+                $items[] = ['name' => lang('All Staff', 'Alle Mitarbeitende'), 'path' => $base . "/persons"];
+                $items[] = ['name' => $data['displayname'] ?? $name, 'path' => $base . "/person/$id"];
                 break;
 
             case 'project':
-                $items[] = ['name' => lang('All Projects', 'Alle Projekte'), 'path' => "/projects"];
-                $items[] = ['name' => $name, 'path' => "/projects/view/$id"];
+                $items[] = ['name' => lang('All Projects', 'Alle Projekte'), 'path' => $base . "/projects"];
+                $items[] = ['name' => $name, 'path' => $base . "/projects/view/$id"];
                 break;
 
             case 'unit':
-                // $items[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"];
-                $items[] = ['name' => $name, 'path' => "/groups/view/$id"];
+                // $items[] = ['name' => lang('Units', 'Einheiten'), 'path' => $base."/groups"];
+                $items[] = ['name' => $name, 'path' => $base . "/groups/view/$id"];
                 break;
 
             case 'infrastructure':
-                $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => "/infrastructures"];
-                $items[] = ['name' => $name, 'path' => "/infrastructure/$id"];
+                $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => $base . "/infrastructures"];
+                $items[] = ['name' => $name, 'path' => $base . "/infrastructure/$id"];
+                break;
+            default:
                 break;
         }
+        return $items;
+    }
+
+    function renderBreadCrumb($type, $data, $base = null)
+    {
+        $items = $this->getBreadCrumb($type, $data, $base);
 
         // Render breadcrumb HTML
-
         $html = '<div class="breadcrumb-container">
   <nav aria-label="breadcrumbs" class="container-lg">
     <ul class="breadcrumb">';
         foreach ($items as $i => $el) {
             $isLast = ($i === count($items) - 1);
             $name = htmlspecialchars($el['name'] ?? '', ENT_QUOTES);
-            $url = $base . htmlspecialchars($el['path'] ?? '', ENT_QUOTES);
+            $url = $el['path'] ?? '#';
 
             if (!$isLast) {
                 $html .= '<li>
