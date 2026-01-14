@@ -57,6 +57,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         margin-right: 2rem;
         object-fit: contain;
     }
+
     .infrastructure-logo-placeholder {
         width: 7rem;
         height: 6rem;
@@ -70,7 +71,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         margin-right: 2rem;
         font-size: 2.5rem;
     }
-
 </style>
 
 <h1>
@@ -111,17 +111,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <tr>
                         <td class="d-flex align-items-center">
                             <?php
-                            $topics = '';
-                            if ($topicsEnabled && !empty($infra['topics'])) {
-                                $topics = '<span class="topic-icons float-right">';
-                                foreach ($infra['topics'] as $topic) {
-                                    $topics .= '<a href="' . ROOTPATH . '/topics/view/' . htmlspecialchars($topic) . '" class="topic-icon topic-' . htmlspecialchars($topic) . '"></a> ';
-                                }
-                                $topics .= '</span>';
-                            }
-                            echo $topics;
-                            ?>
-                            <?php
                             $Infrastructure->printLogo($infra, "infrastructure-logo", lang('Logo of', 'Logo von') . ' ' . $infra['name']);
                             ?>
                             <div>
@@ -141,6 +130,17 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 <div>
                                     <?= fromToYear($infra['start_date'], $infra['end_date'] ?? null, true) ?>
                                 </div>
+                                <?php
+                                $topics = '';
+                                if ($topicsEnabled && !empty($infra['topics'])) {
+                                    $topics = '<span class="topic-icons">';
+                                    foreach ($infra['topics'] as $topic) {
+                                        $topics .= '<a href="' . ROOTPATH . '/topics/view/' . htmlspecialchars($topic) . '" class="topic-icon topic-' . htmlspecialchars($topic) . '"></a> ';
+                                    }
+                                    $topics .= '</span>';
+                                }
+                                echo $topics;
+                                ?>
                             </div>
                         </td>
                         <td><?= lang($infra['name'], $infra['name_de'] ?? null) ?></td>

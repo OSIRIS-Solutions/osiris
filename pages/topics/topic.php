@@ -177,6 +177,14 @@ if ($count_groups > 0) {
         <?php } ?>
     </div>
 
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <a class="btn float-md-right mb-10" href="<?= ROOTPATH ?>/preview/topic/<?= $topic['id'] ?>">
+            <i class="ph ph-eye"></i>
+            <?=lang('Preview', 'Vorschau')?>
+        </a>
+    <?php } ?>
+    
+
     <h1 class="title">
         <span class="topic-icon"></span>
         <?= lang($topic['name'], $topic['name_de'] ?? null) ?>

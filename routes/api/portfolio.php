@@ -174,9 +174,10 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         echo return_permission_denied();
         die;
     }
-    if ($id == 0)
+    if ($id == 0){
         $group = $osiris->groups->findOne(['level' => 0]);
-    else
+        $id = $group['id'];
+    } else
         $group = $osiris->groups->findOne(['id' => $id]);
 
     $head = $group['head'] ?? [];
