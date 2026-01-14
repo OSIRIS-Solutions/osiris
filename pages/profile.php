@@ -52,6 +52,7 @@ if (!isset($scientist['is_active'])) {
 <!-- all variables for this page -->
 <script>
     const CURRENT_USER = '<?= $user ?>';
+    // const HIGHTLIGHTS = <?= json_encode($scientist['highlighted'] ?? []) ?>;
 </script>
 <script src="<?= ROOTPATH ?>/js/profile.js?v=<?= CSS_JS_VERSION ?>"></script>
 
@@ -1266,9 +1267,9 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
         <div class="col-md-6 col-lg-8">
             <div class="box h-full">
-                <div class="content">
 
-                    <?php if ($active('research')) { ?>
+                <?php if ($active('research')) { ?>
+                    <div class="content">
 
                         <h4 class="title">
                             <?= lang('Research interest', 'Forschungsinteressen') ?>
@@ -1303,59 +1304,91 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
                         <?php } ?>
 
-                </div>
-                <hr>
-            <?php } ?>
+                    </div>
+                    <hr>
+                <?php } ?>
 
-            <div class="content">
 
-                <?php if ($active('cv')) { ?>
-                    <h4 class="title">
-                        <?= lang('Curriculum Vitae') ?>
+                <?php if (isset($scientist['highlighted'])) { ?>
+                    <div class="content">
+                        <h4 class="title">
+                            <?= lang('Highlighted Research', 'Hervorgehobene Forschung') ?>
+                        </h4>
+                        <table class="table simple">
+                            <?php
+                            $highlights = DB::doc2Arr($scientist['highlighted']);
+                            foreach ($highlights as $h) {
+                                $pub = $osiris->activities->findOne(['_id' => DB::to_ObjectID($h)], ['projection' => ['rendered' => 1]]);
+                                if ($pub) {
+                                    echo '<tr><td class="w-50">';
+                                    echo $pub['rendered']['icon'] ?? '';
+                                    echo '</td><td>';
+                                    echo $pub['rendered']['web'] ?? '';
+                                    echo '</td></tr>';
+                                }
+                            }
+                            ?>
+                        </table>
+
+
                         <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
-                            <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
-                                <i class="ph ph-note-pencil ph-lg"></i>
-                            </a>
+                            <p class="text-muted font-size-12">
+                                <i class="ph ph-edit"></i> <?= lang('You can highlight/unhighlight publications by clicking on them and changing the "Displayed in your profile" option.', 'Du kannst Publikationen hervorheben/entfernen, indem du sie anklickst und die Option "Darstellung in deinem Profil" änderst.') ?>
+                            </p>
                         <?php } ?>
-                    </h4>
+                    </div>
+                    <hr>
+                <?php } ?>
 
-                    <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
-                        $cv = DB::doc2Arr($scientist['cv']);
-                    ?>
-                        <div class="biography">
-                            <?php foreach ($cv as $entry) { ?>
-                                <div class="cv">
-                                    <span class="time"><?= $entry['time'] ?></span>
-                                    <h5 class="title"><?= $entry['position'] ?></h5>
-                                    <span class="affiliation"><?= $entry['affiliation'] ?></span>
-                                </div>
+                <div class="content">
+
+                    <?php if ($active('cv')) { ?>
+                        <h4 class="title">
+                            <?= lang('Curriculum Vitae') ?>
+                            <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                                <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
+                                    <i class="ph ph-note-pencil ph-lg"></i>
+                                </a>
                             <?php } ?>
-                        </div>
-                    <?php } else { ?>
-                        <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                        </h4>
+
+                        <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
+                            $cv = DB::doc2Arr($scientist['cv']);
+                        ?>
+                            <div class="biography">
+                                <?php foreach ($cv as $entry) { ?>
+                                    <div class="cv">
+                                        <span class="time"><?= $entry['time'] ?></span>
+                                        <h5 class="title"><?= $entry['position'] ?></h5>
+                                        <span class="affiliation"><?= $entry['affiliation'] ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
 
-                <?php if ($active('biography')) { ?>
-                    <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Biography', 'Biografie') ?>
-                        </h6>
-                        <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                    <?php if ($active('biography')) { ?>
+                        <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
+                            <h6 class="title">
+                                <?= lang('Biography', 'Biografie') ?>
+                            </h6>
+                            <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
-                <?php if ($active('education')) { ?>
-                    <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Education', 'Ausbildung') ?>
-                        </h6>
-                        <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                    <?php if ($active('education')) { ?>
+                        <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                            <h6 class="title">
+                                <?= lang('Education', 'Ausbildung') ?>
+                            </h6>
+                            <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
-            </div>
+                </div>
             </div>
         </div>
     </div>

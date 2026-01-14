@@ -226,6 +226,150 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         $group['topics'] = $topics;
     }
 
+    $research = [];
+    if (isset($group['research'])) {
+        foreach ($group['research'] as $key => $value) {
+            $res = [
+                'title' => $value['title'] ?? '',
+                'title_de' => $value['title_de'] ?? null,
+                'subtitle' => $value['subtitle'] ?? '',
+                'subtitle_de' => $value['subtitle_de'] ?? null,
+                'info' => $value['info'] ?? '',
+                'info_de' => $value['info_de'] ?? null,
+            ];
+            if (!empty($value['activities'])) {
+                $res['activities'] = [];
+                foreach ($value['activities'] as $a) {
+                    $doc = $DB->getActivity($a);
+                    if (empty($doc)) continue;
+                    $res['activities'][] = [
+                        'id' => strval($doc['_id']),
+                        'icon' => $doc['rendered']['icon'],
+                        'html' => $doc['rendered']['print']
+                    ];
+                }
+            }
+            $research[] = $res;
+        }
+    }
+    $group['research'] = $research;
+
+    // get all numbers
+    $numbers = [];
+    $child_ids = $Groups->getChildren($id);
+
+    if (isset($group['description']) || isset($group['description_de'])) {
+        $numbers['general'] = 1;
+    }
+    if (!empty($group['research'] ?? null)) {
+        $numbers['research'] = 1;
+    }
+
+    $numbers['persons'] = $osiris->persons->count([
+        'units' => [
+            '$elemMatch' => [
+                'unit' => ['$in' => $child_ids],
+                '$or' => [
+                    ['end' => null],
+                    ['end' => ['$gte' => date('Y-m-d')]]
+                ]
+            ]
+        ],
+        'is_active' => ['$ne' => false],
+        'hide' => ['$ne' => true]
+    ]);
+
+    $publication_filter = [
+        'units' => ['$in' => $child_ids],
+        'type' => 'publication',
+        'hide' => ['$ne' => true]
+    ];
+
+    $activities_filter = [
+        'units' => ['$in' => $child_ids],
+        'subtype' => ['$in' => $Settings->getActivitiesPortfolio()],
+        'hide' => ['$ne' => true]
+    ];
+
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility == 'only-approved') {
+            $publication_filter['workflow.status'] = 'verified';
+            $activities_filter['workflow.status'] = 'verified';
+        } elseif ($visibility == 'approved-or-empty') {
+            $publication_filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+            $activities_filter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
+    $numbers['publications'] = $osiris->activities->count($publication_filter);
+    $numbers['activities'] = $osiris->activities->count($activities_filter);
+
+    // $numbers['memberships'] = $osiris->activities->count([
+    //     'units' => ['$in' => $child_ids],
+    //     'subtype' => ['$in' => $Settings->continuousTypes]
+    // ]);
+
+    $collabs = $osiris->projects->aggregate([
+        ['$match' => [
+            'units' => ['$in' => $child_ids],
+            'collaborators' => ['$exists' => true, '$ne' => []],
+        ]],
+        ['$project' => ['collaborators' => 1]],
+        ['$unwind' => '$collaborators'],
+        [
+            '$group' => [
+                '_id' => '$collaborators.name',
+            ]
+        ],
+        ['$count' => 'count']
+    ])->toArray();
+    $numbers['collaborators'] = $collabs[0]['count'] ?? 0;
+
+
+    if ($Settings->featureEnabled('projects')) {
+        $project_filter = [
+            'units' => ['$in' => $child_ids],
+            "public" => true,
+        ];
+        $numbers['projects'] = $osiris->projects->count($project_filter);
+    } else {
+        $numbers['projects'] = 0;
+    }
+
+    // if ($group['level'] == 1) {
+    //     // copy from project filter
+    //     $cooperation_filter = [
+    //         'year' => ['$gte' => CURRENTYEAR - 4],
+    //         'units' => $id
+    //     ];
+    //     $cooperation_filter = array_merge($cooperation_filter, $publication_filter);
+    //     $coop = $osiris->activities->aggregate([
+    //         ['$match' => $cooperation_filter],
+    //         ['$unwind' => '$units'],
+    //         ['$group' => ['_id' => '$units', 'count' => ['$sum' => 1]]],
+    //         ['$sort' => ['count' => -1]]
+    //     ])->toArray();
+
+    //     $numbers['cooperation'] = max(0, count($coop) - 1);
+    // }
+    $numbers['infrastructures'] = 0;
+    if ($group['level'] == 0 && $Settings->featureEnabled('infrastructures')) {
+        $numbers['infrastructures'] = $osiris->infrastructures->count([
+            // 'units' => ['$in' => $child_ids],
+            'public' => true,
+        ]);
+    }
+    $group['numbers'] = $numbers;
+
     echo rest($group);
 });
 
@@ -286,7 +430,7 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     }
 
     $base_group = false;
-    $result = [];
+    $numbers = [];
     if ($id == 0) {
         $group = $osiris->groups->findOne(['level' => 0]);
         $id = $group['id'];
@@ -303,19 +447,27 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     $child_ids = $Groups->getChildren($id);
 
     if (isset($group['description']) || isset($group['description_de'])) {
-        $result['general'] = 1;
+        $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
-        $result['research'] = 1;
+        $numbers['research'] = 1;
     }
 
     $person_filter = [
-        'units.unit' => ['$in' => $child_ids],
+        'units' => [
+            '$elemMatch' => [
+                'unit' => ['$in' => $child_ids],
+                '$or' => [
+                    ['end' => null],
+                    ['end' => ['$gte' => date('Y-m-d')]]
+                ]
+            ]
+        ],
         'is_active' => ['$ne' => false],
         'hide' => ['$ne' => true]
     ];
 
-    $result['persons'] = $osiris->persons->count($person_filter);
+    $numbers['persons'] = $osiris->persons->count($person_filter);
 
     $publication_filter = [
         'units' => ['$in' => $child_ids],
@@ -348,15 +500,14 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
         }
     }
 
-    $result['publications'] = $osiris->activities->count($publication_filter);
+    $numbers['publications'] = $osiris->activities->count($publication_filter);
 
-    $result['activities'] = $osiris->activities->count($activities_filter);
+    $numbers['activities'] = $osiris->activities->count($activities_filter);
 
-    $membership_filter = [
+    $numbers['memberships'] = $osiris->activities->count([
         'units' => ['$in' => $child_ids],
         'subtype' => ['$in' => $Settings->continuousTypes]
-    ];
-    $result['memberships'] = $osiris->activities->count($membership_filter);
+    ]);
 
     if ($Settings->featureEnabled('projects')) {
         $project_filter = [
@@ -364,9 +515,9 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
             "public" => true,
         ];
 
-        $result['projects'] = $osiris->projects->count($project_filter);
+        $numbers['projects'] = $osiris->projects->count($project_filter);
     } else {
-        $result['projects'] = 0;
+        $numbers['projects'] = 0;
     }
 
     if ($group['level'] == 1) {
@@ -383,17 +534,17 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
             ['$sort' => ['count' => -1]]
         ])->toArray();
 
-        $result['cooperation'] = max(0, count($coop) - 1);
+        $numbers['cooperation'] = max(0, count($coop) - 1);
     }
-    $result['infrastructures'] = 0;
+    $numbers['infrastructures'] = 0;
     if ($base_group && $Settings->featureEnabled('infrastructures')) {
-        $result['infrastructures'] = $osiris->infrastructures->count([
+        $numbers['infrastructures'] = $osiris->infrastructures->count([
             // 'units' => ['$in' => $child_ids],
             'public' => true,
         ]);
     }
 
-    echo rest($result);
+    echo rest($numbers);
 });
 
 
@@ -776,9 +927,18 @@ Route::get('/portfolio/(unit|topic)/([^/]*)/staff', function ($context, $id) {
         if ($id == 0) {
             $group = $osiris->groups->findOne(['level' => 0]);
             $id = $group['id'];
+        } else {
+            $child_ids = $Groups->getChildren($id);
+            $filter['units'] = [
+                '$elemMatch' => [
+                    'unit' => ['$in' => $child_ids],
+                    '$or' => [
+                        ['end' => null],
+                        ['end' => ['$gte' => date('Y-m-d')]]
+                    ]
+                ]
+            ];
         }
-        $child_ids = $Groups->getChildren($id);
-        $filter['units.unit'] = ['$in' => $child_ids];
     } else {
         echo rest('Context not found', 0, 400);
         die;
@@ -1396,7 +1556,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     }
 
     $defaultFilter = [
-        'authors.user' => $person['username'],
+        'authors.user' => $person['username'], // TODO: check for other roles?
         'hide' => ['$ne' => true]
     ];
 

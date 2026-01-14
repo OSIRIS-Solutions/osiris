@@ -30,11 +30,11 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
     // Call Portfolio API to get entity details
     $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
-    if ($type == 'unit') {
-        // fetch additional numbers data
-        $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', lang('en', 'de'));
-        $data['numbers'] = $numbers;
-    }
+    // if ($type == 'unit') {
+    //     // fetch additional numbers data
+    //     $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', lang('en', 'de'));
+    //     $data['numbers'] = $numbers;
+    // }
     // display correct breadcrumb
     $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
 
@@ -149,8 +149,8 @@ Route::get('/portal/(info|activities|publications|persons|projects|groups|infras
         include BASEPATH . "/footer.php";
         die;
     }
-    $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
-    $data['numbers'] = $numbers;
+    // $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', 'de');
+    // $data['numbers'] = $numbers;
     // echo $Portfolio->renderBreadCrumb($type, $data, $base);
     include BASEPATH . "/addons/portal/$type.php";
     include BASEPATH . "/footer.php";
@@ -183,11 +183,11 @@ Route::get('/render/(activity|person|profile|project|group|unit|infrastructure|t
         http_response_code(404);
         exit;
     }
-    if ($type == 'unit') {
-        // fetch additional numbers data
-        $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', $lang);
-        $data['numbers'] = $numbers;
-    }
+    // if ($type == 'unit') {
+    //     // fetch additional numbers data
+    //     $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', $lang);
+    //     $data['numbers'] = $numbers;
+    // }
     // 3) Render content (no OSIRIS header/footer)
     ob_start();
     echo $Portfolio->renderBreadCrumb($type, $data, $base);
@@ -224,7 +224,7 @@ Route::get('/portfolio-index', function () {
                 'cooperation' => 'cooperation',
                 'publications' => 'publications',
                 'activities' => 'activities',
-                'numbers' => 'numbers',
+                // 'numbers' => 'numbers',
                 'staff' => 'staff',
             ];
 

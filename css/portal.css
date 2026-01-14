@@ -83,7 +83,7 @@ nav#group-pills span {
     color: var(--text-color);
     font-weight: 500;
     font-size: 1.4rem;
-    margin-right: 1rem;
+    margin-right: .5rem;
     white-space: nowrap;
 }
 

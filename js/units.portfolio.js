@@ -3,7 +3,7 @@ var activitiesTable = false,
     projectsExists = false,
     coauthorsExists = false,
     conceptsExists = false,
-    // collaboratorsExists = false,
+    collaboratorsExists = false,
     collabExists = false,
     personsExists = false,
     wordcloudExists = false;
@@ -138,10 +138,13 @@ function navigate(key) {
                     },
                 ]
             });
+            break;
+        case 'collaborators':
+            if (collaboratorsExists) break;
+            collaboratorsExists = true;
             collaboratorChart('#collaborators', {
                 'dept': DEPT,
             });
-            break;
 
         // case 'coauthors':
         //     if (coauthorsExists) break;

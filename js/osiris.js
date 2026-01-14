@@ -841,7 +841,7 @@ function prependRow(trcontent) {
 }
 
 
-function initActivities(selector, data = {}) {
+function initActivities(selector, data = {}, highlights = []) {
     if ($(selector).length === 0) {
         console.warn('No activities table found with selector:', selector);
         return;

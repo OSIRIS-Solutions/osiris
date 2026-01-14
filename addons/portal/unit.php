@@ -21,7 +21,14 @@ if ($id == '0') {
     $baseUnit = true;
 }
 $preselect = $open ?? $_GET['open'] ?? null;
-
+$numbers = $data['numbers'] ?? [
+    'persons' => 0,
+    'publications' => 0,
+    'activities' => 0,
+    'projects' => 0,
+    'collaborators' => 0,
+    'infrastructures' => 0,
+];
 ?>
 <div class="container">
 
@@ -204,6 +211,16 @@ $preselect = $open ?? $_GET['open'] ?? null;
                     </a>
                 <?php } ?>
 
+                
+                <?php
+                if ($numbers['collaborators'] > 0) { ?>
+                    <a onclick="navigate('collaborators')" id="btn-collaborators" class="<?= $preselect === 'collaborators' ? 'active' : '' ?>">
+                        <i class="ph ph-handshake" aria-hidden="true"></i>
+                        <?= lang('Collaborators', 'Kooperationspartner')  ?>
+                        <span class="index"><?= $numbers['collaborators'] ?></span>
+                    </a>
+                <?php } ?>
+
                 <?php
                 if (($numbers['infrastructures'] ?? 0) > 0) { ?>
                     <a onclick="navigate('infrastructures')" id="btn-infrastructures" class="<?= $preselect === 'infrastructures' ? 'active' : '' ?>">
@@ -276,10 +293,9 @@ $preselect = $open ?? $_GET['open'] ?? null;
 
                 <!-- <h3><?= lang('Research topics', 'Forschungsschwerpunkte') ?></h3> -->
 
-                <?php if (isset($data['research']) && !empty($data['research'])) { 
-                    $research = $Portfolio->fetch_entity('unit', $id, 'research');
+                <?php if (isset($data['research']) && !empty($data['research'])) {
                     ?>
-                    <?php foreach ($research as $r) { ?>
+                    <?php foreach ($data['research'] as $r) { ?>
                         <div class="box padded">
                             <h5 class="title">
                                 <?= lang($r['title'], $r['title_de'] ?? null) ?>
@@ -289,7 +305,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             </div>
 
                             <div class="description">
-                                <?= (lang($r['info'], $r['info_de'] ?? null)) ?>
+                                <?= (lang($r['info'] ?? '', $r['info_de'] ?? null)) ?>
                             </div>
                             <?php if (!empty($r['activities'] ?? null)) { ?>
                                 <hr>
@@ -426,8 +442,16 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         </table>
                     </div>
 
+                <?php } ?>
 
 
+            </section>
+
+
+            <section id="collaborators" <?= $preselect === 'collaborators' ? '' : 'style="display:none"' ?> data-title="<?= lang('Collaborators', 'Kooperationspartner') ?>">
+
+                <?php if ($numbers['collaborators'] > 0) {
+                ?>
                     <div id="collaborators">
                         <div class="">
                             <div id="collaborator-map"
@@ -443,9 +467,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             <span style="color:var(--primary-color)">&#9673;</span> <?= lang("Cooperation partner", "Kooperationspartner") ?>
                         </p>
                     </div>
-
                 <?php } ?>
-
 
             </section>
 

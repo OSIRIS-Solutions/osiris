@@ -40,6 +40,7 @@ class Portfolio extends Settings
             if (substr($this->basepath, -1) === '/') {
                 $this->basepath = substr($this->basepath, 0, -1);
             }
+            $this->basepath .= '/' . $this->lang;
         }
     }
 
