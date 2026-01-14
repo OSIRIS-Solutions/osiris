@@ -32,8 +32,13 @@ Route::get('/rerender', function () {
     flush();
     ob_flush();
 
+    $filter = [];
+    if (isset($_GET['type']) && !empty($_GET['type'])) {
+        $filter['type'] = $_GET['type'];
+    }
+
     // start rendering process
-    renderActivities();
+    renderActivities($filter);
     ?>
 
     <div class="alert success">
