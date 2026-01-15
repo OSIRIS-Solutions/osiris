@@ -1695,6 +1695,7 @@ class Modules
                 break;
 
             case "supervisor":
+               $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
@@ -1720,7 +1721,7 @@ class Modules
                             <tbody id="supervisors">
                                 <?php
                                 $i = 0;
-                                foreach ($this->preset ?? [] as $i => $author) { ?>
+                                foreach ($supervisors as $i => $author) { ?>
                                     <tr>
                                         <td>
                                             <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
@@ -1813,6 +1814,7 @@ class Modules
 
 
             case "supervisor-thesis":
+               $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
@@ -1836,7 +1838,7 @@ class Modules
                             <tbody id="supervisors">
                                 <?php
                                 $i = 0;
-                                foreach ($this->preset ?? [] as $i => $author) {
+                                foreach ($supervisors as $i => $author) {
                                     $role = $author['role'] ?? 'supervisor';
                                 ?>
                                     <tr>
