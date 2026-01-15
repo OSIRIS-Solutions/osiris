@@ -211,7 +211,7 @@ $numbers = $data['numbers'] ?? [
                     </a>
                 <?php } ?>
 
-                
+
                 <?php
                 if ($numbers['collaborators'] > 0) { ?>
                     <a onclick="navigate('collaborators')" id="btn-collaborators" class="<?= $preselect === 'collaborators' ? 'active' : '' ?>">
@@ -294,7 +294,7 @@ $numbers = $data['numbers'] ?? [
                 <!-- <h3><?= lang('Research topics', 'Forschungsschwerpunkte') ?></h3> -->
 
                 <?php if (isset($data['research']) && !empty($data['research'])) {
-                    ?>
+                ?>
                     <?php foreach ($data['research'] as $r) { ?>
                         <div class="box padded">
                             <h5 class="title">
@@ -384,8 +384,8 @@ $numbers = $data['numbers'] ?? [
                     data-lang="<?= lang('en', 'de') ?>">
                     <thead>
                         <tr>
-                            <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
-                            <th data-col="html" data-search-col="search">Title</th>
+                            <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
+                            <th data-col="html" data-search-col="search"><?= lang('Publication', 'Publikation') ?></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -408,8 +408,8 @@ $numbers = $data['numbers'] ?? [
                         data-lang="<?= lang('en', 'de') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
-                                <th data-col="html" data-search-col="search">Title</th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
                             </tr>
                         </thead>
                         <tbody></tbody>

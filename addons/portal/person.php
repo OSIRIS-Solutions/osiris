@@ -92,8 +92,8 @@
                             data-lang="<?= lang('en', 'de') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
-                                    <th data-col="html" data-search-col="search">Title</th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                    <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -144,8 +144,8 @@
                             data-lang="<?= lang('en', 'de') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false">Type</th>
-                                    <th data-col="html" data-search-col="search">Title</th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                    <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
