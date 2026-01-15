@@ -21,7 +21,7 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '15');
+define('CSS_JS_VERSION', '16');
 
 // error_reporting(E_ERROR);
 

@@ -375,21 +375,52 @@ $numbers = $data['numbers'] ?? [
 
                 <!-- <h2><?= lang('Publications', 'Publikationen') ?></h2> -->
 
+                <div class="row row-eq-spacing">
+                    <div class="col-md">
+                        <table class="table datatable" id="publication-table"
+                            data-table="publications"
+                            data-tab="publications"
+                            data-source="./publications.json"
+                            data-page-length="20"
+                            data-lang="<?= lang('en', 'de') ?>">
+                            <thead>
+                                <tr>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
+                                    <th data-col="html" data-search-col="search"><?= lang('Publication', 'Publikation') ?></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="col w-200 flex-grow-0 flex-reset">
+                        <div id="publication-filters">
+                            <div id="publication-filter-types">
+                                <h6 class="m-0 mb-5"><?= lang('Filter by type', 'Nach Art filtern') ?></h6>
+                                <div class="datatable-filter mb-20">
+                                    <?php
+                                    $pubTypes = $osiris->adminTypes->find(['parent' => 'publication']);
+                                    foreach ($pubTypes as $type) { ?>
+                                        <a href="#" class="filter-item" data-value="<?= $type['id'] ?>" data-column="subtype">
+                                            <?= lang($type['name'], $type['name_de'] ?? null) ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div id="publication-filter-years">
+                                <h6 class="m-0 mb-5"><?= lang('Filter by year', 'Nach Jahr filtern') ?></h6>
+                                <div class="datatable-filter mb-20">
+                                    <?php
+                                    $currentYear = (int)date('Y');
+                                    for ($year = $currentYear; $year >= $currentYear - 10; $year--) { ?>
+                                        <a href="#" class="filter-item" data-value="<?= $year ?>" data-column="year">
+                                            <?= $year ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <table class="table datatable" id="publication-table"
-                    data-table="publications"
-                    data-tab="publications"
-                    data-source="./publications.json"
-                    data-page-length="20"
-                    data-lang="<?= lang('en', 'de') ?>">
-                    <thead>
-                        <tr>
-                            <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
-                            <th data-col="html" data-search-col="search"><?= lang('Publication', 'Publikation') ?></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </section>
 
 
@@ -398,8 +429,9 @@ $numbers = $data['numbers'] ?? [
 
                 <!-- <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2> -->
 
-                <div class="w-full">
+                <div class="row row-eq-spacing">
 
+                    <div class="col-md">
                     <table class="table datatable" id="activities-table"
                         data-table="activities"
                         data-tab="activities"
@@ -408,12 +440,43 @@ $numbers = $data['numbers'] ?? [
                         data-lang="<?= lang('en', 'de') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
-                                <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
+                                <th data-col="html" data-search-col="search"><?= lang('Activity', 'Aktivität') ?></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
+                    </div>
+                    
+                    <div class="col w-200 flex-grow-0 flex-reset">
+                        <div id="publication-filters">
+                            <div id="publication-filter-types">
+                                <h6 class="m-0 mb-5"><?= lang('Filter by type', 'Nach Art filtern') ?></h6>
+                                <div class="datatable-filter mb-20">
+                                    <?php
+                                    $pubTypes = $osiris->adminCategories->find(['id' => ['$ne' => 'publication'], 'portfolio' => true]);
+                                    foreach ($pubTypes as $type) { ?>
+                                        <a href="#" class="filter-item" data-value="<?= $type['id'] ?>" data-column="type">
+                                            <?= lang($type['name'], $type['name_de'] ?? null) ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div id="publication-filter-years">
+                                <h6 class="m-0 mb-5"><?= lang('Filter by year', 'Nach Jahr filtern') ?></h6>
+                                <div class="datatable-filter mb-20">
+                                    <?php
+                                    $currentYear = (int)date('Y');
+                                    for ($year = $currentYear; $year >= $currentYear - 10; $year--) { ?>
+                                        <a href="#" class="filter-item" data-value="<?= $year ?>" data-column="year">
+                                            <?= $year ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
 

@@ -507,6 +507,7 @@ ul.authors>li:last-child::after {
     margin-top: 10px;
     text-decoration: none;
 }
+
 .person-card:hover h5 {
     color: var(--link-color);
 }
@@ -537,76 +538,132 @@ ul.authors>li:last-child::after {
 }
 
 
- .table.cards {
-     border: none;
-     background: transparent;
-     box-shadow: none;
-     display: block;
- }
+.table.cards {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    display: block;
+}
 
- .table.cards thead {
-     display: none;
- }
+.table.cards thead {
+    display: none;
+}
 
- .table.cards tbody {
-     display: flex;
-     flex-grow: column;
-     flex-direction: row;
-     flex-wrap: wrap;
+.table.cards tbody {
+    display: flex;
+    flex-grow: column;
+    flex-direction: row;
+    flex-wrap: wrap;
 
- }
+}
 
- .table.cards tbody tr {
-     width: 100%;
-     margin: 0.5rem;
-     border: var(--border-width) solid var(--border-color);
-     border-radius: var(--border-radius);
-     box-shadow: var(--box-shadow);
-     background: white;
-     display: flex;
-     align-items: center;
- }
+.table.cards tbody tr {
+    width: 100%;
+    margin: 0.5rem;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    background: white;
+    display: flex;
+    align-items: center;
+}
 
- .table.cards tbody tr td {
-     border: 0;
-     box-shadow: none;
-     /* width: 100%; */
-     height: 100%;
-     display: block;
- }
+.table.cards tbody tr td {
+    border: 0;
+    box-shadow: none;
+    /* width: 100%; */
+    height: 100%;
+    display: block;
+}
 
- .table.cards tbody tr td small {
-     display: -webkit-box;
-     -webkit-line-clamp: 2;
-     /* max. 2 Zeilen */
-     -webkit-box-orient: vertical;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     overflow-wrap: anywhere;
- }
+.table.cards tbody tr td small {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* max. 2 Zeilen */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
 
- .table.cards tbody tr img,
- .table#users-table img {
-     max-width: 5rem;
-     height: 7rem;
-     object-fit: cover;
- }
+.table.cards tbody tr img,
+.table#users-table img {
+    max-width: 5rem;
+    height: 7rem;
+    object-fit: cover;
+}
 
 
- .table.cards tbody tr td {
-     display: flex;
-     align-items: center;
-     border: 0;
- }
+.table.cards tbody tr td {
+    display: flex;
+    align-items: center;
+    border: 0;
+}
 
- @media (min-width: 768px) {
-     .table.cards tbody tr {
-         width: 48%;
-     }
- }
+@media (min-width: 768px) {
+    .table.cards tbody tr {
+        width: 48%;
+    }
+}
 
- @media (min-width: 1200px) {
-     .table.cards tbody tr {
-         width: calc(33.3% - 1rem);
-     }
- }
+@media (min-width: 1200px) {
+    .table.cards tbody tr {
+        width: calc(33.3% - 1rem);
+    }
+}
+
+
+
+.datatable-filter {
+    background-color: var(--box-bg-color);
+    overflow-x: hidden;
+    max-height: 20rem;
+    overflow-y: auto;
+    width: 100%;
+    border: var(--border-width) solid var(--border-color);
+    -webkit-box-shadow: var(--box-shadow);
+    -moz-box-shadow: var(--box-shadow);
+    box-shadow: var(--box-shadow);
+    padding: 0;
+    border-radius: var(--border-radius);
+    font-size: 1.2rem;
+}
+
+.datatable-filter a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.datatable-filter a:hover {
+    background-color: var(--primary-color-20);
+    color: var(--primary-color);
+}
+
+.datatable-filter a.active {
+    background-color: var(--primary-color-20);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.datatable-filter a.disabled {
+    display: none;
+}
+
+.datatable-filter a .index {
+    font-style: normal;
+    font-weight: 400;
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.1rem 0.6rem;
+    background: rgba(83, 83, 83, 0.1254901961);
+    border-radius: 1rem;
+    color: var(--muted-color-dark);
+    background-color: var(--gray-color-very-light);
+    text-align: end;
+    height: 1.6rem;
+}
