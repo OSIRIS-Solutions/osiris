@@ -1,5 +1,38 @@
 # Neuigkeiten
 
+## Version 1.8.0
+
+<span class="badge float-right">15.01.2026</span>
+<a class="anchor" href="#version-1.7.2" id="version-1.7.2"></a>
+
+Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Projekte. Hier die Highlights:
+
+### Design & Customization
+Bislang war es nur möglich, das Logo und die Farben von OSIRIS anzupassen. Mit diesem Update haben wir die Customization-Funktionen deutlich erweitert:
+- **Eigene Schriftarten**: Ihr könnt jetzt eigene Schriftarten in OSIRIS verwenden, um das Erscheinungsbild noch besser an eure CI anzupassen.
+- **Icons**: wählt aus drei verschiedenen Icon-Stilen (Standard, Gefüllt oder Zweifarbig).
+- **Viele Elemente anpassen**: z.B. die Dicke und Farbe von Rahmen, die Rundung von Ecken, Schatten, Icons und vieles mehr.
+- **Kopfzeile**: Ihr könnt jetzt die Kopfzeile anpassen, z.B. die Höhe verändern, die Logos komplett in den Footer verschieben oder das OSIRIS-Logo einfärben.
+
+
+### Portfolio
+
+OSIRIS Portfolio wurde um einige nützliche Funktionen erweitert:
+
+- Es gibt jetzt die Möglichkeit, ein öffentliches Portfolio direkt in OSIRIS zu aktivieren. Diese Funktion kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" aktiviert werden. Das öffentliche Portfolio ist auch ohne Login von der Startseite aus zugänglich.
+- Die Forschungsbereiche wurden hinzugefügt und können jetzt im Portfolio und in der API angezeigt werden. Sie haben eine schnell zugängliche Übersichtsseite und werden auch in allen verknüpften Entitäten angezeigt (Aktivitäten, Projekte, Personen, Gruppen).
+- Infrastrukturen wurden hinzugefügt und können jetzt im Portfolio und in der API angezeigt werden. Sie haben eine eigene Seite im Portfolio und werden auch in verknüpften Aktivitäten und auf der persönlichen Seite vom Betriebspersonal angezeigt.
+- Es wurde ein neuer Tab mit Kooperationspartnern hinzugefügt, der eine Weltkarte mit den Standorten der Partner anzeigt. Diese Karte wurde verbessert, um den verfügbaren Platz besser zu nutzen und auf großen Bildschirmen ansprechender auszusehen. Außerdem unterstützt die Karte jetzt die Aggregation von Partnern je nach Zoomstufe, um die Übersichtlichkeit zu erhöhen.
+- Es wurden weitere Einstellungen für persönliche Profile hinzugefügt, z.B. die Möglichkeit, die Anzeige von weiteren Aktivitäten oder Lehraktivitäten zu deaktivieren.
+- Es wurden weitere Vorschauoptionen hinzugefügt.
+
+Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So könnt ihr z.B. eine eigene Domain verwenden oder das Portfolio einfacher in eine bestehende Webseite integrieren. Dazu gibt es im Admin-Bereich unter "Generelle Einstellungen" > "Portfolio" ein neues Feld "Portfolio Basis-URL". Wenn dieses ausgefüllt ist, wird diese URL für alle Links verwendet, die in Portfolio generiert werden. Andernfalls wird die OSIRIS versuchen, eine relative URL zu verwenden.
+
+### Projekte
+
+coming soon
+<!-- Das Projektmodul wurde um einige nützliche Funktionen erweitert: -->
+
 
 
 <span class="badge float-right">17.12.2025</span>
