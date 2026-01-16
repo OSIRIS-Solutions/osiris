@@ -1444,7 +1444,7 @@ class Document extends Settings
                 if (empty($val)) return $default;
                 // only local is different in German
                 if ($val == 'local')
-                    return $this->lang('Local', 'Lokal');
+                    return $this->lang('local', 'lokal');
                 return $val;
             default:
                 if (isset($this->custom_fields[$module])) {

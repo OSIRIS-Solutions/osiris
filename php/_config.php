@@ -269,6 +269,11 @@ function printMsg($msg = null, $type = 'info', $header = "default")
         if ($header == "default") {
             $header = "";
         }
+    } elseif ($type == 'warning') {
+        $class = "signal";
+        if ($header == "default") {
+            $header = lang("Warning", "Warnung");
+        }
     }
     switch ($msg) {
 

@@ -143,8 +143,10 @@ Route::post('/crud/organizations/create', function () {
     $exist = $collection->findOne($filter);
     if (!empty($exist)) {
         if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-            $red = str_replace("*", $id, $_POST['redirect']);
-            header("Location: " . $red . "?msg=organization does already exist.");
+            $red = str_replace("*", strval($exist['_id']), $_POST['redirect']);
+            $_SESSION['msg'] = lang("Organization does already exist.", "Organisation existiert bereits.");
+            $_SESSION['msg_type'] = "warning";
+            header("Location: " . $red);
         } else {
             echo json_encode([
                 'msg' => lang("Organization does already exist and was connected.", "Organisation existiert bereits und wurde verknüpft."),
