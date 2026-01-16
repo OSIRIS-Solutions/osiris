@@ -41,7 +41,7 @@ class Document extends Settings
 
     private $lang = 'en';
 
-public $templates = [
+    public $templates = [
         "abstract" => ["abstract"],
         "affiliation" => ["affiliation"],
         "author-table" => ["authors"],
@@ -430,13 +430,14 @@ public $templates = [
         $this->subtypeArr = $this->getActivity($this->type, $this->subtype);
     }
 
-    public function getUsers($affiliatedOnly = false){
+    public function getUsers($affiliatedOnly = false)
+    {
         $users = [];
-        foreach (['authors', 'editors', 'supervisors'] as $role){
-            if (isset($this->doc[$role]) && !empty($this->doc[$role])){
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
+            if (isset($this->doc[$role]) && !empty($this->doc[$role])) {
                 $persons = DB::doc2Arr($this->doc[$role]);
-                foreach ($persons as $p){
-                    if (isset($p['user']) && !empty($p['user'])){
+                foreach ($persons as $p) {
+                    if (isset($p['user']) && !empty($p['user'])) {
                         if ($affiliatedOnly && !($p['aoi'] ?? false)) continue;
                         $users[] = $p['user'];
                     }
@@ -1435,7 +1436,16 @@ public $templates = [
                 }
                 return $val;
             case "political_consultation":
-                return $this->getVal('political_consultation', false);
+                $val = $this->getVal('political_consultation', null);
+                if (empty($val)) return $default;
+                return $Vocabulary->getValue('political_consultation', $val);
+            case "scope":
+                $val = $this->getVal('scope', null);
+                if (empty($val)) return $default;
+                // only local is different in German
+                if ($val == 'local')
+                    return $this->lang('Local', 'Lokal');
+                return $val;
             default:
                 if (isset($this->custom_fields[$module])) {
                     $val = $this->customVal($this->custom_fields[$module]);
