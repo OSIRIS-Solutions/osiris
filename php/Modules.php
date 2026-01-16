@@ -873,8 +873,8 @@ class Modules
             "name_de" => "Politik- und Gesellschaftsberatung",
             "label" => "Contribution to political and social consulting",
             "label_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
-            "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
-            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
+            "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are based on the vocabulary.",
+            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte basieren auf dem Vokabular.",
             "width" => 6,
             "tags" => ['event', 'publication']
         ],
@@ -2931,10 +2931,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
                     <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
-                        <option <?= $scope == 'local' ? 'selected' : '' ?>>local</option>
-                        <option <?= $scope == 'regional' ? 'selected' : '' ?>>regional</option>
-                        <option <?= $scope == 'national' ? 'selected' : '' ?>>national</option>
-                        <option <?= $scope == 'international' ? 'selected' : '' ?>>international</option>
+                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?=lang('local', 'lokal')?></option>
+                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?=lang('regional', 'regional')?></option>
+                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?=lang('national', 'national')?></option>
+                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?=lang('international', 'international')?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="scope">
                         <?= $label ?>
@@ -3004,14 +3004,14 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="political_consultation">
                     <select type="text" class="form-control" <?= $labelClass ?> name="values[political_consultation]" id="political_consultation">
-                        <!-- Gutachten,Positionspapier,Studie,Sonstiges -->
-                        <?php if (!$labelClass) { ?>
+                        <?php if (!$req) { ?>
                             <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('No political consultation', 'Keine politische Beratung') ?></option>
+                        <?php }
+                        $val = $this->val('political_consultation', null);
+                        $vocab = $Vocabulary->getValues('political_consultation');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                         <?php } ?>
-                        <option value="Gutachten" <?= $this->val('political_consultation') == 'Gutachten' ? 'selected' : '' ?>><?= lang('Review', 'Gutachten') ?></option>
-                        <option value="Positionspapier" <?= $this->val('political_consultation') == 'Positionspapier' ? 'selected' : '' ?>><?= lang('Position paper', 'Positionspapier') ?></option>
-                        <option value="Studie" <?= $this->val('political_consultation') == 'Studie' ? 'selected' : '' ?>><?= lang('Study', 'Studie') ?></option>
-                        <option value="Sonstiges" <?= $this->val('political_consultation') == 'Sonstiges' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
 
                     <label for="political_consultation" class="<?= $labelClass ?>">

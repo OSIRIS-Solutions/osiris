@@ -599,5 +599,35 @@
                 "de": "Andere"
             }
         ]
+    },
+    {
+        "id": "political_consultation",
+        "category": "Activity",
+        "name": "Type of Political Consultation",
+        "name_de": "Art der politischen Beratung",
+        "description": "The values for the data field `political_consultation`.",
+        "description_de": "Die Werte für das Datenfeld `political_consultation`.",
+        "values": [
+            {
+                "id": "Gutachten",
+                "en": "Review",
+                "de": "Gutachten"
+            },
+            {
+                "id": "Positionspapier",
+                "en": "Position paper",
+                "de": "Positionspapier"
+            },
+            {
+                "id": "Studie",
+                "en": "Study",
+                "de": "Studie"
+            },
+            {
+                "id": "Sonstiges",
+                "en": "Other",
+                "de": "Sonstiges"
+            }
+        ]
     }
 ]
