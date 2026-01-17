@@ -270,9 +270,9 @@ function sel($index, $value)
                     <?= lang('Synonyms', 'Synonyme') ?>
                 </label>
                 <?php
-                    $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
+                $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
                 ?>
-                
+
                 <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= htmlspecialchars(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
                 <small class="text-muted"><?= lang('Separate multiple synonyms with semi-colons.', 'Mehrere Synonyme mit Semikolons trennen.') ?></small>
             </div>
@@ -301,6 +301,13 @@ function sel($index, $value)
 
 
     <section id="research-interest" style="display:none;">
+
+        <h3>
+            <?= lang('Research Field Classification', 'Forschungsfeldklassifikation') ?>
+        </h3>
+        <?php
+        include_once BASEPATH . "/components/kdsf-ffk-select.php";
+        ?>
 
         <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
 

@@ -15,6 +15,8 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+include_once BASEPATH . '/php/Vocabulary.php';
+$Vocabulary = new Vocabulary();
 
 $level = $Groups->getLevel($id);
 
@@ -188,77 +190,77 @@ $count_wordcloud = 0;
         <?php } ?>
 
 
+        <?php
+        $publication_filter = [
+            'units' => $id,
+            'type' => 'publication'
+        ];
+        $count_publications = $osiris->activities->count($publication_filter);
+
+        if ($count_publications > 0) { ?>
+            <a onclick="navigate('publications')" id="btn-publications" class="btn">
+                <i class="ph ph-books" aria-hidden="true"></i>
+                <?= lang('Publications', 'Publikationen')  ?>
+                <span class="index"><?= $count_publications ?></span>
+            </a>
+        <?php } ?>
+
+        <?php
+        $activities_filter = [
+            'units' => $id,
+            'type' => ['$ne' => 'publication']
+        ];
+        $count_activities = $osiris->activities->count($activities_filter);
+
+        if ($count_activities > 0) { ?>
+            <a onclick="navigate('activities')" id="btn-activities" class="btn">
+                <i class="ph ph-briefcase" aria-hidden="true"></i>
+                <?= lang('Activities', 'Aktivitäten')  ?>
+                <span class="index"><?= $count_activities ?></span>
+            </a>
+        <?php } ?>
+
+        <?php if ($Settings->featureEnabled('projects')) { ?>
             <?php
-            $publication_filter = [
+            $project_filter = [
+                '$or' => array(
+                    ['contact' => ['$in' => $users]],
+                    ['persons.user' => ['$in' => $users]]
+                ),
+                // "status" => ['$nin' => ["rejected", "applied"]]
+            ];
+
+            $count_projects = $osiris->projects->count($project_filter);
+            if ($count_projects > 0) { ?>
+                <a onclick="navigate('projects')" id="btn-projects" class="btn">
+                    <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                    <?= lang('Projects', 'Projekte')  ?>
+                    <span class="index"><?= $count_projects ?></span>
+                </a>
+            <?php } ?>
+        <?php } ?>
+
+        <?php if ($Settings->featureEnabled('wordcloud')) { ?>
+            <?php
+            $count_wordcloud = $osiris->activities->count([
+                'title' => ['$exists' => true],
                 'units' => $id,
                 'type' => 'publication'
-            ];
-            $count_publications = $osiris->activities->count($publication_filter);
-
-            if ($count_publications > 0) { ?>
-                <a onclick="navigate('publications')" id="btn-publications" class="btn">
-                    <i class="ph ph-books" aria-hidden="true"></i>
-                    <?= lang('Publications', 'Publikationen')  ?>
-                    <span class="index"><?= $count_publications ?></span>
+            ]);
+            if ($count_wordcloud > 0) { ?>
+                <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
+                    <i class="ph ph-cloud" aria-hidden="true"></i>
+                    <?= lang('Word cloud')  ?>
                 </a>
             <?php } ?>
+        <?php } ?>
 
-            <?php
-            $activities_filter = [
-                'units' => $id,
-                'type' => ['$ne' => 'publication']
-            ];
-            $count_activities = $osiris->activities->count($activities_filter);
-
-            if ($count_activities > 0) { ?>
-                <a onclick="navigate('activities')" id="btn-activities" class="btn">
-                    <i class="ph ph-briefcase" aria-hidden="true"></i>
-                    <?= lang('Activities', 'Aktivitäten')  ?>
-                    <span class="index"><?= $count_activities ?></span>
-                </a>
-            <?php } ?>
-
-            <?php if ($Settings->featureEnabled('projects')) { ?>
-                <?php
-                $project_filter = [
-                    '$or' => array(
-                        ['contact' => ['$in' => $users]],
-                        ['persons.user' => ['$in' => $users]]
-                    ),
-                    // "status" => ['$nin' => ["rejected", "applied"]]
-                ];
-
-                $count_projects = $osiris->projects->count($project_filter);
-                if ($count_projects > 0) { ?>
-                    <a onclick="navigate('projects')" id="btn-projects" class="btn">
-                        <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('Projects', 'Projekte')  ?>
-                        <span class="index"><?= $count_projects ?></span>
-                    </a>
-                <?php } ?>
-            <?php } ?>
-
-            <?php if ($Settings->featureEnabled('wordcloud')) { ?>
-                <?php
-                $count_wordcloud = $osiris->activities->count([
-                    'title' => ['$exists' => true],
-                    'units' => $id,
-                    'type' => 'publication'
-                ]);
-                if ($count_wordcloud > 0) { ?>
-                    <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
-                        <i class="ph ph-cloud" aria-hidden="true"></i>
-                        <?= lang('Word cloud')  ?>
-                    </a>
-                <?php } ?>
-            <?php } ?>
-
-            <?php if ($level != 0) { ?>
+        <?php if ($level != 0) { ?>
             <a onclick="navigate('collab')" id="btn-collab" class="btn">
                 <i class="ph ph-users-three" aria-hidden="true"></i>
                 <?= lang('Other units', 'Andere Einheiten')  ?>
             </a>
-            <?php } ?>
+        <?php } ?>
 
     </nav>
 
@@ -388,6 +390,24 @@ $count_wordcloud = 0;
                     </div>
                 <?php } ?>
 
+
+                <?php if (isset($group['kdsf-ffk'])) { ?>
+                    <h5 class="mt-20">
+                        <?= lang('Research Fields', 'Forschungsfelder') ?>
+                    </h5>
+                    <div class="kdsf-ffk">
+                        <?php
+                        $value = DB::doc2Arr($group['kdsf-ffk']);
+                        $return = '<ul class="list mb-0">';
+                        foreach ($value as $k) {
+                            $kdsf = $Vocabulary->getKDSF($k, 'labels');
+                            if (empty($kdsf)) continue;
+                            $return .= '<li>' . lang($kdsf['en'], $kdsf['de'] ?? null) . '</li>';
+                        }
+                        echo $return . '</ul>';
+                        ?>
+                    </div>
+                <?php } ?>
 
                 <?php if (isset($group['description']) || isset($group['description_de'])) { ?>
                     <style>
