@@ -1,3 +1,5 @@
+'use strict';
+
 let SUGGEST;
 let INPUT;
 let SELECTED;
@@ -74,7 +76,7 @@ function getOrganization(name, ror = false) {
 
 function suggestOrganization(data, create = false) {
     console.info('suggestOrganization')
-
+    console.log(create);
     if (data.length === 0) {
         COMMENT.html(lang('No results found', 'Keine Ergebnisse gefunden'))
     } else {
@@ -98,12 +100,18 @@ function suggestOrganization(data, create = false) {
         })
     }
     let lastrow = $('<tr>')
-    let rorbtn = $('<button type="button" class="btn">')
-    rorbtn.html(lang('Search in ROR', 'Suche in ROR'))
-    rorbtn.on('click', function () {
-        getOrganization(INPUT.val(), true);
-    })
-    lastrow.append($('<td colspan="3">').append(rorbtn))
+    if (!create) {
+        let rorbtn = $('<button type="button" class="btn">')
+        rorbtn.html(lang('Search in ROR', 'Suche in ROR'))
+        rorbtn.on('click', function () {
+            getOrganization(INPUT.val(), true);
+        })
+        lastrow.append($('<td colspan="3">').append(rorbtn))
+    } else {
+        let createbtn = $('<a href="#add-organization" class="btn">')
+        createbtn.html(lang('Create new organization', 'Neue Organisation anlegen'))
+        lastrow.append($('<td colspan="3">').append(createbtn))
+    }
     SUGGEST.append(lastrow)
 }
 
@@ -281,10 +289,14 @@ function searchROR(name) {
 
 
 function translateROR(o) {
+    console.log(o);
     let name = ""
+    let synonyms = []
     o.names.forEach(n => {
         if (n.types.includes("ror_display")) {
             name = n.value
+        } else {
+            synonyms.push(n.value)
         }
     })
     if (name == "") {
@@ -309,7 +321,72 @@ function translateROR(o) {
         type: o.types[0],
         types: o.types,
         url: o.links[0] ?? null,
+        synonyms: synonyms,
         chosen: false
     }
     return org
+}
+
+
+
+function addOrganization() {
+    var data = {
+        name: $('#org-name').val(),
+        type: $('#org-type').val(),
+        location: $('#org-location').val(),
+        country: $('#org-country').val(),
+        lat: $('#org-lat').val(),
+        lng: $('#org-lng').val(),
+    }
+
+    // check for required
+    var valid = true;
+    ['name', 'type', 'country'].forEach(function (d) {
+        if (data[d] === '') {
+            $('#org-' + d).addClass('is-invalid')
+            valid = false
+        }
+    });
+    if (!valid) {
+        toastWarning(lang('Please fill out all required fields.', 'Bitte füllen Sie alle Pflichtfelder aus.'))
+        return;
+    }
+
+    selectOrganization(data, true);
+}
+
+
+function getCoordinates(locationId = '#location', countryId = '#country', latId = '#lat', lngId = '#lng') {
+    let loc = $(locationId).val();
+    console.log(loc);
+
+    if (!loc || loc.length === 0) {
+        toastError(lang("Please provide a location first.", "Bitte geben Sie zuerst einen Standort ein."));
+        return;
+    }
+    let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(loc) + '&accept-language=' + lang('en', 'de');
+    if ($(countryId).val() && $(countryId).val().length > 0) {
+        url += '&countrycodes=' + $(countryId).val().toUpperCase();
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data && data.length > 0) {
+                const place = data[0];
+                $(latId).val(place.lat);
+                $(lngId).val(place.lon);
+                const name = place.display_name;
+
+                toastSuccess(lang("Location coordinates updated based on <b>" + name + "</b>.", "Standort-Koordinaten aktualisiert basierend auf <b>" + name + "</b>."));
+            } else {
+                toastError(lang("Location not found. Please refine your search.", "Standort nicht gefunden. Bitte verfeinern Sie Ihre Suche."));
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching location data:', error);
+            toastError(lang("An error occurred while fetching location data.", "Beim Abrufen der Standortdaten ist ein Fehler aufgetreten."));
+        });
+
 }

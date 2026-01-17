@@ -25,7 +25,7 @@ Route::get('/migrate/countries', function () {
     include BASEPATH . "/footer.php";
 });
 
-Route::get('/migrate/teaching', function () {
+Route::get('/migrate/test', function () {
     include_once BASEPATH . "/php/init.php";
 
     set_time_limit(6000);

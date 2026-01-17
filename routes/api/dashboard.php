@@ -220,10 +220,15 @@ Route::get('/api/dashboard/collaborators', function () {
                 return $b['role'] <=> $a['role'];
             });
             foreach ($collabs as $c) {
+                // check if organization is type of MongoDB ObjectID
+                if (!$c['organization'] instanceof MongoDB\BSON\ObjectID) {
+                    continue;
+                }
+                $org = $osiris->organizations->findOne(['_id' => $c['organization']]);
                 // if (empty($c['lng']))
-                $data['lon'][] = $c['lng'];
-                $data['lat'][] = $c['lat'];
-                $data['text'][] = "<b>$c[name]</b><br>$c[location]";
+                $data['lon'][] = $org['lng'];
+                $data['lat'][] = $org['lat'];
+                $data['text'][] = "<b>$org[name]</b><br>$org[location]";
                 $color = ($c['role'] == 'partner' ? '#008083' : '#f78104');
                 if ($c['role'] == 'associated') {
                     $color = '#a6b1b1';
@@ -231,7 +236,7 @@ Route::get('/api/dashboard/collaborators', function () {
                 $data['marker']['color'][] = $color;
             }
             $institute = $Settings->get('affiliation_details');
-            $institute['role'] = $project['role'];
+            $institute['role'] = $project['role'] ?? 'partner';
             if (isset($institute['lat']) && isset($institute['lng'])) {
 
                 $data['lon'][] = $institute['lng'];

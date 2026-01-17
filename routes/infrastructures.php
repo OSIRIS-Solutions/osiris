@@ -983,3 +983,18 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
     header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
     die;
 });
+
+
+Route::get('/infrastructures/image/(.*)', function ($id) {
+    // print image
+    include_once BASEPATH . "/php/init.php";
+    $mongo_id = $DB->to_ObjectID($id);
+    // get infrastructure id    
+    $infrastructure = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
+    if (empty($infrastructure)) {
+        header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=not-found");
+        die;
+    }
+    include_once BASEPATH . "/php/Infrastructure.php";
+    echo Infrastructure::getLogo($infrastructure, "", "Logo of " . $infrastructure['name'], $infrastructure['type'] ?? "");
+});

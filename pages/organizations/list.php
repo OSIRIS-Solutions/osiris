@@ -44,6 +44,7 @@ $organizations  = $osiris->organizations->find(
             <th><?= lang('Type', 'Typ') ?></th>
             <th><?= lang('Location', 'Ort') ?></th>
             <th>ROR</th>
+            <th><?= lang('Synonyms', 'Synonyme') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -61,8 +62,8 @@ $organizations  = $osiris->organizations->find(
                             <?= $org['location'] ?>
                             <?php if (isset($org['ror'])) { ?>
                                 <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
-                            <?php } ?> 
-                                                
+                            <?php } ?>
+
                         </div>
                     </div>
                 </td>
@@ -70,6 +71,7 @@ $organizations  = $osiris->organizations->find(
                 <td><?= $org['type'] ?></td>
                 <td><?= $org['location'] ?></td>
                 <td><?= $org['ror'] ?? '' ?></td>
+                <td><?= implode(', ', DB::doc2Arr($org['synonyms'] ?? [])) ?></td>
             </tr>
         <?php } ?>
     </tbody>
@@ -78,24 +80,24 @@ $organizations  = $osiris->organizations->find(
 
 <script>
     $('#organizations-table').DataTable({
-            responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+        responsive: true,
+        language: {
+            url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
+        },
+        columnDefs: [{
+            targets: [1, 2, 3, 4, 5],
+            visible: false
+        }, ],
+        paging: true,
+        autoWidth: true,
+        pageLength: 10,
+        buttons: [{
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [1, 2, 3, 4, 5] // exclude the first column with the action buttons
             },
-            columnDefs: [{
-                targets: [1, 2, 3, 4],
-                visible: false
-            }, ],
-            paging: true,
-            autoWidth: true,
-            pageLength: 10,
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [1, 2, 3, 4] // exclude the first column with the action buttons
-                },
-                className: 'btn small',
-                text: `<i class="ph ph-file-xls"></i> Excel`,
-            }]
-        });
+            className: 'btn small',
+            text: `<i class="ph ph-file-xls"></i> Excel`,
+        }]
+    });
 </script>

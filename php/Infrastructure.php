@@ -53,7 +53,7 @@ class Infrastructure extends DB
     }
 
 
-    public function getLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
+    public static function getLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
     {
         $placeholder = '<div class="infrastructure-logo-placeholder"><i class="ph-duotone ph-cube-transparent"></i></div> ';
         if (!isset($infrastructure) || empty($infrastructure) || !isset($infrastructure['image'])) {
@@ -73,8 +73,8 @@ class Infrastructure extends DB
         return "<img src='data:$type;base64,$img' alt='" . htmlspecialchars($alt) . "' class='$class'>";
     }
 
-    public function printLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
+    public static function printLogo($infrastructure, $class = "infrastructure-logo", $alt = "")
     {
-        echo $this->getLogo($infrastructure, $class, $alt);
+        echo self::getLogo($infrastructure, $class, $alt);
     }
 }

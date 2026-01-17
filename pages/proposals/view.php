@@ -441,24 +441,118 @@ if ($nagoyaRelevant) {
                         </h5>
 
                         <table class="table">
+                            <thead>
+                                <th style="width:90px;"><?= lang('Year', 'Jahr') ?></th>
+                                <th class="text-right"><?= lang('Planned', 'Soll') ?> in EUR</th>
+                                <th class="text-right"><?= lang('Actual', 'Ist') ?> in EUR</th>
+                                <th class="text-right"><?= lang('Delta', 'Delta') ?> in EUR</th>
+                                <th class="text-right"><?= lang('Fulfillment', 'Erfüllung') ?></th>
+                            </thead>
                             <tbody>
                                 <?php
-                                $years = $project['grant_years'] ?? [];
-                                if (empty($years)) {
+                                $finance = $project['grant_years'] ?? [];
+                                if (empty($finance)) {
                                     echo '<tr><td>' . lang('No funding information available.', 'Keine Drittmitteleinnahmen verfügbar.') . '</td></tr>';
-                                } else foreach ($years as $year => $amount) {
-                                    if (empty($amount)) continue;
+                                } else foreach ($finance as $grant) {
+                                    $year = $grant['year'] ?? '';
+                                    $planned = $grant['planned'] ?? 0;
+                                    $spent = $grant['spent'] ?? 0;
+                                    if (!is_numeric($planned)) {
+                                        $planned = 0;
+                                    }
+                                    if (!is_numeric($spent)) {
+                                        $spent = 0;
+                                    }
+                                    $delta = $spent - $planned;
+                                    $fulfillment = ($planned > 0) ? round(($spent / $planned) * 100, 2) : 0;
+                                    // color fulfillment by threshold
+                                    if ($fulfillment > 100) {
+                                        $cls = 'text-danger';
+                                    } else if ($fulfillment < 80) {
+                                        $cls = 'text-signal';
+                                    } else {
+                                        $cls = 'text-success';
+                                    }
                                 ?>
                                     <tr>
                                         <td class="w-50 font-weight-bold"><?= $year ?></td>
-                                        <td>
-                                            <?= $Project->printField('grant_sum', $amount); ?>
-                                        </td>
+                                        <td class="text-right"><?= number_format($planned, 2, ',', '.') ?></td>
+                                        <td class="text-right"><?= number_format($spent, 2, ',', '.') ?></td>
+                                        <td class="text-right <?= $delta < 0 ? 'text-danger' : '' ?>"><?= number_format($delta, 2, ',', '.') ?></td>
+                                        <td class="<?= $cls ?> text-right"><?= $fulfillment ?> %</td>
                                     </tr>
                                 <?php } ?>
 
                             </tbody>
                         </table>
+                        <?php if (!empty($finance)) { ?>
+
+                            <div class="box padded">
+                                <canvas id="finance-chart"></canvas>
+                            </div>
+
+                            <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
+                            <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
+                            <script>
+                                const finance = <?= json_encode($finance) ?>;
+                                $(document).ready(function() {
+                                    const ctx = document.getElementById('finance-chart').getContext('2d');
+
+                                    const years = finance.map(f => f.year);
+                                    const plannedData = finance.map(f => f.planned);
+                                    const spentData = finance.map(f => f.spent);
+
+                                    const financeChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: years,
+                                            datasets: [{
+                                                    label: '<?= lang('Planned', 'Soll') ?>',
+                                                    data: plannedData,
+                                                    backgroundColor: OSIRIS_PRIMARY,
+                                                },
+                                                {
+                                                    label: '<?= lang('Actual', 'Ist') ?>',
+                                                    data: spentData,
+                                                    backgroundColor: OSIRIS_ACCENT,
+                                                }
+                                            ]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'top',
+                                                },
+                                                title: {
+                                                    display: true,
+                                                    text: '<?= lang('Third-party funding per year', 'Drittmitteleinnahmen pro Jahr') ?>'
+                                                },
+                                                datalabels: {
+                                                    anchor: 'end',
+                                                    align: 'top',
+                                                    formatter: function(value) {
+                                                        return value.toLocaleString('de-DE', {
+                                                            style: 'currency',
+                                                            currency: 'EUR',
+                                                            minimumFractionDigits: 2
+                                                        });
+                                                    },
+                                                    font: { size: 10 }
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        },
+                                        plugins: [ChartDataLabels],
+                                    });
+                                });
+                            </script>
+                        <?php } ?>
+
                     </div>
 
 
@@ -517,7 +611,7 @@ if ($nagoyaRelevant) {
                                                 </div>
                                                 <a href="<?= $file_url ?>" class="">
                                                     <h6 class="m-0">
-                                                        <?php if (isset($doc['permit_id'])){
+                                                        <?php if (isset($doc['permit_id'])) {
                                                             echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', lang('Other', 'Sonstiges'));
                                                         } else {
                                                             echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges'));
@@ -530,16 +624,16 @@ if ($nagoyaRelevant) {
                                                 <div class="font-size-12 text-muted d-flex align-items-center justify-content-between">
                                                     <div>
                                                         <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
-                                                    <br>
-                                                    <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
-                                                    <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                                        <br>
+                                                        <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                                        <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                     </div>
                                                     <?php if (isset($doc['country_code'])) { ?>
-                                                            
-                                                    <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>/<?= $doc['country_code'] ?>">
-                                                        <i class="ph ph-certificate"></i>
+
+                                                        <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>/<?= $doc['country_code'] ?>">
+                                                            <i class="ph ph-certificate"></i>
                                                             <?= lang('Nagoya permit for', 'Nagoya-Genehmigung für') ?> <?= $DB->getCountry($doc['country_code'], lang('name', 'name_de')) ?>
-                                                    </a>
+                                                        </a>
                                                     <?php } ?>
                                                 </div>
                                             </td>

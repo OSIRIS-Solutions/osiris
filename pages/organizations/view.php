@@ -22,58 +22,264 @@ $Project = new Project();
 $edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings->hasPermission('organizations.edit'));
 
 ?>
+<style>
+    .org-logo {
+        max-width: 15rem;
+        max-height: 10rem;
+        object-fit: contain;
+        border-radius: 8px;
+
+        /* border: var(--border-width) solid var(--border-color); */
+        background-color: white;
+    }
+
+    .org-logo-placeholder {
+        width: 10rem;
+        height: 10rem;
+        border-radius: 8px;
+        border: var(--border-width) solid var(--primary-color);
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+    }
+
+    .org-logo-placeholder i {
+        font-size: 5rem;
+    }
+
+    .edit-picture {
+        position: absolute;
+        padding: 1rem;
+        bottom: 0;
+        right: 0;
+        color: var(--muted-color);
+        font-size: 1rem;
+    }
+</style>
+
+<?php
+
+
+if ($edit_perm) { ?>
+    <!-- Modal for updating the profile picture -->
+    <div class="modal modal-lg" id="change-picture" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content w-600 mw-full">
+                <a href="#close-modal" class="btn float-right" role="button" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+
+                <h2 class="title">
+                    <?= lang('Change organization logo', 'Organisations-Logo ändern') ?>
+                </h2>
+
+                <form action="<?= ROOTPATH ?>/crud/organizations/upload-picture/<?= $organization['_id'] ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
+                    <div class="custom-file mb-20" id="file-input-div">
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
+                        <label for="profile-input"><?= lang('Select new logo', 'Wähle ein neues Logo') ?></label>
+                        <br><small class="text-danger">Max. 2 MB.</small>
+                    </div>
+
+                    <script>
+                        var uploadField = document.getElementById("profile-input");
+
+                        uploadField.onchange = function() {
+                            if (this.files[0].size > 2097152) {
+                                toastError(lang("File is too large! Max. 2MB is supported!", "Die Datei ist zu groß! Max. 2MB werden unterstützt."));
+                                this.value = "";
+                            };
+                        };
+                    </script>
+                    <button class="btn primary">
+                        <i class="ph ph-upload"></i>
+                        <?= lang('Upload', 'Hochladen') ?>
+                    </button>
+                </form>
+
+                <hr>
+                <form action="<?= ROOTPATH ?>/crud/organizations/upload-picture/<?= $organization['_id'] ?>" method="post">
+                    <input type="hidden" name="delete" value="true">
+                    <button class="btn danger">
+                        <i class="ph ph-trash"></i>
+                        <?= lang('Delete current picture', 'Aktuelles Bild löschen') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+
 
 <div class="organization">
+    <div class="d-flex align-items-center mb-20">
+        <div class="position-relative mr-20">
+            <?php
+            Organization::printLogo($organization, 'org-logo', lang('Logo of', 'Logo von ') . ' ' . $organization['name'], $organization['type'] ?? '');
+            ?>
 
-    <h1 class="title">
-        <?= Organization::getIcon($organization['type'], 'ph-duotone') ?>
-        <?= lang($organization['name'], $organization['name_de'] ?? null) ?>
-    </h1>
-
+            <?php if ($edit_perm) { ?>
+                <a href="#change-picture" class="edit-picture"><i class="ph ph-edit"></i></a>
+            <?php } ?>
+        </div>
+        <h1 class="title">
+            <?= $organization['name'] ?>
+        </h1>
+    </div>
     <div class="btn-toolbar">
         <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-            <a href="<?= ROOTPATH ?>/organizations/edit/<?= $organization['_id'] ?>" class="btn btn-primary">
+            <a href="<?= ROOTPATH ?>/organizations/edit/<?= $organization['_id'] ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
                 <?= lang('Edit organization', 'Organisation bearbeiten') ?>
             </a>
         <?php } ?>
     </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <td class="w-50">
-                    <?= Organization::getIcon($organization['type'], 'ph-fw ph-2x m-0') ?>
-                    <?= ($organization['type']) ?>
-                </td>
-                <td class="w-50">
-                    <?= lang('Location', 'Standort') ?>:
-                    <?= $organization['location'] ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <?= lang('Latitude') ?>:
-                    <?= $organization['lat'] ?? '-' ?>
-                </td>
-                <td>
-                    <?= lang('Longitude') ?>:
-                    <?= $organization['lng'] ?? '-' ?>
-                </td>
-            </tr>
-            <?php if (!empty($organization['ror'] ?? '')) { ?>
-                <tr>
-                    <td>
-                        <?= lang('ROR') ?>:
-                        <a href="<?= $organization['ror'] ?>" target="_blank" rel="noopener noreferrer">
-                            <?= $organization['ror'] ?>
-                            <i class="ph ph-arrow-square-out"></i>
-                        </a>
-                    </td>
-                </tr>
+    <div class="row row-eq-spacing">
+        <div class="col-md-6">
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <span class="key"><?= lang('Type', 'Typ') ?></span>
+                            <div class="d-flex justify-content-between align-items-center">
+                            <?= ucfirst($organization['type']) ?>
+                                <?= Organization::getIcon($organization['type'], 'ph-fw ph-2x m-0') ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="key"><?= lang('Name', 'Name') ?></span>
+                            <?= $organization['name'] ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="key"><?= lang('Synonyms / Alternative Names / Acronyms', 'Synonyme / alternative Namen / Akronyme') ?></span>
+                            <?= !empty($organization['synonyms']) ? implode(', ', DB::doc2Arr($organization['synonyms'])) : '-' ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Location', 'Ort') ?></span>
+                            <?= $organization['location'] ?? '-' ?>
+                        </td>
+                        <td>
+                            <span class="key"><?= lang('Country', 'Land') ?></span>
+                            <?php if (!empty($organization['country'] ?? '')) { ?>
+                                <?= $DB->getCountry($organization['country'], lang('name', 'name_de')) ?>
+                            <?php } else { ?>
+                                -
+                            <?php } ?>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Latitude', 'Breitengrad') ?></span>
+                            <?= $organization['lat'] ?? '-' ?>
+                        </td>
+                        <td>
+                            <span class="key"><?= lang('Longitude', 'Längengrad') ?></span>
+                            <?= $organization['lng'] ?? '-' ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="key"><?= lang('ROR') ?></span>
+                            <?php if (!empty($organization['ror'] ?? '')) { ?>
+                                <a href="<?= $organization['ror'] ?>" target="_blank" rel="noopener noreferrer">
+                                    <?= $organization['ror'] ?>
+                                    <i class="ph ph-arrow-square-out"></i>
+                                </a>
+                            <?php } else { ?>
+                                -
+                            <?php } ?>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <?php if (!empty($organization['lat'] ?? null) && !empty($organization['lng'] ?? null)) { ?>
+                <div class="map-container mb-20" style="height: 300px;">
+                    <div id="map" style="height: 100%;"></div>
+                </div>
+
+                <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
+                <script>
+                    var layout = {
+                        title: '',
+                        showlegend: false,
+                        geo: {
+                            scope: 'world',
+                            showcountries: true,
+                            showland: true,
+                            showocean: true,
+                            bgcolor: '#f1f1f1',
+                            countrycolor: '#afafaf',
+                            landcolor: '#ffffff',
+                            oceancolor: '#e0e0e0',
+                            subunitcolor: '#afafaf',
+                            coastlinecolor: '#afafaf',
+                            countrywidth: 1,
+                            subunitwidth: 1,
+                            resolution: 110,
+                            // framewidth: 0,
+                            framecolor: '#afafaf',
+                            projection: {
+                                type: 'natural earth'
+                            },
+                            // center: {
+                            //     lon: <?= $organization['lng'] ?>,
+                            //     lat: <?= $organization['lat'] ?>
+                            // },
+                        },
+                        margin: {
+                            r: 0,
+                            t: 0,
+                            b: 0,
+                            l: 0
+                        },
+                        // no borders, no background
+                        paper_bgcolor: 'transparent',
+                        plot_bgcolor: 'transparent',
+                    };
+                    var data = [{
+                        type: 'scattergeo',
+                        locationmode: 'country names',
+                        lat: [<?= $organization['lat'] ?>],
+                        lon: [<?= $organization['lng'] ?>],
+                        hoverinfo: 'text',
+                        text: ['<?= addslashes(lang($organization['name'], $organization['name_de'] ?? null)) ?>'],
+                        mode: 'markers',
+                        marker: {
+                            size: 10,
+                            color: '#d62728',
+                            line: {
+                                width: 1,
+                                color: 'rgba(68, 68, 68, 0.6)'
+                            }
+                        }
+                    }];
+
+                    Plotly.newPlot("map", data, layout, {
+                        showLink: false
+                    });
+                </script>
+
             <?php } ?>
-        </tbody>
-    </table>
+
+        </div>
+
+    </div>
 </div>
 
 

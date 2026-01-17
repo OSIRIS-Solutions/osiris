@@ -3807,6 +3807,28 @@ div.dt-button-collection .dt-button-active:after {
   display: none;
 }
 
+.dt-ordering-asc .dt-column-header:after,
+.dt-ordering-desc .dt-column-header:after {
+  display: inline-block;
+  margin-left: 0.5em;
+  font-family: "Phosphor";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-transform: none;
+  speak: none;
+  color: var(--primary-color-dark);
+}
+
+.dt-ordering-asc .dt-column-header:after {
+  content: "\e124";
+}
+
+.dt-ordering-desc .dt-column-header:after {
+  content: "\e11e";
+}
+
 /*
 -------------------------------------------------------------------------------
 11. Form elements [hm-11]
@@ -5081,32 +5103,38 @@ input[type=number] {
 }
 
 /* Input group button */
-.input-group.small > .input-group-prepend > .btn, .input-group.small > .input-group-append > .btn {
+.input-group.small > .input-group-prepend > .btn,
+.input-group.small > .input-group-append > .btn {
   height: 2.6rem;
   line-height: 2.6rem;
   padding: 0 0.8rem;
   font-size: inherit;
 }
-.input-group.small > .input-group-prepend > .square, .input-group.small > .input-group-append > .square {
+.input-group.small > .input-group-prepend > .square,
+.input-group.small > .input-group-append > .square {
   width: 2.6rem;
   padding-left: 0;
   padding-right: 0;
 }
-.input-group.small > .input-group-prepend > .rounded, .input-group.small > .input-group-append > .rounded {
+.input-group.small > .input-group-prepend > .rounded,
+.input-group.small > .input-group-append > .rounded {
   border-radius: 2.6rem;
 }
-.input-group.large > .input-group-prepend > .btn, .input-group.large > .input-group-append > .btn {
+.input-group.large > .input-group-prepend > .btn,
+.input-group.large > .input-group-append > .btn {
   height: 4rem;
   line-height: 4rem;
   padding: 0 0.8rem;
   font-size: inherit;
 }
-.input-group.large > .input-group-prepend > .square, .input-group.large > .input-group-append > .square {
+.input-group.large > .input-group-prepend > .square,
+.input-group.large > .input-group-append > .square {
   width: 4rem;
   padding-left: 0;
   padding-right: 0;
 }
-.input-group.large > .input-group-prepend > .rounded, .input-group.large > .input-group-append > .rounded {
+.input-group.large > .input-group-prepend > .rounded,
+.input-group.large > .input-group-append > .rounded {
   border-radius: 4rem;
 }
 
@@ -5383,12 +5411,55 @@ select.form-control[multiple] option {
   margin: 0 -0.8rem;
 }
 
-select.form-control[multiple] option:checked, select.form-control[multiple] option:focus {
+select.form-control[multiple] option:checked,
+select.form-control[multiple] option:focus {
   background-color: var(--primary-color-30);
 }
 
 select.form-control[multiple] option:hover {
   background-color: var(--primary-color-20);
+}
+
+.list-widget {
+  display: flex;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: white;
+  align-items: center;
+  min-height: 4rem;
+  flex-wrap: wrap;
+}
+
+.list-widget-input {
+  width: 100%;
+  border: none;
+  background: none;
+  box-shadow: none !important;
+  height: 3rem;
+  padding: 0.5rem;
+}
+
+.list-widget-input:focus, .list-widget-input:focus-visible {
+  outline: none;
+}
+
+.list-widget-item {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0.5rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--gray-color-very-light);
+  padding: 0.25rem 0.5rem;
+}
+
+.list-widget-remove {
+  cursor: pointer;
+  border: none;
+  color: var(--danger-color);
+  margin-left: 0.5rem;
+  background-color: transparent;
 }
 
 /*

@@ -252,7 +252,7 @@ class Project extends Vocabulary
             case 'approval_date':
             case 'rejection_date':
                 return Document::format_date($value);
-            
+
             case 'countries':
             case 'research-countries':
                 $lang = lang('name', 'name_de');
@@ -300,7 +300,7 @@ class Project extends Vocabulary
                 $applicantsList = '';
                 foreach ($applicants as $a) {
                     if ($portfolio) {
-                        $applicantsList .= '<li>'.$DB->portfolioPersonLink($a).'</li>';
+                        $applicantsList .= '<li>' . $DB->portfolioPersonLink($a) . '</li>';
                     } else {
                         $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
                     }
@@ -389,6 +389,35 @@ class Project extends Vocabulary
                 }
                 return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         }
+    }
+
+    public function getCollaborators()
+    {
+        $collaborators = [];
+        if (empty($this->project['collaborators'] ?? [])) {
+            return $collaborators;
+        }
+
+        foreach ($this->project['collaborators'] as $collab) {
+            if (isset($collab['organization']) && is_array($collab['organization'])) {
+                $collab['organization'] = $collab['organization']['_id'];
+            }
+            $org_id = $collab['organization'];
+            $org = $this->db->organizations->findOne(['_id' => $org_id]);
+            if (empty($org)) continue;
+            $collaborators[] = [
+                'id' => strval($org['_id']),
+                'name' => $org['name'],
+                'type' => $org['type'] ?? 'Other',
+                'role' => $collab['role'] ?? 'partner',
+                'icon' => Project::getCollaboratorIcon($org['type'] ?? 'Other'),
+                'lat' => $org['lat'] ?? null,
+                'lng' => $org['lng'] ?? null,
+                'country' => $org['country'] ?? null,
+                'location' => $org['location'] ?? null,
+            ];
+        }
+        return $collaborators;
     }
 
     public function getFieldsLegacy($type)
@@ -763,35 +792,35 @@ class Project extends Vocabulary
         return $widget;
     }
 
-    public function getScope()
+    public function getScope($collaborators = [])
     {
         $req = $this->db->adminGeneral->findOne(['key' => 'affiliation']);
         $institute = DB::doc2Arr($req['value']);
-        $institute['role'] = $this->project['role'] ?? 'Partner';
-
-        $collaborators = DB::doc2Arr($this->project['collaborators'] ?? []);
-        if (!empty($collaborators)) {
-            $collaborators = array_merge($collaborators, [$institute]);
+        $countries = [];
+        if (!empty($collaborators) && isset($collaborators[0]) && isset($collaborators[0]['country'])) {
+            $countries = array_column($collaborators, 'country');
+        } else {
+            $collaborators = $this->getCollaborators();
+            $countries = array_column($collaborators, 'country');
         }
 
-        $scope = 'local';
-        $countries = array_column($collaborators, 'country');
-        if (empty($countries)) return ['scope' => $scope, 'region' => '-'];
+        if (!empty($institute['country'] ?? null)) {
+            $countries[] = $institute['country'];
+        }
 
-        $scope = 'national';
+        if (empty($countries)) return ['scope' => 'local', 'region' => '-'];
+
         $countries = array_unique($countries);
-        if (count($countries) == 1) return ['scope' => $scope, 'region' => $this->getCountry($countries[0], 'name')];
+        if (count($countries) == 1) return ['scope' => 'national', 'region' => $this->getCountry($countries[0], 'name')];
 
-        $scope = 'continental';
         $continents = [];
         foreach ($countries as $code) {
             $continents[] = $this->getCountry($code, 'continent');
         }
         $continents = array_unique($continents);
-        if (count($continents) == 1) return ['scope' => $scope, 'region' => $continents[0]];
+        if (count($continents) == 1) return ['scope' => 'continental', 'region' => $continents[0]];
 
-        $scope = 'international';
-        return ['scope' => $scope, 'region' => 'world'];
+        return ['scope' => 'international', 'region' => 'world'];
     }
 
     public function getContinents()

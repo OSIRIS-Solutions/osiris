@@ -87,12 +87,19 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         <i class="ph ph-chart-line-up"></i>
         <?= lang('Statistics', 'Statistiken') ?>
     </a>
-    <!-- 
-    <a href="<?= ROOTPATH ?>/projects/search" class="btn">
+    <?php if ($Settings->hasPermission('proposals.finance')) { ?>
+    <a href="<?= ROOTPATH ?>/proposals/finances" class="btn">
+        <i class="ph ph-chart-bar"></i>
+        <?= lang('Financial overview', 'Finanzübersicht') ?>
+    </a>
+    <?php } ?>
+
+    
+    <a href="<?= ROOTPATH ?>/proposals/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
-     -->
+    
 
     <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">

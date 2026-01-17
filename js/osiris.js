@@ -635,6 +635,17 @@ function osirisJSOnDOMContentLoaded() {
 }
 
 
+function cssVar(name, fallback = null) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name);
+    return v ? v.trim() : fallback;
+}
+
+const OSIRIS_PRIMARY = cssVar("--primary-color", "#008083");
+const OSIRIS_ACCENT = cssVar("--secondary-color", "#f78104");
+const OSIRIS_SUCCESS = cssVar("--success-color", "#28a745");
+const OSIRIS_WARNING = cssVar("--signal-color", "#ffc107");
+const OSIRIS_DANGER = cssVar("--danger-color", "#dc3545");
+
 function inViewport(el) {
     var elH = el.offsetHeight,
         H = window.innerHeight,

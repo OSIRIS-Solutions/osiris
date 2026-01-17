@@ -214,6 +214,11 @@
                 "comment_en": "Applicants can always see documents in their own proposals. This setting allows seeing all documents, even those in proposals of other people. This is ineffective if proposals of other people cannot be seen."
             },
             {
+                "id": "proposals.finance",
+                "de": "Finanzinformationen zu allen Anträgen sehen",
+                "en": "View financial information of all proposals"
+            },
+            {
                 "id": "projects.add",
                 "de": "Projekte anlegen",
                 "en": "Add new projects"

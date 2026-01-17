@@ -24,6 +24,7 @@ if (!function_exists('str_ends_with')) {
 // helper functions for all CRUD methods
 function validateValues($values, $DB)
 {
+    if (!is_array($values)) return $values;
     $first = max(intval($values['first_authors'] ?? 1), 1);
     unset($values['first_authors']);
     $last = max(intval($values['last_authors'] ?? 1), 1);

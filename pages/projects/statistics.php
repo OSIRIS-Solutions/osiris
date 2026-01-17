@@ -70,6 +70,7 @@ $all = $osiris->projects->count();
     tfoot th:last-child {
         border-bottom-right-radius: var(--border-radius);
     }
+
     div.dt-container div.dt-layout-full {
         width: auto;
     }
@@ -378,6 +379,12 @@ $all = $osiris->projects->count();
             '_id' => 0,
         ]],
         ['$unwind' => '$collaborators'],
+        // lower case grouping
+        ['$addFields' => [
+            'collaborators.type' => [
+                '$toLower' => '$collaborators.type'
+            ]
+        ]],
         ['$group' => [
             '_id' => '$collaborators._id',
             'type' => ['$first' => '$collaborators.type']
@@ -410,7 +417,7 @@ $all = $osiris->projects->count();
                     ?>
                         <tr>
                             <td>
-                                <?= $project['type'] ?>
+                                <?= ucfirst($project['type']) ?>
                             </td>
                             <td>
                                 <?= $project['count'] ?>
@@ -610,7 +617,10 @@ $all = $osiris->projects->count();
                     ['0.0', 'rgb(253.4, 229.8, 204.8)'],
                     ['1.0', '#008084']
                 ],
-                colorbar: {len: 0.5, title: lang('Number of<br>partners', 'Anzahl der<br>Partner')},
+                colorbar: {
+                    len: 0.5,
+                    title: lang('Number of<br>partners', 'Anzahl der<br>Partner')
+                },
             }];
 
             Plotly.newPlot("map", data, layout, {

@@ -49,7 +49,7 @@ $pageactive = function ($p) use ($page) {
     <meta name="description" content="OSIRIS ist ein modernes Forschungsinformationssystem, das besonderen Schwerpunkt auf Open Source und Nutzerfreundlichkeit legt." />
 
     <!-- Favicon and title -->
-    <link rel="icon" href="img/favicon.png">
+    <link rel="icon" href="<?= ROOTPATH ?>/img/favicon.png">
     <title><?= $pagetitle ?? 'OSIRIS-App' ?></title>
     <link rel="manifest" href="<?= ROOTPATH ?>/manifest.json">
 

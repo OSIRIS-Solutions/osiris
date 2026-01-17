@@ -1395,10 +1395,10 @@ Route::get('/api/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
 
     $options = [
         'projection' => [
@@ -1418,7 +1418,7 @@ Route::get('/api/organizations', function () {
     } elseif (isset($_GET['search'])) {
         $search = trim($_GET['search']);
         $ror = null;
-        if (str_starts_with('https://ror.org/', $search)) {
+        if (str_starts_with($search, 'https://ror.org/')) {
             $ror = $search;
         } else if (preg_match('/^0[a-z|0-9]{6}[0-9]{2}$/', $search)) {
             $ror = 'https://ror.org/' . $search;
@@ -1434,7 +1434,7 @@ Route::get('/api/organizations', function () {
         }
 
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['name' => ['$regex' => $j]];
+        $filter = ['$or' => [['name' => ['$regex' => $j]], ['synonyms' => ['$regex' => $j]]]];
     }
     $result = $osiris->organizations->find($filter, $options)->toArray();
     echo return_rest($result, count($result));
