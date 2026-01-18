@@ -11,6 +11,18 @@
         "order": 1
     },
     {
+        "id": "acronym",
+        "en": "Acronym",
+        "de": "Akronym",
+        "kdsf": null,
+        "scope": {
+            "project": false,
+            "proposed": false,
+            "approved": false
+        },
+        "order": 2
+    },
+    {
         "id": "name",
         "en": "Short title",
         "de": "Kurztitel",

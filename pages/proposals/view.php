@@ -75,7 +75,10 @@ if ($nagoyaRelevant) {
         <div class="title">
             <b class="badge text-uppercase primary"><?= lang('Proposal', 'Antrag') ?></b>
             <h1 class="mt-0">
-                <?= $project['name'] ?>
+                <?php if (isset($project['acronym'])) { ?>
+                    <?= htmlspecialchars($project['acronym']) ?> –
+                <?php } ?>
+                <?= htmlspecialchars($project['name']) ?>
             </h1>
 
             <h2 class="subtitle">
@@ -538,7 +541,9 @@ if ($nagoyaRelevant) {
                                                             minimumFractionDigits: 2
                                                         });
                                                     },
-                                                    font: { size: 10 }
+                                                    font: {
+                                                        size: 10
+                                                    }
                                                 }
                                             },
                                             scales: {

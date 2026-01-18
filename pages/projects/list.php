@@ -654,11 +654,15 @@ $Vocabulary = new Vocabulary();
                         } else if (row.persons) {
                             persons = row.persons;
                         }
+                        let acronym = '';
+                        if (row.acronym) {
+                            acronym = row.acronym + ' – ';
+                        }
                         return `
                         ${renderTopic(row.topics ?? [])}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/projects/view/${row.id}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/projects/view/${row.id}">${acronym}${data}</a>
                         </h4>
                        
                         <div class="flex-grow-1">

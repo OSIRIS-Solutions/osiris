@@ -377,9 +377,20 @@ if ($is_subproject) {
                     <?= lang('General information', 'Allgemeine Informationen') ?>
                 </h5>
 
+
+                <?php if (array_key_exists('acronym', $fields)) { ?>
+                    <div class="form-group floating-form with-icon">
+                        <input type="text" class="form-control" name="values[acronym]" id="acronym" value="<?= val('acronym') ?>" maxlength="100" placeholder="Short title" <?= $req('acronym') ?>>
+                        <label for="acronym" class="<?= $req('acronym') ?>">
+                            <?= lang('Acronym', 'Akronym') ?>
+                        </label>
+                    </div>
+                <?php } ?>
+
+
                 <?php if (array_key_exists('name', $fields)) { ?>
                     <div class="form-group floating-form with-icon">
-                        <input type="text" class="form-control" name="values[name]" id="name" value="<?= val('name') ?>" maxlength="30" placeholder="Short title" required>
+                        <input type="text" class="form-control" name="values[name]" id="name" value="<?= val('name') ?>" maxlength="100" placeholder="Short title" required>
                         <label for="name" class="required">
                             <?= lang('Short title', 'Kurztitel') ?>
                         </label>
@@ -391,7 +402,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('name_de', $fields)) { ?>
                     <div class="form-group floating-form position-relative with-icon">
-                        <input type="text" class="form-control" name="values[name_de]" id="name_de" value="<?= val('name_de') ?>" maxlength="30" placeholder="Kurztitel" <?= $req('name_de') ?>>
+                        <input type="text" class="form-control" name="values[name_de]" id="name_de" value="<?= val('name_de') ?>" maxlength="100" placeholder="Kurztitel" <?= $req('name_de') ?>>
                         <label for="name_de" class="<?= $req('name_de') ?>">
                             <?= lang('Short title (German)', 'Kurztitel (Deutsch)') ?>
                         </label>
@@ -890,6 +901,17 @@ if ($is_subproject) {
 
 
                 <?php } ?>
+
+
+                <!-- <?php if (array_key_exists('funding_program-', $fields)) { ?>
+                    <div class="form-group floating-form">
+                        <input type="text" class="form-control" name="values[funding_program]" value="<?= val('funding_program') ?>" id="funding_program" placeholder="Funding program">
+                        <label for="funding_program" class="<?= $req('funding_program') ?>">
+                            <?= lang('Funding program', 'Förderprogramm') ?>
+                        </label>
+                    </div>
+                <?php } ?> -->
+
 
                 <?php if (array_key_exists('funding_program', $fields)) { ?>
                     <div class="form-group floating-form">

@@ -104,7 +104,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     }
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => $project['name']]
+        ['name' => $project['acronym'] ?? $project['name']]
     ];
 
     include BASEPATH . "/header.php";
@@ -151,7 +151,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' =>  $project['name'], 'path' => "/$collection/view/$id"],
+        ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
 
@@ -202,7 +202,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     // set breadcrumb
     $breadcrumb = [
         ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' => $project['name'], 'path' => "/projects/view/$id"],
+        ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
         ['name' => lang("Add subproject", "Teilprojekt hinzufügen")]
     ];
 

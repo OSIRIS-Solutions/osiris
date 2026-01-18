@@ -138,7 +138,10 @@ $scope = $Project->getScope($collaborators);
         <?php } ?>
     </b>
     <h1 class="mt-0">
-        <?= $project['name'] ?>
+        <?php if (isset($project['acronym'])) { ?>
+            <?= htmlspecialchars($project['acronym']) ?> –
+        <?php } ?>
+        <?= htmlspecialchars($project['name']) ?>
     </h1>
 
     <h2 class="subtitle">

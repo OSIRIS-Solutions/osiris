@@ -65,6 +65,9 @@
 
 <section class="container-lg mt-20">
     <h1>
+        <?php if (isset($data['acronym'])) { ?>
+            <?= $data['acronym'] ?> – 
+        <?php } ?>
         <?= lang($data['name'], $data['name_de'] ?? null) ?>
     </h1>
 

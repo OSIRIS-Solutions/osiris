@@ -868,6 +868,7 @@ Route::get('/portfolio/(unit|person|topic)/([^/]*)/projects', function ($context
         'sort' => ['year' => -1, 'month' => -1],
         'projection' => [
             'id' => ['$toString' => '$_id'],
+            'acronym' => 1,
             'name' => 1,
             'name_de' => 1,
             'title' => 1,
@@ -1291,6 +1292,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     $project_type = $Project->getProjectType($result['type'] ?? null);
     $project = [
         'id' => strval($result['_id']),
+        'acronym' => $result['acronym'] ?? null,
         'name' => $result['name'],
         'name_de' => $result['name_de'] ?? null,
         'type' => lang($project_type['name'], $project_type['name_de'] ?? null),

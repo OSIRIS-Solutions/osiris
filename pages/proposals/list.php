@@ -564,23 +564,21 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         if (row.persons && row.persons.length > 0) {
                             persons = row.persons.map(a => a.name).join(', ')
                         }
-
-                        // row.persons.map(a => a.name).join(', ')
+                        let acronym = '';
+                        if (row.acronym) {
+                            acronym = row.acronym + ' – ';
+                        }
                         return `
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${acronym}${data}</a>
                         </h4>
-                       
                         <div class="flex-grow-1">
                          <p class="text-muted mt-0">${renderDate(row)}</p>
-                        
                         ${persons}
-
                         </div>
                         <hr />
-                        
                         <div class="d-flex justify-content-between">
                             ${renderType(row.type)}
                             ${renderStatus(row.status ?? 'proposed')}

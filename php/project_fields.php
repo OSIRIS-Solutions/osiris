@@ -73,6 +73,16 @@ class ProjectFields extends Fields
                 ],
             ],
             [
+                'id' => 'acronym',
+                'module_of' => $typeModules['acronym'] ?? [],
+                'label' => lang('Acronym', 'Akronym'),
+                'type' => 'string',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+            ],
+            [
                 "id" => "type",
                 "module_of" => $typeModules["type"] ?? [],
                 "label" => lang("Type", "Typ"),
