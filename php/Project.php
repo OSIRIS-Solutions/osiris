@@ -232,6 +232,23 @@ class Project extends Vocabulary
         return lang($field['en'], $field['de'] ?? null);
     }
 
+    public function getJointProject()
+    {
+        $isJoint = $this->project['joint_project'] ?? false;
+        if (!$isJoint) {
+            return lang('No', 'Nein');
+        }
+        $identifier = $this->project['joint_project_identifier'] ?? '-';
+        $title = $this->project['joint_project_title'] ?? '-';
+        $speaker = $this->project['joint_project_speaker'] ?? false;
+        $return = '<div class="module">';
+        $return .= '<h5 class="title m-0">' . htmlspecialchars($title) . '</h5>';
+        $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . htmlspecialchars($identifier) . '<br>';
+        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('Yes', 'Ja') : lang('No', 'Nein')) . '<br>';
+        $return .= '</div>';
+        return $return;
+    }
+
     public function printField($field, $value, $portfolio = false)
     {
         $DB = new DB();
@@ -252,7 +269,8 @@ class Project extends Vocabulary
             case 'approval_date':
             case 'rejection_date':
                 return Document::format_date($value);
-
+            case 'joint_project':
+                return $this->getJointProject();
             case 'countries':
             case 'research-countries':
                 $lang = lang('name', 'name_de');
@@ -279,6 +297,9 @@ class Project extends Vocabulary
                 return $this->getFundingNumbers('<br>');
             case 'funding_type':
                 return $this->getFundingType();
+            case 'funding_program_select':
+                // translate via vocabulary
+                return $this->getValue('funding-program', $value);
             case 'contact':
             case 'stipendiate':
             case 'scholar':

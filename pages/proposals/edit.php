@@ -818,7 +818,7 @@ if ($is_subproject) {
 
 
 
-            <?php if (array_intersect(['funder', 'funding_organization', 'funding_program', 'funding_number', 'role', 'coordinator', 'funding_type', 'joint_project', 'project_type'], $field_keys)) { ?>
+            <?php if (array_intersect(['funder', 'funding_organization', 'funding_program', 'funding_program_select', 'funding_number', 'role', 'coordinator', 'funding_type', 'joint_project', 'project_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
                     <?= lang('Funding', 'Förderung') ?>
@@ -903,6 +903,24 @@ if ($is_subproject) {
                 <?php } ?>
 
 
+                <?php if (array_key_exists('funding_program_select', $fields)) { ?>
+                    <div class="form-group">
+                        <div class="floating-form">
+                        <select class="form-control" name="values[funding_program_select]" id="funding_program_select" <?= $req('funding_program_select') ?>>
+                            <?php
+                            if ($req('funding_program_select') == '') { ?>
+                                <option value=""><?= lang('Select funding program', 'Förderprogramm auswählen') ?></option>
+                            <?php }
+                            $vocab = $Vocabulary->getValues('funding-program');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>" <?= sel('funding_program_select', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="funding_program_select" class="<?= $req('funding_program_select') ?>">
+                            <?= lang('Funding program', 'Förderprogramm') ?>
+                        </label>
+                    </div>
+                <?php } ?>
 
                 <?php if (array_key_exists('funding_program', $fields)) { ?>
                     <div class="form-group floating-form">
@@ -925,6 +943,63 @@ if ($is_subproject) {
 
 
 
+                <?php if (array_key_exists('joint_project', $fields)) { ?>
+                    <fieldset class="mt-20">
+                        <legend class="font-size-14"><?= lang('Joint project', 'Verbundprojekt') ?></legend>
+
+                        <b>
+                            <?= lang('Is this project part of a joint project with other institutions?', 'Ist dieses Projekt Teil eines Verbundprojekts mit anderen Institutionen?') ?>
+                        </b>
+                        <div class="custom-radio d-inline-block mr-10 joint-project-input">
+                            <input type="radio" id="joint_project_yes" name="values[joint_project]" value="true" <?= val('joint_project', false) ? 'checked' : '' ?>>
+                            <label for="joint_project_yes">
+                                <?= lang('Yes', 'Ja') ?>
+                            </label>
+                        </div>
+                        <div class="custom-radio d-inline-block mr-10 joint-project-input">
+                            <input type="radio" id="joint_project_no" name="values[joint_project]" value="false" <?= !val('joint_project', false) ? 'checked' : '' ?>>
+                            <label for="joint_project_no">
+                                <?= lang('No', 'Nein') ?>
+                            </label>
+                        </div>
+
+                        <div id="joint-project-yes" style="display: <?= val('joint_project', false) ? 'block' : 'none' ?>;">
+                            <div class="form-group floating-form mt-20">
+                                <input type="text" class="form-control" name="values[joint_project_identifier]" id="joint_project_identifier" value="<?= val('joint_project_identifier') ?>" placeholder="ABC123">
+                                <label for="joint_project_identifier" class="">
+                                    <?= lang('Identifier of the joint project', 'Kennung des Verbundprojekts') ?>
+                                </label>
+                            </div>
+                            <div class="form-group floating-form">
+                                <input type="text" class="form-control" name="values[joint_project_title]" id="joint_project_title" value="<?= val('joint_project_title') ?>" placeholder="">
+                                <label for="joint_project_title" class="">
+                                    <?= lang('Title of the joint project', 'Titel des Verbundprojekts') ?>
+                                </label>
+                            </div>
+                            <div class="form-group floating-form">
+                                <!-- checkbox -->
+                                <input type="hidden" name="values[joint_project_speaker]" value="false">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="joint_project_speaker" <?= val('joint_project_speaker', false) ? 'checked' : '' ?> name="values[joint_project_speaker]" value="true">
+                                    <label for="joint_project_speaker">
+                                        <?= lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <script>
+                        $('.joint-project-input input').on('change', function() {
+                            if (this.value === 'true') {
+                                $('#joint-project-yes').show();
+                            } else {
+                                $('#joint-project-yes').hide();
+                            }
+                        });
+                    </script>
+                <?php } ?>
+                
+                
                 <div class="row row-eq-spacing">
                     <?php if (array_key_exists('role', $fields)) { ?>
                         <div class="col floating-form">
@@ -951,7 +1026,7 @@ if ($is_subproject) {
                 </div>
 
                 <?php if (array_key_exists('funding_type', $fields)) { ?>
-                    <div class="floating-form">
+                    <div class="form-group floating-form">
                         <select class="form-control" name="values[funding_type]" id="funding_type" <?= $req('funding_type') ?>>
                             <?php
                             $vocab = $Vocabulary->getValues('funding-type');
@@ -964,10 +1039,10 @@ if ($is_subproject) {
                         </label>
                     </div>
                 <?php } ?>
-                
+
 
                 <?php if (array_key_exists('project_type', $fields)) { ?>
-                    <div class="floating-form">
+                    <div class="form-group floating-form">
                         <select class="form-control" name="values[project_type]" id="project_type" <?= $req('project_type') ?>>
                             <?php
                             $vocab = $Vocabulary->getValues('project-type');

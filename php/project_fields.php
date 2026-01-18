@@ -360,6 +360,24 @@ class ProjectFields extends Fields
                 ],
             ],
             [
+                "id" => "funding_program_select",
+                "module_of" => $typeModules["funding_program_select"] ?? [],
+                "label" => lang("Funding program (Category)", "Förderprogramm (Kategorie)"),
+                'type' => 'string',
+                'input' => 'select',
+                'values' => $this->vocabularyValues('funding-program'),
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                "scope" => [
+                    "project" => false,
+                    "proposed" => false,
+                    "approved" => false
+                ],
+            ],
+            [
                 "id" => "funding_program",
                 "module_of" => $typeModules["funding_program"] ?? [],
                 "label" => lang("Funding program", "Förderprogramm"),
@@ -415,6 +433,66 @@ class ProjectFields extends Fields
                 'values' => $this->vocabularyValues('project-type'),
                 'usage' => [
                     'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                "scope" => [
+                    "project" => false,
+                    "proposed" => false,
+                    "approved" => false
+                ],
+            ],
+            [
+                "id" => "joint_project",
+                "module_of" => $typeModules["joint_project"] ?? [],
+                "label" => lang("Joint project", "Verbundprojekt"),
+                'type' => 'boolean',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                "scope" => [
+                    "project" => false,
+                    "proposed" => false,
+                    "approved" => false
+                ],
+            ],
+            [
+                "id" => "joint_project_identifier",
+                "module_of" => $typeModules["joint_project"] ?? [],
+                "label" => lang("Joint project identifier", "Verbundprojekt-Kennung"),
+                'type' => 'string',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                "scope" => [
+                    "project" => false,
+                    "proposed" => false,
+                    "approved" => false
+                ],
+            ],
+            [
+                "id" => "joint_project_title",
+                "module_of" => $typeModules["joint_project"] ?? [],
+                "label" => lang("Joint project title", "Verbundprojekt-Titel"),
+                'type' => 'string',
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                "scope" => [
+                    "project" => false,
+                    "proposed" => false,
+                    "approved" => false
+                ],
+            ],
+            [
+                "id" => "joint_project_speaker",
+                "module_of" => $typeModules["joint_project"] ?? [],
+                "label" => lang("Joint project speaker", "Verbundprojekt-Sprecher"),
+                'type' => 'boolean',
+                'usage' => [
                     'filter',
                     'columns'
                 ],
@@ -924,7 +1002,6 @@ class ProjectFields extends Fields
             return strnatcmp($a['label'], $b['label']);
         });
     }
-
 }
 
 // dump($FIELDS);
