@@ -818,7 +818,7 @@ if ($is_subproject) {
 
 
 
-            <?php if (array_intersect(['funder', 'funding_organization', 'funding_program', 'funding_number', 'role', 'coordinator', 'funding_type'], $field_keys)) { ?>
+            <?php if (array_intersect(['funder', 'funding_organization', 'funding_program', 'funding_number', 'role', 'coordinator', 'funding_type', 'joint_project', 'project_type'], $field_keys)) { ?>
 
                 <h5 class="funding">
                     <?= lang('Funding', 'Förderung') ?>
@@ -903,15 +903,6 @@ if ($is_subproject) {
                 <?php } ?>
 
 
-                <!-- <?php if (array_key_exists('funding_program-', $fields)) { ?>
-                    <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[funding_program]" value="<?= val('funding_program') ?>" id="funding_program" placeholder="Funding program">
-                        <label for="funding_program" class="<?= $req('funding_program') ?>">
-                            <?= lang('Funding program', 'Förderprogramm') ?>
-                        </label>
-                    </div>
-                <?php } ?> -->
-
 
                 <?php if (array_key_exists('funding_program', $fields)) { ?>
                     <div class="form-group floating-form">
@@ -973,7 +964,22 @@ if ($is_subproject) {
                         </label>
                     </div>
                 <?php } ?>
+                
 
+                <?php if (array_key_exists('project_type', $fields)) { ?>
+                    <div class="floating-form">
+                        <select class="form-control" name="values[project_type]" id="project_type" <?= $req('project_type') ?>>
+                            <?php
+                            $vocab = $Vocabulary->getValues('project-type');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>" <?= sel('project_type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="project_type" class="<?= $req('project_type') ?>">
+                            <?= lang('Project type', 'Projekttyp') ?>
+                        </label>
+                    </div>
+                    <?php } ?>
             <?php } ?>
 
 
