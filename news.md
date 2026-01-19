@@ -1,8 +1,8 @@
 # Neuigkeiten
 
-## Version 1.8.0
+## Version 1.8.0 (beta)
 
-<span class="badge float-right">15.01.2026</span>
+<span class="badge float-right">18.01.2026</span>
 <a class="anchor" href="#version-1.7.2" id="version-1.7.2"></a>
 
 Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Projekte. Hier die Highlights:
@@ -28,11 +28,35 @@ OSIRIS Portfolio wurde um einige nützliche Funktionen erweitert:
 
 Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So könnt ihr z.B. eine eigene Domain verwenden oder das Portfolio einfacher in eine bestehende Webseite integrieren. Dazu gibt es im Admin-Bereich unter "Generelle Einstellungen" > "Portfolio" ein neues Feld "Portfolio Basis-URL". Wenn dieses ausgefüllt ist, wird diese URL für alle Links verwendet, die in Portfolio generiert werden. Andernfalls wird die OSIRIS versuchen, eine relative URL zu verwenden.
 
-### Projekte
+### Organisationen und Projekt-Kollaborationen
 
-coming soon
-<!-- Das Projektmodul wurde um einige nützliche Funktionen erweitert: -->
+- Es ist nun möglich, Logos für Organisationen hochzuladen, die dann in verschiedenen Bereichen von OSIRIS angezeigt werden (z.B. in Projekten, auf der Organisationsseite, in der erweiterten Suche).
+- Für eine bessere User Experience beim manuellen Anlegen von Organisationen, können die Koordinaten jetzt automatisch über den angegebenen Standort (wahlweise inkl. des Landes) bezogen werden. Dabei wird die aktuelle UI-Sprache verwendet, um die bestmöglichen Ergebnisse zu erzielen.
+- Auf der Übersichtsseite einer Organisation wird neben einem überarbeiteten Layout jetzt auch eine Karte mit den Standort der Organisation angezeigt.
+- Synonyme wurden für Organisationen hinzugefügt zur besseren Auffindbarkeit, z.B. kann dann die Deutsche Forschungsgemeinschaft auch über "DFG" gefunden werden. Die Synonyme werden ebenfalls über ROR bezogen.
+- Der Kollaborationsbereich in Projekten grundlegend überarbeitet und fügt sich damit nahtlos in das neue Organisationsmanagement ein. Es kann zuerst in bereits bestehende Organisationen gesucht und diese dann als Kollaborationspartner hinzugefügt werden. Alternativ können auch neue Organisationen direkt im Projekt angelegt werden.
 
+### Projekte und Anträge
+
+**Finanzen** 
+*(Aufgrund der Sensibilität dieser Daten sind sie ausschließlich im Antrag zu sehen und nicht im Projekt selbst)*
+
+- Die Drittmitteleinnahmen wurden in ein neues Format überführt, das nun neben den geplanten auch die tatsächlich verausgabten Mittel pro Jahr erfasst.
+- Es gibt jetzt eine Übersicht über die Finanzen eines Projekts, die geplante und verausgabte Mittel pro Jahr anzeigt und diese analysiert und visualisiert.
+- In einer neuen Finanzübersicht können Admins und Projektverantwortliche verschiedene Finanzberichte generieren, z.B. geplante vs. verausgabte Mittel. Es gibt ein neues Zugriffsrecht dafür (Finanzinformationen sehen), das standardmäßig nicht vergeben ist.
+
+**Formulare & Eingaben**
+
+- Die maximale Länge für Projekt-Kurzbezeichnungen von 30 auf 100 Zeichen erhöht
+- Dafür wurde ein neues Akronym-Feld ergänzt: dieses wird mit dem Kurztitel kombiniert, falls vorhanden
+- Fehler behoben: Projekttyp wurde im Projektformular nicht angezeigt
+- Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt.
+- Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
+
+### Organisationseinheiten
+
+- Die Forschungsfeldklassifikation des KDSF wurde nun auch den Einheiten in OSIRIS hinzugefügt. Dadurch können Einheiten bestimmten Forschungsfeldern zugeordnet werden, was die KDSF-Konformität weiter verbessert.
+- Ein Fehler wurde behoben, durch den Klammersetzung in Einheitennamen die Darstellung als Organigramm verhindert hat. Außerdem unterstützt das Organigramm jetzt auch die deutschen Namen von Einheiten.
 
 
 <span class="badge float-right">17.12.2025</span>

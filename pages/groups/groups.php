@@ -260,7 +260,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     $g = array_map(function ($a) {
         return [
             'id' => $a['id'],
-            'name' => $a['name'],
+            'name' => lang($a['name'], $a['name_de'] ?? null),
             'unit' => $a['unit'],
             'head' => $a['head'],
             'color' => $a['color'],
@@ -271,7 +271,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     ?>
 
     <script>
-        var tree = JSON.parse('<?= json_encode($g) ?>');
+        var tree = <?= json_encode($g) ?>;
 
         console.log(tree);
         var data = [];
