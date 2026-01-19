@@ -33,7 +33,7 @@ $numbers = $data['numbers'] ?? [
 <div class="container">
 
     <?php if ($Portfolio->isPreview()) { ?>
-        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">
 
         <!-- all necessary javascript -->
         <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
@@ -48,7 +48,7 @@ $numbers = $data['numbers'] ?? [
             const BASE = '<?= $base ?>';
             const DEPT = '<?= $id ?>';
         </script>
-        <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?= CSS_JS_VERSION ?>"></script>
+        <script src="<?= ROOTPATH ?>/js/units.portfolio.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <?php } ?>
 

@@ -530,11 +530,11 @@ class Settings
 
         $iconStyle = $design['icon_style'] ?? 'ph';
         if ($iconStyle == 'filled') {
-            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/fill/style_general.css?v=' . CSS_JS_VERSION . '">' . "\n";
+            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/fill/style_general.css?v=' . OSIRIS_BUILD . '">' . "\n";
         } elseif ($iconStyle == 'duotone') {
-            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/duotone/style_general.css?v=' . CSS_JS_VERSION . '">' . "\n";
+            $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/duotone/style_general.css?v=' . OSIRIS_BUILD . '">' . "\n";
         } else {
-            // $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/regular/style.css?v=' . CSS_JS_VERSION . '">' . "\n";
+            // $out .= '<link rel="stylesheet" href="' . ROOTPATH . '/css/phosphoricons/regular/style.css?v=' . OSIRIS_BUILD . '">' . "\n";
         }
 
         $preset = $design['font_preset'] ?? 'rubik';

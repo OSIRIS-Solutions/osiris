@@ -288,8 +288,8 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 </form>
 
 <!-- <script src="<?= ROOTPATH ?>/js/papaparse.min.js"></script> -->
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
-<!-- <script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?= CSS_JS_VERSION ?>"></script> -->
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
+<!-- <script src="<?= ROOTPATH ?>/js/collaborators.js?v=<?= OSIRIS_BUILD ?>"></script> -->
 
 <script>
     // override default createOrganizationTR function to add collaborators

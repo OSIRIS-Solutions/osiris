@@ -76,12 +76,12 @@ $pageactive = function ($p) use ($page) {
     <title><?= $pagetitle ?? 'OSIRIS' ?></title>
 
     <!-- Icon font -->
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
     <!-- for open access icons -->
-    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
 
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?v=<?= CSS_JS_VERSION ?>">
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?v=<?= OSIRIS_BUILD ?>">
     <?= $Settings->renderAdditionalStylesheetLinks() ?>
     <link rel="stylesheet" href="<?= ROOTPATH ?>/custom_style.css?v=<?= uniqid() ?>" no-cache>
 
@@ -92,8 +92,8 @@ $pageactive = function ($p) use ($page) {
         const AFFILIATION_REGEX = new RegExp('<?= $Settings->getRegex(); ?>', 'i'); // Fallback to a simple regex if parsing fails
     </script>
 
-    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <script>
         $.extend($.fn.DataTable.ext.classes, {

@@ -59,7 +59,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?=OSIRIS_BUILD?>"></script>
 
 <script>
     const USER = '<?= $scientist ?>'

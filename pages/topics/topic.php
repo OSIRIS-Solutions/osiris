@@ -154,15 +154,15 @@ if ($count_groups > 0) {
 <!-- all necessary javascript -->
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 
 <script>
     const TOPIC = '<?= $topic['id'] ?>';
 </script>
 
-<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
-<script src="<?= ROOTPATH ?>/js/topics.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/topics.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <div class="topic" style="--topic-color: <?= $topic['color'] ?? '#333333' ?>">
 

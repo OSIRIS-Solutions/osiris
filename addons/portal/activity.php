@@ -1,5 +1,5 @@
 <?php if ($Portfolio->isPreview()) { ?>
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">
 <?php } ?>
 
 <div class="container-lg">

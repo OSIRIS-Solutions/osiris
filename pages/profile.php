@@ -46,7 +46,7 @@ if (!isset($scientist['is_active'])) {
 <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 
 <!-- all variables for this page -->
@@ -54,7 +54,7 @@ if (!isset($scientist['is_active'])) {
     const CURRENT_USER = '<?= $user ?>';
     // const HIGHTLIGHTS = <?= json_encode($scientist['highlighted'] ?? []) ?>;
 </script>
-<script src="<?= ROOTPATH ?>/js/profile.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/profile.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/achievements.css?<?= filemtime(BASEPATH . '/css/achievements.css') ?>">

@@ -29,7 +29,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
 <div class="container">
 
     <?php if ($Portfolio->isPreview()) { ?>
-        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">
         <!-- all necessary javascript -->
         <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
         <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
@@ -43,7 +43,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             const BASE = '<?= $base ?>';
             const DEPT = '<?= $id ?>';
         </script>
-        <script src="<?= ROOTPATH ?>/js/topics.portfolio.js?v=<?= CSS_JS_VERSION ?>"></script>
+        <script src="<?= ROOTPATH ?>/js/topics.portfolio.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <?php } ?>
 

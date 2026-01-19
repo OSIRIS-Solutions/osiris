@@ -126,7 +126,7 @@ if ($is_subproject) {
 
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <?php if (!empty($prefilled)) { ?>
     <script>

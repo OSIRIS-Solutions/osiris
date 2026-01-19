@@ -480,7 +480,7 @@ if ($Settings->featureEnabled('tags')) {
 
     <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
     <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/activity.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/activity.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
     <div class="btn-toolbar">

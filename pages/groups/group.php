@@ -51,7 +51,7 @@ $count_wordcloud = 0;
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 <!-- <script src="<?= ROOTPATH ?>/js/d3-graph.js"></script> -->
 
@@ -62,8 +62,8 @@ $count_wordcloud = 0;
     const DEPT = '<?= $id ?>';
 </script>
 <!-- // my year for the activity timeline -->
-<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
-<script src="<?= ROOTPATH ?>/js/units.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/units.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
 <style>

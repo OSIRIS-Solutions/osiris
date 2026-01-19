@@ -155,7 +155,7 @@ function val($index, $default = '')
 const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
 console.log(TYPES);
 </script>
-<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
 <div class="modal" id="add-event" tabindex="-1" role="dialog">
@@ -835,7 +835,7 @@ console.log(TYPES);
 <!-- for selecting organisations -->
 
 
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script>
     function selectOrgEvent(event = null, type = 'organization') {
         console.log(type);
@@ -863,4 +863,4 @@ console.log(TYPES);
     }
 </script>
 
-<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script> -->
+<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?= OSIRIS_BUILD ?>"></script> -->

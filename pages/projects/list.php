@@ -53,7 +53,7 @@ $Vocabulary = new Vocabulary();
 
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css?v=<?= CSS_JS_VERSION ?>">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css?v=<?= OSIRIS_BUILD ?>">
 
 <style>
     .index {

@@ -20,7 +20,7 @@ $name = $data['name'];
 ?>
 
 <?php if ($Portfolio->isPreview()) { ?>
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= CSS_JS_VERSION ?>">
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">
 
     <!-- adjust style for a top margin of 4rem for all links and fixed -->
     <style>

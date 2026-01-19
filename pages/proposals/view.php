@@ -67,7 +67,7 @@ if ($nagoyaRelevant) {
         border: var(--border-width) solid var(--muted-color);
     }
 </style>
-<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <div class="proposal <?= $status ?>">
 

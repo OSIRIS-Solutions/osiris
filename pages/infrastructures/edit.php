@@ -67,7 +67,7 @@ $active = function ($field) use ($data_fields) {
 ?>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <h3 class="title">
     <?php
