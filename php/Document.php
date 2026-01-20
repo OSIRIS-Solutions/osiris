@@ -426,7 +426,7 @@ class Document extends Settings
         }
         $this->type = $type;
         $this->typeArr = $this->getActivity($type);
-        $this->subtype = $this->doc['subtype'];
+        $this->subtype = $this->doc['subtype'] ?? '';
         $this->subtypeArr = $this->getActivity($this->type, $this->subtype);
     }
 
@@ -451,7 +451,7 @@ class Document extends Settings
     {
         $name = $this->activity_subtype();
         $icon = $this->activity_icon(false);
-        $type = $this->doc['type'];
+        $type = $this->doc['type'] ?? '';
         return "<span class='badge badge-$type'>$icon $name</span>";
     }
 
@@ -1149,6 +1149,7 @@ class Document extends Settings
             case "issn": // ["issn"],
                 $issn = $this->getVal('issn', null);
                 if (empty($issn)) return $default;
+                if (is_string($issn)) return $issn;
                 return implode(', ', DB::doc2Arr($issn));
             case "issue": // ["issue"],
                 return $this->getVal('issue');
