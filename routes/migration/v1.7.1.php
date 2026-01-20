@@ -101,17 +101,29 @@ if ($N_ == 0) {
 
 // append public_email, public_other_activities, public_teaching to person-data settings if not present
 $Settings = new Settings();
-$personData = DB::doc2Arr($Settings->get('person-data'));
+
+$data_fields = $Settings->get('person-data');
+if (!is_null($data_fields)) {
+    $data_fields = DB::doc2Arr($data_fields);
+} else {
+    $fields = file_get_contents(BASEPATH . '/data/person-fields.json');
+    $fields = json_decode($fields, true);
+
+    $data_fields = array_filter($fields, function ($field) {
+        return $field['default'] ?? false;
+    });
+    $data_fields = array_column($data_fields, 'id');
+}
 $fieldsToAdd = ['public_email', 'public_other_activities', 'public_teaching'];
 $updated = 0;
 foreach ($fieldsToAdd as $field) {
-    if (!in_array($field, $personData ?? [])) {
-        $personData[] = $field;
+    if (!in_array($field, $data_fields ?? [])) {
+        $data_fields[] = $field;
         $updated++;
     }
 }
 if ($updated > 0) {
-    $Settings->set('person-data', $personData);
+    $Settings->set('person-data', $data_fields);
     echo "<p>" . lang(
         "Added " . $updated . " fields to person-data settings.",
         "Es wurden " . $updated . " Felder zu den Personendaten-Einstellungen hinzugefügt."
