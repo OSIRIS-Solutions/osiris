@@ -1108,7 +1108,7 @@ class Document extends Settings
             case "edition": // ["edition"],
             case "edition-ed": // ["edition"],
                 $val = $this->getVal('edition', $default);
-                if ($val != $default) {
+                if ($val != $default && is_numeric($val)) {
                     if ($val == 1) $val .= "st";
                     elseif ($val == 2) $val .= "nd";
                     elseif ($val == 3) $val .= "rd";

@@ -58,6 +58,10 @@ Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So
 - Die Forschungsfeldklassifikation des KDSF wurde nun auch den Einheiten in OSIRIS hinzugefügt. Dadurch können Einheiten bestimmten Forschungsfeldern zugeordnet werden, was die KDSF-Konformität weiter verbessert.
 - Ein Fehler wurde behoben, durch den Klammersetzung in Einheitennamen die Darstellung als Organigramm verhindert hat. Außerdem unterstützt das Organigramm jetzt auch die deutschen Namen von Einheiten.
 
+### Weitere Verbesserungen & Bugfixes
+- Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
+
+
 
 <span class="badge float-right">17.12.2025</span>
 <a class="anchor" href="#version-1.7.1" id="version-1.7.1"></a>
