@@ -72,7 +72,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
 
 
-Route::get('/portal/(info|activities|publications|persons|projects|groups|infrastructures|topics)', function ($pagename) {
+Route::get('/(preview|portal)/(info|activities|publications|persons|projects|groups|infrastructures|topics)', function ($section, $pagename) {
     include_once BASEPATH . "/php/init.php";
     if (! $Settings->featureEnabled('portal')) {
         die('Portal feature is disabled.');
@@ -93,36 +93,40 @@ Route::get('/portal/(info|activities|publications|persons|projects|groups|infras
     // display correct breadcrumb
     global $breadcrumb;
     $breadcrumb = [
-        ['name' => lang('Portal', 'Portal'), 'path' => "/portal/info"],
+        ['name' => lang('Portal', 'Portal'), 'path' => "/$section/info"],
     ];
     switch ($pagename) {
         case 'activities':
-            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/portal/activities"];
+            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/$section/activities"];
             break;
 
         case 'publications':
-            $breadcrumb[] = ['name' => lang('Publications', 'Publikationen'), 'path' => "/portal/publications"];
+            $breadcrumb[] = ['name' => lang('Publications', 'Publikationen'), 'path' => "/$section/publications"];
             break;
 
         case 'persons':
-            $breadcrumb[] = ['name' => lang('User', 'Personen'), 'path' => "/portal/persons"];
+            $breadcrumb[] = ['name' => lang('User', 'Personen'), 'path' => "/$section/persons"];
             break;
 
         case 'projects':
-            $breadcrumb[] = ['name' => lang('Projects', 'Projekte'), 'path' => "/portal/projects"];
+            $breadcrumb[] = ['name' => lang('Projects', 'Projekte'), 'path' => "/$section/projects"];
             break;
 
         case 'units':
-            $breadcrumb[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/portal/groups"];
+            $breadcrumb[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/$section/groups"];
             break;
 
         case 'infrastructures':
-            $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/portal/infrastructures"];
+            $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/$section/infrastructures"];
             break;
     }
 
     // important: NO database connection
-    include BASEPATH . "/header-portal.php";
+    if ($section == 'portal') {
+        include BASEPATH . "/header-portal.php";
+    } else {
+        include BASEPATH . "/header.php";
+    }
 
     // Call Portfolio API to get entity details
     $type = 'unit';

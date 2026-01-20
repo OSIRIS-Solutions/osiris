@@ -337,8 +337,6 @@ $numbers = $data['numbers'] ?? [
 
             <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('Employees', 'Mitarbeitende Personen') ?>">
 
-                <!-- <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3> -->
-
                 <table class="table cards w-full datatable" id="users-table" data-page-length="18">
                     <thead>
                         <th></th>
@@ -398,7 +396,7 @@ $numbers = $data['numbers'] ?? [
                                 <h6 class="m-0 mb-5"><?= lang('Filter by type', 'Nach Art filtern') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
-                                    $pubTypes = $osiris->adminTypes->find(['parent' => 'publication']);
+                                    $pubTypes = $osiris->adminTypes->find(['parent' => 'publication', 'portfolio' => ['$in' => [1, true]]], ['sort' => ['order' => 1]])->toArray();
                                     foreach ($pubTypes as $type) { ?>
                                         <a href="#" class="filter-item" data-value="<?= $type['id'] ?>" data-column="subtype">
                                             <?= lang($type['name'], $type['name_de'] ?? null) ?>
@@ -454,7 +452,8 @@ $numbers = $data['numbers'] ?? [
                                 <h6 class="m-0 mb-5"><?= lang('Filter by type', 'Nach Art filtern') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
-                                    $pubTypes = $osiris->adminCategories->find(['id' => ['$ne' => 'publication'], 'portfolio' => true]);
+                                    $portfolioCats = $osiris->adminTypes->distinct('parent', ['portfolio' => ['$in' => [true, 1]], 'parent' => ['$ne' => 'publication']]);
+                                    $pubTypes = $osiris->adminCategories->find(['id' => ['$in' => $portfolioCats]], ['sort' => ['order' => 1]]);
                                     foreach ($pubTypes as $type) { ?>
                                         <a href="#" class="filter-item" data-value="<?= $type['id'] ?>" data-column="type">
                                             <?= lang($type['name'], $type['name_de'] ?? null) ?>
@@ -504,7 +503,6 @@ $numbers = $data['numbers'] ?? [
                             </tbody>
                         </table>
                     </div>
-
                 <?php } ?>
 
 
