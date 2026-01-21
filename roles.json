@@ -12,8 +12,8 @@
         ]
     },
     {
-        "de": "Aktivitäten",
-        "en": "Activities",
+        "de": "Aktivitäten, Journale und Events",
+        "en": "Activities, Journals and Events",
         "icon": "book-bookmark",
         "fields": [
             {
@@ -45,6 +45,11 @@
                 "id": "journals.edit",
                 "de": "Journale hinzufügen und bearbeiten",
                 "en": "Add and edit journals"
+            },
+            {
+                "id": "journals.delete",
+                "de": "Journale löschen",
+                "en": "Delete journals"
             },
             {
                 "id": "conferences.edit",

@@ -49,6 +49,11 @@ Route::get('/journals?/view/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
 
     $data = $osiris->journals->findOne(['_id' => $id]);
+    if (empty($data)) {
+        $_SESSION['msg'] = lang("Journal not found", "Journal nicht gefunden");
+        header("Location: " . ROOTPATH . "/journal");
+        die;
+    }
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '']
@@ -596,4 +601,46 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
         'updated' => $updateResult->getModifiedCount(),
         'result' => $collection->findOne(['_id' => $id])
     ]);
+});
+
+
+Route::post('/crud/journal/delete/([A-Za-z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('journals.delete')) {
+        $_SESSION['msg'] = lang("You do not have permission to delete journals.", "Sie haben keine Berechtigung, Journale zu löschen.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/journal/view/$id");
+        die;
+    }
+    $N_activities = $osiris->activities->count(['journal_id' => strval($id)]);
+    if ($N_activities > 0) {
+        $_SESSION['msg'] = lang(
+            "Cannot delete journal because there are activities linked to it.",
+            "Das Journal kann nicht gelöscht werden, da Aktivitäten damit verknüpft sind."
+        );
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/journal/view/$id");
+        die;
+    }
+
+    $collection = $osiris->journals;
+    $mongoid = $DB->to_ObjectID($id);
+
+    $deleteResult = $collection->deleteOne(['_id' => $mongoid]);
+
+    // check if JSON response is ACCEPTED
+    if ($_SERVER['HTTP_ACCEPT'] === 'application/json') {
+        echo json_encode([
+            'deleted' => $deleteResult->getDeletedCount(),
+        ]);
+        die;
+    }
+
+    $_SESSION['msg'] = lang(
+        "Journal deleted successfully.",
+        "Journal erfolgreich gelöscht."
+    );
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/journal");
+    
 });
