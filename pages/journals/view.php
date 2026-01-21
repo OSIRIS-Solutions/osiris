@@ -201,7 +201,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 
 <h3>
-    <?= lang("Publications in this $label", "Publikationen in diesem $label") ?>
+    <?= lang("Connected Publications", "Verknüpfte Publikationen") ?>
 </h3>
 
 <!-- <canvas id="spark"></canvas> -->
