@@ -1234,10 +1234,9 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
     if (isset($_GET['user'])) {
         $filter['rendered.users'] = $_GET['user'];
     }
-    // TODO: add filter for department
-    // if (isset($_GET['unit'])) {
-    //     $filter['depts'] = $_GET['unit'];
-    // }
+    if (isset($_GET['unit'])) {
+        $filter['units'] = ['$in' => explode(',', $_GET['unit'])];
+    }
 
     // $osiris->activities->createIndex(['rendered.plain' => 'text']);
 

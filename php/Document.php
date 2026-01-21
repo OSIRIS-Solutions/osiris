@@ -152,6 +152,7 @@ class Document extends Settings
     ];
 
     private $field_ids = [];
+    private $relationship_types = [];
 
 
     function __construct($highlight = true, $usecase = '')
@@ -171,6 +172,10 @@ class Document extends Settings
         foreach ($this->custom_fields as $field) {
             $this->field_ids[] = $field['id'];
         }
+
+        // load relationship types
+        $json = file_get_contents(__DIR__ . '/../data/activity-relations.json');
+        $this->relationship_types = json_decode($json, true);
     }
 
     public function setDocument($doc)
@@ -186,6 +191,24 @@ class Document extends Settings
         foreach (($this->subtypeArr['modules'] ?? array()) as $m) {
             $this->modules[] = str_replace('*', '', $m);
         }
+    }
+
+    public function getRelationships()
+    {
+        return $this->relationship_types;
+    }
+
+    public function getRelationshipLabel($rel_id, $reverse = false)
+    {
+        foreach ($this->relationship_types as $rel) {
+            if ($rel['id'] == $rel_id) {
+                if ($reverse && isset($rel['reverse_label'])) {
+                    return $rel['reverse_label'];
+                }
+                return $rel['label'];
+            }
+        }
+        return ['en' => $rel_id, 'de' => $rel_id];
     }
 
     private function lang($en, $de = null)

@@ -53,6 +53,12 @@ Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So
 - Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt.
 - Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
 
+### Aktivitäten verknüpfen
+
+- Es wurde die Möglichkeit hinzugefügt, Aktivitäten miteinander zu verknüpfen, um Beziehungen wie "ist eine Übersetzung von", "ist eine erweiterte Version von" oder "ist ein Preprint von" abzubilden. Dabei können beliebige Aktivitätstypen miteinander verknüpft werden.
+- Die Verknüpfungen können in beide Richtungen angezeigt werden und sind in der Aktivität unter einem eigenen Abschnitt zu finden.
+- Die Arten von Verknüpfungen sind im Moment noch nicht konfigurierbar, aber es sind bereits einige gängige Beziehungen vordefiniert. Wir möchten gern erst weiteres Feedback sammeln, bevor wir hier mehr Flexibilität einbauen.
+
 ### Organisationseinheiten
 
 - Die Forschungsfeldklassifikation des KDSF wurde nun auch den Einheiten in OSIRIS hinzugefügt. Dadurch können Einheiten bestimmten Forschungsfeldern zugeordnet werden, was die KDSF-Konformität weiter verbessert.

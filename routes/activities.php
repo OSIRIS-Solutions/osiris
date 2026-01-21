@@ -1286,3 +1286,83 @@ Route::post('/crud/activities/lock', function () {
     include BASEPATH . "/pages/activities/locking.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
+
+
+Route::post('/crud/activities/connect', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $target = $_POST['target_id'] ?? null;
+    $source = $_POST['source_id'] ?? null;
+
+    if (is_null($target) || is_null($source)) {
+        die('Error: source or target missing.');
+    }
+
+    $relationship = $_POST['relationship'] ?? 'related';
+    $reverse = isset($_POST['reverse']);
+    if ($reverse) {
+        // swap target and source
+        $temp = $target;
+        $target = $source;
+        $source = $temp;
+    }
+                
+    $data = [
+        'target_id' => $DB->to_ObjectID($target),
+        'source_id' => $DB->to_ObjectID($source),
+        'relationship' => $relationship,
+        'created_at' => date('Y-m-d'),
+        'created_by' => $_SESSION['username']
+    ];
+    // check if connection already exists
+    $existing = $osiris->activitiesConnections->findOne([
+        'target_id' => ['$in' => [$data['target_id'], $data['source_id']]],
+        'source_id' => ['$in' => [$data['target_id'], $data['source_id']]]
+    ]);
+    if (!empty($existing)) {
+        if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+            header("Location: " . $_POST['redirect'] . "?msg=connection-exists");
+            die();
+        }
+        echo json_encode([
+            'inserted' => 0,
+            'id' => (string)$existing['_id'],
+            'message' => 'Connection already exists.'
+        ]);
+        die();
+    }
+
+    $insertOneResult  = $osiris->activitiesConnections->insertOne($data);
+    $id = $insertOneResult->getInsertedId();
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Activities connected successfully.", "Aktivitäten erfolgreich verbunden.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'inserted' => $insertOneResult->getInsertedCount(),
+        'id' => $id,
+    ]);
+});
+
+Route::post('/crud/activities/disconnect', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['connection_id'])) {
+        die('Error: no connection id given.');
+    }
+    $connection_id = $DB->to_ObjectID($_POST['connection_id']);
+    $deleteResult = $osiris->activitiesConnections->deleteOne(['_id' => $connection_id]);
+    $deletedCount = $deleteResult->getDeletedCount();
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Activities disconnected successfully.", "Aktivitäten erfolgreich getrennt.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'deleted' => $deletedCount
+    ]);
+});
+

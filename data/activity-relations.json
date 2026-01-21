@@ -1,0 +1,99 @@
+[
+  {
+    "id": "related",
+    "category": "generic",
+    "label": { "de": "steht im Zusammenhang mit", "en": "is related to" },
+    "reverse_label": { "de": "steht im Zusammenhang mit", "en": "is related to" }
+  },
+  {
+    "id": "references",
+    "category": "generic",
+    "label": { "de": "referenziert", "en": "references" },
+    "reverse_label": { "de": "wird referenziert von", "en": "is referenced by" }
+  },
+  {
+    "id": "continues",
+    "category": "generic",
+    "label": { "de": "setzt fort", "en": "continues" },
+    "reverse_label": { "de": "wird fortgesetzt durch", "en": "is continued by" }
+  },
+  {
+    "id": "replaces",
+    "category": "generic",
+    "label": { "de": "ersetzt", "en": "replaces" },
+    "reverse_label": { "de": "wird ersetzt durch", "en": "is replaced by" }
+  },
+
+  {
+    "id": "summarizes",
+    "category": "outreach",
+    "label": { "de": "fasst zusammen", "en": "summarizes" },
+    "reverse_label": { "de": "wird zusammengefasst in", "en": "is summarized in" }
+  },
+  {
+    "id": "produces",
+    "category": "research_output",
+    "label": { "de": "erzeugt", "en": "produces" },
+    "reverse_label": { "de": "wird erzeugt durch", "en": "is produced by" }
+  },
+  {
+    "id": "uses",
+    "category": "research_output",
+    "label": { "de": "nutzt", "en": "uses" },
+    "reverse_label": { "de": "wird genutzt von", "en": "is used by" }
+  },
+  {
+    "id": "outputs",
+    "category": "research_output",
+    "label": { "de": "hat Ergebnis", "en": "has output" },
+    "reverse_label": { "de": "ist Ergebnis von", "en": "is output of" }
+  },
+  {
+    "id": "is_version_of",
+    "category": "publication",
+    "label": { "de": "ist eine Version von", "en": "is a version of" },
+    "reverse_label": { "de": "hat Version", "en": "has version" }
+  },
+  {
+    "id": "is_preprint_of",
+    "category": "publication",
+    "label": { "de": "ist ein Preprint von", "en": "is a preprint of" },
+    "reverse_label": { "de": "hat Preprint", "en": "has preprint" }
+  },
+  {
+    "id": "is_translation_of",
+    "category": "publication",
+    "label": { "de": "ist eine Übersetzung von", "en": "is a translation of" },
+    "reverse_label": { "de": "hat Übersetzung", "en": "has translation" }
+  },
+  {
+    "id": "is_extended_version_of",
+    "category": "publication",
+    "label": { "de": "ist eine erweiterte Version von", "en": "is an extended version of" },
+    "reverse_label": { "de": "hat eine Kurzfassung", "en": "has a short version" }
+  },
+  {
+    "id": "is_erratum_for",
+    "category": "publication",
+    "label": { "de": "ist Erratum zu", "en": "is erratum for" },
+    "reverse_label": { "de": "hat Erratum", "en": "has erratum" }
+  },
+  {
+    "id": "is_based_on",
+    "category": "publication",
+    "label": { "de": "basiert auf", "en": "is based on" },
+    "reverse_label": { "de": "ist Grundlage für", "en": "is basis for" }
+  },
+  {
+    "id": "is_covered_by",
+    "category": "outreach",
+    "label": { "de": "wird behandelt in", "en": "is covered by" },
+    "reverse_label": { "de": "behandelt", "en": "covers" }
+  },
+  {
+    "id": "reviews",
+    "category": "review",
+    "label": { "de": "begutachtet", "en": "reviews" },
+    "reverse_label": { "de": "wird begutachtet von", "en": "is reviewed by" }
+  }
+]

@@ -44,7 +44,7 @@ $projects = [];
 if (isset($activity['projects']) && count($activity['projects']) > 0) {
     $projects = $osiris->projects->find(
         ['_id' => ['$in' => $activity['projects']]],
-        ['projection' => ['_id' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
+        ['projection' => ['_id' => 1, 'acronym' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
     )->toArray();
 }
 
@@ -57,6 +57,16 @@ $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
 $tagName = '';
 if ($Settings->featureEnabled('tags')) {
     $tagName = $Settings->tagLabel();
+}
+
+$connected_activities = $osiris->activitiesConnections->find(
+    ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+)->toArray();
+
+// Nimm deinen bestehenden User-Kontext
+$user_units = DB::doc2Arr($USER['units'] ?? []);
+if (!empty($user_units)) {
+    $user_units = array_column($user_units, 'unit');
 }
 ?>
 
@@ -91,15 +101,11 @@ if ($Settings->featureEnabled('tags')) {
         $tplById = [];
         foreach (DB::doc2Arr($tpl['steps'] ?? []) as $ts) $tplById[$ts['id']] = $ts;
 
-        // Nimm deinen bestehenden User-Kontext
-        $units = DB::doc2Arr($USER['units'] ?? []);
-        if (!empty($units)) {
-            $units = array_column($units, 'unit');
-        }
+
         $userCtx = [
             'username' => $_SESSION['username'] ?? null,
             'roles'    => $Settings->roles ?? [],
-            'units'   => $units
+            'units'   => $user_units
         ];
 
         // Ermitteln, welche Steps in der aktuellen Phase vom User freigegeben werden dürfen
@@ -122,19 +128,6 @@ if ($Settings->featureEnabled('tags')) {
             }
             return $a['index'] <=> $b['index'];
         });
-
-        // render steps for modal and wf-mini
-        // $all_steps = [];
-        // foreach ($progress as $i => $s):
-        //     $all_steps[] = [
-        //         'id'       => $s['id'],
-        //         'label'    => $s['label'],
-        //         'index'    => intval($s['index'] ?? 0),
-        //         'required' => !empty($s['required']),
-        //         'orgScope' => ($s['orgScope'] ?? 'any'),
-        //     ];
-        // endforeach;
-
     }
     ?>
     <?php if (!empty($wf) && !empty($progress)): ?>
@@ -492,7 +485,6 @@ if ($Settings->featureEnabled('tags')) {
         <?php } ?>
 
         <?php if ($Settings->hasPermission('activities.lock')) { ?>
-            <input type="hidden" name="id" value="<?= $id ?>">
             <form action="<?= ROOTPATH ?>/crud/activities/<?= $id ?>/lock" method="post">
                 <?php if ($doc['locked'] ?? false) { ?>
                     <button class="btn text-success border-success mr-10" type="submit">
@@ -617,7 +609,7 @@ if ($Settings->featureEnabled('tags')) {
 
     <!-- check for basic things -->
     <?php
-    if (!isset($doc['authors']) || empty($doc['authors'] )) {
+    if (!isset($doc['authors']) || empty($doc['authors'])) {
         $doc['authors'] = [];
         if ((!isset($doc['editors']) || empty($doc['editors'])) && (!isset($doc['supervisors']) || empty($doc['supervisors']))) {
     ?>
@@ -758,7 +750,7 @@ if ($Settings->featureEnabled('tags')) {
                 <small><?= lang('Projects', 'Projekte') ?>: </small>
                 <br />
                 <?php foreach ($projects as $p) { ?>
-                    <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['name'] ?></a>
+                    <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['acronym'] ?? $p['name'] ?? '' ?></a>
                 <?php } ?>
             </div>
         <?php } ?>
@@ -893,6 +885,12 @@ if ($Settings->featureEnabled('tags')) {
                 <span class="index"><?= count($doc['authors']) ?></span>
             </a>
         <?php } ?>
+
+        <a onclick="navigate('activities')" id="btn-activities" class="btn">
+            <i class="ph ph-plugs" aria-hidden="true"></i>
+            <?= lang('Activities', 'Aktivitäten') ?>
+            <span class="index"><?= count($connected_activities) ?></span>
+        </a>
 
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <?php
@@ -1512,6 +1510,209 @@ if ($Settings->featureEnabled('tags')) {
         </div>
     <?php } ?>
 
+    <section id="activities" style="display: none;">
+        <h2 class="title">
+            <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+        </h2>
+
+
+        <?php if (!empty($connected_activities)) { ?>
+            <table class="table">
+                <?php foreach ($connected_activities as $con) { ?>
+                    <?php
+                    // check if activity is target or source
+                    $reverse = ($con['target_id'] == $id);
+                    $activity = $osiris->activities->findOne(['_id' => $reverse ? $con['source_id'] : $con['target_id']], ['projection' => [
+                        'rendered' => 1,
+                    ]]);
+                    $conLabel = $Format->getRelationshipLabel($con['relationship'], $reverse);
+                    ?>
+                    <tr>
+                        <td>
+                            <h5 class="m-0">
+                                <?= lang($conLabel['en'], $conLabel['de']) ?>
+                            </h5>
+                            <div><?= $activity['rendered']['web'] ?? '' ?></div>
+                        </td>
+                        <?php if ($edit_perm) { ?>
+                            <td>
+                                <form action="<?= ROOTPATH ?>/crud/activities/disconnect" method="post" class="d-inline-block ml-auto">
+                                    <input type="hidden" name="connection_id" value="<?= $con['_id'] ?>">
+                                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
+                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= lang('Disconnect activity', 'Aktivität trennen') ?>">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        <?php } ?>
+
+                    </tr>
+                <?php } ?>
+            </table>
+        <?php } else { ?>
+            <?= lang('No connected activities.', 'Noch keine Aktivitäten verknüpft.') ?>
+        <?php } ?>
+
+        <?php if ($edit_perm) { ?>
+
+            <div class="box padded">
+                <h3 class="title">
+                    <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                </h3>
+
+                <form action="<?= ROOTPATH ?>/crud/activities/connect" method="post">
+                    <input type="hidden" name="source_id" value="<?= $id ?>">
+                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
+                    <!-- relationship type -->
+                    <div class="form-group">
+                        <label for="relationship-type"><?= lang('Relationship type', 'Beziehungsart') ?></label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <select name="relationship" id="relationship-type" class="form-control" required>
+                                    <?php
+                                    $relationships = $Format->getRelationships();
+                                    foreach ($relationships as $rel) {
+                                        $key = $rel['id'];
+                                        $label = lang($rel['label']['en'], $rel['label']['de'] ?? null);
+                                        $rev = lang($rel['reverse_label']['en'], $rel['reverse_label']['de'] ?? null);
+                                    ?>
+                                        <option data-label="<?= $label ?>" data-reverse-label="<?= $rev ?>" value="<?= $key ?>"><?= $label ?></option>
+                                    <?php } ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <div class="custom-switch">
+                                            <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
+                                            <label for="swap-relationship-dir">
+                                                <?= lang('Swap direction', 'Richtung umdrehen') ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- input field with suggesting activities -->
+                    <div class="form-group" id="activity-suggest">
+                        <label for="activity-suggested"><?= lang('Select an activity to connect', 'Wähle eine Aktivität zum Verknüpfen') ?></label>
+                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?>">
+
+                        <div class="form-group font-size-12">
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
+                                <label for="activity-suggest-author"><?= lang('Only show my activities', 'Nur meine Aktivitäten anzeigen') ?></label>
+                            </div>
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
+                                <label for="activity-suggest-unit"><?= lang('Show activities from my unit(s)', 'Aktivitäten meiner Einheit(en) anzeigen') ?></label>
+                            </div>
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
+                                <label for="activity-suggest-all"><?= lang('Show all activities', 'Alle Aktivitäten anzeigen') ?></label>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="suggestions on-focus"></div>
+                    </div>
+                    <input type="hidden" name="target_id" id="activity-selected" required value="">
+
+                    <button type="submit" class="btn primary">
+                        <?= lang('Connect', 'Verknüpfen') ?>
+                    </button>
+                </form>
+            </div>
+            <style>
+                .suggestions {
+                    color: #464646;
+                    /* position: absolute; */
+                    margin: 10px auto;
+                    top: 100%;
+                    left: 0;
+                    /* height: 19.2rem; */
+                    overflow: auto;
+                    bottom: -3px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    min-width: 12rem;
+                    background-color: white;
+                    border: var(--border-width) solid #afafaf;
+                    /* visibility: hidden; */
+                    /* opacity: 0; */
+                    z-index: 100;
+                    -webkit-transition: opacity 0.4s linear;
+                    transition: opacity 0.4s linear;
+                }
+
+                .suggestions a {
+                    display: block;
+                    padding: 0.5rem;
+                    border-bottom: var(--border-width) solid #afafaf;
+                    color: #464646;
+                    text-decoration: none;
+                    width: 100%;
+                }
+
+                .suggestions a:hover {
+                    background-color: #f0f0f0;
+                }
+            </style>
+            <script>
+                $('#activity-suggested').on('input', function() {
+                    // prevent enter from submitting form
+                    $(this).closest('form').on('keypress', function(event) {
+                        if (event.keyCode == 13) {
+                            event.preventDefault();
+                        }
+                    })
+                    const val = $(this).val();
+                    if (val.length < 3) return;
+                    let filter = ''
+                    let limit = $('input[name="activity-search-limit"]:checked').val();
+                    if (limit == 'user') {
+                        filter = '?user=<?= urlencode($_SESSION['username']) ?>';
+                    } else if (limit == 'unit') {
+                        filter = '?unit=<?= implode(',', $user_units) ?>';
+                    } else {
+                        filter = '';
+                    }
+                    $.get('<?= ROOTPATH ?>/api/activities-suggest/' + val + filter, function(data) {
+                        $('#activity-suggest .suggestions').empty();
+                        console.log(data);
+                        data.data.forEach(function(d) {
+                            if (d.id.toString() == '<?= $id ?>') return; // prevent selecting itself
+                            $('#activity-suggest .suggestions').append(
+                                `<a data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
+                            )
+                        })
+
+                        // $('#activity-suggest .suggest').html(data);
+                    })
+                })
+                $('#activity-suggest .suggestions').on('click', 'a', function() {
+                    const activity_id = $(this).data('id');
+                    const activity_text = $(this).text();
+                    $('#activity-selected').val(activity_id);
+                    $('#activity-suggested').val(activity_text);
+                    $('#activity-suggest .suggestions').empty();
+                })
+
+                function swapRelationshipDirection() {
+                    // swap all the labels
+                    const select = $('#relationship-type');
+                    const isReverse = $('#swap-relationship-dir').is(':checked');
+                    select.find('option').each(function() {
+                        const label = $(this).data(isReverse ? 'reverse-label' : 'label');
+                        $(this).text(label);
+                    });
+                }
+            </script>
+        <?php } ?>
+
+    </section>
 
     <?php if ($Settings->featureEnabled('projects')) { ?>
         <section id="projects" style="display: none;">
