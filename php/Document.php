@@ -140,6 +140,7 @@ class Document extends Settings
         "teaching-category" => ["category"],
         "teaching-course-short" => ["title", "module", "module_id"],
         "teaching-course" => ["title", "module", "module_id"],
+        "topics" => ["topics"],
         "thesis" => ["category"],
         "thesis" => ["thesis"],
         "title" => ["title"],
@@ -149,7 +150,7 @@ class Document extends Settings
         "volume-issue-pages" => ["volume", "issue", "pages"],
         "volume" => ["volume"],
         "year" => ["year", "month", "day"],
-    ];
+        ];
 
     private $field_ids = [];
     private $relationship_types = [];
@@ -1415,6 +1416,12 @@ class Document extends Settings
                 return 'Unknown';
             case "title": // ["title"],
                 return $this->getVal('title');
+            case "topics": // ["topic"],
+                $topics = DB::doc2Arr($this->getVal('topics', []));
+                if (empty($topics)) return '';
+                $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
+                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('name', 'name_de'));
+                return implode(', ', $topics_arr);
             case "university": // ["publisher"],
                 return $this->getVal('publisher');
             case "version": // ["version"],
