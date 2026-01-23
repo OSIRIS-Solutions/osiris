@@ -142,14 +142,14 @@ class Coins
                 } else {
                     $docs = $this->db->activities->aggregate([
                         ['$match' => $filter],
-                        ['$project' => ['authors' => 1]],
-                        ['$unwind' => '$authors'],
-                        ['$match' => ['authors.user' => $user]],
+                        ['$project' => ['supervisors' => 1]],
+                        ['$unwind' => '$supervisors'],
+                        ['$match' => ['supervisors.user' => $user]],
                         [
                             '$group' => [
-                                '_id' => ['$toLower' => '$authors.user'],
+                                '_id' => ['$toLower' => '$supervisors.user'],
                                 'sum' => ['$sum' => ['$convert' => [
-                                    'input' => '$authors.sws',
+                                    'input' => '$supervisors.sws',
                                     'to' => 'int',
                                     'onError' => 0
                                 ]]],

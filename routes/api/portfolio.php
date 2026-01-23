@@ -174,7 +174,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         echo return_permission_denied();
         die;
     }
-    if ($id == 0){
+    if ($id == 0) {
         $group = $osiris->groups->findOne(['level' => 0]);
         $id = $group['id'];
     } else
@@ -1114,12 +1114,13 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
     header('Content-Type: application/json');
     include(BASEPATH . '/php/Modules.php');
+    $portfolio_types = $Settings->getActivitiesPortfolio(true);
     $id = DB::to_ObjectID($id);
     $result = [];
     $doc = $osiris->activities->findOne(
         ['_id' => $id]
     );
-    if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $Settings->getActivitiesPortfolio(true))) {
+    if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
         echo rest('Activity not found', 0, 404);
         die;
     }
@@ -1267,6 +1268,28 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         $result['topics'] = $topics;
     }
 
+    // add connected activities
+    $connected_activities = $osiris->activitiesConnections->find(
+        ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+    )->toArray();
+    $result['connected_activities'] = [];
+    foreach ($connected_activities as $conn) {
+        $reverse = ($conn['target_id'] == $id);
+        $doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
+            'rendered' => 1, 'subtype' => 1, 'hide' => 1
+        ]]);
+        $conLabel = $Format->getRelationshipLabel($conn['relationship'], $reverse);
+        if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
+            continue;
+        }
+        $result['connected_activities'][] = [
+            'id' => strval($doc['_id']),
+            'icon' => $doc['rendered']['icon'],
+            'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio']),
+            'print' => $doc['rendered']['print'] ?? null,
+            'relationship' => $conLabel
+        ];
+    }
     echo rest($result);
 });
 

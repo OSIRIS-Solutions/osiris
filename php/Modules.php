@@ -2899,9 +2899,9 @@ class Modules
             case "correction":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="correction">
-                    <input type="hidden" name="values[correction]" value="0">
+                    <input type="hidden" name="values[correction]" value="false">
                     <div class="custom-checkbox" id="correction-div">
-                        <input type="checkbox" id="correction" value="1" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
+                        <input type="checkbox" id="correction" value="true" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
                         <label for="correction"><?= $label ?></label>
                     </div>
                     <?= $this->render_help($help) ?>

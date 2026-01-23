@@ -45,6 +45,33 @@
                     <p><?= $data['abstract']; ?></p>
                 <?php endif; ?>
 
+                <?php if (!empty($data['connected_activities'])) { ?>
+                    <h3 class="title"><?= lang("Related Activities", "Verknüpfte Aktivitäten"); ?></h3>
+                    <table class="table">
+                        <tbody>
+                            <?php foreach ($data['connected_activities'] as $conn) { ?>
+                                <tr>
+                                    <td>
+                                       <div class="font-size-16 mb-10">
+                                        <b><?=lang('This', 'Dies')?> <?= lang($conn['relationship']['en'], $conn['relationship']['de'] ?? null); ?></b><br />
+                                       </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="w-50">
+                                         <!-- <i class="ph ph-arrow-elbow-down-right align-baseline"></i> -->
+                                                <?= $conn['icon']; ?>
+                                            </div>
+                                            <div class="w-full">
+                                                <?= $conn['html']; ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
+
+
                 <ul class="horizontal font-size-16">
                     <?php if (!empty($data['doi'])): ?>
                         <li>
