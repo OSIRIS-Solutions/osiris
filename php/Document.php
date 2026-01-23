@@ -150,7 +150,7 @@ class Document extends Settings
         "volume-issue-pages" => ["volume", "issue", "pages"],
         "volume" => ["volume"],
         "year" => ["year", "month", "day"],
-        ];
+    ];
 
     private $field_ids = [];
     private $relationship_types = [];
@@ -1815,7 +1815,7 @@ class Document extends Settings
                     $value = $this->get_field($value, '');
                 }
             }
-            if (empty($value)) {
+            if ($this->isEmptyValue($value)) {
                 $value = '';
             } elseif (is_array($value)) {
                 $value = implode(', ', $value);
@@ -1827,6 +1827,7 @@ class Document extends Settings
             }
             $vars['{' . $match . '}'] = ($value);
         }
+        $template = strtr($template, $vars);
 
         $pattern = "/%([^%]*)%/";
         preg_match_all($pattern, $template, $matches);
@@ -1840,8 +1841,18 @@ class Document extends Settings
             if (strpos($fields, '&') !== false) {
                 $allFilled = true;
                 foreach (explode('&', $fields) as $f) {
-                    $value = trim($this->get_field($f));
-                    if (empty($value) || $value == '-') {
+                    // negation?
+                    $negate = false;
+                    if (str_starts_with($f, '!')) {
+                        $negate = true;
+                        $f = substr($f, 1);
+                    }
+                    $value = $this->get_field($f);
+                    $value = is_string($value) ? trim($value) : $value;
+                    if ($negate && !$this->isEmptyValue($value)) {
+                        $allFilled = false;
+                        break;
+                    } else if (!$negate && $this->isEmptyValue($value)) {
                         $allFilled = false;
                         break;
                     }
@@ -1850,8 +1861,17 @@ class Document extends Settings
             } elseif (strpos($fields, '|') !== false) {
                 $anyFilled = false;
                 foreach (explode('|', $fields) as $f) {
-                    $value = trim($this->get_field($f));
-                    if (!empty($value) && $value != '-') {
+                    $negate = false;
+                    if (str_starts_with($f, '!')) {
+                        $negate = true;
+                        $f = substr($f, 1);
+                    }
+                    $value = $this->get_field($f);
+                    $value = is_string($value) ? trim($value) : $value;
+                    if ($negate && $this->isEmptyValue($value)) {
+                        $anyFilled = true;
+                        break;
+                    } else if (!$negate && !$this->isEmptyValue($value)) {
                         $anyFilled = true;
                         break;
                     }
@@ -1859,9 +1879,18 @@ class Document extends Settings
                 if (!$anyFilled) $text = '';
             } else {
                 // single field as before
+                $negate = false;
+                if (str_starts_with($fields, '!')) {
+                    $negate = true;
+                    $fields = substr($fields, 1);
+                }
                 $value = $this->get_field($fields, '');
-                if (!empty($value)) $value = trim($value);
-                if (empty($value) || $value == '-') $text = '';
+                $value = is_string($value) ? trim($value) : $value;
+                if ($negate && !$this->isEmptyValue($value)) {
+                    $text = '';
+                } else if (!$negate && $this->isEmptyValue($value)) {
+                    $text = '';
+                }
             }
             $vars['%' . $match . '%'] = $text;
         }
@@ -1882,5 +1911,30 @@ class Document extends Settings
         $line = preg_replace('/<br *\/?>,\s*/', '<br />', $line);
 
         return $line;
+    }
+
+    private function normalizeValue($value): string
+    {
+        if ($this->isEmptyValue($value)) return '';
+
+        // Arrays
+        if (is_array($value)) {
+            return implode(', ', $value);
+        }
+
+        // MongoDB types
+        if ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
+            return implode(', ', DB::doc2Arr($value));
+        }
+
+        return (string)$value;
+    }
+
+    private function isEmptyValue($v): bool
+    {
+        if (is_null($v)) return true;
+        if (is_string($v)) return (trim($v) === '' || $v === '-');
+        if (is_array($v)) return count($v) === 0;
+        return false;
     }
 }
