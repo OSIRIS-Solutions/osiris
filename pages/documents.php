@@ -46,6 +46,7 @@
                     <th class="text-end"><?= lang('Actions', 'Aktionen') ?></th>
                     <th><?= lang('Document type', 'Dokumententyp') ?></th>
                     <th><?= lang('File type', 'Dateityp') ?></th>
+                    <th><?= lang('Linked entity', 'Verknüpfte Entität') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -146,6 +147,7 @@
                         </td>
                         <td><?= $label ?></td>
                         <td><?= strtoupper($doc['extension'] ?? '') ?></td>
+                        <td><?= $doc['type'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -157,6 +159,36 @@
             <div class="title">Filter</div>
 
             <div id="active-filters"></div>
+
+            <h6>
+                <?= lang('By linked entity', 'Nach verknüpfter Entität') ?>
+            </h6>
+            <div class="filter">
+                <table id="filter-entity" class="table small simple">
+                    <tr>
+                        <td>
+                            <a onclick="filterDataTable(this, 'activities', 5)">
+                                <?= lang('Activities', 'Aktivitäten') ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a onclick="filterDataTable(this, 'proposals', 5)">
+                                <?= lang('Proposals', 'Anträge') ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a onclick="filterDataTable(this, 'nagoya-permit', 5)">
+                                <?= lang('Nagoya Permits', 'Nagoya Genehmigungen') ?>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
             <h6>
                 <?= lang('By document type', 'Nach Dokumententyp') ?>
                 <a class="float-right" onclick="filterDataTable('#filter-category .active', null, 3)"><i class="ph ph-x"></i></a>
@@ -180,12 +212,30 @@
 
 
 <script>
-    const headers = [
-        { key: 'file', title: '<?= lang("File", "Datei") ?>' },
-        { key: 'linked_to', title: '<?= lang("Linked to", "Verknüpft mit") ?>' },
-        { key: 'actions', title: '<?= lang("Actions", "Aktionen") ?>' },
-        { key: 'document_type', title: '<?= lang("Document type", "Dokumententyp") ?>' },
-        { key: 'file_type', title: '<?= lang("File type", "Dateityp") ?>' },
+    const headers = [{
+            key: 'file',
+            title: '<?= lang("File", "Datei") ?>'
+        },
+        {
+            key: 'linked_to',
+            title: '<?= lang("Linked to", "Verknüpft mit") ?>'
+        },
+        {
+            key: 'actions',
+            title: '<?= lang("Actions", "Aktionen") ?>'
+        },
+        {
+            key: 'document_type',
+            title: '<?= lang("Document type", "Dokumententyp") ?>'
+        },
+        {
+            key: 'file_type',
+            title: '<?= lang("File type", "Dateityp") ?>'
+        },
+        {
+            key: 'linked_entity',
+            title: '<?= lang("Linked entity", "Verknüpfte Entität") ?>'
+        },
     ];
     let dataTable = $('#uploadsTable').DataTable({
         pageLength: 25,
@@ -198,6 +248,10 @@
             {
                 orderable: false,
                 searchable: false
+            },
+            {
+                visible: false,
+                searchable: true
             },
             {
                 visible: false,
@@ -251,8 +305,9 @@
 
     }
 
-    
+
     const activeFilters = $('#active-filters')
+
     function filterDataTable(btn, filter = null, column = 1) {
         var tr = $(btn).closest('tr')
         var table = tr.closest('table')
@@ -268,17 +323,17 @@
         } else {
             table.find('.active').removeClass('active')
             tr.addClass('active')
-            
-            
+
+
             let searchValue = filter;
             let regex = false;
             let smart = false;
-            if (column == 9 || column == 10) {
+            if (column == 5) {
                 searchValue = '^' + filter + '$';
                 regex = true;
                 smart = false;
             }
-                console.log(searchValue);
+            console.log(searchValue);
 
             dataTable.column(column).search(searchValue, regex, smart).draw();
 
@@ -294,5 +349,4 @@
         }
         writeHash(hash)
     }
-
 </script>
