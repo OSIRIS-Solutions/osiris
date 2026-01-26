@@ -53,6 +53,13 @@ Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So
 - Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt.
 - Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
 
+### Dokumente von Aktivitäten
+Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und dadurch deutlich verbessert:
+- Der Bereich "Dokumente" in Aktivitäten wurde komplett überarbeitet und bietet jetzt eine deutlich bessere Übersicht und Handhabung.
+- Es ist nun möglich, die Art der Dokumente anzugeben und eine Beschreibung hinzuzufügen.
+- Für die Arten von Dokumenten gibt es jetzt eine Vokabularliste, die im Admin-Bereich verwaltet werden kann.
+- Es gibt einen neuen Bereich "Dokumente", in dem alle Dokumente aus Aktivitäten und Projekten zentral angezeigt werden. Dazu wurde ein neues Zugriffsrecht (Dokumente sehen) dem Bereich "Ansichten" hinzugefügt, das standardmäßig nicht vergeben ist.
+
 ### Aktivitäten verknüpfen
 
 - Es wurde die Möglichkeit hinzugefügt, Aktivitäten miteinander zu verknüpfen, um Beziehungen wie "ist eine Übersetzung von", "ist eine erweiterte Version von" oder "ist ein Preprint von" abzubilden. Dabei können beliebige Aktivitätstypen miteinander verknüpft werden.

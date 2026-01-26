@@ -1843,51 +1843,54 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                             $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
                     ?>
                             <tr>
+                                <td class="font-size-18 text-center text-muted" style="width: 50px;">
+                                    <i class='ph ph-file ph-<?= getFileIcon($doc['extension'] ?? '') ?>'></i>
+                                </td>
                                 <td>
                                     <?php if ($edit_perm) : ?>
-                                    <div class="float-right">
-                                        <div class="dropdown">
-                                            <button class="btn link" data-toggle="dropdown" type="button" id="edit-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
-                                                <i class="ph ph-edit text-primary"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-doc-<?= $doc['_id'] ?>">
-                                                <div class="content">
-                                                    <form action="<?= ROOTPATH ?>/data/document/update" method="post">
-                                                        <div class="form-group floating-form">
-                                                            <select class="form-control" name="name" placeholder="Name" required>
-                                                                <?php
-                                                                $vocab = $Vocabulary->getValues('activity-document-types');
-                                                                foreach ($vocab as $v) { ?>
-                                                                    <option value="<?= $v['id'] ?>" <?= ($doc['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                            <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                                                            <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $doc['description'] ?? '' ?></textarea>
-                                                        </div>
-                                                        <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
-                                                        <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
-                                                    </form>
+                                        <div class="float-right">
+                                            <div class="dropdown">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="edit-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-edit text-primary"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/document/update" method="post">
+                                                            <div class="form-group floating-form">
+                                                                <select class="form-control" name="name" placeholder="Name" required>
+                                                                    <?php
+                                                                    $vocab = $Vocabulary->getValues('activity-document-types');
+                                                                    foreach ($vocab as $v) { ?>
+                                                                        <option value="<?= $v['id'] ?>" <?= ($doc['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                                                                <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $doc['description'] ?? '' ?></textarea>
+                                                            </div>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-trash text-danger"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/delete" method="post">
+                                                            <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="dropdown">
-                                            <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
-                                                <i class="ph ph-trash text-danger"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
-                                                <div class="content">
-                                                    <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                                                        <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
-                                                        <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
-                                                        <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <?php endif; ?>
                                     <h6 class="m-0">
                                         <a href="<?= $file_url ?>" class="">
