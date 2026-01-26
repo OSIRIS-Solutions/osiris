@@ -675,9 +675,9 @@ function dump($element, $as_json = true)
 function bool_icon($bool)
 {
     if ($bool) {
-        return '<i class="ph ph-check text-success"></i>';
+        return '<i class="ph ph-check-circle text-success"></i>';
     } else {
-        return '<i class="ph ph-x text-danger"></i>';
+        return '<i class="ph ph-x-circle text-danger"></i>';
     }
 }
 

@@ -615,6 +615,16 @@ class Document extends Settings
         return Document::commalist($authors, $separator) . $append;
     }
 
+    public static function getPosition($position){
+        $positions = [
+            'first' => lang('First author', 'Erstautor'),
+            'last' => lang('Last author', 'Letztautor'),
+            'middle' => lang('Middle author', 'Mittelautor'),
+            'corresponding' => lang('Corresponding author', 'Korrespondierender Autor'),
+        ];
+        return $positions[$position] ?? ucfirst($position) . ' author';
+    }
+
     public function getAffiliationTypes($key = 'authors')
     {
         if (!isset($this->doc[$key]) || empty($this->doc[$key])) {

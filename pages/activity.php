@@ -1274,123 +1274,264 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
 
 
             <div class="col-lg-6">
-                <?php
-                $units = $doc['units'] ?? [];
-                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
-                foreach ($typeFields as $field_id => $props) {
-                    if (!in_array($field_id, $authorModules)) {
-                        continue;
+                <style>
+                    /* --- Author chips / pills --- */
+                    .author-chips {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px 10px;
+                        align-items: center;
                     }
-                    $role = 'authors';
-                    if ($field_id == 'supervisor' || $field_id == 'supervisor-thesis') {
-                        $role = 'supervisors';
-                    } elseif ($field_id == 'editor') {
-                        $role = 'editors';
+
+                    .author-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        padding: 2px 8px;
+                        border-radius: 999px;
+                        font-size: 12px;
+                        line-height: 1.4;
+                        white-space: nowrap;
+                        background: var(--gray-100, #f2f2f2);
+                        color: var(--gray-800, #333);
+                    }
+
+                    /* .author-chip i {
+                        font-size: 14px;
+                        opacity: 0.8;
+                    } */
+
+                    .author-chip.success {
+                        background: var(--success-color-20);
+                        color: var(--success-color-dark);
+                    }
+
+                    .author-chip.neutral {
+                        background: #eee;
+                        color: #555;
+                    }
+
+                    .author-units {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px;
+                        align-items: center;
+                    }
+
+                    .author-unit {
+                        padding: 2px 6px;
+                        font-size: 10px;
+                        border-radius: 100px;
+                        background: #f7f7f7;
+                        border: 1px solid #e0e0e0;
+                        color: #444;
+                    }
+
+                    .author-unit:hover {
+                        background: #ececec;
+                        text-decoration: none;
+                    }
+
+                    /* Optional: only show claim on hover (less visual noise) */
+                    .author-row .claim-action {
+                        opacity: 0;
+                        transition: opacity 0.15s ease;
+                    }
+
+                    .author-row:hover .claim-action {
+                        opacity: 1;
+                    }
+                </style>
+
+                <?php
+                // --- Minimal helper: central role mapping (business logic) ---
+                function author_role_from_field(string $field_id): ?string
+                {
+                    return match ($field_id) {
+                        'supervisor', 'supervisor-thesis' => 'supervisors',
+                        'editor' => 'editors',
+                        'authors', 'author-table', 'scientist' => 'authors',
+                        default => null,
+                    };
+                }
+
+                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+
+                foreach ($typeFields as $field_id => $props) {
+
+                    if (!in_array($field_id, $authorModules, true)) continue;
+
+                    $role = author_role_from_field($field_id);
+                    if ($role === null) continue;
+
+                    $authors = $activity[$role] ?? [];
+                    if (empty($authors)) continue;
+
+                    $canEdit = ($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'));
+
+                    // --- Configure optional third column (avoid duplicated if/elseif in thead + tbody) ---
+                    $thirdCol = null;
+                    if ($sws) {
+                        $thirdCol = [
+                            'label' => 'SWS',
+                            'value' => fn($a) => (int)($a['sws'] ?? 0),
+                        ];
+                    } elseif ($supervisorThesis) {
+                        $thirdCol = [
+                            'label' => lang('Role', 'Rolle'),
+                            'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
+                        ];
+                    } elseif ($role === 'authors') {
+                        $thirdCol = [
+                            'label' => lang('Position', 'Position'),
+                            'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
+                        ];
                     }
                 ?>
 
-                    <div class="btn-toolbar mb-10 float-sm-right">
-                        <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
+                    <div class="d-flex align-items-start justify-content-between gap-10 mb-10">
+                        <h2 class="mt-0 mb-0"><?= $Modules->get_name($field_id) ?></h2>
+
+                        <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
                                 <?= lang("Edit", "Bearbeiten") ?>
                             </a>
-                        <?php } ?>
+                        <?php endif; ?>
                     </div>
-
-                    <h2 class="mt-0">
-                        <!-- <?php if ($role == 'authors') {
-                                    echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
-                                } elseif ($role == 'supervisors') {
-                                    echo lang('Supervisor(s)', 'Betreuer');
-                                } else {
-                                    echo lang('Editor(s)', 'Herausgeber');
-                                } ?> -->
-                        <?= $Modules->get_name($field_id) ?>
-                    </h2>
-
 
                     <table class="table mb-20">
                         <thead>
                             <tr>
-                                <th><?= lang('Last', 'Nachname') ?></th>
-                                <th><?= lang('First', 'Vorname') ?></th>
-
-                                <?php if ($sws) : ?>
-                                    <th>SWS</th>
-                                <?php elseif ($supervisorThesis) : ?>
-                                    <th><?= lang('Role', 'Rolle') ?></th>
-                                <?php elseif ($role == 'authors') : ?>
-                                    <th>Position</th>
+                                <th><?= lang('Person', 'Person') ?></th>
+                                <!-- <th><?= lang('Details', 'Details') ?></th> -->
+                                <?php if (!empty($thirdCol)): ?>
+                                    <th><?= $thirdCol['label'] ?></th>
                                 <?php endif; ?>
-                                <th>Unit</th>
-                                <th>User</th>
                             </tr>
                         </thead>
-                        <tbody id="<?= $role ?>">
-                            <?php foreach ($activity[$role] ?? [] as $i => $author) {
+
+                        <tbody id="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                            <?php foreach ($authors as $i => $author):
+
+                                // --- Name "Last, First" (inline; used once) ---
+                                $name = $author['last'] ?? '';
+                                if (!empty($author['first'])) $name .= ', ' . $author['first'];
+                                $name = trim($name);
+
+                                $hasUser = !empty($author['user']);
+                                $isAffiliated = (($author['aoi'] ?? 0) == 1);
+
+                                // Unique dropdown id per row (prevents collisions)
+                                $dropdownId = 'claim-dd-' . $role . '-' . $i;
                             ?>
-                                <tr>
-                                    <td class="<?= (($author['aoi'] ?? 0) == '1' ? 'font-weight-bold' : '') ?>">
-                                        <?php if (isset($author['user']) && !empty($author['user'])) { ?>
-                                            <a href="<?= ROOTPATH ?>/profile/<?= $author['user'] ?>">
-                                                <?= $author['last'] ?? '' ?>
+                                <tr class="author-row">
+                                    <td class="text-nowrap">
+                                        <?php if ($hasUser): ?>
+                                            <a href="<?= ROOTPATH ?>/profile/<?= htmlspecialchars($author['user'], ENT_QUOTES) ?>">
+                                                <?= htmlspecialchars($name) ?>
                                             </a>
-                                        <?php } else { ?>
-                                            <?= $author['last'] ?? '' ?>
-                                        <?php } ?>
-                                    </td>
-                                    <td>
-                                        <?= $author['first'] ?? '' ?>
-                                    </td>
-                                    <?php if ($sws) : ?>
-                                        <td><?= $author['sws'] ?? 0 ?></td>
-                                    <?php elseif ($supervisorThesis) : ?>
-                                        <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
-                                    <?php elseif ($role == 'authors') : ?>
-                                        <td><?= $author['position'] ?? '' ?></td>
-                                    <?php endif; ?>
-                                    <td>
-                                        <?php
-                                        if (isset($author['units']) && !empty($author['units'])) {
-                                            foreach ($author['units'] as $unit) {
-                                                echo "<a href='" . ROOTPATH . "/groups/view/$unit' class='mr-10'>$unit</a>";
-                                            }
-                                        } ?>
-                                    </td>
-                                    <td>
-                                        <?php if (isset($author['user']) && !empty($author['user'])) : ?>
-                                            <span data-toggle="tooltip" data-title="<?= lang('Author approved activity?', 'Autor hat die Aktivität bestätigt?') ?>">
-                                                <?= bool_icon($author['approved'] ?? 0) ?>
-                                            </span>
-                                        <?php elseif (!$user_activity) : ?>
-                                            <div class="dropdown">
-                                                <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                                                    <?= lang('Claim', 'Beanspruchen') ?>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="dropdown-1">
-                                                    <div class="content">
-                                                        <small class="d-block text-danger mb-10">
-                                                            <?= lang(
-                                                                'You claim that you are this author.<br> This activity will be added to your list and the author name will be added to your list of alternative names.',
-                                                                'Du beanspruchst, dass du diese Person bist.<br> Du fügst diese Aktivität deiner Liste hinzu und den Namen zur Liste deiner alternativen Namen.'
-                                                            ) ?>
-                                                        </small>
-                                                        <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
-                                                            <input type="hidden" name="role" value="<?= $role ?>">
-                                                            <input type="hidden" name="index" value="<?= $i ?>">
-                                                            <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
-                                                            <button class="btn btn-block" type="submit"><?= lang('Claim', 'Beanspruchen') ?></button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($name) ?>
                                         <?php endif; ?>
+
+                                        <?php if (!empty($author['orcid'])): ?>
+                                            <a href="https://orcid.org/<?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>"
+                                                target="_blank" rel="noopener"
+                                                data-toggle="tooltip"
+                                                data-title="ORCID: <?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>">
+                                                <img loading="lazy" decoding="async" width="16" height="16"
+                                                    class="orcid-img" style="width:16px;"
+                                                    src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID">
+                                            </a>
+                                        <?php endif; ?>
+                                        <br>
+                                        <div class="author-chips font-size-12 text-muted">
+
+                                            <?php if ($isAffiliated): ?>
+                                                <span class="author-chip success"
+                                                    data-toggle="tooltip"
+                                                    data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
+                                                    <i class="ph ph-handshake"></i>
+                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if ($hasUser): ?>
+                                                <?php if ($author['approved']) { ?>
+                                                    <span class="author-chip neutral"
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
+                                                        <?= bool_icon(true) ?>
+                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                    </span>
+                                                <?php } else { ?>
+                                                    <span class="author-chip neutral"
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Author has not yet approved this activity', 'Autor hat die Aktivität noch nicht bestätigt') ?>">
+                                                        <?= bool_icon(false) ?>
+                                                        <?= lang('Pending', 'Ausstehend') ?>
+                                                    </span>
+                                                <?php } ?>
+
+
+                                            <?php elseif (!$user_activity): ?>
+                                                <span class="claim-action">
+                                                    <div class="dropdown d-inline-block">
+                                                        <button class="btn small" data-toggle="dropdown" type="button"
+                                                            id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
+                                                            <?= lang('Claim', 'Beanspruchen') ?>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
+                                                            <div class="content font-size-12">
+                                                                <div class="d-block text-danger mb-10">
+                                                                    <?= lang(
+                                                                        'You claim that you are this author.<br> This activity will be added to your list and the author name will be added to your list of alternative names.',
+                                                                        'Du beanspruchst, dass du diese Person bist.<br> Du fügst diese Aktivität deiner Liste hinzu und den Namen zur Liste deiner alternativen Namen.'
+                                                                    ) ?>
+                                                                </div>
+                                                                <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
+                                                                    <input type="hidden" name="role" value="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                                                                    <input type="hidden" name="index" value="<?= (int)$i ?>">
+                                                                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
+                                                                    <button class="btn block small" type="submit">
+                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($author['units'])): ?>
+                                                <div class="author-chip author-units">
+                                                    <span class=""
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Participating units', 'Beteiligte Einheiten') ?>">
+                                                        <i class="ph ph-users-three"></i>
+                                                    </span>
+                                                    <?php foreach ($author['units'] as $unit):
+                                                        $u = htmlspecialchars((string)$unit, ENT_QUOTES);
+                                                    ?>
+                                                        <a class="author-unit" href="<?= ROOTPATH ?>/groups/view/<?= $u ?>">
+                                                            <?= $u ?>
+                                                        </a>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
+
+                                        </div>
                                     </td>
+
+                                    <?php if (!empty($thirdCol)): ?>
+                                        <td><?= $thirdCol['value']($author) ?></td>
+                                    <?php endif; ?>
                                 </tr>
-                            <?php } ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
+
                 <?php } ?>
 
                 <h3>
@@ -1893,7 +2034,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                         </div>
                                     <?php endif; ?>
                                     <h6 class="m-0">
-                                        <a href="<?= $file_url ?>"  target="_blank" rel="noopener">
+                                        <a href="<?= $file_url ?>" target="_blank" rel="noopener">
                                             <?= $Vocabulary->getValue('activity-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges')); ?>
                                             <i class="ph ph-download"></i>
                                         </a>
