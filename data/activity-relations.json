@@ -31,6 +31,12 @@
     "reverse_label": { "de": "wird zusammengefasst in", "en": "is summarized in" }
   },
   {
+    "id": "documents",
+    "category": "research_output",
+    "label": { "de": "dokumentiert", "en": "documents" },
+    "reverse_label": { "de": "wird dokumentiert in", "en": "is documented in" }
+  },
+  {
     "id": "produces",
     "category": "research_output",
     "label": { "de": "erzeugt", "en": "produces" },

@@ -754,20 +754,25 @@ function getFileIcon($type)
 {
     switch ($type) {
         case 'pdf':
+            return 'file-pdf';
+        case 'txt':
+            return 'file-txt';
+        case 'md':
+            return 'file-md';
         case 'csv':
-            return 'file-' . $type;
+            return 'file-csv';
         case 'xlsx':
         case 'xls':
-            return 'file-excel';
+            return 'file-xls';
         case 'pptx':
         case 'ppt':
-            return 'file-powerpoint';
+            return 'file-ppt';
         case 'docx':
         case 'doc':
-            return 'file-word';
+            return 'file-doc';
         case 'zip':
         case 'gz':
-            return 'file-zipper';
+            return 'file-zip';
         case 'png':
         case 'gif':
         case 'jpg':
@@ -779,7 +784,7 @@ function getFileIcon($type)
         case 'json':
             return 'file-code';
         default:
-            return 'file-text';
+            return 'file';
     }
 }
 

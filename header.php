@@ -771,6 +771,14 @@ $pageactive = function ($p) use ($page) {
                             </a>
                         <?php } ?>
 
+                        <?php if ($Settings->hasPermission('documents')) { ?>
+                            <a href="<?= ROOTPATH ?>/documents" class="with-icon <?= $pageactive('documents') ?>">
+                                <i class="ph ph-files" aria-hidden="true"></i>
+                                <?= lang('Documents', 'Dokumente') ?>
+                            </a>
+                        <?php } ?>
+                        
+
 
                         <?php if ($Settings->featureEnabled('concepts')) { ?>
                             <a href="<?= ROOTPATH ?>/concepts" class="with-icon <?= $pageactive('concepts') ?>">

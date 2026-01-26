@@ -720,6 +720,116 @@
     ]
   },
   {
+    "id": "activity-document-types",
+    "category": "Activity",
+    "name": "Activity Document Types",
+    "name_de": "Arten von Aktivitätsdokumenten",
+    "description": "This controlled vocabulary defines standardized document types commonly associated with various academic and research activities.",
+    "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen, die im Rahmen verschiedener akademischer und Forschungsaktivitäten häufig verwendet werden.",
+    "values": [
+      {
+        "id": "file",
+        "de": "Datei",
+        "en": "File"
+      },
+      {
+        "id": "full_text",
+        "de": "Volltext",
+        "en": "Full text"
+      },
+      {
+        "id": "accepted_manuscript",
+        "de": "Akzeptiertes Manuskript",
+        "en": "Accepted manuscript"
+      },
+      {
+        "id": "proof",
+        "de": "Korrekturabzug (Proof)",
+        "en": "Proof"
+      },
+      {
+        "id": "supplementary_material",
+        "de": "Supplementary Material",
+        "en": "Supplementary material"
+      },
+      {
+        "id": "presentation_slides",
+        "de": "Präsentationsfolien",
+        "en": "Presentation slides"
+      },
+      {
+        "id": "poster",
+        "de": "Poster",
+        "en": "Poster"
+      },
+      {
+        "id": "certificate",
+        "de": "Zertifikat",
+        "en": "Certificate"
+      },
+      {
+        "id": "review_report",
+        "de": "Gutachten",
+        "en": "Review report"
+      },
+      {
+        "id": "editor_decision",
+        "de": "Editorentscheidung",
+        "en": "Editorial decision"
+      },
+      {
+        "id": "cover_letter",
+        "de": "Anschreiben",
+        "en": "Cover letter"
+      },
+      {
+        "id": "response_to_reviewers",
+        "de": "Antwort an Gutachter:innen",
+        "en": "Response to reviewers"
+      },
+      {
+        "id": "dataset_description",
+        "de": "Datensatzbeschreibung",
+        "en": "Dataset description"
+      },
+      {
+        "id": "documentation",
+        "de": "Dokumentation",
+        "en": "Documentation"
+      },
+      {
+        "id": "teaching_material",
+        "de": "Lehrmaterial",
+        "en": "Teaching material"
+      },
+      {
+        "id": "exam_material",
+        "de": "Prüfungsunterlagen",
+        "en": "Exam material"
+      },
+      {
+        "id": "agenda",
+        "de": "Agenda",
+        "en": "Agenda"
+      },
+      {
+        "id": "minutes",
+        "de": "Protokoll",
+        "en": "Minutes"
+      },
+      {
+        "id": "contract",
+        "de": "Vertrag",
+        "en": "Contract"
+      },
+      {
+        "id": "other",
+        "de": "Sonstiges",
+        "en": "Other"
+      }
+    ]
+  },
+  {
     "id": "political_consultation",
     "category": "Activity",
     "name": "Type of Political Consultation",

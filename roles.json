@@ -168,6 +168,13 @@
                 "id": "raw-data",
                 "de": "Die Rohdaten in der Aktivität sehen",
                 "en": "See raw data for activities"
+            },
+            {
+                "id": "documents",
+                "de": "Dokumentenbrowser sehen",
+                "en": "See document browser",
+                "comment_de": "Nutzende können alle Dokumente in einer Übersicht sehen, wenn sie diese Berechtigung haben.",
+                "comment_en": "Users can see all documents in an overview if they have this permission."
             }
         ]
     },

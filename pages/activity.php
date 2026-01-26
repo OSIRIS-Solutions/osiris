@@ -19,8 +19,10 @@
 use chillerlan\QRCode\{QRCode, QROptions};
 
 include_once BASEPATH . "/php/Modules.php";
-
 $Modules = new Modules($doc);
+
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 
 // check if this is an ongoing activity type
 $ongoing = false;
@@ -68,7 +70,17 @@ $user_units = DB::doc2Arr($USER['units'] ?? []);
 if (!empty($user_units)) {
     $user_units = array_column($user_units, 'unit');
 }
+
+$documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)])->toArray();
 ?>
+
+<style>
+    .pills {
+        position: sticky;
+        top: 8rem;
+        z-index: 10;
+    }
+</style>
 
 <?php if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) { ?>
     <?php
@@ -318,6 +330,12 @@ if (!empty($user_units)) {
         </div>
 
 
+
+        <style>
+            .pills {
+                top: 9rem;
+            }
+        </style>
     <?php endif; ?>
 
 
@@ -386,21 +404,6 @@ if (!empty($user_units)) {
         border-radius: .5rem; */
     }
 
-    .filelink {
-        display: block;
-        border: var(--border-width) solid var(--border-color);
-        border-radius: var(--border-radius);
-        color: inherit !important;
-        padding: .5rem 1rem;
-        margin: 0 0 1rem;
-        background: white;
-    }
-
-    .filelink:hover {
-        text-decoration: none;
-        background-color: rgba(0, 110, 183, 0.05);
-    }
-
     .show-on-hover:hover .invisible {
         visibility: visible !important;
     }
@@ -439,26 +442,6 @@ if (!empty($user_units)) {
                 </a>
             </div>
         <?php } ?>
-
-        <?php if ($upload_possible) { ?>
-            <div class="alert signal mb-20">
-                <h3 class="title">
-                    <?= lang('For the good practice: ', 'Für die gute Praxis:') ?>
-                </h3>
-                <?= lang(
-                    'Upload now all relevant files for this activity (e.g. as PDF) to have them available for documentation and exchange.',
-                    'Lade jetzt die relevanten Dateien (z.B. PDF) hoch, um sie für die Dokumentation parat zu haben.'
-                ) ?>
-                <i class="ph ph-smiley"></i>
-                <b><?= lang('Thank you!', 'Danke!') ?></b>
-                <br>
-                <a href="#upload-files" class="btn signal">
-                    <i class="ph ph-upload"></i>
-                    <?= lang('Upload files', 'Dateien hochladen') ?>
-                </a>
-            </div>
-        <?php } ?>
-
     <?php } ?>
 
     <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -932,21 +915,13 @@ if (!empty($user_units)) {
 
         <?php
         if ($upload_possible):
-            $count_files = count($doc['files'] ?? []);
-            if ($count_files) :
+            $count_files = count($documents);
         ?>
-                <a onclick="navigate('files')" id="btn-files" class="btn">
-                    <i class="ph ph-files" aria-hidden="true"></i>
-                    <?= lang('Files', 'Dateien') ?>
-                    <span class="index"><?= $count_files ?></span>
-                </a>
-
-            <?php else : ?>
-                <a href="#upload-files" class="btn">
-                    <i class="ph ph-plus-circle"></i>
-                    <?= lang('Upload files', 'Datei hochladen') ?>
-                </a>
-            <?php endif; ?>
+            <a onclick="navigate('files')" id="btn-files" class="btn">
+                <i class="ph ph-files" aria-hidden="true"></i>
+                <?= lang('Files', 'Dateien') ?>
+                <span class="index"><?= $count_files ?></span>
+            </a>
         <?php endif; ?>
 
         <?php if ($Settings->featureEnabled('concepts')) { ?>
@@ -1822,47 +1797,179 @@ if (!empty($user_units)) {
     <?php
     if ($upload_possible):
     ?>
+        <section id="files" style="display: none; max-width: 60rem;">
+            <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
+            <?php
+            // check for legacy files
+            $files = $doc['files'] ?? array();
+            if (!empty($files)) : ?>
+                <div class="box padded">
+                    <?php foreach ($files as $file) :
+                        $doctype = $file['type'] ?? 'file';
+                    ?>
+                        <div class="">
+                            <i class='ph ph-file ph-<?= $icon ?>'></i>
+                            <?= $file['filename'] ?>
+                            <div class="d-flex justify-content-between">
+                                <a href="<?= $file['filepath'] ?>" class="btn small primary"><i class="ph ph-download"></i> Download</a>
+                                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" class="d-inline-block">
+                                    <input type="hidden" name="delete" value="<?= $file['filename'] ?>">
 
-        <div class="modal" id="upload-files" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                        <span aria-hidden="true">&times;</span>
-                    </a>
-                    <h5 class="title">
-                        <?= lang('Upload files', 'Dateien hochladen') ?>
-                    </h5>
-                    <div>
-                        <?php
-                        include BASEPATH . "/components/upload-files.php";
-                        ?>
+                                    <button class="btn small danger" type="submit">
+                                        <i class="ph-duotone ph-trash text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <!-- hint to migrate -->
+                    <div class="alert signal mt-20">
+                        <b>Info:</b>
+                        <?= lang(
+                            'These are legacy files. Please re-upload them using the new document upload below or have an admin migrate them to benefit from the new features.',
+                            'Dies sind alte Dateien. Bitte lade sie mit dem neuen Dokumenten-Upload unten erneut hoch oder lasse sie von einem Admin migrieren, um von den neuen Funktionen zu profitieren.'
+                        ) ?>
                     </div>
                 </div>
-            </div>
-        </div>
-
-
-        <section id="files" style="display: none;">
-            <div class="btn-toolbar float-sm-right">
-                <a href="#upload-files" class="btn secondary">
-                    <i class="ph ph-upload"></i>
-                    <?= lang('Upload', 'Hochladen') ?>
-                </a>
-            </div>
-
-            <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
-
-            <?php if (!empty($doc['files'])) : ?>
-                <?php foreach ($doc['files'] as $file) : ?>
-                    <a href="<?= $file['filepath'] ?>" target="_blank" class="filelink">
-                        <i class="ph ph-<?= getFileIcon($file['filetype']) ?> mr-10 ph-2x text-osiris"></i>
-
-                        <?= $file['filename'] ?>
-                    </a>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <span class="text-signal"><?= lang('No files attached', 'Noch keine Dateien hochgeladen') ?></span>
             <?php endif; ?>
+
+            <table class="table">
+                <tbody>
+                    <?php
+                    if (empty($documents)) {
+                        echo '<tr><td>' . lang('No documents available.', 'Keine Dokumente verfügbar.') . '</td></tr>';
+                    } else {
+                        foreach ($documents as $doc) {
+                            $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+                    ?>
+                            <tr>
+                                <td>
+                                    <?php if ($edit_perm) : ?>
+                                    <div class="float-right">
+                                        <div class="dropdown">
+                                            <button class="btn link" data-toggle="dropdown" type="button" id="edit-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                <i class="ph ph-edit text-primary"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-doc-<?= $doc['_id'] ?>">
+                                                <div class="content">
+                                                    <form action="<?= ROOTPATH ?>/data/document/update" method="post">
+                                                        <div class="form-group floating-form">
+                                                            <select class="form-control" name="name" placeholder="Name" required>
+                                                                <?php
+                                                                $vocab = $Vocabulary->getValues('activity-document-types');
+                                                                foreach ($vocab as $v) { ?>
+                                                                    <option value="<?= $v['id'] ?>" <?= ($doc['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                            <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                                                            <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $doc['description'] ?? '' ?></textarea>
+                                                        </div>
+                                                        <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                        <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                <i class="ph ph-trash text-danger"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
+                                                <div class="content">
+                                                    <form action="<?= ROOTPATH ?>/data/delete" method="post">
+                                                        <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                        <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                        <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
+                                    <h6 class="m-0">
+                                        <a href="<?= $file_url ?>" class="">
+                                            <?= $Vocabulary->getValue('activity-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                                            <i class="ph ph-download"></i>
+                                        </a>
+                                    </h6>
+                                    <?= $doc['description'] ?? '' ?>
+                                    <br>
+                                    <div class="font-size-12 text-muted d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
+                                            <br>
+                                            <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                            <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+
+            <?php if ($edit_perm) { ?>
+                <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
+                    <h5 class="title font-size-16">
+                        <?= lang('Upload document', 'Dokument hochladen') ?>
+                    </h5>
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                            <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="values[type]" value="activities">
+                    <input type="hidden" name="values[id]" value="<?= $id ?>">
+                    <div class="form-group floating-form">
+                        <select class="form-control" name="values[name]" placeholder="Name" required>
+                            <?php
+                            $vocab = $Vocabulary->getValues('activity-document-types');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                    </div>
+                    <div class="form-group floating-form">
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
+                        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                    </div>
+                    <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                </form>
+                <!-- <div class="box padded">
+                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
+                    <div class="custom-file mb-20" id="file-input-div">
+                        <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                        <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
+                        <br><small class="text-danger">Max. 16 MB.</small>
+                    </div>
+                    <button class="btn">
+                        <i class="ph ph-upload"></i>
+                        Upload
+                    </button>
+                </form>
+            </div> -->
+
+                <script>
+                    var uploadField = document.getElementById("file-input");
+
+                    uploadField.onchange = function() {
+                        if (this.files[0].size > 16777216) {
+                            toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
+                            this.value = "";
+                        };
+                    };
+                </script>
+            <?php } ?>
+
         </section>
 
     <?php endif; ?>

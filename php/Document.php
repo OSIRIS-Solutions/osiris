@@ -1150,12 +1150,15 @@ class Document extends Settings
             case "file-icons":
                 if (!($this->typeArr['upload'] ?? true)) return '';
                 if ($this->usecase == 'portal') return '';
-                $files = '';
-                foreach ($this->getVal('files', array()) as $file) {
-                    $icon = getFileIcon($file['filetype']);
-                    $files .= " <a href='$file[filepath]' target='_blank' data-toggle='tooltip' data-title='$file[filetype]: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
+                $res = '';
+                $files = $this->DB->db->uploads->find(['id' => strval($this->doc['_id']), 'type' => 'activities']);
+                foreach ($files as $file) {
+                    $url = ROOTPATH . '/uploads/' . $file['_id'] . '.' . $file['extension'];
+                    $icon = getFileIcon($file['extension']);
+                    $name = $Vocabulary->getValue('activity-document-types', $file['name'] ?? 'File');
+                    $res .= " <a href='$url' target='_blank' data-toggle='tooltip' data-title='$name: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
                 }
-                return $files;
+                return $res;
             case 'thesis':
                 $val = $this->getVal('thesis', null);
                 return $Vocabulary->getValue('thesis', $val);
