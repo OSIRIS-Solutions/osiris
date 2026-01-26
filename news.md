@@ -75,6 +75,7 @@ Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und
 - Es wurde die Möglichkeit hinzugefügt, Journale zu löschen. Dazu gibt es ein neues Zugriffsrecht (Journale löschen), das standardmäßig nicht vergeben ist. Man kann nur Journale löschen, die nicht mit Aktivitäten verknüpft sind.
 
 ### Weitere Verbesserungen & Bugfixes
+- Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
 - Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
 
 

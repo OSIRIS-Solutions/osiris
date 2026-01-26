@@ -27,30 +27,30 @@ if (!empty($form) && isset($form['id'])) {
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
-            
+
             <p>
-                <?=lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt.') ?>
+                <?= lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt.') ?>
             </p>
             <p>
                 <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
             </p>
             <ul class="list" id="used-ids">
-                <li class="font-weight-bold">--- <?=lang('OSIRIS Fields', 'OSIRIS-Felder')?> ---</li>
-                <?php 
+                <li class="font-weight-bold">--- <?= lang('OSIRIS Fields', 'OSIRIS-Felder') ?> ---</li>
+                <?php
                 require_once BASEPATH . '/php/activity_fields.php';
                 $Fields = new ActivityFields();
                 $field_ids = array_column($Fields->fields, 'id');
                 sort($field_ids);
-                foreach ($field_ids as $k) { 
+                foreach ($field_ids as $k) {
                     if (str_contains($k, '.')) continue;
-                    ?>
+                ?>
                     <li><?= $k ?></li>
                 <?php } ?>
                 <li class="font-weight-bold">--- Custom Fields ---</li>
-                  <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
+                <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
                     <li><?= $k ?></li>
                 <?php } ?>
-                <li class="font-weight-bold">--- <?=lang('Keywords', 'Schlüsselwörter')?> ---</li>
+                <li class="font-weight-bold">--- <?= lang('Keywords', 'Schlüsselwörter') ?> ---</li>
                 <li>language</li>
                 <li>new</li>
             </ul>
@@ -61,26 +61,27 @@ if (!empty($form) && isset($form['id'])) {
     </div>
 </div>
 
+<h1>
+    <i class="ph-duotone ph-textbox"></i>
+    <?= $title ?>
+</h1>
 
 <form action="<?= $formaction ?>" method="post" id="group-form">
 
     <div class="box">
-        <h4 class="header">
-            <?= $title ?>
-        </h4>
 
         <div class="content">
 
             <div class="form-group">
                 <label for="id">ID</label>
                 <input type="text" class="form-control" name="values[id]" id="id" value="<?= $form['id'] ?? '' ?>" <?= !empty($form) ? 'disabled' : '' ?> oninput="sanitizeID(this, '#used-ids li')" required>
-                
-            <small>
-                <a href="#unique"><i class="ph ph-info"></i> 
-                    <?= lang('Important! Must be unique.', 'Wichtig! Die ID muss einzigartig sein.') ?>
-                </a>
-            </small>
-        </div>
+
+                <small>
+                    <a href="#unique"><i class="ph ph-info"></i>
+                        <?= lang('Important! Must be unique.', 'Wichtig! Die ID muss einzigartig sein.') ?>
+                    </a>
+                </small>
+            </div>
 
 
             <div class="row row-eq-spacing">
@@ -198,6 +199,107 @@ if (!empty($form) && isset($form['id'])) {
 
 </form>
 
+<?php if (!empty($form['id'] ?? null)) { ?>
+    <h3>
+        <?= lang('Entities that use this field', 'Entitäten, die dieses Feld verwenden') ?>
+    </h3>
+
+    <?php
+    $id = $form['id'] ?? '';
+    $activities = $osiris->adminTypes->find([
+        '$or' => [
+            ['modules' => ['$in' => [$id, $id . '*']]],
+            ['fields.id' => $id]
+        ]
+    ])->toArray();
+
+    $projects = $osiris->adminProjects->find([
+        'phases.modules.module' => $id
+    ])->toArray();
+
+    $temp = $Settings->get('person-data');
+    if (!empty($temp) && in_array($id, DB::doc2Arr($temp))) {
+        $persons = true;
+    } else {
+        $persons = false;
+    }
+
+    $temp = $Settings->get('infrastructure-data');
+    if (!empty($temp) && in_array($id, DB::doc2Arr($temp))) {
+        $infrastructure = true;
+    } else {
+        $infrastructure = false;
+    }
+    ?>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th class="w-200">
+                    <?= lang('Activities', 'Aktivitäten') ?>
+                </th>
+                <td>
+                    <?php if (!empty($activities)) { ?>
+                        <?php foreach ($activities as $a) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge primary">
+                                <i class="ph ph-folder-open ph-<?= $a['icon'] ?? '' ?>"></i>
+                                <?= lang($a['name'] ?? $a['id'], $a['name_de'] ?? null) ?>
+                            </a>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <em><?= lang('No activity type uses this field.', 'Keine Aktivitätstyp verwendet dieses Feld.') ?></em>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <th class="w-200">
+                    <?= lang('Projects', 'Projekte') ?>
+                </th>
+                <td>
+                    <?php if (!empty($projects)) { ?>
+                        <?php foreach ($projects as $p) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/projects/<?= $p['id'] ?>" class="badge primary">
+                                <i class="ph ph-folder-open ph-<?= $p['icon'] ?? '' ?>"></i>
+                                <?= lang($p['name'] ?? $p['id'], $p['name_de'] ?? null) ?>
+                            </a>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <em><?= lang('No project type uses this field.', 'Kein Projekttyp verwendet dieses Feld.') ?></em>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <th class="w-200">
+                    <?= lang('Persons', 'Personen') ?>
+                </th>
+                <td>
+                    <?php if ($persons) { ?>
+                        <i class="ph ph-check-circle text-success"></i>
+                        <?= lang('Persons use this field.', 'Personen verwenden dieses Feld.') ?>
+                    <?php } else { ?>
+                        <em><?= lang('Persons do not use this field.', 'Personen verwenden dieses Feld nicht.') ?></em>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <th class="w-200">
+                    <?= lang('Infrastructure', 'Infrastruktur') ?>
+                </th>
+                <td>
+                    <?php if ($infrastructure) { ?>
+                        <i class="ph ph-check-circle text-success"></i>
+                        <?= lang('Infrastructures use this field.', 'Infrastrukturen verwenden dieses Feld.') ?>
+                    <?php } else { ?>
+                        <em><?= lang('Infrastructures do not use this field.', 'Infrastrukturen verwenden dieses Feld nicht.') ?></em>
+                    <?php } ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+<?php } ?>
+
+
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 <script>
@@ -255,6 +357,6 @@ if (!empty($form) && isset($form['id'])) {
 </script>
 
 
-<?php if (isset($_GET['verbose'])) { 
+<?php if (isset($_GET['verbose'])) {
     dump($form);
- } ?>
+} ?>
