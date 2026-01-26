@@ -1893,7 +1893,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                         </div>
                                     <?php endif; ?>
                                     <h6 class="m-0">
-                                        <a href="<?= $file_url ?>" class="">
+                                        <a href="<?= $file_url ?>"  target="_blank" rel="noopener">
                                             <?= $Vocabulary->getValue('activity-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges')); ?>
                                             <i class="ph ph-download"></i>
                                         </a>

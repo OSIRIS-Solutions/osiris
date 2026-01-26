@@ -131,10 +131,10 @@
                 <!-- ACTIONS -->
                 <td class="text-end">
                     <div class="btn-group">
-                        <a class="btn btn-sm btn-outline-secondary" href="<?= $file_url ?>" target="_blank" rel="noopener">
+                        <a class="btn small" href="<?= $file_url ?>" target="_blank" rel="noopener">
                             <i class="ph ph-arrow-square-out"></i>
                         </a>
-                        <a class="btn btn-sm btn-outline-primary" href="<?= $file_url ?>" download>
+                        <a class="btn small" href="<?= $file_url ?>" download>
                             <i class="ph ph-download"></i>
                         </a>
                     </div>

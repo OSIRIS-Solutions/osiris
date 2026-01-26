@@ -112,7 +112,7 @@ $summary = [
 
                     // Use a cursor so it doesn't load everything into memory
                     $cursor = $activitiesCol->find($filter, [
-                        'projection' => ['files' => 1],
+                        'projection' => ['files' => 1, 'created_by' => 1],
                     ]);
 
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
