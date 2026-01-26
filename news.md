@@ -58,7 +58,7 @@ Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und
 - Der Bereich "Dokumente" in Aktivitäten wurde komplett überarbeitet und bietet jetzt eine deutlich bessere Übersicht und Handhabung.
 - Es ist nun möglich, die Art der Dokumente anzugeben und eine Beschreibung hinzuzufügen.
 - Für die Arten von Dokumenten gibt es jetzt eine Vokabularliste, die im Admin-Bereich verwaltet werden kann.
-- Es gibt einen neuen Bereich "Dokumente", in dem alle Dokumente aus Aktivitäten und Projekten zentral angezeigt werden. Dazu wurde ein neues Zugriffsrecht (Dokumente sehen) dem Bereich "Ansichten" hinzugefügt, das standardmäßig nicht vergeben ist.
+- Es gibt einen neuen Bereich "Dokumente", in dem alle Dokumente aus Aktivitäten und Projekten zentral angezeigt werden. Außerdem kann in dieser Liste nach Dokumentarten und Dateitypen gefiltert werden. Dazu wurde ein neues Zugriffsrecht (Dokumente sehen) dem Bereich "Ansichten" hinzugefügt, das standardmäßig nicht vergeben ist.
 
 ### Aktivitäten verknüpfen
 
