@@ -413,6 +413,16 @@
         "de": "Anlagen zum Antrag"
       },
       {
+        "id": "cv",
+        "en": "Curriculum Vitae",
+        "de": "Lebenslauf"
+      },
+      {
+        "id": "loi",
+        "en": "Letter of Intent",
+        "de": "Letter of Intent"
+      },
+      {
         "id": "correspondence",
         "en": "Correspondence",
         "de": "Korrespondenz mit Fördergeber"
