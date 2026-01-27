@@ -203,7 +203,7 @@ function printRules($rules)
                     <?php foreach ($queries as $query) {
                         $rules = json_decode($query['rules'], true);
                         if (!$expert && empty($rules['rules'])) {
-                            $rules['rules'] = ['id' => 'No rules'];
+                            $rules = ['rules' => [['id' => 'No rules']]];
                         }
                         $query_id = strval($query['_id']);
                     ?>
