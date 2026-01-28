@@ -135,7 +135,7 @@ Route::get('/api/dashboard/event-timeline', function () {
     echo return_rest($result, count($events));
 });
 
- 
+
 Route::get('/api/dashboard/oa-status', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
@@ -620,47 +620,96 @@ function combinations($array)
         }
     return $results;
 }
-
 Route::get('/api/dashboard/department-network', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
+    // --- Input (keep backward compatibility) ---
+    $activity_type = $_GET['type'] ?? 'publication';
+    $entity        = $_GET['entity'] ?? 'units'; // 'units' | 'topics'
+    $startyear     = intval($_GET['year'] ?? (CURRENTYEAR - 4));
+    $level         = $_GET['level'] ?? 1; // 1 || 2
+
+    // Optional focus (backward compatible)
+    // - units: dept
+    // - topics: topic
+    // - generic: id
+    $focus_id = $_GET['id'] ?? null;
+    if (empty($focus_id) && $entity === 'units')  $focus_id = $_GET['dept'] ?? null;
+    if (empty($focus_id) && $entity === 'topics') $focus_id = $_GET['topic'] ?? null;
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+
+    // --- Validate entity & define field ---
+    $allowed_entities = ['units', 'topics'];
+    if (!in_array($entity, $allowed_entities, true)) {
+        echo return_rest(['error' => 'Invalid entity. Use units|topics.'], 400);
+        die;
+    }
+    $field = $entity; // MongoDB field name in activities: "units" or "topics"
+
+    // --- Build allowed IDs list (what you want to show in the chord) ---
+    // Units: you already have $Departments + $Groups meta
+    if ($entity === 'units') {
+        if ($level == 1) {
+            $allowed_ids = array_keys($Departments);
+        } else {
+            // sort labels by department
+            $groups = array_filter($Groups->groups, function ($a) use ($level) {
+                return ($a['level'] ?? '') == $level;
+            });
+            $allowed_ids = array_column($groups, 'id');
+        }
+    } else {
+        // Topics: adapt to your project
+        $Topics = $osiris->topics->find([], ['projection' => ['id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]])->toArray();
+        $Topics = array_column($Topics, null, 'id');
+        $allowed_ids = array_keys($Topics ?? []); // fallback if you have $Topics as array
+    }
+
+    // Defensive: if no allowed IDs, return empty response
+    if (empty($allowed_ids)) {
+        echo return_rest(['matrix' => [], 'labels' => [], 'warnings' => ['No allowed IDs for entity.']], 0);
         die;
     }
 
-    $dept = $_GET['dept'] ?? null;
-    $lvl = 1;
-    if (isset($_GET['level'])) $lvl = intval($_GET['level']);
-    if (!empty($dept)) $lvl = $Groups->getLevel($dept);
+    // --- Base match filter ---
+    $match = [
+        'type' => $activity_type,
+        'year' => ['$gte' => $startyear],
+        $field => ['$exists' => true],
+    ];
 
-    $dept_ids = array_keys($Departments);
-    $filter = ['type' => 'publication', 'year' => ['$gte' => CURRENTYEAR - 4]];
-
-    if (!empty($dept)) {
-        $filter['units'] = $dept;
+    // If focus is set: keep only activities that contain focus
+    // Else: keep only activities that contain at least one allowed id
+    if (!empty($focus_id)) {
+        $match[$field] = $focus_id;
     } else {
-        $filter['units'] = ['$in' => $dept_ids];
+        $match[$field] = ['$in' => $allowed_ids];
     }
 
-
-    $pipeline = [
-        [
-            '$match' => $filter
-        ],
-        [
-            '$project' => [
-                'filtered_units' => [
-                    '$setIntersection' => ['$units', $dept_ids]
-                ]
+    // --- Common projection: intersect entity array with allowed ids ---
+    $projectFiltered = [
+        '$project' => [
+            'filtered' => [
+                '$setIntersection' => ['$' . $field, $allowed_ids]
             ]
-        ],
+        ]
+    ];
+
+    // --- Pair counts pipeline (co-occurrence edges) ---
+    // Creates unique pairs (a,b) with a < b (lexicographically) per activity.
+    $pairsPipeline = [
+        ['$match' => $match],
+        $projectFiltered,
         [
             '$project' => [
-                'combinations' => [
+                'pairs' => [
                     '$reduce' => [
-                        'input' => '$filtered_units',
+                        'input' => '$filtered',
                         'initialValue' => [],
                         'in' => [
                             '$concatArrays' => [
@@ -669,15 +718,13 @@ Route::get('/api/dashboard/department-network', function () {
                                     '$map' => [
                                         'input' => [
                                             '$filter' => [
-                                                'input' => '$filtered_units',
-                                                'as' => 'unit',
-                                                'cond' => [
-                                                    '$gt' => ['$$unit', '$$this']
-                                                ]
+                                                'input' => '$filtered',
+                                                'as' => 'x',
+                                                'cond' => ['$gt' => ['$$x', '$$this']]
                                             ]
                                         ],
-                                        'as' => 'unit',
-                                        'in' => ['$$this', '$$unit']
+                                        'as' => 'x',
+                                        'in' => ['$$this', '$$x']
                                     ]
                                 ]
                             ]
@@ -686,124 +733,152 @@ Route::get('/api/dashboard/department-network', function () {
                 ]
             ]
         ],
-        [
-            '$unwind' => '$combinations'
-        ],
+        ['$unwind' => '$pairs'],
         [
             '$group' => [
                 '_id' => [
-                    'unit1' => ['$arrayElemAt' => ['$combinations', 0]],
-                    'unit2' => ['$arrayElemAt' => ['$combinations', 1]]
+                    'a' => ['$arrayElemAt' => ['$pairs', 0]],
+                    'b' => ['$arrayElemAt' => ['$pairs', 1]]
                 ],
                 'count' => ['$sum' => 1]
             ]
         ],
         [
             '$project' => [
-                'unit1' => '$_id.unit1',
-                'unit2' => '$_id.unit2',
-                'count' => 1,
-                '_id' => 0
+                '_id'   => 0,
+                'a'     => '$_id.a',
+                'b'     => '$_id.b',
+                'count' => 1
+            ]
+        ],
+        ['$sort' => ['count' => -1]],
+    ];
+
+    // --- Node counts pipeline (diagonal + label counts) ---
+    $nodesSoloPipeline = [
+        ['$match' => $match],
+        $projectFiltered,
+        [
+            '$match' => [
+                '$expr' => [
+                    '$eq' => [
+                        ['$size' => '$filtered'],
+                        1
+                    ]
+                ]
+            ]
+        ],
+        ['$unwind' => '$filtered'],
+        [
+            '$group' => [
+                '_id' => '$filtered',
+                'count' => ['$sum' => 1]
             ]
         ],
         [
-            '$sort' => ['count' => -1]
+            '$project' => [
+                '_id' => 0,
+                'id' => '$_id',
+                'count' => 1
+            ]
         ]
     ];
 
-    // try a new approach
-    $combinations = $osiris->activities->aggregate(
-        $pipeline
-    )->toArray();
-    // dump($combinations, true);
-    // die;
-
-    if (!empty($dept)) {
-        $other_depts = array_values(array_diff($dept_ids, [$dept]));
-        $individual = $osiris->activities->count(
-            [
-                'type' => 'publication',
-                'year' => ['$gte' => CURRENTYEAR - 4],
-                // unit is $dept but not in depts_ids
-                'units' => ['$in' => [$dept], '$nin' => $other_depts]
+    $nodesTotalPipeline = [
+        ['$match' => $match],
+        $projectFiltered,
+        ['$unwind' => '$filtered'],
+        [
+            '$group' => [
+                '_id' => '$filtered',
+                'count' => ['$sum' => 1]
             ]
-        );
-        $combinations[] = [
-            'count' => $individual / 2,
-            'unit1' => $dept,
-            'unit2' => $dept
-        ];
-    } else {
-        foreach ($dept_ids as $id) {
-            $other_depts = array_values(array_diff($dept_ids, [$id]));
-            $individual = $osiris->activities->count(
-                [
-                    'type' => 'publication',
-                    'year' => ['$gte' => CURRENTYEAR - 4],
-                    'units' => ['$in' => [$id], '$nin' => $other_depts]
-                ]
-            );
-            $combinations[] = [
-                'count' => $individual / 2,
-                'unit1' => $id,
-                'unit2' => $id
-            ];
-        }
-    }
+        ],
+        [
+            '$project' => [
+                '_id' => 0,
+                'id' => '$_id',
+                'count' => 1
+            ]
+        ]
+    ];
 
+    // Build maps for fast lookup
+    $pairs     = $osiris->activities->aggregate($pairsPipeline)->toArray();
+    $nodesTotal = $osiris->activities->aggregate($nodesTotalPipeline)->toArray();
+    $nodesSolo  = $osiris->activities->aggregate($nodesSoloPipeline)->toArray();
+
+    $totalById = [];
+    foreach ($nodesTotal as $n) $totalById[(string)$n['id']] = (int)$n['count'];
+
+    $soloById = [];
+    foreach ($nodesSolo as $n) $soloById[(string)$n['id']] = (int)$n['count'];
+
+    // Collect all ids that appear in results (focus reduces network)
     $ids = [];
-    foreach ($combinations as $row) {
-        $ids[] = $row['unit1'];
-        $ids[] = $row['unit2'];
+    foreach ($pairs as $p) {
+        $ids[] = (string)$p['a'];
+        $ids[] = (string)$p['b'];
     }
-    $ids = array_unique($ids);
-    $labels = array_map(function ($id) use ($Groups, $osiris, $dept) {
-        $g = $Groups->getGroup($id);
-        $filter = [
-            'type' => 'publication',
-            'year' => ['$gte' => CURRENTYEAR - 4],
-            'units' => $id
-        ];
-        if (!empty($dept) || $id == $dept) {
-            $filter['units'] = ['$all' => [$dept, $id]];
+    $ids = array_values(array_unique($ids));
+
+    // --- Meta resolver (units vs topics) ---
+    $labels = [];
+    foreach ($ids as $id) {
+        if ($entity === 'units') {
+            $g = $Groups->getGroup($id);
+        } else {
+            // Topics meta: adapt to your project
+            $g = ($Topics[$id] ?? null);
         }
-
-        return [
-            'name' => $g['name'],
-            'name_de' => $g['name_de'],
-            'color' => $g['color'],
-            'id' => $id,
-            'count' => $osiris->activities->count(
-                $filter
-            )
+        $labels[] = [
+            'id'      => $id,
+            'name'    => $g['name'] ?? $id,
+            'name_de' => $g['name_de'] ?? ($g['name'] ?? $id),
+            'color'   => $g['color'] ?? '#999999',
+            'count'   => $soloById[$id] ?? 0,
+            'totalCount' => $totalById[$id] ?? 0,
         ];
-    }, $ids);
-    $labels = array_values($labels);
-
-    // // init matrix of n x n
-    $matrix = array_fill(0, count($labels), 0);
-    $matrix = array_fill(0, count($labels), $matrix);
-
-    $ids = array_column($labels, 'id');
-    // fill matrix based on all combinations
-    foreach ($combinations as $c) {
-        $a = array_search($c['unit1'], $ids);
-        $b = array_search($c['unit2'], $ids);
-
-        $matrix[$a][$b] += $c['count'];
-        // if ($a != $b)
-        $matrix[$b][$a] += $c['count'];
     }
 
+    // --- Matrix init ---
+    $n = count($labels);
+    $matrix = array_fill(0, $n, array_fill(0, $n, 0));
+    
+
+    // Build index map
+    $indexById = [];
+    foreach ($labels as $i => $l) {
+        $indexById[(string)$l['id']] = $i;
+    }
+
+    // Fill diagonal from node counts (each activity that includes entity)
+    foreach ($labels as $i => $l) {
+        $matrix[$i][$i] = (int)($soloById[$l['id']] ?? 0);
+    }
+
+    // Fill co-occurrence edges
+    foreach ($pairs as $p) {
+        $a = (string)$p['a'];
+        $b = (string)$p['b'];
+        if (!isset($indexById[$a], $indexById[$b])) continue;
+
+        $ia = $indexById[$a];
+        $ib = $indexById[$b];
+        $c  = (int)$p['count'];
+
+        $matrix[$ia][$ib] += $c;
+        $matrix[$ib][$ia] += $c;
+    }
 
     echo return_rest([
-        'matrix' => $matrix,
-        'labels' => $labels,
+        'entity'   => $entity,
+        'field'    => $field,
+        'matrix'   => $matrix,
+        'labels'   => $labels,
         'warnings' => []
-    ], count($labels));
+    ], $n);
 });
-
-
 
 Route::get('/api/dashboard/author-network', function () {
     error_reporting(E_ERROR | E_PARSE);
@@ -825,7 +900,7 @@ Route::get('/api/dashboard/author-network', function () {
 
     $depts = null;
     $filter = ['type' => 'publication'];
-    if (isset($_GET['user'])){
+    if (isset($_GET['user'])) {
         $filter['rendered.users'] = $_GET['user'];
     } else if (isset($_GET['dept'])) {
         $depts = $Groups->getChildren($_GET['dept'], 1);
@@ -1276,7 +1351,7 @@ Route::get('/api/calendar', function () {
         echo return_permission_denied();
         die;
     }
-    
+
 
     $filter = [];
     if (isset($_GET['start']) && isset($_GET['end'])) {
@@ -1292,12 +1367,12 @@ Route::get('/api/calendar', function () {
     }
 
     $users = [$_SESSION['username']];
-    if (isset($_GET['unit'])){
+    if (isset($_GET['unit'])) {
         // get all people associated with this unit rn
         $units = $Groups->getChildren($_GET['unit']);
         $users = $Groups->getAllPersons($units);
         $users = array_column($users, 'username');
-    } 
+    }
     $filter['participants'] = ['$in' => $users];
 
     // conferences
@@ -1305,10 +1380,10 @@ Route::get('/api/calendar', function () {
         'projection' => ['start' => 1, 'end' => 1, 'title' => 1, 'id' => ['$toString' => '$_id'], 'type' => 'event']
     ])->toArray();
 
-    
+
 
     // get activities
-    
+
     if (isset($_GET['start']) && isset($_GET['end'])) {
         $start = $_GET['start'];
         $end = $_GET['end'];
@@ -1322,7 +1397,7 @@ Route::get('/api/calendar', function () {
             ]
         ];
     }
-    if (isset($_GET['unit'])){
+    if (isset($_GET['unit'])) {
         $filter['units'] = $_GET['unit'];
     } else {
         $filter['rendered.users'] = $_SESSION['username'] ?? '';
@@ -1415,9 +1490,9 @@ Route::get('/api/pivot-data', function () {
     }
 
 
-    $data = $osiris->activities->find([],
+    $data = $osiris->activities->find(
+        [],
         ['projection' => $projection]
     )->toArray();
     echo return_rest($data, count($data));
 });
-?>

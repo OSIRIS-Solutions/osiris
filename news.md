@@ -54,6 +54,7 @@ Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So
 - Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
 
 ### Dokumente von Aktivitäten
+
 Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und dadurch deutlich verbessert:
 - Der Bereich "Dokumente" in Aktivitäten wurde komplett überarbeitet und bietet jetzt eine deutlich bessere Übersicht und Handhabung.
 - Es ist nun möglich, die Art der Dokumente anzugeben und eine Beschreibung hinzuzufügen.
@@ -72,7 +73,16 @@ Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und
 - Ein Fehler wurde behoben, durch den Klammersetzung in Einheitennamen die Darstellung als Organigramm verhindert hat. Außerdem unterstützt das Organigramm jetzt auch die deutschen Namen von Einheiten.
 
 ### Journale
+
 - Es wurde die Möglichkeit hinzugefügt, Journale zu löschen. Dazu gibt es ein neues Zugriffsrecht (Journale löschen), das standardmäßig nicht vergeben ist. Man kann nur Journale löschen, die nicht mit Aktivitäten verknüpft sind.
+
+### Visualisierungen
+
+Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäten-Netzwerk" umbenannt, um besser die neue Flexibilität widerzuspiegeln.
+- Dabei kann nach verschiedenen Entitäten gruppiert werden. Im Moment werden Organisationen (1. und 2. Level) und Forschungsbereiche unterstützt, weitere folgen eventuell in zukünftigen Versionen. Vorschläge sind willkommen!
+- Es können nun Aktivitäten verschiedener Kategorien (z.B. Publikationen, Vorträge, Medienbeiträge) visualisiert werden
+- Das Startjahr kann jetzt frei gewählt werden (default: 5 Jahre zurück)
+- Das fertige Netzwerk kann jetzt als PNG oder SVG heruntergeladen werden.
 
 ### Weitere Verbesserungen & Bugfixes
 - Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.

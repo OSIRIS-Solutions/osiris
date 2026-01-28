@@ -1855,15 +1855,16 @@ function registerDownloadHandlers(svgNode, selector) {
             );
         }
 
-        const svg64 = window.btoa(unescape(encodeURIComponent(source)));
+        const svg64 = window.btoa(encodeURIComponent(source).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode(parseInt(p1, 16));
+        }));
+        console.log(svg64);
         const imageSrc = 'data:image/svg+xml;base64,' + svg64;
 
         const img = new Image();
         img.onload = function () {
             // canvas size should match your viewBox
             const canvas = document.createElement('canvas');
-            // canvas.width = 1600;
-            // canvas.height = 1000;
             const viewBox = svgNode.getAttribute('viewBox').split(' ');
             canvas.width = parseInt(viewBox[2])*2;
             canvas.height = parseInt(viewBox[3])*2;
@@ -1873,7 +1874,7 @@ function registerDownloadHandlers(svgNode, selector) {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
             const pngData = canvas.toDataURL('image/png');
             const a = document.createElement('a');
