@@ -331,6 +331,7 @@ class Project extends Vocabulary
             case 'grant_income_proposed':
             case 'grant_sum':
             case 'grant_income':
+                if (!is_numeric($value)) return $value;
                 return number_format($value, 2, ',', '.') . ' €';
             case 'abstract':
             case 'abstract_de':
