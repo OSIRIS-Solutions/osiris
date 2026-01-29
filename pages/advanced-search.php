@@ -51,7 +51,7 @@ if ($collection == 'projects' || $collection == 'proposals') {
     $defaultColumns = ['id', 'icon', 'web', 'year'];
 }
 
-// dump($FIELDS, true);
+$field_by_id = array_column($FIELDS->fields, null, 'id');
 
 $filters = array_filter($FIELDS->fields, function ($f) {
     return in_array('filter', $f['usage'] ?? []);
@@ -288,18 +288,23 @@ function printRules($rules)
                                         <th><?= lang('Aggregate', 'Aggregieren') ?>:</th>
                                         <td>
                                             <?php if (isset($query['aggregate']) && !empty($query['aggregate'])) { ?>
-                                                <?= $query['aggregate'] ?>
+                                                <?= $field_by_id[$query['aggregate']]['label'] ?? $query['aggregate'] ?>
                                             <?php } else {
                                                 echo lang('No aggregation', 'Keine Aggregation angewendet');
                                             } ?>
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <th><?= lang('Columns', 'Spalten') ?>:</th>
                                         <td>
-                                            <?php if (isset($query['columns']) && !empty($query['columns'])) { ?>
-                                                <?= implode(', ', DB::doc2Arr($query['columns'])) ?>
+                                            <?php if (isset($query['columns']) && !empty($query['columns'])) { 
+                                                $cols = DB::doc2Arr($query['columns']);
+                                                // get labels from fields
+                                                $colLabels = array_map(function($c) use ($field_by_id) {
+                                                    return $field_by_id[$c]['label'] ?? $c;
+                                                }, $cols);
+                                                ?>
+                                                <?= implode(', ', $colLabels) ?>
                                             <?php } else {
                                                 echo lang('Default columns', 'Standard-Spalten');
                                             } ?>
@@ -429,8 +434,8 @@ function printRules($rules)
                     $modules = $field['module_of'] ?? [];
                 ?>
                     <div class="custom-checkbox checkbox-badge <?= empty($modules) ? 'text-muted' : '' ?>">
-                        <input type="checkbox" class="form-check-input" id="column-<?= $field['id'] ?>" <?= (in_array($field['id'], $selected) ? 'checked' : '') ?>>
-                        <label class="form-check-label" for="column-<?= $field['id'] ?>" value="<?= $field['id'] ?>">
+                        <input type="checkbox" class="form-check-input" data-column="<?= $field['id'] ?>" id="column-<?= str_replace('.', '-', $field['id']) ?>" <?= (in_array($field['id'], $selected) ? 'checked' : '') ?>>
+                        <label class="form-check-label" for="column-<?= str_replace('.', '-', $field['id']) ?>" value="<?= $field['id'] ?>">
                             <?= $field['label'] ?>
                             <?php if ($field['custom'] ?? false) { ?>
                                 <span data-toggle="tooltip" data-title="Custom field">
@@ -659,21 +664,13 @@ function printRules($rules)
                 var selected_columns = []
                 var array_columns = {}
                 $('#column-select input:checked').each(function() {
-                    var id = $(this).attr('id').replace('column-', '')
-                    if (id.includes('.')) {
-                        id = id.split('.')
-                        array_columns[id[0]] = id[1]
-                        id = id[0]
-                    }
+                    var id = $(this).data('column')
                     selected_columns.push(id)
-                })
-
-                // add dynamic column heads
-                selected_columns.forEach(field => {
+                    var name = $(this).next('label').text()
                     const th = document.createElement('th');
-                    th.textContent = field.charAt(0).toUpperCase() + field.slice(1); // Optional: Titel formatieren
+                    th.textContent = name; // Optional: Titel formatieren
                     headerRow.appendChild(th);
-                });
+                })
                 thead.appendChild(headerRow);
                 // Konfiguriere die Spalten für Datatables
                 columns = selected_columns.map(function(field) {
@@ -775,7 +772,7 @@ function printRules($rules)
             // columns
             var columns = []
             $('#column-select input:checked').each(function() {
-                columns.push($(this).attr('id').replace('column-', ''))
+                columns.push($(this).data('column'))
             })
             data.columns = columns
 
@@ -818,6 +815,8 @@ function printRules($rules)
 
 
         function saveQuery() {
+            // disable save button
+            $('#save-query-button').prop('disabled', true);
             if (EXPERT) {
                 var rules = $('#expert').val()
                 rules = JSON.parse(rules)
@@ -827,12 +826,13 @@ function printRules($rules)
             var name = $('#query-name').val()
             if (name == "") {
                 toastError('Please provide a name for your query.')
+                $('#save-query-button').prop('disabled', false);
                 return
             }
 
             var columns = []
             $('#column-select input:checked').each(function() {
-                columns.push($(this).attr('id').replace('column-', ''))
+                columns.push($(this).data('column'))
             })
 
             var query = {
@@ -853,11 +853,12 @@ function printRules($rules)
                 $('#saved-queries').append(`<a class="d-block" onclick="applyFilter(${data.id}, '${$('#aggregate').val()}')">${name}</a>`)
                 $('#query-name').val('')
                 toastSuccess(lang('Query saved successfully. Please reload the page to see it completely.', 'Abfrage erfolgreich gespeichert. Lade die Seite neu, um sie vollständig anzuzeigen.'))
-
+                $('#save-query-button').prop('disabled', false);
             })
         }
 
         function applyFilter(id, aggregate, columns) {
+                console.log(columns);
             if (EXPERT) {
                 applyFilterExpert(id, aggregate, columns)
                 return
@@ -883,7 +884,7 @@ function printRules($rules)
             }
             $('#column-select input').prop('checked', false)
             columns.split(';').forEach(column => {
-                $('#column-' + column).prop('checked', true)
+                $('#column-' + column.replace('.', '-')).prop('checked', true)
             })
 
 

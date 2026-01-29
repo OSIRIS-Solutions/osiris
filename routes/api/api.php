@@ -1026,7 +1026,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         }
     }
 
-    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
+    $unwinds = ['authors', 'editors', 'supervisors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
