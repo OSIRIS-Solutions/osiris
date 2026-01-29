@@ -86,7 +86,9 @@ Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäte
 
 ### Weitere Verbesserungen & Bugfixes
 - Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
+- Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt
 - Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
+- Es ist jetzt nicht mehr möglich, leere Autoren oder Herausgeber hinzuzufügen. Die Fehlermeldungen werden jetzt auch auf Deutsch übersetzt.
 
 
 

@@ -263,11 +263,22 @@ function addAuthor(event, editor = false) {
     // console.log(data);
     if ((event.type == 'keypress' && event.keyCode == '13') || event.type == 'click') {
         event.preventDefault();
+
+        // check if author is empty
+        if (data.trim() === '' || data.trim() === ',') {
+            toastError(lang('Author name cannot be empty.', 'Der Autorenname darf nicht leer sein.'));
+            return;
+        }
         const match = (SCIENTISTS.indexOf(data) != -1)
         var value = data.split(',')
         // console.log(data);
         if (value.length !== 2) {
-            toastError('Author name must be formatted like this: Lastname, Firstname')
+            toastError(
+                lang(
+                    'Author name must be formatted like this: Lastname, Firstname. The Firstname can be empty but the comma is required.',
+                    'Der Autorenname muss folgendermassen formatiert sein: Nachname, Vorname. Der Vorname kann leer sein, das Komma wird jedoch benötigt.'
+                )
+            )
             return;
         }
         addAuthorDiv(value[0], value[1], match, editor)
