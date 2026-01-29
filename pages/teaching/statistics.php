@@ -154,24 +154,32 @@ $all = $osiris->activities->count(
                 $counts['total'] += $total;
                 $counts['affiliation'] += $affiliation;
 
-                $affiliation = '-';
+                $uni = '-';
                 if (isset($t['module_id'])) {
-                    $m = $osiris->teaching->findOne(['_id' => DB::doc2Arr($t['module_id'])]);
+                    $m = $osiris->teaching->findOne(['_id' => DB::to_ObjectID($t['module_id'])]);
                     if (isset($m['affiliation'])) {
-                        $affiliation = $m['affiliation'];
+                        $uni = $m['affiliation'];
                     }
                 }
             ?>
                 <tr>
                     <td>
-                        <a href="<?= ROOTPATH ?>/activities/view/<?= $t['_id'] ?>">
+                        <?php if (isset($t['module_id'])) { ?>
+                            <a href="<?= ROOTPATH ?>/teaching/view/<?= $t['module_id'] ?>">
+                                <?= $t['module'] ?>
+                            </a>
+                        <?php } else { ?>
                             <?= $t['module'] ?>
-                        </a>
+                        <?php } ?>
                     </td>
                     <td>
-                        <?= $affiliation ?>
+                        <?= $uni ?>
                     </td>
-                    <td><?= $Document->translateCategory($t['category'] ?? '-') ?></td>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/activities/view/<?= strval($t['_id']) ?>">
+                            <?= $Document->translateCategory($t['category'] ?? '-') ?>
+                        </a>
+                    </td>
                     <td><?= date('d.m.Y', strtotime($t['start_date'])) ?></td>
                     <td><?= date('d.m.Y', strtotime($t['end_date'])) ?></td>
                     <td>
@@ -187,7 +195,7 @@ $all = $osiris->activities->count(
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="5" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
+                <th colspan="6" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
                 <th><?= $counts['total'] ?></th>
                 <th><?= $counts['affiliation'] ?></th>
             </tr>

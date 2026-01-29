@@ -1,11 +1,11 @@
 # Neuigkeiten
 
+
+<time datetime="2026-01-18">29.01.2026</time>
+<a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
 ## Version 1.8.0 (beta)
 
-<span class="badge float-right">18.01.2026</span>
-<a class="anchor" href="#version-1.7.2" id="version-1.7.2"></a>
-
-Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Projekte. Hier die Highlights:
+Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Organisationen. Hier die Highlights:
 
 ### Design & Customization
 Bislang war es nur möglich, das Logo und die Farben von OSIRIS anzupassen. Mit diesem Update haben wir die Customization-Funktionen deutlich erweitert:
@@ -35,6 +35,20 @@ Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So
 - Auf der Übersichtsseite einer Organisation wird neben einem überarbeiteten Layout jetzt auch eine Karte mit den Standort der Organisation angezeigt.
 - Synonyme wurden für Organisationen hinzugefügt zur besseren Auffindbarkeit, z.B. kann dann die Deutsche Forschungsgemeinschaft auch über "DFG" gefunden werden. Die Synonyme werden ebenfalls über ROR bezogen.
 - Der Kollaborationsbereich in Projekten grundlegend überarbeitet und fügt sich damit nahtlos in das neue Organisationsmanagement ein. Es kann zuerst in bereits bestehende Organisationen gesucht und diese dann als Kollaborationspartner hinzugefügt werden. Alternativ können auch neue Organisationen direkt im Projekt angelegt werden.
+
+### Lehrveranstaltungen
+
+Lehrveranstaltungen wurden grundsätzlich überarbeitet und bieten nun mehr Möglichkeiten
+- Die Übersichtsseite zeigt jetzt alle Lehrveranstaltungen in einer Tabelle an, die deutlich übersichtlicher ist und mehr Informationen bietet.
+- Jede Lehrveranstaltung hat jetzt eine eigene Seite, auf der alle Details angezeigt werden, inkl. aller verknüpften Aktivitäten. Dabei werden Aktivitäten mit dem Modul `supervisors` auch mit ihren Semesterwochenstunden angezeigt.
+- Es gibt auch eine neue Seite, um existierende Lehrveranstaltungen zu bearbeiten. Dazu wurde ein neues Recht hinzugefügt (Lehrveranstaltungen bearbeiten), das standardmäßig an alle Nutzenden vergeben wird (wie es zuvor auch war).
+- Verknüpfung mit Organisationen:
+  - Anstatt Organisationen händisch einzugeben, können diese jetzt aus dem Organisationsmanagement ausgewählt werden. Alternativ gibt es einen Link, um neue Organisationen anzulegen. 
+  - Es gibt auch eine Vorschlagsliste, die die 5 am häufigsten zu Lehrveranstaltungen hinzugefügten Organisationen anzeigt, um die Bearbeitung zu vereinfachen.
+  - Auf der Seite der Organisationen werden alle verknüpften Lehrveranstaltungen angezeigt.
+  - Die Organisation wird auch auf der Statistik-Seite der Lehrveranstaltungen angezeigt.
+
+> Bitte beachte, dass wir die Organisationen nicht automatisch hinzufügen können, wenn ihr bereits Lehrveranstaltungen habt. Diese müsst ihr manuell bearbeiten, um die Organisationen zu verknüpfen. Allerdings werden bestehende Organisationen beibehalten und weiterhin angezeigt.
 
 ### Projekte und Anträge
 
@@ -89,10 +103,11 @@ Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäte
 - Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt
 - Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
 - Es ist jetzt nicht mehr möglich, leere Autoren oder Herausgeber hinzuzufügen. Die Fehlermeldungen werden jetzt auch auf Deutsch übersetzt.
+- Das Layout der News-Seite wurde verbessert.
 
+----
 
-
-<span class="badge float-right">17.12.2025</span>
+<time datetime="2025-12-17">17.12.2025</time>
 <a class="anchor" href="#version-1.7.1" id="version-1.7.1"></a>
 
 ## Version 1.7.1
@@ -111,7 +126,7 @@ In dieser Version wurden im Wesentlichen Fehler behoben und kleinere Verbesserun
 
 ---
 
-<span class="badge float-right">08.12.2025</span>
+<time datetime="2025-12-08">08.12.2025</time>
 <a class="anchor" href="#version-1.7.0" id="version-1.7.0"></a>
 
 ## Version 1.7.0
@@ -182,7 +197,7 @@ Eine Übersicht über alle geschlossenen Issues findet ihr [hier](https://github
 
 ---
 
-<span class="badge float-right">16.11.2025</span>
+<time datetime="2025-11-16">16.11.2025</time>
 <a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
 
 ## Version 1.6.2
@@ -290,7 +305,7 @@ Neu: Vollständiges Management für Gastkonten
 
 ---
 
-<span class="badge float-right">02.11.2025</span>
+<time datetime="2025-11-02">02.11.2025</time>
 <a class="anchor" href="#version-1.6.1" id="version-1.6.1"></a>
 
 ## Version 1.6.1
@@ -343,7 +358,7 @@ Wir haben viele kleinere Verbesserungen vorgenommen:
 
 
 
-<span class="badge float-right">12.10.2025</span>
+<time datetime="2025-10-12">12.10.2025</time>
 <a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
 ## Version 1.6.0
@@ -488,7 +503,7 @@ Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zus�
 ---
 
 
-<span class="badge float-right">30.09.2025</span>
+<time datetime="2025-09-30">30.09.2025</time>
 <a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
 
 ## Version 1.5.2
@@ -529,7 +544,7 @@ Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zus�
 
 ---
 
-<span class="badge float-right">24.08.2025</span>
+<time datetime="2025-08-24">24.08.2025</time>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>
 
 ## Version 1.5.1
@@ -576,7 +591,7 @@ Mit dem neuen Formbuilder kannst du Formulare für Aktivitäten noch flexibler g
 ---
 
 
-<span class="badge float-right">31.07.2025</span>
+<time datetime="2025-07-31">31.07.2025</time>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
 ## Version 1.5.0
@@ -735,7 +750,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 ---
 
-<span class="badge float-right">13.04.2025</span>
+<time datetime="2025-04-13">13.04.2025</time>
 <a class="anchor" href="#version-1.4.3" id="version-1.4.3"></a>
 
 ## Version 1.4.3
@@ -751,7 +766,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 ---
 
-<span class="badge float-right">03.04.2025</span>
+<time datetime="2025-04-03">03.04.2025</time>
 <a class="anchor" href="#version-1.4.2" id="version-1.4.2"></a>
 
 ## Version 1.4.2
@@ -783,7 +798,7 @@ Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infr
 
 ---
 
-<span class="badge float-right">03.04.2025</span>
+<time datetime="2025-04-03">03.04.2025</time>
 <a class="anchor" href="#version-1.4.1" id="version-1.4.1"></a>
 
 ## Version 1.4.1
@@ -874,7 +889,7 @@ Diese können nur in der PHP-Konfiguration gesetzt werden und sind nicht im Admi
 
 ---
 
-<span class="badge float-right">12.02.2025</span>
+<time datetime="2025-02-12">12.02.2025</time>
 <a class="anchor" href="#version-1.4.0" id="version-1.4.0"></a>
 
 ## Version 1.4.0
@@ -1065,7 +1080,7 @@ Die Nutzereinstellungen sind in den letzten Monaten gewachsen und sehr unübersi
 
 ---
 
-<span class="badge float-right">15.08.2024</span>
+<time datetime="2024-08-15">15.08.2024</time>
 <a class="anchor" href="#version-1.3.6" id="version-1.3.6"></a>
 
 ## Version 1.3.6
@@ -1112,7 +1127,7 @@ Es wurden erste Schritte unternommen, um Compliance mit dem [Nagoya-Protokoll](h
 
 ---
 
-<span class="badge float-right">23.06.2024</span>
+<time datetime="2024-06-23">23.06.2024</time>
 <a class="anchor" href="#version-1.3.5" id="version-1.3.5"></a>
 
 ## Version 1.3.5
@@ -1161,7 +1176,7 @@ Die Synchronisation zu LDAP hat jetzt ein Interface spendiert bekommen, über da
 
 ---
 
-<span class="badge float-right">23.05.2024</span>
+<time datetime="2024-05-23">23.05.2024</time>
 <a class="anchor" href="#version-1.3.4" id="version-1.3.4"></a>
 
 ## Version 1.3.4
@@ -1216,7 +1231,7 @@ Es gab außerdem einige UI-Improvements, z.B. beim Festlegen der Leitung einer O
 
 ---
 
-<span class="badge float-right">15.04.2024</span>
+<time datetime="2024-04-15">15.04.2024</time>
 <a class="anchor" href="#version-1.3.3" id="version-1.3.3"></a>
 
 ## Version 1.3.3
@@ -1228,7 +1243,7 @@ Sie ist auf der Detailseite einer Aktivität unter dem Reiter _Historie_ verfüg
 
 ---
 
-<span class="badge float-right">22.02.2024</span>
+<time datetime="2024-02-22">22.02.2024</time>
 <a class="anchor" href="#version-1.3.2" id="version-1.3.2"></a>
 
 ## Version 1.3.2
@@ -1245,7 +1260,7 @@ In der Dokumentation ist ein neuer Reiter API Docs, unter dem die wichtigsten En
 
 ---
 
-<span class="badge float-right">21.02.2024</span>
+<time datetime="2024-02-21">21.02.2024</time>
 <a class="anchor" href="#version-1.3.1" id="version-1.3.1"></a>
 
 ## Version 1.3.1
@@ -1262,7 +1277,7 @@ In dieser Version sind ein paar Fixes zur vorherigen Version, sowie neue Custom 
 
 ---
 
-<span class="badge float-right">09.02.2024</span>
+<time datetime="2024-02-09">09.02.2024</time>
 <a class="anchor" href="#version-1.3.0" id="version-1.3.0"></a>
 
 ## Version 1.3.0
@@ -1414,7 +1429,7 @@ Es kann sein, dass einige wenige Einstellungen von Euch nicht in das neue Format
 
 ---
 
-<span class="badge float-right">25.10.2023</span>
+<time datetime="2023-10-25">25.10.2023</time>
 <a class="anchor" href="#version-1.2.2" id="version-1.2.2"></a>
 
 ## Version 1.2.2
@@ -1470,7 +1485,7 @@ Es wurden einige generelle Verbesserungen durchgeführt:
 
 ---
 
-<span class="badge float-right">18.10.2023</span>
+<time datetime="2023-10-18">18.10.2023</time>
 <a class="anchor" href="#version-1.2.1" id="version-1.2.1"></a>
 
 ## Version 1.2.1
@@ -1479,7 +1494,7 @@ Diese Version beinhaltet vornehmlich Bug Fixes und Optimierungen im Hintergrund.
 
 ---
 
-<span class="badge float-right">04.10.2023</span>
+<time datetime="2023-10-04">04.10.2023</time>
 <a class="anchor" href="#version-1.2.0" id="version-1.2.0"></a>
 
 ## Version 1.2.0
@@ -1638,7 +1653,7 @@ OSIRIS prüft jetzt selbstständig einmal in der Woche (sonntags um 2 Uhr), ob e
 
 ---
 
-<span class="badge float-right">12.05.23</span>
+<time datetime="23-05-12">12.05.23</time>
 <a class="anchor" href="#version-1.1.0" id="version-1.1.0"></a>
 
 ## Version 1.1.0
@@ -1749,7 +1764,7 @@ Dadurch sieht die Seite auf den ersten Blick vielleicht etwas ungewohnt aus, ihr
 
 ---
 
-<span class="badge float-right">02.01.23</span>
+<time datetime="23-01-02">02.01.23</time>
 
 ## Version 1.0
 

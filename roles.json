@@ -55,6 +55,11 @@
                 "id": "conferences.edit",
                 "de": "Events hinzufügen und bearbeiten",
                 "en": "Add and edit events"
+            },
+            {
+                "id": "teaching.edit",
+                "de": "Lehrveranstaltungen hinzufügen und bearbeiten",
+                "en": "Add and edit teaching modules"
             }
         ]
     },

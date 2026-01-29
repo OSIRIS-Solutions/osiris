@@ -3081,10 +3081,10 @@ class Modules
                                 <p>
                                     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
                                         <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
                                     <?php } else { ?>
                                         <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
                                             <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
                                         </a>
                                     <?php } ?>
@@ -3147,10 +3147,10 @@ class Modules
                                     <p>
                                         <?php if ($Settings->hasPermission('organizations.edit')) { ?>
                                             <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                            <a href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
                                         <?php } else { ?>
                                             <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                            <a href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
                                                 <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
                                             </a>
                                         <?php } ?>

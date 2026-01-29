@@ -147,7 +147,7 @@ if ($edit_perm) { ?>
                         <td colspan="2">
                             <span class="key"><?= lang('Type', 'Typ') ?></span>
                             <div class="d-flex justify-content-between align-items-center">
-                            <?= ucfirst($organization['type']) ?>
+                                <?= ucfirst($organization['type']) ?>
                                 <?= Organization::getIcon($organization['type'], 'ph-fw ph-2x m-0') ?>
                             </div>
                         </td>
@@ -436,6 +436,55 @@ if ($edit_perm) { ?>
         $('#infrastructures-table').DataTable({});
     </script>
 <?php } ?>
+
+<?php if ($Settings->featureEnabled('teaching-modules', true)) { ?>
+    <h2>
+        <?= lang('Connected teaching modules', 'Verknüpfte Lehrveranstaltungen') ?>
+    </h2>
+
+    <div class="mt-20 w-full">
+        <table class="table dataTable responsive" id="teaching-modules-table">
+            <thead>
+                <tr>
+                    <th><?= lang('Module No.', 'Modulnummer') ?></th>
+                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('Contact person', 'Ansprechperson') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $teaching_modules = $osiris->teaching->find([
+                    'organization' => $org_id
+                ])->toArray();
+                foreach ($teaching_modules as $module) {
+
+                ?>
+                    <tr>
+                        <td>
+                            <a href="<?= ROOTPATH ?>/teaching/view/<?= strval($module['_id']) ?>">
+                                <?= htmlspecialchars($module['module']) ?>
+                            </a>
+                        </td>
+                        <td>
+                            <?= htmlspecialchars($module['title']) ?>
+                        </td>
+                        <td>
+                            <?php if (isset($module['contact_person'])) { ?>
+                                <a href="<?= ROOTPATH ?>/profile/<?= $module['contact_person'] ?>">
+                                    <?= $DB->getNameFromId($module['contact_person'] ?? null) ?>
+                                </a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#teaching-modules-table').DataTable({});
+    </script>
+<?php } ?>
+
 
 <?php if ($Settings->hasPermission('organizations.delete')) { ?>
     <button type="button" class="btn danger mt-20" id="delete-organization" onclick="$('#delete-organization-confirm').toggle();$(this).toggle();">

@@ -68,3 +68,12 @@ $osiris->adminRights->insertOne([
         <?=lang('Start File Migration', 'Dateimigration starten')?>
     </a>
 </p>
+
+<?php
+// give admin rights to see financial statistics to role 'admin'
+$osiris->adminRights->insertOne([
+    "role" => "user",
+    "right" => "teaching.edit",
+    "value" => true
+]);
+?>
