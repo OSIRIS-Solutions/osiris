@@ -194,6 +194,21 @@ function validateValues($values, $DB)
         echo "The year $values[year] is not valid!";
         die();
     }
+    if (isset($values['month']) && ($values['month'] < 1 || $values['month'] > 12)) {
+        echo "The month $values[month] is not valid!";
+        die();
+    }
+    // if year and month are set, but start is not, set start
+    if (isset($values['year']) && isset($values['month']) && !isset($values['start']) && !isset($values['end'])) {
+        $values['start'] = array(
+            'year' => $values['year'],
+            'month' => $values['month'],
+            'day' => $values['day'] ?? 1,
+        );
+        $values['start_date'] = toISOdate($values['year'], $values['month'], $values['day'] ?? 1);
+        $values['end'] = $values['start'];
+        $values['end_date'] = $values['start_date'];
+    }
     // dump($values);
     // die;
     return $values;
@@ -222,6 +237,11 @@ function get_preview($html, $length = 150)
     }
 
     return $preview;
+}
+
+function toISOdate($year, $month = 1, $day = 1)
+{
+    return str_pad($year, 4, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
 }
 
 function valiDate($date)
