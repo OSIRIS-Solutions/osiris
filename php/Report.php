@@ -175,19 +175,24 @@ class Report
 
     public function format($item)
     {
-        switch ($item['type']) {
-            case 'text':
-                return $this->formatText($item);
-            case 'activities':
-                return $this->formatActivities($item);
-            case 'activities-field':
-                return $this->formatActivitiesFields($item);
-            case 'table':
-                return $this->formatTable($item);
-            case 'line':
-                return $this->formatLine($item);
-            default:
-                return '';
+        try {
+            switch ($item['type']) {
+                case 'text':
+                    return $this->formatText($item);
+                case 'activities':
+                    return $this->formatActivities($item);
+                case 'activities-field':
+                    return $this->formatActivitiesFields($item);
+                case 'table':
+                    return $this->formatTable($item);
+                case 'line':
+                    return $this->formatLine($item);
+                default:
+                    throw new Exception("Unknown report type: " . $item['type']);
+            }
+        } catch (Exception $e) {
+            error_log("Report format error: " . $e->getMessage());
+            return "<div class='alert danger'><strong>Report Error:</strong> " . htmlspecialchars($e->getMessage()) . "</div>";
         }
     }
 
@@ -270,6 +275,11 @@ class Report
         // apply variable substitutions
 
         $filter = json_decode($item['filter'], true);
+        // check for json errors
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("Invalid JSON filter in report item: " . json_last_error_msg());
+        }
+
         $timelimit = $item['timelimit'] ?? false;
 
         // add time limit filter
