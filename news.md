@@ -64,7 +64,7 @@ Lehrveranstaltungen wurden grundsätzlich überarbeitet und bieten nun mehr Mög
 - Die maximale Länge für Projekt-Kurzbezeichnungen von 30 auf 100 Zeichen erhöht
 - Dafür wurde ein neues Akronym-Feld ergänzt: dieses wird mit dem Kurztitel kombiniert, falls vorhanden
 - Fehler behoben: Projekttyp wurde im Projektformular nicht angezeigt
-- Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt.
+- Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt. Wenn ihr das Datenmodul "Verbundvorhaben" nutzen wollt, müsst ihr es zunächst in der Konfiguration aktivieren. Geht dazu auf Inhalte > Projekte und wählt die entsprechende Projektkategorie aus. Auf der zweiten Seite könnt ihr das Modul für alle Phasen aktivieren, bei denen es eine Rolle spielen soll (z.B. Beantragt, Bewilligt, Projektphase).
 - Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
 
 ### Dokumente von Aktivitäten
