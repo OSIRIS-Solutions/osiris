@@ -1,6 +1,139 @@
 # Neuigkeiten
 
-<span class="badge float-right">08.12.2025</span>
+
+<time datetime="2026-01-18">01.02.2026</time>
+<a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
+
+## Version 1.8.0
+
+Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Organisationen. Hier die Highlights:
+
+### Design & Customization
+
+Bislang war es nur möglich, das Logo und die Farben von OSIRIS anzupassen. Mit diesem Update haben wir die Customization-Funktionen deutlich erweitert:
+- **Eigene Schriftarten**: Ihr könnt jetzt eigene Schriftarten in OSIRIS verwenden, um das Erscheinungsbild noch besser an eure CI anzupassen.
+- **Icons**: wählt aus drei verschiedenen Icon-Stilen (Standard, Gefüllt oder Zweifarbig).
+- **Viele Elemente anpassen**: z.B. die Dicke und Farbe von Rahmen, die Rundung von Ecken, Schatten, Icons und vieles mehr.
+- **Kopfzeile**: Ihr könnt jetzt die Kopfzeile anpassen, z.B. die Höhe verändern, die Logos komplett in den Footer verschieben oder das OSIRIS-Logo einfärben.
+
+### Custom Fields
+
+- Neues Format: Freitext-Liste
+  - Es wurde ein neuer Typ von Custom-Field hinzugefügt, der eine Liste von Freitextwerten ermöglicht. Dieses Feld funktioniert ähnlich wie das bestehende Synonyme-Feld bei Organisationen, aber es ist allgemeiner und kann für verschiedene Zwecke verwendet werden.
+- Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
+
+### Portfolio
+
+OSIRIS Portfolio wurde um einige nützliche Funktionen erweitert:
+
+- Es gibt jetzt die Möglichkeit, ein öffentliches Portfolio direkt in OSIRIS zu aktivieren. Diese Funktion kann im Admin-Bereich unter "Generelle Einstellungen" > "Funktionen" aktiviert werden. Das öffentliche Portfolio ist auch ohne Login von der Startseite aus zugänglich.
+- Die Forschungsbereiche wurden hinzugefügt und können jetzt im Portfolio und in der API angezeigt werden. Sie haben eine schnell zugängliche Übersichtsseite und werden auch in allen verknüpften Entitäten angezeigt (Aktivitäten, Projekte, Personen, Gruppen).
+- Infrastrukturen wurden hinzugefügt und können jetzt im Portfolio und in der API angezeigt werden. Sie haben eine eigene Seite im Portfolio und werden auch in verknüpften Aktivitäten und auf der persönlichen Seite vom Betriebspersonal angezeigt.
+- Es wurde ein neuer Tab mit Kooperationspartnern hinzugefügt, der eine Weltkarte mit den Standorten der Partner anzeigt. Diese Karte wurde verbessert, um den verfügbaren Platz besser zu nutzen und auf großen Bildschirmen ansprechender auszusehen. Außerdem unterstützt die Karte jetzt die Aggregation von Partnern je nach Zoomstufe, um die Übersichtlichkeit zu erhöhen.
+- Es wurden weitere Einstellungen für persönliche Profile hinzugefügt, z.B. die Möglichkeit, die Anzeige von weiteren Aktivitäten oder Lehraktivitäten zu deaktivieren.
+- Es wurden weitere Vorschauoptionen hinzugefügt.
+
+Es ist nun außerdem möglich, die **URL zum externen Portfolio** anzupassen. So könnt ihr z.B. eine eigene Domain verwenden oder das Portfolio einfacher in eine bestehende Webseite integrieren. Dazu gibt es im Admin-Bereich unter "Generelle Einstellungen" > "Portfolio" ein neues Feld "Portfolio Basis-URL". Wenn dieses ausgefüllt ist, wird diese URL für alle Links verwendet, die in Portfolio generiert werden. Andernfalls wird die OSIRIS versuchen, eine relative URL zu verwenden.
+
+### Organisationen und Projekt-Kollaborationen
+
+- Es ist nun möglich, Logos für Organisationen hochzuladen, die dann in verschiedenen Bereichen von OSIRIS angezeigt werden (z.B. in Projekten, auf der Organisationsseite, in der erweiterten Suche).
+- Für eine bessere User Experience beim manuellen Anlegen von Organisationen, können die Koordinaten jetzt automatisch über den angegebenen Standort (wahlweise inkl. des Landes) bezogen werden. Dabei wird die aktuelle UI-Sprache verwendet, um die bestmöglichen Ergebnisse zu erzielen.
+- Auf der Übersichtsseite einer Organisation wird neben einem überarbeiteten Layout jetzt auch eine Karte mit den Standort der Organisation angezeigt.
+- Synonyme wurden für Organisationen hinzugefügt zur besseren Auffindbarkeit, z.B. kann dann die Deutsche Forschungsgemeinschaft auch über "DFG" gefunden werden. Die Synonyme werden ebenfalls über ROR bezogen.
+- Der Kollaborationsbereich in Projekten grundlegend überarbeitet und fügt sich damit nahtlos in das neue Organisationsmanagement ein. Es kann zuerst in bereits bestehende Organisationen gesucht und diese dann als Kollaborationspartner hinzugefügt werden. Alternativ können auch neue Organisationen direkt im Projekt angelegt werden.
+
+### Lehrveranstaltungen
+
+Lehrveranstaltungen wurden grundsätzlich überarbeitet und bieten nun mehr Möglichkeiten
+- Die Übersichtsseite zeigt jetzt alle Lehrveranstaltungen in einer Tabelle an, die deutlich übersichtlicher ist und mehr Informationen bietet.
+- Jede Lehrveranstaltung hat jetzt eine eigene Seite, auf der alle Details angezeigt werden, inkl. aller verknüpften Aktivitäten. Dabei werden Aktivitäten mit dem Modul `supervisors` auch mit ihren Semesterwochenstunden angezeigt.
+- Es gibt auch eine neue Seite, um existierende Lehrveranstaltungen zu bearbeiten. Dazu wurde ein neues Recht hinzugefügt (Lehrveranstaltungen bearbeiten), das standardmäßig an alle Nutzenden vergeben wird (wie es zuvor auch war).
+- Verknüpfung mit Organisationen:
+  - Anstatt Organisationen händisch einzugeben, können diese jetzt aus dem Organisationsmanagement ausgewählt werden. Alternativ gibt es einen Link, um neue Organisationen anzulegen. 
+  - Es gibt auch eine Vorschlagsliste, die die 5 am häufigsten zu Lehrveranstaltungen hinzugefügten Organisationen anzeigt, um die Bearbeitung zu vereinfachen.
+  - Auf der Seite der Organisationen werden alle verknüpften Lehrveranstaltungen angezeigt.
+  - Die Organisation wird auch auf der Statistik-Seite der Lehrveranstaltungen angezeigt.
+
+> Bitte beachte, dass wir die Organisationen nicht automatisch hinzufügen können, wenn ihr bereits Lehrveranstaltungen habt. Diese müsst ihr manuell bearbeiten, um die Organisationen zu verknüpfen. Allerdings werden bestehende Organisationen beibehalten und weiterhin angezeigt.
+
+### Projekte und Anträge
+
+**Finanzen** 
+*(Aufgrund der Sensibilität dieser Daten sind sie ausschließlich im Antrag zu sehen und nicht im Projekt selbst)*
+
+- Die Drittmitteleinnahmen wurden in ein neues Format überführt, das nun neben den geplanten auch die tatsächlich verausgabten Mittel pro Jahr erfasst.
+- Es gibt jetzt eine Übersicht über die Finanzen eines Projekts, die geplante und verausgabte Mittel pro Jahr anzeigt und diese analysiert und visualisiert.
+- In einer neuen Finanzübersicht können Admins und Projektverantwortliche verschiedene Finanzberichte generieren, z.B. geplante vs. verausgabte Mittel. Es gibt ein neues Zugriffsrecht dafür (Finanzinformationen sehen), das standardmäßig nicht vergeben ist.
+
+**Formulare & Eingaben**
+
+- Die maximale Länge für Projekt-Kurzbezeichnungen von 30 auf 100 Zeichen erhöht
+- Dafür wurde ein neues Akronym-Feld ergänzt: dieses wird mit dem Kurztitel kombiniert, falls vorhanden
+- Fehler behoben: Projekttyp wurde im Projektformular nicht angezeigt
+- Es wurde die Möglichkeit hinzugefügt, Projekte und Anträge als Verbundvorhaben zu kennzeichnen. Dabei wurde sich am KDSF-Datenmodell orientiert. Bei Verbundvorhaben wird nun ebenfalls nach dem Identifier und dem Titel des Verbunds, sowie nach der Sprecherrolle gefragt. Wenn ihr das Datenmodul "Verbundvorhaben" nutzen wollt, müsst ihr es zunächst in der Konfiguration aktivieren. Geht dazu auf Inhalte > Projekte und wählt die entsprechende Projektkategorie aus. Auf der zweiten Seite könnt ihr das Modul für alle Phasen aktivieren, bei denen es eine Rolle spielen soll (z.B. Beantragt, Bewilligt, Projektphase).
+- Es gibt nun auch eine Möglichkeit, ein Förderprogramm-Feld zu nutzen, das eine Liste statt eines Freifeldes verwendet. Dabei werden vordefinierte Förderprogramme aus einer Vokabularliste verwendet, die im Admin-Bereich verwaltet werden kann.
+
+### Dokumente von Aktivitäten
+
+Die Dokumentenverwaltung bei Aktivitäten wurde auf das neue System migriert und dadurch deutlich verbessert:
+- Der Bereich "Dokumente" in Aktivitäten wurde komplett überarbeitet und bietet jetzt eine deutlich bessere Übersicht und Handhabung.
+- Es ist nun möglich, die Art der Dokumente anzugeben und eine Beschreibung hinzuzufügen.
+- Für die Arten von Dokumenten gibt es jetzt eine Vokabularliste, die im Admin-Bereich verwaltet werden kann.
+- Es gibt einen neuen Bereich "Dokumente", in dem alle Dokumente aus Aktivitäten und Projekten zentral angezeigt werden. Außerdem kann in dieser Liste nach Dokumentarten und Dateitypen gefiltert werden. Dazu wurde ein neues Zugriffsrecht (Dokumente sehen) dem Bereich "Ansichten" hinzugefügt, das standardmäßig nicht vergeben ist.
+
+### Aktivitäten verknüpfen
+
+- Es wurde die Möglichkeit hinzugefügt, Aktivitäten miteinander zu verknüpfen, um Beziehungen wie "ist eine Übersetzung von", "ist eine erweiterte Version von" oder "ist ein Preprint von" abzubilden. Dabei können beliebige Aktivitätstypen miteinander verknüpft werden.
+- Die Verknüpfungen können in beide Richtungen angezeigt werden und sind in der Aktivität unter einem eigenen Abschnitt zu finden.
+- Die Arten von Verknüpfungen sind im Moment noch nicht konfigurierbar, aber es sind bereits einige gängige Beziehungen vordefiniert. Wir möchten gern erst weiteres Feedback sammeln, bevor wir hier mehr Flexibilität einbauen.
+
+### Organisationseinheiten
+
+- Die Forschungsfeldklassifikation des KDSF wurde nun auch den Einheiten in OSIRIS hinzugefügt. Dadurch können Einheiten bestimmten Forschungsfeldern zugeordnet werden, was die KDSF-Konformität weiter verbessert.
+- Ein Fehler wurde behoben, durch den Klammersetzung in Einheitennamen die Darstellung als Organigramm verhindert hat. Außerdem unterstützt das Organigramm jetzt auch die deutschen Namen von Einheiten.
+
+### Journale
+
+- Es wurde die Möglichkeit hinzugefügt, Journale zu löschen. Dazu gibt es ein neues Zugriffsrecht (Journale löschen), das standardmäßig nicht vergeben ist. Man kann nur Journale löschen, die nicht mit Aktivitäten verknüpft sind.
+
+### Visualisierungen
+
+Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäten-Netzwerk" umbenannt, um besser die neue Flexibilität widerzuspiegeln.
+- Dabei kann nach verschiedenen Entitäten gruppiert werden. Im Moment werden Organisationen (1. und 2. Level) und Forschungsbereiche unterstützt, weitere folgen eventuell in zukünftigen Versionen. Vorschläge sind willkommen!
+- Es können nun Aktivitäten verschiedener Kategorien (z.B. Publikationen, Vorträge, Medienbeiträge) visualisiert werden
+- Das Startjahr kann jetzt frei gewählt werden (default: 5 Jahre zurück)
+- Das fertige Netzwerk kann jetzt als PNG oder SVG heruntergeladen werden.
+
+### Weitere Verbesserungen & Bugfixes
+- Es wurde ein neues Daten-Feld für Aktivitäten hinzugefügt, das ähnlich wie das "person"-Feld funktioniert, aber statt des Freitext für die Affiliation eine Auswahl aus den Organisationen bietet. Dadurch können Affiliationen standardisiert und besser verwaltet werden. Bitte beachtet, dass dieses Feld nicht zusammen mit den Feldern "persons" oder "organization" verwendet werden kann. Die Felder sind exklusiv zueinander.
+- Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt, da es häufiger zu Verwirrung geführt hat, als dass es geholfen hat. Die Position der Autoren lässt sich im Nachhinein einfach über die Autorenbearbeitung anpassen. Ansonsten können über das "Authors-Table"-Modul weiterhin alle Autoren mit ihrer Position bearbeitet werden.
+- Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
+- Es ist jetzt nicht mehr möglich, leere Autoren oder Herausgeber hinzuzufügen. Die Fehlermeldungen werden jetzt auch auf Deutsch übersetzt.
+- Das Layout der News-Seite wurde verbessert.
+
+----
+
+<time datetime="2025-12-17">17.12.2025</time>
+<a class="anchor" href="#version-1.7.1" id="version-1.7.1"></a>
+
+## Version 1.7.1
+
+In dieser Version wurden im Wesentlichen Fehler behoben und kleinere Verbesserungen vorgenommen:
+
+- Die Module `supervisors` und `supervisor-thesis` speichern jetzt nicht mehr in die Autorenliste. Dadurch lassen sich jetzt bei einer Aktivität sowohl Betreuer:innen als auch Autor:innen unabhängig voneinander erfassen. Dazu wurden im gesamten Code überall Optimierungen vorgenommen, um diese Trennung zu gewährleisten. Nach Betreuenden kann jetzt auch in der erweiterten Suche gefiltert werden.
+- Es wurde ein Fehler behoben durch den Aktivitätstypen, die nicht öffentlich sichtbar sein sollten, trotzdem über die exakte ID aufgerufen werden konnten.
+- Für Aktivitätstypen, die nicht im Portfolio angezeigt werden sollen, gibt es jetzt auch nicht mehr die Option, sie auszublenden. Dies verhindert Verwirrung, da sie ohnehin nicht sichtbar sind.
+- Die **Templates** wurden erweitert:
+  - Die Conditional Templates unterstützen jetzt auch mehrere Bedingungen mit `&` (und) bzw. `|` (oder).
+  - Es gibt nun die Möglichkeit, im Falle das ein Feld leer ist ein anderes Feld zu nutzen (z.B. `{field1|field2}`). Sollte field1 leer sein, wird field2 genutzt. Sollte field2 kein Name eines Feldes sein, wird der Text so ausgegeben. Die Textausgabe kann mit Anführungszeichen erzwungen werden: `{field1| "Default Text"}`
+- In der Personen-Übersicht kann jetzt auch nach Rollen gefiltert werden.
+- Die Historie wurde verbessert und sollte jetzt zwei unterschiedlich leere Werte nicht mehr als Unterschied erkennen (z.B. "" und []). Außerdem können einige Werte jetzt besser dargestellt werden (z.B. Open Access), da hier keine Icons mehr für die Darstellung in Listen verwendet werden. Des Weiteren können jetzt auch boolsche Werte in der Historie angezeigt werden.
+
+
+---
+
+<time datetime="2025-12-08">08.12.2025</time>
 <a class="anchor" href="#version-1.7.0" id="version-1.7.0"></a>
 
 ## Version 1.7.0
@@ -71,7 +204,7 @@ Eine Übersicht über alle geschlossenen Issues findet ihr [hier](https://github
 
 ---
 
-<span class="badge float-right">16.11.2025</span>
+<time datetime="2025-11-16">16.11.2025</time>
 <a class="anchor" href="#version-1.6.2" id="version-1.6.2"></a>
 
 ## Version 1.6.2
@@ -179,7 +312,7 @@ Neu: Vollständiges Management für Gastkonten
 
 ---
 
-<span class="badge float-right">02.11.2025</span>
+<time datetime="2025-11-02">02.11.2025</time>
 <a class="anchor" href="#version-1.6.1" id="version-1.6.1"></a>
 
 ## Version 1.6.1
@@ -232,7 +365,7 @@ Wir haben viele kleinere Verbesserungen vorgenommen:
 
 
 
-<span class="badge float-right">12.10.2025</span>
+<time datetime="2025-10-12">12.10.2025</time>
 <a class="anchor" href="#version-1.6.0" id="version-1.6.0"></a>
 
 ## Version 1.6.0
@@ -377,7 +510,7 @@ Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zus�
 ---
 
 
-<span class="badge float-right">30.09.2025</span>
+<time datetime="2025-09-30">30.09.2025</time>
 <a class="anchor" href="#version-1.5.2" id="version-1.5.2"></a>
 
 ## Version 1.5.2
@@ -418,7 +551,7 @@ Dadurch werden flexiblere und kontextsensitive Vorlagen möglich, ohne dass zus�
 
 ---
 
-<span class="badge float-right">24.08.2025</span>
+<time datetime="2025-08-24">24.08.2025</time>
 <a class="anchor" href="#version-1.5.1" id="version-1.5.1"></a>
 
 ## Version 1.5.1
@@ -465,7 +598,7 @@ Mit dem neuen Formbuilder kannst du Formulare für Aktivitäten noch flexibler g
 ---
 
 
-<span class="badge float-right">31.07.2025</span>
+<time datetime="2025-07-31">31.07.2025</time>
 <a class="anchor" href="#version-1.5.0" id="version-1.5.0"></a>
 
 ## Version 1.5.0
@@ -624,7 +757,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 ---
 
-<span class="badge float-right">13.04.2025</span>
+<time datetime="2025-04-13">13.04.2025</time>
 <a class="anchor" href="#version-1.4.3" id="version-1.4.3"></a>
 
 ## Version 1.4.3
@@ -640,7 +773,7 @@ Die Projekte wurden komplett überarbeitet und bilden jetzt den gesamten Projekt
 
 ---
 
-<span class="badge float-right">03.04.2025</span>
+<time datetime="2025-04-03">03.04.2025</time>
 <a class="anchor" href="#version-1.4.2" id="version-1.4.2"></a>
 
 ## Version 1.4.2
@@ -672,7 +805,7 @@ Es wurden neue Statistiken hinzugefügt, die ähnlich wie die Statistik der Infr
 
 ---
 
-<span class="badge float-right">03.04.2025</span>
+<time datetime="2025-04-03">03.04.2025</time>
 <a class="anchor" href="#version-1.4.1" id="version-1.4.1"></a>
 
 ## Version 1.4.1
@@ -763,7 +896,7 @@ Diese können nur in der PHP-Konfiguration gesetzt werden und sind nicht im Admi
 
 ---
 
-<span class="badge float-right">12.02.2025</span>
+<time datetime="2025-02-12">12.02.2025</time>
 <a class="anchor" href="#version-1.4.0" id="version-1.4.0"></a>
 
 ## Version 1.4.0
@@ -954,7 +1087,7 @@ Die Nutzereinstellungen sind in den letzten Monaten gewachsen und sehr unübersi
 
 ---
 
-<span class="badge float-right">15.08.2024</span>
+<time datetime="2024-08-15">15.08.2024</time>
 <a class="anchor" href="#version-1.3.6" id="version-1.3.6"></a>
 
 ## Version 1.3.6
@@ -1001,7 +1134,7 @@ Es wurden erste Schritte unternommen, um Compliance mit dem [Nagoya-Protokoll](h
 
 ---
 
-<span class="badge float-right">23.06.2024</span>
+<time datetime="2024-06-23">23.06.2024</time>
 <a class="anchor" href="#version-1.3.5" id="version-1.3.5"></a>
 
 ## Version 1.3.5
@@ -1050,7 +1183,7 @@ Die Synchronisation zu LDAP hat jetzt ein Interface spendiert bekommen, über da
 
 ---
 
-<span class="badge float-right">23.05.2024</span>
+<time datetime="2024-05-23">23.05.2024</time>
 <a class="anchor" href="#version-1.3.4" id="version-1.3.4"></a>
 
 ## Version 1.3.4
@@ -1105,7 +1238,7 @@ Es gab außerdem einige UI-Improvements, z.B. beim Festlegen der Leitung einer O
 
 ---
 
-<span class="badge float-right">15.04.2024</span>
+<time datetime="2024-04-15">15.04.2024</time>
 <a class="anchor" href="#version-1.3.3" id="version-1.3.3"></a>
 
 ## Version 1.3.3
@@ -1117,7 +1250,7 @@ Sie ist auf der Detailseite einer Aktivität unter dem Reiter _Historie_ verfüg
 
 ---
 
-<span class="badge float-right">22.02.2024</span>
+<time datetime="2024-02-22">22.02.2024</time>
 <a class="anchor" href="#version-1.3.2" id="version-1.3.2"></a>
 
 ## Version 1.3.2
@@ -1134,7 +1267,7 @@ In der Dokumentation ist ein neuer Reiter API Docs, unter dem die wichtigsten En
 
 ---
 
-<span class="badge float-right">21.02.2024</span>
+<time datetime="2024-02-21">21.02.2024</time>
 <a class="anchor" href="#version-1.3.1" id="version-1.3.1"></a>
 
 ## Version 1.3.1
@@ -1151,7 +1284,7 @@ In dieser Version sind ein paar Fixes zur vorherigen Version, sowie neue Custom 
 
 ---
 
-<span class="badge float-right">09.02.2024</span>
+<time datetime="2024-02-09">09.02.2024</time>
 <a class="anchor" href="#version-1.3.0" id="version-1.3.0"></a>
 
 ## Version 1.3.0
@@ -1303,7 +1436,7 @@ Es kann sein, dass einige wenige Einstellungen von Euch nicht in das neue Format
 
 ---
 
-<span class="badge float-right">25.10.2023</span>
+<time datetime="2023-10-25">25.10.2023</time>
 <a class="anchor" href="#version-1.2.2" id="version-1.2.2"></a>
 
 ## Version 1.2.2
@@ -1359,7 +1492,7 @@ Es wurden einige generelle Verbesserungen durchgeführt:
 
 ---
 
-<span class="badge float-right">18.10.2023</span>
+<time datetime="2023-10-18">18.10.2023</time>
 <a class="anchor" href="#version-1.2.1" id="version-1.2.1"></a>
 
 ## Version 1.2.1
@@ -1368,7 +1501,7 @@ Diese Version beinhaltet vornehmlich Bug Fixes und Optimierungen im Hintergrund.
 
 ---
 
-<span class="badge float-right">04.10.2023</span>
+<time datetime="2023-10-04">04.10.2023</time>
 <a class="anchor" href="#version-1.2.0" id="version-1.2.0"></a>
 
 ## Version 1.2.0
@@ -1527,7 +1660,7 @@ OSIRIS prüft jetzt selbstständig einmal in der Woche (sonntags um 2 Uhr), ob e
 
 ---
 
-<span class="badge float-right">12.05.23</span>
+<time datetime="23-05-12">12.05.23</time>
 <a class="anchor" href="#version-1.1.0" id="version-1.1.0"></a>
 
 ## Version 1.1.0
@@ -1638,7 +1771,7 @@ Dadurch sieht die Seite auf den ersten Blick vielleicht etwas ungewohnt aus, ihr
 
 ---
 
-<span class="badge float-right">02.01.23</span>
+<time datetime="23-01-02">02.01.23</time>
 
 ## Version 1.0
 

@@ -42,91 +42,119 @@ class Document extends Settings
     private $lang = 'en';
 
     public $templates = [
+        "abstract" => ["abstract"],
         "affiliation" => ["affiliation"],
-        "authors" => ["authors"],
-        "supervisor" => ["authors"],
-        "scientist" => ["authors"],
-        "authors-last-f" => ["authors"],
-        "authors-last-first" => ["authors"],
+        "author-table" => ["authors"],
         "authors-f-last" => ["authors"],
         "authors-f.-last" => ["authors"],
         "authors-first-last" => ["authors"],
-        "editors-first-last-amp-ed"  => ["editors"],
         "authors-last-f-etal6" => ["authors"],
+        "authors-last-f" => ["authors"],
         "authors-last-first-amp+comma" => ["authors"],
-        "editors-f.-last-semicolon-Eds" => ["authors"],
+        "authors-last-first" => ["authors"],
+        "authors" => ["authors"],
+        "book-series" => ["book-series"],
         "book-series" => ["series"],
         "book-title" => ["book"],
         "category" => ["category"],
         "city" => ["city"],
         "conference" => ["conference"],
         "correction" => ["correction"],
-        "start" => ["year", "month", "day"],
-        "end" => ["year", "month", "day"],
-        "date" => ["year", "month", "day"],
-        "date-range" => ["start", "end"],
+        "countries" => ["countries"],
+        "country" => ["country"],
         "date-range-ongoing" => ["start", "end"],
-        "year" => ["year", "month", "day"],
-        "month" => ["year", "month", "day"],
+        "date-range" => ["date-range"],
+        "date-range" => ["start", "end"],
+        "date" => ["start", "end"],
         "details" => ["details"],
         "doctype" => ["doc_type"],
-        "doi" => ["doi"],
+        "doctype" => ["doctype"],
         "doi-link" => ["doi"],
+        "doi-prefix" => ["doi"],
         "doi-text" => ["doi"],
-        "edition" => ["edition"],
+        "doi" => ["doi"],
         "edition-ed" => ["edition"],
+        "edition" => ["edition"],
         "editor" => ["editors"],
         "editorial" => ["editor_type"],
+        "editorial" => ["editorial"],
+        "editors-f.-last-semicolon-Eds" => ["authors"],
+        "editors-first-last-amp-ed"  => ["editors"],
+        "end" => ["year", "month", "day"],
+        "event-select" => ["event-select"],
         "file-icons" => ["file-icons"],
+        "funding_type" => ["funding_type"],
+        "gender" => ["gender"],
+        "guest-category" => ["guest-category"],
         "guest" => ["category"],
         "isbn" => ["isbn"],
         "issn" => ["issn"],
         "issue" => ["issue"],
         "iteration" => ["iteration"],
-        "journal" => ["journal"],
         "journal-abbr" => ["journal"],
+        "journal" => ["journal"],
         "lecture-invited" => ["invited_lecture"],
         "lecture-type" => ["lecture_type"],
-        "link" => ["link"],
+        "license" => ["license"],
         "link-full" => ["link"],
-        "software-link" => ["link"],
+        "link" => ["link"],
         "location" => ["location"],
         "magazine" => ["magazine"],
+        "month" => ["start"],
+        "nationality" => ["nationality"],
         "online-ahead-of-print" => ["epub"],
-        "openaccess" => ["open_access"],
-        "openaccess-text" => ["open_access"],
         "openaccess-status" => ["oa_status"],
-        "organization" => ["organization"],
+        "openaccess-text" => ["open_access"],
+        "openaccess" => ["open_access"],
         "organization-location" => ["organization"],
+        "organization" => ["organization"],
         "organizations" => ["organizations"],
-        "pages" => ["pages"],
         "pages-pp" => ["pages"],
+        "pages" => ["pages"],
+        "peer-reviewed" => ["peer-reviewed"],
         "person" => ["name", "affiliation", "academic_title"],
+        "person-only" => ["name"],
+        "person-organization" => ["name", "organization"],
+        "political_consultation" => ["political_consultation"],
+        "projects" => ["projects"],
+        "pub-language" => ["pub-language"],
         "publisher" => ["publisher"],
         "pubmed" => ["pubmed"],
         "pubtype" => ["pubtype"],
         "review-description" => ["title"],
-        "review-type" => ["title"],
+        "review-type" => ["review-type"],
+        "role" => ["role"],
+        "scientist" => ["authors"],
+        "scope" => ["scope"],
         "semester-select" => [],
-        "subtype" => ["subtype"],
+        "software-link" => ["link"],
         "software-type" => ["software_type"],
         "software-venue" => ["software_venue"],
+        "start" => ["year", "month", "day"],
         "status" => ["status"],
         "student-category" => ["category"],
-        "thesis" => ["category"],
+        "subtitle" => ["subtitle"],
+        "subtype" => ["subtype"],
+        "supervisor-thesis" => ["supervisors"],
+        "supervisor" => ["supervisors"],
+        "tags" => ["tags"],
         "teaching-category" => ["category"],
-        "teaching-course" => ["title", "module", "module_id"],
         "teaching-course-short" => ["title", "module", "module_id"],
+        "teaching-course" => ["title", "module", "module_id"],
+        "topics" => ["topics"],
+        "thesis" => ["category"],
+        "thesis" => ["thesis"],
         "title" => ["title"],
         "university" => ["publisher"],
+        "venue" => ["venue"],
         "version" => ["version"],
+        "volume-issue-pages" => ["volume", "issue", "pages"],
         "volume" => ["volume"],
-        "country" => ["country"],
-        "nationality" => ["nationality"],
-        "gender" => ["gender"],
-        "volume-issue-pages" => ["volume"],
-        "political_consultation" => ["political_consultation"],
+        "year" => ["year", "month", "day"],
     ];
+
+    private $field_ids = [];
+    private $relationship_types = [];
 
 
     function __construct($highlight = true, $usecase = '')
@@ -141,6 +169,15 @@ class Document extends Settings
         $this->custom_field_values = array_column($fields, 'values', 'id');
 
         $this->lang = lang('en', 'de');
+
+        $this->field_ids = array_keys($this->templates);
+        foreach ($this->custom_fields as $field) {
+            $this->field_ids[] = $field['id'];
+        }
+
+        // load relationship types
+        $json = file_get_contents(__DIR__ . '/../data/activity-relations.json');
+        $this->relationship_types = json_decode($json, true);
     }
 
     public function setDocument($doc)
@@ -156,6 +193,24 @@ class Document extends Settings
         foreach (($this->subtypeArr['modules'] ?? array()) as $m) {
             $this->modules[] = str_replace('*', '', $m);
         }
+    }
+
+    public function getRelationships()
+    {
+        return $this->relationship_types;
+    }
+
+    public function getRelationshipLabel($rel_id, $reverse = false)
+    {
+        foreach ($this->relationship_types as $rel) {
+            if ($rel['id'] == $rel_id) {
+                if ($reverse && isset($rel['reverse_label'])) {
+                    return $rel['reverse_label'];
+                }
+                return $rel['label'];
+            }
+        }
+        return ['en' => $rel_id, 'de' => $rel_id];
     }
 
     private function lang($en, $de = null)
@@ -396,15 +451,32 @@ class Document extends Settings
         }
         $this->type = $type;
         $this->typeArr = $this->getActivity($type);
-        $this->subtype = $this->doc['subtype'];
+        $this->subtype = $this->doc['subtype'] ?? '';
         $this->subtypeArr = $this->getActivity($this->type, $this->subtype);
+    }
+
+    public function getUsers($affiliatedOnly = false)
+    {
+        $users = [];
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
+            if (isset($this->doc[$role]) && !empty($this->doc[$role])) {
+                $persons = DB::doc2Arr($this->doc[$role]);
+                foreach ($persons as $p) {
+                    if (isset($p['user']) && !empty($p['user'])) {
+                        if ($affiliatedOnly && !($p['aoi'] ?? false)) continue;
+                        $users[] = $p['user'];
+                    }
+                }
+            }
+        }
+        return array_values(array_unique($users));
     }
 
     function activity_badge()
     {
         $name = $this->activity_subtype();
         $icon = $this->activity_icon(false);
-        $type = $this->doc['type'];
+        $type = $this->doc['type'] ?? '';
         return "<span class='badge badge-$type'>$icon $name</span>";
     }
 
@@ -542,6 +614,17 @@ class Document extends Settings
             $separator = ", ";
         }
         return Document::commalist($authors, $separator) . $append;
+    }
+
+    public static function getPosition($position)
+    {
+        $positions = [
+            'first' => lang('First author', 'Erstautor'),
+            'last' => lang('Last author', 'Letztautor'),
+            'middle' => lang('Middle author', 'Mittelautor'),
+            'corresponding' => lang('Corresponding author', 'Korrespondierender Autor'),
+        ];
+        return $positions[$position] ?? ucfirst($position) . ' author';
     }
 
     public function getAffiliationTypes($key = 'authors')
@@ -828,13 +911,14 @@ class Document extends Settings
     private function formatAuthorsNew($module)
     {
         $isEditors = str_starts_with($module, 'editors-');
-        $authorKey = $isEditors ? 'editors' : 'authors';
+        $isSupervisors = str_starts_with($module, 'supervisors-');
+        $authorKey = $isEditors ? 'editors' : ($isSupervisors ? 'supervisors' : 'authors');
 
         $authors = DB::doc2Arr($this->getVal($authorKey, []));
         if (empty($authors)) return '';
         $N = count($authors);
 
-        $formatParts = explode('-', str_replace(['authors-', 'editors-'], '', $module));
+        $formatParts = explode('-', str_replace(['authors-', 'editors-', 'supervisors-'], '', $module));
 
         // Default-Werte
         $nameFormat = 'last f.'; // z. B. last-f, f.-last, etc.
@@ -991,11 +1075,12 @@ class Document extends Settings
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
             case "authors": // ["authors"],
-            case "supervisor": // ["authors"],
-            case "supervisor-thesis": // ["authors"],
             case "scientist": // ["authors"],
             case "author-table": // ["authors"],
                 return $this->formatAuthorsNew('authors-last-f.');
+            case "supervisor": // ["authors"],
+            case "supervisor-thesis": // ["authors"],
+                return $this->formatAuthorsNew('supervisors-last-f.');
             case "book-series": // ["series"],
                 return $this->getVal('series');
             case "book-title": // ["book"],
@@ -1009,7 +1094,7 @@ class Document extends Settings
             case "correction": // ["correction"],
                 $val = $this->getVal('correction', false);
                 if ($this->usecase == 'list')
-                    return bool_icon($val);
+                    return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
                 if ($val)
                     return "<span style='color:#B61F29;'>[Correction]</span>";
                 else return '';
@@ -1045,18 +1130,21 @@ class Document extends Settings
             case "doi": // ["doi"],
             case "doi-link": // ["doi"],
             case "doi-text": // ["doi"],
+            case "doi-prefix": // ["doi"],
                 $val = $this->getVal('doi');
                 if ($val == $default || empty($val)) return $default;
                 if ($module == 'doi-link') {
                     return "<a target='_blank' href='https://doi.org/$val'>https://doi.org/$val</a>";
                 } elseif ($module == 'doi-text') {
                     return $val;
+                } elseif ($module == 'doi-prefix') {
+                    return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
                 }
-                return "DOI: <a target='_blank' href='https://doi.org/$val'>$val</a>";
+                return "<a target='_blank' href='https://doi.org/$val'>$val</a>";
             case "edition": // ["edition"],
             case "edition-ed": // ["edition"],
                 $val = $this->getVal('edition', $default);
-                if ($val != $default) {
+                if ($val != $default && is_numeric($val)) {
                     if ($val == 1) $val .= "st";
                     elseif ($val == 2) $val .= "nd";
                     elseif ($val == 3) $val .= "rd";
@@ -1074,12 +1162,15 @@ class Document extends Settings
             case "file-icons":
                 if (!($this->typeArr['upload'] ?? true)) return '';
                 if ($this->usecase == 'portal') return '';
-                $files = '';
-                foreach ($this->getVal('files', array()) as $file) {
-                    $icon = getFileIcon($file['filetype']);
-                    $files .= " <a href='$file[filepath]' target='_blank' data-toggle='tooltip' data-title='$file[filetype]: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
+                $res = '';
+                $files = $this->DB->db->uploads->find(['id' => strval($this->doc['_id']), 'type' => 'activities']);
+                foreach ($files as $file) {
+                    $url = ROOTPATH . '/uploads/' . $file['_id'] . '.' . $file['extension'];
+                    $icon = getFileIcon($file['extension']);
+                    $name = $Vocabulary->getValue('activity-document-types', $file['name'] ?? 'File');
+                    $res .= " <a href='$url' target='_blank' data-toggle='tooltip' data-title='$name: $file[filename]' class='file-link'><i class='ph ph-file ph-$icon'></i></a>";
                 }
-                return $files;
+                return $res;
             case 'thesis':
                 $val = $this->getVal('thesis', null);
                 return $Vocabulary->getValue('thesis', $val);
@@ -1097,6 +1188,7 @@ class Document extends Settings
             case "issn": // ["issn"],
                 $issn = $this->getVal('issn', null);
                 if (empty($issn)) return $default;
+                if (is_string($issn)) return $issn;
                 return implode(', ', DB::doc2Arr($issn));
             case "issue": // ["issue"],
                 return $this->getVal('issue');
@@ -1146,7 +1238,7 @@ class Document extends Settings
                 return $this->getVal('magazine');
             case "online-ahead-of-print": // ["epub"],
                 if ($this->usecase == 'list')
-                    return bool_icon($this->getVal('epub', false));
+                    return $this->getVal('epub', false) ? lang('Yes', 'Ja') : lang('No', 'Nein');
                 if ($this->getVal('epub', false))
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
@@ -1154,11 +1246,13 @@ class Document extends Settings
             case "open_access": // ["open_access"],
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
-                    $oa = '<i class="icon-open-access text-success" title="Open Access (' . $status . ')"></i>';
+                    $status = 'Open Access (' . $status . ')';
+                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
                 } else {
-                    $oa = '<i class="icon-closed-access text-danger" title="Closed Access"></i>';
+                    $status = 'Closed Access';
+                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
                 }
-                if ($this->usecase == 'list') return $oa . " (" . $status . ")";
+                if ($this->usecase == 'list') return $status;
                 return $oa;
             case "openaccess-text": // ["open_access"],
                 if ($this->getVal('open_access', false)) {
@@ -1238,7 +1332,29 @@ class Document extends Settings
                 }
                 return "p. " . $val;
             case "person": // ["name", "affiliation", "academic_title"],
-                return $this->getVal('name');
+                $val = $this->getVal('name');
+                $aff = $this->getVal('affiliation');
+                if (isset($this->doc['academic_title']) && !empty($this->doc['academic_title'])) {
+                    $val = $this->doc['academic_title'] . ' ' . $val;
+                }
+                if ($aff != $default) {
+                    $val .= ', ' . $aff;
+                }
+                return $val;
+            case "person-only": // ["name"],
+            case "name": // ["name"],
+                $val = $this->getVal('name');
+                return $val;
+            case "person-organization": // ["name", "organization"],
+                $person = $this->getVal('name');
+                $aff = $this->getVal('organization');
+                if (empty($aff)) return $person;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($aff)]);
+                if (empty($org)) return $person . ', ' . $aff;
+                if ($this->usecase == 'web' || $this->usecase == 'list') {
+                    return $person . ', <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+                }
+                return $person . ', ' . $org['name'];
             case "publisher":; // ["publisher"],
                 return $this->getVal('publisher');
             case "pubmed": // ["pubmed"],
@@ -1272,6 +1388,8 @@ class Document extends Settings
                 return $this->getVal('review-type');
             case "semester-select": // [],
                 return '';
+            case "type":
+                return $this->activity_type();
             case "subtype":
                 return $this->activity_subtype();
             case "software-type": // ["software_type"],
@@ -1329,6 +1447,12 @@ class Document extends Settings
                 return 'Unknown';
             case "title": // ["title"],
                 return $this->getVal('title');
+            case "topics": // ["topic"],
+                $topics = DB::doc2Arr($this->getVal('topics', []));
+                if (empty($topics)) return '';
+                $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
+                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('name', 'name_de'));
+                return implode(', ', $topics_arr);
             case "university": // ["publisher"],
                 return $this->getVal('publisher');
             case "version": // ["version"],
@@ -1374,7 +1498,16 @@ class Document extends Settings
                 }
                 return $val;
             case "political_consultation":
-                return $this->getVal('political_consultation', false);
+                $val = $this->getVal('political_consultation', null);
+                if (empty($val)) return $default;
+                return $Vocabulary->getValue('political_consultation', $val);
+            case "scope":
+                $val = $this->getVal('scope', null);
+                if (empty($val)) return $default;
+                // only local is different in German
+                if ($val == 'local')
+                    return $this->lang('local', 'lokal');
+                return $val;
             default:
                 if (isset($this->custom_fields[$module])) {
                     $val = $this->customVal($this->custom_fields[$module]);
@@ -1404,7 +1537,7 @@ class Document extends Settings
                 }
 
                 if ($val === true || $val === false) {
-                    if ($this->usecase == 'list') return bool_icon($val);
+                    if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
                     $field = $this->custom_fields[$module];
                     if (!isset($field['name'])) {
                         $field['name'] = $module;
@@ -1474,7 +1607,7 @@ class Document extends Settings
         }
 
         if ($this->usecase == 'portal') {
-            $line = "<a class='colorless' href='" . PORTALPATH . "/activity/$id'>$title</a>";
+            $line = "<a class='colorless' href='" . $base . "/activity/$id'>$title</a>";
         } else if ($link) {
             $line = "<a class='colorless' href='" . ROOTPATH . "/activities/view/$id'>$title</a>";
         } else {
@@ -1704,19 +1837,28 @@ class Document extends Settings
 
             if (empty($value) && count($m) == 2) {
                 $value = $m[1];
+                // check if value is enquoted
+                if (preg_match('/^["\'](.*)["\']$/', $value, $value_match)) {
+                    $value = $value_match[1];
+                }
+                // check if the value is a field
+                else if (in_array($value, $this->field_ids)) {
+                    $value = $this->get_field($value, '');
+                }
             }
-
-            if (empty($value)) {
+            if ($this->isEmptyValue($value)) {
                 $value = '';
-            }
-            if (is_array($value)) {
+            } elseif (is_array($value)) {
                 $value = implode(', ', $value);
-            }
-            if ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
+            } elseif ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
                 $value = implode(', ', DB::doc2Arr($value));
+            }
+            if (!is_string($value)) {
+                $value = strval($value);
             }
             $vars['{' . $match . '}'] = ($value);
         }
+        $template = strtr($template, $vars);
 
         $pattern = "/%([^%]*)%/";
         preg_match_all($pattern, $template, $matches);
@@ -1730,8 +1872,18 @@ class Document extends Settings
             if (strpos($fields, '&') !== false) {
                 $allFilled = true;
                 foreach (explode('&', $fields) as $f) {
-                    $value = trim($this->get_field($f));
-                    if (empty($value) || $value == '-') {
+                    // negation?
+                    $negate = false;
+                    if (str_starts_with($f, '!')) {
+                        $negate = true;
+                        $f = substr($f, 1);
+                    }
+                    $value = $this->get_field($f);
+                    $value = is_string($value) ? trim($value) : $value;
+                    if ($negate && !$this->isEmptyValue($value)) {
+                        $allFilled = false;
+                        break;
+                    } else if (!$negate && $this->isEmptyValue($value)) {
                         $allFilled = false;
                         break;
                     }
@@ -1740,8 +1892,17 @@ class Document extends Settings
             } elseif (strpos($fields, '|') !== false) {
                 $anyFilled = false;
                 foreach (explode('|', $fields) as $f) {
-                    $value = trim($this->get_field($f));
-                    if (!empty($value) && $value != '-') {
+                    $negate = false;
+                    if (str_starts_with($f, '!')) {
+                        $negate = true;
+                        $f = substr($f, 1);
+                    }
+                    $value = $this->get_field($f);
+                    $value = is_string($value) ? trim($value) : $value;
+                    if ($negate && $this->isEmptyValue($value)) {
+                        $anyFilled = true;
+                        break;
+                    } else if (!$negate && !$this->isEmptyValue($value)) {
                         $anyFilled = true;
                         break;
                     }
@@ -1749,9 +1910,18 @@ class Document extends Settings
                 if (!$anyFilled) $text = '';
             } else {
                 // single field as before
+                $negate = false;
+                if (str_starts_with($fields, '!')) {
+                    $negate = true;
+                    $fields = substr($fields, 1);
+                }
                 $value = $this->get_field($fields, '');
-                if (!empty($value)) $value = trim($value);
-                if (empty($value) || $value == '-') $text = '';
+                $value = is_string($value) ? trim($value) : $value;
+                if ($negate && !$this->isEmptyValue($value)) {
+                    $text = '';
+                } else if (!$negate && $this->isEmptyValue($value)) {
+                    $text = '';
+                }
             }
             $vars['%' . $match . '%'] = $text;
         }
@@ -1772,5 +1942,30 @@ class Document extends Settings
         $line = preg_replace('/<br *\/?>,\s*/', '<br />', $line);
 
         return $line;
+    }
+
+    private function normalizeValue($value): string
+    {
+        if ($this->isEmptyValue($value)) return '';
+
+        // Arrays
+        if (is_array($value)) {
+            return implode(', ', $value);
+        }
+
+        // MongoDB types
+        if ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
+            return implode(', ', DB::doc2Arr($value));
+        }
+
+        return (string)$value;
+    }
+
+    private function isEmptyValue($v): bool
+    {
+        if (is_null($v)) return true;
+        if (is_string($v)) return (trim($v) === '' || $v === '-');
+        if (is_array($v)) return count($v) === 0;
+        return false;
     }
 }

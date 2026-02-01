@@ -12,8 +12,8 @@
         ]
     },
     {
-        "de": "Aktivitäten",
-        "en": "Activities",
+        "de": "Aktivitäten, Journale und Events",
+        "en": "Activities, Journals and Events",
         "icon": "book-bookmark",
         "fields": [
             {
@@ -44,12 +44,26 @@
             {
                 "id": "journals.edit",
                 "de": "Journale hinzufügen und bearbeiten",
-                "en": "Add and edit journals"
+                "en": "Add and edit journals",
+                "comment_de": "Man kann nur Journale löschen, wenn diese noch keinen Aktivitäten zugewiesen sind.",
+                "comment_en": "You can only delete journals that have not yet been assigned to any activities."
+            },
+            {
+                "id": "journals.delete",
+                "de": "Journale löschen",
+                "en": "Delete journals"
             },
             {
                 "id": "conferences.edit",
                 "de": "Events hinzufügen und bearbeiten",
                 "en": "Add and edit events"
+            },
+            {
+                "id": "teaching.edit",
+                "de": "Lehrveranstaltungen hinzufügen, bearbeiten und löschen",
+                "en": "Add, edit and delete teaching modules",
+                "comment_de": "Nutzende können nur Lehrveranstaltungen löschen, die noch keinen Aktivitäten zugewiesen sind.",
+                "comment_en": "Users can only delete teaching modules that have not yet been assigned to any activities."
             }
         ]
     },
@@ -163,6 +177,13 @@
                 "id": "raw-data",
                 "de": "Die Rohdaten in der Aktivität sehen",
                 "en": "See raw data for activities"
+            },
+            {
+                "id": "documents",
+                "de": "Dokumentenbrowser sehen",
+                "en": "See document browser",
+                "comment_de": "Nutzende können alle Dokumente in einer Übersicht sehen, wenn sie diese Berechtigung haben.",
+                "comment_en": "Users can see all documents in an overview if they have this permission."
             }
         ]
     },
@@ -212,6 +233,11 @@
                 "en": "View all proposal documents",
                 "comment_de": "Antragstellende können Dokumente in ihren eigenen Anträgen immer sehen. Diese Einstellung erlaubt es, alle Dokumente zu sehen, auch die in Anträgen anderer Personen. Dies ist wirkungslos, wenn die Anträge von anderen Personen nicht gesehen werden können.",
                 "comment_en": "Applicants can always see documents in their own proposals. This setting allows seeing all documents, even those in proposals of other people. This is ineffective if proposals of other people cannot be seen."
+            },
+            {
+                "id": "proposals.finance",
+                "de": "Finanzinformationen zu allen Anträgen sehen",
+                "en": "View financial information of all proposals"
             },
             {
                 "id": "projects.add",

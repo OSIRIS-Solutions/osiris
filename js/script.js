@@ -129,6 +129,8 @@ function toastError(msg = "", title = null) {
         hasDismissButton: true,
         timeShown: 10000
     })
+    // also log to console
+    console.error(msg)
 }
 function toastSuccess(msg = "", title = null) {
     if (title === null) title = lang("Success", "Erfolg")

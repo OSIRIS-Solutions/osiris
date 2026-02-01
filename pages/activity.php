@@ -19,8 +19,10 @@
 use chillerlan\QRCode\{QRCode, QROptions};
 
 include_once BASEPATH . "/php/Modules.php";
-
 $Modules = new Modules($doc);
+
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
 
 // check if this is an ongoing activity type
 $ongoing = false;
@@ -44,7 +46,7 @@ $projects = [];
 if (isset($activity['projects']) && count($activity['projects']) > 0) {
     $projects = $osiris->projects->find(
         ['_id' => ['$in' => $activity['projects']]],
-        ['projection' => ['_id' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
+        ['projection' => ['_id' => 1, 'acronym' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
     )->toArray();
 }
 
@@ -58,7 +60,27 @@ $tagName = '';
 if ($Settings->featureEnabled('tags')) {
     $tagName = $Settings->tagLabel();
 }
+
+$connected_activities = $osiris->activitiesConnections->find(
+    ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+)->toArray();
+
+// Nimm deinen bestehenden User-Kontext
+$user_units = DB::doc2Arr($USER['units'] ?? []);
+if (!empty($user_units)) {
+    $user_units = array_column($user_units, 'unit');
+}
+
+$documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)])->toArray();
 ?>
+
+<style>
+    .pills {
+        position: sticky;
+        top: 8rem;
+        z-index: 10;
+    }
+</style>
 
 <?php if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) { ?>
     <?php
@@ -91,15 +113,11 @@ if ($Settings->featureEnabled('tags')) {
         $tplById = [];
         foreach (DB::doc2Arr($tpl['steps'] ?? []) as $ts) $tplById[$ts['id']] = $ts;
 
-        // Nimm deinen bestehenden User-Kontext
-        $units = DB::doc2Arr($USER['units'] ?? []);
-        if (!empty($units)) {
-            $units = array_column($units, 'unit');
-        }
+
         $userCtx = [
             'username' => $_SESSION['username'] ?? null,
             'roles'    => $Settings->roles ?? [],
-            'units'   => $units
+            'units'   => $user_units
         ];
 
         // Ermitteln, welche Steps in der aktuellen Phase vom User freigegeben werden dürfen
@@ -122,19 +140,6 @@ if ($Settings->featureEnabled('tags')) {
             }
             return $a['index'] <=> $b['index'];
         });
-
-        // render steps for modal and wf-mini
-        // $all_steps = [];
-        // foreach ($progress as $i => $s):
-        //     $all_steps[] = [
-        //         'id'       => $s['id'],
-        //         'label'    => $s['label'],
-        //         'index'    => intval($s['index'] ?? 0),
-        //         'required' => !empty($s['required']),
-        //         'orgScope' => ($s['orgScope'] ?? 'any'),
-        //     ];
-        // endforeach;
-
     }
     ?>
     <?php if (!empty($wf) && !empty($progress)): ?>
@@ -325,6 +330,12 @@ if ($Settings->featureEnabled('tags')) {
         </div>
 
 
+
+        <style>
+            .pills {
+                top: 9rem;
+            }
+        </style>
     <?php endif; ?>
 
 
@@ -393,21 +404,6 @@ if ($Settings->featureEnabled('tags')) {
         border-radius: .5rem; */
     }
 
-    .filelink {
-        display: block;
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        color: inherit !important;
-        padding: .5rem 1rem;
-        margin: 0 0 1rem;
-        background: white;
-    }
-
-    .filelink:hover {
-        text-decoration: none;
-        background-color: rgba(0, 110, 183, 0.05);
-    }
-
     .show-on-hover:hover .invisible {
         visibility: visible !important;
     }
@@ -446,26 +442,6 @@ if ($Settings->featureEnabled('tags')) {
                 </a>
             </div>
         <?php } ?>
-
-        <?php if ($upload_possible) { ?>
-            <div class="alert signal mb-20">
-                <h3 class="title">
-                    <?= lang('For the good practice: ', 'Für die gute Praxis:') ?>
-                </h3>
-                <?= lang(
-                    'Upload now all relevant files for this activity (e.g. as PDF) to have them available for documentation and exchange.',
-                    'Lade jetzt die relevanten Dateien (z.B. PDF) hoch, um sie für die Dokumentation parat zu haben.'
-                ) ?>
-                <i class="ph ph-smiley"></i>
-                <b><?= lang('Thank you!', 'Danke!') ?></b>
-                <br>
-                <a href="#upload-files" class="btn signal">
-                    <i class="ph ph-upload"></i>
-                    <?= lang('Upload files', 'Dateien hochladen') ?>
-                </a>
-            </div>
-        <?php } ?>
-
     <?php } ?>
 
     <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -480,7 +456,7 @@ if ($Settings->featureEnabled('tags')) {
 
     <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
     <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
-    <script src="<?= ROOTPATH ?>/js/activity.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/activity.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
     <div class="btn-toolbar">
@@ -492,7 +468,6 @@ if ($Settings->featureEnabled('tags')) {
         <?php } ?>
 
         <?php if ($Settings->hasPermission('activities.lock')) { ?>
-            <input type="hidden" name="id" value="<?= $id ?>">
             <form action="<?= ROOTPATH ?>/crud/activities/<?= $id ?>/lock" method="post">
                 <?php if ($doc['locked'] ?? false) { ?>
                     <button class="btn text-success border-success mr-10" type="submit">
@@ -510,19 +485,19 @@ if ($Settings->featureEnabled('tags')) {
 
         <div class="btn-group">
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
-                <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn text-primary border-primary">
+                <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
                     <?= lang('Edit', 'Bearbeiten') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
-                <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn text-primary border-primary">
+                <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-copy"></i>
                     <?= lang("Copy", "Kopie") ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('tags')) { ?>
-                <a href="#add-tags" class="btn text-primary border-primary">
+                <a href="#add-tags" class="btn primary outline">
                     <i class="ph ph-tag"></i>
                     <?= $tagName ?>
                 </a>
@@ -532,12 +507,12 @@ if ($Settings->featureEnabled('tags')) {
 
 
         <div class="btn-group">
-            <button class="btn text-primary border-primary" onclick="addToCart(this, '<?= $id ?>')">
+            <button class="btn primary outline" onclick="addToCart(this, '<?= $id ?>')">
                 <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
                 <?= lang('Collect', 'Sammeln') ?>
             </button>
             <div class=" dropdown with-arrow btn-group ">
-                <button class="btn text-primary border-primary" data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
+                <button class="btn primary outline" data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-download"></i> Download
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
@@ -584,7 +559,7 @@ if ($Settings->featureEnabled('tags')) {
                                 </div>
 
                             </div>
-                            <button class="btn text-primary border-primary">Download</button>
+                            <button class="btn primary outline">Download</button>
                         </form>
                     </div>
                 </div>
@@ -592,7 +567,7 @@ if ($Settings->featureEnabled('tags')) {
         </div>
 
         <?php if ($Settings->featureEnabled('portal')) { ?>
-            <a class="btn text-primary border-primary ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
+            <a class="btn primary outline ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                 <i class="ph ph-eye ph-fw"></i>
                 <?= lang('Preview', 'Vorschau') ?>
             </a>
@@ -619,7 +594,7 @@ if ($Settings->featureEnabled('tags')) {
     <?php
     if (!isset($doc['authors']) || empty($doc['authors'])) {
         $doc['authors'] = [];
-        if (!isset($doc['editors']) || empty($doc['editors'])) {
+        if ((!isset($doc['editors']) || empty($doc['editors'])) && (!isset($doc['supervisors']) || empty($doc['supervisors']))) {
     ?>
             <div class="alert danger mb-20">
                 <h3 class="title">
@@ -628,7 +603,7 @@ if ($Settings->featureEnabled('tags')) {
                 <p>
                     <?= lang(
                         'This activity has no authors or editors assigned. Please add at least one author or editor to this activity, otherwise it cannot be linked to persons.',
-                        'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor oder Herausgeber zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
+                        'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor, Herausgeber oder Betreuenden zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
                     ) ?>
                 </p>
             </div>
@@ -758,18 +733,24 @@ if ($Settings->featureEnabled('tags')) {
                 <small><?= lang('Projects', 'Projekte') ?>: </small>
                 <br />
                 <?php foreach ($projects as $p) { ?>
-                    <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['name'] ?></a>
+                    <a class="badge" href="<?= ROOTPATH ?>/projects/view/<?= $p['_id'] ?>"><?= $p['acronym'] ?? $p['name'] ?? '' ?></a>
                 <?php } ?>
             </div>
         <?php } ?>
 
         <?php if ($Settings->featureEnabled('portal')) {
             $doc['hide'] = $doc['hide'] ?? false;
+            $visible_subtypes = $Settings->getActivitiesPortfolio(true);
         ?>
             <div class="mr-10 badge bg-white">
                 <small><?= lang('Online Visibility', 'Online-Sichtbarkeit') ?>: </small>
                 <br />
-                <?php if ($edit_perm) { ?>
+                <?php if (!in_array($doc['subtype'], $visible_subtypes)) { ?>
+                    <span class="badge warning" data-toggle="tooltip" data-title="<?= lang('This activity subtype is not visible on the portal due to general settings of your institute.', 'Dieser Aktivitätstyp ist aufgrund genereller Instituts-Einstellungen im Portal nicht sichtbar.') ?>">
+                        <i class="ph ph-eye-slash m-0"></i>
+                        <?= lang('Activity type not visible', 'Aktivitätstyp nicht sichtbar') ?>
+                    </span>
+                <?php } else if ($edit_perm) { ?>
                     <div class="custom-switch">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
@@ -888,6 +869,12 @@ if ($Settings->featureEnabled('tags')) {
             </a>
         <?php } ?>
 
+        <a onclick="navigate('activities')" id="btn-activities" class="btn">
+            <i class="ph ph-plugs" aria-hidden="true"></i>
+            <?= lang('Activities', 'Aktivitäten') ?>
+            <span class="index"><?= count($connected_activities) ?></span>
+        </a>
+
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <?php
             $count_projects = count($doc['projects'] ?? []);
@@ -928,21 +915,13 @@ if ($Settings->featureEnabled('tags')) {
 
         <?php
         if ($upload_possible):
-            $count_files = count($doc['files'] ?? []);
-            if ($count_files) :
+            $count_files = count($documents);
         ?>
-                <a onclick="navigate('files')" id="btn-files" class="btn">
-                    <i class="ph ph-files" aria-hidden="true"></i>
-                    <?= lang('Files', 'Dateien') ?>
-                    <span class="index"><?= $count_files ?></span>
-                </a>
-
-            <?php else : ?>
-                <a href="#upload-files" class="btn">
-                    <i class="ph ph-plus-circle"></i>
-                    <?= lang('Upload files', 'Datei hochladen') ?>
-                </a>
-            <?php endif; ?>
+            <a onclick="navigate('files')" id="btn-files" class="btn">
+                <i class="ph ph-files" aria-hidden="true"></i>
+                <?= lang('Files', 'Dateien') ?>
+                <span class="index"><?= $count_files ?></span>
+            </a>
         <?php endif; ?>
 
         <?php if ($Settings->featureEnabled('concepts')) { ?>
@@ -1295,116 +1274,264 @@ if ($Settings->featureEnabled('tags')) {
 
 
             <div class="col-lg-6">
-                <?php
-                $units = $doc['units'] ?? [];
-                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
-                foreach ($typeFields as $field_id => $props) {
-                    if (!in_array($field_id, $authorModules)) {
-                        continue;
+                <style>
+                    /* --- Author chips / pills --- */
+                    .author-chips {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px 10px;
+                        align-items: center;
                     }
-                    $role = ($field_id == 'editor') ? 'editors' : 'authors';
+
+                    .author-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        padding: 2px 8px;
+                        border-radius: 999px;
+                        font-size: 12px;
+                        line-height: 1.4;
+                        white-space: nowrap;
+                        background: var(--gray-100, #f2f2f2);
+                        color: var(--gray-800, #333);
+                    }
+
+                    /* .author-chip i {
+                        font-size: 14px;
+                        opacity: 0.8;
+                    } */
+
+                    .author-chip.success {
+                        background: var(--success-color-20);
+                        color: var(--success-color-dark);
+                    }
+
+                    .author-chip.neutral {
+                        background: #eee;
+                        color: #555;
+                    }
+
+                    .author-units {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px;
+                        align-items: center;
+                    }
+
+                    .author-unit {
+                        padding: 2px 6px;
+                        font-size: 10px;
+                        border-radius: 100px;
+                        background: #f7f7f7;
+                        border: 1px solid #e0e0e0;
+                        color: #444;
+                    }
+
+                    .author-unit:hover {
+                        background: #ececec;
+                        text-decoration: none;
+                    }
+
+                    /* Optional: only show claim on hover (less visual noise) */
+                    .author-row .claim-action {
+                        opacity: 0;
+                        transition: opacity 0.15s ease;
+                    }
+
+                    .author-row:hover .claim-action {
+                        opacity: 1;
+                    }
+                </style>
+
+                <?php
+                // --- Minimal helper: central role mapping (business logic) ---
+                function author_role_from_field(string $field_id): ?string
+                {
+                    return match ($field_id) {
+                        'supervisor', 'supervisor-thesis' => 'supervisors',
+                        'editor' => 'editors',
+                        'authors', 'author-table', 'scientist' => 'authors',
+                        default => null,
+                    };
+                }
+
+                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+
+                foreach ($typeFields as $field_id => $props) {
+
+                    if (!in_array($field_id, $authorModules, true)) continue;
+
+                    $role = author_role_from_field($field_id);
+                    if ($role === null) continue;
+
+                    $authors = $activity[$role] ?? [];
+                    if (empty($authors)) continue;
+
+                    $canEdit = ($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'));
+
+                    // --- Configure optional third column (avoid duplicated if/elseif in thead + tbody) ---
+                    $thirdCol = null;
+                    if ($sws) {
+                        $thirdCol = [
+                            'label' => 'SWS',
+                            'value' => fn($a) => (int)($a['sws'] ?? 0),
+                        ];
+                    } elseif ($supervisorThesis) {
+                        $thirdCol = [
+                            'label' => lang('Role', 'Rolle'),
+                            'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
+                        ];
+                    } elseif ($role === 'authors') {
+                        $thirdCol = [
+                            'label' => lang('Position', 'Position'),
+                            'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
+                        ];
+                    }
                 ?>
 
-                    <div class="btn-toolbar mb-10 float-sm-right">
-                        <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
+                    <div class="d-flex align-items-start justify-content-between gap-10 mb-10">
+                        <h2 class="mt-0 mb-0"><?= $Modules->get_name($field_id) ?></h2>
+
+                        <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
                                 <?= lang("Edit", "Bearbeiten") ?>
                             </a>
-                        <?php } ?>
+                        <?php endif; ?>
                     </div>
-
-                    <h2 class="mt-0">
-                        <!-- <?php if ($role == 'authors') {
-                                    echo lang('Author(s) / Responsible person', 'Autor(en) / Verantwortliche Person');
-                                } else {
-                                    echo lang('Editor(s)', 'Herausgeber');
-                                } ?> -->
-                        <?= $Modules->get_name($field_id) ?>
-                    </h2>
-
 
                     <table class="table mb-20">
                         <thead>
                             <tr>
-                                <th><?= lang('Last', 'Nachname') ?></th>
-                                <th><?= lang('First', 'Vorname') ?></th>
-
-                                <?php if ($sws) : ?>
-                                    <th>SWS</th>
-                                <?php elseif ($supervisorThesis) : ?>
-                                    <th><?= lang('Role', 'Rolle') ?></th>
-                                <?php elseif ($role == 'authors') : ?>
-                                    <th>Position</th>
+                                <th><?= lang('Person', 'Person') ?></th>
+                                <!-- <th><?= lang('Details', 'Details') ?></th> -->
+                                <?php if (!empty($thirdCol)): ?>
+                                    <th><?= $thirdCol['label'] ?></th>
                                 <?php endif; ?>
-                                <th>Unit</th>
-                                <th>User</th>
                             </tr>
                         </thead>
-                        <tbody id="<?= $role ?>">
-                            <?php foreach ($activity[$role] ?? [] as $i => $author) {
+
+                        <tbody id="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                            <?php foreach ($authors as $i => $author):
+
+                                // --- Name "Last, First" (inline; used once) ---
+                                $name = $author['last'] ?? '';
+                                if (!empty($author['first'])) $name .= ', ' . $author['first'];
+                                $name = trim($name);
+
+                                $hasUser = !empty($author['user']);
+                                $isAffiliated = (($author['aoi'] ?? 0) == 1);
+
+                                // Unique dropdown id per row (prevents collisions)
+                                $dropdownId = 'claim-dd-' . $role . '-' . $i;
                             ?>
-                                <tr>
-                                    <td class="<?= (($author['aoi'] ?? 0) == '1' ? 'font-weight-bold' : '') ?>">
-                                        <?php if (isset($author['user']) && !empty($author['user'])) { ?>
-                                            <a href="<?= ROOTPATH ?>/profile/<?= $author['user'] ?>">
-                                                <?= $author['last'] ?? '' ?>
+                                <tr class="author-row">
+                                    <td class="text-nowrap">
+                                        <?php if ($hasUser): ?>
+                                            <a href="<?= ROOTPATH ?>/profile/<?= htmlspecialchars($author['user'], ENT_QUOTES) ?>">
+                                                <?= htmlspecialchars($name) ?>
                                             </a>
-                                        <?php } else { ?>
-                                            <?= $author['last'] ?? '' ?>
-                                        <?php } ?>
-                                    </td>
-                                    <td>
-                                        <?= $author['first'] ?? '' ?>
-                                    </td>
-                                    <?php if ($sws) : ?>
-                                        <td><?= $author['sws'] ?? 0 ?></td>
-                                    <?php elseif ($supervisorThesis) : ?>
-                                        <td><?= $Format->getSupervisorRole($author['role'] ?? 'other') ?></td>
-                                    <?php elseif ($role == 'authors') : ?>
-                                        <td><?= $author['position'] ?? '' ?></td>
-                                    <?php endif; ?>
-                                    <td>
-                                        <?php
-                                        if (isset($author['units']) && !empty($author['units'])) {
-                                            foreach ($author['units'] as $unit) {
-                                                echo "<a href='" . ROOTPATH . "/groups/view/$unit' class='mr-10'>$unit</a>";
-                                            }
-                                        } ?>
-                                    </td>
-                                    <td>
-                                        <?php if (isset($author['user']) && !empty($author['user'])) : ?>
-                                            <span data-toggle="tooltip" data-title="<?= lang('Author approved activity?', 'Autor hat die Aktivität bestätigt?') ?>">
-                                                <?= bool_icon($author['approved'] ?? 0) ?>
-                                            </span>
-                                        <?php elseif (!$user_activity) : ?>
-                                            <div class="dropdown">
-                                                <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                                                    <?= lang('Claim', 'Beanspruchen') ?>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="dropdown-1">
-                                                    <div class="content">
-                                                        <small class="d-block text-danger mb-10">
-                                                            <?= lang(
-                                                                'You claim that you are this author.<br> This activity will be added to your list and the author name will be added to your list of alternative names.',
-                                                                'Du beanspruchst, dass du diese Person bist.<br> Du fügst diese Aktivität deiner Liste hinzu und den Namen zur Liste deiner alternativen Namen.'
-                                                            ) ?>
-                                                        </small>
-                                                        <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
-                                                            <input type="hidden" name="role" value="<?= $role ?>">
-                                                            <input type="hidden" name="index" value="<?= $i ?>">
-                                                            <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
-                                                            <button class="btn btn-block" type="submit"><?= lang('Claim', 'Beanspruchen') ?></button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($name) ?>
                                         <?php endif; ?>
+
+                                        <?php if (!empty($author['orcid'])): ?>
+                                            <a href="https://orcid.org/<?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>"
+                                                target="_blank" rel="noopener"
+                                                data-toggle="tooltip"
+                                                data-title="ORCID: <?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>">
+                                                <img loading="lazy" decoding="async" width="16" height="16"
+                                                    class="orcid-img" style="width:16px;"
+                                                    src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID">
+                                            </a>
+                                        <?php endif; ?>
+                                        <br>
+                                        <div class="author-chips font-size-12 text-muted">
+
+                                            <?php if ($isAffiliated): ?>
+                                                <span class="author-chip success"
+                                                    data-toggle="tooltip"
+                                                    data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
+                                                    <i class="ph ph-handshake"></i>
+                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if ($hasUser): ?>
+                                                <?php if ($author['approved']) { ?>
+                                                    <span class="author-chip neutral"
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
+                                                        <?= bool_icon(true) ?>
+                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                    </span>
+                                                <?php } else { ?>
+                                                    <span class="author-chip neutral"
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Author has not yet approved this activity', 'Autor hat die Aktivität noch nicht bestätigt') ?>">
+                                                        <?= bool_icon(false) ?>
+                                                        <?= lang('Pending', 'Ausstehend') ?>
+                                                    </span>
+                                                <?php } ?>
+
+
+                                            <?php elseif (!$user_activity): ?>
+                                                <span class="claim-action">
+                                                    <div class="dropdown d-inline-block">
+                                                        <button class="btn small" data-toggle="dropdown" type="button"
+                                                            id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
+                                                            <?= lang('Claim', 'Beanspruchen') ?>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
+                                                            <div class="content font-size-12">
+                                                                <div class="d-block text-danger mb-10">
+                                                                    <?= lang(
+                                                                        'You claim that you are this author.<br> This activity will be added to your list and the author name will be added to your list of alternative names.',
+                                                                        'Du beanspruchst, dass du diese Person bist.<br> Du fügst diese Aktivität deiner Liste hinzu und den Namen zur Liste deiner alternativen Namen.'
+                                                                    ) ?>
+                                                                </div>
+                                                                <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
+                                                                    <input type="hidden" name="role" value="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                                                                    <input type="hidden" name="index" value="<?= (int)$i ?>">
+                                                                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
+                                                                    <button class="btn block small" type="submit">
+                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($author['units'])): ?>
+                                                <div class="author-chip author-units">
+                                                    <span class=""
+                                                        data-toggle="tooltip"
+                                                        data-title="<?= lang('Participating units', 'Beteiligte Einheiten') ?>">
+                                                        <i class="ph ph-users-three"></i>
+                                                    </span>
+                                                    <?php foreach ($author['units'] as $unit):
+                                                        $u = htmlspecialchars((string)$unit, ENT_QUOTES);
+                                                    ?>
+                                                        <a class="author-unit" href="<?= ROOTPATH ?>/groups/view/<?= $u ?>">
+                                                            <?= $u ?>
+                                                        </a>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
+
+                                        </div>
                                     </td>
+
+                                    <?php if (!empty($thirdCol)): ?>
+                                        <td><?= $thirdCol['value']($author) ?></td>
+                                    <?php endif; ?>
                                 </tr>
-                            <?php } ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
+
                 <?php } ?>
 
                 <h3>
@@ -1499,6 +1626,209 @@ if ($Settings->featureEnabled('tags')) {
         </div>
     <?php } ?>
 
+    <section id="activities" style="display: none;">
+        <h2 class="title">
+            <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+        </h2>
+
+
+        <?php if (!empty($connected_activities)) { ?>
+            <table class="table">
+                <?php foreach ($connected_activities as $con) { ?>
+                    <?php
+                    // check if activity is target or source
+                    $reverse = ($con['target_id'] == $id);
+                    $activity = $osiris->activities->findOne(['_id' => $reverse ? $con['source_id'] : $con['target_id']], ['projection' => [
+                        'rendered' => 1,
+                    ]]);
+                    $conLabel = $Format->getRelationshipLabel($con['relationship'], $reverse);
+                    ?>
+                    <tr>
+                        <td>
+                            <h5 class="m-0">
+                                <?= lang($conLabel['en'], $conLabel['de']) ?>
+                            </h5>
+                            <div><?= $activity['rendered']['web'] ?? '' ?></div>
+                        </td>
+                        <?php if ($edit_perm) { ?>
+                            <td>
+                                <form action="<?= ROOTPATH ?>/crud/activities/disconnect" method="post" class="d-inline-block ml-auto">
+                                    <input type="hidden" name="connection_id" value="<?= $con['_id'] ?>">
+                                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
+                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= lang('Disconnect activity', 'Aktivität trennen') ?>">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        <?php } ?>
+
+                    </tr>
+                <?php } ?>
+            </table>
+        <?php } else { ?>
+            <?= lang('No connected activities.', 'Noch keine Aktivitäten verknüpft.') ?>
+        <?php } ?>
+
+        <?php if ($edit_perm) { ?>
+
+            <div class="box padded">
+                <h3 class="title">
+                    <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                </h3>
+
+                <form action="<?= ROOTPATH ?>/crud/activities/connect" method="post">
+                    <input type="hidden" name="source_id" value="<?= $id ?>">
+                    <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
+                    <!-- relationship type -->
+                    <div class="form-group">
+                        <label for="relationship-type"><?= lang('Relationship type', 'Beziehungsart') ?></label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <select name="relationship" id="relationship-type" class="form-control" required>
+                                    <?php
+                                    $relationships = $Format->getRelationships();
+                                    foreach ($relationships as $rel) {
+                                        $key = $rel['id'];
+                                        $label = lang($rel['label']['en'], $rel['label']['de'] ?? null);
+                                        $rev = lang($rel['reverse_label']['en'], $rel['reverse_label']['de'] ?? null);
+                                    ?>
+                                        <option data-label="<?= $label ?>" data-reverse-label="<?= $rev ?>" value="<?= $key ?>"><?= $label ?></option>
+                                    <?php } ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <div class="custom-switch">
+                                            <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
+                                            <label for="swap-relationship-dir">
+                                                <?= lang('Swap direction', 'Richtung umdrehen') ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- input field with suggesting activities -->
+                    <div class="form-group" id="activity-suggest">
+                        <label for="activity-suggested"><?= lang('Select an activity to connect', 'Wähle eine Aktivität zum Verknüpfen') ?></label>
+                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?>">
+
+                        <div class="form-group font-size-12">
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
+                                <label for="activity-suggest-author"><?= lang('Only show my activities', 'Nur meine Aktivitäten anzeigen') ?></label>
+                            </div>
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
+                                <label for="activity-suggest-unit"><?= lang('Show activities from my unit(s)', 'Aktivitäten meiner Einheit(en) anzeigen') ?></label>
+                            </div>
+                            <div class="custom-radio d-inline-block mr-20">
+                                <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
+                                <label for="activity-suggest-all"><?= lang('Show all activities', 'Alle Aktivitäten anzeigen') ?></label>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="suggestions on-focus"></div>
+                    </div>
+                    <input type="hidden" name="target_id" id="activity-selected" required value="">
+
+                    <button type="submit" class="btn primary">
+                        <?= lang('Connect', 'Verknüpfen') ?>
+                    </button>
+                </form>
+            </div>
+            <style>
+                .suggestions {
+                    color: #464646;
+                    /* position: absolute; */
+                    margin: 10px auto;
+                    top: 100%;
+                    left: 0;
+                    /* height: 19.2rem; */
+                    overflow: auto;
+                    bottom: -3px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    min-width: 12rem;
+                    background-color: white;
+                    border: var(--border-width) solid #afafaf;
+                    /* visibility: hidden; */
+                    /* opacity: 0; */
+                    z-index: 100;
+                    -webkit-transition: opacity 0.4s linear;
+                    transition: opacity 0.4s linear;
+                }
+
+                .suggestions a {
+                    display: block;
+                    padding: 0.5rem;
+                    border-bottom: var(--border-width) solid #afafaf;
+                    color: #464646;
+                    text-decoration: none;
+                    width: 100%;
+                }
+
+                .suggestions a:hover {
+                    background-color: #f0f0f0;
+                }
+            </style>
+            <script>
+                $('#activity-suggested').on('input', function() {
+                    // prevent enter from submitting form
+                    $(this).closest('form').on('keypress', function(event) {
+                        if (event.keyCode == 13) {
+                            event.preventDefault();
+                        }
+                    })
+                    const val = $(this).val();
+                    if (val.length < 3) return;
+                    let filter = ''
+                    let limit = $('input[name="activity-search-limit"]:checked').val();
+                    if (limit == 'user') {
+                        filter = '?user=<?= urlencode($_SESSION['username']) ?>';
+                    } else if (limit == 'unit') {
+                        filter = '?unit=<?= implode(',', $user_units) ?>';
+                    } else {
+                        filter = '';
+                    }
+                    $.get('<?= ROOTPATH ?>/api/activities-suggest/' + val + filter, function(data) {
+                        $('#activity-suggest .suggestions').empty();
+                        console.log(data);
+                        data.data.forEach(function(d) {
+                            if (d.id.toString() == '<?= $id ?>') return; // prevent selecting itself
+                            $('#activity-suggest .suggestions').append(
+                                `<a data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
+                            )
+                        })
+
+                        // $('#activity-suggest .suggest').html(data);
+                    })
+                })
+                $('#activity-suggest .suggestions').on('click', 'a', function() {
+                    const activity_id = $(this).data('id');
+                    const activity_text = $(this).text();
+                    $('#activity-selected').val(activity_id);
+                    $('#activity-suggested').val(activity_text);
+                    $('#activity-suggest .suggestions').empty();
+                })
+
+                function swapRelationshipDirection() {
+                    // swap all the labels
+                    const select = $('#relationship-type');
+                    const isReverse = $('#swap-relationship-dir').is(':checked');
+                    select.find('option').each(function() {
+                        const label = $(this).data(isReverse ? 'reverse-label' : 'label');
+                        $(this).text(label);
+                    });
+                }
+            </script>
+        <?php } ?>
+
+    </section>
 
     <?php if ($Settings->featureEnabled('projects')) { ?>
         <section id="projects" style="display: none;">
@@ -1608,47 +1938,182 @@ if ($Settings->featureEnabled('tags')) {
     <?php
     if ($upload_possible):
     ?>
+        <section id="files" style="display: none; max-width: 60rem;">
+            <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
+            <?php
+            // check for legacy files
+            $files = $doc['files'] ?? array();
+            if (!empty($files)) : ?>
+                <div class="box padded">
+                    <?php foreach ($files as $file) :
+                        $doctype = $file['type'] ?? 'file';
+                    ?>
+                        <div class="">
+                            <i class='ph ph-file ph-<?= $icon ?>'></i>
+                            <?= $file['filename'] ?>
+                            <div class="d-flex justify-content-between">
+                                <a href="<?= $file['filepath'] ?>" class="btn small primary"><i class="ph ph-download"></i> Download</a>
+                                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" class="d-inline-block">
+                                    <input type="hidden" name="delete" value="<?= $file['filename'] ?>">
 
-        <div class="modal" id="upload-files" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
-                        <span aria-hidden="true">&times;</span>
-                    </a>
-                    <h5 class="title">
-                        <?= lang('Upload files', 'Dateien hochladen') ?>
-                    </h5>
-                    <div>
-                        <?php
-                        include BASEPATH . "/components/upload-files.php";
-                        ?>
+                                    <button class="btn small danger" type="submit">
+                                        <i class="ph-duotone ph-trash text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <!-- hint to migrate -->
+                    <div class="alert signal mt-20">
+                        <b>Info:</b>
+                        <?= lang(
+                            'These are legacy files. Please re-upload them using the new document upload below or have an admin migrate them to benefit from the new features.',
+                            'Dies sind alte Dateien. Bitte lade sie mit dem neuen Dokumenten-Upload unten erneut hoch oder lasse sie von einem Admin migrieren, um von den neuen Funktionen zu profitieren.'
+                        ) ?>
                     </div>
                 </div>
-            </div>
-        </div>
-
-
-        <section id="files" style="display: none;">
-            <div class="btn-toolbar float-sm-right">
-                <a href="#upload-files" class="btn secondary">
-                    <i class="ph ph-upload"></i>
-                    <?= lang('Upload', 'Hochladen') ?>
-                </a>
-            </div>
-
-            <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
-
-            <?php if (!empty($doc['files'])) : ?>
-                <?php foreach ($doc['files'] as $file) : ?>
-                    <a href="<?= $file['filepath'] ?>" target="_blank" class="filelink">
-                        <i class="ph ph-<?= getFileIcon($file['filetype']) ?> mr-10 ph-2x text-osiris"></i>
-
-                        <?= $file['filename'] ?>
-                    </a>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <span class="text-signal"><?= lang('No files attached', 'Noch keine Dateien hochgeladen') ?></span>
             <?php endif; ?>
+
+            <table class="table">
+                <tbody>
+                    <?php
+                    if (empty($documents)) {
+                        echo '<tr><td>' . lang('No documents available.', 'Keine Dokumente verfügbar.') . '</td></tr>';
+                    } else {
+                        foreach ($documents as $doc) {
+                            $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+                    ?>
+                            <tr>
+                                <td class="font-size-18 text-center text-muted" style="width: 50px;">
+                                    <i class='ph ph-file ph-<?= getFileIcon($doc['extension'] ?? '') ?>'></i>
+                                </td>
+                                <td>
+                                    <?php if ($edit_perm) : ?>
+                                        <div class="float-right">
+                                            <div class="dropdown">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="edit-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-edit text-primary"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/document/update" method="post">
+                                                            <div class="form-group floating-form">
+                                                                <select class="form-control" name="name" placeholder="Name" required>
+                                                                    <?php
+                                                                    $vocab = $Vocabulary->getValues('activity-document-types');
+                                                                    foreach ($vocab as $v) { ?>
+                                                                        <option value="<?= $v['id'] ?>" <?= ($doc['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                                                                <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $doc['description'] ?? '' ?></textarea>
+                                                            </div>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown">
+                                                <button class="btn link" data-toggle="dropdown" type="button" id="delete-doc-<?= $doc['_id'] ?>" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ph ph-trash text-danger"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
+                                                    <div class="content">
+                                                        <form action="<?= ROOTPATH ?>/data/delete" method="post">
+                                                            <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                            <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <h6 class="m-0">
+                                        <a href="<?= $file_url ?>" target="_blank" rel="noopener">
+                                            <?= $Vocabulary->getValue('activity-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                                            <i class="ph ph-download"></i>
+                                        </a>
+                                    </h6>
+                                    <?= $doc['description'] ?? '' ?>
+                                    <br>
+                                    <div class="font-size-12 text-muted d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
+                                            <br>
+                                            <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                            <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+
+            <?php if ($edit_perm) { ?>
+                <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
+                    <h5 class="title font-size-16">
+                        <?= lang('Upload document', 'Dokument hochladen') ?>
+                    </h5>
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                            <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="values[type]" value="activities">
+                    <input type="hidden" name="values[id]" value="<?= $id ?>">
+                    <div class="form-group floating-form">
+                        <select class="form-control" name="values[name]" placeholder="Name" required>
+                            <?php
+                            $vocab = $Vocabulary->getValues('activity-document-types');
+                            foreach ($vocab as $v) { ?>
+                                <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                    </div>
+                    <div class="form-group floating-form">
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
+                        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                    </div>
+                    <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                </form>
+                <!-- <div class="box padded">
+                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
+                    <div class="custom-file mb-20" id="file-input-div">
+                        <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                        <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
+                        <br><small class="text-danger">Max. 16 MB.</small>
+                    </div>
+                    <button class="btn">
+                        <i class="ph ph-upload"></i>
+                        Upload
+                    </button>
+                </form>
+            </div> -->
+
+                <script>
+                    var uploadField = document.getElementById("file-input");
+
+                    uploadField.onchange = function() {
+                        if (this.files[0].size > 16777216) {
+                            toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
+                            this.value = "";
+                        };
+                    };
+                </script>
+            <?php } ?>
+
         </section>
 
     <?php endif; ?>

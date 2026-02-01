@@ -425,7 +425,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
 }, 'login');
 
 
-Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors)', function ($id, $role) {
+Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', function ($id, $role) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
@@ -946,7 +946,7 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
 });
 
 
-Route::post('/crud/activities/update-(authors|editors)/([A-Za-z0-9]*)', function ($type, $id) {
+Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*)', function ($type, $id) {
     include_once BASEPATH . "/php/init.php";
     // prepare id
     if (!isset($_POST['authors']) || empty($_POST['authors'])) {
@@ -1069,6 +1069,20 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     );
 
     $updateCount = ($resA->getModifiedCount() ?? 0) + ($resE->getModifiedCount() ?? 0);
+
+    // supervisor update
+    $updateSupervisors = key($u) === '$set'
+        ? ['$set' => array_combine(
+            array_map(fn($k) => str_replace('$.', 'supervisors.$[s].', $k), array_keys($u['$set'])),
+            array_values($u['$set'])
+        )]
+        : $u;
+    $resS = $collection->updateOne(
+        ['_id' => $id, 'supervisors.user' => $user],
+        $updateSupervisors,
+        ['arrayFilters' => [['s.user' => $user]]]
+    );
+    $updateCount += ($resS->getModifiedCount() ?? 0);
 
     // force update of user notifications
     $DB->notifications(true);
@@ -1272,3 +1286,83 @@ Route::post('/crud/activities/lock', function () {
     include BASEPATH . "/pages/activities/locking.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
+
+
+Route::post('/crud/activities/connect', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    $target = $_POST['target_id'] ?? null;
+    $source = $_POST['source_id'] ?? null;
+
+    if (is_null($target) || is_null($source)) {
+        die('Error: source or target missing.');
+    }
+
+    $relationship = $_POST['relationship'] ?? 'related';
+    $reverse = isset($_POST['reverse']);
+    if ($reverse) {
+        // swap target and source
+        $temp = $target;
+        $target = $source;
+        $source = $temp;
+    }
+                
+    $data = [
+        'target_id' => $DB->to_ObjectID($target),
+        'source_id' => $DB->to_ObjectID($source),
+        'relationship' => $relationship,
+        'created_at' => date('Y-m-d'),
+        'created_by' => $_SESSION['username']
+    ];
+    // check if connection already exists
+    $existing = $osiris->activitiesConnections->findOne([
+        'target_id' => ['$in' => [$data['target_id'], $data['source_id']]],
+        'source_id' => ['$in' => [$data['target_id'], $data['source_id']]]
+    ]);
+    if (!empty($existing)) {
+        if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+            header("Location: " . $_POST['redirect'] . "?msg=connection-exists");
+            die();
+        }
+        echo json_encode([
+            'inserted' => 0,
+            'id' => (string)$existing['_id'],
+            'message' => 'Connection already exists.'
+        ]);
+        die();
+    }
+
+    $insertOneResult  = $osiris->activitiesConnections->insertOne($data);
+    $id = $insertOneResult->getInsertedId();
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Activities connected successfully.", "Aktivitäten erfolgreich verbunden.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'inserted' => $insertOneResult->getInsertedCount(),
+        'id' => $id,
+    ]);
+});
+
+Route::post('/crud/activities/disconnect', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['connection_id'])) {
+        die('Error: no connection id given.');
+    }
+    $connection_id = $DB->to_ObjectID($_POST['connection_id']);
+    $deleteResult = $osiris->activitiesConnections->deleteOne(['_id' => $connection_id]);
+    $deletedCount = $deleteResult->getDeletedCount();
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Activities disconnected successfully.", "Aktivitäten erfolgreich getrennt.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'deleted' => $deletedCount
+    ]);
+});
+

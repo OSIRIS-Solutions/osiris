@@ -75,12 +75,29 @@ if (empty($form) || !isset($form['_id'])) {
             </div>
         </div>
 
+        <h5>
+            <?= lang('Basic Information', 'Grundinformationen') ?>
+        </h5>
+
         <div class="form-group">
             <label for="name" class="required">
                 <?= lang('Name of the organisation', 'Name der Organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-2</span>
             </label>
             <input type="text" class="form-control" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="synonym-input"><?= lang('Synonyms / Alternative Names / Acronyms', 'Synonyme / alternative Namen / Akronyme') ?></label>
+
+            <div id="list-widget" class="list-widget" data-name="values[synonyms][]">
+                <input
+                    id="synonym-input"
+                    class="list-widget-input"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Synonym eingeben und Enter drücken" />
+            </div>
         </div>
 
         <div class="form-group">
@@ -103,7 +120,10 @@ if (empty($form) || !isset($form['_id'])) {
         </div>
 
 
-        <div class="row row-eq-spacing">
+        <h5>
+            <?= lang('Location Information', 'Standortinformationen') ?>
+        </h5>
+        <div class="row row-eq-spacing mt-0">
 
             <div class="col-sm">
                 <label for="location">
@@ -126,7 +146,8 @@ if (empty($form) || !isset($form['_id'])) {
             </div>
         </div>
 
-        <div class="row row-eq-spacing mb-0">
+
+        <div class="row row-eq-spacing align-items-end">
             <div class="col-sm">
                 <label for="lat">
                     <?= lang('Latitude', 'Breitengrad') ?>
@@ -139,15 +160,26 @@ if (empty($form) || !isset($form['_id'])) {
                 </label>
                 <input type="number" class="form-control" name="values[lng]" id="lng" value="<?= $form['lng'] ?? '' ?>" step="any">
             </div>
+            <div class="col-sm">
+                <button type="button" class="btn" onclick="getCoordinates('#location', '#country', '#lat', '#lng')">
+                    <i class="ph ph-map-pin"></i>
+                    <?= lang('Get coordinates by location', 'Koordinaten vom Standort ermitteln') ?>
+                </button>
+            </div>
         </div>
+
         <small class="text-muted">
             <?= lang('Geographical coordinates are required to correctly display the organisation on a map.', 'Die geografischen Koordinaten werden benötigt, um die Organisation auf einer Karte korrekt darzustellen.') ?>
         </small>
-        <br>
-        <br>
+        <br><br>
 
-        <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+        <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
+        <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
         <script>
+            $(function() {
+                // Example init for this widget
+                initListWidget($("#list-widget"), <?= json_encode($form['synonyms'] ?? []) ?>);
+            });
             $('#ror').on('change', function() {
                 const ror = $(this).val();
                 $(this).removeClass('is-invalid');
@@ -192,7 +224,6 @@ if (empty($form) || !isset($form['_id'])) {
                     success: function(response) {
                         $('.loader').removeClass('show')
                         var org = translateROR(response)
-                        console.log(org);
                         if (org.ror) {
                             $('#name').val(org.name)
                             $('#type').val(org.type)
@@ -200,6 +231,12 @@ if (empty($form) || !isset($form['_id'])) {
                             $('#country').val(org.country)
                             $('#lat').val(org.lat)
                             $('#lng').val(org.lng)
+                            // update synonyms list widget
+                            const synonyms = org.synonyms || []
+                            const listWidget = $('#list-widget')
+                            listWidget.find('.list-widget-item').remove()
+                            initListWidget(listWidget, synonyms)
+                            toastSuccess('Organization information updated from ROR')
                         } else {
                             toastError('ROR ID not found')
                         }

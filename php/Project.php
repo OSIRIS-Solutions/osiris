@@ -232,8 +232,26 @@ class Project extends Vocabulary
         return lang($field['en'], $field['de'] ?? null);
     }
 
-    public function printField($field, $value)
+    public function getJointProject()
     {
+        $isJoint = $this->project['joint_project'] ?? false;
+        if (!$isJoint) {
+            return lang('No', 'Nein');
+        }
+        $identifier = $this->project['joint_project_identifier'] ?? '-';
+        $title = $this->project['joint_project_title'] ?? '-';
+        $speaker = $this->project['joint_project_speaker'] ?? false;
+        $return = '<div class="module">';
+        $return .= '<h5 class="title m-0">' . htmlspecialchars($title) . '</h5>';
+        $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . htmlspecialchars($identifier) . '<br>';
+        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('Yes', 'Ja') : lang('No', 'Nein')) . '<br>';
+        $return .= '</div>';
+        return $return;
+    }
+
+    public function printField($field, $value, $portfolio = false)
+    {
+        $DB = new DB();
         if (empty($value)) return '-';
         switch ($field) {
             case 'type':
@@ -251,7 +269,8 @@ class Project extends Vocabulary
             case 'approval_date':
             case 'rejection_date':
                 return Document::format_date($value);
-            
+            case 'joint_project':
+                return $this->getJointProject();
             case 'countries':
             case 'research-countries':
                 $lang = lang('name', 'name_de');
@@ -278,10 +297,17 @@ class Project extends Vocabulary
                 return $this->getFundingNumbers('<br>');
             case 'funding_type':
                 return $this->getFundingType();
+            case 'funding_program_select':
+                // translate via vocabulary
+                return $this->getValue('funding-program', $value);
             case 'contact':
             case 'stipendiate':
             case 'scholar':
             case 'supervisor':
+                if ($portfolio) {
+                    $userid = $DB->getIDfromUsername($value);
+                    return '<a href="' . ROOTPATH . '/person/' . ($userid) . '">' . $this->getNameFromId($value) . '</a>';
+                }
                 return '<a href="' . ROOTPATH . '/profile/' . ($value) . '">' . $this->getNameFromId($value) . '</a>';
             case 'persons':
                 $value = DB::doc2Arr($value);
@@ -294,13 +320,18 @@ class Project extends Vocabulary
                 $applicants = DB::doc2Arr($value);
                 $applicantsList = '';
                 foreach ($applicants as $a) {
-                    $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                    if ($portfolio) {
+                        $applicantsList .= '<li>' . $DB->portfolioPersonLink($a) . '</li>';
+                    } else {
+                        $applicantsList .= '<li><a href="' . ROOTPATH . '/profile/' . ($a) . '">' . $this->getNameFromId($a) . '</a></li>';
+                    }
                 }
                 return '<ul class="list mb-0">' . $applicantsList . '</ul>';
             case 'grant_sum_proposed':
             case 'grant_income_proposed':
             case 'grant_sum':
             case 'grant_income':
+                if (!is_numeric($value)) return $value;
                 return number_format($value, 2, ',', '.') . ' €';
             case 'abstract':
             case 'abstract_de':
@@ -370,6 +401,9 @@ class Project extends Vocabulary
             case 'university':
                 $org = $this->db->organizations->findOne(['_id' => DB::to_ObjectID($value)]);
                 if (empty($org)) return $value;
+                if ($portfolio) {
+                    return $org['name'];
+                }
                 return '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
             default:
                 if (is_string($value)) {
@@ -377,6 +411,35 @@ class Project extends Vocabulary
                 }
                 return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         }
+    }
+
+    public function getCollaborators()
+    {
+        $collaborators = [];
+        if (empty($this->project['collaborators'] ?? [])) {
+            return $collaborators;
+        }
+
+        foreach ($this->project['collaborators'] as $collab) {
+            if (isset($collab['organization']) && is_array($collab['organization'])) {
+                $collab['organization'] = $collab['organization']['_id'];
+            }
+            $org_id = $collab['organization'];
+            $org = $this->db->organizations->findOne(['_id' => $org_id]);
+            if (empty($org)) continue;
+            $collaborators[] = [
+                'id' => strval($org['_id']),
+                'name' => $org['name'],
+                'type' => $org['type'] ?? 'Other',
+                'role' => $collab['role'] ?? 'partner',
+                'icon' => Project::getCollaboratorIcon($org['type'] ?? 'Other'),
+                'lat' => $org['lat'] ?? null,
+                'lng' => $org['lng'] ?? null,
+                'country' => $org['country'] ?? null,
+                'location' => $org['location'] ?? null,
+            ];
+        }
+        return $collaborators;
     }
 
     public function getFieldsLegacy($type)
@@ -711,7 +774,7 @@ class Project extends Vocabulary
 
     public function widgetPortal($cls = "module")
     {
-        $widget = '<a class="' . $cls . '" href="' . PORTALPATH . '/project/' . $this->project['_id'] . '">';
+        $widget = '<a class="' . $cls . '" href="' . $base . '/project/' . $this->project['_id'] . '">';
         $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
         $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
         $widget .= '<p class="d-block text-muted">' . $this->project['title'] . '</p>';
@@ -751,35 +814,35 @@ class Project extends Vocabulary
         return $widget;
     }
 
-    public function getScope()
+    public function getScope($collaborators = [])
     {
         $req = $this->db->adminGeneral->findOne(['key' => 'affiliation']);
         $institute = DB::doc2Arr($req['value']);
-        $institute['role'] = $this->project['role'] ?? 'Partner';
-
-        $collaborators = DB::doc2Arr($this->project['collaborators'] ?? []);
-        if (!empty($collaborators)) {
-            $collaborators = array_merge($collaborators, [$institute]);
+        $countries = [];
+        if (!empty($collaborators) && isset($collaborators[0]) && isset($collaborators[0]['country'])) {
+            $countries = array_column($collaborators, 'country');
+        } else {
+            $collaborators = $this->getCollaborators();
+            $countries = array_column($collaborators, 'country');
         }
 
-        $scope = 'local';
-        $countries = array_column($collaborators, 'country');
-        if (empty($countries)) return ['scope' => $scope, 'region' => '-'];
+        if (!empty($institute['country'] ?? null)) {
+            $countries[] = $institute['country'];
+        }
 
-        $scope = 'national';
+        if (empty($countries)) return ['scope' => 'local', 'region' => '-'];
+
         $countries = array_unique($countries);
-        if (count($countries) == 1) return ['scope' => $scope, 'region' => $this->getCountry($countries[0], 'name')];
+        if (count($countries) == 1) return ['scope' => 'national', 'region' => $this->getCountry($countries[0], 'name')];
 
-        $scope = 'continental';
         $continents = [];
         foreach ($countries as $code) {
             $continents[] = $this->getCountry($code, 'continent');
         }
         $continents = array_unique($continents);
-        if (count($continents) == 1) return ['scope' => $scope, 'region' => $continents[0]];
+        if (count($continents) == 1) return ['scope' => 'continental', 'region' => $continents[0]];
 
-        $scope = 'international';
-        return ['scope' => $scope, 'region' => 'world'];
+        return ['scope' => 'international', 'region' => 'world'];
     }
 
     public function getContinents()

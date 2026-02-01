@@ -1,603 +1,872 @@
 [
-    {
-        "id": "funder",
-        "category": "Project",
-        "name": "Funder",
-        "name_de": "Förderer",
-        "description": "The organization that provides funding for a project.",
-        "description_de": "Die Organisation, die die Finanzierung für ein Projekt bereitstellt.",
-        "values": [
-            {
-                "id": "DFG",
-                "en": "DFG",
-                "de": "DFG"
-            },
-            {
-                "id": "Bund",
-                "en": "Bund",
-                "de": "Bund"
-            },
-            {
-                "id": "Bundesländer",
-                "en": "Federal states",
-                "de": "Bundesländer"
-            },
-            {
-                "id": "Wirtschaft",
-                "en": "Economy",
-                "de": "Wirtschaft"
-            },
-            {
-                "id": "EU",
-                "en": "EU",
-                "de": "EU"
-            },
-            {
-                "id": "Stiftungen",
-                "en": "Foundations",
-                "de": "Stiftungen"
-            },
-            {
-                "id": "Leibniz Wettbewerb",
-                "en": "Leibniz Competition",
-                "de": "Leibniz Wettbewerb"
-            },
-            {
-                "id": "Sonstige Drittmittelgeber",
-                "en": "Other third-party funders",
-                "de": "Sonstige Drittmittelgeber"
-            }
-        ]
-    },
-    {
-        "id": "project-person-role",
-        "category": "Project",
-        "name": "Project Role",
-        "name_de": "Projektrolle",
-        "description": "The role of the person in the project.",
-        "description_de": "Die Rolle der Person im Projekt.",
-        "values": [
-            {
-                "id": "applicant",
-                "en": "Applicant",
-                "de": "Antragstellende"
-            },
-            {
-                "id": "PI",
-                "en": "Project management",
-                "de": "Projektleitung"
-            },
-            {
-                "id": "co-PI",
-                "en": "Deputy project management",
-                "de": "Stellvertretende Projektleitung"
-            },
-            {
-                "id": "worker",
-                "en": "Scientific staff",
-                "de": "Wissenschaftliche Mitarbeitende"
-            },
-            {
-                "id": "coordinator",
-                "en": "Project coordinator",
-                "de": "Projektkoordination"
-            },
-            {
-                "id": "technical-staff",
-                "en": "Technical staff",
-                "de": "Technische Mitarbeitende"
-            },
-            {
-                "id": "student-staff",
-                "en": "Student staff",
-                "de": "Studentische Mitarbeitende"
-            },
-            {
-                "id": "associate",
-                "en": "Associate",
-                "de": "Beteiligte"
-            },
-            {
-                "id": "supervisor",
-                "en": "Supervisor",
-                "de": "Betreuung"
-            },
-            {
-                "id": "scholar",
-                "en": "Scholar",
-                "de": "Stipendiat:in"
-            },
-            {
-                "id": "other",
-                "en": "Other",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "project-institute-role",
-        "category": "Project",
-        "name": "Role of the Institute",
-        "name_de": "Rolle des Instituts",
-        "description": "The role of the institute in the project.",
-        "description_de": "Die Rolle des Instituts im Projekt.",
-        "values": [
-            {
-                "id": "coordinator",
-                "en": "Coordinator",
-                "de": "Koordinator"
-            },
-            {
-                "id": "partner",
-                "en": "Partner",
-                "de": "Partner"
-            },
-            {
-                "id": "associated",
-                "en": "Associated partner",
-                "de": "Assoziierter Partner"
-            }
-        ]
-    },
-    {
-        "id": "project-purpose",
-        "category": "Project",
-        "name": "Project Purpose",
-        "name_de": "Projektzweck",
-        "description": "The purpose of the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-5).",
-        "description_de": "Der Zweck des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-5).",
-        "values": [
-            {
-                "id": "research",
-                "en": "Research",
-                "de": "Forschung"
-            },
-            {
-                "id": "teaching",
-                "en": "Teaching",
-                "de": "Lehre"
-            },
-            {
-                "id": "promotion",
-                "en": "Promotion of young scientists",
-                "de": "Förderung des wissenschaftlichen Nachwuchs"
-            },
-            {
-                "id": "transfer",
-                "en": "Transfer",
-                "de": "Transfer"
-            },
-            {
-                "id": "others",
-                "en": "Other purpose",
-                "de": "Sonstiger Zweck"
-            }
-        ]
-    },
-    {
-        "id": "funding-type",
-        "category": "Project",
-        "name": "Funding Type",
-        "name_de": "Art der Förderung",
-        "description": "The type of funding for the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-3-3).",
-        "description_de": "Die Art der Förderung des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-3-3).",
-        "values": [
-            {
-                "id": "basic-funding",
-                "en": "Basic / Institutional funding",
-                "de": "Grundmittel / Institutionelle Mittel"
-            },
-            {
-                "id": "third-party-funding",
-                "en": "Third-party funding",
-                "de": "Drittmittel"
-            },
-            {
-                "id": "special-funding",
-                "en": "Special funding",
-                "de": "Sondermittel"
-            },
-            {
-                "id": "other-funding",
-                "en": "Other funding",
-                "de": "Sonstige Mittel"
-            }
-        ]
-    },
-    {
-        "id": "project-type",
-        "category": "Project",
-        "name": "Project Type",
-        "name_de": "Art des Projekts",
-        "description": "The type of project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-16, GWK).",
-        "description_de": "Die Art des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-16, GWK).",
-        "values": [
-            {
-                "id": "funding-project",
-                "en": "Funding project",
-                "de": "Zuwendungsprojekt"
-            },
-            {
-                "id": "contract-project",
-                "en": "Contract project",
-                "de": "Auftragsprojekt"
-            },
-            {
-                "id": "other-project",
-                "en": "Other project",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "proposal-document-types",
-        "category": "Project",
-        "name": "Proposal Document Types",
-        "name_de": "Arten von Antragsdokumenten",
-        "description": "This controlled vocabulary defines standardized document types commonly associated with third-party funding proposals.",
-        "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen, die im Rahmen von Drittmittelanträgen häufig verwendet werden.",
-        "values": [
-            {
-                "id": "proposal",
-                "en": "Proposal",
-                "de": "Antrag"
-            },
-            {
-                "id": "proposal_final",
-                "en": "Final Proposal",
-                "de": "Antrag (finale Version)"
-            },
-            {
-                "id": "funding_notice",
-                "en": "Funding Approval",
-                "de": "Bewilligungsbescheid"
-            },
-            {
-                "id": "rejection_notice",
-                "en": "Rejection Notice",
-                "de": "Ablehnungsbescheid"
-            },
-            {
-                "id": "funds_request",
-                "en": "Funds Request",
-                "de": "Mittelabruf"
-            },
-            {
-                "id": "interim_report",
-                "en": "Interim Report",
-                "de": "Zwischenbericht"
-            },
-            {
-                "id": "financial_report",
-                "en": "Financial Report",
-                "de": "Verwendungsnachweis"
-            },
-            {
-                "id": "final_report",
-                "en": "Final Report",
-                "de": "Abschlussbericht"
-            },
-            {
-                "id": "contract",
-                "en": "Contract / Agreement",
-                "de": "Vertrag / Kooperationsvereinbarung"
-            },
-            {
-                "id": "budget",
-                "en": "Budget Overview",
-                "de": "Kalkulation / Budgetübersicht"
-            },
-            {
-                "id": "attachments",
-                "en": "Attachments",
-                "de": "Anlagen zum Antrag"
-            },
-            {
-                "id": "correspondence",
-                "en": "Correspondence",
-                "de": "Korrespondenz mit Fördergeber"
-            },
-            {
-                "id": "ethics",
-                "en": "Ethics Approval",
-                "de": "Ethikvotum / Datenschutzfreigabe"
-            },
-            {
-                "id": "reviews",
-                "en": "Reviews",
-                "de": "Gutachten / Reviews"
-            },
-            {
-                "id": "other",
-                "en": "Other",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "nagoya-document-types",
-        "category": "Project",
-        "name": "Nagoya Permit Documents",
-        "name_de": "Nagoya-Genehmigungsdokumente",
-        "description": "This controlled vocabulary defines standardized document types related to Nagoya Protocol permits for research projects.",
-        "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen im Zusammenhang mit Nagoya-Protokoll-Genehmigungen für Forschungsprojekte.",
-        "values": [
-            {
-                "id": "PIC",
-                "en": "Prior Informed Consent (PIC)",
-                "de": "Prior Informed Consent (PIC)"
-            },
-            {
-                "id": "MAT",
-                "en": "Mutually Agreed Terms (MAT)",
-                "de": "Mutually Agreed Terms (MAT)"
-            },
-            {
-                "id": "DDD",
-                "en": "Due Diligence Declaration (DDD)",
-                "de": "Due Diligence Declaration (DDD)"
-            },
-            {
-                "id": "MTA",
-                "en": "Material Transfer Agreement (MTA)",
-                "de": "Material Transfer Agreement (MTA)"
-            },
-            {
-                "id": "EXPORT-PERMIT",
-                "en": "Export Permit",
-                "de": "Export Permit"
-            },
-            {
-                "id": "RESEARCH-PERMIT",
-                "en": "Research Permit",
-                "de": "Research Permit"
-            },
-            {
-                "id": "CRUISE-PERMIT",
-                "en": "Diplomatic Cruise Permit",
-                "de": "Diplomatic Cruise Permit"
-            },
-            {
-                "id": "EMAIL",
-                "en": "Relevant Emails with Authorities",
-                "de": "Relevante E-Mails mit Behörden"
-            },
-            {
-                "id": "SAMPLE-LIST",
-                "en": "Sample List",
-                "de": "Probensammlung"
-            },
-            {
-                "id": "OTHER",
-                "en": "Other",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "infrastructure-category",
-        "category": "Infrastructure",
-        "name": "Category of an Infrastructure",
-        "name_de": "Kategorie der Infrastruktur",
-        "description": "The category of an infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-5).",
-        "description_de": "Die Kategorie der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-5).",
-        "values": [
-            {
-                "id": "Großgeräte und Instrumente",
-                "en": "Large appliances and instruments",
-                "de": "Großgeräte und Instrumente"
-            },
-            {
-                "id": "Wissensressourcen",
-                "en": "Knowledge resources",
-                "de": "Wissensressourcen"
-            },
-            {
-                "id": "Informations- und Kommunikationsinfrastrukturen",
-                "en": "Information and communication infrastructures",
-                "de": "Informations- und Kommunikationsinfrastrukturen"
-            },
-            {
-                "id": "Sonstiges",
-                "en": "Others",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "infrastructure-type",
-        "category": "Infrastructure",
-        "name": "Type of Infrastructure",
-        "name_de": "Art der Infrastruktur",
-        "description": "The type of infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-6).",
-        "description_de": "Die Art der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-6).",
-        "values": [
-            {
-                "id": "Lokal",
-                "en": "Local",
-                "de": "Lokal"
-            },
-            {
-                "id": "Verteilt",
-                "en": "Distributed",
-                "de": "Verteilt"
-            },
-            {
-                "id": "Virtuell",
-                "en": "Virtual",
-                "de": "Virtuell"
-            }
-        ]
-    },
-    {
-        "id": "infrastructure-access",
-        "category": "Infrastructure",
-        "name": "Infrastructure Access",
-        "name_de": "Zugang zur Infrastruktur",
-        "description": "The access to the infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-7).",
-        "description_de": "Der Zugang zur Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-7).",
-        "values": [
-            {
-                "id": "User Access",
-                "en": "User access",
-                "de": "User Access"
-            },
-            {
-                "id": "Shared Access",
-                "en": "Shared access",
-                "de": "Shared Access"
-            },
-            {
-                "id": "Open Access",
-                "en": "Open access",
-                "de": "Open Access"
-            },
-            {
-                "id": "Sonstiges",
-                "en": "Other",
-                "de": "Sonstiges"
-            }
-        ]
-    },
-    {
-        "id": "infrastructure-stats",
-        "category": "Infrastructure",
-        "name": "Infrastructure Statistics",
-        "name_de": "Infrastrukturstatistiken",
-        "description": "The statistics for the infrastructure. If more values are added here, they can be maintained in the annual statistics and evaluated in the statistics overview.",
-        "description_de": "Die Statistiken für die Infrastruktur. Wenn hier weitere Werte hinzugefügt werden, können diese in der Jahresstatistik gepflegt und in der Statistikübersicht ausgewertet werden.",
-        "values": [
-            {
-                "id": "internal",
-                "en": "Number of internal users",
-                "de": "Anzahl interner Nutzer/-innen"
-            },
-            {
-                "id": "national",
-                "en": "Number of national users",
-                "de": "Anzahl nationaler Nutzer/-innen"
-            },
-            {
-                "id": "international",
-                "en": "Number of international users",
-                "de": "Anzahl internationaler Nutzer/-innen"
-            },
-            {
-                "id": "hours",
-                "en": "Number of hours used",
-                "de": "Anzahl der genutzten Stunden"
-            },
-            {
-                "id": "accesses",
-                "en": "Number of accesses",
-                "de": "Anzahl der Nutzungszugriffe"
-            }
-            
-        ]
-    },
-    {
-        "id": "event-type",
-        "category": "Event",
-        "name": "Event Type",
-        "name_de": "Eventtyp",
-        "description": "The type of an event.",
-        "description_de": "Der Typ eines Events.",
-        "values": [
-            {
-                "id": "local",
-                "en": "Local",
-                "de": "Lokal"
-            },
-            {
-                "id": "national",
-                "en": "National",
-                "de": "National"
-            },
-            {
-                "id": "international",
-                "en": "International",
-                "de": "International"
-            }
-        ]
-    },
-    {
+  {
+    "id": "funder",
+    "category": "Project",
+    "name": "Funder",
+    "name_de": "Förderer",
+    "description": "The organization that provides funding for a project.",
+    "description_de": "Die Organisation, die die Finanzierung für ein Projekt bereitstellt.",
+    "values": [
+      {
+        "id": "DFG",
+        "en": "DFG",
+        "de": "DFG"
+      },
+      {
+        "id": "Bund",
+        "en": "Bund",
+        "de": "Bund"
+      },
+      {
+        "id": "Bundesländer",
+        "en": "Federal states",
+        "de": "Bundesländer"
+      },
+      {
+        "id": "Wirtschaft",
+        "en": "Economy",
+        "de": "Wirtschaft"
+      },
+      {
+        "id": "EU",
+        "en": "EU",
+        "de": "EU"
+      },
+      {
+        "id": "Stiftungen",
+        "en": "Foundations",
+        "de": "Stiftungen"
+      },
+      {
+        "id": "Leibniz Wettbewerb",
+        "en": "Leibniz Competition",
+        "de": "Leibniz Wettbewerb"
+      },
+      {
+        "id": "Sonstige Drittmittelgeber",
+        "en": "Other third-party funders",
+        "de": "Sonstige Drittmittelgeber"
+      }
+    ]
+  },
+  {
+    "id": "project-person-role",
+    "category": "Project",
+    "name": "Project Role",
+    "name_de": "Projektrolle",
+    "description": "The role of the person in the project.",
+    "description_de": "Die Rolle der Person im Projekt.",
+    "values": [
+      {
+        "id": "applicant",
+        "en": "Applicant",
+        "de": "Antragstellende"
+      },
+      {
+        "id": "PI",
+        "en": "Project management",
+        "de": "Projektleitung"
+      },
+      {
+        "id": "co-PI",
+        "en": "Deputy project management",
+        "de": "Stellvertretende Projektleitung"
+      },
+      {
+        "id": "worker",
+        "en": "Scientific staff",
+        "de": "Wissenschaftliche Mitarbeitende"
+      },
+      {
+        "id": "coordinator",
+        "en": "Project coordinator",
+        "de": "Projektkoordination"
+      },
+      {
+        "id": "technical-staff",
+        "en": "Technical staff",
+        "de": "Technische Mitarbeitende"
+      },
+      {
+        "id": "student-staff",
+        "en": "Student staff",
+        "de": "Studentische Mitarbeitende"
+      },
+      {
+        "id": "associate",
+        "en": "Associate",
+        "de": "Beteiligte"
+      },
+      {
+        "id": "supervisor",
+        "en": "Supervisor",
+        "de": "Betreuung"
+      },
+      {
+        "id": "scholar",
+        "en": "Scholar",
+        "de": "Stipendiat:in"
+      },
+      {
+        "id": "other",
+        "en": "Other",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "project-institute-role",
+    "category": "Project",
+    "name": "Role of the Institute",
+    "name_de": "Rolle des Instituts",
+    "description": "The role of the institute in the project.",
+    "description_de": "Die Rolle des Instituts im Projekt.",
+    "values": [
+      {
+        "id": "coordinator",
+        "en": "Coordinator",
+        "de": "Koordinator"
+      },
+      {
+        "id": "partner",
+        "en": "Partner",
+        "de": "Partner"
+      },
+      {
+        "id": "associated",
+        "en": "Associated partner",
+        "de": "Assoziierter Partner"
+      }
+    ]
+  },
+  {
+    "id": "project-purpose",
+    "category": "Project",
+    "name": "Project Purpose",
+    "name_de": "Projektzweck",
+    "description": "The purpose of the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-5).",
+    "description_de": "Der Zweck des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-5).",
+    "values": [
+      {
+        "id": "research",
+        "en": "Research",
+        "de": "Forschung"
+      },
+      {
+        "id": "teaching",
+        "en": "Teaching",
+        "de": "Lehre"
+      },
+      {
+        "id": "promotion",
+        "en": "Promotion of young scientists",
+        "de": "Förderung des wissenschaftlichen Nachwuchs"
+      },
+      {
+        "id": "transfer",
+        "en": "Transfer",
+        "de": "Transfer"
+      },
+      {
+        "id": "others",
+        "en": "Other purpose",
+        "de": "Sonstiger Zweck"
+      }
+    ]
+  },
+  {
+    "id": "funding-type",
+    "category": "Project",
+    "name": "Funding Type",
+    "name_de": "Art der Förderung",
+    "description": "The type of funding for the project. The default values correspond to the vocabulary of the KDSF (KDSF-B-3-3).",
+    "description_de": "Die Art der Förderung des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-3-3).",
+    "values": [
+      {
+        "id": "basic-funding",
+        "en": "Basic / Institutional funding",
+        "de": "Grundmittel / Institutionelle Mittel"
+      },
+      {
+        "id": "third-party-funding",
+        "en": "Third-party funding",
+        "de": "Drittmittel"
+      },
+      {
+        "id": "special-funding",
+        "en": "Special funding",
+        "de": "Sondermittel"
+      },
+      {
+        "id": "other-funding",
+        "en": "Other funding",
+        "de": "Sonstige Mittel"
+      }
+    ]
+  },
+  {
+    "id": "funding-program",
+    "category": "Project",
+    "name": "Funding Program",
+    "name_de": "Förderprogramm",
+    "description": "The funding program for the project. The default values correspond to the vocabulary of the KDSF (Klassif-L-24).",
+    "description_de": "Das Förderprogramm für das Projekt. Die Standard-Werte entsprechen dem Vokabular des KDSF (Klassif-L-24).",
+    "values": [
+      {
+        "id": "ERC-Starting-Grant-H2020",
+        "en": "EU: ERC Starting Grant (Horizon 2020)",
+        "de": "EU: ERC Starting Grant (Horizont 2020)"
+      },
+      {
+        "id": "ERC-Starting-Grant-HEU",
+        "en": "EU: ERC Starting Grant (Horizon Europe)",
+        "de": "EU: ERC Starting Grant (Horizont Europa)"
+      },
+      {
+        "id": "ERC-Advanced-Grant-H2020",
+        "en": "EU: ERC Advanced Grant (Horizon 2020)",
+        "de": "EU: ERC Advanced Grant (Horizont 2020)"
+      },
+      {
+        "id": "ERC-Advanced-Grant-HEU",
+        "en": "EU: ERC Advanced Grant (Horizon Europe)",
+        "de": "EU: ERC Advanced Grant (Horizont Europa)"
+      },
+      {
+        "id": "ERC-Consolidator-Grant-H2020",
+        "en": "EU: ERC Consolidator Grant (Horizon 2020)",
+        "de": "EU: ERC Consolidator Grant (Horizont 2020)"
+      },
+      {
+        "id": "ERC-Consolidator-Grant-HEU",
+        "en": "EU: ERC Consolidator Grant (Horizon Europe)",
+        "de": "EU: ERC Consolidator Grant (Horizont Europa)"
+      },
+      {
+        "id": "ERC-Synergy-Grant-H2020",
+        "en": "EU: ERC Synergy Grant (Horizon 2020)",
+        "de": "EU: ERC Synergy Grant (Horizont 2020)"
+      },
+      {
+        "id": "ERC-Synergy-Grant-HEU",
+        "en": "EU: ERC Synergy Grant (Horizon Europe)",
+        "de": "EU: ERC Synergy Grant (Horizont Europa)"
+      },
+      {
+        "id": "ERC-Other-H2020-HEU",
+        "en": "EU: Other Horizon 2020 or Horizon Europe funding",
+        "de": "EU: Sonstige Horizont 2020- oder Horizont Europa-Förderung"
+      },
+      {
+        "id": "DFG-Exzellenzcluster",
+        "en": "DFG: Excellence Cluster",
+        "de": "DFG: Exzellenzcluster"
+      },
+      {
+        "id": "DFG-Sonderforschungsbereich",
+        "en": "DFG: Collaborative Research Centre",
+        "de": "DFG: Sonderforschungsbereich"
+      },
+      {
+        "id": "DFG-Graduiertenkolleg",
+        "en": "DFG: Research Training Group",
+        "de": "DFG: Graduiertenkolleg"
+      },
+      {
+        "id": "DFG-SFB-Transregio",
+        "en": "DFG: Collaborative Research Centres/ Transregio",
+        "de": "DFG: SFB/ Transregio"
+      },
+      {
+        "id": "DFG-Gottfried-Wilhelm-Leibniz-Preis",
+        "en": "DFG: Gottfried Wilhelm Leibniz Prize",
+        "de": "DFG: Gottfried Wilhelm Leibniz-Preis"
+      },
+      {
+        "id": "DFG-Heinz-Maier-Leibnitz-Preis",
+        "en": "DFG: Heinz Maier-Leibnitz Prize",
+        "de": "DFG: Heinz Maier-Leibnitz-Preis"
+      },
+      {
+        "id": "DFG-Heisenberg-Programm",
+        "en": "DFG: Heisenberg Programme",
+        "de": "DFG: Heisenberg-Programm"
+      },
+      {
+        "id": "DFG-Emmy-Noether-Programm",
+        "en": "DFG: Emmy Noether Programme",
+        "de": "DFG: Emmy-Noether-Programm"
+      },
+      {
+        "id": "AvH-Alexander-von-Humboldt-Professur",
+        "en": "AvH: Alexander von Humboldt Professorship",
+        "de": "AvH: Alexander von Humboldt-Professur"
+      },
+      {
+        "id": "AvH-Sofja-Kovalevskaja-Preis",
+        "en": "AvH: Sofja Kovalevskaja Prize",
+        "de": "AvH: Sofja Kovalevskaja-Preis"
+      },
+      {
+        "id": "DAAD-Projektförderung",
+        "en": "DAAD: Project funding",
+        "de": "DAAD: Projektförderung"
+      },
+      {
+        "id": "DAAD-PROMOS-Programm",
+        "en": "DAAD: PROMOS Programme",
+        "de": "DAAD: PROMOS-Programm"
+      },
+      {
+        "id": "DAAD-Erasmus-Plus-Programm",
+        "en": "DAAD: Erasmus + Programme",
+        "de": "DAAD: Erasmus +- Programm"
+      }
+    ]
+  },
+  {
+    "id": "project-type",
+    "category": "Project",
+    "name": "Project Type",
+    "name_de": "Art des Projekts",
+    "description": "The type of project. The default values correspond to the vocabulary of the KDSF (KDSF-B-2-16, GWK).",
+    "description_de": "Die Art des Projekts. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-2-16, GWK).",
+    "values": [
+      {
+        "id": "funding-project",
+        "en": "Funding project",
+        "de": "Zuwendungsprojekt"
+      },
+      {
+        "id": "contract-project",
+        "en": "Contract project",
+        "de": "Auftragsprojekt"
+      },
+      {
+        "id": "other-project",
+        "en": "Other project",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "proposal-document-types",
+    "category": "Project",
+    "name": "Proposal Document Types",
+    "name_de": "Arten von Antragsdokumenten",
+    "description": "This controlled vocabulary defines standardized document types commonly associated with third-party funding proposals.",
+    "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen, die im Rahmen von Drittmittelanträgen häufig verwendet werden.",
+    "values": [
+      {
+        "id": "proposal",
+        "en": "Proposal",
+        "de": "Antrag"
+      },
+      {
+        "id": "proposal_final",
+        "en": "Final Proposal",
+        "de": "Antrag (finale Version)"
+      },
+      {
+        "id": "funding_notice",
+        "en": "Funding Approval",
+        "de": "Bewilligungsbescheid"
+      },
+      {
+        "id": "rejection_notice",
+        "en": "Rejection Notice",
+        "de": "Ablehnungsbescheid"
+      },
+      {
+        "id": "funds_request",
+        "en": "Funds Request",
+        "de": "Mittelabruf"
+      },
+      {
+        "id": "interim_report",
+        "en": "Interim Report",
+        "de": "Zwischenbericht"
+      },
+      {
+        "id": "financial_report",
+        "en": "Financial Report",
+        "de": "Verwendungsnachweis"
+      },
+      {
+        "id": "final_report",
+        "en": "Final Report",
+        "de": "Abschlussbericht"
+      },
+      {
+        "id": "contract",
+        "en": "Contract / Agreement",
+        "de": "Vertrag / Kooperationsvereinbarung"
+      },
+      {
+        "id": "budget",
+        "en": "Budget Overview",
+        "de": "Kalkulation / Budgetübersicht"
+      },
+      {
+        "id": "attachments",
+        "en": "Attachments",
+        "de": "Anlagen zum Antrag"
+      },
+      {
+        "id": "cv",
+        "en": "Curriculum Vitae",
+        "de": "Lebenslauf"
+      },
+      {
+        "id": "loi",
+        "en": "Letter of Intent",
+        "de": "Letter of Intent"
+      },
+      {
+        "id": "correspondence",
+        "en": "Correspondence",
+        "de": "Korrespondenz mit Fördergeber"
+      },
+      {
+        "id": "ethics",
+        "en": "Ethics Approval",
+        "de": "Ethikvotum / Datenschutzfreigabe"
+      },
+      {
+        "id": "reviews",
+        "en": "Reviews",
+        "de": "Gutachten / Reviews"
+      },
+      {
+        "id": "other",
+        "en": "Other",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "nagoya-document-types",
+    "category": "Project",
+    "name": "Nagoya Permit Documents",
+    "name_de": "Nagoya-Genehmigungsdokumente",
+    "description": "This controlled vocabulary defines standardized document types related to Nagoya Protocol permits for research projects.",
+    "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen im Zusammenhang mit Nagoya-Protokoll-Genehmigungen für Forschungsprojekte.",
+    "values": [
+      {
+        "id": "PIC",
+        "en": "Prior Informed Consent (PIC)",
+        "de": "Prior Informed Consent (PIC)"
+      },
+      {
+        "id": "MAT",
+        "en": "Mutually Agreed Terms (MAT)",
+        "de": "Mutually Agreed Terms (MAT)"
+      },
+      {
+        "id": "DDD",
+        "en": "Due Diligence Declaration (DDD)",
+        "de": "Due Diligence Declaration (DDD)"
+      },
+      {
+        "id": "MTA",
+        "en": "Material Transfer Agreement (MTA)",
+        "de": "Material Transfer Agreement (MTA)"
+      },
+      {
+        "id": "EXPORT-PERMIT",
+        "en": "Export Permit",
+        "de": "Export Permit"
+      },
+      {
+        "id": "RESEARCH-PERMIT",
+        "en": "Research Permit",
+        "de": "Research Permit"
+      },
+      {
+        "id": "CRUISE-PERMIT",
+        "en": "Diplomatic Cruise Permit",
+        "de": "Diplomatic Cruise Permit"
+      },
+      {
+        "id": "EMAIL",
+        "en": "Relevant Emails with Authorities",
+        "de": "Relevante E-Mails mit Behörden"
+      },
+      {
+        "id": "SAMPLE-LIST",
+        "en": "Sample List",
+        "de": "Probensammlung"
+      },
+      {
+        "id": "OTHER",
+        "en": "Other",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "infrastructure-category",
+    "category": "Infrastructure",
+    "name": "Category of an Infrastructure",
+    "name_de": "Kategorie der Infrastruktur",
+    "description": "The category of an infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-5).",
+    "description_de": "Die Kategorie der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-5).",
+    "values": [
+      {
+        "id": "Großgeräte und Instrumente",
+        "en": "Large appliances and instruments",
+        "de": "Großgeräte und Instrumente"
+      },
+      {
+        "id": "Wissensressourcen",
+        "en": "Knowledge resources",
+        "de": "Wissensressourcen"
+      },
+      {
+        "id": "Informations- und Kommunikationsinfrastrukturen",
+        "en": "Information and communication infrastructures",
+        "de": "Informations- und Kommunikationsinfrastrukturen"
+      },
+      {
+        "id": "Sonstiges",
+        "en": "Others",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "infrastructure-type",
+    "category": "Infrastructure",
+    "name": "Type of Infrastructure",
+    "name_de": "Art der Infrastruktur",
+    "description": "The type of infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-6).",
+    "description_de": "Die Art der Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-6).",
+    "values": [
+      {
+        "id": "Lokal",
+        "en": "Local",
+        "de": "Lokal"
+      },
+      {
+        "id": "Verteilt",
+        "en": "Distributed",
+        "de": "Verteilt"
+      },
+      {
+        "id": "Virtuell",
+        "en": "Virtual",
+        "de": "Virtuell"
+      }
+    ]
+  },
+  {
+    "id": "infrastructure-access",
+    "category": "Infrastructure",
+    "name": "Infrastructure Access",
+    "name_de": "Zugang zur Infrastruktur",
+    "description": "The access to the infrastructure. The default values correspond to the vocabulary of the KDSF (KDSF-B-13-7).",
+    "description_de": "Der Zugang zur Infrastruktur. Die Standard-Werte entsprechen dem Vokabular des KDSF (KDSF-B-13-7).",
+    "values": [
+      {
+        "id": "User Access",
+        "en": "User access",
+        "de": "User Access"
+      },
+      {
+        "id": "Shared Access",
+        "en": "Shared access",
+        "de": "Shared Access"
+      },
+      {
+        "id": "Open Access",
+        "en": "Open access",
+        "de": "Open Access"
+      },
+      {
+        "id": "Sonstiges",
+        "en": "Other",
+        "de": "Sonstiges"
+      }
+    ]
+  },
+  {
+    "id": "infrastructure-stats",
+    "category": "Infrastructure",
+    "name": "Infrastructure Statistics",
+    "name_de": "Infrastrukturstatistiken",
+    "description": "The statistics for the infrastructure. If more values are added here, they can be maintained in the annual statistics and evaluated in the statistics overview.",
+    "description_de": "Die Statistiken für die Infrastruktur. Wenn hier weitere Werte hinzugefügt werden, können diese in der Jahresstatistik gepflegt und in der Statistikübersicht ausgewertet werden.",
+    "values": [
+      {
+        "id": "internal",
+        "en": "Number of internal users",
+        "de": "Anzahl interner Nutzer/-innen"
+      },
+      {
+        "id": "national",
+        "en": "Number of national users",
+        "de": "Anzahl nationaler Nutzer/-innen"
+      },
+      {
+        "id": "international",
+        "en": "Number of international users",
+        "de": "Anzahl internationaler Nutzer/-innen"
+      },
+      {
+        "id": "hours",
+        "en": "Number of hours used",
+        "de": "Anzahl der genutzten Stunden"
+      },
+      {
+        "id": "accesses",
+        "en": "Number of accesses",
+        "de": "Anzahl der Nutzungszugriffe"
+      }
+    ]
+  },
+  {
+    "id": "event-type",
+    "category": "Event",
+    "name": "Event Type",
+    "name_de": "Eventtyp",
+    "description": "The type of an event.",
+    "description_de": "Der Typ eines Events.",
+    "values": [
+      {
+        "id": "local",
+        "en": "Local",
+        "de": "Lokal"
+      },
+      {
+        "id": "national",
+        "en": "National",
+        "de": "National"
+      },
+      {
+        "id": "international",
+        "en": "International",
+        "de": "International"
+      }
+    ]
+  },
+  {
+    "id": "thesis",
+    "category": "Activity",
+    "name": "Thesis Category",
+    "name_de": "Abschlussarbeit-Kategorie",
+    "description": "The type of thesis.",
+    "description_de": "Die Art der Abschlussarbeit.",
+    "values": [
+      {
         "id": "thesis",
-        "category": "Activity",
-        "name": "Thesis Category",
-        "name_de": "Abschlussarbeit-Kategorie",
-        "description": "The type of thesis.",
-        "description_de": "Die Art der Abschlussarbeit.",
-        "values": [
-            {
-                "id": "thesis",
-                "en": "Thesis",
-                "de": "Abschlussarbeit"
-            },
-            {
-                "id": "doctor",
-                "en": "Doctoral Thesis",
-                "de": "Doktorarbeit"
-            },
-            {
-                "id": "diploma",
-                "en": "Diploma Thesis",
-                "de": "Diplomarbeit"
-            },
-            {
-                "id": "master",
-                "en": "Master Thesis",
-                "de": "Masterarbeit"
-            },
-            {
-                "id": "bachelor",
-                "en": "Bachelor Thesis",
-                "de": "Bachelorarbeit"
-            },
-            {
-                "id": "habilitation",
-                "en": "Habilitation",
-                "de": "Habilitation"
-            }
-        ]
-    },
-    {
-        "id": "pub-language",
-        "category": "Activity",
-        "name": "Publication Language",
-        "name_de": "Publikationssprache",
-        "description": "The language in which the publication is written, according to ISO 639-1 codes.",
-        "description_de": "Die Sprache, in der die Publikation verfasst ist, gemäß ISO 639-1 Codes.",
-        "values": [
-            {
-                "id": "de",
-                "en": "German",
-                "de": "Deutsch"
-            },
-            {
-                "id": "en",
-                "en": "English",
-                "de": "Englisch"
-            },
-            {
-                "id": "fr",
-                "en": "French",
-                "de": "Französisch"
-            },
-            {
-                "id": "es",
-                "en": "Spanish",
-                "de": "Spanisch"
-            },
-            {
-                "id": "it",
-                "en": "Italian",
-                "de": "Italienisch"
-            },
-            {
-                "id": "other",
-                "en": "Other",
-                "de": "Andere"
-            }
-        ]
-    }
+        "en": "Thesis",
+        "de": "Abschlussarbeit"
+      },
+      {
+        "id": "doctor",
+        "en": "Doctoral Thesis",
+        "de": "Doktorarbeit"
+      },
+      {
+        "id": "diploma",
+        "en": "Diploma Thesis",
+        "de": "Diplomarbeit"
+      },
+      {
+        "id": "master",
+        "en": "Master Thesis",
+        "de": "Masterarbeit"
+      },
+      {
+        "id": "bachelor",
+        "en": "Bachelor Thesis",
+        "de": "Bachelorarbeit"
+      },
+      {
+        "id": "habilitation",
+        "en": "Habilitation",
+        "de": "Habilitation"
+      }
+    ]
+  },
+  {
+    "id": "pub-language",
+    "category": "Activity",
+    "name": "Publication Language",
+    "name_de": "Publikationssprache",
+    "description": "The language in which the publication is written, according to ISO 639-1 codes.",
+    "description_de": "Die Sprache, in der die Publikation verfasst ist, gemäß ISO 639-1 Codes.",
+    "values": [
+      {
+        "id": "de",
+        "en": "German",
+        "de": "Deutsch"
+      },
+      {
+        "id": "en",
+        "en": "English",
+        "de": "Englisch"
+      },
+      {
+        "id": "fr",
+        "en": "French",
+        "de": "Französisch"
+      },
+      {
+        "id": "es",
+        "en": "Spanish",
+        "de": "Spanisch"
+      },
+      {
+        "id": "it",
+        "en": "Italian",
+        "de": "Italienisch"
+      },
+      {
+        "id": "other",
+        "en": "Other",
+        "de": "Andere"
+      }
+    ]
+  },
+  {
+    "id": "activity-document-types",
+    "category": "Activity",
+    "name": "Activity Document Types",
+    "name_de": "Arten von Aktivitätsdokumenten",
+    "description": "This controlled vocabulary defines standardized document types commonly associated with various academic and research activities.",
+    "description_de": "Diese Auswahlliste enthält standardisierte Dokumenttypen, die im Rahmen verschiedener akademischer und Forschungsaktivitäten häufig verwendet werden.",
+    "values": [
+      {
+        "id": "file",
+        "de": "Datei",
+        "en": "File"
+      },
+      {
+        "id": "full_text",
+        "de": "Volltext",
+        "en": "Full text"
+      },
+      {
+        "id": "accepted_manuscript",
+        "de": "Akzeptiertes Manuskript",
+        "en": "Accepted manuscript"
+      },
+      {
+        "id": "proof",
+        "de": "Korrekturabzug (Proof)",
+        "en": "Proof"
+      },
+      {
+        "id": "supplementary_material",
+        "de": "Supplementary Material",
+        "en": "Supplementary material"
+      },
+      {
+        "id": "presentation_slides",
+        "de": "Präsentationsfolien",
+        "en": "Presentation slides"
+      },
+      {
+        "id": "poster",
+        "de": "Poster",
+        "en": "Poster"
+      },
+      {
+        "id": "certificate",
+        "de": "Zertifikat",
+        "en": "Certificate"
+      },
+      {
+        "id": "review_report",
+        "de": "Gutachten",
+        "en": "Review report"
+      },
+      {
+        "id": "editor_decision",
+        "de": "Editorentscheidung",
+        "en": "Editorial decision"
+      },
+      {
+        "id": "cover_letter",
+        "de": "Anschreiben",
+        "en": "Cover letter"
+      },
+      {
+        "id": "response_to_reviewers",
+        "de": "Antwort an Gutachter:innen",
+        "en": "Response to reviewers"
+      },
+      {
+        "id": "dataset_description",
+        "de": "Datensatzbeschreibung",
+        "en": "Dataset description"
+      },
+      {
+        "id": "documentation",
+        "de": "Dokumentation",
+        "en": "Documentation"
+      },
+      {
+        "id": "teaching_material",
+        "de": "Lehrmaterial",
+        "en": "Teaching material"
+      },
+      {
+        "id": "exam_material",
+        "de": "Prüfungsunterlagen",
+        "en": "Exam material"
+      },
+      {
+        "id": "agenda",
+        "de": "Agenda",
+        "en": "Agenda"
+      },
+      {
+        "id": "minutes",
+        "de": "Protokoll",
+        "en": "Minutes"
+      },
+      {
+        "id": "contract",
+        "de": "Vertrag",
+        "en": "Contract"
+      },
+      {
+        "id": "other",
+        "de": "Sonstiges",
+        "en": "Other"
+      }
+    ]
+  },
+  {
+    "id": "political_consultation",
+    "category": "Activity",
+    "name": "Type of Political Consultation",
+    "name_de": "Art der politischen Beratung",
+    "description": "The values for the data field `political_consultation`.",
+    "description_de": "Die Werte für das Datenfeld `political_consultation`.",
+    "values": [
+      {
+        "id": "Gutachten",
+        "en": "Review",
+        "de": "Gutachten"
+      },
+      {
+        "id": "Positionspapier",
+        "en": "Position paper",
+        "de": "Positionspapier"
+      },
+      {
+        "id": "Studie",
+        "en": "Study",
+        "de": "Studie"
+      },
+      {
+        "id": "Sonstiges",
+        "en": "Other",
+        "de": "Sonstiges"
+      }
+    ]
+  }
 ]

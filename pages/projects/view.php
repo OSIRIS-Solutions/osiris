@@ -66,6 +66,9 @@ if ($Settings->featureEnabled('nagoya') && isset($project['proposal_id'])) {
         $nagoya_status_color = Nagoya::statusColor($proposal['nagoya']['status'] ?? 'unknown');
     }
 }
+
+$collaborators = $Project->getCollaborators();
+$scope = $Project->getScope($collaborators);
 ?>
 
 <style>
@@ -106,8 +109,8 @@ if ($Settings->featureEnabled('nagoya') && isset($project['proposal_id'])) {
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 <!-- // my year for the activity timeline -->
-<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
-<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/projects.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <style>
     td .key {
@@ -135,7 +138,10 @@ if ($Settings->featureEnabled('nagoya') && isset($project['proposal_id'])) {
         <?php } ?>
     </b>
     <h1 class="mt-0">
-        <?= $project['name'] ?>
+        <?php if (isset($project['acronym'])) { ?>
+            <?= htmlspecialchars($project['acronym']) ?> –
+        <?php } ?>
+        <?= htmlspecialchars($project['name']) ?>
     </h1>
 
     <h2 class="subtitle">
@@ -177,8 +183,7 @@ if ($topicsEnabled) {
         <br />
         <b>
             <?php
-            if (!empty(($project['collaborators'] ?? []))) {
-                $scope = $Project->getScope();
+            if (!empty($collaborators)) {
                 echo  $scope['scope'] . ' (' . $scope['region'] . ')';
             } else {
                 echo lang('No collaborators', 'Keine Partner');
@@ -586,7 +591,7 @@ if ($topicsEnabled) {
                 <tbody>
                     <?php
                     include_once BASEPATH . '/php/Organization.php';
-                    if (empty($project['collaborators'] ?? array())) {
+                    if (empty($collaborators)) {
                     ?>
                         <tr>
                             <td>
@@ -594,10 +599,7 @@ if ($topicsEnabled) {
                             </td>
                         </tr>
                     <?php
-                    } else foreach ($project['collaborators'] as $collab) {
-                        if (isset($collab['organization']) && is_array($collab['organization'])) {
-                            $collab['organization'] = $collab['organization']['_id'];
-                        }
+                    } else foreach ($collaborators as $collab) {
                     ?>
                         <tr>
                             <td>
@@ -606,7 +608,7 @@ if ($topicsEnabled) {
                                         <?= Organization::getIcon($collab['type'], 'ph-fw ph-2x m-0') ?>
                                     </span>
                                     <div class="">
-                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['organization'] ?>">
+                                        <a class="d-block font-weight-bold" href="<?= ROOTPATH ?>/organizations/view/<?= $collab['id'] ?>">
                                             <?= $collab['name'] ?>
                                         </a>
                                         <?= $collab['location'] ?>
@@ -630,8 +632,8 @@ if ($topicsEnabled) {
                     Scope
                 </h5>
                 <?php
-                $scope = $Project->getScope();
-                echo  $scope['scope'] . ' (' . $scope['region'] . ')';
+                // $scope = $Project->getScope();
+                // echo  $scope['scope'] . ' (' . $scope['region'] . ')';
                 ?>
             </div>
         </div>
@@ -664,7 +666,6 @@ if ($topicsEnabled) {
 
     <script>
         const id = '<?= $_GET['project'] ?? null ?>';
-        console.log(id);
         const collaborator_id = '<?= ($subproject) ? strval($project['parent_id']) : $id ?>';
         <?php if (empty($project['collaborators'] ?? array())) { ?>
             collabChart = true;

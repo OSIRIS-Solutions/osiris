@@ -14,7 +14,7 @@
  * @license     MIT
  */
 
-$grant_years = $project['grant_years'] ?? array();
+$years = DB::doc2Arr($project['grant_years'] ?? array());
 $formaction = ROOTPATH . "/crud/proposals/finance/" . $form['_id'];
 $url = ROOTPATH . "/proposals/view/" . $form['_id'];
 ?>
@@ -28,14 +28,17 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
             <thead>
                 <tr>
                     <th><?=lang('Year', 'Jahr')?></th>
-                    <th><?=lang('Amount', 'Summe')?> in EUR</th>
+                    <th><?=lang('Planned Amount', 'Geplante Summe')?> in EUR</th>
+                    <th><?=lang('Spent Amount', 'Tatsächliche Summe')?> in EUR</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="grant-years">
-                <?php foreach ($grant_years as $year => $amount): ?>
+                <?php foreach ($years as $yearData): ?>
                     <tr>
-                        <td><input required class="form-control" type="number" step="1" min="1900" max="2050" name="values[grant_years][]" value="<?= $year ?>" /></td>
-                        <td><input required class="form-control" type="number" step="0.01" name="values[grant_amounts][]" value="<?= $amount ?>" /></td>
+                        <td><input required class="form-control" type="number" step="1" min="1900" max="2050" name="values[grant_years][]" value="<?= $yearData['year'] ?>" /></td>
+                        <td><input required class="form-control" type="number" step="0.01" name="values[grant_planned][]" value="<?= $yearData['planned']  ?? 0 ?>" /></td>
+                        <td><input required class="form-control" type="number" step="0.01" name="values[grant_spent][]" value="<?= $yearData['spent'] ?? 0  ?>" /></td>
                         <td>
                             <button type="button" class="btn" onclick="$(this).closest('tr').remove()">
                                 <i class="ph ph-trash"></i>
@@ -46,12 +49,11 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2">
+                    <td colspan="4">
                         <button type="button" class="btn" id="add-year" onclick="addYear()">
                             <i class="ph ph-plus"></i>
                             <?= lang('Add Year', 'Jahr hinzufügen') ?>
                         </button>
-                    </td>
                     </td>
                 </tr>
             </tfoot>
@@ -67,7 +69,8 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
         const newRow = `
             <tr>
                 <td><input required class="form-control" type="number" step="1" min="1900" max="2050" name="values[grant_years][]" /></td>
-                <td><input required class="form-control" type="number" step="0.01" name="values[grant_amounts][]" /></td>
+                <td><input required class="form-control" type="number" step="0.01" name="values[grant_planned][]" value="0"/></td>
+                <td><input required class="form-control" type="number" step="0.01" name="values[grant_spent][]" value="0"/></td>
                 <td>
                     <button type="button" class="btn" onclick="$(this).closest('tr').remove()">
                         <i class="ph ph-trash"></i>

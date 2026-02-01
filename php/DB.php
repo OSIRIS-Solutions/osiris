@@ -531,6 +531,25 @@ class DB
         return $fn;
     }
 
+    public function getIDfromUsername($username)
+    {
+        $person = $this->db->persons->findOne(['username' => $username], ['projection' => ['_id' => 1]]);
+        if (empty($person)) return null;
+        return strval($person['_id']);
+    }
+
+    public function portfolioPersonLink($username, $basepath = null)
+    {
+        if (empty($basepath)){
+            $basepath = $this->db->adminGeneral->findOne(['key' => 'portfolio_url'], ['projection' => ['value' => 1]]);
+            $basepath = $basepath['value'] ?? ROOTPATH;
+        }
+        $person = $this->db->persons->findOne(['username' => $username], ['projection' => ['_id' => 1]]);
+        if (empty($person)) return '';
+        $userid = strval($person['_id']);
+        $name = $person['displayname'] ?? $this->getNameFromId($username);
+        return '<a href="' . $basepath . '/person/' . ($userid) . '">' . $name . '</a>';
+    }
 
     /**
      * Returns full name from username.
@@ -754,7 +773,7 @@ class DB
     {
         if ($include_created_by && isset($doc['created_by']) && $doc['created_by'] == $user) return true;
         if (isset($doc['user']) && $doc['user'] == $user) return true;
-        foreach (['authors', 'editors'] as $role) {
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
             if (!isset($doc[$role])) continue;
             foreach ($doc[$role] as $author) {
                 if (isset($author['user']) && !empty($author['user'])) {
@@ -905,7 +924,8 @@ class DB
             '_id',
             ['$or' => [
                 ['authors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
-                ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]]
+                ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
+                ['supervisors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
             ]]
         );
         if (!empty($docs)) $issues['approval'] = array_map('strval', $docs);
@@ -913,7 +933,7 @@ class DB
         // CHECK status issue
         $docs = $this->db->activities->find(
             [
-                'authors.user' => $user,
+                'rendered.affiliated_users' => $user,
                 '$or' => [
                     ['status' => 'in progress', '$or' => [['end_date' => null], ['end_date' => ['$lt' => $today]]]],
                     ['status' => 'preparation', 'start_date' => ['$lt' => $today]],
@@ -928,7 +948,7 @@ class DB
         }
 
         // check EPUB issue
-        $docs = $this->db->activities->find(['authors.user' => $user, 'epub' => true], ['projection' => ['epub-delay' => 1]]);
+        $docs = $this->db->activities->find(['rendered.affiliated_users' => $user, 'epub' => true], ['projection' => ['epub-delay' => 1]]);
         foreach ($docs as $doc) {
             if (isset($doc['epub-delay']) && $now < new DateTime($doc['epub-delay'])) continue;
             $issues['epub'][] = strval($doc['_id']);
@@ -949,7 +969,7 @@ class DB
         }
         // }
         // then find all documents that belong to this
-        $docs = $this->db->activities->find(['authors.user' => $user, 'end' => null, 'subtype' => ['$in' => $openendtypes]], ['projection' => ['end-delay' => 1]]);
+        $docs = $this->db->activities->find(['rendered.affiliated_users' => $user, 'end' => null, 'subtype' => ['$in' => $openendtypes]], ['projection' => ['end-delay' => 1]]);
         foreach ($docs as $doc) {
             if (isset($doc['end-delay']) && $now < new DateTime($doc['end-delay'])) continue;
             $issues['openend'][] = strval($doc['_id']);
@@ -1045,7 +1065,7 @@ class DB
         // check if an activity was rejected
         $docs = $this->db->activities->find(
             [
-                'authors' => ['$elemMatch' => ['user' => $user]],
+                'rendered.affiliated_users' => $user,
                 'workflow.status' => 'rejected'
             ],
             [
@@ -1133,7 +1153,16 @@ class DB
                     $val = json_encode($val);
                 }
             }
-            $val = strip_tags($val);
+            // serialize boolean
+            if (is_bool($val)) {
+                $val = $val ? 'yes' : 'no';
+            }
+            if (is_string($val)) {
+                $val = trim($val);
+                $val = strip_tags($val);
+            }
+            // make sure that empty is really empty
+            if (empty($val) || $val === '' || $val === '[]' || $val === null) $val = '';
             $result[$key] = $val;
         }
         return $result;

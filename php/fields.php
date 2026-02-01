@@ -47,9 +47,12 @@ class Fields
         return $list;
     }
 
-    public function addCustomFields($FIELDS, $osiris, $typeModules = [])
+    public function addCustomFields($FIELDS, $osiris, $typeModules = [], $exclusive = false)
     {
         foreach ($osiris->adminFields->find() as $field) {
+            if (!isset($field['id']) || ($exclusive && in_array($field['id'], $typeModules) === false)) {
+                continue;
+            }
             // make sure that id does not exist yet
             $exists = false;
             foreach ($FIELDS as $existingField) {

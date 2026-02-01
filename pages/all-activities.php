@@ -543,6 +543,7 @@ $cart = readCart();
                     targets: 1,
                     data: 'icon',
                     // className: 'w-50',
+                    defaultContent: '',
                     sortable: false,
                     // render: function(data, type, row) {
                     //     var text = data + '<small class="d-block">' + row.subtype + '</small>';
@@ -552,6 +553,7 @@ $cart = readCart();
                 {
                     targets: 2,
                     data: 'activity',
+                    defaultContent: 'Please contact admin or rerender to correctly see this activity.',
                     render: function(data, type, row) {
                         var text = data;
                         if (topicsEnabled && row.topics && row.topics.length > 0) {

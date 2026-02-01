@@ -13,31 +13,6 @@ if (!empty($form) && isset($form['_id'])) {
     $title = $name;
     $new = false;
 
-    // render example
-    // include_once BASEPATH . "/php/Modules.php";
-    // $Modules = new Modules();
-    // $EXAMPLE = ['_id' => 1, 'type' => $form['parent'], 'subtype' => $form['id']];
-    // foreach ($form['modules'] ?? array() as $module) {
-    //     $name = trim($module);
-    //     if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
-    //         $name = str_replace('*', '', $name);
-    //     }
-    //     $f = $Modules->all_modules[$name] ?? array();
-    //     $EXAMPLE = array_merge($f['fields'] ?? [], $EXAMPLE);
-    // }
-    // include_once BASEPATH . "/php/Document.php";
-    // $Document = new Document(false, 'print');
-    // $Document->setDocument($EXAMPLE);
-    // $type['example'] = $Document->format();
-    // $type['example_web'] = $Document->formatShort(false);
-
-    // $osiris->adminTypes->updateOne(
-    //     ['_id' => $form['_id']],
-    //     ['$set' => [
-    //         'example' => $type['example'],
-    //         'example_web' => $type['example_web'],
-    //     ]]
-    // );
     $member = $osiris->activities->count(['subtype' => $id]);
 } else {
     $new = true;
@@ -66,7 +41,7 @@ if (!empty($form) && isset($form['_id'])) {
 
 <style>
     #data-fields .badge {
-        border: 1px solid var(--text-color);
+        border: var(--border-width) solid var(--text-color);
         margin: .25rem;
     }
 
@@ -182,7 +157,7 @@ if (!empty($form) && isset($form['_id'])) {
                 </div>
             </div>
 
-            <div class="mt-20">
+            <!-- <div class="mt-20">
                 <input type="hidden" name="values[guests]" value="">
                 <div class="custom-checkbox">
                     <input type="checkbox" id="guest-question" value="1" name="values[guests]" <?= ($type['guests'] ?? false) ? 'checked' : '' ?>>
@@ -190,12 +165,17 @@ if (!empty($form) && isset($form['_id'])) {
                         <?= lang('Guests should be registered for this activity', 'Gäste sollen zu dieser Aktivität angemeldet werden können?') ?>
                     </label>
                 </div>
-            </div>
-            <?php if ($Settings->featureEnabled('portal')) { ?>
+            </div> -->
+            <?php if ($Settings->featureEnabled('portal')) { 
+                $portfolio = $type['portfolio'] ?? false;
+                if (!isset($type['portfolio']) && $type['parent'] == 'publication') {
+                    $portfolio = true;
+                }
+                ?>
                 <div class="mt-20">
-                    <input type="hidden" name="values[portfolio]" value="">
+                    <input type="hidden" name="values[portfolio]" value="false">
                     <div class="custom-checkbox">
-                        <input type="checkbox" id="portfolio-question" value="1" name="values[portfolio]" <?= ($type['portfolio'] ?? $type['parent'] == 'publication') ? 'checked' : '' ?>>
+                        <input type="checkbox" id="portfolio-question" value="true" name="values[portfolio]" <?= $portfolio ? 'checked' : '' ?>>
                         <label for="portfolio-question">
                             <?= lang('This type of activity should be visible in OSIRIS Portfolio.', 'Diese Art von Aktivität sollte in OSIRIS Portfolio sichtbar sein.') ?>
                         </label>

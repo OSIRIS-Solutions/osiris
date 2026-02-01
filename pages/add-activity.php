@@ -95,7 +95,7 @@ function val($index, $default = '')
         max-width: 28rem;
         z-index: 10;
         background: var(--signal-color-very-light);
-        border: 1px solid var(--signal-color);
+        border: var(--border-width) solid var(--signal-color);
         border-radius: .5rem;
         box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
         padding: .5rem .75rem;
@@ -129,7 +129,7 @@ function val($index, $default = '')
 
     label.has-help::before {
         content: "\E2CE";
-        font-family: "Phosphor";
+        font-family: var(--icon-font);
         font-size: .85em;
         margin-right: .4rem;
         color: var(--signal-color);
@@ -155,7 +155,7 @@ function val($index, $default = '')
 const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
 console.log(TYPES);
 </script>
-<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
 <div class="modal" id="add-event" tabindex="-1" role="dialog">
@@ -735,15 +735,25 @@ console.log(TYPES);
     <?php } ?>
 </datalist>
 
+<?php
+    $user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1, 'username' => 1], 'sort' => ['last' => 1]])->toArray();
+?>
+
 <datalist id="scientist-list">
     <?php
-    foreach ($osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1], 'sort' => ['last' => 1]]) as $s) {
+    foreach ($user_list as $s) {
         if (empty($s['last'])) continue;
     ?>
         <option><?= $s['last'] ?>, <?= $s['first'] ?></option>
     <?php } ?>
 </datalist>
 
+<datalist id="user-list">
+    <?php
+    foreach ($user_list as $s) { ?>
+        <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+    <?php } ?>
+</datalist>
 
 
 <script>
@@ -825,7 +835,8 @@ console.log(TYPES);
 <!-- for selecting organisations -->
 
 
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script>
     function selectOrgEvent(event = null, type = 'organization') {
         console.log(type);
@@ -853,4 +864,4 @@ console.log(TYPES);
     }
 </script>
 
-<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?= CSS_JS_VERSION ?>"></script> -->
+<!-- <script src="<?= ROOTPATH ?>/js/tour/add-activity.js?v=<?= OSIRIS_BUILD ?>"></script> -->

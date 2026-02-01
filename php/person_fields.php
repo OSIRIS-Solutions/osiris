@@ -24,7 +24,7 @@ class PersonFields extends Fields
             'updated',
             'roles'
         ];
-        
+
         $typeModules = array_merge($data, $typeModules);
         $typeModules = array_fill_keys($typeModules, ['general']);
         $FIELDS = [
@@ -361,7 +361,7 @@ class PersonFields extends Fields
                 'values' => $topics
             ];
         }
-
+        $FIELDS = parent::addCustomFields($FIELDS, $osiris, $typeModules, true);
 
         $this->fields = array_values($FIELDS);
         // Sort fields by name

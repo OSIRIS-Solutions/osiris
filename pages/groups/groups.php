@@ -74,7 +74,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         .table.cards tr {
             width: 100%;
             margin: 0.5em;
-            border: 1px solid var(--border-color);
+            border: var(--border-width) solid var(--border-color);
             border-radius: 0.5em;
             box-shadow: var(--box-shadow);
             background: white;
@@ -260,7 +260,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     $g = array_map(function ($a) {
         return [
             'id' => $a['id'],
-            'name' => $a['name'],
+            'name' => lang($a['name'], $a['name_de'] ?? null),
             'unit' => $a['unit'],
             'head' => $a['head'],
             'color' => $a['color'],
@@ -271,7 +271,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     ?>
 
     <script>
-        var tree = JSON.parse('<?= json_encode($g) ?>');
+        var tree = <?= json_encode($g) ?>;
 
         console.log(tree);
         var data = [];
@@ -299,7 +299,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
             }px;border-radius:2px;overflow:visible">
               <div style="height:${
                 d.height - 32
-              }px;padding-top:0px;background-color:white;border:1px solid var(--border-color);">
+              }px;padding-top:0px;background-color:white;border:var(--border-width) solid var(--border-color);">
 
                <div style="margin-right:10px;margin-top:15px;float:right">${
                  d.data.id

@@ -84,10 +84,10 @@ Route::get('/sws-analysis', function () {
         $year = intval($_GET['year']);
     }
     $sws = $osiris->activities->aggregate([
-        ['$match' => ['authors.sws' => ['$exists' => true], 'year' => $year]],
-        // ['$project' => ['authors' => 1, 'title'=>1, 'start'=>1]],
-        ['$unwind' => '$authors'],
-        ['$match' => ['authors.aoi' => ['$in' => [true, 'true', 1, '1']]]],
+        ['$match' => ['supervisors.sws' => ['$exists' => true], 'year' => $year]],
+        // ['$project' => ['supervisors' => 1, 'title'=>1, 'start'=>1]],
+        ['$unwind' => '$supervisors'],
+        ['$match' => ['supervisors.aoi' => ['$in' => [true, 'true', 1, '1']]]],
     ])->toArray();
     echo "<table>";
     echo "<tr><thead>";
@@ -102,8 +102,8 @@ Route::get('/sws-analysis', function () {
         echo "<td>$a[title]</td>";
         echo "<td>" . format_date($a['start']) . "</td>";
         echo "<td>" . format_date($a['end'] ?? $a['start']) . "</td>";
-        echo "<td>" . $a["authors"]["last"] . ", " . $a["authors"]["first"] . "</td>";
-        echo "<td>" . $a["authors"]["sws"] . "</td>";
+        echo "<td>" . $a["supervisors"]["last"] . ", " . $a["supervisors"]["first"] . "</td>";
+        echo "<td>" . $a["supervisors"]["sws"] . "</td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -234,7 +234,7 @@ Route::post('/download', function () {
         $filename .= "_" . trim($params['type']);
     }
     if (isset($params['user']) && !empty($params['user'])) {
-        $filter['$and'][] = array('$or' => [['authors.user' => $params['user']], ['editors.user' => $params['user']]]);
+        $filter['$and'][] = array('rendered.users' => $params['user']);
         $filename .= "_" . trim($params['user']);
     }
     if (isset($params['dept']) && !empty($params['dept'])) {

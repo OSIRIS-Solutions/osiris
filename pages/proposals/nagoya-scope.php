@@ -81,7 +81,7 @@ $utilizationOptions = [
 
     .scope-group {
         /* border rounded p-10 mb-15 */
-        border: 1px solid var(--primary-color);
+        border: var(--border-width) solid var(--primary-color);
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         padding: 1rem;

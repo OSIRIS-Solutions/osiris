@@ -198,7 +198,7 @@ $conferences = $osiris->conferences->find(
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
 <!-- // my year for the activity timeline -->
-<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script>
     const topicsEnabled = <?= $topicsEnabled ? 'true' : 'false' ?>;
 

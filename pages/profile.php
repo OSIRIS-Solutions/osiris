@@ -46,14 +46,15 @@ if (!isset($scientist['is_active'])) {
 <script src="<?= ROOTPATH ?>/js/chartjs-plugin-datalabels.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 
 <!-- all variables for this page -->
 <script>
     const CURRENT_USER = '<?= $user ?>';
+    // const HIGHTLIGHTS = <?= json_encode($scientist['highlighted'] ?? []) ?>;
 </script>
-<script src="<?= ROOTPATH ?>/js/profile.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/profile.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/achievements.css?<?= filemtime(BASEPATH . '/css/achievements.css') ?>">
@@ -66,7 +67,7 @@ if (!isset($scientist['is_active'])) {
     .expertise {
         border-radius: var(--border-radius);
         background-color: white;
-        border: 1px solid #afafaf;
+        border: var(--border-width) solid #afafaf;
         display: inline-block;
         padding: .2rem .8rem;
         box-shadow: var(--box-shadow);
@@ -76,7 +77,7 @@ if (!isset($scientist['is_active'])) {
     .user-role {
         border-radius: var(--border-radius);
         background-color: white;
-        border: 1px solid #afafaf;
+        border: var(--border-width) solid #afafaf;
         display: inline-block;
         padding: .2rem .8rem;
         box-shadow: var(--box-shadow);
@@ -381,41 +382,41 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
-                <i class="ph ph-plus-circle ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
+                <i class="ph-duotone ph-plus-circle ph-fw"></i>
                 <!-- <?= lang('Add activity', 'Aktivität hinzufügen') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
-                <i class="ph ph-folder-user ph-fw"></i>
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
+                <i class="ph-duotone ph-folder-user ph-fw"></i>
                 <!-- <?= lang('My activities', 'Meine Aktivitäten ') ?> -->
             </a>
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
-                <i class="ph ph-calendar ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
+                <i class="ph-duotone ph-calendar ph-fw"></i>
                 <!-- <?= lang('My Year', 'Mein Jahr') ?> -->
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
-                    <i class="ph ph-eye ph-fw"></i>
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                    <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
 
         </div>
         <div class="btn-group btn-group-lg">
             <?php if ($show_achievements) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('My Achievements', 'Meine Errungenschaften') ?>">
-                    <i class="ph ph-trophy ph-fw"></i>
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('My Achievements', 'Meine Errungenschaften') ?>">
+                    <i class="ph-duotone ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
-                <i class="ph ph-edit ph-fw"></i>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+                <i class="ph-duotone ph-note-pencil ph-fw"></i>
                 <!-- <?= lang('Edit user profile', 'Bearbeite Profil') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/claim" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
-                <i class="ph ph-hand ph-fw"></i>
+            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
+                <i class="ph-duotone ph-hand ph-fw"></i>
                 <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
@@ -426,8 +427,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <input type="hidden" name="format" value="word">
             <input type="hidden" name="type" value="cv">
 
-            <button class="btn text-primary border-primary large" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
-                <i class="ph ph-identification-card text-primary ph-fw"></i>
+            <button class="btn primary outline large" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
+                <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
     </div>
@@ -453,19 +454,19 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <?php } else { ?>
     <div class="btn-toolbar">
         <div class="btn-group btn-group-lg">
-            <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('The year of ', 'Das Jahr von ') . $scientist['first'] ?> ">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('The year of ', 'Das Jahr von ') . $scientist['first'] ?> ">
                 <i class="ph ph-calendar ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn text-primary border-primary" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
+            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
                 <i class="ph ph-folder-user ph-fw"></i>
             </a>
             <?php if ($show_achievements) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
                     <i class="ph ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn text-primary border-primary" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -547,7 +548,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $publication_filter = [
-        '$or' => [['authors.user' => $user], ['editors.user' => $user]],
+        'rendered.users' => $user,
         'type' => 'publication'
     ];
     $count_publications = $osiris->activities->count($publication_filter);
@@ -562,12 +563,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $coauthors = $osiris->activities->aggregate([
-        ['$match' => ['type' => 'publication', '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'year' => ['$gte' => CURRENTYEAR - 4]]],
-        ['$unwind' => '$authors'],
-        ['$match' => ['authors.user' => ['$ne' => null], 'authors.aoi' => ['$ne' => null]]],
+        ['$match' => ['type' => 'publication', 'rendered.users' => $user, 'year' => ['$gte' => CURRENTYEAR - 4]]],
+        ['$unwind' => '$rendered.users'],
+        ['$match' => ['rendered.users' => ['$ne' => null]]],
         [
             '$group' => [
-                '_id' => '$authors.user',
+                '_id' => '$rendered.users',
                 'count' => ['$sum' => 1]
             ]
         ],
@@ -583,7 +584,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $activities_filter = [
-        'authors.user' => "$user",
+        'rendered.users' => $user,
         'type' => ['$ne' => 'publication']
     ];
     $count_activities = $osiris->activities->count($activities_filter);
@@ -598,14 +599,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php
     $membership_filter = [
-        'authors.user' => "$user",
+        'rendered.users' => $user,
         'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $count_memberships = $osiris->activities->count($membership_filter);
     if ($count_memberships > 0) { ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
-            <?= lang('Committee work', 'Gremienarbeit')  ?>
+            <?= lang('Ongoing works', 'Laufende Arbeiten')  ?>
             <span class="index"><?= $count_memberships ?></span>
         </a>
     <?php } ?>
@@ -650,7 +651,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <!-- Teaching activities -->
     <?php
     $teaching = $osiris->activities->aggregate([
-        ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'teaching', 'module_id' => ['$ne' => null]]],
+        ['$match' => [
+            'rendered.users' => $user,
+            'type' => 'teaching',
+            'module_id' => ['$ne' => null]
+        ]],
         [
             '$group' => [
                 '_id' => '$module_id',
@@ -674,7 +679,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php if ($Settings->featureEnabled('wordcloud')) { ?>
         <?php
-        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], '$or' => [['authors.user' => $user], ['editors.user' => $user]], 'type' => 'publication']);
+        $count_wordcloud = $osiris->activities->count(['title' => ['$exists' => true], 'rendered.users' => $user, 'type' => 'publication']);
         if ($count_wordcloud > 0) { ?>
             <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
                 <i class="ph ph-cloud" aria-hidden="true"></i>
@@ -688,7 +693,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         $concepts = [];
         $concepts = $osiris->activities->aggregate(
             [
-                ['$match' => ['$or' => [['authors.user' => $user], ['editors.user' => $user]], 'concepts' => ['$exists' => true]]],
+                ['$match' => ['rendered.users' => $user, 'concepts' => ['$exists' => true]]],
                 ['$project' => ['concepts' => 1]],
                 [
                     '$group' => [
@@ -759,42 +764,42 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php } ?>
 
                 <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
-                <div class="box">
-                    <div class="content">
-                        <h4 class="title">
-                            <?= lang('Newest publications', 'Neuste Publikationen') ?>
-                        </h4>
-                        <p class="text-muted">
-                            <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
-                        </p>
+                    <div class="box">
+                        <div class="content">
+                            <h4 class="title">
+                                <?= lang('Newest publications', 'Neuste Publikationen') ?>
+                            </h4>
+                            <p class="text-muted">
+                                <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
+                            </p>
 
-                        <?php
-                        $pubs = $osiris->activities->find(
-                            ['authors.aoi' => true, 'type' => 'publication'],
-                            [
-                                'sort' => ['start_date' => -1],
-                                'limit' => 5,
-                                'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
-                            ]
-                        )->toArray();
-                        ?>
-                        <table class="table simple">
-                            <?php foreach ($pubs as $doc) { ?>
-                                <tr>
-                                    <td>
-                                        <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
-                                        <?= $doc['html'] ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
+                            <?php
+                            $pubs = $osiris->activities->find(
+                                ['authors.aoi' => true, 'type' => 'publication'],
+                                [
+                                    'sort' => ['start_date' => -1],
+                                    'limit' => 5,
+                                    'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
+                                ]
+                            )->toArray();
+                            ?>
+                            <table class="table simple">
+                                <?php foreach ($pubs as $doc) { ?>
+                                    <tr>
+                                        <td>
+                                            <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
+                                            <?= $doc['html'] ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
 
-                        </table>
+                            </table>
 
-                        <a href="<?= ROOTPATH ?>/activities" class="btn primary">
-                            <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
-                        </a>
+                            <a href="<?= ROOTPATH ?>/activities" class="btn primary">
+                                <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
+                            </a>
+                        </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
             <div class="col-md-6 h-full">
@@ -1262,9 +1267,9 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
         <div class="col-md-6 col-lg-8">
             <div class="box h-full">
-                <div class="content">
 
-                    <?php if ($active('research')) { ?>
+                <?php if ($active('research')) { ?>
+                    <div class="content">
 
                         <h4 class="title">
                             <?= lang('Research interest', 'Forschungsinteressen') ?>
@@ -1299,59 +1304,91 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
                         <?php } ?>
 
-                </div>
-                <hr>
-            <?php } ?>
+                    </div>
+                    <hr>
+                <?php } ?>
 
-            <div class="content">
 
-                <?php if ($active('cv')) { ?>
-                    <h4 class="title">
-                        <?= lang('Curriculum Vitae') ?>
+                <?php if (isset($scientist['highlighted'])) { ?>
+                    <div class="content">
+                        <h4 class="title">
+                            <?= lang('Highlighted Research', 'Hervorgehobene Forschung') ?>
+                        </h4>
+                        <table class="table simple">
+                            <?php
+                            $highlights = DB::doc2Arr($scientist['highlighted']);
+                            foreach ($highlights as $h) {
+                                $pub = $osiris->activities->findOne(['_id' => DB::to_ObjectID($h)], ['projection' => ['rendered' => 1]]);
+                                if ($pub) {
+                                    echo '<tr><td class="w-50">';
+                                    echo $pub['rendered']['icon'] ?? '';
+                                    echo '</td><td>';
+                                    echo $pub['rendered']['web'] ?? '';
+                                    echo '</td></tr>';
+                                }
+                            }
+                            ?>
+                        </table>
+
+
                         <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
-                            <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
-                                <i class="ph ph-note-pencil ph-lg"></i>
-                            </a>
+                            <p class="text-muted font-size-12">
+                                <i class="ph ph-edit"></i> <?= lang('You can highlight/unhighlight publications by clicking on them and changing the "Displayed in your profile" option.', 'Du kannst Publikationen hervorheben/entfernen, indem du sie anklickst und die Option "Darstellung in deinem Profil" änderst.') ?>
+                            </p>
                         <?php } ?>
-                    </h4>
+                    </div>
+                    <hr>
+                <?php } ?>
 
-                    <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
-                        $cv = DB::doc2Arr($scientist['cv']);
-                    ?>
-                        <div class="biography">
-                            <?php foreach ($cv as $entry) { ?>
-                                <div class="cv">
-                                    <span class="time"><?= $entry['time'] ?></span>
-                                    <h5 class="title"><?= $entry['position'] ?></h5>
-                                    <span class="affiliation"><?= $entry['affiliation'] ?></span>
-                                </div>
+                <div class="content">
+
+                    <?php if ($active('cv')) { ?>
+                        <h4 class="title">
+                            <?= lang('Curriculum Vitae') ?>
+                            <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
+                                <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
+                                    <i class="ph ph-note-pencil ph-lg"></i>
+                                </a>
                             <?php } ?>
-                        </div>
-                    <?php } else { ?>
-                        <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                        </h4>
+
+                        <?php if (isset($scientist['cv']) && !empty($scientist['cv'])) {
+                            $cv = DB::doc2Arr($scientist['cv']);
+                        ?>
+                            <div class="biography">
+                                <?php foreach ($cv as $entry) { ?>
+                                    <div class="cv">
+                                        <span class="time"><?= $entry['time'] ?></span>
+                                        <h5 class="title"><?= $entry['position'] ?></h5>
+                                        <span class="affiliation"><?= $entry['affiliation'] ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
 
-                <?php if ($active('biography')) { ?>
-                    <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Biography', 'Biografie') ?>
-                        </h6>
-                        <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                    <?php if ($active('biography')) { ?>
+                        <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
+                            <h6 class="title">
+                                <?= lang('Biography', 'Biografie') ?>
+                            </h6>
+                            <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
-                <?php if ($active('education')) { ?>
-                    <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
-                        <h6 class="title">
-                            <?= lang('Education', 'Ausbildung') ?>
-                        </h6>
-                        <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                    <?php if ($active('education')) { ?>
+                        <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                            <h6 class="title">
+                                <?= lang('Education', 'Ausbildung') ?>
+                            </h6>
+                            <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
 
-            </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1487,7 +1524,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($ongoing)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Ongoing committee works', 'Laufende Gremienarbeit') ?></h4>
+                        <h4 class="title"><?= lang('Ongoing works', 'Laufende Arbeiten') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>
@@ -1515,7 +1552,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($past)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Past committee works', 'Vergangene Gremienarbeiten') ?></h4>
+                        <h4 class="title"><?= lang('Past works', 'Vergangene Arbeiten') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>

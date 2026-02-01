@@ -87,12 +87,19 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         <i class="ph ph-chart-line-up"></i>
         <?= lang('Statistics', 'Statistiken') ?>
     </a>
-    <!-- 
-    <a href="<?= ROOTPATH ?>/projects/search" class="btn">
+    <?php if ($Settings->hasPermission('proposals.finance')) { ?>
+    <a href="<?= ROOTPATH ?>/proposals/finances" class="btn">
+        <i class="ph ph-chart-bar"></i>
+        <?= lang('Financial overview', 'Finanzübersicht') ?>
+    </a>
+    <?php } ?>
+
+    
+    <a href="<?= ROOTPATH ?>/proposals/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
-     -->
+    
 
     <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
@@ -557,23 +564,21 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                         if (row.persons && row.persons.length > 0) {
                             persons = row.persons.map(a => a.name).join(', ')
                         }
-
-                        // row.persons.map(a => a.name).join(', ')
+                        let acronym = '';
+                        if (row.acronym) {
+                            acronym = row.acronym + ' – ';
+                        }
                         return `
                         ${renderTopic(row.topics)}
                         <div class="d-flex flex-column h-full">
                         <h4 class="m-0">
-                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${data}</a>
+                            <a href="<?= ROOTPATH ?>/proposals/view/${row.id}">${acronym}${data}</a>
                         </h4>
-                       
                         <div class="flex-grow-1">
                          <p class="text-muted mt-0">${renderDate(row)}</p>
-                        
                         ${persons}
-
                         </div>
                         <hr />
-                        
                         <div class="d-flex justify-content-between">
                             ${renderType(row.type)}
                             ${renderStatus(row.status ?? 'proposed')}

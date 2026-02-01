@@ -68,10 +68,12 @@ if ($count_groups > 0) {
     .topic-image img {
         width: 100%;
         height: auto;
+        max-height: 300px;
+        object-fit: cover;
     }
 </style>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <style>
     .table.cards#group-table {
@@ -94,7 +96,7 @@ if ($count_groups > 0) {
     .table.cards#group-table tr {
         width: 100%;
         margin: 0.5em;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: 0.5em;
         box-shadow: var(--box-shadow);
         background: white;
@@ -154,15 +156,31 @@ if ($count_groups > 0) {
 <!-- all necessary javascript -->
 <script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-chords.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script src="<?= ROOTPATH ?>/js/d3.layout.cloud.js"></script>
 
 <script>
     const TOPIC = '<?= $topic['id'] ?>';
 </script>
 
-<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= CSS_JS_VERSION ?>"></script>
-<script src="<?= ROOTPATH ?>/js/topics.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/my-year.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/topics.js?v=<?= OSIRIS_BUILD ?>"></script>
+
+<!-- modal -->
+<div id="upload-image" class="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <h3 class="title"><?= lang('Upload Image', 'Bild hochladen') ?></h3>
+            <form action="<?= ROOTPATH ?>/crud/topics/upload/<?= $topic['_id'] ?>" method="post" enctype="multipart/form-data">
+                <div class="custom-file">
+                    <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
+                    <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
+                </div>
+                <button type="submit" class="btn"><?= lang('Upload', 'Hochladen') ?></button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="topic" style="--topic-color: <?= $topic['color'] ?? '#333333' ?>">
 
@@ -176,6 +194,14 @@ if ($count_groups > 0) {
             <a href="#upload-image" class="btn circle position-absolute bottom-0 right-0 m-10"><i class="ph ph-edit"></i></a>
         <?php } ?>
     </div>
+
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <a class="btn float-md-right mb-10" href="<?= ROOTPATH ?>/preview/topic/<?= $topic['id'] ?>">
+            <i class="ph ph-eye"></i>
+            <?= lang('Preview', 'Vorschau') ?>
+        </a>
+    <?php } ?>
+
 
     <h1 class="title">
         <span class="topic-icon"></span>
@@ -297,21 +323,6 @@ if ($count_groups > 0) {
 
     <?php } ?>
 
-    <!-- modal -->
-    <div id="upload-image" class="modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <h3 class="title"><?= lang('Upload Image', 'Bild hochladen') ?></h3>
-                <form action="<?= ROOTPATH ?>/crud/topics/upload/<?= $topic['_id'] ?>" method="post" enctype="multipart/form-data">
-                    <div class="custom-file">
-                        <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
-                        <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
-                    </div>
-                    <button type="submit" class="btn"><?= lang('Upload', 'Hochladen') ?></button>
-                </form>
-            </div>
-        </div>
-    </div>
 </section>
 
 

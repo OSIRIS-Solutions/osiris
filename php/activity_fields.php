@@ -240,13 +240,79 @@ class ActivityFields extends Fields
                 'type' => 'string'
             ],
             [
-                'id' => 'authors.sws',
+                'id' => 'supervisors',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'columns'
+                ],
+                'label' => lang('Supervisors', 'Betreuende'),
+                'type' => 'list',
+            ],
+            [
+                'id' => 'supervisors.first',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Supervisor (first name)', 'Betreuende (Vorname)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'supervisors.last',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Supervisor (last name)', 'Betreuende (Nachname)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'supervisors.user',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Supervisor (username)', 'Betreuende (Username)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'supervisors.approved',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [],
+                'label' => lang('Supervisor (approved)', 'Betreuende (Bestätigt)'),
+                'type' => 'boolean',
+            ],
+            [
+                'id' => 'supervisors.aoi',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Supervisor (affiliated)', 'Betreuende (Affiliated)'),
+                'type' => 'boolean',
+            ],
+            [
+                'id' => 'supervisors.units',
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Supervisor (unit)', 'Betreuende (Einheit)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'supervisors.sws',
                 'module_of' => $typeModules['supervisor'] ?? [],
                 'usage' => [
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Author (SWS)', 'Autor (SWS)'),
+                'label' => lang('Supervisor (SWS)', 'Betreuende (SWS)'),
                 'type' => 'integer'
             ],
             [
@@ -432,6 +498,17 @@ class ActivityFields extends Fields
                 'usage' => [],
                 'label' => lang('Rendered', 'Gerendert'),
                 'type' => 'list'
+            ],
+            [
+                'id' => 'license',
+                'module_of' => $typeModules['license'] ?? [],
+                'usage' => [
+                    'filter',
+                    'aggregate',
+                    'columns'
+                ],
+                'label' => lang('License', 'Lizenz'),
+                'type' => 'string'
             ],
             [
                 'id' => 'month',
@@ -819,6 +896,17 @@ class ActivityFields extends Fields
                 ],
                 'label' => lang('Country', 'Land'),
                 'type' => 'string'
+            ],
+            [
+                'id' => 'peer_reviewed',
+                'module_of' => $typeModules['peer-reviewed'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Peer Reviewed', 'Peer Reviewed'),
+                'type' => 'boolean',
             ],
             [
                 'id' => 'open_access',

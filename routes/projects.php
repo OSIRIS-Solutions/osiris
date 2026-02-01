@@ -75,6 +75,17 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/proposals/finances', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang("Finances overview", "Finanzübersicht")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/proposals/finance-statistics.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
@@ -93,7 +104,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     }
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => $project['name']]
+        ['name' => $project['acronym'] ?? $project['name']]
     ];
 
     include BASEPATH . "/header.php";
@@ -140,7 +151,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' =>  $project['name'], 'path' => "/$collection/view/$id"],
+        ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
 
@@ -191,7 +202,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     // set breadcrumb
     $breadcrumb = [
         ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' => $project['name'], 'path' => "/projects/view/$id"],
+        ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
         ['name' => lang("Add subproject", "Teilprojekt hinzufügen")]
     ];
 
@@ -318,13 +329,14 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $contacts = implode(', ', $contacts);
 
-
+    $clean_name = clean_comment_export(strip_tags($project['name'] ?? 'NA'), false);
+    $clean_title = clean_comment_export(strip_tags($project['title'] ?? 'NA'), false);
 
     $projectValues = [
         "contact" => $contacts,
         "applicants" => $contacts,
-        "name" => $project['name'],
-        "title" => $project['title'],
+        "name" => $clean_name,
+        "title" => $clean_title,
         "funder" => $project['funder'],
         "funding_organization" => $funding_organization,
         "role" => $Project->getRoleRaw(),
@@ -636,15 +648,28 @@ Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $
     /**
      * Combine values[grant_years] && values[grant_amounts] to associative array
      */
-    $grant_years = $_POST['values']['grant_years'] ?? [];
-    $grant_amounts = $_POST['values']['grant_amounts'] ?? [];
+    $values = $_POST['values'];
+    $years = $values['grant_years'] ?? [];
+    $planned = $values['grant_planned'] ?? [];
+    $spent = $values['grant_spent'] ?? [];
 
-    $grant_years = array_map('intval', $grant_years);
-    $grant_amounts = array_map('floatval', $grant_amounts);
 
-    $grants = array_combine($grant_years, $grant_amounts);
-    // sort by year (key)
-    ksort($grants);
+    $years = array_map('intval', $years);
+    $planned = array_map('floatval', $planned);
+    $spent = array_map('floatval', $spent);
+
+    $grants = [];
+    for ($i = 0; $i < count($years); $i++) {
+        $grants[] = [
+            'year' => $years[$i] ?? 0,
+            'planned' => $planned[$i] ?? 0,
+            'spent' => $spent[$i] ?? 0
+        ];
+    }
+    // sort by year
+    usort($grants, function ($a, $b) {
+        return $a['year'] <=> $b['year'];
+    });
 
     $id = $DB->to_ObjectID($id);
     $updateResult = $osiris->$collection->updateOne(
@@ -1007,7 +1032,17 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 
 Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Project.php";
+    if (!isset($_POST['values'])) die("no values given");
     $values = $_POST['values'];
+
+    // get project
+    $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
+    if (empty($project)) {
+        header("Location: " . ROOTPATH . "/projects?msg=not-found");
+        die;
+    }
+    $Project = new Project();
 
     $collaborators = [];
     foreach ($values as $key => $values) {
@@ -1015,30 +1050,12 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
             $collaborators[$i][$key] = $val;
         }
     }
-    foreach ($collaborators as $i => $p) {
-        // check if organisation already exists
-        $coll_id = $osiris->organizations->findOne(['$or' => [
-            ['name' => $p['name'], 'country' => $p['country']],
-            ['ror' => $p['ror']]
-        ]]);
-        if (empty($coll_id)) {
-            $new_org = $osiris->organizations->insertOne([
-                'name' => $p['name'],
-                'type' => $p['type'] ?? 'other',
-                'location' => $p['location'] ?? null,
-                'country' => $p['country'],
-                'ror' => $p['ror'],
-                'lat' => $p['lat'] ?? null,
-                'lng' => $p['lng'] ?? null,
-                'created_by' => $_SESSION['username'],
-                'created' => date('Y-m-d')
-            ]);
-            $coll_id = $new_org->getInsertedId();
-        } else {
-            $coll_id = $coll_id['_id'];
-        }
-        $collaborators[$i]['organization'] = $coll_id;
+    foreach ($collaborators as $i => &$c) {
+        $c['organization'] = $DB->to_ObjectID($c['organization']);
     }
+
+    // dump($collaborators);
+    // die;
 
     $osiris->projects->updateOne(
         ['_id' => $DB::to_ObjectID($id)],

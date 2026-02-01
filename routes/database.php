@@ -32,8 +32,13 @@ Route::get('/rerender', function () {
     flush();
     ob_flush();
 
+    $filter = [];
+    if (isset($_GET['type']) && !empty($_GET['type'])) {
+        $filter['type'] = $_GET['type'];
+    }
+
     // start rendering process
-    renderActivities();
+    renderActivities($filter);
     ?>
 
     <div class="alert success">
@@ -60,7 +65,7 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     set_time_limit(6000);
     include_once BASEPATH . "/php/Render.php";
     $filter = [];
-    if (!empty($username)) $filter['authors.user'] = $username;
+    if (!empty($username)) $filter['rendered.affiliated_users'] = $username;
 
     include BASEPATH . "/header.php";
     renderAuthorUnitsMany($filter);
@@ -124,6 +129,24 @@ Route::get('/settings', function () {
     $json = file_get_contents($file_name);
     echo $json;
 });
+
+
+Route::get('/documents', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('documents')) {
+        die(lang('You do not have permission to view documents.', 'Du hast keine Berechtigung, Dokumente anzusehen.'));
+    }
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+    $documents = $osiris->uploads->find([], ['sort' => ['uploaded' => -1]])->toArray();
+    $breadcrumb = [
+        ['name' => lang('Documents', 'Dokumente')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/documents.php";
+    include BASEPATH . "/footer.php";
+});
+
 
 
 // central upload of documents
@@ -224,5 +247,48 @@ Route::post('/data/delete', function () {
     // redirect
     $_SESSION['msg'] = lang('Document deleted successfully.', 'Dokument erfolgreich gelöscht.');
     $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "?tab=documents";
+    header("Location: $redirectUrl");
+});
+
+// change name and description of document
+Route::post('/data/document/update', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!isset($_POST['id'])) {
+        die("Ungültige Anfrage");
+    }
+    $id = $_POST['id'];
+    $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($document)) {
+        die("Dokument nicht gefunden");
+    }
+    $update = [];
+    if (isset($_POST['name'])) {
+        $update['name'] = $_POST['name'];
+    }
+    if (isset($_POST['description'])) {
+        $update['description'] = $_POST['description'];
+    }
+    if (empty($update)) {
+        $_SESSION['msg'] = lang('No changes made to the document.', 'Es wurden keine Änderungen am Dokument vorgenommen.');
+        $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
+        header("Location: $redirectUrl");
+    }
+
+    // update the document in the database
+    $result = $osiris->uploads->updateOne(
+        ['_id' => DB::to_ObjectID($id)],
+        ['$set' => $update]
+    );
+    if ($result->getModifiedCount() === 0) {
+        $_SESSION['msg'] = lang('No changes made to the document.', 'Es wurden keine Änderungen am Dokument vorgenommen.');
+        $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
+        header("Location: $redirectUrl");
+    }
+
+    // redirect
+    $_SESSION['msg'] = lang('Document updated successfully.', 'Dokument erfolgreich aktualisiert.');
+    $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($id)]);
+    $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
     header("Location: $redirectUrl");
 });

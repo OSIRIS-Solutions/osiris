@@ -42,7 +42,7 @@ if ($active('keywords')) {
 
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= CSS_JS_VERSION ?>">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
     <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
@@ -111,6 +111,25 @@ if ($active('keywords')) {
                 </table>
             </div>
 
+            <h6>
+                <?= lang('By Role', 'Nach Rolle') ?>
+                <a class="float-right" onclick="filterUsers('#filter-role .active', null, 15)"><i class="ph ph-x"></i></a>
+            </h6>
+            <div class="filter">
+                <table id="filter-role" class="table simple">
+                    <?php foreach ($Settings->getRoles() as $role) {
+                    ?>
+                        <tr>
+                            <td>
+                                <a data-type="<?= $role ?>" onclick="filterUsers(this, '<?= $role ?>', 15)" class="item d-block colorless" id="<?= $role ?>-btn">
+                                    <span><?= strtoupper($role) ?></span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+
 
             <?php if ($topicsEnabled) { ?>
                 <h6><?= $Settings->topicLabel() ?>
@@ -156,7 +175,7 @@ if ($active('keywords')) {
                             <?php } ?>
                         </table>
                     </div>
-                <?php }
+            <?php }
             } ?>
 
 
@@ -231,6 +250,10 @@ if ($active('keywords')) {
         {
             title: lang('Keywords', 'Schlagwörter'),
             'key': 'keywords'
+        },
+        {
+            title: lang('Roles', 'Rollen'),
+            'key': 'roles'
         }
     ]
 
@@ -289,7 +312,7 @@ if ($active('keywords')) {
                     className: 'btn small pdf-btn',
                     title: 'OSIRIS Users',
                     text: '<i class="ph ph-file-pdf"></i> PDF',
-                    customize: function (doc) {
+                    customize: function(doc) {
                         doc.defaultStyle = doc.defaultStyle || {};
                         doc.defaultStyle.fontSize = 8; // PDF body font size
                         doc.styles = doc.styles || {};
@@ -405,6 +428,13 @@ if ($active('keywords')) {
                     visible: false,
                     defaultContent: ''
                 },
+                {
+                    target: 15,
+                    data: 'roles',
+                    title: '<?= lang('Roles', 'Rollen') ?>',
+                    visible: false,
+                    defaultContent: ''
+                }
             ],
             "order": [
                 [1, 'asc'],
@@ -436,14 +466,13 @@ if ($active('keywords')) {
         const hash = {}
         hash[field.key] = attr
         // escape parentheses
-        attr = attr.replace(/[\(\)]/g, '\\$&')
-
         if (tr.hasClass('active') || attr === null) {
             hash[field.key] = null
             table.find('.active').removeClass('active')
             dataTable.columns(column).search("", true, false, true).draw();
 
         } else {
+            attr = attr.replace(/[\(\)]/g, '\\$&')
 
             table.find('.active').removeClass('active')
             tr.addClass('active')
@@ -477,3 +506,41 @@ if ($active('keywords')) {
         writeHash(hash)
     }
 </script>
+
+<?php
+if (isset($_GET['permission'])) {
+    // filter users by permission
+    $permission = $_GET['permission'];
+    $roles = $osiris->adminRights->find(['right' => $permission, 'value' => true], ['projection' => ['role' => 1, '_id' => 0]])->toArray();
+    if (count($roles) > 0) {
+        $roles = array_column($roles, 'role');
+
+        $rolesstr = implode("|", $roles);
+?>
+
+        <script>
+            $(document).ready(function() {
+                // search with or
+                dataTable.columns(15).search('<?= $rolesstr ?>', true, false, true).draw();
+                let filterBtn, a = null;
+                <?php
+                foreach ($roles as $role) { ?>
+                    $('#filter-role').find(`[data-type='<?= $role ?>']`).closest('tr').addClass('active');
+                    filterBtn = $('<span class="badge" id="filter-15">')
+                    filterBtn.html(`<b>Role:</b> <span><?= $role ?></span>`)
+                    a = $('<a>')
+                    a.html('&times;')
+                    a.on('click', function() {
+                        filterUsers(null, null, 15);
+                    })
+                    filterBtn.append(a)
+                    activeFilters.append(filterBtn)
+                <?php
+                }
+                ?>
+            });
+        </script>
+<?php
+    }
+}
+?>

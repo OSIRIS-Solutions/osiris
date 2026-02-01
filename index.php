@@ -21,7 +21,6 @@ if (file_exists('CONFIG.php')) {
     require_once 'CONFIG.default.php';
 }
 require_once 'php/_config.php';
-define('CSS_JS_VERSION', '15');
 
 // error_reporting(E_ERROR);
 
@@ -145,6 +144,12 @@ Route::get('/set-preferences', function () {
 
 // always include the static routes
 include_once BASEPATH . "/routes/static.php";
+
+Route::get('/custom_style.css', function () {
+    include_once BASEPATH . "/php/init.php";
+    header("Content-Type: text/css");
+    echo $Settings->generateStyleSheet();
+});
 
 if (
     isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true

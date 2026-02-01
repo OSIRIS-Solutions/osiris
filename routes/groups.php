@@ -190,14 +190,29 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
             ['$set' => ['parent' => $values['id']]]
         );
         $id_changed = true;
-        // change ID of activities
-        // $osiris->activities->updateMany(
-        //     ['units' => $group['id']],
-        //     ['$set' => ['units.$' => $values['id']]]
-        // );
-        // $osiris->activities->updateMany(
-        //     ['authors.units' => $group['id']],
-        // );
+        // change top-level units: replace all occurrences of old id in units[]
+        foreach (['activities', 'projects', 'proposals'] as $collection) {
+            $osiris->$collection->updateMany(
+                ['units' => $group['id']],
+                ['$set' => ['units.$[u]' => $values['id']]],
+                ['arrayFilters' => [['u' => $group['id']]]]
+            );
+            if ($collection == 'activities') {
+                $keys = ['authors', 'editors', 'supervisors'];
+            } else {
+                $keys = ['persons'];
+            }
+            foreach ($keys as $key) {
+                $osiris->$collection->updateMany(
+                    [$key . '.units' => $group['id']],
+                    ['$set' => [$key . '.$[a].units.$[u]' => $values['id']]],
+                    ['arrayFilters' => [
+                        ['a.units' => $group['id']],  // only authors where units contains oldId
+                        ['u' => $group['id']]         // only replace matching unit entries
+                    ]]
+                );
+            }
+        }
     }
 
     if (isset($values['id'])) {
@@ -226,7 +241,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
         }
     }
 
-    if (isset($values['research'])){
+    if (isset($values['research'])) {
         if (!empty($values['research']) && is_array($values['research'])) {
             $values['research'] = array_values($values['research']);
         } else {
@@ -234,7 +249,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
         }
     }
 
-    if (isset($values['synonyms'])){
+    if (isset($values['synonyms'])) {
         if (!empty($values['synonyms'])) {
             $values['synonyms'] = array_map('trim', explode(';', $values['synonyms']));
             $values['synonyms'] = array_values($values['synonyms']);
@@ -352,9 +367,9 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
     if (isset($_POST['start'])) {
-        renderAuthorUnitsMany(['authors.user' => $user, 'date' => ['$gte' => $_POST['start']]]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user, 'date' => ['$gte' => $_POST['start']]]);
     } else {
-        renderAuthorUnitsMany(['authors.user' => $user]);
+        renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
     }
 
 

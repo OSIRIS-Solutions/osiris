@@ -6,8 +6,8 @@
 <!-- Moment.js for date manipulation -->
 <script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
 <!-- Quill for rich text editing -->
-<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=OSIRIS_BUILD?>"></script>
 <!-- Selectize for enhanced select inputs -->
-<script src="<?= ROOTPATH ?>/js/selectize.min.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/selectize.min.js?v=<?=OSIRIS_BUILD?>"></script>
 <!-- Custom styles for the header editor -->
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css?v=<?=CSS_JS_VERSION?>">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css?v=<?=OSIRIS_BUILD?>">

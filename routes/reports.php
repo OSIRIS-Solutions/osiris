@@ -259,83 +259,88 @@ Route::post('/reports', function () {
     $Report->setVariables($vars);
 
     foreach ($Report->steps as $step) {
-        switch ($step['type']) {
-            case 'text':
-                $text = $Report->getText($step);
-                $level = $step['level'] ?? 'p';
-                switch ($level) {
-                    case 'h1':
-                        $run = $section->addTextRun(['styleName' => 'Heading1']);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
-                        break;
-                    case 'h2':
-                        $run = $section->addTextRun(['styleName' => 'Heading2']);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
-                        break;
-                    case 'h3':
-                        $run = $section->addTextRun(['styleName' => 'Heading3']);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
-                        break;
-                    default:
-                        $run = $section->addTextRun();
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
-                        break;
-                }
-                break;
-            case 'line':
-                $section->addTextBreak(1);
-                break;
-            case 'activities':
-                $data = $Report->getActivities($step);
-                foreach ($data as $d) {
-                    $paragraph = $section->addTextRun();
-                    $line = clean_comment_export($d, false);
-                    \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
-                }
-                break;
-            case 'activities-field':
-                $field = $step['field'] ?? 'impact';
-                $data = $Report->getActivities($step, $field);
-                $table = $section->addTable();
-                $table->addRow();
-                $cell = $table->addCell(9000);
-                $cell = $table->addCell(1000);
-                $label = $Report->fields[$field]['label'] ?? $field;
-                $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
-                foreach ($data as $d) {
-                    [$line, $val] = $d;
+        try {
+            switch ($step['type']) {
+                case 'text':
+                    $text = $Report->getText($step);
+                    $level = $step['level'] ?? 'p';
+                    switch ($level) {
+                        case 'h1':
+                            $run = $section->addTextRun(['styleName' => 'Heading1']);
+                            \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
+                            break;
+                        case 'h2':
+                            $run = $section->addTextRun(['styleName' => 'Heading2']);
+                            \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
+                            break;
+                        case 'h3':
+                            $run = $section->addTextRun(['styleName' => 'Heading3']);
+                            \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
+                            break;
+                        default:
+                            $run = $section->addTextRun();
+                            \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
+                            break;
+                    }
+                    break;
+                case 'line':
+                    $section->addTextBreak(1);
+                    break;
+                case 'activities':
+                    $data = $Report->getActivities($step);
+                    foreach ($data as $d) {
+                        $paragraph = $section->addTextRun();
+                        $line = clean_comment_export($d, false);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
+                    }
+                    break;
+                case 'activities-field':
+                    $field = $step['field'] ?? 'impact';
+                    $data = $Report->getActivities($step, $field);
+                    $table = $section->addTable();
                     $table->addRow();
                     $cell = $table->addCell(9000);
-                    $line = clean_comment_export($line);
-                    \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
                     $cell = $table->addCell(1000);
-                    $cell->addText($val, $styleTextBold, $styleParagraphCenter);
-                }
-                break;
-            case 'table':
-                $result = $Report->getTable($step);
-
-                if (count($result) > 0) {
-                    $table = $section->addTable('ReportTable');
-
-                    // table head
-                    $table->addRow();
-                    foreach ($result[0] as $h) {
-                        $table->addCell(2000, $styleCell)->addText($h, $styleTextBold, $styleParagraph);
-                    }
-                    // table body
-                    foreach (array_slice($result, 1) as $row) {
+                    $label = $Report->fields[$field]['label'] ?? $field;
+                    $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
+                    foreach ($data as $d) {
+                        [$line, $val] = $d;
                         $table->addRow();
-                        foreach ($row as $cell) {
-                            $style = $styleParagraph;
-                            if (is_numeric($cell)) {
-                                $style = $styleParagraphRight;
+                        $cell = $table->addCell(9000);
+                        $line = clean_comment_export($line);
+                        \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
+                        $cell = $table->addCell(1000);
+                        $cell->addText($val, $styleTextBold, $styleParagraphCenter);
+                    }
+                    break;
+                case 'table':
+                    $result = $Report->getTable($step);
+
+                    if (count($result) > 0) {
+                        $table = $section->addTable('ReportTable');
+
+                        // table head
+                        $table->addRow();
+                        foreach ($result[0] as $h) {
+                            $table->addCell(2000, $styleCell)->addText($h, $styleTextBold, $styleParagraph);
+                        }
+                        // table body
+                        foreach (array_slice($result, 1) as $row) {
+                            $table->addRow();
+                            foreach ($row as $cell) {
+                                $style = $styleParagraph;
+                                if (is_numeric($cell)) {
+                                    $style = $styleParagraphRight;
+                                }
+                                $table->addCell(2000, $styleCell)->addText($cell, $styleText, $style);
                             }
-                            $table->addCell(2000, $styleCell)->addText($cell, $styleText, $style);
                         }
                     }
-                }
-                break;
+                    break;
+            }
+        } catch (Exception $e) {
+            error_log("Report format error: " . $e->getMessage());
+            $html = "<p><b>Report Error in " . htmlspecialchars($step['type'] ?? 'unknown step') . ":</b> " . htmlspecialchars($e->getMessage()) . "</p>";
         }
     }
 

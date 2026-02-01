@@ -176,7 +176,7 @@ updateRecursive($flare, $activities);
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/popover.js"></script>
-<script src="<?= ROOTPATH ?>/js/d3-sunburst.js?v=<?=CSS_JS_VERSION?>"></script>
+<script src="<?= ROOTPATH ?>/js/d3-sunburst.js?v=<?=OSIRIS_BUILD?>"></script>
 <script>
     var flare = JSON.parse('<?= json_encode($flare[0]) ?>')
     chart('#flare', flare);

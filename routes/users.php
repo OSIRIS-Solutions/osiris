@@ -649,7 +649,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         if ($old['hide'] != $person['hide']) {
             // rerender all activities
             include_once BASEPATH . "/php/Render.php";
-            renderActivities(['authors.user' => $user]);
+            renderActivities(['rendered.users' => $user]);
         }
     }
 

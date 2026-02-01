@@ -201,7 +201,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 
 <h3>
-    <?= lang("Publications in this $label", "Publikationen in diesem $label") ?>
+    <?= lang("Connected Publications", "Verknüpfte Publikationen") ?>
 </h3>
 
 <!-- <canvas id="spark"></canvas> -->
@@ -598,6 +598,28 @@ foreach ($metrics as $metric) {
         </table>
     <?php } ?>
 <?php } ?>
+
+<?php if ($Settings->hasPermission('journals.delete')) { 
+    $N_activities = $osiris->activities->count(['journal_id' => strval($id)]);
+    if ($N_activities > 0) { ?>
+        <div class="alert signal mt-20">
+            <h4 class="title"><?= lang('Cannot delete journal', 'Journal kann nicht gelöscht werden') ?></h4>
+                <?= lang("This journal cannot be deleted because there are $N_activities activities associated with it. Please reassign or delete these activities first.", "Dieses Journal kann nicht gelöscht werden, da $N_activities Aktivitäten damit verknüpft sind. Bitte weisen Sie diese Aktivitäten zuerst neu zu oder löschen Sie sie.") ?>
+        </div>
+    <?php } else { ?>
+   <div class="alert danger mt-20">
+    <h4 class="title"><?= lang('Delete this journal', 'Dieses Journal löschen') ?></h4>
+    <p>
+        <i class="ph ph-warning text-signal"></i>
+        <?= lang("This will delete this journal permanently. This action cannot be undone.", "Dadurch wird dieses Journal dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.") ?>
+    </p>
+    <form action="<?= ROOTPATH ?>/crud/journal/delete/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this journal?', 'Sind Sie sicher, dass Sie dieses Journal löschen möchten?') ?>');">
+        <button class="btn danger"><i class="ph ph-trash"></i> <?=  lang('Delete journal', 'Journal löschen') ?></button>
+    </form>
+   </div>
+   <?php } ?>
+<?php } ?>
+
 
 
 <?php

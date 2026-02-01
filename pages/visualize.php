@@ -45,7 +45,7 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
         </a>
         <a href="<?= ROOTPATH ?>/visualize/departments" class="tile">
             <h5 class="title">
-                <?= lang('Department network', 'Abteilungs-Netzwerk') ?>
+                <?= lang('Activity network', 'Aktivitäten-Netzwerk') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/departments.svg" alt="" class="w-full">
         </a>

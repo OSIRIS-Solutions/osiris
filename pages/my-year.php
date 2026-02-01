@@ -59,21 +59,22 @@ foreach ($Categories->categories as $value) {
 
 $timeline = [];
 //, 'editors.user' => $user
-$filter = ['authors.user' => $user];
-$filter['$or'] =   array(
-    [
-        "start.year" => array('$lte' => $YEAR),
-        '$or' => array(
-            ['end.year' => array('$gte' => $YEAR)],
-            [
-                'end' => null,
-                'subtype' => ['$in' => $Settings->continuousTypes]
-            ]
-        )
-    ],
-    ['year' => $YEAR]
-);
-
+$filter = [
+    'rendered.users' => $user,
+    '$or' => [
+        [
+            "start.year" => array('$lte' => $YEAR),
+            '$or' => array(
+                ['end.year' => array('$gte' => $YEAR)],
+                [
+                    'end' => null,
+                    'subtype' => ['$in' => $Settings->continuousTypes]
+                ]
+            )
+        ],
+        ['year' => $YEAR]
+    ]
+];
 $options = [
     'sort' => ["year" => -1, "month" => -1],
     // 'projection' => ['file' => -1]
@@ -223,7 +224,7 @@ if (!$Settings->featureEnabled('coins')) {
                         <a href="?year=<?= $lastY ?>&quarter=<?= $lastQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Previous quarter', 'Vorheriges Quartal') ?>">
                             <i class="ph ph-caret-left"></i>
                         </a>
-                        <a class="btn text-primary border-primary" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('Select quarter in detail', 'Wähle ein Quartal aus') ?>">
+                        <a class="btn primary outline" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('Select quarter in detail', 'Wähle ein Quartal aus') ?>">
                             <!-- <i class="ph ph-circle"></i> -->
                             <?= $YEAR ?>
                             Q<?= $QUARTER ?>

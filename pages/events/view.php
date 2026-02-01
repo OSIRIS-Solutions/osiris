@@ -25,7 +25,7 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
         align-items: center;
         padding: 0.5rem 1rem;
         background: white;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
     }
 
     .badge.person:hover {

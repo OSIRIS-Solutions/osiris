@@ -34,7 +34,7 @@ if ($semesterType === 'SoSe') {
 // Filter Lehrveranstaltungen im Semester
 $filter = [
     'module_id'       => ['$exists' => true],
-    'authors.sws' => ['$exists' => true],
+    'supervisors.sws' => ['$exists' => true],
     'start_date' => ['$lte' => $end],
     'end_date'   => ['$gte' => $start]
 ];
@@ -44,7 +44,7 @@ $teaching = $osiris->activities->find($filter)->toArray();
 $all = $osiris->activities->count(
     [
         'module_id' => ['$exists' => true],
-        'authors.sws' => ['$exists' => true]
+        'supervisors.sws' => ['$exists' => true]
     ]
 );
 
@@ -53,7 +53,7 @@ $all = $osiris->activities->count(
 
 <style>
     tfoot th {
-        border-top: 1px solid var(--border-color);
+        border-top: var(--border-width) solid var(--border-color);
         color: var(--muted-color);
         background-color: var(--gray-color-very-light);
     }
@@ -119,6 +119,7 @@ $all = $osiris->activities->count(
         <thead>
             <tr>
                 <th>Modul</th>
+                <th><?= lang('Affiliation', 'Affiliation') ?></th>
                 <th><?= lang('Type', 'Art') ?></th>
                 <th><?= lang('Start date', 'Beginn') ?></th>
                 <th><?= lang('End date', 'Ende') ?></th>
@@ -134,11 +135,11 @@ $all = $osiris->activities->count(
                 'affiliation' => 0
             ];
             foreach ($teaching as $t):
-                $authors = DB::doc2Arr($t['authors']);
+                $supervisors = DB::doc2Arr($t['supervisors']);
                 $total = 0;
                 $affiliation = 0;
                 $affilated = false;
-                foreach ($authors as $a) {
+                foreach ($supervisors as $a) {
                     $aoi = $a['aoi'] ?? null;
                     if ($aoi === 'true' || $aoi === true || $aoi == "1") {
                         $affilated = true;
@@ -152,14 +153,33 @@ $all = $osiris->activities->count(
                 }
                 $counts['total'] += $total;
                 $counts['affiliation'] += $affiliation;
+
+                $uni = '-';
+                if (isset($t['module_id'])) {
+                    $m = $osiris->teaching->findOne(['_id' => DB::to_ObjectID($t['module_id'])]);
+                    if (isset($m['affiliation'])) {
+                        $uni = $m['affiliation'];
+                    }
+                }
             ?>
                 <tr>
                     <td>
-                        <a href="<?= ROOTPATH ?>/activities/view/<?= $t['_id'] ?>">
+                        <?php if (isset($t['module_id'])) { ?>
+                            <a href="<?= ROOTPATH ?>/teaching/view/<?= $t['module_id'] ?>">
+                                <?= $t['module'] ?>
+                            </a>
+                        <?php } else { ?>
                             <?= $t['module'] ?>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <?= $uni ?>
+                    </td>
+                    <td>
+                        <a href="<?= ROOTPATH ?>/activities/view/<?= strval($t['_id']) ?>">
+                            <?= $Document->translateCategory($t['category'] ?? '-') ?>
                         </a>
                     </td>
-                    <td><?= $Document->translateCategory($t['category'] ?? '-') ?></td>
                     <td><?= date('d.m.Y', strtotime($t['start_date'])) ?></td>
                     <td><?= date('d.m.Y', strtotime($t['end_date'])) ?></td>
                     <td>
@@ -175,7 +195,7 @@ $all = $osiris->activities->count(
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="5" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
+                <th colspan="6" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
                 <th><?= $counts['total'] ?></th>
                 <th><?= $counts['affiliation'] ?></th>
             </tr>
@@ -186,13 +206,13 @@ $all = $osiris->activities->count(
 
 <?php
 $timelineData = array_map(function ($t) use ($Document) {
-    $authors = DB::doc2Arr($t['authors']);
+    $supervisors = DB::doc2Arr($t['supervisors']);
     return [
         'title' => $t['module'] ?? '',
         'name' => $t['title'] ?? '',
         'start' => $t['start_date'],
         'end'   => $t['end_date'],
-        'hasAoi' => array_filter($authors, fn($a) => !empty($a['aoi'])) ? true : false,
+        'hasAoi' => array_filter($supervisors, fn($a) => !empty($a['aoi'])) ? true : false,
         'cat' => $Document->translateCategory($t['category'] ?? '-'),
     ];
 }, $teaching);

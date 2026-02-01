@@ -57,7 +57,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 <style>
     tfoot th {
         font-weight: 400 !important;
-        border-top: 1px solid var(--border-color);
+        border-top: var(--border-width) solid var(--border-color);
         color: var(--muted-color);
         background-color: var(--gray-color-very-light);
     }

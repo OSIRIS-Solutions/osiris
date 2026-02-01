@@ -67,7 +67,7 @@ $active = function ($field) use ($data_fields) {
 ?>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
-<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= CSS_JS_VERSION ?>"></script>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 <h3 class="title">
     <?php
@@ -215,6 +215,26 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
     </div>
 
+    <!-- link -->
+     <?php if ($active('link')) { ?>
+    <div class="form-group">
+        <label for="link">
+            <?= lang('Website', 'Webseite') ?>
+        </label>
+        <input type="url" class="form-control" name="values[link]" id="link" value="<?= $form['link'] ?? '' ?>">
+    </div>
+    <?php } ?>
+
+    <!-- contact email -->
+     <?php if ($active('contact_email')) { ?>
+    <div class="form-group">
+        <label for="contact_email">
+            <?= lang('Contact Email', 'Kontakt E-Mail') ?>
+        </label>
+        <input type="email" class="form-control" name="values[contact_email]" id="contact_email" value="<?= $form['contact_email'] ?? '' ?>">
+    </div>
+    <?php } ?>
+
 
     <!-- check if there are active custom fields -->
     <?php
@@ -344,6 +364,17 @@ $active = function ($field) use ($data_fields) {
                             </tbody>
                         </table>
                         <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                        <p>
+                            <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                            <?php } else { ?>
+                                <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                    <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                </a>
+                            <?php } ?>
+                        </p>
                         <script>
                             function handleKeyDown(event) {
                                 if (event.key === 'Enter') {
@@ -395,7 +426,7 @@ $active = function ($field) use ($data_fields) {
             <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('Irregularly', 'Unregelmäßig') ?></option>
         </select>
         <small class="text-muted">
-            <?=lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
+            <?= lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
         </small>
     </div>
 
@@ -447,6 +478,26 @@ $active = function ($field) use ($data_fields) {
             </div>
         </div>
     <?php } ?>
+
+    <?php if ($Settings->featureEnabled('portal')) { ?>
+        <h5>
+            <?= lang('Portal Settings', 'Portal Einstellungen') ?>
+        </h5>
+
+        <div class="form-group">
+            <?php
+            $public = $form['public'] ?? false;
+            ?>
+            <input type="hidden" name="values[public]" value="false">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
+                <label for="public">
+                    <?= lang('Show this infrastructure in the public Portfolio', 'Diese Infrastruktur im öffentlichen Portfolio anzeigen') ?>
+                </label>
+            </div>
+        </div>
+    <?php } ?>
+    
 
     <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
 </form>

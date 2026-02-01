@@ -351,7 +351,7 @@ Route::get('/api/all-activities', function () {
             $filter = [];
         }
         $filter['$and'][] = [
-            '$or' => [['authors.user' => $user], ['editors.user' => $user], ['user' => $user]]
+            'rendered.users' => $user
         ];
     } else if (!empty($perm_filter)) {
         if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
@@ -415,7 +415,7 @@ Route::get('/api/all-activities', function () {
         } elseif ($page === 'portal') {
             $doc['activity'] = str_replace(
                 [ROOTPATH . "/activities/view", ROOTPATH . "/profile"],
-                [PORTALPATH . "/activity", PORTALPATH . "/person"],
+                ["/activity", "/person"],
                 $doc['activity']
             );
         }
@@ -610,6 +610,7 @@ Route::get('/api/users', function () {
             'public_image' => $user['public_image'] ?? true,
             'topics' => $user['topics'] ?? array(),
             'keywords' => $user['keywords'] ?? array(),
+            'roles' => $user['roles'] ?? array(),
         ];
     }
     echo return_rest($table, count($table));
@@ -915,6 +916,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
             '_id' => 0,
             'id' => ['$toString' => '$_id'],
             'type' => '$type',
+            'acronym' => '$acronym',
             'funder' => '$funder',
             'scholarship' => '$scholarship',
             'start_date' => '$start_date',
@@ -937,6 +939,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
             '_id' => 0,
             'id' => ['$toString' => '$_id'],
             'name' => '$name',
+            'acronym' => '$acronym',
             'type' => '$type',
             'funder' => '$funder',
             'start_date' => '$start_date',
@@ -1023,7 +1026,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         }
     }
 
-    $unwinds = ['authors', 'editors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
+    $unwinds = ['authors', 'editors', 'supervisors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
@@ -1394,10 +1397,10 @@ Route::get('/api/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
 
     $options = [
         'projection' => [
@@ -1417,7 +1420,7 @@ Route::get('/api/organizations', function () {
     } elseif (isset($_GET['search'])) {
         $search = trim($_GET['search']);
         $ror = null;
-        if (str_starts_with('https://ror.org/', $search)) {
+        if (str_starts_with($search, 'https://ror.org/')) {
             $ror = $search;
         } else if (preg_match('/^0[a-z|0-9]{6}[0-9]{2}$/', $search)) {
             $ror = 'https://ror.org/' . $search;
@@ -1433,7 +1436,7 @@ Route::get('/api/organizations', function () {
         }
 
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
-        $filter = ['name' => ['$regex' => $j]];
+        $filter = ['$or' => [['name' => ['$regex' => $j]], ['synonyms' => ['$regex' => $j]]]];
     }
     $result = $osiris->organizations->find($filter, $options)->toArray();
     echo return_rest($result, count($result));

@@ -114,12 +114,20 @@ Route::get('/organizations/edit/(.*)', function ($id) {
 Route::post('/crud/organizations/create', function () {
     include_once BASEPATH . "/php/init.php";
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values']) || empty($_POST['values'])) die("no values given");
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
+    if (empty($values['name'])) {
+        echo json_encode([
+            'msg' => lang("Organization name is required.", "Organisationsname ist erforderlich."),
+            'status' => 'error'
+        ]);
+        die();
+    }
     unset($values['chosen']);
     unset($values['id']);
+
 
     $filter = [
         'name' => $values['name'],
@@ -143,8 +151,10 @@ Route::post('/crud/organizations/create', function () {
     $exist = $collection->findOne($filter);
     if (!empty($exist)) {
         if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-            $red = str_replace("*", $id, $_POST['redirect']);
-            header("Location: " . $red . "?msg=organization does already exist.");
+            $red = str_replace("*", strval($exist['_id']), $_POST['redirect']);
+            $_SESSION['msg'] = lang("Organization does already exist.", "Organisation existiert bereits.");
+            $_SESSION['msg_type'] = "warning";
+            header("Location: " . $red);
         } else {
             echo json_encode([
                 'msg' => lang("Organization does already exist and was connected.", "Organisation existiert bereits und wurde verknüpft."),
@@ -172,7 +182,7 @@ Route::post('/crud/organizations/create', function () {
 
     echo json_encode([
         'inserted' => $insertOneResult->getInsertedCount(),
-        'id' => $new_id,
+        'id' => strval($new_id),
         'ror' => $values['ror'] ?? '',
         'name' => $values['name'],
         'location' => $values['location'] ?? '',
@@ -237,4 +247,88 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
 
     $_SESSION['msg'] = lang("Organisation has been deleted successfully.", "Organisation wurde erfolgreich gelöscht.");
     header("Location: " . ROOTPATH . "/organizations");
+});
+
+
+Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $mongo_id = $DB->to_ObjectID($id);
+    // get organization id    
+    $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
+    if (empty($organization)) {
+        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
+        die;
+    }
+    if (isset($_FILES["file"])) {
+        // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
+
+        if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
+            $errorMsg = match ($_FILES['file']['error']) {
+                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
+                2 => lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt."),
+                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
+                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
+                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
+                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
+                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
+                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+            };
+            $_SESSION['msg'] = $errorMsg;
+            $_SESSION['msg_type'] = "error";
+        } else if ($_FILES["file"]["size"] > 2000000) {
+            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg_type'] = "error";
+        } else {
+            // check image settings
+            $file = file_get_contents($_FILES["file"]["tmp_name"]);
+            $type = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+            // encode image
+            $file = base64_encode($file);
+            $img = new MongoDB\BSON\Binary($file, MongoDB\BSON\Binary::TYPE_GENERIC);
+            // first: delete old image, then: insert new one
+            $updateResult = $osiris->organizations->updateOne(
+                ['_id' => $mongo_id],
+                ['$set' => ['image' => [
+                    'data' => $img,
+                    'type' => $type,
+                    'extension' => $type,
+                    'uploaded_by' => $_SESSION['username'],
+                    'uploaded' => date('Y-m-d')
+                ]]]
+            );
+            $_SESSION['msg'] = lang("Organisation logo uploaded successfully.", "Organisations-Logo erfolgreich hochgeladen.");
+            $_SESSION['msg_type'] = "success";
+            header("Location: " . ROOTPATH . "/organizations/view/$id");
+            die;
+            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+        }
+    } else if (isset($_POST['delete'])) {
+        $osiris->organizations->updateOne(
+            ['_id' => $mongo_id],
+            ['$unset' => ['image' => ""]]
+        );
+        $_SESSION['msg'] = lang("Organisation logo deleted.", "Organisations-Logo gelöscht.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . ROOTPATH . "/organizations/view/$id");
+        die;
+    }
+
+    header("Location: " . ROOTPATH . "/organizations/view/$id");
+    die;
+});
+
+
+
+Route::get('/organizations/image/(.*)', function ($id) {
+    // print image
+    include_once BASEPATH . "/php/init.php";
+    $mongo_id = $DB->to_ObjectID($id);
+    // get organization id    
+    $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
+    if (empty($organization)) {
+        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
+        die;
+    }
+    include_once BASEPATH . "/php/Organization.php";
+    echo Organization::getLogo($organization, "", "Logo of " . $organization['name'], $organization['type'] ?? "");
 });

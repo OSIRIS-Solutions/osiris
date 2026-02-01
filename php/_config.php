@@ -24,6 +24,7 @@ if (!function_exists('str_ends_with')) {
 // helper functions for all CRUD methods
 function validateValues($values, $DB)
 {
+    if (!is_array($values)) return $values;
     $first = max(intval($values['first_authors'] ?? 1), 1);
     unset($values['first_authors']);
     $last = max(intval($values['last_authors'] ?? 1), 1);
@@ -39,7 +40,7 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $values[$key] = "10." . $value[1];
             }
-        } else if ($key == 'authors' || $key == "editors") {
+        } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;
             foreach ($value as $author) {
@@ -139,7 +140,7 @@ function validateValues($values, $DB)
             // value is boolean
             $values[$key] = boolval($value);
         } else if (in_array($key, ['aoi', 'correction'])) {
-            $values[$key] = true;
+            $values[$key] = boolval($value);
         } else if ($value === '') {
             $values[$key] = null;
         } else if ($key === 'epub-delay' || $key === 'end-delay') {
@@ -193,6 +194,21 @@ function validateValues($values, $DB)
         echo "The year $values[year] is not valid!";
         die();
     }
+    if (isset($values['month']) && ($values['month'] < 1 || $values['month'] > 12)) {
+        echo "The month $values[month] is not valid!";
+        die();
+    }
+    // if year and month are set, but start is not, set start
+    if (isset($values['year']) && isset($values['month']) && !isset($values['start']) && !isset($values['end'])) {
+        $values['start'] = array(
+            'year' => $values['year'],
+            'month' => $values['month'],
+            'day' => $values['day'] ?? 1,
+        );
+        $values['start_date'] = toISOdate($values['year'], $values['month'], $values['day'] ?? 1);
+        $values['end'] = $values['start'];
+        $values['end_date'] = $values['start_date'];
+    }
     // dump($values);
     // die;
     return $values;
@@ -221,6 +237,11 @@ function get_preview($html, $length = 150)
     }
 
     return $preview;
+}
+
+function toISOdate($year, $month = 1, $day = 1)
+{
+    return str_pad($year, 4, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
 }
 
 function valiDate($date)
@@ -268,6 +289,11 @@ function printMsg($msg = null, $type = 'info', $header = "default")
         $class = "primary";
         if ($header == "default") {
             $header = "";
+        }
+    } elseif ($type == 'warning') {
+        $class = "signal";
+        if ($header == "default") {
+            $header = lang("Warning", "Warnung");
         }
     }
     switch ($msg) {
@@ -669,9 +695,9 @@ function dump($element, $as_json = true)
 function bool_icon($bool)
 {
     if ($bool) {
-        return '<i class="ph ph-check text-success"></i>';
+        return '<i class="ph ph-check-circle text-success"></i>';
     } else {
-        return '<i class="ph ph-x text-danger"></i>';
+        return '<i class="ph ph-x-circle text-danger"></i>';
     }
 }
 
@@ -748,20 +774,25 @@ function getFileIcon($type)
 {
     switch ($type) {
         case 'pdf':
+            return 'file-pdf';
+        case 'txt':
+            return 'file-txt';
+        case 'md':
+            return 'file-md';
         case 'csv':
-            return 'file-' . $type;
+            return 'file-csv';
         case 'xlsx':
         case 'xls':
-            return 'file-excel';
+            return 'file-xls';
         case 'pptx':
         case 'ppt':
-            return 'file-powerpoint';
+            return 'file-ppt';
         case 'docx':
         case 'doc':
-            return 'file-word';
+            return 'file-doc';
         case 'zip':
         case 'gz':
-            return 'file-zipper';
+            return 'file-zip';
         case 'png':
         case 'gif':
         case 'jpg':
@@ -773,7 +804,7 @@ function getFileIcon($type)
         case 'json':
             return 'file-code';
         default:
-            return 'file-text';
+            return 'file';
     }
 }
 

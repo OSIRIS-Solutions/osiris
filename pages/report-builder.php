@@ -8,7 +8,7 @@
 // report is defined in the controller
 
 include_once BASEPATH . "/php/activity_fields.php";
-$FIELDS = new Fields();
+$FIELDS = new ActivityFields();
 $fields_aggregate = array_filter($FIELDS->fields, function ($f) {
     return !empty($f['module_of']) && in_array('aggregate', $f['usage']);
 });
@@ -21,7 +21,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     .step {
         margin-bottom: 1rem;
         padding: 1rem;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         background-color: white;
     }

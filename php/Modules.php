@@ -532,10 +532,32 @@ class Modules
             "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
             "name" => "Person",
             "name_de" => "Person",
-            "label" => "Name of the person (last name, given name)",
-            "label_de" => "Name der Person (Nachname, Vorname)",
+            "label" => "Details about the person",
+            "label_de" => "Details über die Person",
             "description" => "A fieldset for a person, including name, affiliation and academic title.",
             "description_de" => "Ein Feldset für eine Person, einschließlich Name, Affiliation und akademischem Titel.",
+            "width" => 0,
+            "tags" => ['people']
+        ],
+        "person-only" => [
+            "fields" => ["name" => "Koblitz, Julia"],
+            "name" => "Person",
+            "name_de" => "Person",
+            "label" => "Name of the person (last name, given name)",
+            "label_de" => "Name der Person (Nachname, Vorname)",
+            "description" => "A field for a person with only the name.",
+            "description_de" => "Ein Feld für eine Person nur mit dem Namen.",
+            "width" => 0,
+            "tags" => ['people']
+        ],
+        "person-organization" => [
+            "fields" => ["name" => "Koblitz, Julia", "organization" => "DSMZ"],
+            "name" => "Person with organization (ROR)",
+            "name_de" => "Person mit Organisation (ROR)",
+            "label" => "Details about the person",
+            "label_de" => "Details über die Person",
+            "description" => "A fieldset for a person including an organization from the catalogue and a ROR search. Cannot be combined with the 'person' or the 'organization' module.",
+            "description_de" => "Ein Feldser für eine Person inkl. der Affiliation mit einer Organisation aus dem Katalog inkl. ROR-Suche. Kann nicht mit den Feldern 'person' oder 'organization' verknüpft werden.",
             "width" => 0,
             "tags" => ['people']
         ],
@@ -862,8 +884,8 @@ class Modules
             "name_de" => "Politik- und Gesellschaftsberatung",
             "label" => "Contribution to political and social consulting",
             "label_de" => "Beitrag zur Politik- und Gesellschaftsberatung",
-            "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
-            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte sind: Gutachten, Stellungnahme, Kommentar, Empfehlung.",
+            "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are based on the vocabulary.",
+            "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte basieren auf dem Vokabular.",
             "width" => 6,
             "tags" => ['event', 'publication']
         ],
@@ -1172,9 +1194,31 @@ class Modules
         if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
             $value = $field['default'];
         }
+        if ($field['format'] == 'str-list') {
+            $rand_id = bin2hex(random_bytes(4));
+?>
+
+            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
+                <label for="list-input-<?= $rand_id ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div id="list-widget-<?= $rand_id ?>" class="list-widget" data-name="values[<?= $module ?>][]">
+                        <input
+                            id="list-input-<?= $rand_id ?>"
+                            class="list-widget-input"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                    </div>
+                    <?= $this->render_help($help) ?>
+            </div>
+            <script>
+                initListWidget($("#list-widget-<?= $rand_id ?>"), <?= json_encode($this->val($module, [])) ?>);
+            </script>
+        <?php
+            return;
+        }
 
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
-?>
+        ?>
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
                 <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?>
 
@@ -1336,6 +1380,7 @@ class Modules
         if (!array_key_exists($module, $this->all_modules)) {
             return $this->custom_field($module, $req, $props);
         }
+        global $Settings;
         $Vocabulary = new Vocabulary();
 
         $labelClass = ($req ? "required" : "");
@@ -1683,12 +1728,13 @@ class Modules
                 break;
 
             case "supervisor":
+                $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
 
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
 
                     <div class="module p-0">
@@ -1708,25 +1754,25 @@ class Modules
                             <tbody id="supervisors">
                                 <?php
                                 $i = 0;
-                                foreach ($this->preset ?? [] as $i => $author) { ?>
+                                foreach ($supervisors as $i => $author) { ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="number" step="0.1" class="form-control" name="values[authors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
+                                            <input type="number" step="0.1" class="form-control" name="values[supervisors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
                                             <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
@@ -1782,11 +1828,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[authors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[supervisors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
                             var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });
@@ -1795,25 +1841,19 @@ class Modules
                         }
                     </script>
 
-                    <datalist id="user-list">
-                        <?php
-                        foreach ($this->userlist as $s) { ?>
-                            <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
-                        <?php } ?>
-                    </datalist>
-
                 </div>
             <?php
                 break;
 
 
             case "supervisor-thesis":
+                $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
 
                     <?php if (!$req) { ?>
-                        <input type="hidden" name="values[authors]" value="">
+                        <input type="hidden" name="values[supervisors]" value="">
                     <?php } ?>
 
                     <div class="module p-0">
@@ -1825,34 +1865,33 @@ class Modules
                                     <th><?= lang('First name', 'Vorname') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
-                                    <th>
-                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="supervisors">
                                 <?php
                                 $i = 0;
-                                foreach ($this->preset ?? [] as $i => $author) {
+                                foreach ($supervisors as $i => $author) {
                                     $role = $author['role'] ?? 'supervisor';
                                 ?>
                                     <tr>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
                                         </td>
                                         <td>
-                                            <input name="values[authors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
                                         </td>
                                         <td>
                                             <div class="custom-checkbox">
-                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[authors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
                                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                                             </div>
                                         </td>
                                         <td>
-                                            <select name="values[authors][<?= $i ?>][role]" class="form-control">
+                                            <select name="values[supervisors][<?= $i ?>][role]" class="form-control">
                                                 <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
                                                 <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
                                                 <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
@@ -1896,7 +1935,7 @@ class Modules
 
                         function selectUsernameSupervisor(el) {
                             let username = el.value
-                            let user = $('#user-list-thesis option[value=' + username + ']')
+                            let user = $('#user-list-thesis option[value="' + username + '"]')
                             if (!user || user === undefined || user.length === 0) return;
 
                             console.log(user);
@@ -1917,11 +1956,11 @@ class Modules
                         function addSupervisorRow() {
                             counter++;
                             var tr = $('<tr>')
-                            tr.append('<td> <input name="values[authors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][last]" type="text" class="form-control" required></td>')
-                            tr.append('<td><input name="values[authors][' + counter + '][first]" type="text" class="form-control"></td>')
-                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[authors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            var select = $('<select name="values[authors][' + counter + '][role]" class="form-control">');
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
                             var roles = {
                                 'supervisor': lang('Supervisor', 'Betreuer'),
                                 'first-reviewer': lang('First reviewer', 'Erster Gutachter'),
@@ -2088,7 +2127,7 @@ class Modules
                             padding: 0.5rem;
                             text-decoration: none;
                             color: var(--text-color);
-                            border-bottom: 1px solid var(--border-color);
+                            border-bottom: var(--border-width) solid var(--border-color);
                         }
 
                         #event-select-dropdown .dropdown-menu a:hover {
@@ -2122,6 +2161,7 @@ class Modules
                 break;
 
             case "authors":
+            case "authors-first-last":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="authors">
                     <a class="float-right" href="#author-help"><i class="ph ph-question" style="line-height:0;"></i> <?= lang('Help', 'Hilfe') ?></a>
@@ -2140,21 +2180,22 @@ class Modules
                         </div>
                         <div class="footer">
 
-                            <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
+                            <div class="input-group d-inline-flex w-auto">
+                                <input type="text" class="form-control" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
-                                    <button class="btn secondary h-full" type="button" onclick="addAuthor(event);">
+                                    <button class="btn secondary" type="button" onclick="addAuthor(event);">
                                         <i class="ph ph-plus"></i>
                                     </button>
                                 </div>
                             </div>
-
-                            <div class="ml-auto" id="author-numbers">
-                                <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
-                                <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
-                                <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
-                                <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
-                            </div>
+                            <?php if ($module == 'authors-first-last') : ?>
+                                <div class="ml-auto" id="author-numbers">
+                                    <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
+                                    <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
+                                    <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
+                                    <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <?= $this->render_help($help) ?>
@@ -2178,13 +2219,13 @@ class Modules
             case "person":
             ?>
                 <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
-                    <?= lang('Details about the person', 'Angaben zu der Person') ?>
+                    <?= $label ?>
                 </h6>
                 <div class="data-module col-sm-<?= $width ?> row" data-module="person">
                     <div class="col-sm-5 floating-form">
                         <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $labelClass ?> element-other">
-                            <?= $label ?>
+                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
                         </label>
                     </div>
                     <div class="col-sm-5 floating-form">
@@ -2200,6 +2241,101 @@ class Modules
             <?php
                 break;
 
+            case "person-only":
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="person-only">
+                    <input type="text" class="form-control" name="values[name]" id="guest-name-only" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
+                    <label for="guest-name-only" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
+            case "person-organization":
+                $org_id = $this->val('organization', null);
+                $rand_id = rand(1000, 9999);
+            ?>
+                <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
+                    <?= $label ?>
+                </h6>
+                <div class="data-module col-sm-12 row" data-module="person-organization">
+                    <div class="col-sm-6 floating-form">
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
+                        <label for="guest-name" class="<?= $labelClass ?> element-other">
+                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
+                        </label>
+                    </div>
+                    <div class="col-sm-6 floating-form">
+                        <label for="organization" class="<?= $labelClass ?> floating-title">
+                            <?= lang('Affiliated Organization', 'Zugehörige Organisation') ?>
+                        </label>
+                        <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
+                            <i class="ph ph-edit float-right"></i>
+                            <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
+                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
+                                <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                            </span>
+
+                            <div id="org-<?= $rand_id ?>-value">
+                                <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
+
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?php if (!empty($org_id)) { ?>
+                                        <br><small class="text-muted"><?= $org_id ?></small>
+                                    <?php } ?>
+                                    <?php } else {
+                                    $org_id = DB::to_ObjectID($org_id);
+                                    $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                    if (!empty($collab)) { ?>
+                                        <b><?= $collab['name'] ?></b>
+                                        <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                    <?php } else { ?>
+                                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                        <br><small class="text-muted"><?= $org_id ?></small>
+                                <?php }
+                                } ?>
+                            </div>
+                        </a>
+
+                        <div class="modal" id="organization-modal-<?= $rand_id ?>" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </a>
+                                    <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
+                                        </div>
+                                    </div>
+                                    <p id="org-<?= $rand_id ?>-search-comment"></p>
+                                    <table class="table simple">
+                                        <tbody id="org-<?= $rand_id ?>-suggest">
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+
+                                    <p>
+                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                        <?php } else { ?>
+                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                            </a>
+                                        <?php } ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
             case "student-category":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="student-category">
@@ -2881,9 +3017,9 @@ class Modules
             case "correction":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="correction">
-                    <input type="hidden" name="values[correction]" value="0">
+                    <input type="hidden" name="values[correction]" value="false">
                     <div class="custom-checkbox" id="correction-div">
-                        <input type="checkbox" id="correction" value="1" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
+                        <input type="checkbox" id="correction" value="true" name="values[correction]" <?= $this->val('correction', false) ? 'checked' : '' ?>>
                         <label for="correction"><?= $label ?></label>
                     </div>
                     <?= $this->render_help($help) ?>
@@ -2913,10 +3049,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
                     <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
-                        <option <?= $scope == 'local' ? 'selected' : '' ?>>local</option>
-                        <option <?= $scope == 'regional' ? 'selected' : '' ?>>regional</option>
-                        <option <?= $scope == 'national' ? 'selected' : '' ?>>national</option>
-                        <option <?= $scope == 'international' ? 'selected' : '' ?>>international</option>
+                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('local', 'lokal') ?></option>
+                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('regional', 'regional') ?></option>
+                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('national', 'national') ?></option>
+                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('international', 'international') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="scope">
                         <?= $label ?>
@@ -2986,14 +3122,14 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="political_consultation">
                     <select type="text" class="form-control" <?= $labelClass ?> name="values[political_consultation]" id="political_consultation">
-                        <!-- Gutachten,Positionspapier,Studie,Sonstiges -->
-                        <?php if (!$labelClass) { ?>
+                        <?php if (!$req) { ?>
                             <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('No political consultation', 'Keine politische Beratung') ?></option>
+                        <?php }
+                        $val = $this->val('political_consultation', null);
+                        $vocab = $Vocabulary->getValues('political_consultation');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v['id'] ?>" <?= $v['id'] == $val ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                         <?php } ?>
-                        <option value="Gutachten" <?= $this->val('political_consultation') == 'Gutachten' ? 'selected' : '' ?>><?= lang('Review', 'Gutachten') ?></option>
-                        <option value="Positionspapier" <?= $this->val('political_consultation') == 'Positionspapier' ? 'selected' : '' ?>><?= lang('Position paper', 'Positionspapier') ?></option>
-                        <option value="Studie" <?= $this->val('political_consultation') == 'Studie' ? 'selected' : '' ?>><?= lang('Study', 'Studie') ?></option>
-                        <option value="Sonstiges" <?= $this->val('political_consultation') == 'Sonstiges' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
                     </select>
 
                     <label for="political_consultation" class="<?= $labelClass ?>">
@@ -3014,7 +3150,7 @@ class Modules
                     </label>
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
-                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization"/>
+                        <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
                         <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
                             <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
                         </span>
@@ -3058,7 +3194,19 @@ class Modules
                                     <tbody id="org-<?= $rand_id ?>-suggest">
                                     </tbody>
                                 </table>
-                                <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+
+                                <p>
+                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                    <?php } else { ?>
+                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                        </a>
+                                    <?php } ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -3114,6 +3262,17 @@ class Modules
                                         </tbody>
                                     </table>
                                     <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                    <p>
+                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                        <?php } else { ?>
+                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                            </a>
+                                        <?php } ?>
+                                    </p>
                                     <script>
                                         $(document).ready(function() {
                                             SUGGEST = $('#organization-suggest')
@@ -3148,7 +3307,6 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="projects">
                     <label for="project" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <?php
-                    global $Settings;
                     $full_permission = $Settings->hasPermission('projects.edit') || $Settings->hasPermission('projects.connect');
                     $filter = [];
                     if (!$full_permission) {

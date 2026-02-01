@@ -144,14 +144,25 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
 
     var opacityDefault = 0.8;
 
+    if (type == 'all'){
+        type = 'activities';
+    } else {
+        // Make type plural
+        if (type.endsWith('y')) {
+            type = type.slice(0, -1) + 'ies';
+        } else {
+            type = type + 's';
+        }
+    }
+
     /// Create scale and layout functions ///
 
-    if (colors == null){
+    if (colors == null) {
         var colors = d3.scaleOrdinal(d3.schemeCategory20b);
     } else {
         var colors = d3.scaleOrdinal()
-        .domain(d3.range(labels.length))
-        .range(colors);
+            .domain(d3.range(labels.length))
+            .range(colors);
     }
 
     //A "custom" d3 chord function that automatically sorts the order of the chords in such a manner to reduce overlap	
@@ -285,20 +296,7 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
     //Append the label labels on the outside
     var outerLabels = outerArcs.append("text")
         .attr("class", "titles")
-        // .attr("dy", function (d, i) {
-        //     return (d.endAngle > 90 * Math.PI / 180 & d.startAngle < 270 * Math.PI / 180 ? 25 : -16);
-        // })
-        // .append("textPath")
-        // .attr("startOffset", "50%")
-        // .style("text-anchor", "middle")
-        // .attr("xlink:href", function (d, i) {
-        //     return "#arc" + i;
-        // })
         .style('font-size', '0.9em')
-        .text(function (d, i) {
-            return labels[i];
-        })
-        .attr("dy", ".35em")
         .attr("text-anchor", function (d) {
             return ((d.startAngle + d.endAngle) / 2) > Math.PI ? "end" : null;
         })
@@ -307,6 +305,35 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
                 "translate(" + (height * .40 + 30) + ")" +
                 (((d.startAngle + d.endAngle) / 2) > Math.PI ? "rotate(180)" : "");
         })
+        .each(function (d, i) {
+            var maxCharsPerLine = 15; // Adjust this value as needed
+            var words = labels[i].split(/\s+/);
+            var line = [];
+            var lines = [];
+
+            words.forEach(word => {
+                var testLine = line.concat(word).join(' ');
+                if (testLine.length > maxCharsPerLine && line.length > 0) {
+                    lines.push(line.join(' '));
+                    line = [word];
+                } else {
+                    line.push(word);
+                }
+            });
+            if (line.length > 0) lines.push(line.join(' '));
+
+            var textElement = d3.select(this);
+            textElement.text(null);
+
+            var totalHeight = lines.length * 1.1;
+            // Vertically center the text block
+            lines.forEach((lineText, j) => {
+                textElement.append('tspan')
+                    .attr('x', 0)
+                    .attr('dy', j === 0 ? (-totalHeight / 2 + .7) + 'em' : '1.1em')
+                    .text(lineText);
+            });
+        });
 
     if (labelBold) {
         outerLabels.style("font-weight", function (d) {
@@ -333,7 +360,6 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
         });
 
     if (useGradient) {
-        console.log(useGradient);
         chord.style("fill", function (d) {
             return "url(#" + getGradID(d) + ")";
         })
@@ -364,9 +390,12 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
                 trigger: 'hover',
                 html: true,
                 content: function () {
-                    return `<span style='font-weight:900'>
-                        ${data[d.index]['count']}
-                    </span> ${type}s
+                    return `
+                    <h6>${data[d.index]['name']}</h6>
+                    Total of
+                    <span style='font-weight:900'>
+                        ${data[d.index]['totalCount']}
+                    </span> ${type}
                     `
                 }
             });
@@ -395,9 +424,21 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
             trigger: 'hover',
             html: true,
             content: function () {
-                return `<span style='font-weight:900'>
+                let labelsSource = data[d.source.index]['name'];
+                let labelsTarget = data[d.target.index]['name'];
+                if (d.source.index == d.target.index) { 
+                    return `
+                <h6>${labelsSource}</h6>
+                    <span style='font-weight:900'>
+                        ${d.source.value}
+                    </span> ${type} only with themselves
+                    `
+                }
+                return `
+                <h6>${labelsSource} ↔ ${labelsTarget}</h6>
+                <span style='font-weight:900'>
                     ${d.source.value}
-                </span> ${type}s
+                </span> ${type}
                 `
             }
         });

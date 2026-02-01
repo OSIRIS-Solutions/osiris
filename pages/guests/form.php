@@ -7,7 +7,7 @@
     form .title {
         margin-bottom: 1rem; 
         /* padding-top: .5rem; */
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: var(--border-width) solid var(--border-color);
     }
 </style> -->
 

@@ -49,7 +49,7 @@ $pageactive = function ($p) use ($page) {
     <meta name="description" content="OSIRIS ist ein modernes Forschungsinformationssystem, das besonderen Schwerpunkt auf Open Source und Nutzerfreundlichkeit legt." />
 
     <!-- Favicon and title -->
-    <link rel="icon" href="img/favicon.png">
+    <link rel="icon" href="<?= ROOTPATH ?>/img/favicon.png">
     <title><?= $pagetitle ?? 'OSIRIS-App' ?></title>
     <link rel="manifest" href="<?= ROOTPATH ?>/manifest.json">
 
@@ -76,20 +76,15 @@ $pageactive = function ($p) use ($page) {
     <title><?= $pagetitle ?? 'OSIRIS' ?></title>
 
     <!-- Icon font -->
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/phosphoricons/duotone/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
     <!-- for open access icons -->
-    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= CSS_JS_VERSION ?>" rel="stylesheet" />
+    <link href="<?= ROOTPATH ?>/css/fontello/css/osiris.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
 
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?<?= filemtime(BASEPATH . '/css/main.css') ?>">
-    <?php
-    echo $Settings->generateStyleSheet();
-    ?>
-    <style>
-        :root {
-            --affiliation: "<?= $Settings->get('affiliation') ?>";
-        }
-    </style>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?v=<?= OSIRIS_BUILD ?>">
+    <?= $Settings->renderAdditionalStylesheetLinks() ?>
+    <link rel="stylesheet" href="<?= ROOTPATH ?>/custom_style.css?v=<?= uniqid() ?>" no-cache>
+
 
     <script>
         const ROOTPATH = "<?= ROOTPATH ?>";
@@ -97,8 +92,8 @@ $pageactive = function ($p) use ($page) {
         const AFFILIATION_REGEX = new RegExp('<?= $Settings->getRegex(); ?>', 'i'); // Fallback to a simple regex if parsing fails
     </script>
 
-    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= CSS_JS_VERSION ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= CSS_JS_VERSION ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <script>
         $.extend($.fn.DataTable.ext.classes, {
@@ -194,7 +189,7 @@ $pageactive = function ($p) use ($page) {
                         margin: 1rem 0rem 1rem 1rem;
                         padding: 1rem;
                         border-radius: var(--border-radius);
-                        border: 1px solid var(--signal-color);
+                        border: var(--border-width) solid var(--signal-color);
                     }
 
                     .maintenance-msg .title {
@@ -217,9 +212,9 @@ $pageactive = function ($p) use ($page) {
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
-                    <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS">
+                    <img src="<?= ROOTPATH ?>/img/logo.svg" alt="OSIRIS" id="osiris-logo">
                     <?php if (defined('LIVE') && LIVE === false) { ?>
-                        <span class=" position-absolute bottom-0 left-0 secondary" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
+                        <span class=" position-absolute bottom-0 left-0 danger" style="font-size: 1rem;z-index:1">TESTSYSTEM</span>
                     <?php } ?>
                 </a>
 
@@ -524,6 +519,12 @@ $pageactive = function ($p) use ($page) {
                         </a>
                     <?php } ?>
 
+                    <?php if ($Settings->featureEnabled('portal-public')) { ?>
+                        <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
+                            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+                            <?= lang('Go to portal', 'Zum Portal') ?>
+                        </a>
+                    <?php } ?>
 
                 <?php } else { ?>
 
@@ -678,6 +679,14 @@ $pageactive = function ($p) use ($page) {
                             Logout
                         </a>
 
+                        
+                    <?php if ($Settings->featureEnabled('portal-public')) { ?>
+                        <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>" style="--primary-color:var(--muted-color);--primary-color-20:var(--muted-color-20);">
+                            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+                            <?= lang('Go to portal', 'Zum Portal') ?>
+                        </a>
+                    <?php } ?>
+
                     </nav>
 
                     <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-activities">
@@ -761,6 +770,14 @@ $pageactive = function ($p) use ($page) {
                                 <?= $Settings->infrastructureLabel() ?>
                             </a>
                         <?php } ?>
+
+                        <?php if ($Settings->hasPermission('documents')) { ?>
+                            <a href="<?= ROOTPATH ?>/documents" class="with-icon <?= $pageactive('documents') ?>">
+                                <i class="ph ph-files" aria-hidden="true"></i>
+                                <?= lang('Documents', 'Dokumente') ?>
+                            </a>
+                        <?php } ?>
+                        
 
 
                         <?php if ($Settings->featureEnabled('concepts')) { ?>
@@ -906,46 +923,46 @@ $pageactive = function ($p) use ($page) {
 
                     </nav>
 
+
+
+                    <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
+                        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
+                            ADMIN
+                        </div>
+                        <nav>
+                            <?php if ($Settings->hasPermission('admin.see')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
+                                    <i class="ph ph-gear" aria-hidden="true"></i>
+                                    <?= lang('Settings', 'Einstellungen') ?>
+                                </a>
+                                <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
+                                    <i class="ph ph-treasure-chest" aria-hidden="true"></i>
+                                    <?= lang('Contents', 'Inhalte') ?>
+                                </a>
+                                <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
+                                    <i class="ph ph-shield-check" aria-hidden="true"></i>
+                                    <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
+                                </a>
+                            <?php } ?>
+
+
+                            <?php if ($Settings->hasPermission('report.templates')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
+                                    <i class="ph ph-clipboard-text"></i>
+                                    <?= lang('Report templates', 'Berichtsvorlagen') ?>
+                                </a>
+                            <?php } ?>
+                            <?php if ($Settings->hasPermission('user.synchronize')) { ?>
+                                <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
+                                    <i class="ph ph-users"></i>
+                                    <?= lang('User Management', 'Nutzerverwaltung') ?>
+                                </a>
+                            <?php } ?>
+                        </nav>
+                    <?php } ?>
+
+
                 <?php } ?>
-
-
-
-                <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
-                    <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
-                        ADMIN
-                    </div>
-                    <nav>
-                        <?php if ($Settings->hasPermission('admin.see')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
-                                <i class="ph ph-gear" aria-hidden="true"></i>
-                                <?= lang('Settings', 'Einstellungen') ?>
-                            </a>
-                            <a href="<?= ROOTPATH ?>/admin" class="with-icon <?= $pageactive('admin') ?>">
-                                <i class="ph ph-treasure-chest" aria-hidden="true"></i>
-                                <?= lang('Contents', 'Inhalte') ?>
-                            </a>
-                            <a href="<?= ROOTPATH ?>/admin/roles" class="with-icon <?= $pageactive('admin/roles') ?>">
-                                <i class="ph ph-shield-check" aria-hidden="true"></i>
-                                <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
-                            </a>
-                        <?php } ?>
-
-
-                        <?php if ($Settings->hasPermission('report.templates')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/reports" class="with-icon <?= $pageactive('admin/reports') ?>">
-                                <i class="ph ph-clipboard-text"></i>
-                                <?= lang('Report templates', 'Berichtsvorlagen') ?>
-                            </a>
-                        <?php } ?>
-                        <?php if ($Settings->hasPermission('user.synchronize')) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/users" class="with-icon <?= $pageactive('admin/users') ?>">
-                                <i class="ph ph-users"></i>
-                                <?= lang('User Management', 'Nutzerverwaltung') ?>
-                            </a>
-                        <?php } ?>
-                    </nav>
-                <?php } ?>
-
 
 
             </div>

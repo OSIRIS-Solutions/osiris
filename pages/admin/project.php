@@ -98,7 +98,7 @@ if ($process == 'project') {
     .required-badge {
         margin-bottom: 0.5rem;
         background: white;
-        border: 1px solid var(--border-color);
+        border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius);
         padding: 0.25rem 0.5rem;
         background-color: var(--danger-color-20);
@@ -544,26 +544,27 @@ if ($process == 'project') {
                 </div>
             </div>
         <?php } ?>
-    <?php } ?>
 
-    <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
-        <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
-        <i class="ph ph-arrow-fat-line-left"></i>
-    </a>
-    <!-- 
-        <button type="submit" class="btn success">
+        <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
+            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
+            <i class="ph ph-arrow-fat-line-left"></i>
+        </a>
+        <!-- <button type="submit" class="btn success">
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
-        </button>
+        </button> -->
+        <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+
+    <?php } ?>
+
+    <!-- 
          -->
-
-    <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
-
+    <!-- 
     <?php if ($stage <= $finished_stages) { ?>
         <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
             <?= lang('Skip', 'Überspringen') ?>
         </a>
-    <?php } ?>
+    <?php } ?> -->
 
 
     <script>
