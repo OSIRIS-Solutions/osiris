@@ -44,7 +44,9 @@
             {
                 "id": "journals.edit",
                 "de": "Journale hinzufügen und bearbeiten",
-                "en": "Add and edit journals"
+                "en": "Add and edit journals",
+                "comment_de": "Man kann nur Journale löschen, wenn diese noch keinen Aktivitäten zugewiesen sind.",
+                "comment_en": "You can only delete journals that have not yet been assigned to any activities."
             },
             {
                 "id": "journals.delete",
