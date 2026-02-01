@@ -9,6 +9,7 @@
 Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Organisationen. Hier die Highlights:
 
 ### Design & Customization
+
 Bislang war es nur möglich, das Logo und die Farben von OSIRIS anzupassen. Mit diesem Update haben wir die Customization-Funktionen deutlich erweitert:
 - **Eigene Schriftarten**: Ihr könnt jetzt eigene Schriftarten in OSIRIS verwenden, um das Erscheinungsbild noch besser an eure CI anzupassen.
 - **Icons**: wählt aus drei verschiedenen Icon-Stilen (Standard, Gefüllt oder Zweifarbig).
@@ -101,7 +102,8 @@ Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäte
 
 ### Weitere Verbesserungen & Bugfixes
 - Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
-- Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt
+- Es wurde ein neues Daten-Feld für Aktivitäten hinzugefügt, das ähnlich wie das "person"-Feld funktioniert, aber statt des Freitext für die Affiliation eine Auswahl aus den Organisationen bietet. Dadurch können Affiliationen standardisiert und besser verwaltet werden. Bitte beachtet, dass dieses Feld nicht zusammen mit den Feldern "persons" oder "organization" verwendet werden kann. Die Felder sind exklusiv zueinander.
+- Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt, da es häufiger zu Verwirrung geführt hat, als dass es geholfen hat. Die Position der Autoren lässt sich im Nachhinein einfach über die Autorenbearbeitung anpassen. Ansonsten können über das "Authors-Table"-Modul weiterhin alle Autoren mit ihrer Position bearbeitet werden.
 - Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
 - Es ist jetzt nicht mehr möglich, leere Autoren oder Herausgeber hinzuzufügen. Die Fehlermeldungen werden jetzt auch auf Deutsch übersetzt.
 - Das Layout der News-Seite wurde verbessert.

@@ -550,6 +550,17 @@ class Modules
             "width" => 0,
             "tags" => ['people']
         ],
+        "person-organization" => [
+            "fields" => ["name" => "Koblitz, Julia", "organization" => "DSMZ"],
+            "name" => "Person with organization (ROR)",
+            "name_de" => "Person mit Organisation (ROR)",
+            "label" => "Details about the person",
+            "label_de" => "Details über die Person",
+            "description" => "A fieldset for a person including an organization from the catalogue and a ROR search. Cannot be combined with the 'person' or the 'organization' module.",
+            "description_de" => "Ein Feldser für eine Person inkl. der Affiliation mit einer Organisation aus dem Katalog inkl. ROR-Suche. Kann nicht mit den Feldern 'person' oder 'organization' verknüpft werden.",
+            "width" => 0,
+            "tags" => ['people']
+        ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
             "name" => "Projects",
@@ -1695,7 +1706,7 @@ class Modules
                 break;
 
             case "supervisor":
-               $supervisors = $this->val('supervisors', []);
+                $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
@@ -1814,7 +1825,7 @@ class Modules
 
 
             case "supervisor-thesis":
-               $supervisors = $this->val('supervisors', []);
+                $supervisors = $this->val('supervisors', []);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis">
                     <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
@@ -2155,13 +2166,13 @@ class Modules
                                     </button>
                                 </div>
                             </div>
-                        <?php if ($module == 'authors-first-last') : ?>
-                            <div class="ml-auto" id="author-numbers">
-                                <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
-                                <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
-                                <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
-                                <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
-                            </div>
+                            <?php if ($module == 'authors-first-last') : ?>
+                                <div class="ml-auto" id="author-numbers">
+                                    <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
+                                    <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
+                                    <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
+                                    <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
+                                </div>
                             <?php endif; ?>
                         </div>
 
@@ -2218,6 +2229,91 @@ class Modules
             <?php
                 break;
 
+            case "person-organization":
+                $org_id = $this->val('organization', null);
+                $rand_id = rand(1000, 9999);
+            ?>
+                <h6 class="col-12 m-0 floating-title <?= $labelClass ?>">
+                    <?= $label ?>
+                </h6>
+                <div class="data-module col-sm-12 row" data-module="person-organization">
+                    <div class="col-sm-6 floating-form">
+                        <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
+                        <label for="guest-name" class="<?= $labelClass ?> element-other">
+                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
+                        </label>
+                    </div>
+                    <div class="col-sm-6 floating-form">
+                        <label for="organization" class="<?= $labelClass ?> floating-title">
+                            <?= lang('Affiliated Organization', 'Zugehörige Organisation') ?>
+                        </label>
+                        <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
+                            <i class="ph ph-edit float-right"></i>
+                            <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
+                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
+                                <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                            </span>
+
+                            <div id="org-<?= $rand_id ?>-value">
+                                <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
+
+                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?php if (!empty($org_id)) { ?>
+                                        <br><small class="text-muted"><?= $org_id ?></small>
+                                    <?php } ?>
+                                    <?php } else {
+                                    $org_id = DB::to_ObjectID($org_id);
+                                    $collab = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                    if (!empty($collab)) { ?>
+                                        <b><?= $collab['name'] ?></b>
+                                        <br><small class="text-muted"><?= $collab['location'] ?></small>
+                                    <?php } else { ?>
+                                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                        <br><small class="text-muted"><?= $org_id ?></small>
+                                <?php }
+                                } ?>
+                            </div>
+                        </a>
+
+                        <div class="modal" id="organization-modal-<?= $rand_id ?>" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <a href="#close-modal" class="close" role="button" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </a>
+                                    <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
+                                        </div>
+                                    </div>
+                                    <p id="org-<?= $rand_id ?>-search-comment"></p>
+                                    <table class="table simple">
+                                        <tbody id="org-<?= $rand_id ?>-suggest">
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+
+                                    <p>
+                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
+                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
+                                        <?php } else { ?>
+                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
+                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
+                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
+                                            </a>
+                                        <?php } ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
             case "student-category":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="student-category">
@@ -2931,10 +3027,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
                     <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
-                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?=lang('local', 'lokal')?></option>
-                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?=lang('regional', 'regional')?></option>
-                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?=lang('national', 'national')?></option>
-                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?=lang('international', 'international')?></option>
+                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('local', 'lokal') ?></option>
+                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('regional', 'regional') ?></option>
+                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('national', 'national') ?></option>
+                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('international', 'international') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="scope">
                         <?= $label ?>

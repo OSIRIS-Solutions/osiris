@@ -114,6 +114,7 @@ class Document extends Settings
         "peer-reviewed" => ["peer-reviewed"],
         "person" => ["name", "affiliation", "academic_title"],
         "person-only" => ["name"],
+        "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
         "projects" => ["projects"],
         "pub-language" => ["pub-language"],
@@ -615,7 +616,8 @@ class Document extends Settings
         return Document::commalist($authors, $separator) . $append;
     }
 
-    public static function getPosition($position){
+    public static function getPosition($position)
+    {
         $positions = [
             'first' => lang('First author', 'Erstautor'),
             'last' => lang('Last author', 'Letztautor'),
@@ -1330,13 +1332,29 @@ class Document extends Settings
                 }
                 return "p. " . $val;
             case "person": // ["name", "affiliation", "academic_title"],
+                $val = $this->getVal('name');
+                $aff = $this->getVal('affiliation');
+                if (isset($this->doc['academic_title']) && !empty($this->doc['academic_title'])) {
+                    $val = $this->doc['academic_title'] . ' ' . $val;
+                }
+                if ($aff != $default) {
+                    $val .= ', ' . $aff;
+                }
+                return $val;
             case "person-only": // ["name"],
             case "name": // ["name"],
                 $val = $this->getVal('name');
-                if (($module == 'person') && isset($this->doc['academic_title']) && !empty($this->doc['academic_title'])) {
-                    $val = $this->doc['academic_title'] . ' ' . $val;
-                }
                 return $val;
+            case "person-organization": // ["name", "organization"],
+                $person = $this->getVal('name');
+                $aff = $this->getVal('organization');
+                if (empty($aff)) return $person;
+                $org = $this->DB->db->organizations->findOne(['_id' => DB::to_ObjectID($aff)]);
+                if (empty($org)) return $person . ', ' . $aff;
+                if ($this->usecase == 'web' || $this->usecase == 'list') {
+                    return $person . ', <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . $org['name'] . '</a>';
+                }
+                return $person . ', ' . $org['name'];
             case "publisher":; // ["publisher"],
                 return $this->getVal('publisher');
             case "pubmed": // ["pubmed"],
