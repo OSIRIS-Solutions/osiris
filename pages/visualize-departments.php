@@ -40,7 +40,7 @@ $type = $_GET['type'] ?? 'publication';
             </button>
             <?php if ($Settings->featureEnabled('topics')) { ?>
                 <button id="btn-topics" class="btn <?= ($entity == 'topics') ? 'active' : '' ?>" onclick="showForm('topics')">
-                    <?= lang('Topics', 'Themen') ?>
+                    <?= $Settings->topicLabel() ?>
                 </button>
             <?php } ?>
         </div>
@@ -57,6 +57,7 @@ $type = $_GET['type'] ?? 'publication';
             <div class="form-group">
                 <label for="type"><?= lang('Activity type', 'Aktivitätstyp') ?></label>
                 <select id="type" name="type" class="form-control">
+                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('All activity types', 'Alle Aktivitätstypen') ?></option>
                     <?php
                     foreach ($Categories->categories as $key) { ?>
                         <option value="<?= $key['id'] ?>" <?= ($type == $key['id']) ? 'selected' : '' ?>><?= lang($key['name'], $key['name_de'] ?? null) ?></option>
@@ -86,6 +87,7 @@ $type = $_GET['type'] ?? 'publication';
             <div class="form-group">
                 <label for="type"><?= lang('Activity type', 'Aktivitätstyp') ?></label>
                 <select id="type" name="type" class="form-control">
+                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('All activity types', 'Alle Aktivitätstypen') ?></option>
                     <?php
                     foreach ($Categories->categories as $key) { ?>
                         <option value="<?= $key['id'] ?>" <?= ($type == $key['id']) ? 'selected' : '' ?>><?= lang($key['name'], $key['name_de'] ?? null) ?></option>
@@ -147,9 +149,13 @@ $type = $_GET['type'] ?? 'publication';
         },
         dataType: "json",
         success: function(response) {
-            console.log(response);
             var matrix = response.data.matrix;
             var data = response.data.labels;
+
+            if (matrix.length == 0) {
+                $('#chart').html('<div class="alert signal"><?= lang('No data available for the selected parameters.', 'Keine Daten für die ausgewählten Parameter vorhanden.') ?></div>');
+                return;
+            }
 
             var labels = [];
             var colors = [];

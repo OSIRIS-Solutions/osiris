@@ -341,7 +341,6 @@ function osirisJSOnDOMContentLoaded() {
             osirisJS.pageWrapper.setAttribute("data-sidebar-first", "first");
         }
     }
-    console.log(document.documentElement.clientWidth);
 
     // Adding the click event listener
     document.addEventListener(
@@ -668,12 +667,6 @@ function adjustPageNav() {
     var navbarTopHeight = document.querySelector('.navbar-top').offsetHeight
     var navbarBottomHeight = document.querySelector('.navbar-bottom').offsetHeight
     var navbarHeight = navbarTopHeight - Math.min(navbarTopHeight, window.scrollY) + navbarBottomHeight
-    // console.log(navbarHeight);
-    // var offset = wrapper.scrollTop + wrapper.offsetHeight
-    // var offset = window.scrollY
-    // var footerVisible = offset - footer.offsetTop
-    // footerVisible = Math.max(footerVisible, 0)
-    // console.log(offset, footer.offsetTop);
 
     var footerVisible = inViewport(footer);
 
@@ -765,7 +758,6 @@ function _updateUser(id, data = {}) {
         url: ROOTPATH + '/update-user/' + id,
         success: function (response) {
             $('.loader').removeClass('show')
-            console.log(response);
             toastSuccess("Updated " + response.updated + " datasets.")
             // $('#result').html(response)
         },
@@ -788,7 +780,6 @@ function _approve(id, approval) {
         success: function (response) {
             $('.loader').removeClass('show')
             let n_notifications = parseInt($('span.notification').text()) - 1
-            console.log(n_notifications);
             if (n_notifications >= 0) {
                 $('span.notification').text(n_notifications)
             }
@@ -829,8 +820,6 @@ function _delete(id) {
         url: ROOTPATH + '/delete/' + id,
         success: function (response) {
             $('.loader').removeClass('show')
-
-            console.log(response);
             toastSuccess("Deleted " + response.deleted + " datasets.")
             // $('#'+id).remove();
             $('#' + id).fadeOut();
@@ -1145,7 +1134,6 @@ function impactfactors(containerID, canvasID, data = {}) {
         data: data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var container = document.getElementById(containerID)
             if (response.count == 0) {
                 container.classList.add('hidden')
@@ -1160,7 +1148,6 @@ function impactfactors(containerID, canvasID, data = {}) {
             ]
             var i = 0
 
-            console.log(labels);
             var data = {
                 type: 'bar',
                 options: {
@@ -1226,9 +1213,6 @@ function impactfactors(containerID, canvasID, data = {}) {
                     },],
                 }
             }
-
-
-            console.log(data);
             var myChart = new Chart(ctx, data);
         },
         error: function (response) {
@@ -1247,7 +1231,6 @@ function authorrole(containerID, canvasID, data = {}) {
         data: data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var container = document.getElementById(containerID)
             if (response.count == 0) {
                 container.classList.add('hidden')
@@ -1305,7 +1288,6 @@ function activitiesChart(containerID, canvasID, data = {}) {
         data: data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var container = document.getElementById(containerID)
             if (response.count == 0) {
                 container.classList.add('hidden')
@@ -1371,7 +1353,6 @@ function activitiesChart(containerID, canvasID, data = {}) {
             }
 
 
-            console.log(data);
             var activityChart = new Chart(ctx, data);
         },
         error: function (response) {
@@ -1387,7 +1368,6 @@ function projectTimeline(selector, data = {}) {
         data: data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var events = []
 
             const CURRENT_YEAR = new Date().getFullYear();
@@ -1527,7 +1507,6 @@ function projectTimeline(selector, data = {}) {
                     html: true,
                     content: function () {
                         var role = '';
-                        console.log(d.role);
                         if (typeInfo[d.role] !== undefined) {
                             role = `<span style="color:${typeInfo[d.role].color}">${typeInfo[d.role].label}</span>`
                         }
@@ -1614,7 +1593,6 @@ function coauthorNetwork(selector, data = {}) {
         data: data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var matrix = response.data.matrix;
             var DEPTS = response.data.labels;
 
@@ -1724,9 +1702,6 @@ function wordcloud(selector, data = {}) {
                     size: (dat[key] * factor) + 10
                 };
             });
-            // console.log(myWords);
-            // myWords = myWords.slice(0, 300)
-
             // set the dimensions and margins of the graph
             var margin = {
                 top: 10,
@@ -1855,19 +1830,19 @@ function registerDownloadHandlers(svgNode, selector) {
             );
         }
 
-        const svg64 = window.btoa(encodeURIComponent(source).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        const svg64 = window.btoa(encodeURIComponent(source).replace(/%([0-9A-F]{2})/g, function (match, p1) {
             return String.fromCharCode(parseInt(p1, 16));
         }));
-        console.log(svg64);
         const imageSrc = 'data:image/svg+xml;base64,' + svg64;
 
         const img = new Image();
         img.onload = function () {
             // canvas size should match your viewBox
             const canvas = document.createElement('canvas');
-            const viewBox = svgNode.getAttribute('viewBox').split(' ');
-            canvas.width = parseInt(viewBox[2])*2;
-            canvas.height = parseInt(viewBox[3])*2;
+            const vb = svgNode.getAttribute('viewBox') || '';
+            const viewBox = vb.trim().split(/[\s,]+/).map(Number); // <- important
+            canvas.width = Math.round(viewBox[2] * 2);
+            canvas.height = Math.round(viewBox[3] * 2);
             const ctx = canvas.getContext('2d');
 
             // optional: white background
@@ -1890,7 +1865,6 @@ function registerDownloadHandlers(svgNode, selector) {
 
 function userTable(selector, data = {}) {
     data['table'] = true
-    console.log(data)
     return $(selector).DataTable({
         "ajax": {
             "url": ROOTPATH + '/api/users',
@@ -1969,7 +1943,6 @@ function spark($selector, $filter) {
         },
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var data = response.data;
 
             // sort data by key "year" desc
@@ -1980,9 +1953,6 @@ function spark($selector, $filter) {
             labels = Array.from({ length: labels[0] - labels[labels.length - 1] + 1 }, (_, i) => labels[labels.length - 1] + i);
 
             var y = data.map(item => item.count);
-
-            console.log(labels);
-            console.log(y);
 
             var ctx = document.getElementById($selector)
             var myChart = new Chart(ctx, {
@@ -2078,7 +2048,6 @@ function timelineChart(filter = {}, props = {}) {
         },
         dataType: "json",
         success: function (response) {
-            console.log(response);
             let typeInfo = response.data.info;
             let events = response.data.events;
             if (events.length === 0) {
@@ -2129,7 +2098,6 @@ function sanitizeID(element, idlist = '#IDLIST li') {
     // read input value and make sure its lowercase
     var val = element.value.toLowerCase();
     var original_val = $(element).data('value')
-    console.log(original_val);
     // remove forbitten chars
     val = val.replace(/\./g, '-').replace(/ /g, '_')
     $(element).val(val)

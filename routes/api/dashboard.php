@@ -630,18 +630,19 @@ Route::get('/api/dashboard/department-network', function () {
     $startyear     = intval($_GET['year'] ?? (CURRENTYEAR - 4));
     $level         = $_GET['level'] ?? 1; // 1 || 2
 
+    if ($activity_type === 'all') {
+        $activity_type = ['$exists' => true];
+    }
+
     // Optional focus (backward compatible)
-    // - units: dept
-    // - topics: topic
-    // - generic: id
     $focus_id = $_GET['id'] ?? null;
     if (empty($focus_id) && $entity === 'units')  $focus_id = $_GET['dept'] ?? null;
     if (empty($focus_id) && $entity === 'topics') $focus_id = $_GET['topic'] ?? null;
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     // --- Validate entity & define field ---
     $allowed_entities = ['units', 'topics'];

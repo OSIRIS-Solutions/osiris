@@ -144,6 +144,17 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
 
     var opacityDefault = 0.8;
 
+    if (type == 'all'){
+        type = 'activities';
+    } else {
+        // Make type plural
+        if (type.endsWith('y')) {
+            type = type.slice(0, -1) + 'ies';
+        } else {
+            type = type + 's';
+        }
+    }
+
     /// Create scale and layout functions ///
 
     if (colors == null) {
@@ -349,7 +360,6 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
         });
 
     if (useGradient) {
-        console.log(useGradient);
         chord.style("fill", function (d) {
             return "url(#" + getGradID(d) + ")";
         })
@@ -385,7 +395,7 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
                     Total of
                     <span style='font-weight:900'>
                         ${data[d.index]['totalCount']}
-                    </span> ${type}s
+                    </span> ${type}
                     `
                 }
             });
@@ -414,7 +424,6 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
             trigger: 'hover',
             html: true,
             content: function () {
-                console.log(d);
                 let labelsSource = data[d.source.index]['name'];
                 let labelsTarget = data[d.target.index]['name'];
                 if (d.source.index == d.target.index) { 
@@ -422,14 +431,14 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
                 <h6>${labelsSource}</h6>
                     <span style='font-weight:900'>
                         ${d.source.value}
-                    </span> ${type}s only with themselves
+                    </span> ${type} only with themselves
                     `
                 }
                 return `
                 <h6>${labelsSource} ↔ ${labelsTarget}</h6>
                 <span style='font-weight:900'>
                     ${d.source.value}
-                </span> ${type}s
+                </span> ${type}
                 `
             }
         });

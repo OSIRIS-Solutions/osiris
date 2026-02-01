@@ -24,9 +24,18 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
     <?= $Settings->topicLabel() ?>
 </h1>
 
+<div class="btn-toolbar">
+    <a href="<?= ROOTPATH ?>/visualize/departments?entity=topics" class="btn">
+        <i class="ph ph-graph"></i>
+        <?= lang('Visualize topic network', 'Themen-Netzwerk visualisieren') ?>
+    </a>
 <?php if ($Settings->hasPermission('topics.edit')) { ?>
-    <a href="<?= ROOTPATH ?>/topics/new"><?= lang('Add new topic', 'Neuen Bereich hinzufügen') ?></a>
+    <a href="<?= ROOTPATH ?>/topics/new">
+        <i class="ph ph-plus"></i>
+        <?= lang('Add new topic', 'Neuen Bereich hinzufügen') ?>
+    </a>
 <?php } ?>
+</div>
 
 <div id="topics">
     <?php foreach ($topics as $topic) { ?>
