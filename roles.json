@@ -60,8 +60,10 @@
             },
             {
                 "id": "teaching.edit",
-                "de": "Lehrveranstaltungen hinzufügen und bearbeiten",
-                "en": "Add and edit teaching modules"
+                "de": "Lehrveranstaltungen hinzufügen, bearbeiten und löschen",
+                "en": "Add, edit and delete teaching modules",
+                "comment_de": "Nutzende können nur Lehrveranstaltungen löschen, die noch keinen Aktivitäten zugewiesen sind.",
+                "comment_en": "Users can only delete teaching modules that have not yet been assigned to any activities."
             }
         ]
     },
