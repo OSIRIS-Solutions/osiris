@@ -1194,9 +1194,31 @@ class Modules
         if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
             $value = $field['default'];
         }
+        if ($field['format'] == 'str-list') {
+            $rand_id = bin2hex(random_bytes(4));
+?>
+
+            <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
+                <label for="list-input-<?= $rand_id ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div id="list-widget-<?= $rand_id ?>" class="list-widget" data-name="values[<?= $module ?>][]">
+                        <input
+                            id="list-input-<?= $rand_id ?>"
+                            class="list-widget-input"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                    </div>
+                    <?= $this->render_help($help) ?>
+            </div>
+            <script>
+                initListWidget($("#list-widget-<?= $rand_id ?>"), <?= json_encode($this->val($module, [])) ?>);
+            </script>
+        <?php
+            return;
+        }
 
         if ($field['format'] == 'list' && ($field['multiple'] ?? false)) {
-?>
+        ?>
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
                 <label for="<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?>
 

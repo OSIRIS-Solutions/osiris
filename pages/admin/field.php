@@ -11,7 +11,9 @@ if (!empty($form) && isset($form['id'])) {
     $url = ROOTPATH . "/admin/fields";
     $title = lang('New field', 'Neues Feld');
 }
-
+$affiliation = (strtolower($Settings->get('affiliation')));
+// keep only letters and numbers
+$affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 ?>
 <style>
     tr.ui-sortable-helper {
@@ -74,7 +76,7 @@ if (!empty($form) && isset($form['id'])) {
 
             <div class="form-group">
                 <label for="id">ID</label>
-                <input type="text" class="form-control" name="values[id]" id="id" value="<?= $form['id'] ?? '' ?>" <?= !empty($form) ? 'disabled' : '' ?> oninput="sanitizeID(this, '#used-ids li')" required>
+                <input type="text" class="form-control" name="values[id]" id="id" value="<?= $form['id'] ?? $affiliation . '-' ?>" <?= !empty($form) ? 'disabled' : '' ?> oninput="sanitizeID(this, '#used-ids li')" required>
 
                 <small>
                     <a href="#unique"><i class="ph ph-info"></i>
@@ -99,15 +101,16 @@ if (!empty($form) && isset($form['id'])) {
                 <div class="col-sm-6">
                     <label for="format">Format</label>
                     <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)">
-                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>>Text</option>
-                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>>Long text</option>
-                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>>Integer</option>
-                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>>Float</option>
-                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>>List</option>
-                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>>Date</option>
-                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>>Boolean (Ja/Nein)</option>
-                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>>Boolean (Checkbox)</option>
+                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?=lang('Normal Text', 'Normaler Text')?></option>
+                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?=lang('Long text', 'Langer Text')?></option>
+                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?=lang('Integer', 'Ganzzahl')?></option>
+                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?=lang('Float', 'Gleitkommazahl')?></option>
+                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?=lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)')?></option>
+                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?=lang('Date', 'Datum')?></option>
+                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?=lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)')?></option>
+                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?=lang('Boolean (as checkbox)', 'Boolean (als Checkbox)')?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
+                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?=lang('Free text list (without predefined values)', 'Freitext-Liste (ohne vordefinierte Werte)')?></option>
                         <!-- <option value="user">User</option> -->
                     </select>
                 </div>

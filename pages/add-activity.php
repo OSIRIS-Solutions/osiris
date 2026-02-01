@@ -836,6 +836,7 @@ console.log(TYPES);
 
 
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
+<script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script>
     function selectOrgEvent(event = null, type = 'organization') {
         console.log(type);

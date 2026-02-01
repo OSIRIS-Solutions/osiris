@@ -16,6 +16,11 @@ Bislang war es nur möglich, das Logo und die Farben von OSIRIS anzupassen. Mit 
 - **Viele Elemente anpassen**: z.B. die Dicke und Farbe von Rahmen, die Rundung von Ecken, Schatten, Icons und vieles mehr.
 - **Kopfzeile**: Ihr könnt jetzt die Kopfzeile anpassen, z.B. die Höhe verändern, die Logos komplett in den Footer verschieben oder das OSIRIS-Logo einfärben.
 
+### Custom Fields
+
+- Neues Format: Freitext-Liste
+  - Es wurde ein neuer Typ von Custom-Field hinzugefügt, der eine Liste von Freitextwerten ermöglicht. Dieses Feld funktioniert ähnlich wie das bestehende Synonyme-Feld bei Organisationen, aber es ist allgemeiner und kann für verschiedene Zwecke verwendet werden.
+- Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
 
 ### Portfolio
 
@@ -101,7 +106,6 @@ Die Visualisierung "Abteilungs-Netzwerk" wurde überarbeitet und in "Aktivitäte
 - Das fertige Netzwerk kann jetzt als PNG oder SVG heruntergeladen werden.
 
 ### Weitere Verbesserungen & Bugfixes
-- Auf der Seite eines Custom-Fields wird jetzt angezeigt, welche Aktivitäts- und Projekttypen dieses Feld verwenden und ob es mit Infrastrukturen oder Personen verknüpft ist.
 - Es wurde ein neues Daten-Feld für Aktivitäten hinzugefügt, das ähnlich wie das "person"-Feld funktioniert, aber statt des Freitext für die Affiliation eine Auswahl aus den Organisationen bietet. Dadurch können Affiliationen standardisiert und besser verwaltet werden. Bitte beachtet, dass dieses Feld nicht zusammen mit den Feldern "persons" oder "organization" verwendet werden kann. Die Felder sind exklusiv zueinander.
 - Die Abfrage der Erst- und Letztautoren wurde aus dem normalen "Authors"-Modul entfernt, da es häufiger zu Verwirrung geführt hat, als dass es geholfen hat. Die Position der Autoren lässt sich im Nachhinein einfach über die Autorenbearbeitung anpassen. Ansonsten können über das "Authors-Table"-Modul weiterhin alle Autoren mit ihrer Position bearbeitet werden.
 - Wenn die Edition (ein Datenfeld in Aktivitäten) leer oder keine Nummer ist, wird jetzt kein Suffix mehr angezeigt (z.B. 8th, 2nd, 1st).
