@@ -1,9 +1,10 @@
 # Neuigkeiten
 
 
-<time datetime="2026-01-18">29.01.2026</time>
+<time datetime="2026-01-18">01.02.2026</time>
 <a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
-## Version 1.8.0 (beta)
+
+## Version 1.8.0
 
 Es gibt viele neue Funktionen und Verbesserungen, insbesondere im Bereich Customization, Portfolio und Organisationen. Hier die Highlights:
 
