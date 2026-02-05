@@ -28,7 +28,12 @@ function login($username, $password)
         return $login;
     } else {
         // try to login via guest accounts
-        return loginGuest($username, $password);
+        $guest = loginGuest($username, $password);
+        if ($guest['success']) {
+            return $guest;
+        } else {
+            return $login; // return LDAP login failure message
+        }
     }
 }
 
