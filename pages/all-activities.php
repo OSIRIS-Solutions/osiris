@@ -747,8 +747,8 @@ $cart = readCart();
                 max.setHours(23, 59, 59, 999); // inclusive end of day
             }
 
-            const minDate = new Date(data[5]);
-            const maxDate = new Date(data[6]);
+            const minDate = parseLocalYMD(data[5]);
+            const maxDate = parseLocalYMD(data[6]);
 
             const ok =
                 (!min && !max) ||
