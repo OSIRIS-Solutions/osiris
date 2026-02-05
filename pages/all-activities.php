@@ -730,29 +730,33 @@ $cart = readCart();
 
         });
 
-
-
         // Custom range filtering function
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = null,
+        function parseLocalYMD(ymd) {
+            // ymd: "2025-01-01"
+            const [y, m, d] = ymd.split('-').map(Number);
+            return new Date(y, m - 1, d); // local midnight
+        }
+
+        $.fn.dataTable.ext.search.push(function(settings, data) {
+            let min = null,
                 max = null;
-            if (minEl.value !== null && minEl.value !== '')
-                min = new Date(minEl.value);
-            if (maxEl.value !== null && maxEl.value !== '')
-                max = new Date(maxEl.value);
 
-            var minDate = new Date(data[5]);
-            var maxDate = new Date(data[6]);
-
-            if (
-                (min === null && max === null) ||
-                (min === null && minDate <= max) ||
-                (min <= minDate && max === null) ||
-                (min < maxDate && minDate < max)) {
-                return true;
+            if (minEl.value) min = parseLocalYMD(minEl.value);
+            if (maxEl.value) {
+                max = parseLocalYMD(maxEl.value);
+                max.setHours(23, 59, 59, 999); // inclusive end of day
             }
 
-            return false;
+            const minDate = new Date(data[5]);
+            const maxDate = new Date(data[6]);
+
+            const ok =
+                (!min && !max) ||
+                (!min && minDate <= max) ||
+                (min <= maxDate && !max) ||
+                (min <= maxDate && minDate <= max);
+
+            return ok;
         });
 
         <?php if (isset($_GET['type'])) { ?>
@@ -882,7 +886,10 @@ $cart = readCart();
         var submenu = tr.find('.submenu')
         var table = tr.closest('table')
         $('#filter-' + column).remove()
-        const field = headers[column] || { key: 'unknown', title: 'Unknown' }
+        const field = headers[column] || {
+            key: 'unknown',
+            title: 'Unknown'
+        }
         const hash = {}
         hash[field.key] = activity
 
@@ -905,7 +912,7 @@ $cart = readCart();
                 regex = true;
                 smart = false;
             }
-                console.log(searchValue);
+            console.log(searchValue);
 
             dataTable.column(column).search(searchValue, regex, smart).draw();
             // indicator
