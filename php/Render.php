@@ -40,6 +40,7 @@ function renderActivities($filter = [])
             'title' => $Format->getTitle(),
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
+            'supervisors' => $Format->getAuthors('supervisors'),
             'users' => $Format->getUsers(false),
             'affiliated_users' => $Format->getUsers(true),
         ];
