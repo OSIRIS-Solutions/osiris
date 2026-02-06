@@ -297,13 +297,13 @@ function printRules($rules)
                                     <tr>
                                         <th><?= lang('Columns', 'Spalten') ?>:</th>
                                         <td>
-                                            <?php if (isset($query['columns']) && !empty($query['columns'])) { 
+                                            <?php if (isset($query['columns']) && !empty($query['columns'])) {
                                                 $cols = DB::doc2Arr($query['columns']);
                                                 // get labels from fields
-                                                $colLabels = array_map(function($c) use ($field_by_id) {
+                                                $colLabels = array_map(function ($c) use ($field_by_id) {
                                                     return $field_by_id[$c]['label'] ?? $c;
                                                 }, $cols);
-                                                ?>
+                                            ?>
                                                 <?= implode(', ', $colLabels) ?>
                                             <?php } else {
                                                 echo lang('Default columns', 'Standard-Spalten');
@@ -599,6 +599,11 @@ function printRules($rules)
             fields = Object.values(fields)
         }
 
+        function escapeRegex(s) {
+            return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+
         var mongoQuery = $('#builder').queryBuilder({
             filters: filters,
             'lang_code': lang('en', 'de'),
@@ -610,7 +615,52 @@ function printRules($rules)
                 error: 'ph ph-warning text-danger',
             },
             allow_empty: true,
-            default_filter: '<?= $defaultFilter ?>'
+            default_filter: '<?= $defaultFilter ?>',
+            operators: [
+                'equal', 'not_equal', 'in', 'not_in', 'less', 'less_or_equal', 'greater', 'greater_or_equal',
+                'between', 'not_between', 'begins_with', 'not_begins_with', 'contains', 'not_contains',
+                'ends_with', 'not_ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null',
+                {
+                    type: 'exists',
+                    nb_inputs: 0,
+                    apply_to: ['string', 'number', 'datetime', 'boolean']
+                },
+                {
+                    type: 'not_exists',
+                    nb_inputs: 0,
+                    apply_to: ['string', 'number', 'datetime', 'boolean']
+                },
+                {
+                    type: 'contains_i',
+                    nb_inputs: 1,
+                    apply_to: ['string']
+                }
+            ],
+            lang: {
+                operators: {
+                    exists: lang('exists', 'existiert'),
+                    not_exists: lang('not exists', 'existiert nicht'),
+                    contains_i: lang('contains (ignore case)', 'enthält (Groß-/Kleinschreibung ignorieren)')
+                }
+            },
+            mongoOperators: {
+                exists: function() {
+                    return {
+                        $exists: true
+                    };
+                },
+                not_exists: function() {
+                    return {
+                        $exists: false
+                    };
+                },
+                contains_i: function(v) {
+                    return {
+                        $regex: escapeRegex(v),
+                        $options: 'i'
+                    };
+                }
+            }
         });
 
         var dataTable;
@@ -691,7 +741,7 @@ function printRules($rules)
                         var array_column = array_columns[field]
                         r.render = function(data, type, row, meta) {
                             if (Array.isArray(data)) {
-                                data = data[0]
+                                data = data.map(item => item[array_column]).join(', ');
                             }
                             if (data === undefined || data === null) {
                                 return '-'
@@ -858,7 +908,7 @@ function printRules($rules)
         }
 
         function applyFilter(id, aggregate, columns) {
-                console.log(columns);
+            console.log(columns);
             if (EXPERT) {
                 applyFilterExpert(id, aggregate, columns)
                 return
