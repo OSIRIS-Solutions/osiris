@@ -554,13 +554,16 @@ $fundingByYear = $osiris->proposals->aggregate([
 
     <script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js"></script>
     <script>
-        const fundingRows = <?= json_encode(array_map(function ($r) {
+        var fundingRows = <?= json_encode(array_map(function ($r) {
+                                if (empty($r['_id']) || $r['_id'] < 1900) return null;
                                 return [
                                     'year' => $r['_id'],
                                     'planned' => (float)($r['planned'] ?? 0),
                                     'spent' => (float)($r['spent'] ?? 0),
                                 ];
                             }, $fundingByYear)); ?>;
+        // Remove nulls (invalid years)
+        fundingRows = fundingRows.filter(r => r !== null);
 
         const years = fundingRows.map(r => String(r.year));
         const planned = fundingRows.map(r => r.planned);
@@ -603,6 +606,12 @@ $fundingByYear = $osiris->proposals->aggregate([
                 orientation: 'h',
                 x: 0,
                 y: -0.2
+            },
+            xaxis: {
+                title: lang('Year', 'Jahr'),
+                // no decimals
+                tickformat: 'd',
+                dtick: 1
             },
             hovermode: 'x unified'
         };

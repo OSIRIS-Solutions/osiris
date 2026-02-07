@@ -300,7 +300,6 @@ class ActivityFields extends Fields
                 'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
                 'usage' => [
                     'filter',
-                    'columns'
                 ],
                 'label' => lang('Supervisor (unit)', 'Betreuende (Einheit)'),
                 'type' => 'string'
