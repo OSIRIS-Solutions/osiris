@@ -267,7 +267,7 @@ class Settings
 
     function getActivitiesPortfolio($includePublications = false)
     {
-        $filter = ['portfolio' => 1];
+        $filter = ['portfolio' => ['$in' => [true, 'true', 1]]];
         if (!$includePublications) $filter['parent'] = ['$ne' => 'publication'];
         return $this->osiris->adminTypes->distinct('id', $filter);
     }
