@@ -30,7 +30,14 @@ function initQuill(element) {
     });
 
     quill.on('text-change', function () {
-        var str = $(element).find('.ql-editor p').html()
+        var str = ''
+        $(element).find('.ql-editor p').each(function (i, el) {
+            var el = $(el)
+            if (el.html() == '<br>') return;
+            var html = el.html()
+            if (str != '') str += "<br>"
+            str += html
+        })
         $(element).next().val(str)
         // TODO: add doubletCheck() with underscore
     });
@@ -472,7 +479,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
     } else {
         $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
     }
-    
+
 }
 
 
