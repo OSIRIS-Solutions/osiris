@@ -148,6 +148,9 @@ function validateValues($values, $DB)
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
+            if ($values[$key] === '' || $values[$key] == '<br>' || $values[$key] == '<br/>') {
+                $values[$key] = null;
+            }
         } else if ($key === 'epub') {
             $values['epub-delay'] = endOfCurrentQuarter(true);
             // value is boolean
@@ -188,6 +191,9 @@ function validateValues($values, $DB)
             }
         } else if (is_string($value)) {
             $values[$key] = trim($value);
+            if ($values[$key] === '') {
+                $values[$key] = null;
+            }
         }
     }
 
