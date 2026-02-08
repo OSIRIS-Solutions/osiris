@@ -36,7 +36,7 @@
             <?php
             $cats = $osiris->adminCategories->find([], ['sort' => ['order' => 1]])->toArray();
             foreach ($cats as $cat) {
-                echo '<option value="' . htmlspecialchars($cat['id']) . '">' . lang($cat['name'], $cat['name_de'] ?? null) . '</option>';
+                echo '<option value="' . e($cat['id']) . '">' . lang($cat['name'], $cat['name_de'] ?? null) . '</option>';
             }
             ?>
         </select>

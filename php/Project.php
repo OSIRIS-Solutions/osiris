@@ -242,8 +242,8 @@ class Project extends Vocabulary
         $title = $this->project['joint_project_title'] ?? '-';
         $speaker = $this->project['joint_project_speaker'] ?? false;
         $return = '<div class="module">';
-        $return .= '<h5 class="title m-0">' . htmlspecialchars($title) . '</h5>';
-        $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . htmlspecialchars($identifier) . '<br>';
+        $return .= '<h5 class="title m-0">' . e($title) . '</h5>';
+        $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . e($identifier) . '<br>';
         $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('Yes', 'Ja') : lang('No', 'Nein')) . '<br>';
         $return .= '</div>';
         return $return;
@@ -392,7 +392,7 @@ class Project extends Vocabulary
                 return $Settings->printTags($tags, $base);
                 // foreach ($tags as $tag) {
                 //     $return .= '<a class="badge primary mr-5 mb-5" href="' . ROOTPATH . '/' . $base . '#tags=' . urlencode($tag) . '">
-                //         <i class="ph ph-tag"></i> ' . htmlspecialchars($tag) . '
+                //         <i class="ph ph-tag"></i> ' . e($tag) . '
                 //     </a>';
                 // }
                 return $return;

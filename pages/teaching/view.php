@@ -65,7 +65,7 @@
                             }
                         }
                     } else {
-                        $affiliation = htmlspecialchars($module['affiliation']);
+                        $affiliation = e($module['affiliation']);
                     }
                     echo $affiliation;
                     ?>

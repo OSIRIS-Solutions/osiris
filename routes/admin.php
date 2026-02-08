@@ -607,7 +607,7 @@ Route::post('/crud/admin/general', function () {
 
 
     if (isset($_FILES["logo"])) {
-        $filename = htmlspecialchars(basename($_FILES["logo"]["name"]));
+        $filename = e(basename($_FILES["logo"]["name"]));
         $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["logo"]["size"];
 
@@ -1120,7 +1120,7 @@ Route::post('/crud/admin/guest-account/update', function () {
         ]]
     );
 
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich aktualisiert.");
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
@@ -1139,7 +1139,7 @@ Route::post('/crud/admin/guest-account/delete', function () {
         ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
         ['$pull' => ['roles' => 'guest']]
     );
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();

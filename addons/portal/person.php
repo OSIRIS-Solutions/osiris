@@ -343,7 +343,7 @@
                                             <span class="key">Email</span>
                                             <?php if (!empty($data['contact']['mail'])): ?>
                                                 <span id="mail">
-                                                    <a class="hidden"><?= htmlspecialchars($data['contact']['mail']) ?></a>
+                                                    <a class="hidden"><?= e($data['contact']['mail']) ?></a>
                                                     <button class="btn small" onclick="document.getElementById('mail').querySelector('a').classList.remove('hidden'); this.style.display='none';">
                                                         <?= lang("Show mail", "Zeige Mail") ?>
                                                     </button>
@@ -352,11 +352,11 @@
                                             <?php if (!empty($data['contact']['mail_alternative'])): ?>
                                                 <?php if (!empty($data['contact']['mail_alternative_comment'])): ?>
                                                     <p class="mb-0 font-weight-bold">
-                                                        <?= htmlspecialchars($data['contact']['mail_alternative_comment']) ?>
+                                                        <?= e($data['contact']['mail_alternative_comment']) ?>
                                                     </p>
                                                 <?php endif; ?>
                                                 <span id="mail-alt">
-                                                    <a class="hidden"><?= htmlspecialchars($data['contact']['mail_alternative']) ?></a>
+                                                    <a class="hidden"><?= e($data['contact']['mail_alternative']) ?></a>
                                                     <button class="btn small" onclick="document.getElementById('mail-alt').querySelector('a').classList.remove('hidden'); this.style.display='none';">
                                                         <?= lang("Show mail", "Zeige Mail") ?>
                                                     </button>
@@ -370,7 +370,7 @@
                                     <tr>
                                         <td>
                                             <span class="key"><?= lang("Telephone", "Telefon") ?></span>
-                                            <?= htmlspecialchars($data['contact']['phone']) ?>
+                                            <?= e($data['contact']['phone']) ?>
                                         </td>
                                     </tr>
                                 <?php endif; ?>
@@ -379,8 +379,8 @@
                                     <tr>
                                         <td>
                                             <span class="key">ORCID</span>
-                                            <a href="http://orcid.org/<?= htmlspecialchars($data['contact']['orcid']) ?>" target="_blank" rel="noopener noreferrer">
-                                                <?= htmlspecialchars($data['contact']['orcid']) ?>
+                                            <a href="http://orcid.org/<?= e($data['contact']['orcid']) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($data['contact']['orcid']) ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -390,8 +390,8 @@
                                     <tr>
                                         <td>
                                             <span class="key">ResearchGate</span>
-                                            <a href="https://www.researchgate.net/profile/<?= htmlspecialchars($data['contact']['researchgate']) ?>" target="_blank" rel="noopener noreferrer">
-                                                <?= htmlspecialchars($data['contact']['researchgate']) ?>
+                                            <a href="https://www.researchgate.net/profile/<?= e($data['contact']['researchgate']) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($data['contact']['researchgate']) ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -401,8 +401,8 @@
                                     <tr>
                                         <td>
                                             <span class="key">Google Scholar</span>
-                                            <a href="https://scholar.google.com/citations?user=<?= htmlspecialchars($data['contact']['google_scholar']) ?>" target="_blank" rel="noopener noreferrer">
-                                                <?= htmlspecialchars($data['contact']['google_scholar']) ?>
+                                            <a href="https://scholar.google.com/citations?user=<?= e($data['contact']['google_scholar']) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($data['contact']['google_scholar']) ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -412,8 +412,8 @@
                                     <tr>
                                         <td>
                                             <span class="key">LinkedIn</span>
-                                            <a href="https://linkedin.com/in/<?= htmlspecialchars($data['contact']['linkedin']) ?>" target="_blank" rel="noopener noreferrer">
-                                                <?= htmlspecialchars($data['contact']['linkedin']) ?>
+                                            <a href="https://linkedin.com/in/<?= e($data['contact']['linkedin']) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($data['contact']['linkedin']) ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -423,8 +423,8 @@
                                     <tr>
                                         <td>
                                             <span class="key">Twitter</span>
-                                            <a href="https://twitter.com/<?= htmlspecialchars($data['contact']['twitter']) ?>" target="_blank" rel="noopener noreferrer">
-                                                @<?= htmlspecialchars($data['contact']['twitter']) ?>
+                                            <a href="https://twitter.com/<?= e($data['contact']['twitter']) ?>" target="_blank" rel="noopener noreferrer">
+                                                @<?= e($data['contact']['twitter']) ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -437,8 +437,8 @@
                                             <?php
                                             $webpage = preg_replace('/^https?:\/\//', '', $data['contact']['webpage']);
                                             ?>
-                                            <a href="https://<?= htmlspecialchars($webpage) ?>" target="_blank" rel="noopener noreferrer">
-                                                <?= htmlspecialchars($webpage) ?>
+                                            <a href="https://<?= e($webpage) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($webpage) ?>
                                             </a>
                                         </td>
                                     </tr>

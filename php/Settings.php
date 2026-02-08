@@ -549,7 +549,7 @@ class Settings
         if ($cssUrl === '') return '';
         if (!preg_match('~^https://[^\s"\'<>]+$~i', $cssUrl)) return '';
 
-        $cssUrlEsc = htmlspecialchars($cssUrl, ENT_QUOTES, 'UTF-8');
+        $cssUrlEsc = e($cssUrl);
 
         // Preconnect only makes sense for Google Fonts
         if (strpos($cssUrl, 'fonts.googleapis.com') !== false) {

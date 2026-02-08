@@ -104,14 +104,14 @@
                                     </div>
 
                                     <?php if ($desc !== ''): ?>
-                                        <div class="text-muted font-size-12"><?= nl2br(htmlspecialchars($desc)) ?></div>
+                                        <div class="text-muted font-size-12"><?= nl2br(e($desc)) ?></div>
                                     <?php endif; ?>
 
                                     <div class="text-muted font-size-12 mt-5">
-                                        <?= lang('File name', 'Dateiname') ?>: <?= htmlspecialchars($filename) ?> <br>
-                                        <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= htmlspecialchars($uploader) ?>
-                                        <?= lang('on', 'am') ?> <?= htmlspecialchars($date) ?>
-                                        · <?= htmlspecialchars($size) ?> <?= lang('Bytes', 'Bytes') ?>
+                                        <?= lang('File name', 'Dateiname') ?>: <?= e($filename) ?> <br>
+                                        <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= e($uploader) ?>
+                                        <?= lang('on', 'am') ?> <?= e($date) ?>
+                                        · <?= e($size) ?> <?= lang('Bytes', 'Bytes') ?>
                                     </div>
                                 </div>
                             </div>

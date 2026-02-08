@@ -146,11 +146,11 @@ $numbers = $data['numbers'] ?? [
                             }
                             ?>
                             <tr>
-                                <td class="<?= htmlspecialchars(implode(' ', $classes), ENT_QUOTES, 'UTF-8'); ?>">
+                                <td class="<?= e(implode(' ', $classes)); ?>">
                                     <a
                                         class="item d-block colorless"
                                         href="<?= $href ?>">
-                                        <span><?= htmlspecialchars(lang($nameEn, $nameDe), ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <span><?= e(lang($nameEn, $nameDe)); ?></span>
                                     </a>
                                 </td>
                             </tr>

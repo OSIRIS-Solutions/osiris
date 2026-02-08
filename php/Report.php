@@ -192,7 +192,7 @@ class Report
             }
         } catch (Exception $e) {
             error_log("Report format error: " . $e->getMessage());
-            return "<div class='alert danger'><strong>Report Error:</strong> " . htmlspecialchars($e->getMessage()) . "</div>";
+            return "<div class='alert danger'><strong>Report Error:</strong> " . e($e->getMessage()) . "</div>";
         }
     }
 

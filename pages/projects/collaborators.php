@@ -243,7 +243,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         <td colspan="3">
                             <span class="text-danger">
                                 <i class="ph ph-warning-circle"></i>
-                                <b><?= htmlspecialchars($con['name'] ?? $con['organization']) ?></b>
+                                <b><?= e($con['name'] ?? $con['organization']) ?></b>
                                 <?= lang('Organization not found. It might have been deleted.', 'Organisation nicht gefunden. Sie wurde möglicherweise gelöscht.') ?>
                             </span>
                         </td>

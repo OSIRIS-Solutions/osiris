@@ -30,7 +30,7 @@ function val($index, $default = '')
 {
     $val = $GLOBALS['form'][$index] ?? $default;
     if (is_string($val)) {
-        return htmlspecialchars($val);
+        return e($val);
     }
     return $val;
 }

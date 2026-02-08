@@ -154,7 +154,7 @@ $utilizationOptions = [
                     <i class="ph-duotone ph-globe-stand"></i>
                     <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
                 </h2>
-                <small class="code badge primary"><?= htmlspecialchars($cid) ?></small>
+                <small class="code badge primary"><?= e($cid) ?></small>
             </div>
             <div class="content">
                 <?php if (!empty($country['review']['comment'] ?? null)) { ?>
@@ -163,15 +163,15 @@ $utilizationOptions = [
                         <b>
                             <?= lang('ABS Review comment', 'Kommentar der ABS-Prüfung') ?>:
                         </b>
-                        <q><?= nl2br(htmlspecialchars($country['review']['comment'])) ?></q>
+                        <q><?= nl2br(e($country['review']['comment'])) ?></q>
                     </p>
                 <?php } ?>
 
 
-                <input type="hidden" name="country_id[]" value="<?= htmlspecialchars($cid) ?>">
+                <input type="hidden" name="country_id[]" value="<?= e($cid) ?>">
 
                 <!-- Scope groups for this country -->
-                <div class="scope-groups" data-country="<?= htmlspecialchars($cid) ?>" data-next-index="<?= count($groups) ?>">
+                <div class="scope-groups" data-country="<?= e($cid) ?>" data-next-index="<?= count($groups) ?>">
                     <?php foreach ($groups as $gi => $g):
                         // normalize material/utilization
                         $matSelected  = DB::doc2Arr($g['material']    ?? []);
@@ -192,7 +192,7 @@ $utilizationOptions = [
                                 <?php if ($gi > 0): ?>
                                     <button type="button"
                                         class="btn small text-danger remove-scope-group"
-                                        data-country="<?= htmlspecialchars($cid) ?>">
+                                        data-country="<?= e($cid) ?>">
                                         <i class="ph ph-trash"></i>
                                         <?= lang('Remove Sample Collection', 'Probensammlung entfernen') ?>
                                     </button>
@@ -203,7 +203,7 @@ $utilizationOptions = [
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Geographical scope', 'Geographischer Scope') ?>
-                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'geo');">
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'geo');">
                                             <i class="ph ph-copy"></i>
                                             <?= lang('Copy from above', 'Von oben kopieren') ?>
                                         </div>
@@ -215,16 +215,16 @@ $utilizationOptions = [
                                         ) ?>
                                     </small>
                                     <textarea
-                                        name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][geo]"
+                                        name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][geo]"
                                         rows="3"
-                                        class="form-control geo"><?= htmlspecialchars($g['geo'] ?? '') ?></textarea>
+                                        class="form-control geo"><?= e($g['geo'] ?? '') ?></textarea>
                                 </div>
 
                                 <!-- Temporal scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Temporal scope', 'Zeitlicher Scope') ?>
-                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'temporal');">
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'temporal');">
                                             <i class="ph ph-copy"></i>
                                             <?= lang('Copy from above', 'Von oben kopieren') ?>
                                         </div>
@@ -239,16 +239,16 @@ $utilizationOptions = [
                                         <div class="mr-10">
                                             <input
                                                 type="text"
-                                                name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][temporal]"
+                                                name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][temporal]"
                                                 class="form-control temporal"
                                                 placeholder="e.g. 2018–2020"
-                                                value="<?= htmlspecialchars($g['temporal'] ?? '') ?>">
+                                                value="<?= e($g['temporal'] ?? '') ?>">
                                         </div>
                                         <div>
                                             <label class="inline-flex align-items-center">
                                                 <input
                                                     type="checkbox"
-                                                    name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][temporal_ongoing]"
+                                                    name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][temporal_ongoing]"
                                                     value="1" class="temporal_ongoing"
                                                     <?= !empty($g['temporal_ongoing']) ? 'checked' : '' ?>>
                                                 <span class="ml-5">
@@ -263,7 +263,7 @@ $utilizationOptions = [
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
                                         <?= lang('Material scope', 'Material-Scope') ?>
-                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'material');">
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'material');">
                                             <i class="ph ph-copy"></i>
                                             <?= lang('Copy from above', 'Von oben kopieren') ?>
                                         </div>
@@ -275,13 +275,13 @@ $utilizationOptions = [
                                         ) ?>
                                     </small>
                                     <select
-                                        name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][material][]"
+                                        name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][material][]"
                                         class="form-control scope-multi-select material"
                                         multiple>
                                         <?php foreach ($materialOptions as $opt): ?>
-                                            <option value="<?= htmlspecialchars($opt) ?>"
+                                            <option value="<?= e($opt) ?>"
                                                 <?= in_array($opt, $matSelected, true) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($opt) ?>
+                                                <?= e($opt) ?>
                                             </option>
                                         <?php endforeach; ?>
 
@@ -289,8 +289,8 @@ $utilizationOptions = [
                                         foreach ($matSelected as $val) {
                                             if (!in_array($val, $materialOptions, true)) {
                                         ?>
-                                                <option value="<?= htmlspecialchars($val) ?>" selected>
-                                                    <?= htmlspecialchars($val) ?>
+                                                <option value="<?= e($val) ?>" selected>
+                                                    <?= e($val) ?>
                                                 </option>
                                         <?php
                                             }
@@ -303,7 +303,7 @@ $utilizationOptions = [
                                 <div class="form-group mb-0">
                                     <label class="font-weight-bold required">
                                         <?= lang('Utilization scope', 'Nutzung / Utilisation-Scope') ?>
-                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= htmlspecialchars($cid) ?>', <?= $gi ?>, 'utilization');">
+                                        <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'utilization');">
                                             <i class="ph ph-copy"></i>
                                             <?= lang('Copy from above', 'Von oben kopieren') ?>
                                         </div>
@@ -315,13 +315,13 @@ $utilizationOptions = [
                                         ) ?>
                                     </small>
                                     <select
-                                        name="scope[<?= htmlspecialchars($cid) ?>][groups][<?= $gi ?>][utilization][]"
+                                        name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][utilization][]"
                                         class="form-control scope-multi-select utilization"
                                         multiple>
                                         <?php foreach ($utilizationOptions as $opt): ?>
-                                            <option value="<?= htmlspecialchars($opt) ?>"
+                                            <option value="<?= e($opt) ?>"
                                                 <?= in_array($opt, $utilSelected, true) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($opt) ?>
+                                                <?= e($opt) ?>
                                             </option>
                                         <?php endforeach; ?>
 
@@ -329,8 +329,8 @@ $utilizationOptions = [
                                         foreach ($utilSelected as $val) {
                                             if (!in_array($val, $utilizationOptions, true)) {
                                         ?>
-                                                <option value="<?= htmlspecialchars($val) ?>" selected>
-                                                    <?= htmlspecialchars($val) ?>
+                                                <option value="<?= e($val) ?>" selected>
+                                                    <?= e($val) ?>
                                                 </option>
                                         <?php
                                             }
@@ -346,7 +346,7 @@ $utilizationOptions = [
                 <!-- Add scope block button -->
                 <button type="button"
                     class="btn primary add-scope-group"
-                    data-country="<?= htmlspecialchars($cid) ?>">
+                    data-country="<?= e($cid) ?>">
                     <i class="ph ph-plus"></i>
                     <?= lang('Add Sample Collection', 'Probensammlung hinzufügen') ?>
                 </button>
@@ -368,9 +368,9 @@ $utilizationOptions = [
                         <label class="inline-flex align-items-center">
                             <input
                                 type="checkbox"
-                                name="scope[<?= htmlspecialchars($cid) ?>][atk_used]"
+                                name="scope[<?= e($cid) ?>][atk_used]"
                                 value="1"
-                                onchange="$('#atk_details_<?= htmlspecialchars($cid) ?>').toggleClass('hidden', !this.checked);"
+                                onchange="$('#atk_details_<?= e($cid) ?>').toggleClass('hidden', !this.checked);"
                                 <?= !empty($scope['atk_used']) ? 'checked' : '' ?>>
                             <span class="ml-5">
                                 <?= lang(
@@ -381,11 +381,11 @@ $utilizationOptions = [
                         </label>
                     </div>
                     <textarea
-                        id="atk_details_<?= htmlspecialchars($cid) ?>"
-                        name="scope[<?= htmlspecialchars($cid) ?>][atk_details]"
+                        id="atk_details_<?= e($cid) ?>"
+                        name="scope[<?= e($cid) ?>][atk_details]"
                         rows="2"
                         class="form-control <?= empty($scope['atk_used']) ? 'hidden' : '' ?>"
-                        placeholder="<?= lang('Please describe source, communities or agreements if applicable.', 'Bitte Quelle, beteiligte Communities oder Vereinbarungen beschreiben, falls zutreffend.') ?>"><?= htmlspecialchars($scope['atk_details'] ?? '') ?></textarea>
+                        placeholder="<?= lang('Please describe source, communities or agreements if applicable.', 'Bitte Quelle, beteiligte Communities oder Vereinbarungen beschreiben, falls zutreffend.') ?>"><?= e($scope['atk_details'] ?? '') ?></textarea>
                 </div>
 
                 <!-- Optional notes (country-level) -->
@@ -398,9 +398,9 @@ $utilizationOptions = [
                         ) ?>
                     </small>
                     <textarea
-                        name="scope[<?= htmlspecialchars($cid) ?>][notes]"
+                        name="scope[<?= e($cid) ?>][notes]"
                         rows="2"
-                        class="form-control"><?= htmlspecialchars($scope['notes'] ?? '') ?></textarea>
+                        class="form-control"><?= e($scope['notes'] ?? '') ?></textarea>
                 </div>
             </div>
 

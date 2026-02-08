@@ -414,7 +414,7 @@ class Portfolio extends Settings
     <ul class="breadcrumb">';
         foreach ($items as $i => $el) {
             $isLast = ($i === count($items) - 1);
-            $name = htmlspecialchars($el['name'] ?? '', ENT_QUOTES);
+            $name = e($el['name'] ?? '');
             $url = $el['path'] ?? '#';
 
             if (!$isLast) {

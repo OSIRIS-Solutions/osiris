@@ -21,6 +21,19 @@ if (!function_exists('str_ends_with')) {
     }
 }
 
+/**
+ * Escape output for safe HTML rendering (attributes + text).
+ * Always use this when echoing user or DB content.
+ */
+function e($value): string
+{
+    return htmlspecialchars(
+        (string) ($value ?? ''),
+        ENT_QUOTES | ENT_SUBSTITUTE,
+        'UTF-8'
+    );
+}
+
 // helper functions for all CRUD methods
 function validateValues($values, $DB)
 {
@@ -135,7 +148,7 @@ function validateValues($values, $DB)
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
-        } else if ($key === 'epub'){
+        } else if ($key === 'epub') {
             $values['epub-delay'] = endOfCurrentQuarter(true);
             // value is boolean
             $values[$key] = boolval($value);
@@ -681,7 +694,7 @@ function dump($element, $as_json = true)
         $element = $element->bsonSerialize();
     }
     if ($as_json) {
-        echo htmlspecialchars(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        echo e(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         if (!empty(json_last_error())) {
             var_dump(json_last_error_msg()) . PHP_EOL;
             var_export($element);

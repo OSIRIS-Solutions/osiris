@@ -310,13 +310,13 @@
                         ?>
                             <tr>
                                 <td>
-                                    <?= htmlspecialchars($f['name'] ?? $field) ?>
+                                    <?= e($f['name'] ?? $field) ?>
                                 </td>
                                 <td>
-                                    <input type="text" name="field[<?= $field ?>]" id="field-<?= $field ?>" value="<?= htmlspecialchars($ldap_field) ?>" class="form-control">
+                                    <input type="text" name="field[<?= $field ?>]" id="field-<?= $field ?>" value="<?= e($ldap_field) ?>" class="form-control">
                                 </td>
                                 <td class="text-muted">
-                                    <?= htmlspecialchars($f['example']) ?>
+                                    <?= e($f['example']) ?>
                                     <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= lang('Take', 'Übernehmen') ?></a>
                                 </td>
                             </tr>
@@ -483,7 +483,7 @@ if (!is_null($data)) {
                                     </div>
                                 </td>
                                 <td>
-                                    <b><?= htmlspecialchars($field['name']) ?></b>
+                                    <b><?= e($field['name']) ?></b>
                                 </td>
 
                             </tr>

@@ -456,7 +456,7 @@ $affiliation = $Settings->get('affiliation_details');
                                 class="form-control"
                                 name="general[design][font_family]"
                                 id="design_font_family"
-                                value="<?= htmlspecialchars($fontFamily) ?>"
+                                value="<?= e($fontFamily) ?>"
                                 placeholder="<?= lang("e.g. Rubik", "z.B. Rubik") ?>">
                         </div>
                         <small class="text-muted d-block mt-5">
@@ -479,7 +479,7 @@ $affiliation = $Settings->get('affiliation_details');
                                 class="form-control"
                                 name="general[design][font_css_url]"
                                 id="design_font_css_url"
-                                value="<?= htmlspecialchars($fontCssUrl) ?>"
+                                value="<?= e($fontCssUrl) ?>"
                                 placeholder="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;1,400;1,600&display=swap">
                         </div>
                         <small class="text-muted d-block mt-5">
@@ -1221,11 +1221,11 @@ $affiliation = $Settings->get('affiliation_details');
                             <div class="row row-eq-spacing my-0">
                                 <div class="col-md-6">
                                     <label for="topics_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                    <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Research topics') ?>">
+                                    <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Research topics') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="topics_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                    <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Forschungsbereiche') ?>">
+                                    <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Forschungsbereiche') ?>">
                                 </div>
                             </div>
                         </div>
@@ -1259,11 +1259,11 @@ $affiliation = $Settings->get('affiliation_details');
                             <div class="row row-eq-spacing my-0">
                                 <div class="col-md-6">
                                     <label for="infrastructures_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                    <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Infrastructures') ?>">
+                                    <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Infrastructures') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="infrastructures_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                    <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Infrastrukturen') ?>">
+                                    <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Infrastrukturen') ?>">
                                 </div>
                             </div>
                         </div>
@@ -1311,11 +1311,11 @@ $affiliation = $Settings->get('affiliation_details');
                             <div class="row row-eq-spacing my-0">
                                 <div class="col-md-6">
                                     <label for="tags_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                    <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Tags') ?>">
+                                    <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Tags') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="tags_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                    <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Schlagwörter') ?>">
+                                    <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Schlagwörter') ?>">
                                 </div>
                             </div>
                         </div>
@@ -1430,11 +1430,11 @@ $affiliation = $Settings->get('affiliation_details');
                             <div class="row row-eq-spacing my-0">
                                 <div class="col-md-6">
                                     <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                    <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= htmlspecialchars($label['en'] ?? 'Journals') ?>">
+                                    <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                    <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= htmlspecialchars($label['de'] ?? 'Journale') ?>">
+                                    <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
                                 </div>
                             </div>
                         </div>
@@ -1778,7 +1778,7 @@ $affiliation = $Settings->get('affiliation_details');
                 <div class="form-group">
                     <div>
                         <div class="form-group title-editor" id="impress-quill"><?= $impress ?></div>
-                        <textarea class="form-control hidden" name="general[impress]" id="impress"><?= htmlspecialchars($impress) ?></textarea>
+                        <textarea class="form-control hidden" name="general[impress]" id="impress"><?= e($impress) ?></textarea>
                     </div>
 
                     <script>
@@ -1798,7 +1798,7 @@ $affiliation = $Settings->get('affiliation_details');
                 <div class="form-group">
                     <div>
                         <div class="form-group title-editor" id="privacy-quill"><?= $privacy ?></div>
-                        <textarea class="form-control hidden" name="general[privacy]" id="privacy"><?= htmlspecialchars($privacy) ?></textarea>
+                        <textarea class="form-control hidden" name="general[privacy]" id="privacy"><?= e($privacy) ?></textarea>
                     </div>
                     <script>
                         quillEditor('privacy');
@@ -1830,13 +1830,13 @@ $affiliation = $Settings->get('affiliation_details');
                         <?php foreach ($links as $link): ?>
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" name="footer_links[name][]" value="<?= htmlspecialchars($link['name'] ?? '') ?>" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>">
+                                    <input type="text" class="form-control" name="footer_links[name][]" value="<?= e($link['name'] ?? '') ?>" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= htmlspecialchars($link['name_de'] ?? '') ?>" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>">
+                                    <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= e($link['name_de'] ?? '') ?>" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>">
                                 </td>
                                 <td>
-                                    <input type="url" class="form-control" name="footer_links[url][]" value="<?= htmlspecialchars($link['url'] ?? '') ?>" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>">
+                                    <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>">
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('Delete', 'Löschen') ?>"></i></button>

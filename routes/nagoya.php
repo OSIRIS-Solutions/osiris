@@ -942,7 +942,7 @@ Route::post('/crud/nagoya/evaluate-abs/([A-Za-z0-9]*)', function ($id) {
         'details'   => "<b>ABS evaluation updated for " . count($updatedCountries) . " countries.</b><br>"
             . '<ul><li>' . implode('</li><li>', array_map(function ($c) use ($DB) {
                 $name = $DB->getCountry($c['code'] ?? '', 'name');
-                return htmlspecialchars($name) . ': (' .
+                return e($name) . ': (' .
                     (isset($c['evaluation']) ? 'evaluated' : 'no evaluation') . ')';
             }, $updatedCountries)) . '</li></ul>',
     ];

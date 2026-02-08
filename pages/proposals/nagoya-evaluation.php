@@ -84,7 +84,7 @@ foreach ($countries as $c) {
                 ];
             }
         ?>
-            <div class="box" id="country-<?= htmlspecialchars($cid) ?>">
+            <div class="box" id="country-<?= e($cid) ?>">
                 <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                     <h2>
                         <i class="ph-duotone ph-globe-stand"></i>
@@ -98,7 +98,7 @@ foreach ($countries as $c) {
                     <?php if (isset($review['reviewed_by'])) { ?>
                         <small class="text-muted">
                             <?= lang('Review of countries as part of the ABS evaluation process was conducted by:', 'Die Bewertung der Länder im Rahmen des ABS-Bewertungsprozesses wurde durchgeführt von:') ?>
-                            <strong><?= htmlspecialchars($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
+                            <strong><?= e($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
                             <?= lang('on', 'am') ?> <?= format_date($review['reviewed'] ?? '') ?>
                         </small>
                     <?php } ?>
@@ -133,7 +133,7 @@ foreach ($countries as $c) {
                     </div>
                     <div>
                         <strong><?= lang('Comment', 'Kommentar') ?>:</strong><br>
-                        <span><?= nl2br(htmlspecialchars($review['comment'] ?? lang('No comment provided.', 'Kein Kommentar hinterlegt.'))) ?></span>
+                        <span><?= nl2br(e($review['comment'] ?? lang('No comment provided.', 'Kein Kommentar hinterlegt.'))) ?></span>
                     </div>
                 </div>
 
@@ -152,7 +152,7 @@ foreach ($countries as $c) {
                             <?php if (!empty($review['reviewed_by'])): ?>
                                 <p class="font-size-12 text-muted">
                                     <?= lang('Country review by', 'Länderbewertung von') ?>
-                                    <?= htmlspecialchars($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?>
+                                    <?= e($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?>
                                     <?php if (!empty($review['reviewed'])): ?>
                                         <?= lang('on', 'am') ?> <?= format_date($review['reviewed']) ?>
                                     <?php endif; ?>
@@ -173,7 +173,7 @@ foreach ($countries as $c) {
                                         <?php if (!empty($g['geo'])): ?>
                                             <tr class="mb-2">
                                                 <th><?= lang('Geographical scope', 'Geographischer Scope') ?>:</th>
-                                                <td><?= nl2br(htmlspecialchars($g['geo'])) ?></td>
+                                                <td><?= nl2br(e($g['geo'])) ?></td>
                                             </tr>
                                         <?php endif; ?>
 
@@ -182,7 +182,7 @@ foreach ($countries as $c) {
                                                 <th><?= lang('Temporal scope', 'Zeitlicher Scope') ?>:</th>
                                                 <td>
                                                     <?php if (!empty($g['temporal'])): ?>
-                                                        <?= htmlspecialchars($g['temporal']) ?>
+                                                        <?= e($g['temporal']) ?>
                                                     <?php endif; ?>
                                                     <?php if (!empty($g['temporal_ongoing'])): ?>
                                                         <em><?= lang('ongoing / planned', 'laufend / geplant') ?></em>
@@ -199,7 +199,7 @@ foreach ($countries as $c) {
                                             <tr class="mb-2">
                                                 <th><?= lang('Material scope', 'Material-Scope') ?>:</th>
                                                 <td>
-                                                    <?= htmlspecialchars(implode(', ', $mat)) ?>
+                                                    <?= e(implode(', ', $mat)) ?>
                                                 </td>
                                             </tr>
                                         <?php endif; ?>
@@ -208,7 +208,7 @@ foreach ($countries as $c) {
                                             <tr class="mb-2">
                                                 <th><?= lang('Utilization scope', 'Nutzung / Utilisation') ?>:</th>
                                                 <td>
-                                                    <?= htmlspecialchars(implode(', ', $util)) ?>
+                                                    <?= e(implode(', ', $util)) ?>
                                                 </td>
                                             </tr>
                                         <?php endif; ?>
@@ -231,7 +231,7 @@ foreach ($countries as $c) {
                                     <?php endif; ?>
                                     <?php if ($atk_details): ?>
                                         <span>
-                                            <?= nl2br(htmlspecialchars($atk_details)) ?>
+                                            <?= nl2br(e($atk_details)) ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
@@ -240,7 +240,7 @@ foreach ($countries as $c) {
                             <?php if ($notes): ?>
                                 <div>
                                     <strong><?= lang('Additional notes', 'Weitere Hinweise') ?>:</strong><br>
-                                    <?= nl2br(htmlspecialchars($notes)) ?>
+                                    <?= nl2br(e($notes)) ?>
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -248,7 +248,7 @@ foreach ($countries as $c) {
                         <hr class="my-10">
 
                         <!-- Country-level evaluation (A/B/C + rationale + permits) -->
-                        <input type="hidden" name="evaluation[<?= htmlspecialchars($cid) ?>][country_id]" value="<?= htmlspecialchars($cid) ?>">
+                        <input type="hidden" name="evaluation[<?= e($cid) ?>][country_id]" value="<?= e($cid) ?>">
 
                         <div class="form-group mb-10">
                             <label class="font-weight-bold required">
@@ -256,15 +256,15 @@ foreach ($countries as $c) {
                             </label>
                             <div class="mt-5 small">
                                 <label class="d-block">
-                                    <input type="radio" name="evaluation[<?= htmlspecialchars($cid) ?>][label]" value="A" <?= $label === 'A' ? 'checked' : '' ?>>
+                                    <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="A" <?= $label === 'A' ? 'checked' : '' ?>>
                                     <strong>A</strong> – <?= lang('in scope of EU Regulation (Nagoya Protocol)', 'im Geltungsbereich der EU-Verordnung (Nagoya-Protokoll)') ?>
                                 </label>
                                 <label class="d-block mt-5">
-                                    <input type="radio" name="evaluation[<?= htmlspecialchars($cid) ?>][label]" value="B" <?= $label === 'B' ? 'checked' : '' ?>>
+                                    <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="B" <?= $label === 'B' ? 'checked' : '' ?>>
                                     <strong>B</strong> – <?= lang('in scope of national ABS measures only', 'nur im Geltungsbereich nationaler ABS-Maßnahmen') ?>
                                 </label>
                                 <label class="d-block mt-5">
-                                    <input type="radio" name="evaluation[<?= htmlspecialchars($cid) ?>][label]" value="C" <?= $label === 'C' ? 'checked' : '' ?>>
+                                    <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="C" <?= $label === 'C' ? 'checked' : '' ?>>
                                     <strong>C</strong> – <?= lang('out of scope', 'nicht im Geltungsbereich') ?>
                                 </label>
                             </div>
@@ -281,9 +281,9 @@ foreach ($countries as $c) {
                                 ) ?>
                             </small>
                             <textarea
-                                name="evaluation[<?= htmlspecialchars($cid) ?>][rationale]"
+                                name="evaluation[<?= e($cid) ?>][rationale]"
                                 rows="3"
-                                class="form-control"><?= htmlspecialchars($eval['rationale'] ?? '') ?></textarea>
+                                class="form-control"><?= e($eval['rationale'] ?? '') ?></textarea>
                         </div>
 
                         <div class="form-group">
@@ -297,7 +297,7 @@ foreach ($countries as $c) {
                                 ) ?>
                             </small>
 
-                            <table class="table table-sm mb-5 nagoya-permits-table" data-country="<?= htmlspecialchars($cid) ?>">
+                            <table class="table table-sm mb-5 nagoya-permits-table" data-country="<?= e($cid) ?>">
                                 <thead>
                                     <tr>
                                         <th><?= lang('Permit name', 'Genehmigungsname') ?></th>
@@ -312,14 +312,14 @@ foreach ($countries as $c) {
                                             <td>
                                                 <input
                                                     type="text"
-                                                    name="evaluation[<?= htmlspecialchars($cid) ?>][permits][<?= $pi ?>][name]"
+                                                    name="evaluation[<?= e($cid) ?>][permits][<?= $pi ?>][name]"
                                                     class="form-control form-control-sm"
-                                                    value="<?= htmlspecialchars($p['name'] ?? '') ?>">
+                                                    value="<?= e($p['name'] ?? '') ?>">
                                             </td>
                                             <td>
                                                 <?php $status = $p['status'] ?? ''; ?>
                                                 <select
-                                                    name="evaluation[<?= htmlspecialchars($cid) ?>][permits][<?= $pi ?>][status]"
+                                                    name="evaluation[<?= e($cid) ?>][permits][<?= $pi ?>][status]"
                                                     class="form-control form-control-sm">
                                                     <option value=""><?= lang('– select –', '– auswählen –') ?></option>
                                                     <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
@@ -331,9 +331,9 @@ foreach ($countries as $c) {
                                             <td>
                                                 <input
                                                     type="text"
-                                                    name="evaluation[<?= htmlspecialchars($cid) ?>][permits][<?= $pi ?>][comment]"
+                                                    name="evaluation[<?= e($cid) ?>][permits][<?= $pi ?>][comment]"
                                                     class="form-control form-control-sm"
-                                                    value="<?= htmlspecialchars($p['comment'] ?? '') ?>">
+                                                    value="<?= e($p['comment'] ?? '') ?>">
                                             </td>
                                             <td class="text-right">
                                                 <button type="button" class="btn small text-danger remove-permit-row">
@@ -346,7 +346,7 @@ foreach ($countries as $c) {
                             </table>
                             <button type="button"
                                 class="btn small outline add-permit-row"
-                                data-country="<?= htmlspecialchars($cid) ?>">
+                                data-country="<?= e($cid) ?>">
                                 <i class="ph ph-plus"></i>
                                 <?= lang('Add permit', 'Genehmigung hinzufügen') ?>
                             </button>
@@ -355,7 +355,7 @@ foreach ($countries as $c) {
                         <?php if (!empty($eval['by']) && !empty($eval['at'])): ?>
                             <div class="small text-muted mt-5">
                                 <?= lang('Last evaluation for this country by', 'Letzte Bewertung für dieses Land von') ?>
-                                <?= htmlspecialchars($DB->getNameFromId($eval['by']) ?? $eval['by']) ?>
+                                <?= e($DB->getNameFromId($eval['by']) ?? $eval['by']) ?>
                                 <?= lang('on', 'am') ?> <?= format_date($eval['at']) ?>
                             </div>
                         <?php endif; ?>

@@ -62,7 +62,7 @@ $nagoya = $project['nagoya'] ?? [];
                             <?php endforeach; ?>
                         </select>
                     </td>
-                    <td><textarea name="comment[]" rows="2" class="form-control form-control-sm"><?= htmlspecialchars($r['comment'] ?? '') ?></textarea></td>
+                    <td><textarea name="comment[]" rows="2" class="form-control form-control-sm"><?= e($r['comment'] ?? '') ?></textarea></td>
                     <td>
                         <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                         <?php if (!empty($r['reviewed_by'] ?? '')) { ?>
@@ -82,7 +82,7 @@ $nagoya = $project['nagoya'] ?? [];
             <tr>
                 <td colspan="5">
                     <label for="overallRationale"><strong><?= lang('Overall rationale / comments', 'Gesamtbegründung / Kommentare') ?></strong></label>
-                    <textarea name="overallRationale" rows="4" class="form-control mb-3"><?= htmlspecialchars($nagoya['absRationale'] ?? '') ?></textarea>
+                    <textarea name="overallRationale" rows="4" class="form-control mb-3"><?= e($nagoya['absRationale'] ?? '') ?></textarea>
                 </td>
             </tr>
         </tfoot>

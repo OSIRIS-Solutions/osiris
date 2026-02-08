@@ -1022,7 +1022,7 @@ class Modules
     {
         $val = $this->form[$index] ?? $default;
         if (is_string($val)) {
-            return htmlspecialchars($val);
+            return e($val);
         }
         return $val;
     }
@@ -1271,7 +1271,7 @@ class Modules
                 // make sure that value is string
                 if (!is_string($value)) {
                     $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-                    $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                    $value = e($value);
                 }
                 echo '<input type="text" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
@@ -2072,12 +2072,12 @@ class Modules
 
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
-                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= htmlspecialchars(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= htmlspecialchars(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
-                                        <strong><?= htmlspecialchars($ev['title']) ?></strong><br>
+                                    <a onclick="selectEvent('<?= $ev['_id'] ?>', '<?= e(addslashes($ev['title'])) ?>', '<?= $ev['start'] ?>', '<?= $ev['end'] ?>', '<?= e(addslashes($ev['location'] ?? '')) ?>', '<?= $ev['country'] ?? '' ?>'); return false;">
+                                        <strong><?= e($ev['title']) ?></strong><br>
                                         <small class="text-muted">
                                             <?= date('d.m.Y', strtotime($ev['start'])) ?> - <?= date('d.m.Y', strtotime($ev['end'])) ?>
                                             <?php if (!empty($ev['location'])) { ?>
-                                                | <?= htmlspecialchars($ev['location']) ?>
+                                                | <?= e($ev['location']) ?>
                                             <?php } ?>
                                         </small>
                                     </a>

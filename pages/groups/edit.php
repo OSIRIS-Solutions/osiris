@@ -45,7 +45,7 @@ function val($index, $default = '')
 {
     $val = $GLOBALS['form'][$index] ?? $default;
     if (is_string($val)) {
-        return htmlspecialchars($val);
+        return e($val);
     }
     return $val;
 }
@@ -273,7 +273,7 @@ function sel($index, $value)
                 $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
                 ?>
 
-                <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= htmlspecialchars(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
+                <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= e(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
                 <small class="text-muted"><?= lang('Separate multiple synonyms with semi-colons.', 'Mehrere Synonyme mit Semikolons trennen.') ?></small>
             </div>
 
@@ -325,11 +325,11 @@ function sel($index, $value)
                             <div class="col-md-6">
                                 <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                                 <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= htmlspecialchars($con['title'] ?? '') ?>" placeholder="Title" required>
+                                    <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
                                     <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('Title', 'Titel') ?></label>
                                 </div>
                                 <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= htmlspecialchars($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
+                                    <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
                                     <label for="values[research][<?= $i ?>][subtitle]"><?= lang('Subtitle', 'Untertitel') ?></label>
                                 </div>
                                 <div class="form-group mb-0">
@@ -344,11 +344,11 @@ function sel($index, $value)
                             <div class="col-md-6">
                                 <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                                 <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= htmlspecialchars($con['title_de'] ?? '') ?>" placeholder="Title">
+                                    <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
                                     <label for="values[research][<?= $i ?>][title_de]"><?= lang('Title', 'Titel') ?></label>
                                 </div>
                                 <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= htmlspecialchars($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
+                                    <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
                                     <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('Subtitle', 'Untertitel') ?></label>
                                 </div>
                                 <div class="form-group mb-0">

@@ -271,7 +271,7 @@ krsort($rows);
                                     <tr>
                                         <td>
                                             <a href="<?= $url ?>">
-                                                <?= htmlspecialchars($p['name']) ?>
+                                                <?= e($p['name']) ?>
                                             </a>
                                         </td>
                                         <td class="text-right">

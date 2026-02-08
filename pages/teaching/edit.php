@@ -20,7 +20,7 @@ function val($index, $default = '')
 {
     $val = $GLOBALS['form'][$index] ?? $default;
     if (is_string($val)) {
-        return htmlspecialchars($val);
+        return e($val);
     }
     if ($val instanceof MongoDB\Model\BSONArray) {
         return implode(',', DB::doc2Arr($val));
@@ -148,8 +148,8 @@ include_once BASEPATH . "/header-editor.php";
                         $org = $osiris->organizations->findOne(['_id' => DB::to_ObjectID($o['_id'])], ['projection' => ['_id' => 0, 'name' => 1, 'location' => 1, 'id' => ['$toString' => '$_id']]]);
                         if ($org) {
                     ?>
-                            <a class="badge primary" onclick='selectOrg("<?= $org["id"] ?>", "<?= htmlspecialchars($org["name"]) ?>", "<?= htmlspecialchars($org["location"]) ?>", "organization"); return false;'>
-                                <?= htmlspecialchars($org['name']) ?>
+                            <a class="badge primary" onclick='selectOrg("<?= $org["id"] ?>", "<?= e($org["name"]) ?>", "<?= e($org["location"]) ?>", "organization"); return false;'>
+                                <?= e($org['name']) ?>
                             </a>
                     <?php
                         }

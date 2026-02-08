@@ -388,7 +388,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                         return $f['type'] !== 'boolean' && $f['type'] !== 'list' && !str_starts_with($f['id'], 'authors.');
                     });
                     foreach ($fields_add as $f) { ?>
-                        <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                        <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -428,7 +428,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     <label for="aggregate"><?= lang('First aggregation', 'Erste Aggregation') ?></label>
                     <select name="values[*][aggregate]" required class="form-control step-aggregate">
                         <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -437,7 +437,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     <select name="values[*][aggregate2]" class="form-control step-aggregate2">
                         <option value=""><?= lang('Without second aggregation', 'Ohne zweite Aggregation') ?></option>
                         <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -594,7 +594,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
         <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
         <?php foreach ($fields_sort as $f) { ?>
-            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
         <?php } ?>
       </select>
       <select class="form-control small w-150 flex-grow-0" name="${namePrefix}[${idx}][dir]" required>

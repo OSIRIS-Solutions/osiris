@@ -50,7 +50,7 @@ $variables = $report['variables'] ?? [];
                     <tr>
                         <td>
                             <span class="key"><?= ($var['label'] ?? $var['key']) ?></span>
-                            <input type="<?= ($var['type'] ?? 'text') ?>" class="form-control" value="<?= htmlspecialchars($_GET['var'][$var['key']] ?? ($var['default'] ?? '')) ?>" name="var[<?= ($var['key']) ?>]">
+                            <input type="<?= ($var['type'] ?? 'text') ?>" class="form-control" value="<?= e($_GET['var'][$var['key']] ?? ($var['default'] ?? '')) ?>" name="var[<?= ($var['key']) ?>]">
                         </td>
                     </tr>
                 <?php } ?>

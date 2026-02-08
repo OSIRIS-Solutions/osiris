@@ -31,11 +31,11 @@ if (!empty($form ?? []) && isset($form['_id'])) {
     <form action="<?= $action ?>" method="post" id="conference-form">
 
         <div class="form-group floating-form">
-            <input type="text" name="values[title]" required class="form-control" value="<?= $form['title'] ?? '' ?>" placeholder="title">
+            <input type="text" name="values[title]" required class="form-control" value="<?= e($form['title'] ?? '') ?>" placeholder="title">
             <label for="title" class="required"><?= lang('(Short) Title', 'Kurztitel') ?></label>
         </div>
         <div class="form-group floating-form">
-            <input type="text" name="values[title_full]" class="form-control" value="<?= $form['title_full'] ?? '' ?>" placeholder="title_full">
+            <input type="text" name="values[title_full]" class="form-control" value="<?= e($form['title_full'] ?? '') ?>" placeholder="title_full">
             <label for="title"><?= lang('Full Title', 'Kompletter Titel') ?></label>
         </div>
 
@@ -78,7 +78,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
-                <input type="text" name="values[location]" required class="form-control" value="<?= $form['location'] ?? '' ?>" placeholder="location">
+                <input type="text" name="values[location]" required class="form-control" value="<?= e($form['location'] ?? '') ?>" placeholder="location">
                 <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
             </div>
             <div class="col floating-form">
@@ -95,7 +95,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         </div>
 
         <div class="form-group floating-form">
-            <input type="url" name="values[url]" class="form-control" value="<?= $form['url'] ?? '' ?>" placeholder="url">
+            <input type="url" name="values[url]" class="form-control" value="<?= e($form['url'] ?? '') ?>" placeholder="url">
             <label for="url"><?= lang('URL', 'URL') ?></label>
         </div>
 

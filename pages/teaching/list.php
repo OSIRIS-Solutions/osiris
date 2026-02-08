@@ -76,17 +76,17 @@ $teaching = $osiris->teaching->aggregate([
                         }
                     }
                 } else {
-                    $affiliation = htmlspecialchars($module['affiliation']);
+                    $affiliation = e($module['affiliation']);
                 }
             ?>
                 <tr>
                     <th>
                         <a href="<?= ROOTPATH ?>/teaching/view/<?= strval($module['_id']) ?>">
-                            <?= htmlspecialchars($module['module']) ?>
+                            <?= e($module['module']) ?>
                         </a>
                     </th>
                     <td>
-                        <?= htmlspecialchars($module['title']) ?>
+                        <?= e($module['title']) ?>
                     </td>
                     <td>
                         <?= $affiliation ?>

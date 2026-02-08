@@ -310,14 +310,14 @@ $active = function ($field) use ($data_fields) {
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
                                 <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= e($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
                                 <?php if (in_array('position', $ldap_fields)) {
                                     echo $ldap_msg;
                                 } ?>
                             </div>
                             <div class="col-md-6">
                                 <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= e($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
                                 <?php if (in_array('position', $ldap_fields)) {
                                     echo $ldap_msg;
                                 } ?>
@@ -406,12 +406,12 @@ $active = function ($field) use ($data_fields) {
                 </div>
             <?php } ?>
 
-                <p class="text-danger">
-                    <?= lang(
-                        'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
-                        'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
-                    ) ?>
-                </p>
+            <p class="text-danger">
+                <?= lang(
+                    'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
+                    'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
+                ) ?>
+            </p>
             <?php if ($active('public_image')) { ?>
                 <!-- show profile picture -->
                 <div class="custom-checkbox mb-20">
@@ -422,7 +422,7 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('public_other_activities')) { ?>
                 <!-- show profile picture -->
-                 <input type="hidden" name="values[public_other_activities]" value="false">
+                <input type="hidden" name="values[public_other_activities]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_other_activities" value="true" name="values[public_other_activities]" <?= ($data['public_other_activities'] ?? true) ? 'checked' : '' ?>>
                     <label for="public_other_activities"><?= lang('Show other activities (not publications) as a separate section in the profile', 'Zeige sonstige Aktivitäten (nicht Publikationen) als eigene Sektion im Profil') ?></label>
@@ -431,7 +431,7 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('public_teaching')) { ?>
                 <!-- show profile picture -->
-                 <input type="hidden" name="values[public_teaching]" value="false">
+                <input type="hidden" name="values[public_teaching]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_teaching" value="true" name="values[public_teaching]" <?= ($data['public_teaching'] ?? true) ? 'checked' : '' ?>>
                     <label for="public_teaching"><?= lang('Show teaching activities as a separate section in the profile', 'Zeige Lehraktivitäten als eigene Sektion im Profil') ?></label>
@@ -439,10 +439,10 @@ $active = function ($field) use ($data_fields) {
             <?php } ?>
 
             <?php if ($active('public_email')) { ?>
-            <div class="custom-checkbox mb-20">
-                <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
-                <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
-            </div>
+                <div class="custom-checkbox mb-20">
+                    <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
+                    <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
+                </div>
             <?php } ?>
 
             <div class="custom-checkbox mb-20">

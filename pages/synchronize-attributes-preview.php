@@ -74,9 +74,9 @@ if (is_string($result)) {
             <?php foreach ($ldap_fields as $osiris_field => $ldap_key) {
             ?>
                 <th>
-                    <?= htmlspecialchars($osiris_field) ?>
+                    <?= e($osiris_field) ?>
                     <br>
-                    <code><?= htmlspecialchars($ldap_key) ?></code>
+                    <code><?= e($ldap_key) ?></code>
                 </th>
             <?php } ?>
         </tr>

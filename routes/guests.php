@@ -322,7 +322,7 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
 
     if (isset($_FILES["file"])) {
 
-        $filename = htmlspecialchars(basename($_FILES["file"]["name"]));
+        $filename = e(basename($_FILES["file"]["name"]));
         $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["file"]["size"];
         $filepath = ROOTPATH . "/uploads/$id/$filename";

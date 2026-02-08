@@ -1274,9 +1274,9 @@ class Document extends Settings
                 if ($this->usecase == 'list') {
                     return '
                         <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
-                            <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                            <h6 class="m-0">' . e($org['name']) . '</h6>
                             <ul class="horizontal mb-0">
-                                <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                <li> <i class="ph ph-map-pin-area"></i> ' . e($org['location']) . '</li>
                                 <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
                             </ul>
                         </a>';
@@ -1298,16 +1298,16 @@ class Document extends Settings
                     if ($this->usecase == 'list') {
                         $orgs[] = '
                             <a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '" class="module ">
-                                <h6 class="m-0">' . htmlspecialchars($org['name']) . '</h6>
+                                <h6 class="m-0">' . e($org['name']) . '</h6>
                                 <ul class="horizontal mb-0">
-                                    <li> <i class="ph ph-map-pin-area"></i> ' . htmlspecialchars($org['location']) . '</li>
+                                    <li> <i class="ph ph-map-pin-area"></i> ' . e($org['location']) . '</li>
                                     <li>' . Organization::getIcon($org['type'] ?? '') .  ' ' . ($org['type'] ?? '') . '</li>
                                 </ul>
                             </a>';
                     } elseif ($this->usecase == 'web') {
-                        $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . htmlspecialchars($org['name']) . '</a>';
+                        $orgs[] = '<a href="' . ROOTPATH . '/organizations/view/' . $org['_id'] . '">' . e($org['name']) . '</a>';
                     } else {
-                        $orgs[] = htmlspecialchars($org['name']);
+                        $orgs[] = e($org['name']);
                     }
                 }
                 if (empty($orgs)) return $default;

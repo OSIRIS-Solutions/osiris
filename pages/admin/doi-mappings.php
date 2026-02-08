@@ -92,7 +92,7 @@ $fields = [
         <?php
         foreach ($type_options as $type_id => $type_name) {
         ?>
-            <option value="<?= htmlspecialchars($type_id) ?>"><?= htmlspecialchars($type_name) ?></option>
+            <option value="<?= e($type_id) ?>"><?= e($type_name) ?></option>
         <?php } ?>
     </select>
     <div class="input-group-append">
@@ -130,7 +130,7 @@ $fields = [
                 ?>
                     <tr>
                         <td>
-                            <?= htmlspecialchars($field) ?>
+                            <?= e($field) ?>
                         </td>
                         <td>
                             <select name="general[doi_mappings][<?= $key ?>]" class="form-control">
@@ -139,7 +139,7 @@ $fields = [
                                 foreach ($type_options as $type_id => $type_name) {
                                     $selected = (isset($mappings[$key]) && $mappings[$key] === $type_id) ? 'selected' : '';
                                 ?>
-                                    <option value="<?= htmlspecialchars($type_id) ?>" <?= $selected ?>><?= htmlspecialchars($type_name) ?></option>
+                                    <option value="<?= e($type_id) ?>" <?= $selected ?>><?= e($type_name) ?></option>
                                 <?php } ?>
                             </select>
                         </td>

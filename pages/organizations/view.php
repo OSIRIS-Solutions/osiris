@@ -462,11 +462,11 @@ if ($edit_perm) { ?>
                     <tr>
                         <td>
                             <a href="<?= ROOTPATH ?>/teaching/view/<?= strval($module['_id']) ?>">
-                                <?= htmlspecialchars($module['module']) ?>
+                                <?= e($module['module']) ?>
                             </a>
                         </td>
                         <td>
-                            <?= htmlspecialchars($module['title']) ?>
+                            <?= e($module['title']) ?>
                         </td>
                         <td>
                             <?php if (isset($module['contact_person'])) { ?>

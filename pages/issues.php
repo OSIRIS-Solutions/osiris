@@ -209,7 +209,7 @@ if (array_sum($a) === 0) {
                     <div class="title">
                         <?= lang('Reason for rejection', 'Ablehnungsgrund') ?>
                     </div>
-                    <?= nl2br(htmlspecialchars($comment)) ?>
+                    <?= nl2br(e($comment)) ?>
                 </blockquote>
                 </p>
 
