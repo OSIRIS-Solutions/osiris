@@ -1209,7 +1209,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $Format->usecase = "list";
 
     // TODO: configurable
-    $hidden_modules = ['authors', "editors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
+    $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
     $fields = [];
     foreach ($selected as $module) {
         if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
