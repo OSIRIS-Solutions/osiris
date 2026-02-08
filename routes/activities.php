@@ -240,6 +240,7 @@ Route::get('/activities/(doi|pubmed)/(.*)', function ($type, $identifier) {
     }
     echo "$type $identifier not found.";
 });
+
 Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
@@ -288,9 +289,70 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
                 <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
             </div>
         </div>
-<?php
+    <?php
     } else {
         include BASEPATH . "/pages/activity.php";
+    }
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+
+Route::get('/activities/new-view/([a-zA-Z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+    include_once BASEPATH . "/php/Modules.php";
+    include_once BASEPATH . "/php/Vocabulary.php";
+
+    $user = $_SESSION['username'];
+    $id = $DB->to_ObjectID($id);
+    $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
+
+    if (!empty($activity)) {
+        $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
+        $locked = $activity['locked'] ?? false;
+        if ($doc['type'] == 'publication' && isset($doc['journal'])) {
+            // fix old journal_ids
+            if (isset($doc['journal_id']) && !preg_match("/^[0-9a-fA-F]{24}$/", $doc['journal_id'])) {
+                $doc['journal_id'] = null;
+                $osiris->activities->updateOne(
+                    ['_id' => $activity['_id']],
+                    ['$unset' => ['journal_id' => '']]
+                );
+            }
+        }
+        renderActivities(['_id' =>  $activity['_id']]);
+        $user_activity = $DB->isUserActivity($doc, $user);
+
+        $Format = new Document;
+        $Format->setDocument($doc);
+
+        $name = $activity['title'] ?? $id;
+        // if (strlen($name) > 20)
+        //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
+        // $name = ucfirst($activity['type']) . ": " . $name;
+        $breadcrumb = [
+            ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+            ['name' => $name]
+        ];
+        if ($Format->hasSchema()) {
+            $additionalHead = $Format->schema();
+        }
+    }
+    $no_container = true;
+    include BASEPATH . "/header.php";
+
+    if (empty($activity)) { ?>
+        <div class="content-container">
+            <div class="alert alert-danger">
+                <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
+            </div>
+        </div>
+<?php
+    } else {
+        $Modules = new Modules($doc);
+        $Vocabulary = new Vocabulary();
+        include BASEPATH . "/pages/activities/new-view.php";
     }
     include BASEPATH . "/footer.php";
 }, 'login');
@@ -1307,7 +1369,7 @@ Route::post('/crud/activities/connect', function () {
         $target = $source;
         $source = $temp;
     }
-                
+
     $data = [
         'target_id' => $DB->to_ObjectID($target),
         'source_id' => $DB->to_ObjectID($source),
@@ -1365,4 +1427,3 @@ Route::post('/crud/activities/disconnect', function () {
         'deleted' => $deletedCount
     ]);
 });
-

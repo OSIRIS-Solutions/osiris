@@ -18,7 +18,8 @@ class Modules
     private $conference = array();
     private $fields = array();
 
-    public $all_modules = array(
+   
+public $all_modules = array(
         "authors" => [
             "fields" => ["authors" => [
                 [
@@ -47,7 +48,8 @@ class Modules
             "description" => "A compressed module for authors, with 'tag-like' input fields for authors. Supports multiple authors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
             "description_de" => "Ein komprimiertes Modul für Autoren, mit 'tag-ähnlichen' Eingabefeldern für Autoren. Unterstützt mehrere Autoren, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick.",
             "width" => 0,
-            "tags" => ['authors']
+            "tags" => ['authors'],
+            "section" => "authors",
         ],
         "author-table" => [
             "fields" => ["authors" => [
@@ -77,7 +79,8 @@ class Modules
             "description" => "A comprehensive table for authors, with individual input fields for authors, including first an last name, position, username and an affiliation checkbox. Supports multiple authors, drag-and-drop, and auto-suggest on username field.",
             "description_de" => "Eine umfassende Tabelle für Autoren, mit individuellen Eingabefeldern für Autoren, einschließlich Vor- und Nachname, Position, Benutzername und einem Affiliation-Checkbox. Unterstützt mehrere Autoren, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld.",
             "width" => 0,
-            "tags" => ['authors']
+            "tags" => ['authors'],
+            "section" => "authors",
         ],
         "book-series" => [
             "fields" => ["series" => 'Book Series on Open Source Systems'],
@@ -88,7 +91,8 @@ class Modules
             "description" => "A field for the book series, where the publication is part of.",
             "description_de" => "Ein Feld für die Buchreihe, zu der die Publikation gehört.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "book-title" => [
             "fields" => ["book" => 'Research Information Systems'],
@@ -99,7 +103,8 @@ class Modules
             "description" => "A field for the book title, where the publication is part of.",
             "description_de" => "Ein Feld für den Buchtitel, zu dem die Publikation gehört.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "city" => [
             "fields" => ["city" => 'Helmstedt, Deutschland'],
@@ -110,7 +115,8 @@ class Modules
             "description" => "A field for a city, e.g for the publisher of a book or for a conference location.",
             "description_de" => "Ein Feld für eine Stadt, z.B. für den Verlag eines Buches oder für einen Konferenzort.",
             "width" => 6,
-            "tags" => ['general', 'location']
+            "tags" => ['general', 'location'],
+            "section" => "locations",
         ],
         "conference" => [
             "fields" => ["conference" => '1st CRIS Conference'],
@@ -121,7 +127,8 @@ class Modules
             "description" => "A field for the name of a conference/event.",
             "description_de" => "Ein Feld für den Namen einer Konferenz/Veranstaltung.",
             "width" => 6,
-            "tags" => ['event']
+            "tags" => ['event'],
+            "section" => "events",
         ],
         "correction" => [
             "fields" => ["correction" => true],
@@ -132,7 +139,8 @@ class Modules
             "description" => "Checkbox for a correction flag.",
             "description_de" => "Checkbox für eine Korrekturmarkierung.",
             "width" => 12,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "date-range" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => ["year" => 2022, "month" => 9, "day" => 8]],
@@ -143,7 +151,8 @@ class Modules
             "description" => "A field for a date range, e.g. for a event. <b>Important</b>: If the end date is not set, the date is assumed to be only one day! If you want an ongoing event, please use the 'date-range-ongoing' module.",
             "description_de" => "Ein Feld für einen Zeitraum, z.B. für eine Konferenz. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als nur ein Tag angenommen! Wenn Sie ein laufendes Ereignis möchten, verwenden Sie bitte das Modul 'date-range-ongoing'.",
             "width" => 6,
-            "tags" => ['date', 'important']
+            "tags" => ['date', 'important'],
+            "section" => "dates",
         ],
         "date-range-ongoing" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => null],
@@ -154,7 +163,8 @@ class Modules
             "description" => "A field for a possibly ongoing date range, e.g. for a membership. <b>Important</b>: If the end date is not set, the date is assumed to be ongoing! If you want a fixed date range, please use the 'date-range' module.",
             "description_de" => "Ein Feld für einen möglicherweise laufenden Zeitraum, z.B. für eine Mitgliedschaft. <b>Wichtig</b>: Wenn das Enddatum nicht gesetzt ist, wird das Datum als laufend angenommen! Wenn Sie einen festen Zeitraum möchten, verwenden Sie bitte das Modul 'date-range'.",
             "width" => 6,
-            "tags" => ['date', 'important']
+            "tags" => ['date', 'important'],
+            "section" => "dates",
         ],
         "date" => [
             "fields" => ["year" => 2023, "month" => 5, "day" => 4],
@@ -165,7 +175,8 @@ class Modules
             "description" => "A field for a date, divided into year, month and day. A shortcut button for today's date is available.",
             "description_de" => "Ein Feld für ein Datum, aufgeteilt in Jahr, Monat und Tag. Ein Shortcut-Button für das heutige Datum ist verfügbar.",
             "width" => 12,
-            "tags" => ['date', 'important']
+            "tags" => ['date', 'important'],
+            "section" => "dates",
         ],
         "details" => [
             "fields" => ["details" => "Weitere Details"],
@@ -176,7 +187,8 @@ class Modules
             "description" => "A field for additional details, e.g. for a grant.",
             "description_de" => "Ein Feld für weitere Details, z.B. für ein Stipendium.",
             "width" => 6,
-            "tags" => ['general']
+            "tags" => ['general'],
+            "section" => "others",
         ],
         "doctype" => [
             "fields" => ["doc_type" => 'White Paper'],
@@ -187,7 +199,8 @@ class Modules
             "description" => "A field for the document type, e.g. for a report.",
             "description_de" => "Ein Feld für den Dokumententyp, z.B. für einen Bericht.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "doi" => [
             "fields" => ["doi" => '10.1234/idk/invalid'],
@@ -198,7 +211,8 @@ class Modules
             "description" => "A field for the Digital Object Identifier (DOI) of a publication. This field is used to uniquely identify a publication.",
             "description_de" => "Ein Feld für den Digital Object Identifier (DOI) einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
             "width" => 6,
-            "tags" => ['important', 'publication']
+            "tags" => ['important', 'publication'],
+            "section" => "key",
         ],
         "edition" => [
             "fields" => ["edition" => 2],
@@ -209,7 +223,8 @@ class Modules
             "description" => "A field for the edition of a publication, e.g. for a book.",
             "description_de" => "Ein Feld für die Auflage einer Publikation, z.B. für ein Buch.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "editor" => [
             "fields" => ["editors" => [
@@ -239,7 +254,8 @@ class Modules
             "description" => "A compressed module for editors, with 'tag-like' input fields for editors. Supports multiple editors, drag-and-drop, auto-suggest and affiliation-flagging via double click.",
             "description_de" => "Ein komprimiertes Modul für Herausgeber, mit 'tag-ähnlichen' Eingabefeldern für Herausgeber. Unterstützt mehrere Herausgeber, Drag-and-Drop, Auto-Suggest und Affiliation-Flagging per Doppelklick.",
             "width" => 12,
-            "tags" => ['authors', 'publication']
+            "tags" => ['authors', 'publication'],
+            "section" => "authors",
         ],
         "editorial" => [
             "fields" => ["editor_type" => 'Guest Editor'],
@@ -250,7 +266,8 @@ class Modules
             "description" => "A field for the editorial type, e.g. for a special issue.",
             "description_de" => "Ein Feld für den Herausgebertyp, z.B. für eine Sonderausgabe.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "event-select" => [
             "fields" => [],
@@ -261,7 +278,8 @@ class Modules
             "description" => "A field for selecting an event that has been entered in the system. If the user clicks on an event, date, loation and event name are automatically filled in.",
             "description_de" => "Ein Feld zum Auswählen einer Veranstaltung, die bereits im System erfasst wurde. Wenn ein:e Benutzer:in auf eine Veranstaltung klickt, werden Datum, Ort und Veranstaltungsname automatisch ausgefüllt.",
             "width" => 0,
-            "tags" => ['event', 'modificator']
+            "tags" => ['event', 'modificator'],
+            "section" => "",
         ],
         "funding_type" => [
             "fields" => ["funding_type" => 'Third-Party Funded'],
@@ -272,7 +290,8 @@ class Modules
             "description" => "A field for the type of financing, e.g., for a scholarship. The values are managed via the vocabulary and are identical to the values from the data field in projects.",
             "description_de" => "Ein Feld für die Art der Finanzierung, z.B. für ein Stipendium. Die Werte werden über das Vokabular verwaltet und sind identisch zu den Werten aus dem Datenfeld in Projekten.",
             "width" => 6,
-            "tags" => ['general']
+            "tags" => ['general'],
+            "section" => "others",
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -284,7 +303,8 @@ class Modules
             "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
             "width" => 6,
             "tags" => ['people'],
-            "show" => false
+            "show" => false,
+            "section" => "people",
         ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
@@ -295,7 +315,8 @@ class Modules
             "description" => "A field for the category of a guest, can be one of the following: guest scientist, lecture internship, student internship, other.",
             "description_de" => "Ein Feld für die Kategorie eines Gastes, kann eine der folgenden sein: Gastwissenschaftler:in, Pflichtpraktikum im Rahmen des Studium, Schülerpraktikum, Sonstiges.",
             "width" => 6,
-            "tags" => ['people']
+            "tags" => ['people'],
+            "section" => "people",
         ],
         "gender" => [
             "fields" => ["gender" => 'f'],
@@ -306,7 +327,8 @@ class Modules
             "description" => "A field to select the gender of a person. Can be one of the following: male, female, non-binary, not specified.",
             "description_de" => "Ein Feld zur Auswahl des Geschlechts einer Person. Kann eines der folgenden sein: männlich, weiblich, divers, nicht spezifiziert.",
             "width" => 6,
-            "tags" => ['people']
+            "tags" => ['people'],
+            "section" => "people",
         ],
         "nationality" => [
             "fields" => ["country" => 'DE'],
@@ -317,7 +339,8 @@ class Modules
             "description" => "A synonym for the 'country' field, used for persons.",
             "description_de" => "Ein Synonym für das Feld 'Land', das für Personen verwendet wird.",
             "width" => 6,
-            "tags" => ['people', 'location']
+            "tags" => ['people', 'location'],
+            "section" => "people",
         ],
         "country" => [
             "fields" => ["country" => 'DE'],
@@ -328,7 +351,8 @@ class Modules
             "description" => "A field for a country, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für ein Land, das aus einer Liste ausgewählt werden kann und als zweistelliger ISO-Ländercode gespeichert wird.",
             "width" => 6,
-            "tags" => ['location']
+            "tags" => ['location'],
+            "section" => "locations",
         ],
         "countries" => [
             "fields" => ["countries" => ['DE', 'AT', 'CH']],
@@ -339,7 +363,8 @@ class Modules
             "description" => "A field for a list of countries, that can be selected from a list and is saved as a two-letter ISO country code.",
             "description_de" => "Ein Feld für eine Liste von Ländern, die aus einer Liste ausgewählt werden können und als zweistelliger ISO-Ländercode gespeichert werden.",
             "width" => 6,
-            "tags" => ['location']
+            "tags" => ['location'],
+            "section" => "locations",
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
@@ -350,7 +375,8 @@ class Modules
             "description" => "A field for the abstract, summarizing an activity.",
             "description_de" => "Ein Feld für die Zusammenfassung, die eine Aktivität zusammenfasst.",
             "width" => 0,
-            "tags" => ['publication', 'important']
+            "tags" => ['publication', 'important'],
+            "section" => "summary",
         ],
         "isbn" => [
             "fields" => ["isbn" => '979-8716615502'],
@@ -361,7 +387,8 @@ class Modules
             "description" => "A field for the International Standard Book Number (ISBN) of a publication. This field is used to uniquely identify a book.",
             "description_de" => "Ein Feld für die Internationale Standardbuchnummer (ISBN) einer Publikation. Dieses Feld wird verwendet, um ein Buch eindeutig zu identifizieren.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "key",
         ],
         "issn" => [
             "fields" => ["issn" => ["1362-4962", "0305-1048"]],
@@ -372,7 +399,8 @@ class Modules
             "description" => "A field for the International Standard Serial Number (ISSN) of a publication. This field is used to uniquely identify a journal. May contain multiple ISSNs, separated by comma.",
             "description_de" => "Ein Feld für die Internationale Standardnummer für fortlaufende Sammelwerke (ISSN) einer Publikation. Dieses Feld wird verwendet, um eine Zeitschrift eindeutig zu identifizieren. Kann mehrere ISSNs enthalten, die durch Komma getrennt sind.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "issue" => [
             "fields" => ["issue" => "D1"],
@@ -383,7 +411,8 @@ class Modules
             "description" => "A field for the issue of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für das Heft einer Publikation, z.B. für eine Zeitschrift.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "iteration" => [
             "fields" => ["iteration" => "annual"],
@@ -394,7 +423,8 @@ class Modules
             "description" => "A field for the iteration of an event, e.g. for a conference. Possible values are: continously or once.",
             "description_de" => "Ein Feld für die Häufigkeit einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: kontinuierlich oder einmalig.",
             "width" => 6,
-            "tags" => ['event']
+            "tags" => ['event'],
+            "section" => "events",
         ],
         "journal" => [
             "fields" => ["journal" => 'Information Systems Research', "journal_id" => null],
@@ -405,7 +435,8 @@ class Modules
             "description" => "A field for selecting a journal from the database. If the journal does not exist yet, the user will be prompted to select one from an online catalogue that will be then saved into the database.",
             "description_de" => "Ein Feld zum Auswählen eines Journals (Zeitschrift) aus der Datenbank. Wenn das Journal noch nicht existiert, wird der Benutzer aufgefordert, eines aus einem Online-Katalog auszuwählen, das dann in die Datenbank gespeichert wird.",
             "width" => 12,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "lecture-invited" => [
             "fields" => ["invited_lecture" => true],
@@ -416,7 +447,8 @@ class Modules
             "description" => "Checkbox for an invited lecture flag.",
             "description_de" => "Checkbox für eine eingeladene Vortragsmarkierung.",
             "width" => 6,
-            "tags" => ['event']
+            "tags" => ['event'],
+            "section" => "events",
         ],
         "lecture-type" => [
             "fields" => ["lecture_type" => 'short'],
@@ -427,7 +459,8 @@ class Modules
             "description" => "A field for the length of a lecture, e.g. for a conference. Possible values are: short, medium, long.",
             "description_de" => "Ein Feld für die Länge eines Vortrags, z.B. für eine Konferenz. Mögliche Werte sind: kurz, mittel, lang.",
             "width" => 6,
-            "tags" => ['event']
+            "tags" => ['event'],
+            "section" => "events",
         ],
         "license" => [
             "fields" => ["license" => 'MIT'],
@@ -438,7 +471,8 @@ class Modules
             "description" => "A field for the license, e.g. for software.",
             "description_de" => "Ein Feld für die Lizenz, z.B. für Software.",
             "width" => 6,
-            "tags" => ['software', 'publication']
+            "tags" => ['software', 'publication'],
+            "section" => "key",
         ],
         "link" => [
             "fields" => ["link" => 'https://osiris-app.de'],
@@ -449,7 +483,8 @@ class Modules
             "description" => "A field for a link, e.g. for an event.",
             "description_de" => "Ein Feld für einen Link, z.B. für eine Veranstaltung.",
             "width" => 6,
-            "tags" => ['general', 'important']
+            "tags" => ['general', 'important'],
+            "section" => "key",
         ],
         "location" => [
             "fields" => ["location" => 'Braunschweig, Germany'],
@@ -460,7 +495,8 @@ class Modules
             "description" => "A field for the more general location, e.g. for an event. If you want to specify a city an country, please use the 'city' and 'country' modules.",
             "description_de" => "Ein Feld für den allgemeineren Ort, z.B. für eine Veranstaltung. Wenn Sie eine Stadt und ein Land angeben möchten, verwenden Sie bitte die Module 'city' und 'country'.",
             "width" => 6,
-            "tags" => ['location']
+            "tags" => ['location'],
+            "section" => "locations",
         ],
         "magazine" => [
             "fields" => ["magazine" => 'Apothekenumschau'],
@@ -471,7 +507,8 @@ class Modules
             "description" => "A field for the magazine or publication venue, where the publication is part of. Not standardized and typically used if no journal is given.",
             "description_de" => "Ein Feld für das Magazin oder den Veröffentlichungsort, zu dem die Publikation gehört. Nicht standardisiert und typischerweise verwendet, wenn keine Zeitschrift angegeben ist.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
@@ -482,7 +519,8 @@ class Modules
             "description" => "Checkbox for an online ahead of print flag. This flag is used to indicate that a publication is available online before it is published in a journal. Checking will lead to a frequent reminder to update the publication status.",
             "description_de" => "Checkbox für eine Online Ahead Of Print-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation online verfügbar ist, bevor sie in einer Zeitschrift veröffentlicht wird. Das Ankreuzen führt zu einer gelegentlichen Erinnerung, den Publikationsstatus zu überprüfen.",
             "width" => 12,
-            "tags" => ['publication', 'important']
+            "tags" => ['publication', 'important'],
+            "section" => "bibliography",
         ],
         "openaccess" => [
             "fields" => ["open_access" => true],
@@ -493,7 +531,8 @@ class Modules
             "description" => "Checkbox for an open access flag. This flag is used to indicate that a publication is freely available online. Important: If the actual open access status is important, please use the 'openaccess-status' module.",
             "description_de" => "Checkbox für eine Open-Access-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation frei online verfügbar ist. Wichtig: Wenn der tatsächliche Open-Access-Status wichtig ist, verwenden Sie bitte das Modul 'openaccess-status'.",
             "width" => 12,
-            "tags" => ['publication', 'important']
+            "tags" => ['publication', 'important'],
+            "section" => "key",
         ],
         "openaccess-status" => [
             "fields" => ["open_access" => true, "oa_status" => 'gold'],
@@ -504,7 +543,8 @@ class Modules
             "description" => "A field for the open access status of a publication. Possible values are: gold, green, hybrid, bronze, closed.",
             "description_de" => "Ein Feld für den Open-Access-Status einer Publikation. Mögliche Werte sind: gold, green, hybrid, bronze, closed.",
             "width" => 6,
-            "tags" => ['publication', 'important']
+            "tags" => ['publication', 'important'],
+            "section" => "key",
         ],
         "pages" => [
             "fields" => ["pages" => 'D1531-8'],
@@ -515,7 +555,8 @@ class Modules
             "description" => "A field for the pages of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für die Seiten einer Publikation, z.B. für eine Zeitschrift.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "peer-reviewed" => [
             "fields" => ["peer-reviewed" => true],
@@ -526,7 +567,8 @@ class Modules
             "description" => "Checkbox for a peer-reviewed flag. This flag is used to indicate that a publication has been peer-reviewed.",
             "description_de" => "Checkbox für eine Peer-Reviewed-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation peer-reviewed wurde.",
             "width" => 6,
-            "tags" => ['publication', 'important']
+            "tags" => ['publication', 'important'],
+            "section" => "key",
         ],
         "person" => [
             "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
@@ -537,7 +579,8 @@ class Modules
             "description" => "A fieldset for a person, including name, affiliation and academic title.",
             "description_de" => "Ein Feldset für eine Person, einschließlich Name, Affiliation und akademischem Titel.",
             "width" => 0,
-            "tags" => ['people']
+            "tags" => ['people'],
+            "section" => "people",
         ],
         "person-only" => [
             "fields" => ["name" => "Koblitz, Julia"],
@@ -548,7 +591,8 @@ class Modules
             "description" => "A field for a person with only the name.",
             "description_de" => "Ein Feld für eine Person nur mit dem Namen.",
             "width" => 0,
-            "tags" => ['people']
+            "tags" => ['people'],
+            "section" => "people",
         ],
         "person-organization" => [
             "fields" => ["name" => "Koblitz, Julia", "organization" => "DSMZ"],
@@ -559,7 +603,8 @@ class Modules
             "description" => "A fieldset for a person including an organization from the catalogue and a ROR search. Cannot be combined with the 'person' or the 'organization' module.",
             "description_de" => "Ein Feldser für eine Person inkl. der Affiliation mit einer Organisation aus dem Katalog inkl. ROR-Suche. Kann nicht mit den Feldern 'person' oder 'organization' verknüpft werden.",
             "width" => 0,
-            "tags" => ['people']
+            "tags" => ['people'],
+            "section" => "people",
         ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
@@ -570,7 +615,8 @@ class Modules
             "description" => "A field for a list of projects, that can be selected from a list of existing projects in the database.",
             "description_de" => "Ein Feld für eine Liste von Projekten, die aus einer Liste von bestehenden Projekten in der Datenbank ausgewählt werden können.",
             "width" => 12,
-            "tags" => ['general', 'important']
+            "tags" => ['general', 'important'],
+            "section" => "",
         ],
         "pub-language" => [
             "fields" => ["pub_language" => 'de'],
@@ -581,7 +627,8 @@ class Modules
             "description" => "A field for the language of a publication, values defined by vocabulary. Possible values are: de, en, fr, es, it, other.",
             "description_de" => "Ein Feld für die Sprache einer Publikation, Werte werden über das Vokabular definiert. Mögliche Werte sind: de, en, fr, es, it, other.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
@@ -592,7 +639,8 @@ class Modules
             "description" => "A field for the publisher of a publication, e.g. for a book.",
             "description_de" => "Ein Feld für den Verlag einer Publikation, z.B. für ein Buch.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "pubmed" => [
             "fields" => ["pubmed" => 1234567],
@@ -603,7 +651,8 @@ class Modules
             "description" => "A field for the PubMed ID of a publication. This field is used to uniquely identify a publication.",
             "description_de" => "Ein Feld für die PubMed-ID einer Publikation. Dieses Feld wird verwendet, um eine Publikation eindeutig zu identifizieren.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "pubtype" => [
             "fields" => ["pubtype" => "article"],
@@ -614,7 +663,8 @@ class Modules
             "description" => "A field for the publication type, e.g. for a journal article. Only to be used if the publication type is not defined by the subtype.",
             "description_de" => "Ein Feld für den Publikationstyp, z.B. für einen Zeitschriftenartikel. Nur zu nutzen, wenn der Publikationstyp nicht durch den Subtyp festgelegt wird.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "review-type" => [
             "fields" => ["review-type" => "Begutachtung eines Forschungsantrages"],
@@ -625,7 +675,8 @@ class Modules
             "description" => "A field for the type of review, e.g. for a grant.",
             "description_de" => "Ein Feld für die Art der Begutachtung, z.B. für ein Stipendium.",
             "width" => 6,
-            "tags" => ['publication']
+            "tags" => ['publication'],
+            "section" => "bibliography",
         ],
         "role" => [
             "fields" => ["role" => "Organisator:in"],
@@ -636,7 +687,8 @@ class Modules
             "description" => "A field for the role or function of a person, e.g. for an event.",
             "description_de" => "Ein Feld für die Rolle oder Funktion einer Person, z.B. für eine Veranstaltung.",
             "width" => 6,
-            "tags" => ['people', 'event']
+            "tags" => ['people', 'event'],
+            "section" => "people",
         ],
         "scientist" => [
             "fields" => ["authors" =>
@@ -657,7 +709,8 @@ class Modules
             "description" => "A selection field for an author from the institute. Limited to the persons in the database and supports only one author.",
             "description_de" => "Ein Auswahlfeld für einen Autor aus dem Institut. Beschränkt auf die Personen in der Datenbank und unterstützt nur einen Autor.",
             "width" => 6,
-            "tags" => ['authors', 'important']
+            "tags" => ['authors', 'important'],
+            "section" => "authors",
         ],
         "semester-select" => [
             "fields" => [],
@@ -668,7 +721,8 @@ class Modules
             "description" => "A field for preselecting a semester, e.g. the next Summer Semester. If the user clicks on a semester, the date range is automatically adjusted.",
             "description_de" => "Ein Feld zur Vorauswahl eines Semesters, z.B. des nächsten Sommersemesters. Wenn ein:e Benutzer:in auf ein Semester klickt, wird der Zeitraum automatisch angepasst.",
             "width" => 6,
-            "tags" => ['teaching', 'modificator']
+            "tags" => ['teaching', 'modificator'],
+            "section" => "",
         ],
         "scope" => [
             "fields" => ["scope" => "national"],
@@ -679,7 +733,8 @@ class Modules
             "description" => "A field for the scope of an event, e.g. for a conference. Possible values are: local, regional, national, international.",
             "description_de" => "Ein Feld für den Geltungsbereich einer Veranstaltung, z.B. für eine Konferenz. Mögliche Werte sind: lokal, regional, national, international.",
             "width" => 6,
-            "tags" => ['event']
+            "tags" => ['event'],
+            "section" => "events",
         ],
         "software-link" => [
             "fields" => ["link" => "https://osiris-app.de"],
@@ -690,7 +745,8 @@ class Modules
             "description" => "Synonym for a link used for software.",
             "description_de" => "Synonym für einen Link, der für Software verwendet wird.",
             "width" => 6,
-            "tags" => ['software']
+            "tags" => ['software'],
+            "section" => "software",
         ],
         "software-type" => [
             "fields" => ["software_type" => "Database"],
@@ -701,7 +757,8 @@ class Modules
             "description" => "A field for the type of software, possible vales are software, database, dataset, webtool, report.",
             "description_de" => "Ein Feld für den Typ der Software, mögliche Werte sind Software, Datenbank, Datensatz, Webtool, Bericht.",
             "width" => 6,
-            "tags" => ['software']
+            "tags" => ['software'],
+            "section" => "software",
         ],
         "software-venue" => [
             "fields" => ["software_venue" => "GitHub"],
@@ -712,7 +769,8 @@ class Modules
             "description" => "A field for the venue of a software, e.g. for a repository.",
             "description_de" => "Ein Feld für den Veröffentlichungsort einer Software, z.B. für ein Repository.",
             "width" => 6,
-            "tags" => ['software']
+            "tags" => ['software'],
+            "section" => "software",
         ],
         "status" => [
             "fields" => ["status" => 'completed'],
@@ -723,7 +781,8 @@ class Modules
             "description" => "A field for the status of an activity, e.g. for a thesis supervision. Possible values are: in progress, completed, aborted.",
             "description_de" => "Ein Feld für den Status einer Aktivität, z.B. für eine Betreuung einer Abschlussarbeit. Mögliche Werte sind: in Bearbeitung, abgeschlossen, abgebrochen.",
             "width" => 12,
-            "tags" => ['general', 'important']
+            "tags" => ['general', 'important'],
+            "section" => "key",
         ],
         "student-category" => [
             "fields" => ["category" => 'doctoral thesis'],
@@ -734,7 +793,8 @@ class Modules
             "description" => "A field for the category of a student, can be one of the following: bachelor thesis, master thesis, doctoral thesis, internship, other.",
             "description_de" => "Ein Feld für die Kategorie eines Studierenden, kann eine der folgenden sein: Bachelorarbeit, Masterarbeit, Doktorarbeit, Praktikum, Sonstiges.",
             "width" => 6,
-            "tags" => ['people', 'publication']
+            "tags" => ['people', 'publication'],
+            "section" => "people",
         ],
         "tags" => [
             "fields" => ["tags" => ['OSIRIS', 'CRIS2023']],
@@ -745,7 +805,8 @@ class Modules
             "description" => "A field for a list of tags, that can be selected from a list of existing tags in the database. These can be managed in the admin area.",
             "description_de" => "Ein Feld für eine Liste von Schlagworten, die aus einer Liste von bestehenden Schlagworten in der Datenbank ausgewählt werden können. Diese können im Admin-Bereich verwaltet werden.",
             "width" => 12,
-            "tags" => ['general']
+            "tags" => ['general'],
+            "section" => "key",
         ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
@@ -756,7 +817,8 @@ class Modules
             "description" => "A field for the category of a thesis, values defined by vocabulary. Standard values are: bachelor, master, diploma, doctor, habilitation.",
             "description_de" => "Ein Feld für die Kategorie einer Abschlussarbeit, Werte werden über das Vokabular definiert. Standardwerte sind: Bachelor, Master, Diplom, Doktor, Habilitation.",
             "width" => 6,
-            "tags" => ['publication', 'people']
+            "tags" => ['publication', 'people'],
+            "section" => "bibliography",
         ],
         "supervisor" => [
             "fields" => ["authors" => [
@@ -777,7 +839,8 @@ class Modules
             "description" => "A comprehensive table for supervisors, with individual input fields for supervisors, including first an last name, position, username, an affiliation checkbox and semester week hours (sws). Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but with SWS.",
             "description_de" => "Eine umfassende Tabelle für Betreuer:innen, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox und Semesterwochenstunden (SWS). Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber mit SWS.",
             "width" => 0,
-            "tags" => ['authors', 'people']
+            "tags" => ['authors', 'people'],
+            "section" => "authors",
         ],
         "supervisor-thesis" => [
             "fields" => ["authors"],
@@ -788,7 +851,8 @@ class Modules
             "description" => "A comprehensive table for supervisors of a thesis, with individual input fields for supervisors, including first and last name, position, username, an affiliation checkbox and the role. Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but for theses.",
             "description_de" => "Eine umfassende Tabelle für Betreuer:innen einer Abschlussarbeit, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox und der Rolle. Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber für Abschlussarbeiten.",
             "width" => 0,
-            "tags" => ['authors', 'people', 'publication']
+            "tags" => ['authors', 'people', 'publication'],
+            "section" => "authors",
         ],
         "teaching-category" => [
             "fields" => ["category" => 'practical-lecture'],
@@ -799,7 +863,8 @@ class Modules
             "description" => "A field for the category of a teaching activity, e.g. for a lecture. Possible values are: lecture, practical-lecture, seminar, project, other.",
             "description_de" => "Ein Feld für die Kategorie einer Lehrveranstaltung, z.B. für eine Vorlesung. Mögliche Werte sind: Vorlesung, Praktikum, Seminar, Projekt, Sonstiges.",
             "width" => 6,
-            "tags" => ['teaching']
+            "tags" => ['teaching'],
+            "section" => "others",
         ],
         "teaching-course" => [
             "fields" => ["title" => "Einführung in die Forschungsinformation", "module" => null, "module_id" => null],
@@ -810,7 +875,8 @@ class Modules
             "description" => "A field for selecting a teaching course from the database. If the course does not exist yet, the user will be prompted to add a new one that will be then saved into the database.",
             "description_de" => "Ein Feld zum Auswählen eines Lehrmoduls aus der Datenbank. Wenn das Modul noch nicht existiert, wird der Benutzer aufgefordert, ein neues hinzuzufügen, das dann in die Datenbank gespeichert wird.",
             "width" => 12,
-            "tags" => ['teaching']
+            "tags" => ['teaching'],
+            "section" => "others",
         ],
         "title" => [
             "fields" => ["title" => 'OSIRIS - Open Source Research Information System'],
@@ -821,7 +887,8 @@ class Modules
             "description" => "A field for the title of an activity, e.g. for a journal article. Always mandatory.",
             "description_de" => "Ein Feld für den Titel einer Aktivität, z.B. für einen Zeitschriftenartikel. Immer erforderlich.",
             "width" => 0,
-            "tags" => ['general', 'important']
+            "tags" => ['general', 'important'],
+            "section" => "summary",
         ],
         "subtitle" => [
             "fields" => ["subtitle" => 'A subtitle for the activity, e.g. for a journal article.'],
@@ -832,7 +899,8 @@ class Modules
             "description" => "A field for the subtitle of an activity.",
             "description_de" => "Ein Feld für den Untertitel einer Aktivität.",
             "width" => 12,
-            "tags" => ['general']
+            "tags" => ['general'],
+            "section" => "summary",
         ],
         "university" => [
             "fields" => ["publisher" => 'Springer Nature'],
@@ -843,7 +911,8 @@ class Modules
             "description" => "A field for the university of a publication, e.g. for a thesis.",
             "description_de" => "Ein Feld für die Universität einer Publikation, z.B. für eine Abschlussarbeit.",
             "width" => 6,
-            "tags" => ['teaching', 'people']
+            "tags" => ['teaching', 'people'],
+            "section" => "people",
         ],
         "version" => [
             "fields" => ["version" => OSIRIS_VERSION],
@@ -854,7 +923,8 @@ class Modules
             "description" => "A field for the version of a software, e.g. for a release.",
             "description_de" => "Ein Feld für die Version einer Software, z.B. für ein Release.",
             "width" => 6,
-            "tags" => ['software']
+            "tags" => ['software'],
+            "section" => "software",
         ],
         "venue" => [
             "fields" => ["venue"],
@@ -865,7 +935,8 @@ class Modules
             "description" => "A field for the publisher or place of publication, e.g. for a report.",
             "description_de" => "Ein Feld für den Herausgeber oder den Ort der Veröffentlichung, z.B. für einen Bericht.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "volume" => [
             "fields" => ["volume" => 51],
@@ -876,7 +947,8 @@ class Modules
             "description" => "A field for the volume of a publication, e.g. for a journal.",
             "description_de" => "Ein Feld für den Band einer Publikation, z.B. für eine Zeitschrift.",
             "width" => 6,
-            "tags" => ['publication', 'journal']
+            "tags" => ['publication', 'journal'],
+            "section" => "bibliography",
         ],
         "political_consultation" => [
             "fields" => ["political_consultation" => 'Gutachten'],
@@ -887,7 +959,8 @@ class Modules
             "description" => "A field for the type of contribution to political and social consulting, e.g. for a report. Possible values are based on the vocabulary.",
             "description_de" => "Ein Feld für die Art des Beitrags zur Politik- und Gesellschaftsberatung, z.B. für einen Bericht. Mögliche Werte basieren auf dem Vokabular.",
             "width" => 6,
-            "tags" => ['event', 'publication']
+            "tags" => ['event', 'publication'],
+            "section" => "events",
         ],
         "organization" => [
             "fields" => ["organization" => 'Technische Universität Braunschweig'],
@@ -898,7 +971,8 @@ class Modules
             "description" => "A field for an organisation that is connected to an activity, e.g. a university or a company. This field is used to identify the organisation that is responsible for the activity.",
             "description_de" => "Ein Feld für eine Organisation, die mit einer Aktivität verbunden ist, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisation zu identifizieren, die für die Aktivität verantwortlich ist.",
             "width" => 12,
-            "tags" => ['organizations', 'people']
+            "tags" => ['organizations', 'people'],
+            "section" => "people",
         ],
         "organizations" => [
             "fields" => ["organizations" => ['Technische Universität Braunschweig', 'Deutsche Forschungsgemeinschaft']],
@@ -909,7 +983,8 @@ class Modules
             "description" => "A field for a list of organisations that are connected to an activity, e.g. a university or a company. This field is used to identify the organisations that are responsible for the activity.",
             "description_de" => "Ein Feld für eine Liste von Organisationen, die mit einer Aktivität verbunden sind, z.B. eine Universität oder ein Unternehmen. Dieses Feld wird verwendet, um die Organisationen zu identifizieren, die für die Aktivität verantwortlich sind.",
             "width" => 0,
-            "tags" => ['organizations', 'people']
+            "tags" => ['organizations', 'people'],
+            "section" => "people",
         ],
     );
 
