@@ -561,7 +561,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             }
             editorInput.attr('id', editorId);
             editorInput.next().attr('id', editorId + '-field');
-            initQuill(editorInput.get(0));
+            initQuill(editorInput.get(0), 'full');
         }
 
         templateIndex++;

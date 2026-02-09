@@ -205,10 +205,10 @@ class Report
     public function getText($item)
     {
         $text = $item['text'] ?? '';
+        // make sure that img and br tags are self-closing for HTML compatibility
+        $text = str_replace("<br>", "<br />", $text);
+        $text = preg_replace('/<img([^>]+)(?<!\/)>/', '<img$1 width="100%" />', $text);
         return $text;
-        // if (empty($text)) return '';
-        // $Parsedown = new Parsedown();
-        // return $Parsedown->line($text);
     }
 
     /**
