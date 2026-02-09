@@ -1200,15 +1200,15 @@ class Modules
 
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
                 <label for="list-input-<?= $rand_id ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
-                    <div id="list-widget-<?= $rand_id ?>" class="list-widget" data-name="values[<?= $module ?>][]">
-                        <input
-                            id="list-input-<?= $rand_id ?>"
-                            class="list-widget-input"
-                            type="text"
-                            autocomplete="off"
-                            placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
-                    </div>
-                    <?= $this->render_help($help) ?>
+                <div id="list-widget-<?= $rand_id ?>" class="list-widget" data-name="values[<?= $module ?>][]">
+                    <input
+                        id="list-input-<?= $rand_id ?>"
+                        class="list-widget-input"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                </div>
+                <?= $this->render_help($help) ?>
             </div>
             <script>
                 initListWidget($("#list-widget-<?= $rand_id ?>"), <?= json_encode($this->val($module, [])) ?>);
@@ -2718,6 +2718,11 @@ class Modules
                     <label for="journal" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <a href="#journal-select" id="journal-field" class="module">
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
+                        <?php if (!$req) { ?>
+                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected journal', 'Verknüpftes Journal entfernen') ?>">
+                                <i class="ph ph-trash" onclick="$('#journal_id').val('');$('#journal').val(''); $('#selected-journal').html('<?= lang('No journal connected', 'Kein Journal verknüpft') ?>'); return false;"></i>
+                            </span>
+                        <?php } ?>
 
                         <div id="selected-journal">
                             <?php if (!empty($this->form) && isset($this->form['journal_id'])) :
