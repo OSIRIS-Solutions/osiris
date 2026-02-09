@@ -691,12 +691,12 @@ class Document extends Settings
         else return 'contributing';
     }
 
-    public function getAuthors()
+    public function getAuthors($key = 'authors')
     {
-        if (empty($this->doc['authors'])) return '';
+        if (empty($this->doc[$key])) return '';
         $full = $this->full;
         $this->full = true;
-        return $this->formatAuthors($this->doc['authors']);
+        return $this->formatAuthors($this->doc[$key]);
         $this->full = $full;
     }
 

@@ -1066,7 +1066,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         $columns = $_GET['columns'];
         foreach ($columns as $c) {
             if ($c == 'id') continue;
-            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'title', 'departments'])) {
+            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'editors', 'supervisors', 'title', 'departments'])) {
                 $projection[$c] = '$rendered.' . $c;
                 continue;
             }
