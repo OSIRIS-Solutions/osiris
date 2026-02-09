@@ -101,16 +101,16 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <div class="col-sm-6">
                     <label for="format">Format</label>
                     <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)">
-                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?=lang('Normal Text', 'Normaler Text')?></option>
-                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?=lang('Long text', 'Langer Text')?></option>
-                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?=lang('Integer', 'Ganzzahl')?></option>
-                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?=lang('Float', 'Gleitkommazahl')?></option>
-                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?=lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)')?></option>
-                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?=lang('Date', 'Datum')?></option>
-                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?=lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)')?></option>
-                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?=lang('Boolean (as checkbox)', 'Boolean (als Checkbox)')?></option>
+                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('Normal Text', 'Normaler Text') ?></option>
+                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('Long text', 'Langer Text') ?></option>
+                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('Integer', 'Ganzzahl') ?></option>
+                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('Float', 'Gleitkommazahl') ?></option>
+                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)') ?></option>
+                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('Date', 'Datum') ?></option>
+                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)') ?></option>
+                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('Boolean (as checkbox)', 'Boolean (als Checkbox)') ?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
-                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?=lang('Free text list (without predefined values)', 'Freitext-Liste (ohne vordefinierte Werte)')?></option>
+                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= lang('Free text list (without predefined values)', 'Freitext-Liste (ohne vordefinierte Werte)') ?></option>
                         <!-- <option value="user">User</option> -->
                     </select>
                 </div>
@@ -301,6 +301,25 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 
 <?php } ?>
+
+
+<div class="alert danger mt-20">
+    <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post">
+        <h5 class="title">
+            <?= lang('Delete this field', 'Dieses Feld löschen') ?>
+        </h5>
+        <p>
+            <?= lang('Are you sure you want to delete this field? This action cannot be undone.', 'Bist du sicher, dass du dieses Feld löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
+        <br>
+            <?= lang('<b>Hint:</b> this wont automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
+        <br>
+            <?= lang('<b>Hint:</b> We wont remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
+        </p>
+
+        <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('Delete', 'Löschen') ?></button>
+
+    </form>
+</div>
 
 
 

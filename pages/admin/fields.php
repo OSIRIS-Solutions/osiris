@@ -53,12 +53,10 @@ $fields = $osiris->adminFields->find()->toArray();
                 <td>
                     <?= lang($field['name'], $field['name_de']) ?>
                 </td>
-                <td class="unbreakable">
-                    <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post" class="d-inline">
-                        <button type="submit" class="btn link"><i class="ph-duotone ph-trash text-danger"></i></button>
-                    </form>
+                <td>
                     <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
                         <i class="ph ph-pencil"></i>
+                        <?= lang('Edit', 'Bearbeiten') ?>
                     </a>
                 </td>
             </tr>
