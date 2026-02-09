@@ -343,7 +343,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="activities">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
                 <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie von "Zeige Filter" kopieren.') ?>
             </small>
@@ -376,7 +376,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="activities-field">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
                 <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie von "Zeige Filter" kopieren.') ?>
             </small>
@@ -421,7 +421,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="table">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
 
             <div class="form-row row-eq-spacing mt-10">
                 <div class="col">
