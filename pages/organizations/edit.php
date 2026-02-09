@@ -106,16 +106,16 @@ if (empty($form) || !isset($form['_id'])) {
             <input type="url" class="form-control" name="values[url]" id="org-url" value="<?= $form['url'] ?? '' ?>">
          </div>
 
-        <div class="row row-eq-spacing">
-        <div class="col-sm">
+        <!-- <div class="row row-eq-spacing"> -->
+        <div class="form-group">
             <label for="type" class="required">
                 <?= lang('Type of organisation (from ROR)', 'Art der Organisation (nach ROR)') ?>
             </label>
             <select name="values[type]" id="type" class="form-control">
                 <option value="" disabled <?= sel('type', '') ?>><?= lang('Select type', 'Art auswählen') ?></option>
-                <option value="university" <?= sel('type', 'university') ?>><?= lang('University', 'Universität') ?></option>
+                <!-- <option value="university" <?= sel('type', 'university') ?>><?= lang('University', 'Universität') ?></option>
                 <option value="applied-sciences" <?= sel('type', 'applied-sciences') ?>><?= lang('University of Applied Sciences', 'Fachhochschule') ?></option>
-                <option value="research-institute" <?= sel('type', 'research-institute') ?>><?= lang('Research Institute', 'Außeruniversitäres Forschungsinstitut') ?></option>
+                <option value="research-institute" <?= sel('type', 'research-institute') ?>><?= lang('Research Institute', 'Außeruniversitäres Forschungsinstitut') ?></option> -->
                 <option value="education" <?= sel('type', 'education') ?>><?= lang('Education', 'Bildung') ?></option>
                 <option value="funder" <?= sel('type', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
                 <option value="healthcare" <?= sel('type', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
@@ -127,7 +127,7 @@ if (empty($form) || !isset($form['_id'])) {
                 <option value="other" <?= sel('type', 'other') ?>><?= lang('Other', 'Sonstiges') ?></option>
             </select>
         </div>
-        <div class="col-sm">
+        <!-- <div class="col-sm">
             <label for="type_kdsf" class="required">
                 <?= lang('Type of organisation', 'Art der Organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-4</span>
@@ -137,13 +137,13 @@ if (empty($form) || !isset($form['_id'])) {
                 <option value="university" <?= sel('type_kdsf', 'university') ?>><?= lang('University', 'Universität') ?></option>
                 <option value="applied-sciences" <?= sel('type_kdsf', 'applied-sciences') ?>><?= lang('University of Applied Sciences', 'Fachhochschule') ?></option>
                 <option value="research-institute" <?= sel('type_kdsf', 'research-institute') ?>><?= lang('Research Institute', 'Außeruniversitäres Forschungsinstitut') ?></option>
-                <!-- <option value="funder" <?= sel('type_kdsf', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
-                <option value="healthcare" <?= sel('type_kdsf', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option> -->
+                 <option value="funder" <?= sel('type_kdsf', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
+                <option value="healthcare" <?= sel('type_kdsf', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
                 <option value="company" <?= sel('type_kdsf', 'company') ?>><?= lang('Company', 'Wirtschaft') ?></option>
                 <option value="other" <?= sel('type_kdsf', 'other') ?>><?= lang('Other', 'Sonstiges') ?></option>
             </select>
         </div>
-        </div>
+        </div> -->
 
 
 
