@@ -156,11 +156,38 @@ Route::post('/data/upload', function () {
     $values = $_POST['values'] ?? [];
 
     if (!isset($values['type']) || !isset($values['id'])) {
-        die("Ungültige Anfrage");
+        die(lang('Invalid request. Missing type or id.', 'Ungültige Anfrage. Typ oder ID fehlt.'));
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        die("Fehler beim Upload");
+        echo lang('File upload failed with the following error: ','Datei-Upload fehlgeschlagen mit folgendem Fehler: ') . '<br>';
+        switch ($_FILES['file']['error']) {
+            case UPLOAD_ERR_INI_SIZE:
+                echo lang('The uploaded file exceeds the upload_max_filesize directive in php.ini. Please contact admin.', 'Die hochgeladene Datei überschreitet die upload_max_filesize Direktive in der php.ini. Bitte kontaktiere den Administrator.');
+                break;
+            case UPLOAD_ERR_FORM_SIZE:
+                echo lang('The uploaded file exceeds the maximum allowed size.', 'Die hochgeladene Datei überschreitet die maximal erlaubte Größe.');
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                echo lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.');
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                echo lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.');
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                echo lang('Missing a temporary folder.', 'Es fehlt ein temporärer Ordner.');
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                echo lang('Failed to write file to disk.', 'Die Datei konnte nicht auf die Festplatte geschrieben werden.');
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                echo lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.');
+                break;
+            default:
+                echo lang('Unknown upload error.', 'Unbekannter Upload-Fehler.');
+                break;
+        }
+        die;
     }
 
     $file = $_FILES['file'];

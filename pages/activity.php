@@ -2065,8 +2065,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
-                            <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
                             <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                            <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                     </div>
                     <input type="hidden" name="values[type]" value="activities">
@@ -2087,23 +2088,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     </div>
                     <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
                 </form>
-                <!-- <div class="box padded">
-                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
-                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                    <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
-                        <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
-                        <br><small class="text-danger">Max. 16 MB.</small>
-                    </div>
-                    <button class="btn">
-                        <i class="ph ph-upload"></i>
-                        Upload
-                    </button>
-                </form>
-            </div> -->
 
                 <script>
-                    var uploadField = document.getElementById("file-input");
+                    var uploadField = document.getElementById("upload-file");
 
                     uploadField.onchange = function() {
                         if (this.files[0].size > 16777216) {
