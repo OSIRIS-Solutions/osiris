@@ -17,6 +17,7 @@ class Modules
     private $userlist = array();
     private $conference = array();
     private $fields = array();
+    private $type = '';
 
     public $all_modules = array(
         "authors" => [
@@ -1092,6 +1093,7 @@ class Modules
 
     function print_form($type)
     {
+        $this->type = $type;
         $typeArr = $this->DB->db->adminTypes->findOne(['id' => $type]);
         if (!isset($typeArr)) {
             echo '<b>Type <code>' . $type . '</code> is not defined. </b>';
@@ -1373,6 +1375,41 @@ class Modules
         if (!$text) return '';
         // $hid = 'help-'.preg_replace('/[^a-z0-9_-]+/i','-',$inputId);
         return '<div class="form-help" role="note">' . $text . '</div>';
+    }
+
+    function getSuggestedOrgs()
+    {
+        $match = ['organization' => ['$exists' => true, '$ne' => null]];
+        if (!empty($this->type)) {
+            $match['subtype'] = $this->type;
+        }
+        $orgs = $this->DB->db->activities->aggregate([
+            ['$match' => $match],
+            ['$group' => [
+                '_id' => '$organization',
+                'count' => ['$sum' => 1]
+            ]],
+            ['$sort' => ['count' => -1]],
+            ['$limit' => 5],
+            // transform to ObjectIDs
+            ['$addFields' => [
+                'objectId' => ['$toObjectId' => '$_id']
+            ]],
+            ['$lookup' => [
+                'from' => 'organizations',
+                'localField' => 'objectId',
+                'foreignField' => '_id',
+                'as' => 'org'
+            ]],
+            ['$unwind' => '$org'],
+            ['$project' => [
+                'id' => '$_id',
+                'name' => '$org.name',
+                'location' => '$org.location',
+                'count' => 1
+            ]]
+        ])->toArray();
+        return $orgs;
     }
 
     function print_module($module, $req = false, $props = [])
@@ -2297,13 +2334,16 @@ class Modules
                             </div>
                         </a>
 
+
                         <div class="modal" id="organization-modal-<?= $rand_id ?>" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <a href="#close-modal" class="close" role="button" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </a>
+                                    <small class="text-muted float-sm-right">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                     <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
                                         <div class="input-group-append">
@@ -2315,8 +2355,30 @@ class Modules
                                         <tbody id="org-<?= $rand_id ?>-suggest">
                                         </tbody>
                                     </table>
-                                    <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-
+                                    <?php
+                                    $orgs = $this->getSuggestedOrgs();
+                                    if (!empty($orgs)) { ?>
+                                        <div class="suggestions">
+                                            <?= lang('Suggestions:', 'Vorschläge:') ?>
+                                            <?php
+                                            // suggest oftenly used organisations
+                                            foreach ($orgs as $org) { ?>
+                                                <a class="badge primary" onclick='selectOrgPerson("<?= $org["id"] ?>", "<?= e($org["name"]) ?>", "<?= e($org["location"]) ?>", "<?= $rand_id ?>"); return false;'>
+                                                    <?= e($org['name']) ?>
+                                                </a>
+                                            <?php } ?>
+                                        </div>
+                                        <script>
+                                            function selectOrgPerson(id, name, location, type = '<?= $rand_id ?>') {
+                                                $('#org-' + type + '-value').html(
+                                                    `<b>${name}</b> <br><small class="text-muted">${location}</small>`
+                                                );
+                                                $('#org-' + type + '-organization').val(id);
+                                                // close modal with href
+                                                window.location.href = "#close-modal";
+                                            }
+                                        </script>
+                                    <?php } ?>
                                     <p>
                                         <?php if ($Settings->hasPermission('organizations.edit')) { ?>
                                             <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
@@ -3187,6 +3249,7 @@ class Modules
                                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </a>
+                                <small class="text-muted float-sm-right">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                 <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
@@ -3199,7 +3262,30 @@ class Modules
                                     <tbody id="org-<?= $rand_id ?>-suggest">
                                     </tbody>
                                 </table>
-                                <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
+                                <?php
+                                $orgs = $this->getSuggestedOrgs();
+                                if (!empty($orgs)) { ?>
+                                    <div class="suggestions">
+                                        <?= lang('Suggestions:', 'Vorschläge:') ?>
+                                        <?php
+                                        // suggest oftenly used organisations
+                                        foreach ($orgs as $org) { ?>
+                                            <a class="badge primary" onclick='selectOrg("<?= $org["id"] ?>", "<?= e($org["name"]) ?>", "<?= e($org["location"]) ?>", "<?= $rand_id ?>"); return false;'>
+                                                <?= e($org['name']) ?>
+                                            </a>
+                                        <?php } ?>
+                                    </div>
+                                    <script>
+                                        function selectOrg(id, name, location, type = '<?= $rand_id ?>') {
+                                            $('#org-' + type + '-value').html(
+                                                `<b>${name}</b> <br><small class="text-muted">${location}</small>`
+                                            );
+                                            $('#org-' + type + '-organization').val(id);
+                                            // close modal with href
+                                            window.location.href = "#close-modal";
+                                        }
+                                    </script>
+                                <?php } ?>
 
                                 <p>
                                     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
