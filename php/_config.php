@@ -306,14 +306,14 @@ function printMsg($msg = null, $type = 'info', $header = "default")
         }
     } elseif ($type == 'info') {
         $class = "primary";
-        if ($header == "default") {
-            $header = "";
-        }
     } elseif ($type == 'warning') {
         $class = "signal";
         if ($header == "default") {
             $header = lang("Warning", "Warnung");
         }
+    }
+    if ($header == "default") {
+        $header = "";
     }
     switch ($msg) {
 
