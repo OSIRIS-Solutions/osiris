@@ -577,8 +577,8 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         const $orig = $(btn).closest('.step');
         const $clone = $orig.clone(true, true);
         // re-index names (*) -> n
-        $clone.html($clone.html().replace(/\[\*\]/g, '[' + n + ']'));
-        n++;
+        $clone.html($clone.html().replace(/\[\*\]/g, '[' + templateIndex + ']'));
+        templateIndex++;
         $('#report').append($clone);
     }
 
