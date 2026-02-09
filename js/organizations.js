@@ -307,6 +307,10 @@ function translateROR(o) {
             location_name += ', ' + location.country_name
         }
     }
+    let link = o.links ? o.links[0] : null
+    if (link && link.value) {
+        link = link.value
+    }
     let org = {
         ror: o.id,
         name: name,
@@ -316,7 +320,7 @@ function translateROR(o) {
         lng: location.lng ?? null,
         type: o.types[0],
         types: o.types,
-        url: o.links[0] ?? null,
+        url: link,
         synonyms: synonyms,
         chosen: false
     }
@@ -333,6 +337,7 @@ function addOrganization() {
         country: $('#org-country').val(),
         lat: $('#org-lat').val(),
         lng: $('#org-lng').val(),
+        url: $('#org-url').val(),
     }
 
     // check for required

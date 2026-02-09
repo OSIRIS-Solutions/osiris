@@ -190,17 +190,28 @@ if ($edit_perm) { ?>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td>
                             <span class="key"><?= lang('ROR') ?></span>
                             <?php if (!empty($organization['ror'] ?? '')) { ?>
                                 <a href="<?= $organization['ror'] ?>" target="_blank" rel="noopener noreferrer">
-                                    <?= $organization['ror'] ?>
                                     <i class="ph ph-arrow-square-out"></i>
+                                    <?= $organization['ror'] ?>
                                 </a>
                             <?php } else { ?>
                                 -
                             <?php } ?>
+                        </td>
 
+                        <td>
+                            <span class="key"><?= lang('URL') ?></span>
+                            <?php if (!empty($organization['url'] ?? '')) { ?>
+                                <a href="<?= $organization['url'] ?>" target="_blank" rel="noopener noreferrer" class="short-link">
+                                    <i class="ph ph-arrow-square-out"></i>
+                                    <?= $organization['url'] ?>
+                                </a>
+                            <?php } else { ?>
+                                -
+                            <?php } ?>
                         </td>
                     </tr>
                 </tbody>
@@ -301,7 +312,6 @@ if ($edit_perm) { ?>
 <h2>
     <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
 </h2>
-<!-- TODO: add download button -->
 <div class="mt-20 w-full">
     <table class="table dataTable responsive" id="activities-table">
         <thead>
