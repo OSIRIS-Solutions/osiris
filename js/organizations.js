@@ -107,10 +107,6 @@ function suggestOrganization(data, create = false) {
             getOrganization(INPUT.val(), true);
         })
         lastrow.append($('<td colspan="3">').append(rorbtn))
-    } else {
-        let createbtn = $('<a href="#add-organization" class="btn">')
-        createbtn.html(lang('Create new organization', 'Neue Organisation anlegen'))
-        lastrow.append($('<td colspan="3">').append(createbtn))
     }
     SUGGEST.append(lastrow)
 }
