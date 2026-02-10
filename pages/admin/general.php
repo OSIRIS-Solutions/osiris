@@ -491,7 +491,6 @@ $affiliation = $Settings->get('affiliation_details');
                     </td>
                 </tr>
                 <tr class="design-font-custom-row">
-                    <!-- for headers as well? Default: Tiktok sans -->
                     <td>
                         <label for="design_font_headers"><?= lang('Use for headers as well', 'Auch für Überschriften verwenden') ?></label>
                     </td>
@@ -506,7 +505,117 @@ $affiliation = $Settings->get('affiliation_details');
                         </small>
                     </td>
                 </tr>
+                <?php
+                // existing
+                $fontPreset = $design['font_preset'] ?? 'rubik';
+                $fontFamily = $design['font_family'] ?? '';
+                $fontCssUrl = $design['font_css_url'] ?? '';
 
+                // new header font settings
+                $headerFontPreset = $design['header_font_preset'] ?? 'tiktok'; // 'body' | 'tiktok' | 'rubik' | 'system' | 'custom'
+                $headerFontFamily = $design['header_font_family'] ?? '';
+                $headerFontCssUrl = $design['header_font_css_url'] ?? '';
+                ?>
+
+                <!-- HEADER FONT PRESET -->
+                <tr>
+                    <td>
+                        <label for="design_header_font_preset"><?= lang('Header font', 'Überschriften-Schriftart') ?></label>
+                    </td>
+                    <td>
+                        <select class="form-control" name="general[design][header_font_preset]" id="design_header_font_preset">
+                            <option value="body" <?= $headerFontPreset == 'body' ? 'selected' : '' ?>>
+                                <?= lang('Same as body', 'Wie Fließtext') ?>
+                            </option>
+                            <option value="tiktok" <?= $headerFontPreset == 'tiktok' ? 'selected' : '' ?>>
+                                TikTok Sans (<?= lang('default', 'Standard') ?>)
+                            </option>
+                            <option value="rubik" <?= $headerFontPreset == 'rubik' ? 'selected' : '' ?>>
+                                Rubik
+                            </option>
+                            <option value="system" <?= $headerFontPreset == 'system' ? 'selected' : '' ?>>
+                                <?= lang('System', 'System') ?>
+                            </option>
+                            <option value="custom" <?= $headerFontPreset == 'custom' ? 'selected' : '' ?>>
+                                <?= lang('Custom*', 'Benutzerdefiniert*') ?>
+                            </option>
+                        </select>
+
+                        <small class="text-muted d-block mt-5">
+                            <?= lang(
+                                '*Tip: Prefer variable fonts / a single CSS URL that includes italic + weights.',
+                                '*Tipp: Am besten variable Fonts / eine CSS-URL, die Italic + Gewichte enthält.'
+                            ) ?>
+                        </small>
+                    </td>
+                </tr>
+
+                <!-- HEADER CUSTOM FONT DETAILS (only if header_font_preset == custom) -->
+                <tr class="design-header-font-custom-row">
+                    <td>
+                        <label for="design_header_font_family"><?= lang('Header font family name', 'Header Font-Familienname') ?></label>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="general[design][header_font_family]"
+                                id="design_header_font_family"
+                                value="<?= e($headerFontFamily) ?>"
+                                placeholder="<?= lang("e.g. Young Serif", "z.B. Young Serif") ?>">
+                        </div>
+                        <small class="text-muted d-block mt-5">
+                            <?= lang(
+                                "Must match the font name used in the CSS (e.g. font-family: 'Young Serif';).",
+                                "Muss zum Namen im CSS passen (z.B. font-family: 'Young Serif';)."
+                            ) ?>
+                        </small>
+                    </td>
+                </tr>
+
+                <tr class="design-header-font-custom-row">
+                    <td>
+                        <label for="design_header_font_css_url"><?= lang('Header font CSS URL', 'Header Font-CSS-URL') ?></label>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <input
+                                type="url"
+                                class="form-control"
+                                name="general[design][header_font_css_url]"
+                                id="design_header_font_css_url"
+                                value="<?= e($headerFontCssUrl) ?>"
+                                placeholder="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap">
+                        </div>
+                        <small class="text-muted d-block mt-5">
+                            <?= lang(
+                                'This will be inserted as a &lt;link rel="stylesheet"&gt; in the page header.',
+                                'Wird als &lt;link rel="stylesheet"&gt; im Header eingebunden.'
+                            ) ?>
+                        </small>
+                    </td>
+                </tr>
+
+                <script>
+                    (function() {
+                        function toggleCustomRows(presetValue, selector) {
+                            var show = (presetValue === 'custom');
+                            document.querySelectorAll(selector).forEach(function(row) {
+                                row.style.display = show ? '' : 'none';
+                            });
+                        }
+
+                        // initial
+                        var headerPresetEl = document.getElementById('design_header_font_preset');
+                        if (headerPresetEl) {
+                            toggleCustomRows(headerPresetEl.value, '.design-header-font-custom-row');
+                            headerPresetEl.addEventListener('change', function() {
+                                toggleCustomRows(this.value, '.design-header-font-custom-row');
+                            });
+                        }
+                    })();
+                </script>
                 <!-- preview -->
                 <tr>
                     <td><?= lang('Preview', 'Vorschau') ?></td>
