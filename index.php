@@ -194,6 +194,15 @@ include_once BASEPATH . "/routes/api/portfolio.php";
 include_once BASEPATH . "/routes/cron.php";
 
 /**
+ * Rerender elements that have not rendered yet
+ */
+Route::get('/smart-render', function () {
+    set_time_limit(6000);
+    include_once BASEPATH . "/php/Render.php";
+    renderActivities(['rendered' => ['$exists' => false]]);
+    echo "Done.";
+});
+/**
  * Routes for OSIRIS Portal
  */
 
