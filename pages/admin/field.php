@@ -311,9 +311,9 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
         <p>
             <?= lang('Are you sure you want to delete this field? This action cannot be undone.', 'Bist du sicher, dass du dieses Feld löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
         <br>
-            <?= lang('<b>Hint:</b> this wont automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
+            <?= lang('<b>Hint:</b> this won\'t automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
         <br>
-            <?= lang('<b>Hint:</b> We wont remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
+            <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
         </p>
 
         <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('Delete', 'Löschen') ?></button>
