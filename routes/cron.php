@@ -110,3 +110,20 @@ Route::get('/cron/digest', function () {
 
     return JSON::ok(['status' => 'ok', 'sent' => $sent, 'skipped' => $skipped, 'errors' => $errors]);
 });
+
+
+
+/**
+ * Rerender elements that have not rendered yet
+ */
+Route::get('/smart-render', function () {
+    if (!defined('CRON_SECRET') || CRON_SECRET === 'please-change-this-secret') {
+        return JSON::error('CRON_SECRET is not set properly in CONFIG.php', 500);
+    }
+    $secret = $_GET['key'] ?? '';
+    if ($secret !== CRON_SECRET) return JSON::error('Unauthorized', 401);
+    set_time_limit(6000);
+    include_once BASEPATH . "/php/Render.php";
+    $updated = renderActivities(['rendered' => ['$exists' => false]], true);
+    return JSON::ok(['status' => 'ok', 'message' => 'Done.', 'updated' => $updated]);
+});
