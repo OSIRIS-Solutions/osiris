@@ -404,7 +404,10 @@ function printMsg($msg = null, $type = 'info', $header = "default")
             break;
 
         default:
-            $text = str_replace("-", " ", $msg);
+            $text = $msg;
+            if (isset($_GET['msg']) && str_contains($_GET['msg'], '-')) {
+                $text = str_replace("-", " ", $msg);
+            }
             break;
     }
     $get = currentGET(['msg']) ?? "";

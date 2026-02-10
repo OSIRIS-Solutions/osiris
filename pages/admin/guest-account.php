@@ -87,10 +87,10 @@ if (empty($accounts)) {
                     </td>
                     <td class="w-100">
                         <div class="dropdown">
-                            <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-edit-<?= e($account['username']) ?>" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-pencil"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-edit-<?= e($account['username']) ?>">
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/update" method="post">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <div class="form-group">
@@ -104,11 +104,30 @@ if (empty($accounts)) {
                                 </form>
                             </div>
                         </div>
+
+                        <?php if ($account['valid_until'] > date('Y-m-d') || empty($account['valid_until'])) { ?>
+                            <div class="dropdown">
+                                <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-link-<?= e($account['username']) ?>" aria-haspopup="true" aria-expanded="false">
+                                    <i class="ph ph-link"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right p-10 w-400" aria-labelledby="dropdown-link-<?= e($account['username']) ?>">
+                                    <?= lang('Generate a link to set a new password for this guest account. The link will be valid for 24 hours.', 'Generieren Sie einen Link, um ein neues Passwort für diesen Gast-Account festzulegen. Der Link ist 24 Stunden gültig.') ?>
+                                    <form action="<?= ROOTPATH ?>/crud/admin/guest-account/generate-link" method="post" class="mt-10">
+                                        <input type="hidden" name="username" value="<?= e($account['username']) ?>">
+                                        <button type="submit" class="btn primary">
+                                            <i class="ph ph-link"></i>
+                                            <?= lang('Generate link', 'Link generieren') ?>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php } ?>
+
                         <div class="dropdown">
-                            <button class="btn small danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn small danger" data-toggle="dropdown" type="button" id="dropdown-delete-<?= e($account['username']) ?>" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-trash"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right w-400" aria-labelledby="dropdown-1">
+                            <div class="dropdown-menu dropdown-menu-right w-400" aria-labelledby="dropdown-delete-<?= e($account['username']) ?>">
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/delete" method="post" class="d-inline">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <small>
