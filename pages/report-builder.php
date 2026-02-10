@@ -343,7 +343,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="activities">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
                 <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie von "Zeige Filter" kopieren.') ?>
             </small>
@@ -376,7 +376,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="activities-field">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
                 <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie von "Zeige Filter" kopieren.') ?>
             </small>
@@ -388,7 +388,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                         return $f['type'] !== 'boolean' && $f['type'] !== 'list' && !str_starts_with($f['id'], 'authors.');
                     });
                     foreach ($fields_add as $f) { ?>
-                        <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                        <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -421,14 +421,14 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         </div>
         <div class="step-body">
             <input type="hidden" class="hidden" name="values[*][type]" value="table">
-            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required></textarea>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
 
             <div class="form-row row-eq-spacing mt-10">
                 <div class="col">
                     <label for="aggregate"><?= lang('First aggregation', 'Erste Aggregation') ?></label>
                     <select name="values[*][aggregate]" required class="form-control step-aggregate">
                         <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -437,7 +437,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                     <select name="values[*][aggregate2]" class="form-control step-aggregate2">
                         <option value=""><?= lang('Without second aggregation', 'Ohne zweite Aggregation') ?></option>
                         <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -561,7 +561,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             }
             editorInput.attr('id', editorId);
             editorInput.next().attr('id', editorId + '-field');
-            initQuill(editorInput.get(0));
+            initQuill(editorInput.get(0), 'full');
         }
 
         templateIndex++;
@@ -577,8 +577,8 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         const $orig = $(btn).closest('.step');
         const $clone = $orig.clone(true, true);
         // re-index names (*) -> n
-        $clone.html($clone.html().replace(/\[\*\]/g, '[' + n + ']'));
-        n++;
+        $clone.html($clone.html().replace(/\[\*\]/g, '[' + templateIndex + ']'));
+        templateIndex++;
         $('#report').append($clone);
     }
 
@@ -594,7 +594,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
         <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
         <?php foreach ($fields_sort as $f) { ?>
-            <option value="<?= htmlspecialchars($f['id']) ?>"><?= $f['label'] ?></option>
+            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
         <?php } ?>
       </select>
       <select class="form-control small w-150 flex-grow-0" name="${namePrefix}[${idx}][dir]" required>

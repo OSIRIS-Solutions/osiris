@@ -2772,6 +2772,13 @@ a.link:not(.btn)[target=_blank]::after {
 a.colorless {
   color: inherit;
 }
+a.short-link {
+  display: inline-block;
+  max-width: 25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .hyperlink-underline {
   text-decoration: underline;
@@ -2928,7 +2935,6 @@ Buttons
 .btn.secondary.filled {
   color: white;
   background-color: var(--secondary-color);
-  border: none;
 }
 .btn.secondary.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--secondary-color-dark);
@@ -2950,7 +2956,6 @@ Buttons
 .btn.primary.filled {
   color: white;
   background-color: var(--primary-color);
-  border: none;
 }
 .btn.primary.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--primary-color-dark);
@@ -2972,7 +2977,6 @@ Buttons
 .btn.success.filled {
   color: white;
   background-color: var(--success-color);
-  border: none;
 }
 .btn.success.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--success-color-dark);
@@ -2994,7 +2998,6 @@ Buttons
 .btn.danger.filled {
   color: white;
   background-color: var(--danger-color);
-  border: none;
 }
 .btn.danger.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--danger-color-dark);
@@ -3016,7 +3019,6 @@ Buttons
 .btn.signal.filled {
   color: white;
   background-color: var(--signal-color);
-  border: none;
 }
 .btn.signal.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--signal-color-dark);
@@ -3038,7 +3040,6 @@ Buttons
 .btn.muted.filled {
   color: white;
   background-color: var(--muted-color);
-  border: none;
 }
 .btn.muted.filled:not(.disabled):not(:disabled):hover {
   background-color: var(--muted-color-dark);
@@ -6224,18 +6225,6 @@ Alerts
 }
 .card.muted.filled {
   background-color: var(--muted-color);
-}
-.card a:not(.btn, .link) {
-  cursor: pointer;
-  color: inherit;
-}
-.card a:not(.btn, .link):hover {
-  color: inherit;
-  opacity: 0.75;
-}
-.card a.btn,
-.card a.link {
-  text-decoration: none;
 }
 .card .title {
   color: inherit;

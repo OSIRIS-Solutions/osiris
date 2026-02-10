@@ -296,19 +296,19 @@ final class Nagoya
 
     // If module not enabled → green check (no ABS context)
     if (($n['enabled'] ?? false) === false) {
-      return '<i class="ph ph-check text-success" title="' . htmlspecialchars(lang('Not ABS-relevant', 'Nicht ABS-relevant')) . '"></i>';
+      return '<i class="ph ph-check text-success" title="' . e(lang('Not ABS-relevant', 'Nicht ABS-relevant')) . '"></i>';
     }
 
     $status = $n['status'] ?? null;
     if (!$status) {
-      return '<i class="ph ph-question text-muted" title="' . htmlspecialchars(lang('Unknown', 'Unbekannt')) . '"></i>';
+      return '<i class="ph ph-question text-muted" title="' . e(lang('Unknown', 'Unbekannt')) . '"></i>';
     }
 
     // Map statuses to icons/colors
     $map = self::MAP[$status] ?? self::MAP['unknown'];
     $clr  = $map['color'] ?? 'muted';
     $icon = $map['icon']  ?? 'ph-question';
-    return '<i class="ph ' . $icon . ' ' . $clr . '" title="' . htmlspecialchars(self::statusLabel($status)) . '"></i>';
+    return '<i class="ph ' . $icon . ' ' . $clr . '" title="' . e(self::statusLabel($status)) . '"></i>';
   }
 
   /** Returns a badge (<span class="badge ...">...</span>) for the given project/nagoya. */
@@ -406,12 +406,12 @@ final class Nagoya
       if ($hasNeeded || $hasRequested) {
         $permitHtml = sprintf(
           '<small class="badge warning ml-5">%s</small>',
-          htmlspecialchars(lang('permits pending', 'Genehmigungen ausstehend'))
+          e(lang('permits pending', 'Genehmigungen ausstehend'))
         );
       } elseif ($hasGranted) {
         $permitHtml = sprintf(
           '<small class="badge success ml-5">%s</small>',
-          htmlspecialchars(lang('permits granted', 'Genehmigungen erteilt'))
+          e(lang('permits granted', 'Genehmigungen erteilt'))
         );
       }
     }
@@ -420,7 +420,7 @@ final class Nagoya
       '<span class="%s"><i class="%s"></i> %s%s%s</span>',
       $classes,
       $icon,
-      htmlspecialchars($text),
+      e($text),
       $labelHtml,
       $permitHtml
     );
@@ -431,19 +431,19 @@ final class Nagoya
     switch ($status) {
       case 'needed':
         return '<span class="badge no-wrap danger"><i class="ph ph-seal-warning"></i> ' .
-          htmlspecialchars(lang('Open', 'Offen')) . '</span>';
+          e(lang('Open', 'Offen')) . '</span>';
       case 'requested':
         return '<span class="badge no-wrap signal"><i class="ph ph-seal-question"></i> ' .
-          htmlspecialchars(lang('Requested', 'Beantragt')) . '</span>';
+          e(lang('Requested', 'Beantragt')) . '</span>';
       case 'granted':
         return '<span class="badge no-wrap success"><i class="ph ph-seal-check"></i> ' .
-          htmlspecialchars(lang('Granted', 'Erteilt')) . '</span>';
+          e(lang('Granted', 'Erteilt')) . '</span>';
       case 'not-applicable':
         return '<span class="badge no-wrap muted"><i class="ph ph-seal"></i> ' .
-          htmlspecialchars(lang('Not needed', 'Nicht benötigt')) . '</span>';
+          e(lang('Not needed', 'Nicht benötigt')) . '</span>';
       default:
         return '<span class="badge no-wrap muted"><i class="ph ph-seal-warning"></i> ' .
-          htmlspecialchars(lang('Unknown status', 'Unbekannter Status')) . '</span>';
+          e(lang('Unknown status', 'Unbekannter Status')) . '</span>';
     }
   }
 
@@ -468,6 +468,6 @@ final class Nagoya
   private static function makeBadge(string $color, string $icon, string $label, bool $large): string
   {
     $sizeCls = $large ? ' large' : '';
-    return '<span class="badge' . $sizeCls . ' ' . $color . '"><i class="ph ' . $icon . '"></i> ' . htmlspecialchars($label) . '</span>';
+    return '<span class="badge' . $sizeCls . ' ' . $color . '"><i class="ph ' . $icon . '"></i> ' . e($label) . '</span>';
   }
 }

@@ -147,7 +147,7 @@ $countryLabel = $evaluation['label'] ?? '';
                         $checked   = !empty($p['checked']);
                         $docs      = $docsByPermit[$pid] ?? [];
                     ?>
-                        <div class="box padded permit-block" data-permit-id="<?= htmlspecialchars($pid) ?>" id="permit-<?= htmlspecialchars($pid) ?>">
+                        <div class="box padded permit-block" data-permit-id="<?= e($pid) ?>" id="permit-<?= e($pid) ?>">
                             <div class="dropdown float-right">
                                 <button class="btn link small text-danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                     <i class="ph-duotone ph-trash"></i>
@@ -165,11 +165,11 @@ $countryLabel = $evaluation['label'] ?? '';
                             </div>
                             <h3 class="title">
                                 <i class="ph-duotone ph-file-text"></i>
-                                <?= htmlspecialchars($name) ?>
+                                <?= e($name) ?>
                             </h3>
                             <input type="hidden"
-                                name="permits[<?= htmlspecialchars($pid) ?>][id]"
-                                value="<?= htmlspecialchars($pid) ?>">
+                                name="permits[<?= e($pid) ?>][id]"
+                                value="<?= e($pid) ?>">
 
                             <div class="d-flex justify-content-between align-items-center mb-20">
                                 <div>
@@ -177,15 +177,15 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <input
                                             type="text"
                                             class="form-control w-300"
-                                            name="permits[<?= htmlspecialchars($pid) ?>][name]"
-                                            value="<?= htmlspecialchars($name) ?>"
+                                            name="permits[<?= e($pid) ?>][name]"
+                                            value="<?= e($name) ?>"
                                             placeholder="<?= lang('Permit name (e.g. PIC, MAT, ABS permit…)', 'Name der Genehmigung (z.B. PIC, MAT, ABS-Genehmigung…)') ?>">
                                     <?php else: ?>
-                                        <strong><?= htmlspecialchars($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
+                                        <strong><?= e($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
                                     <?php endif; ?>
                                     <?php if (!empty($comment) && !$canEditBasic): ?>
                                         <div class="small text-muted">
-                                            <?= htmlspecialchars($comment) ?>
+                                            <?= e($comment) ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -196,7 +196,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                     </label>
                                     <?php if ($canEditBasic): ?>
                                         <select
-                                            name="permits[<?= htmlspecialchars($pid) ?>][status]"
+                                            name="permits[<?= e($pid) ?>][status]"
                                             class="form-control d-inline-block w-auto">
                                             <option value="" disabled><?= lang('Status', 'Status') ?></option>
                                             <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
@@ -218,11 +218,11 @@ $countryLabel = $evaluation['label'] ?? '';
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][identifier]"
+                                                name="permits[<?= e($pid) ?>][identifier]"
                                                 placeholder="e.g. 12345-ABCD"
-                                                value="<?= htmlspecialchars($identifier) ?>">
+                                                value="<?= e($identifier) ?>">
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($identifier ?: '–') ?></div>
+                                            <div class="small"><?= e($identifier ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-md-6">
@@ -231,11 +231,11 @@ $countryLabel = $evaluation['label'] ?? '';
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][ircc]"
+                                                name="permits[<?= e($pid) ?>][ircc]"
                                                 placeholder="e.g. IRCC123456"
-                                                value="<?= htmlspecialchars($ircc) ?>">
+                                                value="<?= e($ircc) ?>">
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($ircc ?: '–') ?></div>
+                                            <div class="small"><?= e($ircc ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -246,11 +246,11 @@ $countryLabel = $evaluation['label'] ?? '';
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][ircc_link]"
+                                                name="permits[<?= e($pid) ?>][ircc_link]"
                                                 placeholder="https://absch.cbd.int/ircc/..."
-                                                value="<?= htmlspecialchars($ircc_link) ?>">
+                                                value="<?= e($ircc_link) ?>">
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($ircc_link ?: '–') ?></div>
+                                            <div class="small"><?= e($ircc_link ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-md-6">
@@ -259,11 +259,11 @@ $countryLabel = $evaluation['label'] ?? '';
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][validity]"
+                                                name="permits[<?= e($pid) ?>][validity]"
                                                 placeholder="e.g. 2024-2029, indefinite…"
-                                                value="<?= htmlspecialchars($validity) ?>">
+                                                value="<?= e($validity) ?>">
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($validity ?: '–') ?></div>
+                                            <div class="small"><?= e($validity ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -271,12 +271,12 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <!-- does the permit include restrictuons to transfer generic materials to third party?  -->
                                 <div class="form-group">
                                     <?php if ($canEditBasic): ?>
-                                        <input type="hidden" name="permits[<?= htmlspecialchars($pid) ?>][restricts_transfer]" value="0">
+                                        <input type="hidden" name="permits[<?= e($pid) ?>][restricts_transfer]" value="0">
                                         <input
                                             type="checkbox"
-                                            name="permits[<?= htmlspecialchars($pid) ?>][restricts_transfer]"
+                                            name="permits[<?= e($pid) ?>][restricts_transfer]"
                                             value="1"
-                                            onchange="$('#restriction-details-<?= htmlspecialchars($pid) ?>').toggleClass('hidden', !this.checked);"
+                                            onchange="$('#restriction-details-<?= e($pid) ?>').toggleClass('hidden', !this.checked);"
                                             <?= $restricts_transfer ? 'checked' : '' ?>>
                                         <label class="ml-5"><?= lang('The permit includes restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?></label>
                                     <?php else: ?>
@@ -290,15 +290,15 @@ $countryLabel = $evaluation['label'] ?? '';
                                     <?php endif; ?>
 
                                     <!-- if yes: add comment -->
-                                    <div class="form-group mt-2 <?= $restricts_transfer ? '' : 'hidden' ?>" id="restriction-details-<?= htmlspecialchars($pid) ?>">
+                                    <div class="form-group mt-2 <?= $restricts_transfer ? '' : 'hidden' ?>" id="restriction-details-<?= e($pid) ?>">
                                         <label class="small mb-1"><?= lang('Please specify the restrictions', 'Bitte geben Sie die Einschränkungen an') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <textarea
                                                 type="text"
                                                 class="form-control"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][restriction_details]"><?= htmlspecialchars($restriction_details) ?></textarea>
+                                                name="permits[<?= e($pid) ?>][restriction_details]"><?= e($restriction_details) ?></textarea>
                                         <?php else: ?>
-                                            <div class="small"><?= htmlspecialchars($restriction_details ?: '–') ?></div>
+                                            <div class="small"><?= e($restriction_details ?: '–') ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -310,9 +310,9 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <textarea
                                             type="text"
                                             class="form-control"
-                                            name="permits[<?= htmlspecialchars($pid) ?>][benefit_sharing]"><?= htmlspecialchars($p['benefit_sharing'] ?? '') ?></textarea>
+                                            name="permits[<?= e($pid) ?>][benefit_sharing]"><?= e($p['benefit_sharing'] ?? '') ?></textarea>
                                     <?php else: ?>
-                                        <div class="small"><?= htmlspecialchars($p['benefit_sharing'] ?? '–') ?></div>
+                                        <div class="small"><?= e($p['benefit_sharing'] ?? '–') ?></div>
                                     <?php endif; ?>
                                 </div>
 
@@ -323,15 +323,15 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <?= lang('Have you submitted the Due Diligence Declaration for this permit to the ABS Clearing-House?', 'Hast du die <em>Due Diligence Declaration</em> für diese Genehmigung im ABS Clearing-House eingereicht?') ?>
                                         <a href="https://nagoyaprotocol-hub.de/my-obligations/#obligation-2" target="_blank" rel="noopener noreferrer"><i class="ph ph-info"></i></a>
                                         <?php if ($canEditBasic): ?>
-                                            <input type="hidden" name="permits[<?= htmlspecialchars($pid) ?>][declared]" value="0">
+                                            <input type="hidden" name="permits[<?= e($pid) ?>][declared]" value="0">
                                             <div class="mt-5">
                                                 <input
                                                     type="checkbox"
-                                                    name="permits[<?= htmlspecialchars($pid) ?>][declared]"
+                                                    name="permits[<?= e($pid) ?>][declared]"
                                                     value="1"
-                                                    id="declared-<?= htmlspecialchars($pid) ?>"
+                                                    id="declared-<?= e($pid) ?>"
                                                     <?= $declared ? 'checked' : '' ?>>
-                                                <label class="ml-5" for="declared-<?= htmlspecialchars($pid) ?>"><?= lang('Yes, I have submitted the declaration.', 'Ja, ich habe die Erklärung eingereicht.') ?></label>
+                                                <label class="ml-5" for="declared-<?= e($pid) ?>"><?= lang('Yes, I have submitted the declaration.', 'Ja, ich habe die Erklärung eingereicht.') ?></label>
                                             </div>
                                             <small class="text-muted">
                                                 <?= lang('If you have submitted the declaration, please upload a copy of the confirmation received from the ABS Clearing-House in the documents section below.', 'Falls du die Erklärung eingereicht hast, lade bitte eine Kopie der Bestätigung, die du vom ABS Clearing-House erhalten hast, im untenstehenden Dokumentenbereich hoch.') ?>
@@ -360,9 +360,9 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <textarea
                                             type="text"
                                             class="form-control"
-                                            name="permits[<?= htmlspecialchars($pid) ?>][comment]"><?= htmlspecialchars($comment) ?></textarea>
+                                            name="permits[<?= e($pid) ?>][comment]"><?= e($comment) ?></textarea>
                                     <?php else: ?>
-                                        <div class="small"><?= htmlspecialchars($comment ?: '–') ?></div>
+                                        <div class="small"><?= e($comment ?: '–') ?></div>
                                     <?php endif; ?>
                                 </div>
 
@@ -371,7 +371,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <label class="inline-flex align-items-center small">
                                             <input
                                                 type="checkbox"
-                                                name="permits[<?= htmlspecialchars($pid) ?>][checked]"
+                                                name="permits[<?= e($pid) ?>][checked]"
                                                 value="1"
                                                 <?= $checked ? 'checked' : '' ?>>
                                             <span class="ml-5">
@@ -423,8 +423,8 @@ $countryLabel = $evaluation['label'] ?? '';
                                                                     <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                                 </small>
                                                             </div>
-                                                            <?= htmlspecialchars($doc['description'] ?? '') ?><br>
-                                                            <small class="text-muted"><?= htmlspecialchars($doc['filename']) ?> (<?= (int)$doc['size'] ?> Bytes)</small>
+                                                            <?= e($doc['description'] ?? '') ?><br>
+                                                            <small class="text-muted"><?= e($doc['filename']) ?> (<?= (int)$doc['size'] ?> Bytes)</small>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -437,7 +437,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                     <?php endif; ?>
 
                                     <?php if ($canUploadDocs): ?>
-                                        <a href="#docs-permit-<?= htmlspecialchars($pid) ?>" class="btn small" data-toggle="modal">
+                                        <a href="#docs-permit-<?= e($pid) ?>" class="btn small" data-toggle="modal">
                                             <i class="ph ph-upload"></i>
                                             <?= lang('Upload Documents', 'Dokumente hochladen') ?>
                                         </a>
@@ -479,11 +479,11 @@ $countryLabel = $evaluation['label'] ?? '';
                         <tr>
                             <td>
                                 <div class="d-flex justify-content-between mb-5">
-                                    <strong><i class="ph-duotone ph-user text-primary"></i> <?= htmlspecialchars($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
+                                    <strong><i class="ph-duotone ph-user text-primary"></i> <?= e($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
                                     <span class="text-muted"><?= !empty($note['at']) ? format_date($note['at']) : '' ?></span>
                                 </div>
                                 <div class="">
-                                    <?= nl2br(htmlspecialchars($note['message'] ?? '')) ?>
+                                    <?= nl2br(e($note['message'] ?? '')) ?>
                                 </div>
                             </td>
                         </tr>
@@ -521,12 +521,12 @@ $countryLabel = $evaluation['label'] ?? '';
 <?php foreach ($permits as $index => $p):
     $pid = $p['id'] ?? ('permit_' . $index);
 ?>
-    <div class="modal fade" id="docs-permit-<?= htmlspecialchars($pid) ?>" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="docs-permit-<?= e($pid) ?>" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <h5 class="title">
                     <i class="ph-duotone ph-upload"></i>
-                    <?= lang('Upload document for permit', 'Dokument für Genehmigung hochladen') ?>: <q><?= htmlspecialchars($p['name'] ?? '') ?></q>
+                    <?= lang('Upload document for permit', 'Dokument für Genehmigung hochladen') ?>: <q><?= e($p['name'] ?? '') ?></q>
                 </h5>
 
                 <p>
@@ -540,8 +540,8 @@ $countryLabel = $evaluation['label'] ?? '';
                     class="small">
                     <div class="form-group">
                         <div class="custom-file">
-                            <input type="file" id="upload-file-<?= htmlspecialchars($pid) ?>" name="file" class="custom-file-input" required>
-                            <label for="upload-file-<?= htmlspecialchars($pid) ?>" class="custom-file-label">
+                            <input type="file" id="upload-file-<?= e($pid) ?>" name="file" class="custom-file-input" required>
+                            <label for="upload-file-<?= e($pid) ?>" class="custom-file-label">
                                 <?= lang('Choose a file', 'Wähle eine Datei aus') ?>
                             </label>
                         </div>
@@ -570,7 +570,7 @@ $countryLabel = $evaluation['label'] ?? '';
 
                     <!-- Kontext-Felder für Nagoya -->
                     <input type="hidden" name="values[permit_id]" value="<?= $pid ?>">
-                    <input type="hidden" name="values[country_code]" value="<?= htmlspecialchars($code) ?>">
+                    <input type="hidden" name="values[country_code]" value="<?= e($code) ?>">
 
                     <!-- Zurück zur Permit-Seite für dieses Land -->
                     <input type="hidden" name="values[redirect]"

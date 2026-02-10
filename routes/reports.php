@@ -340,7 +340,7 @@ Route::post('/reports', function () {
             }
         } catch (Exception $e) {
             error_log("Report format error: " . $e->getMessage());
-            $html = "<p><b>Report Error in " . htmlspecialchars($step['type'] ?? 'unknown step') . ":</b> " . htmlspecialchars($e->getMessage()) . "</p>";
+            $html = "<p><b>Report Error in " . e($step['type'] ?? 'unknown step') . ":</b> " . e($e->getMessage()) . "</p>";
         }
     }
 

@@ -76,9 +76,9 @@ if ($nagoyaRelevant) {
             <b class="badge text-uppercase primary"><?= lang('Proposal', 'Antrag') ?></b>
             <h1 class="mt-0">
                 <?php if (isset($project['acronym'])) { ?>
-                    <?= htmlspecialchars($project['acronym']) ?> –
+                    <?= e($project['acronym']) ?> –
                 <?php } ?>
-                <?= htmlspecialchars($project['name']) ?>
+                <?= e($project['name']) ?>
             </h1>
 
             <h2 class="subtitle">
@@ -803,7 +803,7 @@ if ($nagoyaRelevant) {
             <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
         </p>
         <div class="box padded overflow-x-scroll">
-            <pre><?= htmlspecialchars(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
+            <pre><?= e(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
         </div>
 
     </section>

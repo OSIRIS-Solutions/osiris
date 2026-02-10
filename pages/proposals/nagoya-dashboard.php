@@ -66,8 +66,8 @@ $totalProjects     = count($projects ?? []);
                         $code = $c['code'] ?? '';
                     ?>
                         <li>
-                            <a href="<?= htmlspecialchars($item['url']) ?>">
-                                <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <a href="<?= e($item['url']) ?>">
+                                <strong><?= e($p['name'] ?? '') ?></strong>
                             </a><br>
                             <span>
                                 <i class="ph ph-globe"></i>
@@ -126,8 +126,8 @@ $totalProjects     = count($projects ?? []);
                         $p   = $item['project'];
                     ?>
                         <li>
-                            <a href="<?= htmlspecialchars($item['url']) ?>">
-                                <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <a href="<?= e($item['url']) ?>">
+                                <strong><?= e($p['name'] ?? '') ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
                                 <?= lang('ABS review pending', 'ABS-Review offen') ?>
@@ -139,8 +139,8 @@ $totalProjects     = count($projects ?? []);
                         $p   = $item['project'];
                     ?>
                         <li class="mb-5">
-                            <a href="<?= htmlspecialchars($item['url']) ?>">
-                                <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <a href="<?= e($item['url']) ?>">
+                                <strong><?= e($p['name'] ?? '') ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
                                 <?= lang('waiting for scope from PI', 'wartet auf Scope vom PI') ?>
@@ -193,8 +193,8 @@ $totalProjects     = count($projects ?? []);
                         $p   = $item['project'];
                     ?>
                         <li>
-                            <a href="<?= htmlspecialchars($item['url']) ?>">
-                                <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <a href="<?= e($item['url']) ?>">
+                                <strong><?= e($p['name'] ?? '') ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
                                 <?= lang('permits in progress', 'Genehmigungen in Bearbeitung') ?>
@@ -206,8 +206,8 @@ $totalProjects     = count($projects ?? []);
                         $p   = $item['project'];
                     ?>
                         <li class="mb-5">
-                            <a href="<?= htmlspecialchars($item['url']) ?>">
-                                <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <a href="<?= e($item['url']) ?>">
+                                <strong><?= e($p['name'] ?? '') ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
                                 <?= lang('validation by ABS team pending', 'Validierung durch ABS-Team offen') ?>
@@ -278,10 +278,10 @@ $totalProjects     = count($projects ?? []);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
-                            <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                            <strong><?= e($p['name'] ?? '') ?></strong>
                         </a><br>
                         <span class="text-muted font-size-12">
-                            <?= htmlspecialchars($p['id'] ?? '') ?>
+                            <?= e($p['id'] ?? '') ?>
                         </span>
                     </td>
                     <td class="font-size-12">
@@ -359,7 +359,7 @@ $totalProjects     = count($projects ?? []);
                         <tr>
                             <td>
                                 <a href="<?= ROOTPATH ?>/nagoya/country/<?= urlencode($code) ?>">
-                                    <strong><?= htmlspecialchars($name) ?></strong>
+                                    <strong><?= e($name) ?></strong>
                                 </a><br>
                                 <small class="text-muted">
                                     <?= $projectsN ?> <?= lang('projects', 'Projekte') ?>
@@ -446,8 +446,8 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <tr>
                             <td>
-                                <a href="<?= ROOTPATH ?>/proposals/view/<?= htmlspecialchars($pid) ?>#nagoya">
-                                    <strong><?= htmlspecialchars($perm['projectName'] ?? '') ?></strong>
+                                <a href="<?= ROOTPATH ?>/proposals/view/<?= e($pid) ?>#nagoya">
+                                    <strong><?= e($perm['projectName'] ?? '') ?></strong>
                                 </a>
                             </td>
                             <td class="font-size-12">
@@ -455,11 +455,11 @@ $totalProjects     = count($projects ?? []);
                                 $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('name', 'name_de'));
                                 ?>
                                 <i class="ph ph-globe"></i>
-                                <?= htmlspecialchars($countryName) ?>
+                                <?= e($countryName) ?>
                             </td>
                             <td class="font-size-12">
-                                <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= htmlspecialchars($pid) ?>/<?= urlencode($perm['countryCode'] ?? '') ?>#permit-<?= urlencode($perm['permitId'] ?? '') ?>">
-                                    <?= htmlspecialchars($perm['permitName'] ?? '–') ?>
+                                <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= e($pid) ?>/<?= urlencode($perm['countryCode'] ?? '') ?>#permit-<?= urlencode($perm['permitId'] ?? '') ?>">
+                                    <?= e($perm['permitName'] ?? '–') ?>
                                 </a>
                                 <?php if (!empty($perm['checked'] ?? null)) { ?>
                                     <span data-toggle="tooltip" data-title="<?= lang('Validated by ABS team', 'Vom ABS-Team validiert') ?>">
@@ -477,13 +477,13 @@ $totalProjects     = count($projects ?? []);
                             </td>
                             <td class="font-size-12">
                                 <?php if (!empty($perm['irccLink'] ?? '')) { ?>
-                                    <a href="<?= htmlspecialchars($perm['irccLink']) ?>" target="_blank" rel="noopener noreferrer" class="link">
-                                        <?= htmlspecialchars($perm['ircc'] ?? '–') ?>
+                                    <a href="<?= e($perm['irccLink']) ?>" target="_blank" rel="noopener noreferrer" class="link">
+                                        <?= e($perm['ircc'] ?? '–') ?>
                                     </a>
                                 <?php } elseif (!empty($perm['ircc'] ?? '')) { ?>
-                                    <?= htmlspecialchars($perm['ircc']) ?>
+                                    <?= e($perm['ircc']) ?>
                                 <?php } else { ?>
-                                    <?= htmlspecialchars($perm['identifier'] ?? '–') ?>
+                                    <?= e($perm['identifier'] ?? '–') ?>
                                 <?php } ?>
                             </td>
                         </tr>

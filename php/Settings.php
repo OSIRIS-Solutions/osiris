@@ -359,27 +359,108 @@ class Settings
 
         if (!empty($design)) {
 
-
             $font = $design['font_preset'] ?? 'rubik';
+
+            $setBody = function (string $css) use (&$root) {
+                $root .= "--font-family:$css;";
+            };
+            $setHeader = function (string $css) use (&$root) {
+                $root .= "--header-font:$css;";
+            };
+
+            $bodyCss = "'Rubik', Helvetica, sans-serif"; // fallback default
+
             switch ($font) {
                 case 'rubik':
-                    $root .= "--font-family:'Rubik', Helvetica, sans-serif;";
+                    $bodyCss = "'Rubik', Helvetica, sans-serif";
                     break;
                 case 'tiktok':
-                    $root .= "--font-family:'TikTok Sans', Helvetica, sans-serif;";
+                    $bodyCss = "'TikTok Sans', Helvetica, sans-serif";
                     break;
                 case 'system':
-                    $root .= "--font-family:-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;";
+                    $bodyCss = "-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif";
                     break;
                 case 'custom':
                     if (!empty($design['font_family'])) {
-                        $root .= '--font-family: "' . $design['font_family'] . '", Rubik, Helvetica, sans-serif;';
-                        if (($design['font_headers'] ?? 'no') == 'yes') {
-                            $root .= "--header-font: " . $design['font_family'] . ", Rubik, Helvetica, sans-serif;";
-                        }
+                        // Quote font family safely
+                        $family = str_replace('"', '\"', (string)$design['font_family']);
+                        $bodyCss = "\"{$family}\", Rubik, Helvetica, sans-serif";
                     }
                     break;
             }
+
+            $setBody($bodyCss);
+
+            // --------------------
+            // Header font handling
+            // --------------------
+            $headerPreset = $design['header_font_preset'] ?? null;
+
+            // Legacy fallback (old setting): if header preset is not set, emulate previous behavior
+            if ($headerPreset === null) {
+                // old default: headers were TikTok unless font_headers=yes in custom case
+                $headerCss = "'TikTok Sans', Helvetica, sans-serif";
+
+                if (($design['font_headers'] ?? 'no') === 'yes' && !empty($design['font_family'])) {
+                    $family = str_replace('"', '\"', (string)$design['font_family']);
+                    $headerCss = "\"{$family}\", Rubik, Helvetica, sans-serif";
+                }
+
+                $setHeader($headerCss);
+            } else {
+                // New behavior
+                switch ($headerPreset) {
+                    case 'body':
+                        $setHeader($bodyCss);
+                        break;
+
+                    case 'rubik':
+                        $setHeader("'Rubik', Helvetica, sans-serif");
+                        break;
+
+                    case 'tiktok':
+                        $setHeader("'TikTok Sans', Helvetica, sans-serif");
+                        break;
+
+                    case 'system':
+                        $setHeader("-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
+                        break;
+
+                    case 'custom':
+                        if (!empty($design['header_font_family'])) {
+                            $family = str_replace('"', '\"', (string)$design['header_font_family']);
+                            $setHeader("\"{$family}\", 'TikTok Sans', Helvetica, sans-serif");
+                        } else {
+                            // sensible fallback if custom selected but empty
+                            $setHeader("'TikTok Sans', Helvetica, sans-serif");
+                        }
+                        break;
+
+                    default:
+                        $setHeader("'TikTok Sans', Helvetica, sans-serif");
+                        break;
+                }
+            }
+            // $font = $design['font_preset'] ?? 'rubik';
+            // switch ($font) {
+            //     case 'rubik':
+            //         $root .= "--font-family:'Rubik', Helvetica, sans-serif;";
+            //         break;
+            //     case 'tiktok':
+            //         $root .= "--font-family:'TikTok Sans', Helvetica, sans-serif;";
+            //         break;
+            //     case 'system':
+            //         $root .= "--font-family:-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;";
+            //         break;
+            //     case 'custom':
+            //         if (!empty($design['font_family'])) {
+            //             $root .= '--font-family: "' . $design['font_family'] . '", Rubik, Helvetica, sans-serif;';
+            //             if (($design['font_headers'] ?? 'no') == 'yes') {
+            //                 $root .= "--header-font: " . $design['font_family'] . ", Rubik, Helvetica, sans-serif;";
+            //             }
+            //         }
+            //         break;
+            // }
 
 
             if (!empty($design['border_width'])) {
@@ -415,7 +496,7 @@ class Settings
                 $root .= "--border-color: " . $design['border_color'] . ";";
             }
 
-            if (isset($design['logo_filter']) ) {
+            if (isset($design['logo_filter'])) {
                 switch ($design['logo_filter']) {
                     case 'none':
                         // $style .= "#osiris-logo { filter: none;} ";
@@ -465,7 +546,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['table_striped'])){
+            if (isset($design['table_striped'])) {
                 switch ($design['table_striped']) {
                     case 'enabled':
                         $root .= "--table-stripe-color: var(--gray-color-very-light);";
@@ -475,7 +556,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['box_shadow'])){
+            if (isset($design['box_shadow'])) {
                 switch ($design['box_shadow']) {
                     case 'strong':
                         $root .= "--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);";
@@ -485,11 +566,11 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['icon_style'])){
+            if (isset($design['icon_style'])) {
                 switch ($design['icon_style']) {
                     case 'filled':
                         $root .= "--icon-font: 'Phosphor-Fill';";
-                        $style .= '.ph {font-family: "Phosphor-Fill" !important;} ' ;
+                        $style .= '.ph {font-family: "Phosphor-Fill" !important;} ';
                         break;
                     case 'duotone':
                         $root .= "--icon-font: 'Phosphor';";
@@ -500,7 +581,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['link_style'])){
+            if (isset($design['link_style'])) {
                 switch ($design['link_style']) {
                     case 'underline':
                         $style .= "a:not(.btn, .link, .item) { text-decoration: underline; }";
@@ -538,25 +619,40 @@ class Settings
         }
 
         $preset = $design['font_preset'] ?? 'rubik';
-        if (empty($preset) || $preset != 'custom') {
-            return $out;
+        $googleUsed = false;
+        if (!empty($preset) && $preset == 'custom') {
+
+            // Determine which CSS URL to load (if any)
+            $cssUrl = trim((string)($design['font_css_url'] ?? ''));
+
+            // Basic validation: https only, no whitespace, no quotes, no "<" / ">"
+            if ($cssUrl === '') return '';
+            if (!preg_match('~^https://[^\s"\'<>]+$~i', $cssUrl)) return '';
+
+            $cssUrlEsc = e($cssUrl);
+
+            // Preconnect only makes sense for Google Fonts
+            if (strpos($cssUrl, 'fonts.googleapis.com') !== false) {
+                $out  .= '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+                $out .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+                $googleUsed = true;
+            }
+            $out .= '<link rel="stylesheet" href="' . $cssUrlEsc . '">' . "\n";
         }
+        $headerPreset = $design['header_font_preset'] ?? null;
+        if (!empty($headerPreset) && $headerPreset == 'custom') {
+            $cssUrl = trim((string)($design['header_font_css_url'] ?? ''));
+            if ($cssUrl === '') return $out;
+            if (!preg_match('~^https://[^\s"\'<>]+$~i', $cssUrl)) return $out;
 
-        // Determine which CSS URL to load (if any)
-        $cssUrl = trim((string)($design['font_css_url'] ?? ''));
+            $cssUrlEsc = e($cssUrl);
 
-        // Basic validation: https only, no whitespace, no quotes, no "<" / ">"
-        if ($cssUrl === '') return '';
-        if (!preg_match('~^https://[^\s"\'<>]+$~i', $cssUrl)) return '';
-
-        $cssUrlEsc = htmlspecialchars($cssUrl, ENT_QUOTES, 'UTF-8');
-
-        // Preconnect only makes sense for Google Fonts
-        if (strpos($cssUrl, 'fonts.googleapis.com') !== false) {
-            $out  .= '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-            $out .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+            if (strpos($cssUrl, 'fonts.googleapis.com') !== false && !$googleUsed) {
+                $out  .= '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+                $out .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+            }
+            $out .= '<link rel="stylesheet" href="' . $cssUrlEsc . '">' . "\n";
         }
-        $out .= '<link rel="stylesheet" href="' . $cssUrlEsc . '">' . "\n";
 
         return $out;
     }

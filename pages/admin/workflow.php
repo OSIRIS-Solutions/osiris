@@ -44,12 +44,12 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
 
 <form action="<?= ROOTPATH ?>/crud/workflows/update/<?= $form['id'] ?>" method="post" id="workflow-form">
     <div class="box">
-        <h4 class="header"><?= htmlspecialchars($name) ?></h4>
+        <h4 class="header"><?= e($name) ?></h4>
         <div class="content">
             <p><b>ID:</b> <code class="code"><?= $form['id'] ?></code></p>
             <div class="form-group">
                 <label for="name" class="required"><?= lang('Name of the workflow', 'Name des Workflow') ?></label>
-                <input type="text" class="form-control" name="values[name]" required value="<?= htmlspecialchars($form['name'] ?? '') ?>" maxlength="30">
+                <input type="text" class="form-control" name="values[name]" required value="<?= e($form['name'] ?? '') ?>" maxlength="30">
                 <small class="form-text text-muted"><?= lang('Max 30 characters', 'Maximal 30 Zeichen') ?></small>
             </div>
         </div>
@@ -79,7 +79,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             <td class="drag-handle"><i class="ph ph-dots-six-vertical"></i></td>
                             <td>
                                 <div class="form-group floating-form mb-0">
-                                    <input type="text" class="form-control" name="values[steps][<?= $i ?>][label]" value="<?= htmlspecialchars($s['label'] ?? '') ?>" placeholder="e.g. Department review" required>
+                                    <input type="text" class="form-control" name="values[steps][<?= $i ?>][label]" value="<?= e($s['label'] ?? '') ?>" placeholder="e.g. Department review" required>
                                     <label><?= lang('Step title', 'Titel des Schrittes') ?></label>
                                 </div>
                             </td>
@@ -89,7 +89,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             <td>
                                 <select name="values[steps][<?= $i ?>][role]" class="form-control">
                                     <?php foreach ($roles as $r): ?>
-                                        <option value="<?= htmlspecialchars($r) ?>" <?= (($s['role'] ?? '') === $r ? 'selected' : '') ?>><?= strtoupper($r) ?></option>
+                                        <option value="<?= e($r) ?>" <?= (($s['role'] ?? '') === $r ? 'selected' : '') ?>><?= strtoupper($r) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </td>
@@ -152,7 +152,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <td>
                 <select name="__name__[role]" class="form-control">
                     <?php foreach ($roles as $r): ?>
-                        <option value="<?= htmlspecialchars($r) ?>"><?= strtoupper($r) ?></option>
+                        <option value="<?= e($r) ?>"><?= strtoupper($r) ?></option>
                     <?php endforeach; ?>
                 </select>
             </td>
@@ -201,13 +201,13 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <tbody>
                 <?php foreach ($activities as $act) { ?>
                     <tr>
-                        <td><a href="<?= ROOTPATH ?>/admin/categories/<?= $act['id'] ?>"><?= htmlspecialchars($act['name'] ?? $act['id']) ?></a></td>
+                        <td><a href="<?= ROOTPATH ?>/admin/categories/<?= $act['id'] ?>"><?= e($act['name'] ?? $act['id']) ?></a></td>
                         <td><?= $osiris->activities->count(['type' => $act['id']]) ?></td>
                         <td><?= $osiris->activities->count(['type' => $act['id'], 'workflow' => ['$ne' => null]]) ?></td>
                         <td class="text-right">
                             <a href="#" class="btn-migrate"
-                                data-category-id="<?= htmlspecialchars($act['id']) ?>"
-                                data-category-name="<?= htmlspecialchars($act['name'] ?? $act['id']) ?>"
+                                data-category-id="<?= e($act['id']) ?>"
+                                data-category-name="<?= e($act['name'] ?? $act['id']) ?>"
                                 title="<?= lang('Migrate existing activities', 'Bestehende Aktivitäten migrieren') ?>">
                                 <i class="ph ph-arrow-right"></i>
                             </a>

@@ -337,3 +337,97 @@ Route::get('/user/oauth', function () {
         }
     }
 });
+
+
+Route::get('/reset-guest-password', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_GET['token'])) die("no token given");
+    $token = $_GET['token'];
+    $guest = $osiris->guestAccounts->findOne(['reset_token' => $token, 'reset_token_valid_until' => ['$gt' => date('Y-m-d H:i:s')]]);
+    if (empty($guest)) {
+        $_SESSION['msg'] = lang("Invalid or expired token.", "Ungültiger oder abgelaufener Token.");
+        header("Location: " . ROOTPATH . "/");
+        die();
+    }
+    include BASEPATH . "/header.php";
+?>
+    <div class="container">
+        <h1><?= lang("Reset password for guest account", "Passwort für Gastkonto zurücksetzen") ?></h1>
+        <form action="<?= ROOTPATH ?>/reset-guest-password" method="post">
+            <input type="hidden" name="token" value="<?= e($token) ?>">
+            <div class="form-group">
+                <label for="password"><?= lang("New password", "Neues Passwort") ?></label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm"><?= lang("Confirm new password", "Neues Passwort bestätigen") ?></label>
+                <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+            </div>
+
+            <div id="feedback" class="mb-20"></div>
+
+            <button type="submit" class="btn btn-primary"><?= lang("Reset password", "Passwort zurücksetzen") ?></button>
+        </form>
+
+        <script>
+            const password = document.getElementById('password');
+            const password_confirm = document.getElementById('password_confirm');
+            const feedback = document.getElementById('feedback');
+
+            function validatePasswords() {
+                if (password.value === "" || password_confirm.value === "") {
+                    feedback.textContent = "";
+                    feedback.className = "";
+                    return;
+                }
+                if (password.value === password_confirm.value) {
+                    feedback.textContent = "<?= lang("Passwords match", "Passwörter stimmen überein") ?>";
+                    feedback.className = "text-success";
+                } else {
+                    feedback.textContent = "<?= lang("Passwords do not match", "Passwörter stimmen nicht überein") ?>";
+                    feedback.className = "text-danger";
+                }
+            }
+
+            password.addEventListener('input', validatePasswords);
+            password_confirm.addEventListener('input', validatePasswords);
+        </script>
+    </div>
+<?php
+    include BASEPATH . "/footer.php";
+});
+
+Route::post('/reset-guest-password', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['token'])) die("no token given");
+    $token = $_POST['token'];
+    $guest = $osiris->guestAccounts->findOne(['reset_token' => $token, 'reset_token_valid_until' => ['$gt' => date('Y-m-d H:i:s')]]);
+    if (empty($guest)) {
+        $_SESSION['msg'] = lang("Invalid or expired token.", "Ungültiger oder abgelaufener Token.");
+        header("Location: " . ROOTPATH . "/");
+        die();
+    }
+    if (!isset($_POST['password']) || empty($_POST['password'])) {
+        $_SESSION['msg'] = lang("Password cannot be empty.", "Passwort darf nicht leer sein.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/reset-guest-password?token=$token");
+        die();
+    }
+    if (!isset($_POST['password_confirm']) || $_POST['password'] != $_POST['password_confirm']) {
+        $_SESSION['msg'] = lang("Passwords do not match.", "Passwörter stimmen nicht überein.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/reset-guest-password?token=$token");
+        die();
+    }
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $osiris->guestAccounts->updateOne(
+        ['username' => $guest['username']],
+        ['$set' => ['password' => $password]],
+        ['$unset' => ['reset_token' => "", 'reset_token_valid_until' => ""]]
+    );
+    $_SESSION['msg'] = lang("Password successfully reset. You can now log in with your new password.", "Passwort erfolgreich zurückgesetzt. Du kannst dich jetzt mit deinem neuen Passwort einloggen.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/");
+    die();
+});

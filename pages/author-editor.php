@@ -166,12 +166,12 @@ foreach ($typeModules as $m) {
                                         <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                             <input type="checkbox"
                                                 name="authors[<?= $i ?>][units][]"
-                                                id="unit-<?= $i ?>-<?= htmlspecialchars($unit_id) ?>"
-                                                value="<?= htmlspecialchars($unit_id) ?>"
+                                                id="unit-<?= $i ?>-<?= e($unit_id) ?>"
+                                                value="<?= e($unit_id) ?>"
                                                 <?= in_array($unit_id, $selected) ? 'checked' : '' ?>>
-                                            <label for="unit-<?= $i ?>-<?= htmlspecialchars($unit_id) ?>">
+                                            <label for="unit-<?= $i ?>-<?= e($unit_id) ?>">
                                                 <span data-toggle="tooltip" data-title="<?= $unit['name'] ?>" class="underline-dashed">
-                                                    <?= htmlspecialchars($unit_id) ?>
+                                                    <?= e($unit_id) ?>
                                                 </span>
                                             </label>
                                         </div>

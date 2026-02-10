@@ -124,11 +124,11 @@
             <div class="row row-eq-spacing my-0">
                 <div class="col-md-6">
                     <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                    <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>">
+                    <input name="values[position]" id="position" type="text" class="form-control" value="<?= e($data['position'] ?? '') ?>">
                 </div>
                 <div class="col-md-6">
                     <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                    <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>">
+                    <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= e($data['position_de'] ?? '') ?>">
                 </div>
             </div>
         <?php } else { ?>

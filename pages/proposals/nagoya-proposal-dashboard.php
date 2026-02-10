@@ -323,7 +323,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
                             <?= $numGroups ?>
                             <?= lang('Sample collection(s)', 'Probensammlung(en)') ?>
                             <?php if ($nagoya_perm && !empty($review['comment'])): ?>
-                                · <?= htmlspecialchars($review['comment']) ?>
+                                · <?= e($review['comment']) ?>
                             <?php endif; ?>
                             <?php if ($permTotal > 0): ?>
                                 <?= $permTotal ?> <?= lang('Permit(s)', 'Genehmigung(en)') ?>
@@ -383,7 +383,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
     <div class="mt-20">
         <h6><?= lang('Overall rationale / comments', 'Gesamtbegründung / Kommentare') ?></h6>
         <div class="p-10 bg-light border rounded">
-            <?= nl2br(htmlspecialchars($proposal['nagoya']['absRationale'])) ?>
+            <?= nl2br(e($proposal['nagoya']['absRationale'])) ?>
         </div>
     </div>
 <?php endif; ?>

@@ -15,44 +15,65 @@ $(document).ready(function () {
     }
 })
 
-function initQuill(element) {
-
+function initQuill(element, controls = 'basic') {
+    let toolbar = [
+        ['italic', 'underline'],
+        [{ script: 'super' }, { script: 'sub' }]
+    ];
+    let formats = ['italic', 'underline', 'script'];
+    if (controls === 'full') {
+        toolbar = [
+            ['bold', 'italic', 'underline'],
+            // [{ header: [1, 2, 3, false] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ script: 'super' }, { script: 'sub' }],
+            ['link', 'image'],
+            ['clean']
+        ]
+        formats = ['italic', 'underline', 'bold', 'script', 'link', 'image', 'list', 'header']
+    }
     var quill = new Quill(element, {
         modules: {
-            toolbar: [
-                ['italic', 'underline'],
-                [{ script: 'super' }, { script: 'sub' }]
-            ]
+            toolbar: toolbar
         },
-        formats: ['italic', 'underline', 'script'],
+        formats: formats,
         placeholder: '',
         theme: 'snow' // or 'bubble'
     });
 
     quill.on('text-change', function () {
-        var str = $(element).find('.ql-editor p').html()
-        $(element).next().val(str)
-        // TODO: add doubletCheck() with underscore
-    });
-
-    // add additional symbol toolbar for greek letters
-    var additional = $('<span class="ql-formats">')
-    var symbols = ['α', 'β', 'π', 'Δ']
-    symbols.forEach(symbol => {
-        var btn = $('<button type="button" class="ql-symbol additional">')
-        btn.html(symbol)
-        btn.on('click', function () {
-            // $('.symbols').click(function(){
-            quill.focus();
-            var symbol = $(this).html();
-            var caretPosition = quill.getSelection(true);
-            quill.insertText(caretPosition, symbol);
-            // });
+        var str = ''
+        $(element).find('.ql-editor p').each(function (i, el) {
+            var el = $(el)
+            if (el.html() == '<br>') return;
+            var html = el.html()
+            if (str != '') str += "<br>"
+            str += html
         })
-        additional.append(btn)
+        $(element).next().val(str)
     });
 
-    $(element).parent().find('.ql-toolbar').append(additional)
+    if (controls === 'scientific') {
+        // add additional symbol toolbar for greek letters
+        var additional = $('<span class="ql-formats">')
+        var symbols = ['α', 'β', 'π', 'Δ']
+        symbols.forEach(symbol => {
+            var btn = $('<button type="button" class="ql-symbol additional">')
+            btn.html(symbol)
+            btn.on('click', function () {
+                // $('.symbols').click(function(){
+                quill.focus();
+                var symbol = $(this).html();
+                var caretPosition = quill.getSelection(true);
+                quill.insertText(caretPosition, symbol);
+                // });
+            })
+            additional.append(btn)
+        });
+        $(element).parent().find('.ql-toolbar').append(additional)
+    }
+
+
 }
 
 function quillEditor(selector) {
@@ -472,7 +493,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
     } else {
         $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
     }
-    
+
 }
 
 
