@@ -6,14 +6,55 @@
 
 ## Version 1.8.1
 
-In diesem Update gibt es ein paar kleinere Verbesserungen und Bugfixes, inklusive eines wichtigen Security-Fixes. Hier die Details:
+Dieses Update bringt wichtige Sicherheitsverbesserungen, viele kleine Bugfixes sowie spürbare Verbesserungen in Einstellungen, Organisationen, Reports und im Admin-Bereich.
 
-### Sicherheitsfix
-Es wurde ein Problem behoben, durch das Nutzer:innen ohne Bearbeitungsrechten für Nutzer:innenprofile auch die Profile anderer Nutzer:innen bearbeiten und sogar inaktivieren oder löschen konnten. Wir entschuldigen uns für dieses Problem und bedanken uns bei dem OSIRIS-Nutzer Jochen, der uns darauf aufmerksam gemacht hat [#408](https://github.com/OSIRIS-Solutions/osiris/issues/408).
+### Sicherheit & Stabilität
 
-### Weitere Verbesserungen & Bugfixes
+Es wurde ein kritisches Problem behoben, durch das Nutzer:innen ohne Bearbeitungsrechten für Nutzer:innenprofile auch die Profile anderer Nutzer:innen bearbeiten und sogar inaktivieren oder löschen konnten. Wir entschuldigen uns für dieses Problem und bedanken uns bei dem OSIRIS-Nutzer Jochen, der uns darauf aufmerksam gemacht hat [#408](https://github.com/OSIRIS-Solutions/osiris/issues/408).
+
+- Einheitliches Escaping von Nutzereingaben auf Portal-Seiten (Personen, Infrastrukturen, Einheiten, Topics) zur besseren Absicherung gegen fehlerhafte oder manipulierte Inhalte (Fixes #404)
+- Verbesserte Fehlerbehandlung bei Datei-Uploads inkl. Maximalgrößen-Validierung (#394)
+- Upload-Fehler und Erfolgsmeldungen werden jetzt korrekt gerendert
+- Passwort-Reset für Gastaccounts mit Token-Validierung implementiert
 
 
+### Design, Einstellungen & UI
+- Neue Schriftarten-Optionen inkl. Header-Font in den Design-Einstellungen (#395)
+- Lange Links werden jetzt teilweise automatisch gekürzt
+- Beispiel-Button (nicht funktionsfähig) entfernt
+
+
+### Organisationen & Kollaborationen
+- Häufig genutzte Organisationen werden jetzt auch in Aktivitäten vorgeschlagen
+- Organisationen können jetzt mit URL gespeichert werden
+- „Organisation erstellen“-Button entfernt (war nicht funktionsfähig) (#393)
+- Alle Projekt-Kollaborationen können jetzt entfernt werden (#401)
+- Anzeige des Scopes in der Projektansicht wieder aktiviert (#407)
+
+
+### Reports & Editor
+- Report Builder:
+  - Blöcke lassen sich jetzt wieder duplizieren (#391)
+  - Tabellen-Aggregationen robuster (Strings werden korrekt behandelt) (#392)
+  - Mehr Styling-Optionen (fett, Links, Bilder)
+  - Standardfilter ist jetzt leer (besseres Startverhalten in Übersichten)
+- Quill-Editor:
+  - Bessere Behandlung von Leerzeilen und Mehrzeiligkeit (#387)
+- Validierung:
+  - Leere Strings und Zeilenumbrüche werden korrekt behandelt (#403)
+
+
+### API, Rendering & Backend
+- Neuer „Smart Render“-Endpoint zum Nachrendern noch nicht gerenderter Inhalte (z. B. extern hinzugefügte Aktivitäten)
+- Verbesserte getAuthors-Logik für dynamische Felder und API-Suche (inkl. Editor:innen & Supervisor:innen) (#399)
+
+### Kleinere Fixes
+- Bestätigungsdialog beim Löschen von Custom Fields (#389) und bessere damit zusammenhängende User Experience
+- Text-Handling in Formularen robuster gemacht
+- Diverse kleine UI- und Anzeigeprobleme behoben
+
+
+----
 
 <time datetime="2026-02-01">01.02.2026</time>
 <a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
