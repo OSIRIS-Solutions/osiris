@@ -71,7 +71,12 @@ Route::get('/whats-up', function () {
 Route::get('/user/edit/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Document.php";
-
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
     // $id = $DB->to_ObjectID($id);
 
     $data = $DB->getPerson($user);
@@ -93,7 +98,12 @@ Route::get('/user/edit/(.*)', function ($user) {
 
 Route::get('/user/units/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
     $data = $DB->getPerson($user);
     if (empty($data)) {
         header("Location: " . ROOTPATH . "/user/browse");
@@ -113,6 +123,13 @@ Route::get('/user/units/(.*)', function ($user) {
 Route::get('/user/visibility/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     // include_once BASEPATH . "/php/Document.php";
+
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
 
     $data = $DB->getPerson($user);
     if (empty($data)) {
@@ -134,7 +151,12 @@ Route::get('/user/visibility/(.*)', function ($user) {
 
 Route::get('/user/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-
+    if (!$Settings->hasPermission('user.inactive')) {
+        $_SESSION['msg'] = lang("You don't have permission to inactivate users.", "Du hast keine Berechtigung, Benutzer zu inaktivieren.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
     $data = $DB->getPerson($user);
     $data = DB::doc2Arr($data);
     if (empty($data)) {
@@ -156,6 +178,12 @@ Route::get('/user/inactivate/(.*)', function ($user) {
 
 Route::get('/user/delete/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.delete')) {
+        $_SESSION['msg'] = lang("You don't have permission to delete users.", "Du hast keine Berechtigung, Benutzer zu löschen.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
 
     $data = $DB->getPerson($user);
     $data = DB::doc2Arr($data);
@@ -544,6 +572,12 @@ Route::post('/switch-user', function () {
 Route::post('/crud/users/update/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['values'])) die("no values given");
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+         $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");    
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
 
     $values = $_POST['values'];
     $values = validateValues($values, $DB);
@@ -666,6 +700,12 @@ Route::post('/crud/users/update/(.*)', function ($user) {
 Route::post('/crud/users/units/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
 
     if (!isset($_POST['values']) && isset($_POST['id'])) {
         // first get the unit that should be deleted
@@ -674,7 +714,9 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['projection' => ['units.$' => 1]]
         );
         if (empty($unit)) {
-            echo "Unit not found.";
+            $_SESSION['msg'] = lang("Unit not found.", "Einheit nicht gefunden.");
+            $_SESSION['msg_type'] = "error";
+            header("Location: " . ROOTPATH . "/profile/$user");
             die();
         }
         $unit = $unit['units'][0];
@@ -728,12 +770,6 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     // update all activities that have this user as author
 
     $filter = ['authors.user' => $user];
-    // if (isset($values['start'])) {
-    //     $filter['start_date'] = ['$gte' => $values['start']];
-    // }
-    // if (isset($values['end'])) {
-    //     $filter['start_date'] = ['$lte' => $values['end']];
-    // }
     renderAuthorUnitsMany($filter);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
@@ -804,7 +840,9 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
 
     // check permissions
     if (!$Settings->hasPermission('user.delete')) {
-        echo "Permission denied.";
+        $_SESSION['msg'] = lang("You don't have permission to delete users.", "Du hast keine Berechtigung, Benutzer zu löschen.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
         die();
     }
 
@@ -872,7 +910,13 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
  */
 Route::post('/crud/users/profile-picture/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-
+    
+    if (!$Settings->hasPermission('user.image') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
 
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
