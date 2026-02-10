@@ -632,8 +632,7 @@ if ($topicsEnabled) {
                     Scope
                 </h5>
                 <?php
-                // $scope = $Project->getScope();
-                // echo  $scope['scope'] . ' (' . $scope['region'] . ')';
+                echo  $scope['scope'] . ' (' . $scope['region'] . ')';
                 ?>
             </div>
         </div>
