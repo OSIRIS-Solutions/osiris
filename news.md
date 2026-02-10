@@ -1,7 +1,21 @@
 # Neuigkeiten
 
 
-<time datetime="2026-01-18">01.02.2026</time>
+<time datetime="2026-02-10">10.02.2026</time>
+<a class="anchor" href="#version-1.8.1" id="version-1.8.1"></a>
+
+## Version 1.8.1
+
+In diesem Update gibt es ein paar kleinere Verbesserungen und Bugfixes, inklusive eines wichtigen Security-Fixes. Hier die Details:
+
+### Sicherheitsfix
+Es wurde ein Problem behoben, durch das Nutzer:innen ohne Bearbeitungsrechten für Nutzer:innenprofile auch die Profile anderer Nutzer:innen bearbeiten und sogar inaktivieren oder löschen konnten. Wir entschuldigen uns für dieses Problem und bedanken uns bei dem OSIRIS-Nutzer Jochen, der uns darauf aufmerksam gemacht hat [#408](https://github.com/OSIRIS-Solutions/osiris/issues/408).
+
+### Weitere Verbesserungen & Bugfixes
+
+
+
+<time datetime="2026-02-01">01.02.2026</time>
 <a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
 
 ## Version 1.8.0
