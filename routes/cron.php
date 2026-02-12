@@ -117,6 +117,7 @@ Route::get('/cron/digest', function () {
  * Rerender elements that have not rendered yet
  */
 Route::get('/smart-render', function () {
+    include_once BASEPATH . "/php/init.php";
     if (!defined('CRON_SECRET') || CRON_SECRET === 'please-change-this-secret') {
         return JSON::error('CRON_SECRET is not set properly in CONFIG.php', 500);
     }
