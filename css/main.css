@@ -2772,6 +2772,13 @@ a.link:not(.btn)[target=_blank]::after {
 a.colorless {
   color: inherit;
 }
+a.short-link {
+  display: inline-block;
+  max-width: 25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .hyperlink-underline {
   text-decoration: underline;
@@ -6883,21 +6890,23 @@ Sidebar content
   font-size: 1.3rem;
   letter-spacing: 3px;
   color: var(--primary-color-light);
+  display: flex;
+  justify-content: space-between;
 }
 .sidebar-menu .title.collapse {
   cursor: pointer;
 }
-.sidebar-menu .title.collapse::before {
+.sidebar-menu .title.collapse::after {
   font-family: "Phosphor";
-  content: "\e136";
+  content: "\e3d4";
   font-size: 1.25em;
   line-height: 1em;
   vertical-align: -0.15em;
   display: inline-block;
   transition: transform 0.5s;
 }
-.sidebar-menu .title.collapse.open::before {
-  transform: rotate(90deg);
+.sidebar-menu .title.collapse.open::after {
+  transform: rotate(-45deg);
 }
 .sidebar-menu .brand {
   display: -ms-flexbox;
