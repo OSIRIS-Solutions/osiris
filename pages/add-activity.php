@@ -331,6 +331,29 @@ console.log(TYPES);
 </div>
 
 
+<div class="modal" id="teaching-select" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a data-dismiss="modal" href="#close-modal" class="btn float-right" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+
+            <label for="teaching-search"><?= lang('Search Modules by name or module number', 'Suche Module nach Name oder Modulnummer') ?></label>
+            <div class="input-group">
+                <input type="text" class="form-control" onchange="getTeaching(this.value)" list="teaching-list" id="teaching-search" value="<?= $form['module'] ?? '' ?>">
+                <div class="input-group-append">
+                    <button class="btn" onclick="getTeaching($('#teaching-search').val())"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+            </div>
+            <table class="table simple">
+                <tbody id="teaching-suggest">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal" id="sws-calc" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
