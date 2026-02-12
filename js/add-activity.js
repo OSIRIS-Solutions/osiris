@@ -416,7 +416,7 @@ function getTeaching(name) {
                     affiliation: j.affiliation,
                     contact_person: j.contact_person,
                     module: j.module,
-                    id: j._id['$oid']
+                    id: j.id
                 })
             });
             if (teaching.length === 0) {

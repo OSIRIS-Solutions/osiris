@@ -798,7 +798,7 @@ Route::get('/api/teaching', function () {
             $aff = $aff['name'] ?? '';
         }
         $t = [
-            '_id' => strval($doc['_id']),
+            'id' => strval($doc['_id']),
             'title' => $doc['title'] ?? '',
             'module' => $doc['module'] ?? '',
             'semester' => $doc['semester'] ?? '',
