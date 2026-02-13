@@ -24,10 +24,156 @@
 
     <?php } else { ?>
 
-        <!-- search bar -->
-        <div class="content" style="margin-top:-4rem">
-            <input type="text" class="form-control small border-primary" autocomplete="off" placeholder="<?= lang('Search', 'Suche') ?>" oninput="searchNavBar(this.value)">
+
+        <style>
+            .sidebar-menu {
+                top: 0;
+            }
+
+            .my-profile {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: column;
+                gap: 5px;
+                margin-bottom: 2rem;
+                position: fixed;
+                width: 25rem;
+                background-color: white;
+                z-index: 100;
+            }
+
+            .my-profile-spacer {
+                height: 9.5rem;
+            }
+
+            .my-profile-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .my-profile-head .my-profile-avatar {
+                text-decoration: none;
+                color: inherit;
+                display: flex;
+                align-items: center;
+            }
+
+            .my-profile-picture {
+                width: 5rem;
+                height: 5rem;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 1rem;
+                object-position: 0 -1rem;
+                flex-shrink: 0;
+                border: var(--border-width) solid var(--border-color);
+            }
+
+            .my-profile-name {
+                line-height: 1.1;
+            }
+
+            .my-profile-name strong {
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+                font-weight: var(--header-weight);
+                font-family: var(--header-font);
+                font-size: 1.6rem;
+            }
+
+            .my-profile-links {
+                display: flex;
+                gap: 1rem;
+                position: absolute;
+                top: 6.5rem;
+                right: 0;
+                background: white;
+                border: var(--border-width) solid var(--border-color);
+                border-top-left-radius: 999px;
+                padding: .25rem 1rem;
+                border-bottom-left-radius: 999px;
+                border-right: none;
+            }
+
+            .my-profile-links a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                color: var(--primary-color);
+                /* background-color: var(--primary-color-20); */
+                /* transition: background-color 0.2s, color 0.2s; */
+            }
+
+            .my-profile-links a:hover {
+                background-color: var(--primary-color);
+                color: #fff;
+            }
+
+            .sidebar-menu>a .index,
+            .sidebar-menu nav>a .index {
+                margin-left: auto;
+                background-color: var(--danger-color-20);
+                color: var(--danger-color);
+                border-radius: 999px;
+                padding: 0 6px;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+        </style>
+
+        <div class="my-profile">
+            <div class="my-profile-head">
+
+                <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>" class="my-profile-avatar">
+                    <?= $Settings->printProfilePicture($_SESSION['username'], 'my-profile-picture') ?>
+                    <div class="my-profile-name">
+                        <strong><?= $USER["displayname"] ?? $_SESSION['username'] ?></strong>
+                        <br>
+                        <small class="text-muted" style="font-size: 0.8rem; font-weight: normal;">
+                            @<?= $_SESSION['username'] ?>
+                        </small>
+                    </div>
+                </a>
+                <a href="#" onclick="$('.my-profile-links').slideToggle();" title="<?= lang('Profile options', 'Profiloptionen') ?>">
+                    <i class="ph ph-dots-three ph-2x"></i>
+                </a>
+            </div>
+            <div class="my-profile-links" style="display: none;">
+
+                <?php if ($Settings->hasPermission('scientist')) { ?>
+                    <a href="<?= ROOTPATH ?>/my-year" class="<?= $pageactive('my-year') ?>" data-toggle="tooltip" data-title="<?= lang('My year', 'Mein Jahr') ?>">
+                        <i class="ph ph-calendar" aria-hidden="true"></i>
+                    </a>
+
+                    <a href="<?= ROOTPATH ?>/my-activities" class="<?= $pageactive('my-activities') ?>" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten') ?>">
+                        <i class="ph ph-folder-user" aria-hidden="true"></i>
+                    </a>
+                <?php } ?>
+
+                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" data-toggle="tooltip" data-title="<?= lang('Settings', 'Einstellungen') ?>">
+                    <i class="ph ph-gear" aria-hidden="true"></i>
+                </a>
+
+                <a href="<?= ROOTPATH ?>/user/logout" class="" style="--primary-color:var(--danger-color);" data-toggle="tooltip" data-title="<?= lang('Logout', 'Abmelden') ?>">
+                    <i class="ph ph-sign-out" aria-hidden="true"></i>
+                </a>
+
+            </div>
         </div>
+
+        <div class="my-profile-spacer"></div>
+
+        <!-- search bar -->
+        <!-- <div class="content">
+            <input type="text" class="form-control small border-primary" autocomplete="off" placeholder="<?= lang('Search', 'Suche') ?>" oninput="searchNavBar(this.value)">
+        </div> -->
 
         <nav id="sidebar-add">
             <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
@@ -115,44 +261,74 @@
             }
         </script>
 
-        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-user">
-            <?= lang('My area', 'Mein Bereich') ?>
+
+        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tasks">
+            <?= lang('My tasks', 'Meine Aufgaben') ?>
         </div>
 
         <nav>
-            <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>" class="with-icon <?= $pageactive('profile/' . $_SESSION['username']) ?>">
-                <i class="ph ph-user" aria-hidden="true"></i>
-                <?= $USER["displayname"] ?? 'User' ?>
-            </a>
 
-            <?php if ($Settings->hasPermission('scientist')) { ?>
-                <a href="<?= ROOTPATH ?>/my-year" class="with-icon <?= $pageactive('my-year') ?>">
-                    <i class="ph ph-calendar" aria-hidden="true"></i>
-                    <?= lang('My year', 'Mein Jahr') ?>
-                </a>
+            <?php
+            $notifications = $DB->notifications();
+            $n_notifications = $_SESSION['has_notifications'] ?? false;
+            $has_notifications = $n_notifications > 0;
 
-                <?php if ($Settings->featureEnabled('calendar', false)) { ?>
-                    <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
-                        <i class="ph ph-calendar-dots" aria-hidden="true"></i>
-                        <?= lang('Calendar', 'Kalender') ?>
+            $notifications['reviews'] = 0;
+            if ($Settings->featureEnabled('quality-workflow', false)) {
+                $notifications['reviews'] = $osiris->adminWorkflows->count(['steps.role' => ['$in' => $Settings->roles]]) > 0;
+                if ($notifications['reviews'] > 0) {
+                    $has_notifications = true;
+                }
+            }
+            ?>
+            <?php
+            if ($has_notifications) {
+                if (isset($notifications['activity'])) {
+                    $n_issues = $notifications['activity']['count'];
+            ?>
+                    <a href="<?= ROOTPATH ?>/issues" class="with-icon <?= $pageactive('issues') ?>">
+                        <i class="ph ph-bell" aria-hidden="true"></i>
+                        <?= lang('Issues', 'Hinweise') ?>
+                        <span class="index" id="issue-counter"><?= $n_issues ?></span>
                     </a>
                 <?php } ?>
 
-                <a href="<?= ROOTPATH ?>/my-activities" class="with-icon <?= $pageactive('my-activities') ?>">
-                    <i class="ph ph-folder-user" aria-hidden="true"></i>
-                    <?= lang('My activities', 'Meine Aktivitäten') ?>
-                </a>
-            <?php } ?>
+                <?php if (isset($notifications['approval'])) {
+                    $quarter = $notifications['approval']['key'];
+                ?>
+                    <a href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>" class="with-icon <?= $pageactive('my-year') ?>">
+                        <i class="ph ph-calendar-check" aria-hidden="true"></i>
+                        <?= lang('Quarterly approval', 'Quartalsfreigabe') ?>
+                    </a>
+                <?php } ?>
 
-            <?php if ($Settings->featureEnabled('quality-workflow', false)) {
-                $userRoles = $Settings->roles;
-                $isReviewer = $osiris->adminWorkflows->count(['steps.role' => ['$in' => $userRoles]]) > 0;
-                if ($isReviewer) {
-            ?>
+                <?php if (isset($notifications['queue'])) {
+                    $queue = $notifications['queue']['count'];
+                ?>
+                    <a href="<?= ROOTPATH ?>/queue/user" class="with-icon <?= $pageactive('queue/user') ?>">
+                        <i class="ph ph-queue" aria-hidden="true"></i>
+                        <?= lang('To review', 'Zu überprüfen') ?>
+                        <span class="index" id="queue-counter"><?= $queue ?></span>
+                    </a>
+                <?php } ?>
+
+
+                <?php if (isset($notifications['messages'])) {
+                    $n_messages = count($notifications['messages']);
+                ?>
+                    <a href="<?= ROOTPATH ?>/messages" class="with-icon <?= $pageactive('messages') ?>">
+                        <i class="ph ph-envelope" aria-hidden="true"></i>
+                        <?= lang('Messages', 'Nachrichten') ?>
+                        <span class="index" id="message-counter"><?= $n_messages ?></span>
+                    </a>
+                <?php } ?>
+
+
+                <?php if ($notifications['reviews'] > 0) { ?>
                     <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
                         <i class="ph ph-highlighter" aria-hidden="true"></i>
                         <?= lang('Reviews', 'Überprüfungen') ?>
-                        <span class="badge secondary badge-pill ml-10" id="review-counter">0</span>
+                        <span class="index" id="review-counter">0</span>
                     </a>
 
                     <script>
@@ -165,8 +341,55 @@
                             });
                         });
                     </script>
-            <?php }
-            } ?>
+                <?php } ?>
+
+
+                <?php if (isset($notifications['version'])) {
+                ?>
+                    <a href="<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>" class="with-icon <?= $pageactive('new-stuff') ?>">
+                        <i class="ph ph-bell-ringing" aria-hidden="true"></i>
+                        <?= lang('News', 'Neuigkeiten') ?>
+                    </a>
+                <?php } ?>
+
+
+            <?php } else { ?>
+                <div class="content">
+                    <?= lang('You have no pending tasks. Great job!', 'Du hast keine offenen Aufgaben. Großartig!') ?>
+                </div>
+            <?php } ?>
+
+        </nav>
+
+
+
+        <!-- <nav>
+
+            <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>" class="with-icon <?= $pageactive('profile/' . $_SESSION['username']) ?>">
+                <i class="ph ph-user" aria-hidden="true"></i>
+                <?= $USER["displayname"] ?? 'User' ?>
+            </a>
+
+            <?php if ($Settings->hasPermission('scientist')) { ?>
+                <a href="<?= ROOTPATH ?>/my-year" class="with-icon <?= $pageactive('my-year') ?>">
+                    <i class="ph ph-calendar" aria-hidden="true"></i>
+                    <?= lang('My year', 'Mein Jahr') ?>
+                </a>
+
+                <a href="<?= ROOTPATH ?>/my-activities" class="with-icon <?= $pageactive('my-activities') ?>">
+                    <i class="ph ph-folder-user" aria-hidden="true"></i>
+                    <?= lang('My activities', 'Meine Aktivitäten') ?>
+                </a>
+            <?php } ?>
+
+                <?php if ($Settings->featureEnabled('calendar', false)) { ?>
+                    <a href="<?= ROOTPATH ?>/calendar" class="with-icon <?= $pageactive('calendar') ?>">
+                        <i class="ph ph-calendar-dots" aria-hidden="true"></i>
+                        <?= lang('Calendar', 'Kalender') ?>
+                    </a>
+                <?php } ?>
+
+           
 
 
 
@@ -183,7 +406,7 @@
                 </a>
             <?php } ?>
 
-        </nav>
+        </nav> -->
 
         <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-activities">
             <?= lang('Content', 'Inhalte') ?>
@@ -370,11 +593,11 @@
                 <?php
                 $cart = readCart();
                 if (!empty($cart)) { ?>
-                    <small class="badge secondary badge-pill ml-10" id="cart-counter">
+                    <small class="index" id="cart-counter">
                         <?= count($cart) ?>
                     </small>
                 <?php } else { ?>
-                    <small class="badge secondary badge-pill ml-10 hidden" id="cart-counter">
+                    <small class="index hidden" id="cart-counter">
                         0
                     </small>
                 <?php } ?>
@@ -393,7 +616,7 @@
                 <a href="<?= ROOTPATH ?>/queue/editor" class="sidebar-link with-icon sidebar-link-osiris <?= $pageactive('queue/editor') ?>">
                     <i class="ph ph-queue" aria-hidden="true"></i>
                     <?= lang('Queue', 'Warteschlange') ?>
-                    <span class="badge secondary badge-pill ml-10" id="cart-counter">
+                    <span class="index" id="cart-counter">
                         <?= $n_queue ?>
                     </span>
                 </a>

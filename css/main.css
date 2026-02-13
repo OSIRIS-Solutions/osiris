@@ -6841,6 +6841,7 @@ Sidebar content
   border-radius: var(--border-radius);
   -webkit-transition: box-shadow 0.5s, background-color 0.5s, color 0.5s;
   transition: box-shadow 0.5s, background-color 0.5s, color 0.5s;
+  flex-shrink: 0;
 }
 .sidebar-menu > a.with-icon:hover > i,
 .sidebar-menu nav > a.with-icon:hover > i {
@@ -7750,7 +7751,8 @@ Tooltips
 [data-toggle=tooltip]::after {
   content: attr(data-title);
   white-space: normal;
-  width: 14rem;
+  min-width: 6rem;
+  max-width: 16rem;
   font-size: 1.2rem;
   line-height: 1.5;
   padding: 0.5rem 1rem;

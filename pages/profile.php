@@ -382,17 +382,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
+            <!-- <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
                 <i class="ph-duotone ph-plus-circle ph-fw"></i>
-                <!-- <?= lang('Add activity', 'Aktivität hinzufügen') ?> -->
-            </a>
+            </a> -->
             <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
-                <!-- <?= lang('My activities', 'Meine Aktivitäten ') ?> -->
             </a>
             <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
-                <!-- <?= lang('My Year', 'Mein Jahr') ?> -->
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -735,24 +732,36 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div class="row row-eq-spacing my-0">
             <div class="col-md-6">
                 <?php if (isset($n_notifications) && $n_notifications) { ?>
-                    <div class="box padded">
+                    <!-- <div class="box padded">
                         <p class="lead cursor-pointer" onclick="openNotifications()">
                             <i class="ph ph-bell-ringing ph-fw text-danger mr-5"></i>
                             <?= lang('You have <strong class="text-danger">' . $n_notifications . '</strong> new notifications.', 'Du hast <strong class="text-danger">' . $n_notifications . '</strong> neue Benachrichtigungen.') ?>
                         </p>
-                    </div>
+                    </div> -->
                     <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
                     ?>
                         <div class="box padded d-flex align-items-center">
                             <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i>
 
-                            <p>
-                                <?= lang("You can now approve the past quarter:", "Du kannst jetzt das vergangene Quartal freigeben:") ?>
+                            <div>
+                                <b>
+                                    <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
+                                </b>
+                                <br>
+                                <small class="text-muted">
+                                    <?= lang('
+                                        For the quarterly controlling, you need to confirm that all activities from the previous quarter are stored in OSIRIS and saved correctly.
+                                        To do this, go to your year and check and approve your activities. 
+                                        ', '
+                                        Für das Quartalscontrolling musst du bestätigen, dass alle Aktivitäten aus dem vergangenen Quartal in OSIRIS hinterlegt und korrekt gespeichert sind.
+                                        Gehe dazu in dein Jahr und überprüfe deine Aktivitäten.
+                                        ') ?>
+                                </small>
                                 <br>
                                 <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
                                     <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
                                 </a>
-                            </p>
+                            </div>
                         </div>
                     <?php } ?>
 
