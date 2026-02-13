@@ -42,6 +42,7 @@
                 width: 25rem;
                 background-color: white;
                 z-index: 100;
+                box-shadow: var(--button-box-shadow);
             }
 
             .my-profile-spacer {
@@ -116,15 +117,77 @@
                 color: #fff;
             }
 
-            .sidebar-menu>a .index,
-            .sidebar-menu nav>a .index {
+            .sidebar-menu .index {
                 margin-left: auto;
-                background-color: var(--danger-color-20);
-                color: var(--danger-color);
+                background-color: var(--signal-color-20);
+                color: var(--signal-color);
                 border-radius: 999px;
                 padding: 0 6px;
                 font-size: 1.2rem;
                 font-weight: bold;
+                min-width: 2rem;
+                text-align: center;
+            }
+
+            .sidebar-menu .index.danger {
+                background-color: var(--danger-color-20);
+                color: var(--danger-color);
+            }
+
+            .sidebar-menu .index.info {
+                background-color: var(--blue-color-20);
+                color: var(--blue-color);
+            }
+
+            .no-tasks {
+                display: flex;
+                align-items: center;
+                margin: 0 1.5rem 1rem;
+                color: var(--muted-color);
+                font-size: 1.2rem;
+                line-height: 1.4;
+            }
+
+            .no-tasks i {
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                width: 3rem;
+                height: 3rem;
+                font-size: 2rem;
+                margin-right: 1rem;
+                background-color: var(--muted-color-20);
+                border: none;
+                border-radius: var(--border-radius);
+                flex-shrink: 0;
+            }
+
+            .my-tasks {
+                --primary-color: var(--blue-color);
+                --primary-color-20: var(--blue-color-20);
+                background-color: var(--blue-color-10);
+                margin: 1rem;
+                border-radius: var(--border-radius);
+                padding: 0.5rem 0;
+            }
+
+            .my-tasks.tasks-0 {
+                background-color: var(--gray-color-very-light);
+            }
+
+            .sidebar-menu .my-tasks nav>a {
+                /* padding: 0.5rem 1.5rem; */
+
+                padding: 0.5rem 1rem;
+                margin: 0.5rem .5rem;
+                background-color: white;
+                border-radius: var(--border-radius);
+            }
+
+            .sidebar-menu .my-tasks .title {
+                margin: 0.5rem 1.5rem 0.5rem;
             }
         </style>
 
@@ -261,105 +324,110 @@
             }
         </script>
 
+        <?php
+        $notifications = $DB->notifications();
+        $n_notifications = $_SESSION['has_notifications'] ?? false;
+        $has_notifications = $n_notifications > 0;
 
-        <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tasks">
-            <?= lang('My tasks', 'Meine Aufgaben') ?>
-        </div>
-
-        <nav>
-
-            <?php
-            $notifications = $DB->notifications();
-            $n_notifications = $_SESSION['has_notifications'] ?? false;
-            $has_notifications = $n_notifications > 0;
-
-            $notifications['reviews'] = 0;
-            if ($Settings->featureEnabled('quality-workflow', false)) {
-                $notifications['reviews'] = $osiris->adminWorkflows->count(['steps.role' => ['$in' => $Settings->roles]]) > 0;
-                if ($notifications['reviews'] > 0) {
-                    $has_notifications = true;
-                }
+        $notifications['reviews'] = 0;
+        if ($Settings->featureEnabled('quality-workflow', false)) {
+            $notifications['reviews'] = $osiris->adminWorkflows->count(['steps.role' => ['$in' => $Settings->roles]]) > 0;
+            if ($notifications['reviews'] > 0) {
+                $has_notifications = true;
             }
-            ?>
-            <?php
-            if ($has_notifications) {
-                if (isset($notifications['activity'])) {
-                    $n_issues = $notifications['activity']['count'];
-            ?>
-                    <a href="<?= ROOTPATH ?>/issues" class="with-icon <?= $pageactive('issues') ?>">
-                        <i class="ph ph-bell" aria-hidden="true"></i>
-                        <?= lang('Issues', 'Hinweise') ?>
-                        <span class="index" id="issue-counter"><?= $n_issues ?></span>
-                    </a>
-                <?php } ?>
+        }
+        ?>
+        <div class="my-tasks tasks-<?= $has_notifications ? '1' : '0' ?>">
 
-                <?php if (isset($notifications['approval'])) {
-                    $quarter = $notifications['approval']['key'];
+            <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tasks">
+                <?= lang('My tasks', 'Meine Aufgaben') ?>
+            </div>
+
+            <nav>
+
+                <?php
+                if ($has_notifications) {
+                    if (isset($notifications['activity'])) {
+                        $n_issues = $notifications['activity']['count'];
                 ?>
-                    <a href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>" class="with-icon <?= $pageactive('my-year') ?>">
-                        <i class="ph ph-calendar-check" aria-hidden="true"></i>
-                        <?= lang('Quarterly approval', 'Quartalsfreigabe') ?>
-                    </a>
-                <?php } ?>
+                        <a href="<?= ROOTPATH ?>/issues" class="with-icon <?= $pageactive('issues') ?>">
+                            <i class="ph ph-bell" aria-hidden="true"></i>
+                            <?= lang('Issues', 'Hinweise') ?>
+                            <span class="index danger" id="issue-counter"><?= $n_issues ?></span>
+                        </a>
+                    <?php } ?>
 
-                <?php if (isset($notifications['queue'])) {
-                    $queue = $notifications['queue']['count'];
-                ?>
-                    <a href="<?= ROOTPATH ?>/queue/user" class="with-icon <?= $pageactive('queue/user') ?>">
-                        <i class="ph ph-queue" aria-hidden="true"></i>
-                        <?= lang('To review', 'Zu überprüfen') ?>
-                        <span class="index" id="queue-counter"><?= $queue ?></span>
-                    </a>
-                <?php } ?>
+                    <?php if (isset($notifications['approval'])) {
+                        $quarter = $notifications['approval']['key'];
+                    ?>
+                        <a href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>" class="with-icon <?= $pageactive('my-year') ?>">
+                            <i class="ph ph-calendar-check" aria-hidden="true"></i>
+                            <?= lang('Quarterly approval', 'Quartalsfreigabe') ?>
+                            <span class="index danger" id="approval-counter">!</span>
+                        </a>
+                    <?php } ?>
+
+                    <?php if (isset($notifications['queue'])) {
+                        $queue = $notifications['queue']['count'];
+                    ?>
+                        <a href="<?= ROOTPATH ?>/queue/user" class="with-icon <?= $pageactive('queue/user') ?>">
+                            <i class="ph ph-queue" aria-hidden="true"></i>
+                            <?= lang('To review', 'Zu überprüfen') ?>
+                            <span class="index" id="queue-counter"><?= $queue ?></span>
+                        </a>
+                    <?php } ?>
 
 
-                <?php if (isset($notifications['messages'])) {
-                    $n_messages = count($notifications['messages']);
-                ?>
-                    <a href="<?= ROOTPATH ?>/messages" class="with-icon <?= $pageactive('messages') ?>">
-                        <i class="ph ph-envelope" aria-hidden="true"></i>
-                        <?= lang('Messages', 'Nachrichten') ?>
-                        <span class="index" id="message-counter"><?= $n_messages ?></span>
-                    </a>
-                <?php } ?>
+                    <?php if ($notifications['reviews'] > 0) { ?>
+                        <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
+                            <i class="ph ph-highlighter" aria-hidden="true"></i>
+                            <?= lang('Reviews', 'Überprüfungen') ?>
+                            <span class="index" id="review-counter">0</span>
+                        </a>
 
-
-                <?php if ($notifications['reviews'] > 0) { ?>
-                    <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
-                        <i class="ph ph-highlighter" aria-hidden="true"></i>
-                        <?= lang('Reviews', 'Überprüfungen') ?>
-                        <span class="index" id="review-counter">0</span>
-                    </a>
-
-                    <script>
-                        // highlight if there are reviews to be done
-                        $(document).ready(function() {
-                            $.getJSON('<?= ROOTPATH ?>/api/workflow-reviews/count', function(data) {
-                                if (data.count > 0) {
-                                    $('#review-counter').text(data.count);
-                                }
+                        <script>
+                            // highlight if there are reviews to be done
+                            $(document).ready(function() {
+                                $.getJSON('<?= ROOTPATH ?>/api/workflow-reviews/count', function(data) {
+                                    if (data.count > 0) {
+                                        $('#review-counter').text(data.count);
+                                    }
+                                });
                             });
-                        });
-                    </script>
+                        </script>
+                    <?php } ?>
+
+                    <?php if (isset($notifications['messages'])) {
+                        $n_messages = count($notifications['messages']);
+                    ?>
+                        <a href="<?= ROOTPATH ?>/messages" class="with-icon <?= $pageactive('messages') ?>">
+                            <i class="ph ph-envelope" aria-hidden="true"></i>
+                            <?= lang('Messages', 'Nachrichten') ?>
+                            <span class="index info" id="message-counter"><?= $n_messages ?></span>
+                        </a>
+                    <?php } ?>
+
+
+
+                    <?php if (isset($notifications['version'])) {
+                    ?>
+                        <a href="<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>" class="with-icon <?= $pageactive('new-stuff') ?>">
+                            <i class="ph ph-bell-ringing" aria-hidden="true"></i>
+                            <?= lang('News', 'Neuigkeiten') ?>
+                            <span class="index info" id="version-counter">!</span>
+                        </a>
+                    <?php } ?>
+
+
+                <?php } else { ?>
+                    <div class="no-tasks">
+                        <i class="ph ph-coffee" aria-hidden="true"></i>
+                        <span><?= lang('You have no pending tasks. Great job!', 'Du hast keine offenen Aufgaben. Großartig!') ?></span>
+                    </div>
                 <?php } ?>
 
-
-                <?php if (isset($notifications['version'])) {
-                ?>
-                    <a href="<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>" class="with-icon <?= $pageactive('new-stuff') ?>">
-                        <i class="ph ph-bell-ringing" aria-hidden="true"></i>
-                        <?= lang('News', 'Neuigkeiten') ?>
-                    </a>
-                <?php } ?>
-
-
-            <?php } else { ?>
-                <div class="content">
-                    <?= lang('You have no pending tasks. Great job!', 'Du hast keine offenen Aufgaben. Großartig!') ?>
-                </div>
-            <?php } ?>
-
-        </nav>
+            </nav>
+        </div>
 
 
 
@@ -645,10 +713,10 @@
 
 
         <?php if ($Settings->hasPermission('admin.see') || $Settings->hasPermission('report.templates') || $Settings->hasPermission('user.synchronize')) { ?>
-            <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-admin">
+            <div class="title collapse" onclick="toggleSidebar(this);" id="sidebar-admin">
                 ADMIN
             </div>
-            <nav>
+            <nav style="display: none;" id="sidebar-admin-links">
                 <?php if ($Settings->hasPermission('admin.see')) { ?>
                     <a href="<?= ROOTPATH ?>/admin/general" class="with-icon <?= $pageactive('admin/general') ?>">
                         <i class="ph ph-gear" aria-hidden="true"></i>

@@ -82,6 +82,7 @@ CSS variables (CSS custom properties)
   --secondary-color-very-light: #fde6cd;
   --secondary-color-dark: #e95709;
   --secondary-color-very-dark: #311a01;
+  --secondary-color-10: rgba(247, 129, 4, 0.2);
   --secondary-color-20: rgba(247, 129, 4, 0.2);
   --secondary-color-30: rgba(247, 129, 4, 0.3);
   --secondary-color-60: rgba(247, 129, 4, 0.6);
@@ -90,6 +91,7 @@ CSS variables (CSS custom properties)
   --primary-color-very-light: #cce6e6;
   --primary-color-dark: #005f60;
   --primary-color-very-dark: #001a1a;
+  --primary-color-10: rgba(0, 128, 131, 0.2);
   --primary-color-20: rgba(0, 128, 131, 0.2);
   --primary-color-30: rgba(0, 128, 131, 0.3);
   --primary-color-60: rgba(0, 128, 131, 0.6);
@@ -100,6 +102,7 @@ CSS variables (CSS custom properties)
   --success-color-very-light: #e0edce;
   --success-color-dark: #599307;
   --success-color-very-dark: #142102;
+  --success-color-10: rgba(99, 163, 8, 0.2);
   --success-color-20: rgba(99, 163, 8, 0.2);
   --success-color-30: rgba(99, 163, 8, 0.3);
   --success-color-60: rgba(99, 163, 8, 0.6);
@@ -108,6 +111,7 @@ CSS variables (CSS custom properties)
   --danger-color-very-light: #f0d2d4;
   --danger-color-dark: #a41c25;
   --danger-color-very-dark: #240608;
+  --danger-color-10: rgba(182, 31, 41, 0.2);
   --danger-color-20: rgba(182, 31, 41, 0.2);
   --danger-color-30: rgba(182, 31, 41, 0.3);
   --danger-color-60: rgba(182, 31, 41, 0.6);
@@ -116,6 +120,7 @@ CSS variables (CSS custom properties)
   --muted-color-very-light: #e7e7e7;
   --muted-color-dark: #7a7a7a;
   --muted-color-very-dark: #1b1b1b;
+  --muted-color-10: rgba(135, 135, 135, 0.2);
   --muted-color-20: rgba(135, 135, 135, 0.2);
   --muted-color-30: rgba(135, 135, 135, 0.3);
   --muted-color-60: rgba(135, 135, 135, 0.6);
@@ -124,6 +129,7 @@ CSS variables (CSS custom properties)
   --signal-color-very-light: #fbefcc;
   --signal-color-dark: #d49e00;
   --signal-color-very-dark: #2f2300;
+  --signal-color-10: rgba(236, 175, 0, 0.2);
   --signal-color-20: rgba(236, 175, 0, 0.2);
   --signal-color-30: rgba(236, 175, 0, 0.3);
   --signal-color-60: rgba(236, 175, 0, 0.6);
@@ -132,6 +138,7 @@ CSS variables (CSS custom properties)
   --blue-color-very-light: #d3eaf0;
   --blue-color-dark: #12687d;
   --blue-color-very-dark: #043a48;
+  --blue-color-10: rgba(6, 102, 125, 0.1);
   --blue-color-20: rgba(6, 102, 125, 0.2);
   --blue-color-30: rgba(6, 102, 125, 0.3);
   --blue-color-60: rgba(6, 102, 125, 0.6);
@@ -6889,7 +6896,7 @@ Sidebar content
   margin: 2.5rem 2.5rem 0.5rem;
   font-weight: bold;
   font-size: 1.3rem;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   color: var(--primary-color-light);
   display: flex;
   justify-content: space-between;
@@ -6899,15 +6906,13 @@ Sidebar content
 }
 .sidebar-menu .title.collapse::after {
   font-family: "Phosphor";
-  content: "\e3d4";
+  content: "\e13a";
   font-size: 1.25em;
-  line-height: 1em;
-  vertical-align: -0.15em;
-  display: inline-block;
+  line-height: 1;
   transition: transform 0.5s;
 }
 .sidebar-menu .title.collapse.open::after {
-  transform: rotate(-45deg);
+  transform: rotate(90deg);
 }
 .sidebar-menu .brand {
   display: -ms-flexbox;
