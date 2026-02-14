@@ -522,7 +522,7 @@ Route::post('/switch-user', function () {
         $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
         // change username if user is allowed
         if ($allowed == 1 || $realusername == $username) {
-            $_SESSION['msg'] = lang("You are now logged in as", "Du bist jetzt angemeldet als") . " ". $DB->getNameFromId($username);
+            $_SESSION['msg'] = lang("You are now logged in as", "Du bist jetzt angemeldet als") . " " . $DB->getNameFromId($username);
             $_SESSION['msg_type'] = "info";
             $_SESSION['realuser'] = $realusername;
             $_SESSION['username'] = $username;
@@ -568,8 +568,13 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         foreach (["public_image", "public_email", "public_phone", "hide"] as $key) {
             $person[$key] = boolval($values[$key] ?? false);
         }
+        require_once BASEPATH . "/php/Render.php";
+        $complete_person = array_merge($old, $person);
+        $person['search_text'] = build_person_search_text($complete_person);
     }
 
+    // $person['updated'] = date('Y-m-d');
+    // $person['updated_by'] = $_SESSION['username'];
 
     if (isset($values['cv'])) {
         $cv = $values['cv'];
@@ -774,6 +779,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         "username",
         "created",
         "created_by",
+        "search_text",
         'uniqueid',
     ];
     $arr = [];
@@ -838,7 +844,7 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
     $osiris->infrastructures->updateMany(
         ["persons.user" => $user],
         ['$pull' => ["persons" => ["user" => $user]]]
-    ); 
+    );
 
     // remove user from teaching
     $osiris->teaching->updateMany(
@@ -999,7 +1005,7 @@ Route::post('/crud/users/approve', function () {
 
 Route::post('/crud/queries', function () {
     include_once BASEPATH . "/php/init.php";
-    
+
     $action = $_POST['action'] ?? 'ADD';
 
     if (isset($_POST['id']) && $action == 'DELETE') {
@@ -1008,7 +1014,7 @@ Route::post('/crud/queries', function () {
         return $deleteResult->getDeletedCount();
         die;
     }
-    if ($action == 'SHARE'){
+    if ($action == 'SHARE') {
         if (isset($_POST['global'])) {
             $values = ['global' => true];
         } else if (isset($_POST['role'])) {

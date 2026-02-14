@@ -37,11 +37,12 @@ Route::get('/migrate/files', function () {
 });
 
 Route::get('/migrate/test', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    set_time_limit(6000);
     include_once BASEPATH . "/php/init.php";
 
-    set_time_limit(6000);
     include BASEPATH . "/header.php";
-    include_once BASEPATH . "/routes/migration/v1.7.1.php";
+
 
     include BASEPATH . "/footer.php";
 });
@@ -329,7 +330,7 @@ Route::get('/migrate', function () {
         ob_flush();
         $rerender = false;
     }
-    
+
     if (version_compare($DBversion, '1.7.0', '<')) {
         include BASEPATH . "/routes/migration/v1.7.0.php";
         flush();

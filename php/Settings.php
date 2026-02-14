@@ -19,6 +19,8 @@ class Settings
     public $osiris = null;
     private $features = array();
     public $continuousTypes = [];
+    public $topics = [];
+    public $activityCategories = [];
 
     function __construct($user = array())
     {
@@ -46,6 +48,8 @@ class Settings
             ['visible_role' => null],
             ['visible_role' => ['$in' => $this->roles]]
         ]];
+        $this->activityCategories = $this->osiris->adminCategories->find()->toArray();
+        
         $allowedTypes = $this->osiris->adminCategories->find($catFilter, ['projection' => ['_id' => 0, 'id' => 1]]);
         $this->allowedTypes = array_column($allowedTypes->toArray(), 'id');
 
@@ -64,6 +68,11 @@ class Settings
             ['projection' => ['_id' => 0, 'id' => 1]]
         )->toArray();
         $this->continuousTypes = array_column($continuous, 'id');
+
+        // get topics
+        if ($this->featureEnabled('topics')) {
+            $this->topics =  $this->osiris->topics->find([], ['sort' => ['inactive' => 1]])->toArray();
+        }
     }
 
     /**
@@ -341,7 +350,7 @@ class Settings
         }
         $style = preg_replace('/\s+/', ' ', $style);
 
-        foreach ($this->osiris->topics->find() as $t) {
+        foreach ($this->topics as $t) {
             $style .= " .topic-" . $t['id'] . " { --topic-color: " . $t['color'] . "; } ";
         }
 
@@ -628,7 +637,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
+        $topics = $this->topics;
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);

@@ -333,3 +333,29 @@ function renderProject($doc, $col = 'projects', $id = null)
     }
     return $doc;
 }
+
+function build_person_search_text(array $p): string
+{
+    $parts = [];
+    if (!empty($p['last'])) $parts[] = $p['last'];
+    if (!empty($p['first'])) $parts[] = $p['first'];
+
+    // Alternative names / aliases (can be array or string)
+    if (!empty($p['names'] ?? [])) {
+        foreach ($p['names'] as $n) {
+            if (!empty($n) && is_string($n)) $parts[] = $n;
+        }
+    }
+
+    // Optional: add extra fields if they exist in your schema
+    if ($p['username']) $parts[] = $p['username'];
+    if (isset($p['orcid'])) $parts[] = $p['orcid'];
+    if (isset($p['mail'])) $parts[] = $p['mail'];
+
+    // Join, normalize whitespace, lowercase
+    $text = implode(' ', $parts);
+    $text = preg_replace('/\s+/', ' ', $text);
+    $text = trim(mb_strtolower($text));
+
+    return $text;
+}

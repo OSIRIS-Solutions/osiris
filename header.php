@@ -152,6 +152,8 @@ $pageactive = function ($p) use ($page) {
         <span></span>
     </div>
 
+    <?php include_once BASEPATH . "/components/command-palette.php"; ?>
+
     <!-- Page wrapper start -->
     <div class="page-wrapper 
         <?= $_COOKIE['D3-accessibility-contrast'] ?? '' ?>
@@ -250,10 +252,8 @@ $pageactive = function ($p) use ($page) {
             </ul>
 
             <!-- messages -->
-            
-
             <div class="dropdown modal-sm">
-                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
+                <button class="btn primary outline mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-translate"></i>
                     <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
                 </button>
@@ -272,50 +272,6 @@ $pageactive = function ($p) use ($page) {
                 </div>
             </div>
 
-            <!-- Accessibility menu -->
-            <div class="dropdown modal-sm">
-                <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
-                    <i class="ph ph-person-arms-spread ph-person-simple-circle"></i>
-                    <span class="sr-only"><?= lang('Accessibility Options', 'Accessibility-Optionen') ?></span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-center w-300" aria-labelledby="accessibility-menu">
-                    <h6 class="header text-primary">Accessibility</h6>
-                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
-                        <input type="hidden" name="accessibility[check]">
-                        <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
-
-                        <div class="form-group">
-                            <div class="custom-checkbox">
-                                <input type="checkbox" id="set-contrast" name="accessibility[contrast]" value="high-contrast" <?= !empty($_COOKIE['D3-accessibility-contrast'] ?? '') ? 'checked' : '' ?>>
-                                <label for="set-contrast"><?= lang('High contrast', 'Erhöhter Kontrast') ?></label><br>
-                                <small class="text-muted">
-                                    <?= lang('Enhance the contrast of the web page for better readability.', 'Erhöht den Kontrast für bessere Lesbarkeit.') ?>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-checkbox">
-                                <input type="checkbox" id="set-transitions" name="accessibility[transitions]" value="without-transitions" <?= !empty($_COOKIE['D3-accessibility-transitions'] ?? '') ? 'checked' : '' ?>>
-                                <label for="set-transitions"><?= lang('Reduce motion', 'Verringerte Bewegung') ?></label><br>
-                                <small class="text-muted">
-                                    <?= lang('Reduce motion and animations on the page.', 'Verringert Animationen und Bewegungen auf der Seite.') ?>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-checkbox">
-                                <input type="checkbox" id="set-dyslexia" name="accessibility[dyslexia]" value="dyslexia" <?= !empty($_COOKIE['D3-accessibility-dyslexia'] ?? '') ? 'checked' : '' ?>>
-                                <label for="set-dyslexia"><?= lang('Dyslexia mode', 'Dyslexie-Modus') ?></label><br>
-                                <small class="text-muted">
-                                    <?= lang('Use a special font to increase readability for users with dyslexia.', 'OSIRIS nutzt eine spezielle Schriftart, die von manchen Menschen mit Dyslexie besser gelesen werden kann.') ?>
-                                </small>
-                            </div>
-                        </div>
-                        <button class="btn primary">Apply</button>
-                    </form>
-                </div>
-            </div>
-
 
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
                 <a href="<?= ROOTPATH ?>/" class="btn primary-5">
@@ -327,14 +283,14 @@ $pageactive = function ($p) use ($page) {
                 $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
                 if (!empty($maintain)) { ?>
                     <div class="dropdown modal-sm">
-                        <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn primary outline mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-user-switch"></i>
                             <span class="sr-only"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
                             <h6 class="header text-primary"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></h6>
 
-                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="content pt-0" id="navbar-search">
+                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="content pt-0" id="switch-user-form">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
@@ -355,14 +311,26 @@ $pageactive = function ($p) use ($page) {
                         </div>
                     </div>
                 <?php }  ?>
-                <form id="navbar-search" action="<?= ROOTPATH ?>/activities" method="get" class="nav-search d-none d-md-block">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control border-primary" autocomplete="off" placeholder="<?= lang('Search in activities', 'Suche in Aktivitäten') ?>">
-                        <div class="input-group-append">
-                            <button class="btn primary filled"><i class="ph ph-magnifying-glass"></i></button>
-                        </div>
-                    </div>
-                </form>
+                <!-- fake search input for command palette -->
+                <div id="navbar-cp-trigger" class="d-none d-md-block">
+                    <button type="button" class="cp-trigger" aria-label="<?= lang('Open search', 'Suche öffnen') ?>">
+                        <i class="ph ph-magnifying-glass cp-trigger__icon" aria-hidden="true"></i>
+                        <span class="cp-trigger__placeholder">
+                            <?= lang('Search in OSIRIS', 'Suche in OSIRIS') ?>
+                        </span>
+                        <span class="cp-trigger__kbd" aria-hidden="true">
+                            <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('Ctrl', 'Strg') ?></span>
+                            <span class="os-kbd">K</span>
+                        </span>
+                    </button>
+                </div>
+
+                <script>
+                    $(document).on('click', '#navbar-cp-trigger .cp-trigger', function() {
+                        // Fire a custom event the palette listens to
+                        document.dispatchEvent(new CustomEvent('osiris:command-palette:open'));
+                    });
+                </script>
             <?php
             } ?>
 

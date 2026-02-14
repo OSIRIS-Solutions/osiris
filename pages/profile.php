@@ -417,8 +417,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
-        <form action="<?= ROOTPATH ?>/download" method="post">
 
+        <form action="<?= ROOTPATH ?>/download" method="post">
             <input type="hidden" name="filter[user]" value="<?= $user ?>">
             <input type="hidden" name="highlight" value="user">
             <input type="hidden" name="format" value="word">
@@ -428,7 +428,21 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
+
+        <!-- <div class="dropdown with-arrow">
+            <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
+                <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
+                <a href="<?= ROOTPATH ?>/user/permissions" class="item">
+                    <i class="ph ph-users-three ph-fw text-primary"></i>
+                    <?= lang('Show permissions', 'Einheiten bearbeiten') ?>
+                </a>
+            </div>
+        </div> -->
     </div>
+
+
 
 
     <?php
@@ -1196,20 +1210,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if ($active('room') && isset($scientist['room'])) { ?>
-                            <tr>
-                                <td>
-                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
-                                    <?= $scientist['room'] ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-
                         <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Mobile', 'Mobil') ?></span>
                                     <a href="tel:<?= $scientist['mobile'] ?>"><?= $scientist['mobile'] ?></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if ($active('room') && isset($scientist['room'])) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
+                                    <?= $scientist['room'] ?>
                                 </td>
                             </tr>
                         <?php } ?>
