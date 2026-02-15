@@ -21,6 +21,7 @@ class Settings
     public $continuousTypes = [];
     public $topics = [];
     public $activityCategories = [];
+    public $sidebarFavorites = [];
 
     function __construct($user = array())
     {
@@ -35,6 +36,9 @@ class Settings
             foreach (['editor', 'admin', 'leader', 'controlling', 'scientist'] as $key) {
                 if ($user['is_' . $key] ?? false) $this->roles[] = $key;
             }
+        }
+        if (isset($user['sidebar_favorites']) && is_iterable($user['sidebar_favorites'])) {
+            $this->sidebarFavorites = DB::doc2Arr($user['sidebar_favorites']);
         }
         // everyone is a user
         $this->roles[] = 'user';
@@ -249,6 +253,9 @@ class Settings
      */
     function featureEnabled($feature, $default = false)
     {
+        if ($feature == 'proposals'){
+            return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
+        }
         return $this->features[$feature] ?? $default;
     }
 

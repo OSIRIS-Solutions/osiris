@@ -406,12 +406,12 @@ $active = function ($field) use ($data_fields) {
                 </div>
             <?php } ?>
 
-                <p class="text-danger">
-                    <?= lang(
-                        'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
-                        'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
-                    ) ?>
-                </p>
+            <p class="text-danger">
+                <?= lang(
+                    'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
+                    'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
+                ) ?>
+            </p>
             <?php if ($active('public_image')) { ?>
                 <!-- show profile picture -->
                 <div class="custom-checkbox mb-20">
@@ -422,7 +422,7 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('public_other_activities')) { ?>
                 <!-- show profile picture -->
-                 <input type="hidden" name="values[public_other_activities]" value="false">
+                <input type="hidden" name="values[public_other_activities]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_other_activities" value="true" name="values[public_other_activities]" <?= ($data['public_other_activities'] ?? true) ? 'checked' : '' ?>>
                     <label for="public_other_activities"><?= lang('Show other activities (not publications) as a separate section in the profile', 'Zeige sonstige Aktivitäten (nicht Publikationen) als eigene Sektion im Profil') ?></label>
@@ -431,7 +431,7 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('public_teaching')) { ?>
                 <!-- show profile picture -->
-                 <input type="hidden" name="values[public_teaching]" value="false">
+                <input type="hidden" name="values[public_teaching]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_teaching" value="true" name="values[public_teaching]" <?= ($data['public_teaching'] ?? true) ? 'checked' : '' ?>>
                     <label for="public_teaching"><?= lang('Show teaching activities as a separate section in the profile', 'Zeige Lehraktivitäten als eigene Sektion im Profil') ?></label>
@@ -439,10 +439,10 @@ $active = function ($field) use ($data_fields) {
             <?php } ?>
 
             <?php if ($active('public_email')) { ?>
-            <div class="custom-checkbox mb-20">
-                <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
-                <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
-            </div>
+                <div class="custom-checkbox mb-20">
+                    <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
+                    <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
+                </div>
             <?php } ?>
 
             <div class="custom-checkbox mb-20">
@@ -771,6 +771,75 @@ $active = function ($field) use ($data_fields) {
             <h2 class="title"><?= lang('Profile preferences', 'Profil-Einstellungen') ?></h2>
 
 
+            <h5><?= lang('Sidebar Favourites', 'Seitenleisten-Favoriten') ?></h5>
+
+            <p>
+                <?= lang('You can add your favourite pages to the sidebar for quick access. ', 'Du kannst deine Lieblingsseiten zur Seitenleiste hinzufügen, um schnell darauf zugreifen zu können. ') ?>
+            </p>
+
+            <?php
+            $favs = DB::doc2Arr($data['sidebar_favorites'] ?? []);
+            include_once BASEPATH . '/php/SidebarNav.php';
+            $sidebar = new SidebarNav($Settings);
+            $options = $sidebar->getFavoritableOptions();
+            $options = array_column($options, null, 'id');
+            ?>
+            <!-- save empty favs as well -->
+            <input type="hidden" name="values[sidebar_favorites]" value="">
+            <div class="author-widget">
+                <div class="author-list p-10" id="sidebar_favorites-list">
+                    <?php
+                    $module_lst = [];
+                    foreach ($favs as $fav) {
+                        $label = $options[$fav]['label'] ?? '';
+                    ?>
+                        <div class='author'>
+                            <i class="ph ph-dots-six-vertical text-muted"></i> <?= $label ?>
+                            <input type='hidden' name='values[sidebar_favorites][]' value='<?= $fav ?>'>
+                            <a onclick='$(this).parent().remove()'>&times;</a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="footer">
+                    <div class="input-group small d-inline-flex w-auto">
+                        <select class="form-control" id="sidebar-select">
+                            <option value="" disabled selected><?= lang("Add favorite ...", "Füge Favorit hinzu ...") ?></option>
+                            <?php
+                            foreach ($options as $option) {
+                                $id = $option['id'];
+                            ?>
+                                <option value="<?= $id ?>"><?= $option['label'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn small primary" type="button" onclick="addSidebarFavorite();">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function addSidebarFavorite() {
+                    var sidebar = $('#sidebar-select').val();
+                    if (sidebar.length === 0) return;
+                    var label = $('#sidebar-select option:selected').text();
+                    // check if already exists
+                    if ($('#sidebar_favorites-list').find(`input[value="${sidebar}"]`).length > 0) {
+                        toastError('<?= lang('Sidebar favorite already exists', 'Favorit existiert bereits') ?>');
+                        return;
+                    }
+                    var html = `<div class='author'><i class="ph ph-dots-six-vertical text-muted"></i> ${label} <input type='hidden' name='values[sidebar_favorites][]' value='${sidebar}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                    $('#sidebar_favorites-list').append(html);
+                }
+                $(document).ready(function() {
+                    var sidebardiv = $("#sidebar_favorites-list");
+                    sidebardiv.sortable({});
+                });
+            </script>
+
+
             <h5><?= lang('Activity display', 'Aktivitäten-Anzeige') ?>:</h5>
             <?php
             $display_activities = $data['display_activities'] ?? 'web';
@@ -881,7 +950,7 @@ $active = function ($field) use ($data_fields) {
                             <?php } ?>
                         </select>
                         <div class="input-group-append">
-                            <button class="btn secondary h-full" type="button" onclick="addKeyword();">
+                            <button class="btn small primary" type="button" onclick="addKeyword();">
                                 <i class="ph ph-plus"></i>
                             </button>
                         </div>
