@@ -1574,7 +1574,8 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                 <table class="table unit-table w-full">
                     <tbody>
                         <?php
-                        if (!empty($units)) {
+                        if (!empty($doc['units'] ?? [])) {
+                            $units = $doc['units'];
                             $hierarchy = $Groups->getPersonHierarchyTree($units);
                             $tree = $Groups->readableHierarchy($hierarchy);
 
