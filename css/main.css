@@ -7262,7 +7262,7 @@ Sidebar content
   margin-right: 3rem;
   width: 100%;
 }
-.sidebar-menu .index {
+.sidebar-menu .sidebar-index {
   margin-left: auto;
   background-color: var(--signal-color-20);
   color: var(--signal-color);
@@ -7273,11 +7273,11 @@ Sidebar content
   min-width: 2rem;
   text-align: center;
 }
-.sidebar-menu .index.danger {
+.sidebar-menu .sidebar-index.danger {
   background-color: var(--danger-color-20);
   color: var(--danger-color);
 }
-.sidebar-menu .index.info {
+.sidebar-menu .sidebar-index.info {
   background-color: var(--blue-color-20);
   color: var(--blue-color);
 }

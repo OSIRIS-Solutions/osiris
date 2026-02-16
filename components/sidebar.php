@@ -149,7 +149,7 @@
                         <a href="<?= ROOTPATH ?>/issues" class="with-icon <?= $pageactive('issues') ?>">
                             <i class="ph ph-bell" aria-hidden="true"></i>
                             <?= lang('Issues', 'Hinweise') ?>
-                            <span class="index danger" id="issue-counter"><?= $n_issues ?></span>
+                            <span class="sidebar-index danger" id="issue-counter"><?= $n_issues ?></span>
                         </a>
                     <?php } ?>
 
@@ -159,7 +159,7 @@
                         <a href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>" class="with-icon <?= $pageactive('my-year') ?>">
                             <i class="ph ph-calendar-check" aria-hidden="true"></i>
                             <?= lang('Quarterly approval', 'Quartalsfreigabe') ?>
-                            <span class="index danger" id="approval-counter">!</span>
+                            <span class="sidebar-index danger" id="approval-counter">!</span>
                         </a>
                     <?php } ?>
 
@@ -169,7 +169,7 @@
                         <a href="<?= ROOTPATH ?>/queue/user" class="with-icon <?= $pageactive('queue/user') ?>">
                             <i class="ph ph-queue" aria-hidden="true"></i>
                             <?= lang('To review', 'Zu überprüfen') ?>
-                            <span class="index" id="queue-counter"><?= $queue ?></span>
+                            <span class="sidebar-index" id="queue-counter"><?= $queue ?></span>
                         </a>
                     <?php } ?>
 
@@ -178,7 +178,7 @@
                         <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
                             <i class="ph ph-highlighter" aria-hidden="true"></i>
                             <?= lang('Reviews', 'Überprüfungen') ?>
-                            <span class="index" id="review-counter">0</span>
+                            <span class="sidebar-index" id="review-counter">0</span>
                         </a>
 
                         <script>
@@ -199,7 +199,7 @@
                         <a href="<?= ROOTPATH ?>/messages" class="with-icon <?= $pageactive('messages') ?>">
                             <i class="ph ph-envelope" aria-hidden="true"></i>
                             <?= lang('Messages', 'Nachrichten') ?>
-                            <span class="index info" id="message-counter"><?= $n_messages ?></span>
+                            <span class="sidebar-index info" id="message-counter"><?= $n_messages ?></span>
                         </a>
                     <?php } ?>
 
@@ -210,7 +210,7 @@
                         <a href="<?= ROOTPATH ?>/new-stuff#version-<?= OSIRIS_VERSION ?>" class="with-icon <?= $pageactive('new-stuff') ?>">
                             <i class="ph ph-bell-ringing" aria-hidden="true"></i>
                             <?= lang('News', 'Neuigkeiten') ?>
-                            <span class="index info" id="version-counter">!</span>
+                            <span class="sidebar-index info" id="version-counter">!</span>
                         </a>
                     <?php } ?>
 

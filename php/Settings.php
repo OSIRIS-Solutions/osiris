@@ -117,6 +117,10 @@ class Settings
         ];
     }
 
+    function getQueueCount(){
+        return $this->osiris->queue->count(['declined' => ['$ne' => true]]);
+    }
+
     function get($key, $default = null)
     {
         switch ($key) {

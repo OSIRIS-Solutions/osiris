@@ -589,6 +589,27 @@ class SidebarNav
         $html .= '<a href="' . ROOTPATH . $item['url'] . '" class="with-icon' . $activeClass . '">';
         $html .= '<i class="ph ph-' . $item['icon'] . '" aria-hidden="true"></i>';
         $html .= $item['label'];
+        switch ($item['id']) {
+            case 'cart':
+            // Show cart item count
+            $cart = readCart();
+            if (!empty($cart)) {
+                $html .= '<small class="sidebar-index info" id="cart-counter">' . count($cart) . '</small>';
+            } else {
+                $html .= '<small class="sidebar-index info hidden" id="cart-counter">0</small>';
+            }
+                break;
+            case 'queue':
+            // Show queue item count
+            $queueCount = $this->settings->getQueueCount();
+            if ($queueCount > 0) {
+                $html .= '<small class="sidebar-index info" id="queue-counter">' . $queueCount . '</small>';
+            } else {
+                $html .= '<small class="sidebar-index info hidden" id="queue-counter">0</small>';
+            }
+                break;
+        }
+
         $html .= '</a>';
 
         return $html;
