@@ -72,6 +72,8 @@ if (!empty($user_units)) {
 }
 
 $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)])->toArray();
+
+$cart = readCart();
 ?>
 
 <style>
