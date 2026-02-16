@@ -44,7 +44,7 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
     </div>
 <?php
     die;
-} else if ($version['value'] != OSIRIS_VERSION && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
+} else if (version_compare($version['value'], OSIRIS_VERSION, '<') && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
     <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />

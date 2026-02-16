@@ -330,7 +330,7 @@ class Settings
     function generateStyleSheet()
     {
         $style = '';
-        $root = "--affiliation: " . $this->get('affiliation') . ";";
+        $root = '--affiliation: "' . $this->get('affiliation') . '";';
 
         foreach ($this->getActivities() as $val) {
             $style .= "

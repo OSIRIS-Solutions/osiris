@@ -1842,7 +1842,8 @@ class Document extends Settings
                     $value = $value_match[1];
                 }
                 // check if the value is a field
-                else if (in_array($value, $this->field_ids)) {
+                else {
+                    // if (in_array($value, $this->field_ids))
                     $value = $this->get_field($value, '');
                 }
             }
