@@ -15,14 +15,14 @@ class CommandPalette
         $topicLabel = $this->settings->topicLabel();
 
         $elements = [
-            [
-                "url" => "/profile/" . $_SESSION['username'],
-                "type" => "Navigation",
-                "label" => lang(lang('Profile  of ', 'Profil von ') . ($_SESSION['name'] ?? $_SESSION['username']), null),
-                "icon" => "student",
-                "keywords" => ["profile", "user", "person", "me", "my profile", "my account", "mein profil", "mein konto"],
-                "priority" => 100
-            ],
+            // [
+            //     "url" => "/profile/" . $_SESSION['username'],
+            //     "type" => "Navigation",
+            //     "label" => lang(lang('Profile  of ', 'Profil von ') . ($_SESSION['name'] ?? $_SESSION['username']), null),
+            //     "icon" => "student",
+            //     "keywords" => ["profile", "user", "person", "me", "my profile", "my account", "mein profil", "mein konto"],
+            //     "priority" => 100
+            // ],
             [
                 "url" => "/my-year",
                 "type" => "Navigation",

@@ -1634,6 +1634,93 @@ Route::get('/api/command-palette/search', function () {
         }
     }
 
+    // --- Proposals
+    if ($Settings->featureEnabled('projects') && $Settings->hasPermission('proposals.view')) {
+
+        // Aggregation pipeline to rank prefix matches higher than contains matches.
+        // Fields: acronym, name (as you said)
+        $pipeline = [
+            [
+                '$match' => [
+                    '$or' => [
+                        ['acronym' => ['$regex' => $rxContain, '$options' => 'i']],
+                        ['name'    => ['$regex' => $rxContain, '$options' => 'i']],
+                    ]
+                ]
+            ],
+            [
+                '$addFields' => [
+                    // Prefix boosts
+                    '_cp_prefix_acronym' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$acronym', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                    ],
+                    '_cp_prefix_name' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                    ],
+                    // Contains (weaker) boosts
+                    '_cp_contain_acronym' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$acronym', 'regex' => $rxContain, 'options' => 'i']], 1, 0]
+                    ],
+                    '_cp_contain_name' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxContain, 'options' => 'i']], 1, 0]
+                    ],
+                ]
+            ],
+            [
+                '$addFields' => [
+                    // Weighted score (tweak weights later)
+                    '_cp_score' => [
+                        '$add' => [
+                            ['$multiply' => ['$_cp_prefix_acronym', 50]],
+                            ['$multiply' => ['$_cp_prefix_name', 30]],
+                            ['$multiply' => ['$_cp_contain_acronym', 10]],
+                            ['$multiply' => ['$_cp_contain_name', 5]],
+                        ]
+                    ]
+                ]
+            ],
+            ['$sort' => ['_cp_score' => -1, 'acronym' => 1, 'name' => 1]],
+            ['$limit' => $limitProjects],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'acronym' => 1,
+                    'name' => 1,
+                    '_cp_score' => 1
+                ]
+            ]
+        ];
+
+        $cursor = $osiris->proposals->aggregate($pipeline);
+        $items = [];
+
+        foreach ($cursor as $doc) {
+            $id = (string)$doc->_id;
+            $label = ($doc->name ?? '');
+            if (isset($doc->acronym) && !empty($doc->acronym)) {
+                $label = $doc->acronym . ' - ' . $label;
+            }
+
+            $items[] = [
+                'id' => 'proposal:' . $id,
+                'type' => lang('Entity', 'Entität'),
+                'entity' => 'proposal',
+                'label' => $label,
+                'url' => '/proposals/view/' . $id,
+                'icon' => 'tree-structure',
+                'priority' => (int)($doc->_cp_score ?? 0),
+            ];
+        }
+
+        if (!empty($items)) {
+            $groups[] = [
+                'id' => 'proposals',
+                'label' => lang('Project Proposals', 'Projektanträge'),
+                'items' => $items
+            ];
+        }
+    }
+
     // --- Persons
 
     $pipeline = [
