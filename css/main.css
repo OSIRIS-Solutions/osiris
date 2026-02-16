@@ -7411,7 +7411,6 @@ Sidebar content
   display: flex;
   align-items: center;
   padding: 1.5rem 1rem;
-  border-bottom: 1px solid var(--border-color);
   flex-direction: column;
   gap: 5px;
   margin-bottom: 2rem;
