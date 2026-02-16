@@ -79,7 +79,12 @@ Route::get('/check-duplicate-id', function () {
     if (!isset($_GET['type']) || !isset($_GET['id'])) die('false');
     if ($_GET['type'] != 'doi' && $_GET['type'] != 'pubmed') die('false');
 
-    $form = $osiris->activities->findOne([$_GET['type'] => $_GET['id']]);
+    $type = $_GET['type'];
+    $id = $_GET['id'];
+
+    $form = $osiris->activities->findOne([
+        $type => new MongoDB\BSON\Regex('^' . preg_quote($id) . '$', 'i')
+    ]);
     if (empty($form)) die('false');
     echo 'true';
 });
