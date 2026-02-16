@@ -1,5 +1,31 @@
 # Neuigkeiten
 
+<time datetime="2026-02-16">16.02.2026</time>
+<a class="anchor" href="#build-20260216" id="build-20260216"></a>
+
+Dieses Update liefert eine Reihe von wichtigen Verbesserungen an der API, robustere Datenverarbeitung im Backend sowie mehr Flexibilität und Fehlerresilienz in der Oberfläche.
+
+### API & Daten-Konsistenz
+- Neues /activity-fields API-Endpoint ergänzt — liefert alle Aktivitäts-Felder für Frontend-Use-Cases. 
+- Teaching-API gibt nun immer eine String-ID zurück und löst zugehörige Organisationsnamen auf, für klare API-Antworten. 
+
+### UI & Filter-Verbesserungen
+- Jahr-Filter in Download-Funktion erweitert: nun flexibler von 1900 bis inklusive nächstes Jahr. 
+- Anzeige von Einheiten auf Aktivitätsseiten verbessert — keine Fehler mehr, wenn Feld fehlt. 
+
+### Backend-Fixes & Datenvalidierung
+- DOI- und PubMed-Lookups jetzt case-insensitive, robuster bei unterschiedlichen Schreibweisen. 
+- Version-Checks mit version_compare verbessert, um Versionsstring-Mismatch zu vermeiden. 
+- DOI-Werte werden immer als lowercase gespeichert für konsistente Datensätze. 
+- Smart-Render-CRON-Route wurde sichergestellt, dass immer korrekte Initialisierung geladen wird. 
+
+### Weitere Detailverbesserungen
+- CSS-Variable für Affiliations-Klasse immer korrekt zitiert (gültiges CSS). 
+- Profilseite: Kalendereintrag-Link aktualisiert auf richtigen Endpunkt. 
+- Template-Feld-Checks im Backend leicht gelockert für mehr Flexibilität. 
+- Bilddaten im Portfolio werden nicht doppelt kodiert — effizientere Darstellung. 
+- Versions-Build-Nummer aktualisiert. 
+
 
 <time datetime="2026-02-10">10.02.2026</time>
 <a class="anchor" href="#version-1.8.1" id="version-1.8.1"></a>
