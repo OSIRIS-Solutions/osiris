@@ -586,7 +586,7 @@ class SidebarNav
             if ($item['id'] === 'users') {
                 $searchUrl = ROOTPATH . '/persons/search';
             }
-            $html .= '<a href="' . $searchUrl . '" class="inline-btn" title="' . lang('Advanced Search', 'Erweiterte Suche') . '">';
+            $html .= '<a href="' . $searchUrl . '" class="inline-btn ' . $activeClass . '" title="' . lang('Advanced Search', 'Erweiterte Suche') . '">';
             $html .= '<i class="ph-duotone ph-magnifying-glass-plus"></i>';
             $html .= '</a>';
         }
