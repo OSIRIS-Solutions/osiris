@@ -582,7 +582,11 @@ class SidebarNav
         $activeClass = $item['is_active'] ? ' active' : '';
 
         if ($item['hasSearch'] ?? false) {
-            $html .= '<a href="' . ROOTPATH . $item['url'] . '/search" class="inline-btn" title="' . lang('Advanced Search', 'Erweiterte Suche') . '">';
+            $searchUrl = ROOTPATH . $item['url'] . '/search';
+            if ($item['id'] === 'users') {
+                $searchUrl = ROOTPATH . '/persons/search';
+            }
+            $html .= '<a href="' . $searchUrl . '" class="inline-btn" title="' . lang('Advanced Search', 'Erweiterte Suche') . '">';
             $html .= '<i class="ph-duotone ph-magnifying-glass-plus"></i>';
             $html .= '</a>';
         }
