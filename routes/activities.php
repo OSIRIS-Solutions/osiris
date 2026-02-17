@@ -40,10 +40,20 @@ Route::get('/(activities|my-activities)', function ($page) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/advanced-search/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($query)) {
+        header("Location: " . ROOTPATH . "/activities/search?msg=query-not-found");
+        die();
+    }
+    $collection = $query['type'] ?? 'activities';
+    header("Location: " . ROOTPATH . "/$collection/search?query=$id");
+    die;
+}, 'login');
 
 Route::get('/(activities|projects|proposals|conferences|journals|persons)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
 
     switch ($collection) {
         case 'activities':

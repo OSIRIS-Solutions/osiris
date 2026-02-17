@@ -253,6 +253,7 @@
             </span>
             <span class="cp-itemMain">
               <span class="cp-itemTitle">${escapeHtml(item.label)}</span>
+              <span class="cp-itemMeta">${escapeHtml(item.description || '')}</span>
             </span>
             <span class="cp-tag">${(item.type || '')}</span>
           </li>

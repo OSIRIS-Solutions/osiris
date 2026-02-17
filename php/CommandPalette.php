@@ -491,6 +491,36 @@ class CommandPalette
                 "priority" => 80
             ]);
         }
+
+        // --- Advanced search queries
+        $filter = [
+            '$or' => [
+                ['user' => $_SESSION['username']],
+                ['global' => true],
+                ['role' => ['$in' => $this->settings->roles]]
+            ]
+        ];
+        $queries = $this->settings->osiris->queries->find($filter);
+        $collectionMap = [
+            'activities' => lang('Activities', 'Aktivitäten'),
+            'projects' => lang('Projects', 'Projekte'),
+            'proposals' => lang('Proposals', 'Anträge'),
+            'conferences' => lang('Events', 'Veranstaltungen'),
+            'journals' => lang('Journals', 'Zeitschriften'),
+            'persons' => lang('Persons', 'Personen')
+        ];
+        foreach ($queries as $query) {
+            $this->add([
+                "url" => "/" . ($query['type'] ?? 'activities') . "/search?query=" . $query['_id'],
+                "type" => lang("Saved search", "Gespeicherte Suche"),
+                "icon" => "magnifying-glass",
+                "label" => $query['name'],
+                "description" => (isset($collectionMap[$query['type']]) ? lang("Search in ", "Suche in ") . $collectionMap[$query['type']] : null),
+                "keywords" => [$query['name'], "saved search", "gespeicherte suche", "advanced search", "erweiterte suche"],
+                "priority" => 80
+            ]);
+        }
+        
     }
 
     public function add(array $item): void
