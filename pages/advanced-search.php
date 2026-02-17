@@ -737,6 +737,10 @@ function printRules($rules)
                         r.render = function(data, type, row, meta) {
                             return `<a href="<?= ROOTPATH ?>/<?= $collection ?>/view/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
                         }
+                    } else if (field == 'username') {
+                        r.render = function(data, type, row, meta) {
+                            return data ? `<a href="<?= ROOTPATH ?>/profile/${data}">${data}</a>` : '-';
+                        }
                     } else if (array_columns[field]) {
                         var array_column = array_columns[field]
                         r.render = function(data, type, row, meta) {
