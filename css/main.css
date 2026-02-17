@@ -675,6 +675,10 @@ span.muted {
   color: var(--muted-color);
 }
 
+span.blue {
+  color: var(--blue-color);
+}
+
 .text-osiris {
   color: var(--osiris-color) !important;
 }
@@ -3057,6 +3061,27 @@ Buttons
 .btn.outline:not(.disabled):not(:disabled):hover {
   background-color: var(--primary-color-20);
 }
+.btn.blue {
+  color: var(--blue-color-dark);
+  border-color: var(--blue-color);
+  background-color: var(--blue-color-20);
+}
+.btn.blue:not(.disabled):not(:disabled):hover {
+  background-color: var(--blue-color-30);
+}
+.btn.blue.filled {
+  color: white;
+  background-color: var(--blue-color);
+}
+.btn.blue.filled:not(.disabled):not(:disabled):hover {
+  background-color: var(--blue-color-dark);
+}
+.btn.outline {
+  background-color: white;
+}
+.btn.outline:not(.disabled):not(:disabled):hover {
+  background-color: var(--primary-color-20);
+}
 .btn.small {
   height: 2.6rem;
   line-height: 2.6rem;
@@ -3337,6 +3362,9 @@ ul.list.signal > li::before {
 ul.list.muted > li::before {
   background-color: var(--muted-color);
 }
+ul.list.blue > li::before {
+  background-color: var(--blue-color);
+}
 
 /* Ordered list */
 ol.list {
@@ -3390,6 +3418,10 @@ ol.list.signal > li::before {
 ol.list.muted > li::before {
   background-color: var(--muted-color-20);
   color: var(--muted-color);
+}
+ol.list.blue > li::before {
+  background-color: var(--blue-color-20);
+  color: var(--blue-color);
 }
 
 ul.horizontal {
@@ -3948,6 +3980,10 @@ Tables
 .table tbody tr.muted td,
 .table tbody tr.muted th {
   color: var(--muted-color);
+}
+.table tbody tr.blue td,
+.table tbody tr.blue th {
+  background-color: var(--blue-color-very-light);
 }
 
 td .key {
@@ -6482,6 +6518,18 @@ Alerts
 .alert.muted a:hover {
   color: var(--muted-color);
 }
+.alert.blue {
+  --color: var(--blue-color);
+}
+.alert.blue hr {
+  background-color: var(--blue-color-30);
+}
+.alert.blue a {
+  color: var(--blue-color-dark);
+}
+.alert.blue a:hover {
+  color: var(--blue-color);
+}
 .alert.without-icon {
   padding-left: 2rem;
 }
@@ -6561,6 +6609,13 @@ Alerts
 }
 .card.muted.filled {
   background-color: var(--muted-color);
+}
+.card.blue {
+  background-color: var(--blue-color-20);
+  border-color: var(--blue-color);
+}
+.card.blue.filled {
+  background-color: var(--blue-color);
 }
 .card .title {
   color: inherit;
@@ -7793,6 +7848,12 @@ Boxes, tiles, and title bar
 .box.muted > .header {
   background-color: var(--muted-color-very-light);
 }
+.box.blue {
+  border-left: 4px solid var(--blue-color);
+}
+.box.blue > .header {
+  background-color: var(--blue-color-very-light);
+}
 .box:target {
   -moz-box-shadow: 0 0 0 0.3rem var(--signal-box-shadow-color);
   -webkit-box-shadow: 0 0 0 0.3rem var(--signal-box-shadow-color);
@@ -8513,6 +8574,14 @@ Badges
   color: white;
   background-color: var(--muted-color);
 }
+.badge.blue {
+  color: var(--blue-color-dark);
+  background-color: var(--blue-color-20);
+}
+.badge.blue.filled {
+  color: white;
+  background-color: var(--blue-color);
+}
 .badge.dark {
   background-color: var(--base-text-color-light);
   color: white;
@@ -8592,6 +8661,12 @@ a.badge.muted:hover,
 a.badge-group:hover > .badge.muted {
   color: var(--muted-color-dark);
   background-color: var(--muted-color-30);
+}
+
+a.badge.blue:hover,
+a.badge-group:hover > .badge.blue {
+  color: var(--blue-color-dark);
+  background-color: var(--blue-color-30);
 }
 
 /*
@@ -12305,6 +12380,10 @@ body:not(.dark-mode) .hidden-lm {
   border: max(var(--border-width), 1px) solid var(--muted-color) !important;
 }
 
+.border-blue {
+  border: max(var(--border-width), 1px) solid var(--blue-color) !important;
+}
+
 /* Float */
 .float-left {
   float: left !important;
@@ -12655,6 +12734,19 @@ a.text-signal:focus {
 a.text-muted:hover,
 a.text-muted:focus {
   color: var(--muted-color-light) !important;
+}
+
+.bg-blue {
+  background-color: var(--blue-color) !important;
+}
+
+.text-blue {
+  color: var(--blue-color) !important;
+}
+
+a.text-blue:hover,
+a.text-blue:focus {
+  color: var(--blue-color-light) !important;
 }
 
 /* Text colors */

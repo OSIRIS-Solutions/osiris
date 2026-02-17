@@ -554,7 +554,6 @@ if ($count_groups > 0) {
 <script>
     initActivities('#activities-table', {
         page: 'all-activities',
-        display_activities: 'web',
         filter: {
             topics: '<?= $topic['id'] ?>',
             type: {
@@ -567,7 +566,6 @@ if ($count_groups > 0) {
 <script>
     initActivities('#publication-table', {
         page: 'all-activities',
-        display_activities: 'web',
         filter: {
             topics: '<?= $topic['id'] ?>',
             type: 'publication'

@@ -433,7 +433,6 @@ $cart = readCart();
                 "url": ROOTPATH + '/api/all-activities',
                 "data": {
                     "page": '<?= $page ?>',
-                    'display_activities': '<?= $USER['display_activities'] ?>',
                     'user': '<?= $user ?>'
                 },
                 dataSrc: 'data'

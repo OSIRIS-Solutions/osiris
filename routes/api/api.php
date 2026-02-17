@@ -310,10 +310,10 @@ Route::get('/api/all-activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     include_once BASEPATH . "/php/Render.php";
     include_once BASEPATH . "/php/Document.php";
@@ -333,15 +333,9 @@ Route::get('/api/all-activities', function () {
     if (isset($filter['projects'])) {
         $filter['projects'] = DB::to_ObjectID($filter['projects']);
     }
-    // if (!isset($_GET['apikey']) && isset($_SESSION['username'])) {
-
     if (isset($_GET['type']) && $_GET['type'] !== '') {
         $filter['type'] = $_GET['type'];
     }
-    // if (!empty($filter)){
-    //     $filter = ['$and' => [$filter]];
-    // }
-
     $perm_filter = $Settings->getActivityFilter($filter);
     if ($page == "my-activities") {
         // reduced filter for my activities
@@ -366,7 +360,7 @@ Route::get('/api/all-activities', function () {
     $i = 0;
     $first = true;
 
-    $display = $_GET['display_activities'] ?? 'web';
+    $display = $USER['display_activities'] ?? 'web';
     $activityField = $display === 'web'
         ? '$rendered.web'
         : '$rendered.print';
