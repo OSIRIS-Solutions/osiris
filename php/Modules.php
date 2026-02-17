@@ -2835,7 +2835,7 @@ class Modules
 
             case "book-title":
             ?>
-                <div class="data-module floating-form col-6" data-module="book-title">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="book-title">
                     <input type="text" class="form-control" name="values[book]" value="<?= $this->val('book') ?>" id="book" <?= $labelClass ?> placeholder="book-title">
                     <label for="book" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2845,7 +2845,7 @@ class Modules
 
             case "book-series":
             ?>
-                <div class="data-module floating-form col-6" data-module="book-series">
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="book-series">
                     <input type="text" class="form-control" <?= $labelClass ?> name="values[series]" value="<?= $this->val('series') ?>" id="series" placeholder="series">
                     <label for="series" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
