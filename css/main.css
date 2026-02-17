@@ -7464,31 +7464,40 @@ Sidebar content
 
 .my-profile-links {
   display: flex;
-  gap: 1rem;
-  position: absolute;
-  top: 6.5rem;
-  right: 0;
-  background: white;
-  border: var(--border-width) solid var(--border-color);
-  border-top-left-radius: 999px;
-  padding: 0.25rem 1rem;
-  border-bottom-left-radius: 999px;
-  border-right: none;
+  flex-direction: column;
+  width: 100%;
 }
 
 .my-profile-links a {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  color: var(--primary-color);
+  width: 100%;
+  text-align: left;
+  color: rgba(70, 70, 70, 0.8);
+  padding: 0.25rem 1rem;
+  border-radius: var(--border-radius);
   /* background-color: var(--primary-color-20); */
   /* transition: background-color 0.2s, color 0.2s; */
 }
 
+.my-profile-links a i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  color: var(--primary-color);
+  margin-right: 1rem;
+}
+
 .my-profile-links a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.my-profile-links a:hover i {
   background-color: var(--primary-color);
   color: #fff;
 }
@@ -7529,6 +7538,10 @@ Sidebar content
 
 .my-tasks.tasks-0 {
   background-color: var(--gray-color-very-light);
+}
+
+.my-tasks .title {
+  color: var(--blue-color);
 }
 
 .sidebar-menu .my-tasks nav > a {

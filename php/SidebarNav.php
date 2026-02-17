@@ -446,7 +446,7 @@ class SidebarNav
         if (!empty($favorites)) {
             $output[] = [
                 'id' => 'favorites',
-                'label' => lang('Favorites', 'Favoriten'),
+                'label' => '<span><i class="ph ph-star"></i> ' . lang('Favorites', 'Favoriten') . '</span>',
                 'items' => $favorites
             ];
         }

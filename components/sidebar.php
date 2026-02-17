@@ -1,3 +1,6 @@
+<?php
+$cart = readCart();
+?>
 <div class="sidebar-menu">
 
     <!-- Sidebar links and titles -->
@@ -42,23 +45,60 @@
                 </a>
             </div>
             <div class="my-profile-links" style="display: none;">
+                <?php
+                $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
+                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
+                if (!empty($maintain)) { ?>
+                    <div class="dropdown modal-sm">
+                        <a href="#" class="" data-toggle="dropdown" id="switch-user" aria-haspopup="true" aria-expanded="false">
+                            <i class="ph ph-user-switch"></i>
+                            <span><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
+                            <!-- <h6 class="header text-primary"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></h6> -->
+
+                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="p-10" id="switch-user-form">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
+                                    </div>
+
+                                    <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
+                                        <option value="" disabled>
+                                            <?= lang('Switch user', 'Benutzer wechseln') ?>
+                                        </option>
+                                        <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
+                                        <?php
+                                        foreach ($maintain as $d) { ?>
+                                            <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <?php } ?>
 
                 <?php if ($Settings->hasPermission('scientist')) { ?>
-                    <a href="<?= ROOTPATH ?>/my-year" class="<?= $pageactive('my-year') ?>" data-toggle="tooltip" data-title="<?= lang('My year', 'Mein Jahr') ?>">
+                    <a href="<?= ROOTPATH ?>/my-year" class="<?= $pageactive('my-year') ?>">
                         <i class="ph ph-calendar" aria-hidden="true"></i>
+                        <?= lang('My year', 'Mein Jahr') ?>
                     </a>
 
-                    <a href="<?= ROOTPATH ?>/my-activities" class="<?= $pageactive('my-activities') ?>" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten') ?>">
+                    <a href="<?= ROOTPATH ?>/my-activities" class="<?= $pageactive('my-activities') ?>">
                         <i class="ph ph-folder-user" aria-hidden="true"></i>
+                        <?= lang('My activities', 'Meine Aktivitäten') ?>
                     </a>
                 <?php } ?>
 
-                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" data-toggle="tooltip" data-title="<?= lang('Settings', 'Einstellungen') ?>">
+                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>">
                     <i class="ph ph-gear" aria-hidden="true"></i>
+                    <?= lang('User Settings', 'Nutzereinstellungen') ?>
                 </a>
 
-                <a href="<?= ROOTPATH ?>/user/logout" class="" style="--primary-color:var(--danger-color);" data-toggle="tooltip" data-title="<?= lang('Logout', 'Abmelden') ?>">
+                <a href="<?= ROOTPATH ?>/user/logout" class="mt-10" style="--primary-color:var(--danger-color);">
                     <i class="ph ph-sign-out" aria-hidden="true"></i>
+                    <?= lang('Logout', 'Abmelden') ?>
                 </a>
 
             </div>
@@ -227,11 +267,11 @@
 
 
         <?php
-            include_once BASEPATH . '/php/SidebarNav.php';
-            $Sidebar = new SidebarNav($Settings);
-            echo $Sidebar->render();
+        include_once BASEPATH . '/php/SidebarNav.php';
+        $Sidebar = new SidebarNav($Settings);
+        echo $Sidebar->render();
         ?>
-        
+
 
     <?php } ?>
 

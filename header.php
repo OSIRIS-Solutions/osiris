@@ -253,13 +253,12 @@ $pageactive = function ($p) use ($page) {
 
             <!-- messages -->
             <div class="dropdown modal-sm">
-                <button class="btn primary outline mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
+                <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-translate"></i>
                     <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
                     <h6 class="header text-primary"><?= lang('Change language', 'Sprache ändern') ?></h6>
-
                     <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                         <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
@@ -278,39 +277,7 @@ $pageactive = function ($p) use ($page) {
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
                     <?= lang('Log in', 'Anmelden') ?>
                 </a>
-                <?php } else {
-                $realusername = $_SESSION['realuser'] ?? $_SESSION['username'];
-                $maintain = $osiris->persons->find(['maintenance' => $realusername, 'username' => ['$exists' => true]], ['projection' => ['displayname' => 1, 'username' => 1]])->toArray();
-                if (!empty($maintain)) { ?>
-                    <div class="dropdown modal-sm">
-                        <button class="btn primary outline mr-5" data-toggle="dropdown" type="button" id="switch-user" aria-haspopup="true" aria-expanded="false">
-                            <i class="ph ph-user-switch"></i>
-                            <span class="sr-only"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
-                            <h6 class="header text-primary"><?= lang('Switch users', 'Nutzeraccount wechseln') ?></h6>
-
-                            <form action="<?= ROOTPATH ?>/switch-user" method="post" class="content pt-0" id="switch-user-form">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text border-primary text-primary"><i class="ph ph-user"></i></span>
-                                    </div>
-
-                                    <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
-                                        <option value="" disabled>
-                                            <?= lang('Switch user', 'Benutzer wechseln') ?>
-                                        </option>
-                                        <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
-                                        <?php
-                                        foreach ($maintain as $d) { ?>
-                                            <option value="<?= $d['username'] ?>" <?= $d['username'] ==  $_SESSION['username'] ? 'selected' : '' ?>><?= $DB->getNameFromId($d['username']) ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                <?php }  ?>
+            <?php } else { ?>
                 <!-- fake search input for command palette -->
                 <div id="navbar-cp-trigger" class="d-none d-md-block">
                     <button type="button" class="cp-trigger" aria-label="<?= lang('Open search', 'Suche öffnen') ?>">
