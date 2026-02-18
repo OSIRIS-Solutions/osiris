@@ -583,12 +583,41 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
             <!-- <span class='mr-10'><?= $Format->activity_icon(false) ?></span> -->
             <li><?= $Format->activity_subtype() ?></li>
         </ul>
-        <h1 class="mt-10">
-            <?= $Format->getTitle('web') ?>
-        </h1>
 
-        <p class="lead"><?= $Format->getSubtitle('web') ?></p>
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1> <?= $Format->getTitle('web') ?></h1>
+                <p class="lead"><?= $Format->getSubtitle('web') ?></p>
+            </div>
 
+            <?php if ($Settings->featureEnabled('altmetrics')) {
+                $displayAltmetric = true;
+                $details = [
+                    'data-badge-type' => 'medium-donut',
+                    'data-badge-popover' => 'left',
+                    'data-link-target' => '_blank'
+                ];
+                if (isset($doc['doi']) && !empty($doc['doi'])) {
+                    $details['data-doi'] = $doc['doi'];
+                } elseif (isset($doc['isbn']) && !empty($doc['isbn'])) {
+                    $details['data-isbn'] = $doc['isbn'];
+                } elseif (isset($doc['pubmed']) && !empty($doc['pubmed'])) {
+                    $details['data-pmid'] = $doc['pubmed'];
+                } else {
+                    $displayAltmetric = false;
+                }
+                if ($displayAltmetric) {
+                    $detailsAttr = '';
+                    foreach ($details as $k => $v) {
+                        $detailsAttr .= " $k='$v' ";
+                    }
+            ?>
+                    <script type='text/javascript' src='https://embed.altmetric.com/assets/embed.js'></script>
+                    <div class='altmetric-embed' <?= $detailsAttr ?>></div>
+            <?php }
+            } ?>
+
+        </div>
     </div>
 
     <!-- check for basic things -->
@@ -612,6 +641,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
         }
     }
     ?>
+
+
+
 
     <!-- check for date, at least month and year must be given -->
     <?php
@@ -1336,7 +1368,14 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     /* Optional: only show claim on hover (less visual noise) */
                     .author-row .claim-action {
                         opacity: 0;
+                        position: absolute;
+                        right: 0;
+                        top: .75rem;
                         transition: opacity 0.15s ease;
+                    }
+
+                    .author-row td {
+                        position: relative;
                     }
 
                     .author-row:hover .claim-action {
