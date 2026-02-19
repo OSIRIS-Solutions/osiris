@@ -30,21 +30,22 @@ function navigate(key) {
     $('.pills .btn#btn-' + key).addClass('active')
 
     switch (key) {
-        // case 'publications':
-        //     if (publicationTable) break;
-        //     publicationTable = initActivities('#publication-table', {
-        //         filter: {
-        //             topics: TOPIC,
-        //             type: 'publication'
-        //         }
-        //     })
-        //     break;
+        case 'publications':
+            if (publicationTable) break;
+            publicationTable = initActivities('#publication-table', {
+                filter: {
+                    topics: TOPIC,
+                    type: 'publication'
+                }
+            })
+            break;
 
         case 'activities':
             if (activitiesTable) break;
             activitiesTable = initActivities('#activities-table', {
                 filter: {
                     topics: TOPIC,
+                    type: { '$ne': 'publication' }
                 }
             })
             timelineChart({ 'topics': TOPIC });

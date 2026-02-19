@@ -43,6 +43,7 @@ if (empty($form) || !isset($form['_id'])) {
     $url = ROOTPATH . "/topics/view/" . $form['_id'];
 }
 
+$topicLabel = $Settings->topicLabel();
 ?>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -51,9 +52,9 @@ if (empty($form) || !isset($form['_id'])) {
 <h3 class="title">
     <?php
     if (empty($form) || !isset($form['_id'])) {
-        echo lang('New Research Topic', 'Neuer Forschungsbereich');
+        echo lang('New ' . $topicLabel, 'Neuer ' . $topicLabel);
     } else {
-        echo lang('Edit Research Topic', 'Forschungsbereich bearbeiten');
+        echo lang('Edit ' . $topicLabel, $topicLabel . ' bearbeiten');
     }
     ?>
 </h3>
@@ -70,8 +71,12 @@ if (empty($form) || !isset($form['_id'])) {
                     <?= lang('It it recommended to choose something short you can recognize.', 'Es wird empfohlen, etwas Kurzes, Wiedererkennbares zu nehmen.') ?>
                 </small>
             <?php } else { ?>
-                <small class="font-weight-bold">ID:</small><br>
-                <?= $form['id'] ?>
+                <p class="mt-0">
+                    ID: <code class="code"><?= $form['id'] ?></code>
+                </p>
+                <small class="text-muted d-block">
+                    <?= lang('ID cannot be changed.', 'Die ID kann nicht geändert werden.') ?>
+                </small>
             <?php } ?>
         </div>
         <!-- <div class="col-md-5 floating-form">
@@ -103,6 +108,17 @@ if (empty($form) || !isset($form['_id'])) {
                     </label>
                     <input type="text" class="form-control" name="values[subtitle]" id="subtitle" value="<?= $form['subtitle'] ?? ''  ?>">
                 </div>
+
+                <label for="description">
+                    <?= lang('Description', 'Beschreibung') ?>
+                </label>
+                <div class="form-group">
+                    <div id="description-quill"><?= $form['description'] ?? '' ?></div>
+                    <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
+                    <script>
+                        quillEditor('description');
+                    </script>
+                </div>
             </fieldset>
         </div>
         <div class="col-md-6">
@@ -121,36 +137,21 @@ if (empty($form) || !isset($form['_id'])) {
                     </label>
                     <input type="text" class="form-control" name="values[subtitle_de]" id="subtitle_de" value="<?= $form['subtitle_de'] ?? '' ?>">
                 </div>
+
+
+                <label for="description_de">
+                    <?= lang('Description', 'Beschreibung') ?>
+                </label>
+                <div class="form-group">
+                    <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
+                    <textarea name="values[description_de]" id="description_de" class="d-none"><?= $form['description_de'] ?? '' ?></textarea>
+
+                    <script>
+                        quillEditor('description_de');
+                    </script>
+                </div>
             </fieldset>
         </div>
-    </div>
-
-    <hr>
-
-    <h4>
-        <?= lang('Description', 'Beschreibung') ?>
-        in <span class="d-inline-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
-    </h4>
-    <div class="form-group">
-        <div id="description-quill"><?= $form['description'] ?? '' ?></div>
-        <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
-        <script>
-            quillEditor('description');
-        </script>
-    </div>
-
-
-    <h4>
-        <?= lang('Description', 'Beschreibung') ?>
-        in <span class="d-inline-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
-    </h4>
-    <div class="form-group">
-        <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
-        <textarea name="values[description_de]" id="description_de" class="d-none"><?= $form['description_de'] ?? '' ?></textarea>
-
-        <script>
-            quillEditor('description_de');
-        </script>
     </div>
 
     <!-- inactive -->
@@ -164,6 +165,30 @@ if (empty($form) || !isset($form['_id'])) {
         </div>
     </div>
 
-
     <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
 </form>
+
+
+
+<?php if ($Settings->hasPermission('topics.delete')) { ?>
+    <br>
+    <div class="alert danger mt-20">
+        <a onclick="$('#delete').slideToggle()">
+            <?= lang('Delete', 'Löschen') ?>
+            <i class="ph ph-caret-down"></i>
+        </a>
+
+        <div id="delete" style="display: none;">
+            <form action="<?= ROOTPATH ?>/crud/topics/delete/<?= $topic['_id'] ?>" method="post">
+                <p>
+                    <?= lang(
+                        'Do you really want to delete this ' . $topicLabel . '? If you delete, it will be removed from all connected persons, activities and projects.',
+                        'Möchten Sie diesen ' . $topicLabel . ' wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
+                    ) ?>
+                </p>
+                <button type="submit" class="btn danger"><?= lang('Delete', 'Löschen') ?></button>
+            </form>
+        </div>
+    </div>
+
+<?php } ?>
