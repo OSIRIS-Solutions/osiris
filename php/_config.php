@@ -135,7 +135,7 @@ function validateValues($values, $DB)
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
-        } else if ($key === 'epub'){
+        } else if ($key === 'epub') {
             $values['epub-delay'] = endOfCurrentQuarter(true);
             // value is boolean
             $values[$key] = boolval($value);
@@ -257,9 +257,11 @@ function valiDate($date)
 
 function printMsg($msg = null, $type = 'info', $header = "default")
 {
+    $sessionMsg = false;
     if ($msg === null && isset($_SESSION['msg'])) {
         $msg = $_SESSION['msg'];
         unset($_SESSION["msg"]);
+        $sessionMsg = true;
     }
     if (isset($_SESSION['msg_type'])) {
         $type = $_SESSION['msg_type'];
@@ -388,9 +390,14 @@ function printMsg($msg = null, $type = 'info', $header = "default")
             $text = str_replace("-", " ", $msg);
             break;
     }
-    $get = currentGET(['msg']) ?? "";
+    if ($sessionMsg) {
+        // no need to reload the page, just close the alert
+        $attr = 'onclick="$(this).closest(\'.alert\').remove()"';
+    } else {
+        $attr = 'href="' . (currentGET(['msg']) ?? "") . '"';
+    }
     echo "<div class='alert $class block show my-10' role='alert'>
-          <a class='close' href='$get' aria-label='Close'>
+          <a class='close' $attr aria-label='Close'>
           <span aria-hidden='true'>&times;</span>
         </a> ";
     if (!empty($header)) {
