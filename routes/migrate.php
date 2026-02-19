@@ -16,6 +16,14 @@
 
 Route::get('/migration-needed', function () {
     include_once BASEPATH . "/php/init.php";
+    // check if we need to run the migration
+    $version = $osiris->system->findOne(['key' => 'version']);
+    if (empty($version) || version_compare($version['value'], OSIRIS_VERSION, '<')) {
+        // migration needed
+    } else {
+        $_SESSION['msg'] = lang('Your OSIRIS installation is up to date.', 'Deine OSIRIS-Installation ist auf dem neuesten Stand.');
+        header('Location: ' . ROOTPATH . '/');
+    }
     include_once BASEPATH . "/header.php";
 
     if ($Settings->hasPermission('admin.see')) {
