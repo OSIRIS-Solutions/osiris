@@ -997,6 +997,13 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
     }
     if (isset($_GET['json'])) {
         $filter = json_decode($_GET['json'], true);
+        if (!is_array($filter)) {
+            $filter = [];
+        }
+        if (isset($filter['$and']) && empty($filter['$and'])) {
+            // this will otherwise produce an error, because $and must be a non-empty array
+            unset($filter['$and']);
+        }
     }
     if (isset($filter['public'])) $filter['public'] = boolval($filter['public']);
 
