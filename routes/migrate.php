@@ -14,6 +14,51 @@
  * @license     MIT
  */
 
+Route::get('/migration-needed', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/header.php";
+
+    if ($Settings->hasPermission('admin.see')) {
+?>
+        <div class="align-items-center container d-flex h-full">
+            <div class="alert danger mb-20 w-full">
+                <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>
+                <p>
+                    <?= lang(
+                        'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
+                        'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
+                    ) ?>
+                </p>
+                <p class="text-muted">
+                    <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
+                </p>
+                <a href="<?= ROOTPATH ?>/migrate" class="btn danger">
+                    <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
+                </a>
+            </div>
+        </div>
+    <?php
+    } else {
+    ?>
+        <div class="align-items-center container d-flex h-full">
+            <div class="alert danger mb-20 w-full">
+                <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>
+                <p>
+                    <?= lang(
+                        'OSIRIS needs to be updated and will be unavailable during the process. Please contact your administrator.',
+                        'OSIRIS muss aktualisiert werden und ist während des Prozesses nicht verfügbar. Bitte kontaktiere deinen Administrator.'
+                    ) ?>
+                </p>
+                <p class="text-muted">
+                    <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
+                </p>
+            </div>
+        </div>
+<?php
+    }
+    include_once BASEPATH . "/footer.php";
+    die;
+});
 
 Route::get('/migrate/countries', function () {
     include_once BASEPATH . "/php/init.php";
@@ -213,6 +258,14 @@ Route::get('/migrate', function () {
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
+
+    // check if user is logged in and has admin rights
+    if (!$Settings->hasPermission('admin.see')) {
+        echo "<p class='alert danger'>" . lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') . "</p>";
+        include BASEPATH . "/footer.php";
+        die;
+    }
+
     echo "<h1>" . lang('OSIRIS Migration', 'OSIRIS Migration') . "</h1>";
     echo "<p>" . lang('Please wait...', 'Bitte warten...') . "</p>";
     // flush output buffer

@@ -6,7 +6,8 @@ $cart = readCart();
     <!-- Sidebar links and titles -->
     <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) { ?>
 
-        <a href="<?= ROOTPATH ?>/" class="cta with-icon <?= $pageactive('add-activity') ?>">
+        <div class="spacer h-50"></div>
+        <a href="<?= ROOTPATH ?>/user/login" class="cta with-icon <?= $pageactive('add-activity') ?>">
             <i class="ph ph-sign-in mr-10" aria-hidden="true"></i>
             <?= lang('Log in', 'Anmelden') ?>
         </a>
