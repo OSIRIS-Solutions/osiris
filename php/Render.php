@@ -132,115 +132,113 @@ function renderDates($doc)
     return $doc;
 }
 
-function renderAuthorUnits($doc, $old_doc = [], $author_key = 'authors')
+
+function renderAuthorUnits($doc, $old_doc = [])
 {
     global $Groups;
-    if ($author_key == 'authors' || $author_key == 'editors') {
-        // check both authors and editors
-        if (!isset($doc['authors']) && !isset($doc['editors'])) {
-            return $doc; // no authors or editors to process
-        }
-    } else if (!isset($doc[$author_key])) return $doc;
-
     $DB = new DB;
-    $osiris = $DB->db;
+    // Roles that may exist in different activity types
+    $roles = ['authors', 'editors', 'supervisors', 'persons'];
+    // If none of the roles exist, nothing to do
+    $hasAny = false;
+    foreach ($roles as $r) {
+        if (!empty($doc[$r])) {
+            $hasAny = true;
+            break;
+        }
+    }
+    if (!$hasAny) return $doc;
 
-    $units = [];
-    // make sure that start_date is set because we need it to filter units
+    // Ensure start_date is available (needed for time-filtering units)
     if (!isset($doc['start_date']) && isset($old_doc['start_date'])) {
         $doc['start_date'] = $old_doc['start_date'];
     }
     if (!isset($doc['start_date'])) {
         $doc = renderDates($doc);
     }
-    // if it still does not exist, use start of all times
     if (!isset($doc['start_date'])) {
         $doc['start_date'] = '1970-01-01';
     }
     $startdate = strtotime($doc['start_date']);
 
-    $authors = $doc[$author_key] ?? [];
-    $old = $old_doc[$author_key] ?? [];
-
-    // check if old authors are equal to new authors
-    if (count($authors) == count($old) && $authors == $old) {
-        return $doc;
-    }
-
-    // add user as key to authors
-    // $old = array_column($old, 'units', 'user');
-
-    foreach ($authors as $i => $author) {
-        if ($author_key == 'authors' && (!($author['aoi'] ?? false))) continue;
-        // check if author has been manually set, if so, do not update units
-        if ($author['manually'] ?? false) {
-            $units = array_merge($units, DB::doc2Arr($authors[$i]['units']));
-            continue;
-        }
-        // $old_author = $old[$user] ?? [];
-        // if (isset($author['manually']) && $author['manually']) {
-        //     $old_author = DB::doc2Arr($author);
-        // }
-        // if (!empty($old_author) && $author['manually']) {
-        //     $authors[$i]['units'] = $old_author['units'] ?? [];
-        //     $units = array_merge($units, $authors[$i]['units']);
-        //     continue;
-        // }
-        if (!isset($author['user'])) continue; // skip if no user
-        $user = $author['user'];
-
+    // Helper: get person's units active at $startdate (scientific only)
+    $getUnitsForUserAtDate = function ($user) use ($DB, $startdate) {
         $person = $DB->getPerson($user);
-        if (isset($person['units']) && !empty($person['units'])) {
-            $u = DB::doc2Arr($person['units']);
-            // filter units that have been active at the time of activity
-            $u = array_filter($u, function ($unit) use ($startdate) {
-                if (!$unit['scientific']) return false; // we are only interested in scientific units
-                if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
-                return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
-            });
-            $u = array_column($u, 'unit');
-            $authors[$i]['units'] = $u;
-            $units = array_merge($units, $u);
+        if (empty($person['units'])) return [];
+
+        $u = DB::doc2Arr($person['units']);
+
+        $u = array_filter($u, function ($unit) use ($startdate) {
+            if (!($unit['scientific'] ?? false)) return false; // scientific only
+            if (empty($unit['start'])) return true;            // unknown start => keep
+            $s = strtotime($unit['start']);
+            $e = empty($unit['end']) ? null : strtotime($unit['end']);
+            return $s <= $startdate && ($e === null || $e >= $startdate);
+        });
+
+        $u = array_column($u, 'unit');
+        return array_values(array_unique($u));
+    };
+
+    // Helper: index old role array by user for manual-flag carry-over
+    $indexOldByUser = function ($arr) {
+        $idx = [];
+        foreach ($arr as $item) {
+            if (empty($item['user'])) continue;
+            $idx[$item['user']] = $item;
         }
-    }
+        return $idx;
+    };
 
-    // Check for editors and supervisors if the key is 'authors'
-    if ($author_key == 'authors') {
-        foreach (['editors', 'supervisors'] as $role) {
-            $editors = $doc[$role] ?? [];
-            foreach ($editors as $i => $editor) {
-                if (!isset($editor['user']) || !($editor['aoi'] ?? false)) continue; // skip if no user or not an aoi editor
-                $user = $editor['user'];
-                $person = $DB->getPerson($user);
+    $allUnits = [];
 
-                if ($editor['manually'] ?? false) {
-                    $units = array_merge($units, DB::doc2Arr($editors[$i]['units']));
-                    continue;
-                }
-                if (isset($person['units']) && !empty($person['units'])) {
-                    $u = DB::doc2Arr($person['units']);
-                    // filter units that have been active at the time of activity
-                    $u = array_filter($u, function ($unit) use ($startdate) {
-                        if (!$unit['scientific']) return false; // we are only interested in scientific units
-                        if (empty($unit['start'])) return true; // we have basically no idea when this unit was active
-                        return strtotime($unit['start']) <= $startdate && (empty($unit['end']) || strtotime($unit['end']) >= $startdate);
-                    });
-                    $u = array_column($u, 'unit');
-                    $editors[$i]['units'] = $u;
-                    $units = array_merge($units, $u);
-                }
+    foreach ($roles as $role) {
+        if (empty($doc[$role])) continue;
+
+        $current = DB::doc2Arr($doc[$role]);
+        $oldIdx  = $indexOldByUser($old_doc[$role] ?? []);
+        foreach ($current as $i => $author) {
+            // Consistent affiliation behavior:
+            // - authors: only if aoi==true 
+            // - editors/supervisors: currently you also require aoi==true
+            // - persons: all aoi
+            if ($role !== 'persons' && !($author['aoi'] ?? false)) {
+                continue;
             }
-            $doc[$role] = $editors;
+            if (empty($author['user'])) continue;
+
+            $user = $author['user'];
+
+            // Respect manual units:
+            // - if current says manually => keep
+            // - OR if old had manually => keep (prevents accidental overwrite)
+            $manualNow = ($author['manually'] ?? false) ? true : false;
+            $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
+            if ($manualNow || $manualOld) {
+                $kept = DB::doc2Arr($author['units'] ?? []);
+                $current[$i]['units'] = $kept;
+                $allUnits = array_merge($allUnits, $kept);
+                continue;
+            }
+
+            // Auto-assign units from person profile at the activity date
+            $u = $getUnitsForUserAtDate($user);
+
+            $current[$i]['units'] = $u;
+            $allUnits = array_merge($allUnits, $u);
         }
+        $doc[$role] = $current;
     }
 
-    $units = array_unique($units);
-    foreach ($units as $unit) {
-        $units = array_merge($units, $Groups->getParents($unit, true));
+    // Build global units list (including parent units)
+    $allUnits = array_values(array_unique($allUnits));
+
+    foreach ($allUnits as $unit) {
+        $allUnits = array_merge($allUnits, $Groups->getParents($unit, true));
     }
-    $units = array_unique($units);
-    $doc['units'] = array_values($units);
-    $doc[$author_key] = $authors;
+
+    $doc['units'] = array_values(array_unique($allUnits));
+
     return $doc;
 }
 

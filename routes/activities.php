@@ -777,21 +777,23 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     // add information on units
-    if (isset($values['authors'])) {
+    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
         // check if authors have been changed
-        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['authors' => 1]]);
-        $old = DB::doc2Arr($old['authors'] ?? []);
-        // filter old authors without user
-        $old = array_filter($old, function ($a) {
-            return !empty($a['user']);
-        });
-        // avoid updating user if last and first name are the same
-        foreach ($old as $o) {
-            foreach ($values['authors'] as $i => $a) {
-                // if (empty($o['user'])) continue;
-                if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
-                    $values['authors'][$i]['user'] = $o['user'];
-                    break;
+        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
+            $old_arr = DB::doc2Arr($old[$role] ?? []);
+            // filter old authors without user
+            $old_arr = array_filter($old_arr, function ($a) {
+                return !empty($a['user']);
+            });
+            // avoid updating users if last and first name are the same
+            foreach ($old_arr as $o) {
+                if (empty($o['user'])) continue;
+                foreach ($values[$role] as $i => $a) {
+                    if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
+                        $values[$role][$i]['user'] = $o['user'];
+                        break;
+                    }
                 }
             }
         }
@@ -1072,7 +1074,7 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
 
     // update units array
     include_once BASEPATH . "/php/Render.php";
-    renderActivities(['_id' =>  $activity['_id']]);
+    renderActivities(['_id' =>  $id]);
     renderAuthorUnitsMany(['_id' => $id]);
 
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
