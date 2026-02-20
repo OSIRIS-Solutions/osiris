@@ -113,8 +113,9 @@
 </div>
 
 <?php
-foreach ($Categories->categories as $type) { ?>
-    <div class="box px-20 py-10 mb-10" style="--primary-color: <?= $type['color'] ?? 'var(--primary-color);' ?>">
+foreach ($Categories->categories as $type) {
+    ?>
+    <div class="box px-20 py-10 mb-10 adjust-color-<?= $type['id'] ?>">
         <h3 class="title text-primary">
             <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?> mr-10"></i>
             <?= lang($type['name'], $type['name_de'] ?? $type['name']) ?>

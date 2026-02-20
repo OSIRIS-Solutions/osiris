@@ -53,7 +53,7 @@ class Settings
             ['visible_role' => ['$in' => $this->roles]]
         ]];
         $this->activityCategories = $this->osiris->adminCategories->find()->toArray();
-        
+
         $allowedTypes = $this->osiris->adminCategories->find($catFilter, ['projection' => ['_id' => 0, 'id' => 1]]);
         $this->allowedTypes = array_column($allowedTypes->toArray(), 'id');
 
@@ -117,7 +117,8 @@ class Settings
         ];
     }
 
-    function getQueueCount(){
+    function getQueueCount()
+    {
         return $this->osiris->queue->count(['declined' => ['$ne' => true]]);
     }
 
@@ -257,7 +258,7 @@ class Settings
      */
     function featureEnabled($feature, $default = false)
     {
-        if ($feature == 'proposals'){
+        if ($feature == 'proposals') {
             return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
         }
         return $this->features[$feature] ?? $default;
@@ -353,10 +354,17 @@ class Settings
         $root = "--affiliation: " . $this->get('affiliation') . ";";
 
         foreach ($this->getActivities() as $val) {
+
+            $color = $val['color'] ?? '#06667d';
+            $color_dark = adjustBrightness($color, -20);
+            $color_light = adjustBrightness($color, 20);
             $style .= "
-            .text-$val[id] { color: $val[color] !important; }
-            .box-$val[id] { border-left: 4px solid $val[color] !important; }
-            .badge-$val[id] { color:  $val[color] !important; border-color:  $val[color] !important; }
+            .text-$val[id] { color: $color !important; }
+            .box-$val[id] { border-left: 4px solid $color !important; }
+            .badge-$val[id] { color:  $color !important; border-color:  $color !important; }
+            ";
+            $style .= "
+            .adjust-color-$val[id] { --primary-color: $color; --primary-color-dark: $color_dark; --primary-color-light: $color_light; --link-color-hover: $color_light; }
             ";
         }
         $style = preg_replace('/\s+/', ' ', $style);
@@ -435,7 +443,7 @@ class Settings
                 $root .= "--border-color: " . $design['border_color'] . ";";
             }
 
-            if (isset($design['logo_filter']) ) {
+            if (isset($design['logo_filter'])) {
                 switch ($design['logo_filter']) {
                     case 'none':
                         // $style .= "#osiris-logo { filter: none;} ";
@@ -485,7 +493,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['table_striped'])){
+            if (isset($design['table_striped'])) {
                 switch ($design['table_striped']) {
                     case 'enabled':
                         $root .= "--table-stripe-color: var(--gray-color-very-light);";
@@ -495,7 +503,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['box_shadow'])){
+            if (isset($design['box_shadow'])) {
                 switch ($design['box_shadow']) {
                     case 'strong':
                         $root .= "--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);";
@@ -505,11 +513,11 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['icon_style'])){
+            if (isset($design['icon_style'])) {
                 switch ($design['icon_style']) {
                     case 'filled':
                         $root .= "--icon-font: 'Phosphor-Fill';";
-                        $style .= '.ph {font-family: "Phosphor-Fill" !important;} ' ;
+                        $style .= '.ph {font-family: "Phosphor-Fill" !important;} ';
                         break;
                     case 'duotone':
                         $root .= "--icon-font: 'Phosphor';";
@@ -520,7 +528,7 @@ class Settings
                         break;
                 }
             }
-            if (isset($design['link_style'])){
+            if (isset($design['link_style'])) {
                 switch ($design['link_style']) {
                     case 'underline':
                         $style .= "a:not(.btn, .link, .item) { text-decoration: underline; }";
