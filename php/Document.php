@@ -1067,7 +1067,7 @@ class Document extends Settings
         // dump($module);
         // dump($this->getVal($module, $default));
         if ($this->usecase == 'list') $default = '-';
-        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
+        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }
         $Vocabulary = new Vocabulary();
