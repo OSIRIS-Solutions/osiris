@@ -17,11 +17,26 @@
 
 Route::get('/rerender', function () {
     set_time_limit(6000);
-    // TODO: tell the browser not to cache this page
+    # Do not chache this page
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+    header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
 
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
     include BASEPATH . "/header.php"; ?>
+    <?php if (!$Settings->hasPermission('admin.see')) { ?>
+        <div class="alert danger">
+            <h4 class="title">
+                <?= lang('Access denied', 'Zugriff verweigert') ?>
+            </h4>
+            <?= lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') ?>
+        </div>
+    <?php
+        include BASEPATH . "/footer.php";
+        die;
+    } ?>
 
     <p class="text-danger">
         <i class="ph ph-warning"></i>
@@ -48,7 +63,7 @@ Route::get('/rerender', function () {
         <?= lang('The rendering has finished. All activities should now be displayed correctly. You can now safely close this window.', 'Das Rendering ist abgeschlossen. Alle Aktivitäten sollten jetzt korrekt dargestellt werden. Du kannst diese Seite jetzt schließen.') ?>
     </div>
 
-<?php
+    <?php
     include BASEPATH . "/footer.php";
 });
 
@@ -56,6 +71,17 @@ Route::get('/rerender-projects', function () {
     set_time_limit(6000);
     include_once BASEPATH . "/php/Render.php";
     include BASEPATH . "/header.php";
+    if (!$Settings->hasPermission('admin.see')) { ?>
+        <div class="alert danger">
+            <h4 class="title">
+                <?= lang('Access denied', 'Zugriff verweigert') ?>
+            </h4>
+            <?= lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') ?>
+        </div>
+    <?php
+        include BASEPATH . "/footer.php";
+        die;
+    }
     renderAuthorUnitsProjects();
     echo "Done.";
     include BASEPATH . "/footer.php";
@@ -68,6 +94,17 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     if (!empty($username)) $filter['rendered.affiliated_users'] = $username;
 
     include BASEPATH . "/header.php";
+    if (!$Settings->hasPermission('admin.see')) { ?>
+        <div class="alert danger">
+            <h4 class="title">
+                <?= lang('Access denied', 'Zugriff verweigert') ?>
+            </h4>
+            <?= lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') ?>
+        </div>
+<?php
+        include BASEPATH . "/footer.php";
+        die;
+    }
     renderAuthorUnitsMany($filter);
     echo "Done.";
     include BASEPATH . "/footer.php";
