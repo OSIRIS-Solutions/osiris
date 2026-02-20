@@ -1072,6 +1072,7 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
 
     // update units array
     include_once BASEPATH . "/php/Render.php";
+    renderActivities(['_id' =>  $activity['_id']]);
     renderAuthorUnitsMany(['_id' => $id]);
 
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
