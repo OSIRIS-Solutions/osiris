@@ -316,8 +316,11 @@ Route::get('/api/all-activities', function () {
     }
 
     include_once BASEPATH . "/php/Render.php";
-    include_once BASEPATH . "/php/Document.php";
 
+    // render all activities that have not rendered yet (e.g. after data import)
+    $updated = renderActivities(['rendered' => ['$exists' => false]], true);
+
+    include_once BASEPATH . "/php/Document.php";
 
     $user = $_GET['user'] ?? $_SESSION['username'] ?? null;
     $page = $_GET['page'] ?? 'all-activities';
