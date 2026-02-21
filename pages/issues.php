@@ -172,11 +172,14 @@ $issues = $DB->getUserIssues($user);
 $a = array_map(function ($a) {
     return empty($a) ? 0 : 1;
 }, $issues);
-if (array_sum($a) === 0) {
-    echo "<p>" . lang(
-        "No problems found.",
-        "Keine Probleme gefunden."
-    ) . "</p>";
+if (array_sum($a) === 0) { ?>
+
+    <div class="text-center">
+        <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-tasks.png" alt="" class="sophie-img w-300">
+        <h2 class="mt-0"><?= lang('No warnings', 'Keine Warnmeldungen') ?></h2>
+        <p><?= lang('Here is currently nothing that requires your attention. Great work!', 'Hier gibt es momentan nichts, was deine Aufmerksamkeit erfordert. Großartige Arbeit!') ?></p>
+    </div>
+<?php
 }
 ?>
 
@@ -733,4 +736,3 @@ if (array_sum($a) === 0) {
             <?php } ?>
         </table>
     <?php } ?>
-    

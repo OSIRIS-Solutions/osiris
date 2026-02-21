@@ -433,16 +433,12 @@ $cart = readCart();
                 "url": ROOTPATH + '/api/all-activities',
                 "data": {
                     "page": '<?= $page ?>',
-                    'display_activities': '<?= $USER['display_activities'] ?>',
                     'user': '<?= $user ?>'
                 },
                 dataSrc: 'data'
             },
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             layout: {
                 top1Start: 'search',
                 topStart: 'buttons',

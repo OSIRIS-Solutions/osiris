@@ -413,7 +413,6 @@ if ($edit_perm) { ?>
                 "url": ROOTPATH + '/api/all-activities',
                 "data": {
                     page: 'activities',
-                    display_activities: 'web',
                     filter: {
                         'infrastructures': '<?= $infrastructure['id'] ?>'
                     }

@@ -303,7 +303,7 @@ Route::post('/journal/metrics/update/(\d{4})', function ($year) {
 Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
     include_once BASEPATH . "/php/init.php";
     $count = $osiris->journals->count([
-        'metrics.year' => ['$ne' => $year],
+        'metrics.year' => ['$ne' => intval($year)],
         'no_metrics' => ['$ne' => true]
     ]);
     if (empty($count)) {

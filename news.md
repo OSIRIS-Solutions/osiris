@@ -1,4 +1,3 @@
-# Neuigkeiten
 
 <time datetime="2026-02-16">16.02.2026</time>
 <a class="anchor" href="#build-20260216" id="build-20260216"></a>

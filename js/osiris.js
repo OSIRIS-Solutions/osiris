@@ -1874,9 +1874,6 @@ function userTable(selector, data = {}) {
         dom: 'frtipP',
         deferRender: true,
         responsive: true,
-        language: {
-            url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-        },
         columnDefs: [
             {
                 targets: 0,

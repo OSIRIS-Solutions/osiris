@@ -278,9 +278,11 @@ function valiDate($date)
 
 function printMsg($msg = null, $type = 'info', $header = "default")
 {
+    $sessionMsg = false;
     if ($msg === null && isset($_SESSION['msg'])) {
         $msg = $_SESSION['msg'];
         unset($_SESSION["msg"]);
+        $sessionMsg = true;
     }
     if (isset($_SESSION['msg_type'])) {
         $type = $_SESSION['msg_type'];
@@ -329,7 +331,7 @@ function printMsg($msg = null, $type = 'info', $header = "default")
                     Bitte überprüfe <a class="link" href="' . ROOTPATH . '/user/edit/' . $_SESSION['username'] . '">dein Profil</a> und ergänze bzw. korrigiere die Angaben.'
                 );
                 if (!empty($_GET['new'])) {
-                    $text .=  '<br/>' . lang('Ich habe außerdem <b>' . $_GET['new'] . ' Aktivitäten</b> gefunden, die vielleicht zu dir gehören. Du kannst sie <a class="link" href="' . ROOTPATH . '/issues">hier</a> überprüfen.');
+                    $text .=  '<br/>' . lang('Ich habe außerdem <b>' . $_GET['new'] . ' Aktivitäten</b> gefunden, die vielleicht zu dir gehören. Du kannst sie <a class="link" href="' . ROOTPATH . '/claim">hier</a> überprüfen.');
                 }
             }
 
@@ -344,23 +346,19 @@ function printMsg($msg = null, $type = 'info', $header = "default")
 
         case 'account-created':
             $text = lang("Account has been created. Please log in.", "Der Account wurde erstellt. Bitte logge dich ein.");
-            // $text = lang("Thank you.", "Vielen Dank.");
             $class = "success";
             break;
 
         case 'settings-saved':
             $text = lang("Settings saved", "Einstellungen gespeichert.");
-            // $text = lang("Thank you.", "Vielen Dank.");
             $class = "success";
             break;
         case 'settings-resetted':
             $text = lang("Settings resetted to the default values.", "Einstellungen wurden auf den Standard zurückgesetzt.");
-            // $text = lang("Thank you.", "Vielen Dank.");
             $class = "success";
             break;
         case 'settings-replaced':
             $text = lang("Settings replaced by uploaded file.", "Einstellungen wurden durch den Upload ersetzt.");
-            // $text = lang("Thank you.", "Vielen Dank.");
             $class = "success";
             break;
         case 'success':
@@ -399,12 +397,6 @@ function printMsg($msg = null, $type = 'info', $header = "default")
             $class = "danger";
             break;
 
-        case 'ali':
-            $header = '';
-            $text = lang("You are already logged in.", "Du bist bereits eingeloggt");
-            $class = "signal";
-            break;
-
         default:
             $text = $msg;
             if (isset($_GET['msg']) && str_contains($_GET['msg'], '-')) {
@@ -412,16 +404,23 @@ function printMsg($msg = null, $type = 'info', $header = "default")
             }
             break;
     }
-    $get = currentGET(['msg']) ?? "";
+    if ($sessionMsg) {
+        // no need to reload the page, just close the alert
+        $attr = 'onclick="$(this).closest(\'.alert\').remove()"';
+    } else {
+        $attr = 'href="' . (currentGET(['msg']) ?? "") . '"';
+    }
     echo "<div class='alert $class block show my-10' role='alert'>
-          <a class='close' href='$get' aria-label='Close'>
+          <a class='close' $attr aria-label='Close'>
           <span aria-hidden='true'>&times;</span>
         </a> ";
+        echo "<div>";
     if (!empty($header)) {
         echo " <h4 class='title'>$header</h4>";
     }
-    echo "$text
-      </div>";
+    echo "$text";
+    echo "</div>";
+      echo "</div>";
 }
 
 function readCart()
@@ -960,4 +959,50 @@ function format_month($month)
         12 => lang("December", "Dezember")
     ];
     return $array[$month];
+}
+
+/**
+ * Render the page view for a not found item
+ *
+ * @param string $entity The type of the item (e.g. "activity", "person", etc.)
+ * @param string $link The link to the overview page of the item type (default: "/activities")
+ * @return string $html
+ */
+function notFoundPage($entity = "item", $link = '/activities')
+{
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-nothing-here.png" alt="Nothing here">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang($entity . '<br> not found', $entity . '<br> nicht gefunden');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= lang('The ' . $entity . ' you are looking for does not exist or has been deleted.', 'Die gesuchte ' . $entity . ' existiert nicht mehr oder wurde entfernt.');
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
+    $html .= lang('Go back to overview', 'Zur Übersicht zurück');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
+}
+
+// no permission page
+function noPermissionPage($entity = "item", $link = '/activities')
+{
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-no-permission.png" alt="No permission">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang('No permission', 'Keine Berechtigung');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= lang('You do not have the necessary permissions to view this ' . $entity . ' page.', 'Du hast nicht die notwendigen Berechtigungen, um diese ' . $entity . '-Seite zu sehen.');
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
+    $html .= lang('Go back to overview', 'Zur Übersicht zurück');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
 }

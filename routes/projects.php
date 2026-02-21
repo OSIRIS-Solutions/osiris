@@ -99,8 +99,10 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage($collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
@@ -122,16 +124,20 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage($collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $Project = new Project($project);
 
     $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
     $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
     if (!$edit_perm) {
-        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection/view/$id");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     switch ($page) {
@@ -182,8 +188,10 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('projects.add-subprojects')) {
-        header("Location: " . ROOTPATH . "/projects?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Project', 'Projekt'), "/projects");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     // get project
     if (DB::is_ObjectID($id)) {
@@ -195,8 +203,10 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
     // check if project exists
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Project', 'Projekt'), "/projects");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     // set breadcrumb
@@ -285,8 +295,10 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/proposals?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Project proposal', 'Projektantrag'), "/proposals");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $project = DB::doc2Arr($project);
     $Project = new Project($project);
@@ -697,8 +709,10 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/$collection?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage($collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     $values = validateValues($_POST['values'], $DB);
@@ -907,8 +921,10 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
 
     // if user has no permission: redirect to project view
     if (!$edit_perm) {
-        header("Location: " . ROOTPATH . "/$collection/view/$id?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection/view/$id");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     if ($collection == 'projects') {
@@ -923,9 +939,10 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
         // check if a project with the same ID exists
         $existing_project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
         if (!empty($existing_project)) {
-            $_SESSION['msg'] = lang("Project proposal cannot be deleted, because it is connected to a project. Delete the project first.", "Projektantrag kann nicht gelöscht werden, da er mit einem Projekt verbunden ist. Lösche das Projekt zuerst.");
-            header("Location: " . ROOTPATH . "/$collection/view/$id");
-            die;
+            include_once BASEPATH . "/header.php";
+            echo notFoundPage(lang("Project proposal cannot be deleted, because it is connected to a project. Delete the project first.", "Projektantrag kann nicht gelöscht werden, da er mit einem Projekt verbunden ist. Lösche das Projekt zuerst."), "/$collection/view/$id");
+            include_once BASEPATH . "/footer.php";
+            die();
         }
     }
 
@@ -944,7 +961,7 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
 
     // remove project
     $osiris->$collection->deleteOne(
-        ['_id' => $DB::to_ObjectID($id)]
+        ['_id' => $DB->to_ObjectID($id)]
     );
 
     $_SESSION['msg'] = lang("Element has been deleted successfully.", "Element wurde erfolgreich gelöscht.");
@@ -1023,7 +1040,7 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
     }
 
     $osiris->$collection->updateOne(
-        ['_id' => $DB::to_ObjectID($id)],
+        ['_id' => $DB->to_ObjectID($id)],
         ['$set' => $values]
     );
 
@@ -1039,8 +1056,10 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
     // get project
     $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        header("Location: " . ROOTPATH . "/projects?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Project', 'Projekt'), "/projects");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $Project = new Project();
 
@@ -1054,11 +1073,8 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
         $c['organization'] = $DB->to_ObjectID($c['organization']);
     }
 
-    // dump($collaborators);
-    // die;
-
     $osiris->projects->updateOne(
-        ['_id' => $DB::to_ObjectID($id)],
+        ['_id' => $DB->to_ObjectID($id)],
         ['$set' => ["collaborators" => $collaborators]]
     );
 
@@ -1102,7 +1118,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
             // update project with new image
             $osiris->projects->updateOne(
-                ['_id' => $DB::to_ObjectID($id)],
+                ['_id' => $DB->to_ObjectID($id)],
                 ['$set' => ["image" => "projects/" . $filename]]
             );
         } else {
@@ -1120,7 +1136,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
         }
 
         $osiris->projects->updateOne(
-            ['_id' => $DB::to_ObjectID($id)],
+            ['_id' => $DB->to_ObjectID($id)],
             ['$set' => ["image" => null]]
         );
     } else {
@@ -1144,8 +1160,8 @@ Route::post('/crud/projects/connect-activities', function () {
         die;
     }
 
-    $project = DB::to_ObjectID($_POST['project']);
-    $activity = DB::to_ObjectID($_POST['activity']);
+    $project = DB->to_ObjectID($_POST['project']);
+    $activity = DB->to_ObjectID($_POST['activity']);
 
     if (isset($_POST['delete'])) {
         $osiris->activities->updateOne(
@@ -1157,7 +1173,7 @@ Route::post('/crud/projects/connect-activities', function () {
     }
 
     $osiris->activities->updateOne(
-        ['_id' => $DB::to_ObjectID($activity)],
+        ['_id' => $DB->to_ObjectID($activity)],
         ['$push' => ["projects" => $project]]
     );
 

@@ -45,6 +45,11 @@
                     <?= lang('Documentation', 'Dokumentation') ?>
                 </a>
 
+                <!-- accessibility -->
+                <a href="<?= ROOTPATH ?>/accessibility" class="">
+                    <?= lang('Accessibility', 'Barrierefreiheit') ?>
+                </a>
+
                 <a href="https://github.com/OSIRIS-Solutions/osiris/issues" target="_blank" class="">
                     <?= lang('Report an issue', "Problem melden") ?>
                     <i class="ph ph-arrow-square-out"></i>

@@ -29,10 +29,10 @@ $publication_filter = [
     'topics' => $topic['id'],
     'type' => 'publication'
 ];
-$count_publications = $osiris->activities->count($publication_filter);
+$count_publications = 4; //$osiris->activities->count($publication_filter);
 $activities_filter = [
     'topics' => $topic['id'],
-    // 'type' => ['$ne' => 'publication']
+    'type' => ['$ne' => 'publication']
 ];
 $count_activities = $osiris->activities->count($activities_filter);
 
@@ -49,8 +49,8 @@ if ($count_groups > 0) {
     $active_page = 'groups';
 } elseif ($count_persons > 0) {
     $active_page = 'persons';
-    // } elseif ($count_publications > 0) {
-    // $active_page = 'publications';
+    } elseif ($count_publications > 0) {
+    $active_page = 'publications';
 } elseif ($count_activities > 0) {
     $active_page = 'activities';
 } elseif ($count_projects > 0) {
@@ -249,11 +249,11 @@ if ($count_groups > 0) {
     <?php
 
     if ($count_publications > 0) { ?>
-        <!-- <a onclick="navigate('publications')" id="btn-publications" class="btn">
+        <a onclick="navigate('publications')" id="btn-publications" class="btn <?= $active_page == 'publications' ? 'active' : '' ?>">
             <i class="ph ph-books" aria-hidden="true"></i>
             <?= lang('Publications', 'Publikationen')  ?>
             <span class="index"><?= $count_publications ?></span>
-        </a> -->
+        </a>
     <?php } ?>
 
     <?php
@@ -299,30 +299,6 @@ if ($count_groups > 0) {
     <p>
         <?= lang($topic['description'], $topic['description_de'] ?? null) ?>
     </p>
-
-    <?php if ($Settings->hasPermission('topics.delete')) { ?>
-        <br>
-        <div class="alert danger mt-20">
-            <a onclick="$('#delete').slideToggle()">
-                <?= lang('Delete', 'Löschen') ?>
-                <i class="ph ph-caret-down"></i>
-            </a>
-
-            <div id="delete" style="display: none;">
-                <form action="<?= ROOTPATH ?>/crud/topics/delete/<?= $topic['_id'] ?>" method="post">
-                    <p>
-                        <?= lang(
-                            'Do you really want to delete this topic? If you delete, it will be removed from all connected persons, activities and projects.',
-                            'Möchten Sie diesen Bereich wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
-                        ) ?>
-                    </p>
-                    <button type="submit" class="btn danger"><?= lang('Delete', 'Löschen') ?></button>
-                </form>
-            </div>
-        </div>
-
-    <?php } ?>
-
 </section>
 
 
@@ -541,39 +517,6 @@ if ($count_groups > 0) {
 
 </section>
 
-
-<!-- 
-<script>
-    userTable('#user-table', {
-        filter: {
-            topics: '<?= $topic['id'] ?>'
-        }
-    });
-</script>
-
-<script>
-    initActivities('#activities-table', {
-        page: 'all-activities',
-        display_activities: 'web',
-        filter: {
-            topics: '<?= $topic['id'] ?>',
-            type: {
-                $ne: 'publication'
-            }
-        }
-    });
-</script>
-
-<script>
-    initActivities('#publication-table', {
-        page: 'all-activities',
-        display_activities: 'web',
-        filter: {
-            topics: '<?= $topic['id'] ?>',
-            type: 'publication'
-        }
-    });
-</script> -->
 
 <script>
     $(document).ready(function() {

@@ -81,9 +81,6 @@ $organizations  = $osiris->organizations->find(
 <script>
     $('#organizations-table').DataTable({
         responsive: true,
-        language: {
-            url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-        },
         columnDefs: [{
             targets: [1, 2, 3, 4, 5],
             visible: false

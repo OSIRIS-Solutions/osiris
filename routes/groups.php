@@ -18,7 +18,7 @@ Route::get('/groups', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Groups", "Gruppen")]
+        ['name' => lang("Units", "Einheiten")]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/groups.php";
@@ -29,7 +29,7 @@ Route::get('/groups/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Groups", "Gruppen"), 'path' => "/groups"],
+        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -52,11 +52,13 @@ Route::get('/groups/view/(.*)', function ($id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        header("Location: " . ROOTPATH . "/groups?msg=not-found");
-        die;
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang("Unit", "Einheit"), '/groups');
+        include BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
-        ['name' => lang("Groups", "Gruppen"), 'path' => "/groups"],
+        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
         ['name' => $group['id']]
     ];
 
@@ -83,7 +85,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang("Groups", "Gruppen"), 'path' => "/groups"],
+        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
         ['name' =>  $group['id'], 'path' => "/groups/view/$id"],
     ];
     if ($page == 'edit') {

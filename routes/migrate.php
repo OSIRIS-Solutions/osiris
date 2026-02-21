@@ -14,6 +14,64 @@
  * @license     MIT
  */
 
+Route::get('/migration-needed', function () {
+    include_once BASEPATH . "/php/init.php";
+    // check if we need to run the migration
+    $version = $osiris->system->findOne(['key' => 'version']);
+    if (empty($version) || version_compare($version['value'], OSIRIS_VERSION, '<')) {
+        // migration needed
+    } else {
+        $_SESSION['msg'] = lang('Your OSIRIS installation is up to date.', 'Deine OSIRIS-Installation ist auf dem neuesten Stand.');
+        header('Location: ' . ROOTPATH . '/');
+    }
+    include_once BASEPATH . "/header.php";
+
+    if ($Settings->hasPermission('admin.see')) {
+?>
+        <div class="container text-center" style="max-width: 70rem;">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
+            <h1 class="mt-0">
+                <?= lang('A new OSIRIS version has been found', 'Eine neue OSIRIS-Version wurde gefunden') ?>!
+            </h1>
+            <p>
+                <?= lang(
+                    'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
+                    'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
+                ) ?>
+            </p>
+            <p class="text-muted">
+                <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
+            </p>
+            <a href="<?= ROOTPATH ?>/migrate" class="btn cta large">
+                <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
+            </a>
+        </div>
+    <?php
+    } else {
+    ?>
+        <div class="container text-center">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
+            <h1 class="mt-0">
+                <?= lang('OSIRIS is being updated', 'OSIRIS wird aktualisiert') ?>...
+            </h1>
+
+            <p>
+                <?= lang(
+                    'OSIRIS is currently being updated to the latest version. Please check back later.',
+                    'OSIRIS wird gerade auf die neueste Version aktualisiert. Bitte schau später noch einmal vorbei.'
+                ) ?>
+            </p>
+
+            <div class="spacer h-100"></div>
+            <small class="text-muted">
+                <?= lang('In case you are seeing this message for a long time, please contact your administrator.', 'Falls du diese Nachricht über einen längeren Zeitraum siehst, kontaktiere bitte deinen Administrator.') ?>
+            </small>
+        </div>
+<?php
+    }
+    include_once BASEPATH . "/footer.php";
+    die;
+});
 
 Route::get('/migrate/countries', function () {
     include_once BASEPATH . "/php/init.php";
@@ -37,11 +95,12 @@ Route::get('/migrate/files', function () {
 });
 
 Route::get('/migrate/test', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    set_time_limit(6000);
     include_once BASEPATH . "/php/init.php";
 
-    set_time_limit(6000);
     include BASEPATH . "/header.php";
-    include_once BASEPATH . "/routes/migration/v1.7.1.php";
+
 
     include BASEPATH . "/footer.php";
 });
@@ -212,6 +271,14 @@ Route::get('/migrate', function () {
 
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
+
+    // check if user is logged in and has admin rights
+    if (!$Settings->hasPermission('admin.see')) {
+        echo "<p class='alert danger'>" . lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') . "</p>";
+        include BASEPATH . "/footer.php";
+        die;
+    }
+
     echo "<h1>" . lang('OSIRIS Migration', 'OSIRIS Migration') . "</h1>";
     echo "<p>" . lang('Please wait...', 'Bitte warten...') . "</p>";
     // flush output buffer
@@ -329,7 +396,7 @@ Route::get('/migrate', function () {
         ob_flush();
         $rerender = false;
     }
-    
+
     if (version_compare($DBversion, '1.7.0', '<')) {
         include BASEPATH . "/routes/migration/v1.7.0.php";
         flush();

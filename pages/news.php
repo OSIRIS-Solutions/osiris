@@ -57,33 +57,45 @@
         float: right;
         font-size: 1.6rem;
         font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
+    }
 
-a.anchor {
-    display: block;
-    position: relative;
-}
-a.anchor::before {
-    content: "#";
-    position: absolute;
-    left: -3rem;
-    top: 1rem;
-    color: var(--link-color);
-    font-size: 1.8rem;
-    font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
+    a.anchor {
+        display: block;
+        position: relative;
+    }
 
-hr {
-    margin: 4rem 0;
-}
+    a.anchor::before {
+        content: "#";
+        position: absolute;
+        left: -3rem;
+        top: 1rem;
+        color: var(--link-color);
+        font-size: 1.8rem;
+        font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
 
-ul ul {
-    margin-top: 0.5rem;
-}
+    hr {
+        margin: 4rem 0;
+    }
+
+    ul ul {
+        margin-top: 0.5rem;
+    }
 </style>
 
 
 <div class='container'>
+    <div class="d-flex align-items-end">
+        <div>
+            <h1>
+                <?= lang('What\'s new in OSIRIS', 'Neuigkeiten zu OSIRIS') ?>
+            </h1>
+            <p>
+                <?= lang('Here you can find the latest news and updates about OSIRIS.', 'Hier findest du die neuesten Nachrichten und Updates zu OSIRIS.') ?>
+            </p>
+        </div>
+        <img src="<?= ROOTPATH ?>/img/sophie/sophie-announcement.png" alt="OSIRIS Announcement" style="max-width: 30rem; margin: 0 0 -1rem auto; display: block;">
+    </div>
     <?php
     $text = file_get_contents(BASEPATH . "/news.md");
     $parsedown = new Parsedown;

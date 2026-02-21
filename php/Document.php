@@ -1067,7 +1067,7 @@ class Document extends Settings
         // dump($module);
         // dump($this->getVal($module, $default));
         if ($this->usecase == 'list') $default = '-';
-        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
+        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }
         $Vocabulary = new Vocabulary();
@@ -1079,6 +1079,7 @@ class Document extends Settings
             case "author-table": // ["authors"],
                 return $this->formatAuthorsNew('authors-last-f.');
             case "supervisor": // ["authors"],
+            case "supervisors": // ["authors"],
             case "supervisor-thesis": // ["authors"],
                 return $this->formatAuthorsNew('supervisors-last-f.');
             case "book-series": // ["series"],
@@ -1545,7 +1546,7 @@ class Document extends Settings
                     $label = '[' . $this->lang($field['name'], $field['name_de'] ?? null) . ']';
                     return $val ? $label : '';
                 }
-                if (is_array($val)) return implode(", ", $val);
+                if (is_array($val)) {dump($module); return implode(", ", $val);}
                 return $val;
         }
     }

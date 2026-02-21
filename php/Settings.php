@@ -19,6 +19,9 @@ class Settings
     public $osiris = null;
     private $features = array();
     public $continuousTypes = [];
+    public $topics = [];
+    public $activityCategories = [];
+    public $sidebarFavorites = [];
 
     function __construct($user = array())
     {
@@ -34,6 +37,9 @@ class Settings
                 if ($user['is_' . $key] ?? false) $this->roles[] = $key;
             }
         }
+        if (isset($user['sidebar_favorites']) && is_iterable($user['sidebar_favorites'])) {
+            $this->sidebarFavorites = DB::doc2Arr($user['sidebar_favorites']);
+        }
         // everyone is a user
         $this->roles[] = 'user';
         if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
@@ -46,6 +52,8 @@ class Settings
             ['visible_role' => null],
             ['visible_role' => ['$in' => $this->roles]]
         ]];
+        $this->activityCategories = $this->osiris->adminCategories->find()->toArray();
+
         $allowedTypes = $this->osiris->adminCategories->find($catFilter, ['projection' => ['_id' => 0, 'id' => 1]]);
         $this->allowedTypes = array_column($allowedTypes->toArray(), 'id');
 
@@ -64,6 +72,11 @@ class Settings
             ['projection' => ['_id' => 0, 'id' => 1]]
         )->toArray();
         $this->continuousTypes = array_column($continuous, 'id');
+
+        // get topics
+        if ($this->featureEnabled('topics')) {
+            $this->topics =  $this->osiris->topics->find([], ['sort' => ['inactive' => 1]])->toArray();
+        }
     }
 
     /**
@@ -102,6 +115,11 @@ class Settings
                 ]]
             ]
         ];
+    }
+
+    function getQueueCount()
+    {
+        return $this->osiris->queue->count(['declined' => ['$ne' => true]]);
     }
 
     function get($key, $default = null)
@@ -240,6 +258,9 @@ class Settings
      */
     function featureEnabled($feature, $default = false)
     {
+        if ($feature == 'proposals') {
+            return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
+        }
         return $this->features[$feature] ?? $default;
     }
 
@@ -333,15 +354,22 @@ class Settings
         $root = '--affiliation: "' . $this->get('affiliation') . '";';
 
         foreach ($this->getActivities() as $val) {
+
+            $color = $val['color'] ?? '#06667d';
+            $color_dark = adjustBrightness($color, -20);
+            $color_light = adjustBrightness($color, 20);
             $style .= "
-            .text-$val[id] { color: $val[color] !important; }
-            .box-$val[id] { border-left: 4px solid $val[color] !important; }
-            .badge-$val[id] { color:  $val[color] !important; border-color:  $val[color] !important; }
+            .text-$val[id] { color: $color !important; }
+            .box-$val[id] { border-left: 4px solid $color !important; }
+            .badge-$val[id] { color:  $color !important; border-color:  $color !important; }
+            ";
+            $style .= "
+            .adjust-color-$val[id] { --primary-color: $color; --primary-color-dark: $color_dark; --primary-color-light: $color_light; --link-color-hover: $color_light; }
             ";
         }
         $style = preg_replace('/\s+/', ' ', $style);
 
-        foreach ($this->osiris->topics->find() as $t) {
+        foreach ($this->topics as $t) {
             $style .= " .topic-" . $t['id'] . " { --topic-color: " . $t['color'] . "; } ";
         }
 
@@ -724,7 +752,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
+        $topics = $this->topics;
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);

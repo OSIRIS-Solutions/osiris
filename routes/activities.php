@@ -40,10 +40,22 @@ Route::get('/(activities|my-activities)', function ($page) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/advanced-search/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($query)) {
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Query', "Abfrage"), '/activities/search');
+        include BASEPATH . "/footer.php";
+        die();
+    }
+    $collection = $query['type'] ?? 'activities';
+    header("Location: " . ROOTPATH . "/$collection/search?query=$id");
+    die;
+}, 'login');
 
 Route::get('/(activities|projects|proposals|conferences|journals|persons)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
 
     switch ($collection) {
         case 'activities':
@@ -102,7 +114,9 @@ Route::get('/add-activity', function () {
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
             if (empty($draft)) {
-                header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+                include BASEPATH . "/header.php";
+                echo notFoundPage(lang('Activity', "Aktivität"), '/activities');
+                include BASEPATH . "/footer.php";
                 die();
             }
             $form = DB::doc2Arr($draft);
@@ -170,7 +184,9 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($draft)) {
-        header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Activity', "Aktivität"), '/activities/drafts');
+        include BASEPATH . "/footer.php";
         die();
     }
 
@@ -240,9 +256,63 @@ Route::get('/activities/(doi|pubmed)/(.*)', function ($type, $identifier) {
     }
     echo "$type $identifier not found.";
 });
+
 Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
+
+    $user = $_SESSION['username'];
+    $id = $DB->to_ObjectID($id);
+    $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
+    if (empty($activity)) {
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Activity', "Aktivität"), '/activities');
+        include BASEPATH . "/footer.php";
+        die();
+    }
+
+    $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
+    $locked = $activity['locked'] ?? false;
+    if ($doc['type'] == 'publication' && isset($doc['journal'])) {
+        // fix old journal_ids
+        if (isset($doc['journal_id']) && !preg_match("/^[0-9a-fA-F]{24}$/", $doc['journal_id'])) {
+            $doc['journal_id'] = null;
+            $osiris->activities->updateOne(
+                ['_id' => $activity['_id']],
+                ['$unset' => ['journal_id' => '']]
+            );
+        }
+    }
+    renderActivities(['_id' =>  $activity['_id']]);
+    $user_activity = $DB->isUserActivity($doc, $user);
+
+    $Format = new Document;
+    $Format->setDocument($doc);
+
+    $name = $activity['title'] ?? $id;
+    // if (strlen($name) > 20)
+    //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
+    // $name = ucfirst($activity['type']) . ": " . $name;
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => $name]
+    ];
+    if ($Format->hasSchema()) {
+        $additionalHead = $Format->schema();
+    }
+    $no_container = true;
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/activity.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+
+Route::get('/activities/new-view/([a-zA-Z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+    include_once BASEPATH . "/php/Modules.php";
+    include_once BASEPATH . "/php/Vocabulary.php";
 
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
@@ -290,7 +360,9 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         </div>
 <?php
     } else {
-        include BASEPATH . "/pages/activity.php";
+        $Modules = new Modules($doc);
+        $Vocabulary = new Vocabulary();
+        include BASEPATH . "/pages/activities/new-view.php";
     }
     include BASEPATH . "/footer.php";
 }, 'login');
@@ -705,21 +777,23 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     // add information on units
-    if (isset($values['authors'])) {
+    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
         // check if authors have been changed
-        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['authors' => 1]]);
-        $old = DB::doc2Arr($old['authors'] ?? []);
-        // filter old authors without user
-        $old = array_filter($old, function ($a) {
-            return !empty($a['user']);
-        });
-        // avoid updating user if last and first name are the same
-        foreach ($old as $o) {
-            foreach ($values['authors'] as $i => $a) {
-                // if (empty($o['user'])) continue;
-                if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
-                    $values['authors'][$i]['user'] = $o['user'];
-                    break;
+        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
+            $old_arr = DB::doc2Arr($old[$role] ?? []);
+            // filter old authors without user
+            $old_arr = array_filter($old_arr, function ($a) {
+                return !empty($a['user']);
+            });
+            // avoid updating users if last and first name are the same
+            foreach ($old_arr as $o) {
+                if (empty($o['user'])) continue;
+                foreach ($values[$role] as $i => $a) {
+                    if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
+                        $values[$role][$i]['user'] = $o['user'];
+                        break;
+                    }
                 }
             }
         }
@@ -1000,6 +1074,7 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
 
     // update units array
     include_once BASEPATH . "/php/Render.php";
+    renderActivities(['_id' =>  $id]);
     renderAuthorUnitsMany(['_id' => $id]);
 
     header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
@@ -1307,7 +1382,7 @@ Route::post('/crud/activities/connect', function () {
         $target = $source;
         $source = $temp;
     }
-                
+
     $data = [
         'target_id' => $DB->to_ObjectID($target),
         'source_id' => $DB->to_ObjectID($source),
@@ -1365,4 +1440,3 @@ Route::post('/crud/activities/disconnect', function () {
         'deleted' => $deletedCount
     ]);
 });
-

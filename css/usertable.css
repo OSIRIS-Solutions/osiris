@@ -59,6 +59,13 @@
      border: 0;
  }
 
+ .table.cards tbody tr td.dt-empty {
+     display: block;
+     width: 100%;
+     text-align: center;
+     padding: 2rem;
+ }
+
  @media (min-width: 768px) {
      .table.cards tbody tr {
          width: 48%;

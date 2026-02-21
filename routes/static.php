@@ -66,3 +66,16 @@ Route::get('/license', function () {
     include BASEPATH . "/pages/license.html";
     include BASEPATH . "/footer.php";
 });
+
+
+Route::get('/accessibility', function () {
+
+    $breadcrumb = [
+        ['name' => lang('Accessibility', 'Barrierefreiheit')]
+    ];
+
+    include_once BASEPATH . "/php/init.php";
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/accessibility.php";
+    include BASEPATH . "/footer.php";
+});

@@ -401,6 +401,9 @@ $affiliation = $Settings->get('affiliation_details');
                                 'The secondary color is used for highlighted elements of the website.',
                                 'Die Sekundärfarbe wird für die hervorgehobenen Elemente der Website verwendet.'
                             ) ?>
+                            <br>
+                            <i class="ph ph-warning"></i>
+                            <?= lang('If your institution has no secondary color, please set the secondary color to the same value as the primary color and do not select black or white.', 'Wenn deine Institution keine Sekundärfarbe hat, setze die Sekundärfarbe bitte auf den gleichen Wert wie die Primärfarbe und wähle nicht schwarz oder weiß aus.') ?>
                         </small>
                     </td>
                 </tr>
@@ -1638,6 +1641,26 @@ $affiliation = $Settings->get('affiliation_details');
                     </div>
                     <hr>
                     <div class="content">
+                        <h4 id="altmetrics">
+                            <?= lang('Altmetrics', 'Altmetriken') ?>
+                        </h4>
+                        <?= badgeBeta() ?>
+                        <p class="description">
+                            <?= lang('Altmetrics are alternative metrics that measure the attention and impact of research outputs based on online activity. By enabling this feature, you can display altmetric badges in activities that have a DOI, ISBN or PubMed ID in OSIRIS.', 'Altmetriken sind alternative Metriken, die die Aufmerksamkeit und den Einfluss von Forschungsergebnissen basierend auf Online-Aktivitäten messen. Durch die Aktivierung dieser Funktion kannst du Altmetrik-Badges in Aktivitäten anzeigen, die eine DOI, ISBN oder PubMed ID in OSIRIS haben.') ?>
+                            <br>
+                            <?= lang('In this first version, only public badges are supported.', 'In dieser ersten Version werden nur öffentliche Badges unterstützt.') ?>
+                        </p>
+                        <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Enable Altmetrics for publications', 'Aktiviere Altmetriken für Publikationen') ?>
+                            </label>
+                            <?php
+                            renderCheckbox('altmetrics');
+                            ?>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="content">
                         <h4 id="concepts">
                             <?= lang('Concepts', 'Konzepte') ?>
                         </h4>
@@ -1760,6 +1783,7 @@ $affiliation = $Settings->get('affiliation_details');
 
                         <a href="#imports-external-features"><?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?></a>
                         <a href="#imports" class="submenu"><?= lang('Imports', 'Importe') ?></a>
+                        <a href="#altmetrics" class="submenu"><?= lang('Altmetrics', 'Altmetriken') ?></a>
                         <a href="#concepts" class="submenu"><?= lang('Concepts', 'Konzepte') ?></a>
 
                         <a href="#guest-management-features"><?= lang('People and Guests', 'Personen und Gäste') ?></a>

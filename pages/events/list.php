@@ -259,9 +259,6 @@ $conferences = $osiris->conferences->find(
             responsive: true,
             autoWidth: true,
             deferRender: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             buttons: [
                 {
                     extend: 'excelHtml5',

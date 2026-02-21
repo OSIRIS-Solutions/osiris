@@ -382,17 +382,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
+            <!-- <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
                 <i class="ph-duotone ph-plus-circle ph-fw"></i>
-                <!-- <?= lang('Add activity', 'Aktivität hinzufügen') ?> -->
-            </a>
+            </a> -->
             <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
-                <!-- <?= lang('My activities', 'Meine Aktivitäten ') ?> -->
             </a>
             <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
-                <!-- <?= lang('My Year', 'Mein Jahr') ?> -->
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -420,8 +417,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
-        <form action="<?= ROOTPATH ?>/download" method="post">
 
+        <form action="<?= ROOTPATH ?>/download" method="post">
             <input type="hidden" name="filter[user]" value="<?= $user ?>">
             <input type="hidden" name="highlight" value="user">
             <input type="hidden" name="format" value="word">
@@ -431,7 +428,21 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
+
+        <!-- <div class="dropdown with-arrow">
+            <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
+                <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
+                <a href="<?= ROOTPATH ?>/user/permissions" class="item">
+                    <i class="ph ph-users-three ph-fw text-primary"></i>
+                    <?= lang('Show permissions', 'Einheiten bearbeiten') ?>
+                </a>
+            </div>
+        </div> -->
     </div>
+
+
 
 
     <?php
@@ -735,24 +746,33 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div class="row row-eq-spacing my-0">
             <div class="col-md-6">
                 <?php if (isset($n_notifications) && $n_notifications) { ?>
-                    <div class="box padded">
+                    <!-- <div class="box padded">
                         <p class="lead cursor-pointer" onclick="openNotifications()">
                             <i class="ph ph-bell-ringing ph-fw text-danger mr-5"></i>
                             <?= lang('You have <strong class="text-danger">' . $n_notifications . '</strong> new notifications.', 'Du hast <strong class="text-danger">' . $n_notifications . '</strong> neue Benachrichtigungen.') ?>
                         </p>
-                    </div>
+                    </div> -->
                     <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
                     ?>
                         <div class="box padded d-flex align-items-center">
-                            <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i>
+                            <!-- <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i> -->
 
-                            <p>
-                                <?= lang("You can now approve the past quarter:", "Du kannst jetzt das vergangene Quartal freigeben:") ?>
-                                <br>
+                            <div>
+                                <b>
+                                    <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
+                                </b>
+                                <p class="text-muted my-5 font-size-12">
+                                    <?= lang(
+                                        'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
+                                        'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
+                                    ) ?>
+                                </p>
                                 <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
                                     <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
                                 </a>
-                            </p>
+                            </div>
+
+                            <img src="<?= ROOTPATH ?>/img/sophie/sophie-checklist.png" class="w-100">
                         </div>
                     <?php } ?>
 
@@ -1187,20 +1207,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if ($active('room') && isset($scientist['room'])) { ?>
-                            <tr>
-                                <td>
-                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
-                                    <?= $scientist['room'] ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-
                         <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Mobile', 'Mobil') ?></span>
                                     <a href="tel:<?= $scientist['mobile'] ?>"><?= $scientist['mobile'] ?></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if ($active('room') && isset($scientist['room'])) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
+                                    <?= $scientist['room'] ?>
                                 </td>
                             </tr>
                         <?php } ?>

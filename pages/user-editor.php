@@ -771,18 +771,106 @@ $active = function ($field) use ($data_fields) {
             <h2 class="title"><?= lang('Profile preferences', 'Profil-Einstellungen') ?></h2>
 
 
-            <h5><?= lang('Activity display', 'Aktivitäten-Anzeige') ?>:</h5>
+            <h5><?= lang('Sidebar Favourites', 'Seitenleisten-Favoriten') ?></h5>
+
+            <p>
+                <?= lang('You can add your favourite pages to the sidebar for quick access. ', 'Du kannst deine Lieblingsseiten zur Seitenleiste hinzufügen, um schnell darauf zugreifen zu können. ') ?>
+            </p>
+
+            <?php
+            $favs = DB::doc2Arr($data['sidebar_favorites'] ?? []);
+            include_once BASEPATH . '/php/SidebarNav.php';
+            $sidebar = new SidebarNav($Settings);
+            $options = $sidebar->getFavoritableOptions();
+            $options = array_column($options, null, 'id');
+            ?>
+            <!-- save empty favs as well -->
+            <input type="hidden" name="values[sidebar_favorites]" value="">
+            <div class="author-widget">
+                <div class="author-list p-10" id="sidebar_favorites-list">
+                    <?php
+                    $module_lst = [];
+                    foreach ($favs as $fav) {
+                        $label = $options[$fav]['label'] ?? '';
+                    ?>
+                        <div class='author'>
+                            <i class="ph ph-dots-six-vertical text-muted"></i> <?= $label ?>
+                            <input type='hidden' name='values[sidebar_favorites][]' value='<?= $fav ?>'>
+                            <a onclick='$(this).parent().remove()'>&times;</a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="footer">
+                    <div class="input-group small d-inline-flex w-auto">
+                        <select class="form-control" id="sidebar-select">
+                            <option value="" disabled selected><?= lang("Add favorite ...", "Füge Favorit hinzu ...") ?></option>
+                            <?php
+                            foreach ($options as $option) {
+                                $id = $option['id'];
+                            ?>
+                                <option value="<?= $id ?>"><?= $option['label'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn small primary" type="button" onclick="addSidebarFavorite();">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function addSidebarFavorite() {
+                    var sidebar = $('#sidebar-select').val();
+                    if (sidebar.length === 0) return;
+                    var label = $('#sidebar-select option:selected').text();
+                    // check if already exists
+                    if ($('#sidebar_favorites-list').find(`input[value="${sidebar}"]`).length > 0) {
+                        toastError('<?= lang('Sidebar favorite already exists', 'Favorit existiert bereits') ?>');
+                        return;
+                    }
+                    var html = `<div class='author'><i class="ph ph-dots-six-vertical text-muted"></i> ${label} <input type='hidden' name='values[sidebar_favorites][]' value='${sidebar}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                    $('#sidebar_favorites-list').append(html);
+                }
+                $(document).ready(function() {
+                    var sidebardiv = $("#sidebar_favorites-list");
+                    sidebardiv.sortable({});
+                });
+            </script>
+
+
+            <h5>
+                <?= lang('Display of Activities', 'Darstellung der Aktivitäten') ?>
+                <a href="#" onclick="$('#display_activities-info').toggleClass('hidden'); return false;">
+                    <i class="ph ph-info text-muted"></i>
+                </a>
+            </h5>
             <?php
             $display_activities = $data['display_activities'] ?? 'web';
             ?>
+            <p class="hidden" id="display_activities-info">
+                <?= lang('You can choose how activities are displayed for you when you use OSIRIS.', 'Du kannst wählen, wie Aktivitäten für dich dargestellt werden, wenn du OSIRIS nutzt.') ?>
+            </p>
 
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[display_activities]" id="display_activities-web" value="web" <?= $display_activities == 'web' ? 'checked' : '' ?>>
-                <label for="display_activities-web"><?= lang('Web') ?></label>
+
+            <div class="form-group">
+                <div class="custom-radio">
+                    <input type="radio" name="values[display_activities]" id="display_activities-web" value="web" <?= $display_activities == 'web' ? 'checked' : '' ?>>
+                    <label for="display_activities-web"><?= lang('Web Display', 'Web-Darstellung') ?></label>
+                </div>
+                <small class="text-muted">
+                    <?= lang('Display type optimized for the web.', 'Darstellung, die für das Web optimiert ist.') ?>
+                </small>
             </div>
-            <div class="custom-radio d-inline-block mr-10">
-                <input type="radio" name="values[display_activities]" id="display_activities-print" value="print" <?= $display_activities != 'web' ? 'checked' : '' ?>>
-                <label for="display_activities-print"><?= lang('Print', 'Druck') ?></label>
+            <div class="form-group">
+                <div class="custom-radio">
+                    <input type="radio" name="values[display_activities]" id="display_activities-print" value="print" <?= $display_activities != 'web' ? 'checked' : '' ?>>
+                    <label for="display_activities-print"><?= lang('Print Display', 'Druck-Darstellung') ?></label>
+                </div>
+                <small class="text-muted">
+                    <?= lang('Display type optimized for printing and exporting activities.', 'Darstellung, die für den Druck optimiert ist und für den Export von Aktivitäten verwendet wird.') ?>
+                </small>
             </div>
 
 
@@ -791,11 +879,20 @@ $active = function ($field) use ($data_fields) {
             ?>
 
                 <div class="mt-10">
-                    <h5><?= lang('Coin visibility', 'Sichtbarkeit der Coins') ?>:</h5>
+                    <h5>
+                        <?= lang('Coin visibility', 'Sichtbarkeit der Coins') ?>
+                        <a href="#" onclick="$('#coins-info').toggleClass('hidden'); return false;">
+                            <i class="ph ph-info text-muted"></i>
+                        </a>
+                    </h5>
                     <?php
                     $show_coins = $data['show_coins'] ?? 'none';
                     ?>
 
+                    <p class="hidden" id="coins-info">
+                        <i class="ph ph-coins text-signal"></i>
+                        <?= lang('Coins are a gamification element in OSIRIS and represent points you earn for your activities. You can choose to show them to everyone, only to yourself, or to nobody. If you do not show them to everyone, they won\'t be visible to others, including admins and technical staff.', 'Coins sind ein Gamification-Element in OSIRIS und stellen Punkte dar, die du für deine Aktivitäten erhältst. Du kannst wählen, sie allen, nur dir selbst oder niemandem zu zeigen. Wenn du sie nicht allen zeigst, sind sie für andere, einschließlich Admins und technischem Personal, nicht sichtbar.') ?>
+                    </p>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-true" value="none" <?= $show_coins == 'none' ? 'checked' : '' ?>>
                         <label for="show_coins-true"><?= lang('For nobody', 'Für niemanden') ?></label>
@@ -806,8 +903,9 @@ $active = function ($field) use ($data_fields) {
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-all" value="all" <?= $show_coins == 'all' ? 'checked' : '' ?>>
-                        <label for="show_coins-all"><?= lang('For all', 'Für jeden') ?></label>
+                        <label for="show_coins-all"><?= lang('For everyone', 'Für jeden') ?></label>
                     </div>
+
                 </div>
             <?php
             }
@@ -818,18 +916,27 @@ $active = function ($field) use ($data_fields) {
             if ($Settings->featureEnabled('achievements')) {
             ?>
                 <div class="mb-20">
-                    <h5><?= lang('Show achievements', 'Zeige Errungenschaften') ?>:</h5>
+                    <h5>
+                        <?= lang('Achievement visibility', 'Sichtbarkeit der Achievements') ?>
+                        <a href="#" onclick="$('#achievements-info').toggleClass('hidden'); return false;">
+                            <i class="ph ph-info text-muted"></i>
+                        </a>
+                    </h5>
                     <?php
                     $hide_achievements = $data['hide_achievements'] ?? false;
                     ?>
+                    <p class="hidden" id="achievements-info">
+                        <i class="ph ph-trophy text-signal"></i>
+                        <?= lang('Achievements are a gamification element in OSIRIS and represent badges you earn for your activities. You can choose to hide them from everyone or show them to everyone. If you hide them, they won\'t be visible to others, including admins and technical staff.', 'Achievements sind ein Gamification-Element in OSIRIS und stellen Abzeichen dar, die du für deine Aktivitäten erhältst. Du kannst wählen, sie vor allen zu verstecken oder allen zu zeigen. Wenn du sie versteckst, sind sie für andere, einschließlich Admins und technischem Personal, nicht sichtbar.') ?>
+                    </p>
 
                     <div class="custom-radio d-inline-block mr-10">
-                        <input type="radio" name="values[hide_achievements]" id="hide_achievements-false" value="false" <?= $hide_achievements ? '' : 'checked' ?>>
-                        <label for="hide_achievements-false"><?= lang('Yes', 'Ja') ?></label>
+                        <input type="radio" name="values[hide_achievements]" id="hide_achievements-true" value="true" <?= $hide_achievements ? 'checked' : '' ?>>
+                        <label for="hide_achievements-true"><?= lang('For nobody', 'Für niemanden') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
-                        <input type="radio" name="values[hide_achievements]" id="hide_achievements-true" value="true" <?= $hide_achievements ? 'checked' : '' ?>>
-                        <label for="hide_achievements-true"><?= lang('No', 'Nein') ?></label>
+                        <input type="radio" name="values[hide_achievements]" id="hide_achievements-false" value="false" <?= $hide_achievements ? '' : 'checked' ?>>
+                        <label for="hide_achievements-false"><?= lang('For everyone', 'Für jeden') ?></label>
                     </div>
                 </div>
             <?php
@@ -881,7 +988,7 @@ $active = function ($field) use ($data_fields) {
                             <?php } ?>
                         </select>
                         <div class="input-group-append">
-                            <button class="btn secondary h-full" type="button" onclick="addKeyword();">
+                            <button class="btn small primary" type="button" onclick="addKeyword();">
                                 <i class="ph ph-plus"></i>
                             </button>
                         </div>

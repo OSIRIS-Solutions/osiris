@@ -6,8 +6,8 @@
         "fields": [
             {
                 "id": "admin.see",
-                "de": "Auf das Admin-Panel zugreifen",
-                "en": "Access to the admin panel"
+                "de": "Auf das Admin-Panel zugreifen, Einstellungen anpassen und Versionen migrieren",
+                "en": "Access to the admin panel, modify settings and migrate versions"
             }
         ]
     },

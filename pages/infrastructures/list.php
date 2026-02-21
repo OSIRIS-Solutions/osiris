@@ -324,9 +324,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     $(document).ready(function() {
         dataTable = new DataTable('#infrastructure-table', {
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             columnDefs: [{
                 targets: [1, 2, 3, 4, 5, 6, 7],
                 visible: false

@@ -18,7 +18,6 @@ function navigate(key) {
             publicationTable = true;
             initActivities('#publication-table', {
                 page: 'my-activities',
-                display_activities: 'web',
                 user: CURRENT_USER,
                 type: 'publication'
             })
@@ -31,7 +30,6 @@ function navigate(key) {
             activitiesTable = true;
             initActivities('#activities-table', {
                 page: 'my-activities',
-                display_activities: 'web',
                 user: CURRENT_USER,
                 type: { '$ne': 'publication' }
             })

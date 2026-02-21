@@ -19,6 +19,14 @@
 $Format = new Document(true);
 $expert = isset($_GET['expert']);
 
+$preset_query = null;
+if (isset($_GET['query'])) {
+    $preset_query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($_GET['query'])]);
+    if ($preset_query) {
+        $expert = $preset_query['expert'] ?? false;
+    }
+}
+
 $defaultColumns = ['id', 'name', 'title'];
 $defaultFilter = 'type';
 $expertQuery = '{"type": "publication"}';
@@ -217,7 +225,10 @@ function printRules($rules)
                                 <?php } ?>
                             </summary>
                             <div class="collapse-content">
-                                <?php if ($Settings->hasPermission('queries.global') && !($query['global'] ?? false)) { ?>
+                                <?php if ($Settings->hasPermission('queries.global') && !($query['global'] ?? false)) {
+                                    $sharelink = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+                                    $sharelink .= ROOTPATH . '/' . $collection . '/search?query=' . $query_id;
+                                ?>
                                     <div class="dropdown float-right">
                                         <button class="btn" data-toggle="dropdown" type="button" id="dropdown-<?= $query_id ?>" aria-haspopup="true" aria-expanded="false">
                                             <i class="ph ph-share-network"></i> <?= lang('Share', 'Teilen') ?>
@@ -225,6 +236,15 @@ function printRules($rules)
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-<?= $query_id ?>">
                                             <!-- share globally -->
                                             <div class="content">
+                                                <!-- copy Link with ID to clipboard -->
+                                                 <?=lang('Sharable link:', 'Teilbarer Link:')?>
+                                                <a class="" href="<?= $sharelink ?>" target="_blank">
+                                                    <?= $sharelink ?>
+                                                </a>
+                                                <!-- <button class="btn link" onclick="copyQuery()" data-toggle="tooltip" data-title="<?= lang('Copy sharable linkto clipboard', 'Link zum Teilen in die Zwischenablage kopieren') ?>">
+                                                    <i class="ph ph-copy"></i>
+                                                </button> -->
+                                                <hr>
                                                 <button class="btn block mb-5" onclick="shareQuery('<?= $query['_id'] ?>', 'global')">
                                                     <i class="ph ph-globe"></i> <?= lang('Share globally', 'Global teilen') ?>
                                                 </button>
@@ -241,6 +261,12 @@ function printRules($rules)
                                         </div>
                                     </div>
                                     <script>
+                                        function copyQuery() {
+                                            var url = '<?= $currentURL ?>?query=<?= $query_id ?>';
+                                            navigator.clipboard.writeText(url);
+                                            toastSuccess('<?= lang('Sharable link copied to clipboard.', 'Link zum Teilen in die Zwischenablage kopiert.') ?>');
+                                        }
+
                                         function shareQuery(id, type) {
                                             var data = {
                                                 id: id,
@@ -737,6 +763,10 @@ function printRules($rules)
                         r.render = function(data, type, row, meta) {
                             return `<a href="<?= ROOTPATH ?>/<?= $collection ?>/view/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
                         }
+                    } else if (field == 'username') {
+                        r.render = function(data, type, row, meta) {
+                            return data ? `<a href="<?= ROOTPATH ?>/profile/${data}">${data}</a>` : '-';
+                        }
                     } else if (array_columns[field]) {
                         var array_column = array_columns[field]
                         r.render = function(data, type, row, meta) {
@@ -765,9 +795,6 @@ function printRules($rules)
                 destroy: true, // Alte Tabelle entfernen, falls sie existiert
                 data: data, // Daten direkt übergeben
                 columns: columns, // Dynamisch generierte Spalten
-                language: {
-                    url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-                },
                 dom: 'fBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
@@ -850,6 +877,11 @@ function printRules($rules)
         }
 
         $(document).ready(function() {
+            <?php if ($preset_query) : ?>
+                applyFilter('<?= $preset_query['_id'] ?>', '<?= $preset_query['aggregate'] ?>', '<?= implode(';', DB::doc2Arr($preset_query['columns'] ?? [])) ?>')
+                return;
+            <?php endif; ?>
+
             var hash = window.location.hash.substr(1);
             if (hash !== undefined && hash != "") {
                 try {

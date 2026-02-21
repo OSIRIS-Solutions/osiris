@@ -57,12 +57,9 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
                     <?= get_preview(lang($topic['description'], $topic['description_de'] ?? null), 300) ?>
                 <?php } ?>
             </p>
-            <?php if ($Settings->hasPermission('topics.edit')) { ?>
-                <a class="btn" href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
-                    <i class="ph ph-edit"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
-                </a>
-            <?php } ?>
+            <a href="<?= ROOTPATH ?>/topics/view/<?= $topic['_id'] ?>" class="link">
+                <?= lang('View details', 'Details ansehen') ?>
+            </a>
         </div>
     <?php } ?>
 </div>
