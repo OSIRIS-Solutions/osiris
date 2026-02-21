@@ -19,7 +19,7 @@ Route::get('/topics', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("topics", "Topics")]
+        ['name' => $Settings->topicLabel(), 'path' => "/topics"]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/topics/topics.php";
@@ -30,12 +30,14 @@ Route::get('/topics/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     if (!$Settings->hasPermission('topics.edit')) {
-        header("Location: " . ROOTPATH . "/topics?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     $breadcrumb = [
-        ['name' => lang('Topics', 'Topics'), 'path' => "/topics"],
+        ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -57,11 +59,13 @@ Route::get('/topics/view/(.*)', function ($id) {
         $id = strval($topic['_id'] ?? '');
     }
     if (empty($topic)) {
-        header("Location: " . ROOTPATH . "/topics?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
-        ['name' => lang('Topics', 'Topics'), 'path' => "/topics"],
+        ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $topic['name']]
     ];
 
@@ -76,8 +80,10 @@ Route::get('/topics/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('topics.edit')) {
-        header("Location: " . ROOTPATH . "/topics/view/$id?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics/view/$id");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     global $form;
@@ -87,14 +93,16 @@ Route::get('/topics/edit/(.*)', function ($id) {
         $form = $osiris->topics->findOne(['_id' => $mongo_id]);
     } else {
         $form = $osiris->topics->findOne(['name' => $id]);
-        $id = strval($topic['_id'] ?? '');
+        $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
-        header("Location: " . ROOTPATH . "/topics?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
-        ['name' => lang('Topics', 'Topics'), 'path' => "/topics"],
+        ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $form['name'], 'path' => "/topics/view/$id"],
         ['name' => lang("Edit", "Bearbeiten")]
     ];
@@ -112,8 +120,10 @@ Route::post('/crud/topics/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        header("Location: " . ROOTPATH . "/topics?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     if (!isset($_POST['values'])) die("no values given");
@@ -126,7 +136,9 @@ Route::post('/crud/topics/create', function () {
     // check if topic id already exists:
     $topic_exist = $collection->findOne(['id' => $id]);
     if (!empty($topic_exist)) {
-        header("Location: " . $red . "?msg=topic ID does already exist.");
+        $_SESSION['msg'] = lang('A topic with this ID already exists.', 'Ein Forschungsbereich mit dieser ID existiert bereits.');
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/topics/new");
         die();
     }
 
@@ -154,8 +166,10 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        header("Location: " . ROOTPATH . "/topics?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     $target_dir = BASEPATH . "/uploads/";
@@ -217,8 +231,10 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        header("Location: " . ROOTPATH . "/topics?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->topics;
@@ -250,8 +266,10 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.delete')) {
-        header("Location: " . ROOTPATH . "/topics?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage($Settings->topicLabel(), "/topics");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     $topic = $osiris->topics->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -287,6 +305,6 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
     );
 
     $_SESSION['msg'] = lang("Research topic has been deleted successfully.", "Forschungsbereich wurde erfolgreich gelöscht.");
+    $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/topics");
 });
-

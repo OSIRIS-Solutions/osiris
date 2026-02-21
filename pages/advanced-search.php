@@ -795,9 +795,6 @@ function printRules($rules)
                 destroy: true, // Alte Tabelle entfernen, falls sie existiert
                 data: data, // Daten direkt übergeben
                 columns: columns, // Dynamisch generierte Spalten
-                language: {
-                    url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-                },
                 dom: 'fBrtip',
                 buttons: [{
                     extend: 'excelHtml5',

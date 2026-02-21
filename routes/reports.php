@@ -21,7 +21,12 @@ Route::get('/reports', function () {
         // ['name' => 'Export', 'path' => "/export"],
         ['name' => lang("Reports", "Berichte")]
     ];
-
+    if (!$Settings->hasPermission('report.generate')) {
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Report', 'Bericht'), "/");
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports.php";
     include BASEPATH . "/footer.php";
@@ -34,7 +39,12 @@ Route::get('/admin/reports', function () {
         ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen')],
     ];
-    $page = 'reports-templates';
+    if (!$Settings->hasPermission('report.templates')) {
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Report', 'Bericht'), "/reports");
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
     include BASEPATH . "/footer.php";
@@ -47,6 +57,12 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
         ['name' => lang("Builder", "Editor")]
     ];
+    if (!$Settings->hasPermission('report.templates')) {
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Report', 'Bericht'), "/");
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
 
     $report = [];
     $title = '';
@@ -58,7 +74,6 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         $steps = $report['steps'];
     }
 
-    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-builder.php";
     include BASEPATH . "/footer.php";
@@ -73,12 +88,20 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
         ['name' => lang('Builder', 'Editor'), 'path' => "/admin/reports/builder/$id"],
         ['name' => lang("Preview", "Vorschau")]
     ];
-    if (!DB::is_ObjectID($id)) {
-        die('The Report does not exist.');
+    if (!$Settings->hasPermission('report.templates')) {
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Report', 'Bericht'), "/");
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($report)) {
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Report', 'Bericht'), "/admin/reports");
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
 
-    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-preview.php";
     include BASEPATH . "/footer.php";

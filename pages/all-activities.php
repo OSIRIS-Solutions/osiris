@@ -439,9 +439,6 @@ $cart = readCart();
             },
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             layout: {
                 top1Start: 'search',
                 topStart: 'buttons',

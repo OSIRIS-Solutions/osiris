@@ -29,8 +29,9 @@ Route::get('/teaching', function () {
 Route::get('/teaching/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        $_SESSION['msg'] = lang('You do not have permission to add teaching modules.', 'Sie haben keine Berechtigung, Lehrveranstaltungen hinzuzufügen.');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
     $breadcrumb = [
@@ -55,8 +56,9 @@ Route::get('/teaching/view/(.*)', function ($id) {
     // get teaching module
     $module = $osiris->teaching->findOne(['_id' => $mongo_id]);
     if (!$module) {
-        $_SESSION['msg'] = lang('Teaching module not found', 'Lehrveranstaltung nicht gefunden');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
 
@@ -76,8 +78,9 @@ Route::get('/teaching/view/(.*)', function ($id) {
 Route::get('/teaching/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        $_SESSION['msg'] = lang('You do not have permission to edit teaching modules.', 'Sie haben keine Berechtigung, Lehrveranstaltungen zu bearbeiten.');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching/view/$id");
+        include_once BASEPATH . "/footer.php";
         die();
     }
     $mongo_id = DB::to_ObjectID($id);
@@ -86,14 +89,16 @@ Route::get('/teaching/edit/(.*)', function ($id) {
     global $form;
     $form = $osiris->teaching->findOne(['_id' => $mongo_id]);
     if (!$form) {
-        $_SESSION['msg'] = lang('Teaching module not found', 'Lehrveranstaltung nicht gefunden');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
 
     $breadcrumb = [
         ['name' => lang('Teaching', 'Lehrveranstaltungen'), 'path' => '/teaching'],
-        ['name' => $form['title']]
+        ['name' => $form['title'], 'path' => "/teaching/view/$id"],
+        ['name' => lang("Edit", "Bearbeiten")]
     ];
 
     $activities = $osiris->activities->find(['module_id' => $id], ['sort' => ['start_date' => -1]])->toArray();
@@ -124,8 +129,9 @@ Route::get('/teaching/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['values'])) die("no values given");
     if (!$Settings->hasPermission('teaching.edit')) {
-        $_SESSION['msg'] = lang('You do not have permission to add teaching modules.', 'Sie haben keine Berechtigung, Lehrveranstaltungen hinzuzufügen.');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
     $collection = $osiris->teaching;
@@ -141,7 +147,9 @@ Route::get('/teaching/statistics', function () {
         $exists = $osiris->teaching->count(['module' => $values['module']]);
         if ($exists > 0) {
             if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-                header("Location: " . ROOTPATH . '/teaching?msg=Module+with+this+module+number+already+exists&msgType=error');
+                $_SESSION['msg'] = lang("Module with this module number already exists", "Modul mit dieser Modulnummer existiert bereits");
+                $_SESSION['msg_type'] = "error";
+                header("Location: " . ROOTPATH . '/teaching');
                 die();
             }
             echo json_encode([
@@ -161,7 +169,9 @@ Route::get('/teaching/statistics', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=success");
+        $_SESSION['msg'] = lang("Teaching module has been created successfully.", "Lehrveranstaltung wurde erfolgreich erstellt.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $red);
         die();
     }
 
@@ -175,8 +185,9 @@ Route::get('/teaching/statistics', function () {
  Route::post('/crud/teaching/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        $_SESSION['msg'] = lang('You do not have permission to delete teaching modules.', 'Sie haben keine Berechtigung, Lehrveranstaltungen zu löschen.');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
 
@@ -190,7 +201,9 @@ Route::get('/teaching/statistics', function () {
         ['$set' => $values]
     );
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Teaching module has been updated successfully.", "Lehrveranstaltung wurde erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -202,15 +215,18 @@ Route::get('/teaching/statistics', function () {
 Route::post('/crud/teaching/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        $_SESSION['msg'] = lang('You do not have permission to delete teaching modules.', 'Sie haben keine Berechtigung, Lehrveranstaltungen zu löschen.');
-        header("Location: " . ROOTPATH . '/teaching');
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
+        include_once BASEPATH . "/footer.php";
         die();
     }
     //chack that no activities are connected
     $activities = $osiris->activities->count(['module_id' => strval($module['_id'])]);
     if ($activities != 0) {
-        header("Location: " . $_POST['redirect'] . "?msg=Cannot+delete+teaching+module+when+activities+are+still+connected&msgType=error");
-        die;
+        $_SESSION['msg'] = lang("Cannot delete teaching module when activities are still connected", "Lehrveranstaltung kann nicht gelöscht werden, wenn noch Aktivitäten damit verbunden sind");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . $_POST['redirect']);
+        die();
     }
 
     // prepare id
@@ -220,7 +236,9 @@ Route::post('/crud/teaching/delete/([A-Za-z0-9]*)', function ($id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=deleted-1&msgType=error");
+        $_SESSION['msg'] = lang("Teaching module has been deleted successfully.", "Lehrveranstaltung wurde erfolgreich gelöscht.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect'] );
         die();
     }
     echo json_encode([

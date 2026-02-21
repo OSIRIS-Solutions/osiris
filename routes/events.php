@@ -51,8 +51,9 @@ Route::get('/conferences/view/(.*)', function ($id) {
     // get conference
     $conference = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$conference) {
-        $_SESSION['msg'] = lang('Conference not found', 'Konferenz nicht gefunden');
-        header("Location: " . ROOTPATH . '/conferences');
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Event', "Veranstaltung"), '/conferences');
+        include BASEPATH . "/footer.php";
         die();
     }
 
@@ -77,8 +78,9 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     $new = false;
     $form = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$form) {
-        $_SESSION['msg'] = lang('Conference not found', 'Konferenz nicht gefunden');
-        header("Location: " . ROOTPATH . '/conferences');
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Event', "Veranstaltung"), '/conferences');
+        include BASEPATH . "/footer.php";
         die();
     }
 

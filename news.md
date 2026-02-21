@@ -1,4 +1,3 @@
-# Neuigkeiten
 
 
 <time datetime="2026-01-18">01.02.2026</time>

@@ -59,8 +59,10 @@ Route::get('/organizations/view/(.*)', function ($id) {
         $id = strval($organization['_id'] ?? '');
     }
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Organisation', 'Organisation'), '/organizations');
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
@@ -78,8 +80,10 @@ Route::get('/organizations/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Organisation', 'Organisation'), '/organizations/view/' . $id);
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     global $form;
@@ -89,11 +93,13 @@ Route::get('/organizations/edit/(.*)', function ($id) {
         $form = $osiris->organizations->findOne(['_id' => $mongo_id]);
     } else {
         $form = $osiris->organizations->findOne(['name' => $id]);
-        $id = strval($organization['_id'] ?? '');
+        $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
-        header("Location: " . ROOTPATH . "/organizations?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Organisation', 'Organisation'), '/organizations');
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
@@ -113,6 +119,13 @@ Route::get('/organizations/edit/(.*)', function ($id) {
 
 Route::post('/crud/organizations/create', function () {
     include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->hasPermission('organizations.create')) {
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Organisation', 'Organisation'), '/organizations');
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
 
     if (!isset($_POST['values']) || empty($_POST['values'])) die("no values given");
     $collection = $osiris->organizations;
@@ -194,8 +207,10 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        header("Location: " . ROOTPATH . "/organizations?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Organisation', 'Organisation'), '/organizations/view/' . $id);
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     if (!isset($_POST['values'])) die("no values given");
     $collection = $osiris->organizations;
@@ -228,8 +243,10 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.delete')) {
-        header("Location: " . ROOTPATH . "/organizations?msg=no-permission");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo noPermissionPage(lang('Organisation', 'Organisation'), '/organizations/view/' . $id);
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
     // $organization = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -256,8 +273,10 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Organisation', 'Organisation'), '/organizations');
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
@@ -326,8 +345,10 @@ Route::get('/organizations/image/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
-        die;
+        include_once BASEPATH . "/header.php";
+        echo notFoundPage(lang('Organisation', 'Organisation'), '/organizations');
+        include_once BASEPATH . "/footer.php";
+        die();
     }
     include_once BASEPATH . "/php/Organization.php";
     echo Organization::getLogo($organization, "", "Logo of " . $organization['name'], $organization['type'] ?? "");

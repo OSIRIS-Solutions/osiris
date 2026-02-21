@@ -28,39 +28,44 @@ Route::get('/migration-needed', function () {
 
     if ($Settings->hasPermission('admin.see')) {
 ?>
-        <div class="align-items-center container d-flex h-full">
-            <div class="alert danger mb-20 w-full">
-                <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>
-                <p>
-                    <?= lang(
-                        'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
-                        'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
-                    ) ?>
-                </p>
-                <p class="text-muted">
-                    <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
-                </p>
-                <a href="<?= ROOTPATH ?>/migrate" class="btn danger">
-                    <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
-                </a>
-            </div>
+        <div class="container text-center" style="max-width: 70rem;">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
+            <h1 class="mt-0">
+                <?= lang('A new OSIRIS version has been found', 'Eine neue OSIRIS-Version wurde gefunden') ?>!
+            </h1>
+            <p>
+                <?= lang(
+                    'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
+                    'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
+                ) ?>
+            </p>
+            <p class="text-muted">
+                <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
+            </p>
+            <a href="<?= ROOTPATH ?>/migrate" class="btn cta large">
+                <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
+            </a>
         </div>
     <?php
     } else {
     ?>
-        <div class="align-items-center container d-flex h-full">
-            <div class="alert danger mb-20 w-full">
-                <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>
-                <p>
-                    <?= lang(
-                        'OSIRIS needs to be updated and will be unavailable during the process. Please contact your administrator.',
-                        'OSIRIS muss aktualisiert werden und ist während des Prozesses nicht verfügbar. Bitte kontaktiere deinen Administrator.'
-                    ) ?>
-                </p>
-                <p class="text-muted">
-                    <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
-                </p>
-            </div>
+        <div class="container text-center">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
+            <h1 class="mt-0">
+                <?= lang('OSIRIS is being updated', 'OSIRIS wird aktualisiert') ?>...
+            </h1>
+
+            <p>
+                <?= lang(
+                    'OSIRIS is currently being updated to the latest version. Please check back later.',
+                    'OSIRIS wird gerade auf die neueste Version aktualisiert. Bitte schau später noch einmal vorbei.'
+                ) ?>
+            </p>
+
+            <div class="spacer h-100"></div>
+            <small class="text-muted">
+                <?= lang('In case you are seeing this message for a long time, please contact your administrator.', 'Falls du diese Nachricht über einen längeren Zeitraum siehst, kontaktiere bitte deinen Administrator.') ?>
+            </small>
         </div>
 <?php
     }

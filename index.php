@@ -237,15 +237,29 @@ Route::pathNotFound(function ($path) {
 
 // Add a 405 method not allowed route
 Route::methodNotAllowed(function ($path, $method) {
-    // Do not forget to send a status header back to the client
-    // The router will not send any headers by default
-    // So you will have the full flexibility to handle this case
-    header('HTTP/1.0 405 Method Not Allowed');
-    $error = 405;
-    include BASEPATH . "/header.php";
-    // include BASEPATH . "/pages/error.php";
-    echo "Error 405";
-    include BASEPATH . "/footer.php";
+    http_response_code(405);
+    // Check the Accept header to determine the content type
+    $acceptHeader = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'text/html';
+
+    header("HTTP/1.0 405 Method Not Allowed");
+    if (strpos($acceptHeader, 'application/json') !== false) {
+        // Send JSON response for scripts expecting JSON
+        header('Content-Type: application/json');
+        echo json_encode(['error' => '405 Method Not Allowed']);
+    } elseif (strpos($acceptHeader, 'text/plain') !== false) {
+        // Send plain text response for scripts expecting text
+        header('Content-Type: text/plain');
+        echo "405 Method Not Allowed";
+    } elseif (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
+        header("Location: " . ROOTPATH . "/user/login?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+    } else {
+        // Send HTML response for users
+        $error = 405;
+        include BASEPATH . "/header.php";
+
+        include BASEPATH . "/pages/error.php";
+        include BASEPATH . "/footer.php";
+    }
 });
 
 

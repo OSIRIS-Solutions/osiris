@@ -755,27 +755,24 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
                     ?>
                         <div class="box padded d-flex align-items-center">
-                            <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i>
+                            <!-- <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i> -->
 
                             <div>
                                 <b>
                                     <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
                                 </b>
-                                <br>
-                                <small class="text-muted">
-                                    <?= lang('
-                                        For the quarterly controlling, you need to confirm that all activities from the previous quarter are stored in OSIRIS and saved correctly.
-                                        To do this, go to your year and check and approve your activities. 
-                                        ', '
-                                        Für das Quartalscontrolling musst du bestätigen, dass alle Aktivitäten aus dem vergangenen Quartal in OSIRIS hinterlegt und korrekt gespeichert sind.
-                                        Gehe dazu in dein Jahr und überprüfe deine Aktivitäten.
-                                        ') ?>
-                                </small>
-                                <br>
+                                <p class="text-muted my-5 font-size-12">
+                                    <?= lang(
+                                        'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
+                                        'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
+                                    ) ?>
+                                </p>
                                 <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
                                     <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
                                 </a>
                             </div>
+
+                            <img src="<?= ROOTPATH ?>/img/sophie/sophie-checklist.png" class="w-100">
                         </div>
                     <?php } ?>
 

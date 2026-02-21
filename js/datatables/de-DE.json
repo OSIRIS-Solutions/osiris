@@ -1,11 +1,11 @@
 {
-    "emptyTable": "Keine Daten in der Tabelle vorhanden",
+    "emptyTable": "<div class='sophie sophie-empty'></div> <b>Noch keine Daten vorhanden.</b><br><small>Füge Einträge hinzu, um sie hier anzuzeigen.</small>",
     "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
     "infoEmpty": "Keine Daten vorhanden",
     "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
     "infoThousands": ".",
-    "loadingRecords": "Wird geladen ..",
-    "processing": "Bitte warten ..",
+    "loadingRecords": "<div class='sophie sophie-bored'></div> Wird geladen ..",
+    "processing": "<div class='sophie sophie-bored'></div> Bitte warten ..",
     "paginate": {
         "first": "«",
         "next": "›",
@@ -146,7 +146,7 @@
         "loadMessage": "Lade Suchmasken .."
     },
     "thousands": ".",
-    "zeroRecords": "Keine passenden Einträge gefunden",
+    "zeroRecords": "<div class='sophie sophie-disappointed'></div> <b>Keine passenden Einträge gefunden.</b><br><small>Versuche, deine Suchkriterien anzupassen.</small>",
     "lengthMenu": "_MENU_ Zeilen",
     "datetime": {
         "previous": "Vorher",

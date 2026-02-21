@@ -610,9 +610,6 @@ $Vocabulary = new Vocabulary();
             type: 'GET',
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             buttons: [{
                     text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
                     className: 'btn small text-primary mr-10',

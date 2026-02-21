@@ -530,9 +530,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             type: 'GET',
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {

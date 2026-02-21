@@ -3089,10 +3089,11 @@ Buttons
   font-size: 1.2rem;
 }
 .btn.large {
-  height: 4rem;
-  line-height: 4rem;
+  height: 3.8rem;
+  line-height: 3.8rem;
   padding: 0 2rem;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: bold;
 }
 .btn.block {
   display: block;
@@ -3121,6 +3122,20 @@ Buttons
 }
 .btn.rounded.large, .btn.circle.large {
   border-radius: 4rem;
+}
+.btn.cta {
+  font-size: 1.6rem;
+  font-weight: bold;
+  padding: 0.25rem 2rem;
+  height: auto;
+  color: var(--secondary-color-dark);
+  background: var(--secondary-color-20);
+  border-color: var(--secondary-color);
+}
+.btn.cta:hover {
+  color: white;
+  background: linear-gradient(135deg, var(--secondary-color-light), var(--secondary-color-dark));
+  text-decoration: none;
 }
 
 @-webkit-keyframes button-spin {
@@ -4200,6 +4215,11 @@ div.dt-button-collection .dt-button-active:after {
 
 .dt-ordering-desc .dt-column-header:after {
   content: "\e11e";
+}
+
+.dt-empty {
+  text-align: center !important;
+  color: #666;
 }
 
 /*
@@ -8677,6 +8697,61 @@ a.badge-group:hover > .badge.blue {
 .img-fluid {
   max-width: 100%;
   height: auto;
+}
+
+.sophie {
+  background: url(../img/sophie/sophie-book.png) no-repeat center 10px;
+  background-size: auto 110px;
+  padding-top: 120px;
+  text-align: center;
+}
+.sophie.sophie-coin {
+  background-image: url(../img/sophie/sophie-coin.png);
+}
+.sophie.sophie-trophy {
+  background-image: url(../img/sophie/sophie-trophy.png);
+}
+.sophie.sophie-empty {
+  background-image: url(../img/sophie/sophie-empty.png);
+}
+.sophie.sophie-book {
+  background-image: url(../img/sophie/sophie-book.png);
+}
+.sophie.sophie-idea {
+  background-image: url(../img/sophie/sophie-idea.png);
+}
+.sophie.sophie-bored {
+  background-image: url(../img/sophie/sophie-bored.png);
+}
+.sophie.sophie-ai {
+  background-image: url(../img/sophie/sophie-ai.png);
+}
+.sophie.sophie-message {
+  background-image: url(../img/sophie/sophie-message.png);
+}
+.sophie.sophie-announced {
+  background-image: url(../img/sophie/sophie-announced.png);
+}
+.sophie.sophie-excited {
+  background-image: url(../img/sophie/sophie-excited.png);
+}
+.sophie.sophie-reward {
+  background-image: url(../img/sophie/sophie-reward.png);
+}
+.sophie.sophie-report {
+  background-image: url(../img/sophie/sophie-report.png);
+}
+.sophie.sophie-report {
+  background-image: url(../img/sophie/sophie-checklist.png);
+}
+.sophie.sophie-search {
+  background-image: url(../img/sophie/sophie-search.png);
+}
+.sophie.sophie-error {
+  background-image: url(../img/sophie/sophie-error.png);
+}
+.sophie.sophie-disappointed {
+  background-image: url(../img/sophie/sophie-disappointed.png);
 }
 
 /*
@@ -14364,6 +14439,33 @@ table img {
   white-space: normal;
 }
 
+.not-found {
+  display: flex;
+  align-items: center;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.not-found img {
+  width: 100%;
+  max-width: 35rem;
+  margin-right: 2rem;
+}
+
+.not-found h1 {
+  margin-top: 0;
+}
+
+/* column layout on small screens */
+@media (max-width: 600px) {
+  .not-found {
+    flex-direction: column;
+    text-align: center;
+  }
+  .not-found img {
+    margin-right: 0;
+  }
+}
 /*!
  * Quill Editor v1.3.6
  * https://quilljs.com/

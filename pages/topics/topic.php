@@ -29,7 +29,7 @@ $publication_filter = [
     'topics' => $topic['id'],
     'type' => 'publication'
 ];
-$count_publications = $osiris->activities->count($publication_filter);
+$count_publications = 4; //$osiris->activities->count($publication_filter);
 $activities_filter = [
     'topics' => $topic['id'],
     'type' => ['$ne' => 'publication']

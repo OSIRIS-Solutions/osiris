@@ -271,9 +271,6 @@ if ($active('keywords')) {
             },
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             paging: true,
             autoWidth: true,
             pageLength: 18,

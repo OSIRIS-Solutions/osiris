@@ -208,9 +208,16 @@ if (!$Settings->featureEnabled('coins')) {
 
             <?php } ?>
         </div>
-        <div class="col-lg">
+        
+        <div class="col-md text-md-right">
+            <div class=" float-right float-md-none">
+                <a target="_blank" href="https://wiki.osiris-app.de/users/profile/scientist_view/" class="btn tour" id="tour">
+                    <i class="ph ph-lg ph-question mr-5"></i>
+                    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
+                </a>
+            </div>
 
-            <form id="" action="" method="get" class="w-400 mw-full ml-lg-auto">
+            <form id="" action="" method="get" class="d-block w-400 mw-full ml-md-auto mt-20">
                 <div class="form-group">
                     <label for="year">
                         <?= lang('Change year and quarter', 'Ändere Jahr und Quartal') ?>:
@@ -264,12 +271,6 @@ if (!$Settings->featureEnabled('coins')) {
                     </div>
                 </div>
             </form>
-            <div class="text-lg-right">
-                <a target="_blank" href="https://wiki.osiris-app.de/users/profile/scientist_view/" class="btn tour" id="tour">
-                    <i class="ph ph-lg ph-question mr-5"></i>
-                    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
-                </a>
-            </div>
 
 
         </div>
@@ -546,18 +547,18 @@ if (!$Settings->featureEnabled('coins')) {
                         echo "</tbody></table>";
                     } else { ?>
 
+                        <img src="<?= ROOTPATH ?>/img/sophie/sophie-report.png" class="w-300 float-right">
                         <p>
-                            <?= lang('
-                            You are about to approve the current quarter. Your data will be sent to the Controlling and you hereby confirm that you have entered or checked all reportable activities for this year and that all data is correct. This process cannot be reversed and any changes to the quarter after this must be reported to Controlling.
-                            ', '
-                            Du bist dabei, das aktuelle Quartal freizugeben. Deine Daten werden an das Controlling übermittelt und du bestätigst hiermit, dass du alle meldungspflichtigen Aktivitäten für dieses Jahr eingetragen bzw. überprüft hast und alle Daten korrekt sind. Dieser Vorgang kann nicht rückgängig gemacht werden und alle Änderungen am Quartal im Nachhinein müssen dem Controlling gemeldet werden.
-                            ') ?>
+                            <?= lang('You are about to approve the current quarter. By confirming, you verify that all reportable activities for this quarter have been entered or reviewed and that the data is complete and correct.', 'Du bist dabei, das aktuelle Quartal freizugeben. Mit der Bestätigung erklärst du, dass alle meldepflichtigen Aktivitäten für dieses Quartal erfasst oder geprüft wurden und die Angaben vollständig und korrekt sind.') ?>
+                        </p>
+                        <p>
+                            <?= lang('This action cannot be undone. Any later changes should be coordinated with the responsible office.', 'Dieser Vorgang kann nicht rückgängig gemacht werden. Spätere Änderungen sollten mit der zuständigen Stelle abgestimmt werden.') ?>
                         </p>
 
                         <form action="<?= ROOTPATH ?>/crud/users/approve" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <input type="hidden" name="quarter" class="hidden" value="<?= $YEAR . "Q" . $QUARTER ?>">
-                            <button class="btn success"><?= lang('Approve', 'Freigeben') ?></button>
+                            <button class="btn success large filled"><?= lang('Approve', 'Freigeben') ?></button>
                         </form>
                     <?php } ?>
 

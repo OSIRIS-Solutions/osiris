@@ -95,6 +95,8 @@ $pageactive = function ($p) use ($page) {
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>
     <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= OSIRIS_BUILD ?>"></script>
 
+    <script src="<?= ROOTPATH ?>/js/script.js?<?= filemtime(BASEPATH . '/js/script.js') ?>"></script>
+
     <script>
         $.extend($.fn.DataTable.ext.classes, {
             paging: {
@@ -135,16 +137,23 @@ $pageactive = function ($p) use ($page) {
                 },
                 className: 'btn small',
                 text: `<i class="ph ph-file-xls"></i> Excel`,
-            }]
+            }],
+            language: {
+                url: lang(
+                    ROOTPATH + '/js/datatables/en-GB.json',
+                    ROOTPATH + '/js/datatables/de-DE.json'
+                )
+            }
         });
+        // // Global DataTables defaults
+        // $.extend(true, $.fn.dataTable.defaults, {
+        // });
     </script>
     <script src="<?= ROOTPATH ?>/js/osiris.js?<?= filemtime(BASEPATH . '/js/osiris.js') ?>"></script>
-    <script src="<?= ROOTPATH ?>/js/script.js?<?= filemtime(BASEPATH . '/js/script.js') ?>"></script>
 
     <?php if (isset($additionalHead)) {
         echo $additionalHead;
     } ?>
-
 </head>
 
 <body>

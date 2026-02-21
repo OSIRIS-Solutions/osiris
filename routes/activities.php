@@ -44,7 +44,9 @@ Route::get('/advanced-search/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($query)) {
-        header("Location: " . ROOTPATH . "/activities/search?msg=query-not-found");
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Query', "Abfrage"), '/activities/search');
+        include BASEPATH . "/footer.php";
         die();
     }
     $collection = $query['type'] ?? 'activities';
@@ -112,7 +114,9 @@ Route::get('/add-activity', function () {
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
             if (empty($draft)) {
-                header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+                include BASEPATH . "/header.php";
+                echo notFoundPage(lang('Activity', "Aktivität"), '/activities');
+                include BASEPATH . "/footer.php";
                 die();
             }
             $form = DB::doc2Arr($draft);
@@ -180,7 +184,9 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($draft)) {
-        header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Activity', "Aktivität"), '/activities/drafts');
+        include BASEPATH . "/footer.php";
         die();
     }
 
@@ -258,51 +264,45 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
+    if (empty($activity)) {
+        include BASEPATH . "/header.php";
+        echo notFoundPage(lang('Activity', "Aktivität"), '/activities');
+        include BASEPATH . "/footer.php";
+        die();
+    }
 
-    if (!empty($activity)) {
-        $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
-        $locked = $activity['locked'] ?? false;
-        if ($doc['type'] == 'publication' && isset($doc['journal'])) {
-            // fix old journal_ids
-            if (isset($doc['journal_id']) && !preg_match("/^[0-9a-fA-F]{24}$/", $doc['journal_id'])) {
-                $doc['journal_id'] = null;
-                $osiris->activities->updateOne(
-                    ['_id' => $activity['_id']],
-                    ['$unset' => ['journal_id' => '']]
-                );
-            }
+    $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
+    $locked = $activity['locked'] ?? false;
+    if ($doc['type'] == 'publication' && isset($doc['journal'])) {
+        // fix old journal_ids
+        if (isset($doc['journal_id']) && !preg_match("/^[0-9a-fA-F]{24}$/", $doc['journal_id'])) {
+            $doc['journal_id'] = null;
+            $osiris->activities->updateOne(
+                ['_id' => $activity['_id']],
+                ['$unset' => ['journal_id' => '']]
+            );
         }
-        renderActivities(['_id' =>  $activity['_id']]);
-        $user_activity = $DB->isUserActivity($doc, $user);
+    }
+    renderActivities(['_id' =>  $activity['_id']]);
+    $user_activity = $DB->isUserActivity($doc, $user);
 
-        $Format = new Document;
-        $Format->setDocument($doc);
+    $Format = new Document;
+    $Format->setDocument($doc);
 
-        $name = $activity['title'] ?? $id;
-        // if (strlen($name) > 20)
-        //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
-        // $name = ucfirst($activity['type']) . ": " . $name;
-        $breadcrumb = [
-            ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-            ['name' => $name]
-        ];
-        if ($Format->hasSchema()) {
-            $additionalHead = $Format->schema();
-        }
+    $name = $activity['title'] ?? $id;
+    // if (strlen($name) > 20)
+    //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
+    // $name = ucfirst($activity['type']) . ": " . $name;
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => $name]
+    ];
+    if ($Format->hasSchema()) {
+        $additionalHead = $Format->schema();
     }
     $no_container = true;
     include BASEPATH . "/header.php";
-
-    if (empty($activity)) { ?>
-        <div class="content-container">
-            <div class="alert alert-danger">
-                <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
-            </div>
-        </div>
-    <?php
-    } else {
-        include BASEPATH . "/pages/activity.php";
-    }
+    include BASEPATH . "/pages/activity.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 

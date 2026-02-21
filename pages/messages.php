@@ -75,63 +75,66 @@ $types = [
     </div>
 <?php } ?>
 
-<table class="table" id="messages-table">
-    <?php if (empty($messages)) { ?>
-        <tr>
-            <td colspan="2" class="text-center">
-                <i class="ph ph-chat-circle text-muted"></i>
-                <?= lang('No messages', 'Keine Nachrichten') ?>
-            </td>
-        </tr>
-    <?php } else foreach ($messages as $message) {
-        $time = date('d.m.Y H:i', $message['created_at']);
-        $type = $types[$message['type']] ?? [
-            'en' => 'Unknown',
-            'de' => 'Unbekannt',
-            'icon' => 'question'
-        ];
-        // dump($message);
-    ?>
-        <tr id="message-<?= $message['id'] ?>" class="<?= ($message['read'] ?? false) ? 'read' : '' ?>">
-            <td class="w-50 text-center text-primary">
-                <i class="ph ph-<?= $type['icon'] ?> ph-fw ph-2x"></i>
-                <span>
-                    <?= lang($type['en'], $type['de']) ?>
-                </span>
-            </td>
-            <td>
-                <span class="text-muted">
-                    <i class="ph ph-clock text-muted"></i>
-                    <?= $time ?>
-                </span>
-                <br>
+<?php if (empty($messages)) { ?>
+    <div class="text-center">
+        <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-messages.png" alt="" class="sophie-img w-400">
+        <h2 class="mt-0"><?= lang('No messages', 'Keine Nachrichten') ?></h2>
+        <p><?= lang('You have no messages at the moment.', 'Du hast momentan keine Nachrichten.') ?></p>
+    </div>
 
-                <?= lang($message['en'], $message['de']) ?>
-                <div class="btn-toolbar justify-content-between">
-                    <?php if (isset($message['link'])) { ?>
-                        <a href="<?= ROOTPATH . $message['link'] ?>" class="btn primary small">
-                            <i class="ph ph-link"></i>
-                            <?= lang('View', 'Anzeigen') ?>
-                        </a>
-                    <?php } ?>
-
+<?php } else { ?>
+    <table class="table" id="messages-table">
+        <?php foreach ($messages as $message) {
+            $time = date('d.m.Y H:i', $message['created_at']);
+            $type = $types[$message['type']] ?? [
+                'en' => 'Unknown',
+                'de' => 'Unbekannt',
+                'icon' => 'question'
+            ];
+            // dump($message);
+        ?>
+            <tr id="message-<?= $message['id'] ?>" class="<?= ($message['read'] ?? false) ? 'read' : '' ?>">
+                <td class="w-50 text-center text-primary">
+                    <i class="ph ph-<?= $type['icon'] ?> ph-fw ph-2x"></i>
                     <span>
-                    <!-- mark as read -->
-                        <?php if (!$message['read']) { ?>
-                            <button class="btn primary small mark-as-read" type="button" onclick="markAsRead('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('Mark as read', 'Als gelesen markieren') ?>">
-                                <i class="ph ph-eye-closed"></i>
-                            </button>
-                        <?php } ?>
-                        <!-- delete message -->
-                        <button class="btn danger small" type="button" onclick="deleteMessage('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('Delete', 'Löschen') ?>">
-                            <i class="ph ph-trash"></i>
-                        </button>
+                        <?= lang($type['en'], $type['de']) ?>
                     </span>
-                </div>
-            </td>
-        </tr>
-    <?php } ?>
-</table>
+                </td>
+                <td>
+                    <span class="text-muted">
+                        <i class="ph ph-clock text-muted"></i>
+                        <?= $time ?>
+                    </span>
+                    <br>
+
+                    <?= lang($message['en'], $message['de']) ?>
+                    <div class="btn-toolbar justify-content-between">
+                        <?php if (isset($message['link'])) { ?>
+                            <a href="<?= ROOTPATH . $message['link'] ?>" class="btn primary small">
+                                <i class="ph ph-link"></i>
+                                <?= lang('View', 'Anzeigen') ?>
+                            </a>
+                        <?php } ?>
+
+                        <span>
+                            <!-- mark as read -->
+                            <?php if (!$message['read']) { ?>
+                                <button class="btn primary small mark-as-read" type="button" onclick="markAsRead('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('Mark as read', 'Als gelesen markieren') ?>">
+                                    <i class="ph ph-eye-closed"></i>
+                                </button>
+                            <?php } ?>
+                            <!-- delete message -->
+                            <button class="btn danger small" type="button" onclick="deleteMessage('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('Delete', 'Löschen') ?>">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        <?php } ?>
+
+    </table>
+<?php } ?>
 
 
 
