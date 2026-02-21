@@ -205,3 +205,11 @@ Route::get('/components/([A-Za-z0-9\-]*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/components/$path.php";
 });
+
+Route::get('/activity-fields', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/activity_fields.php";
+    $FIELDS = new ActivityFields();
+    JSON::ok(["fields" => $FIELDS->fields]);
+});
+

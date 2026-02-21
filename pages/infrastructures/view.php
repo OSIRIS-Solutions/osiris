@@ -291,7 +291,7 @@ if ($edit_perm) { ?>
         <tr>
             <td>
                 <span class="key"><?= lang('Link', 'Link') ?>: </span>
-                <a href="<?= htmlspecialchars($infrastructure['link']) ?>" target="_blank"><?= htmlspecialchars($infrastructure['link']) ?></a>
+                <a href="<?= e($infrastructure['link']) ?>" target="_blank"><?= e($infrastructure['link']) ?></a>
             </td>
         </tr>
         <?php endif; ?>
@@ -299,7 +299,7 @@ if ($edit_perm) { ?>
             <tr>
                 <td>
                     <span class="key"><?= lang('Contact Email', 'Kontakt E-Mail') ?>: </span>
-                    <a href="mailto:<?= htmlspecialchars($infrastructure['contact_email']) ?>"><?= htmlspecialchars($infrastructure['contact_email']) ?></a>
+                    <a href="mailto:<?= e($infrastructure['contact_email']) ?>"><?= e($infrastructure['contact_email']) ?></a>
                 </td>
             </tr>
         <?php endif; ?>
@@ -618,7 +618,7 @@ if ($edit_perm) { ?>
                                             <?= !empty($stat['updated_by']) ? ' | ' . $stat['updated_by'] : '' ?>
                                         </small>
                                     </td>
-                                    <td><?= htmlspecialchars($stat['comment'] ?? '') ?></td>
+                                    <td><?= e($stat['comment'] ?? '') ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>

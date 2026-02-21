@@ -135,7 +135,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 if ($topicsEnabled && !empty($infra['topics'])) {
                                     $topics = '<span class="topic-icons">';
                                     foreach ($infra['topics'] as $topic) {
-                                        $topics .= '<a href="' . ROOTPATH . '/topics/view/' . htmlspecialchars($topic) . '" class="topic-icon topic-' . htmlspecialchars($topic) . '"></a> ';
+                                        $topics .= '<a href="' . ROOTPATH . '/topics/view/' . e($topic) . '" class="topic-icon topic-' . e($topic) . '"></a> ';
                                     }
                                     $topics .= '</span>';
                                 }

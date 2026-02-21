@@ -68,7 +68,7 @@ class Organization
             $type = 'image/' . $img['type'];
         }
         $img = $img['data']->getData();
-        return "<img src='data:$type;base64,$img' alt='" . htmlspecialchars($alt) . "' class='$class'>";
+        return "<img src='data:$type;base64,$img' alt='" . e($alt) . "' class='$class'>";
     }
 
     public static function printLogo($org, $class = "org-logo", $alt = "")

@@ -75,7 +75,7 @@ if (empty($reports)) {
                         <?php foreach ($vars as $var) {  ?>
                             <div class="form-group">
                                 <label for="var[<?= ($var['key']) ?>]"><?= ($var['label'] ?? $var['key']) ?></label>
-                                <input type="<?= ($var['type'] ?? 'text') ?>" class="form-control" value="<?= htmlspecialchars($_GET['var'][$var['key']] ?? ($var['default'] ?? '')) ?>" name="var[<?= ($var['key']) ?>]">
+                                <input type="<?= ($var['type'] ?? 'text') ?>" class="form-control" value="<?= e($_GET['var'][$var['key']] ?? ($var['default'] ?? '')) ?>" name="var[<?= ($var['key']) ?>]">
                             </div>
                         <?php } ?>
                     </fieldset>

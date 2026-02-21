@@ -29,10 +29,10 @@
                     <div class="col-md-6">
                         <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                         <div class="form-group my-10">
-                            <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= htmlspecialchars($con['title_de'] ?? '') ?>" placeholder="Title">
+                            <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
                         </div>
                         <div class="form-group mb-0">
-                            <textarea name="values[research][<?= $i ?>][info_de]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)"><?= htmlspecialchars($con['info_de'] ?? '') ?></textarea>
+                            <textarea name="values[research][<?= $i ?>][info_de]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)"><?= e($con['info_de'] ?? '') ?></textarea>
                             <small class="text-muted">
                                 <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">
                                     <?= lang('Markdown supported', 'Markdown unterstützt') ?> <i class="ph ph-info"></i>
@@ -44,10 +44,10 @@
                     <div class="col-md-6">
                         <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                         <div class="form-group my-10">
-                            <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= htmlspecialchars($con['title'] ?? '') ?>" placeholder="Title" required>
+                            <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
                         </div>
                         <div class="form-group mb-0">
-                            <textarea name="values[research][<?= $i ?>][info]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)" required><?= htmlspecialchars($con['info'] ?? '') ?></textarea>
+                            <textarea name="values[research][<?= $i ?>][info]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)" required><?= e($con['info'] ?? '') ?></textarea>
                             <small class="text-muted">
                                 <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">
                                     <?= lang('Markdown supported', 'Markdown unterstützt') ?> <i class="ph ph-info"></i>

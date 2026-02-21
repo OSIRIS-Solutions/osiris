@@ -1,6 +1,87 @@
 
+<time datetime="2026-02-16">16.02.2026</time>
+<a class="anchor" href="#build-20260216" id="build-20260216"></a>
 
-<time datetime="2026-01-18">01.02.2026</time>
+Dieses Update liefert eine Reihe von wichtigen Verbesserungen an der API, robustere Datenverarbeitung im Backend sowie mehr Flexibilität und Fehlerresilienz in der Oberfläche.
+
+### API & Daten-Konsistenz
+- Neues /activity-fields API-Endpoint ergänzt — liefert alle Aktivitäts-Felder für Frontend-Use-Cases. 
+- Teaching-API gibt nun immer eine String-ID zurück und löst zugehörige Organisationsnamen auf, für klare API-Antworten. 
+
+### UI & Filter-Verbesserungen
+- Jahr-Filter in Download-Funktion erweitert: nun flexibler von 1900 bis inklusive nächstes Jahr. 
+- Anzeige von Einheiten auf Aktivitätsseiten verbessert — keine Fehler mehr, wenn Feld fehlt. 
+
+### Backend-Fixes & Datenvalidierung
+- DOI- und PubMed-Lookups jetzt case-insensitive, robuster bei unterschiedlichen Schreibweisen. 
+- Version-Checks mit version_compare verbessert, um Versionsstring-Mismatch zu vermeiden. 
+- DOI-Werte werden immer als lowercase gespeichert für konsistente Datensätze. 
+- Smart-Render-CRON-Route wurde sichergestellt, dass immer korrekte Initialisierung geladen wird. 
+
+### Weitere Detailverbesserungen
+- CSS-Variable für Affiliations-Klasse immer korrekt zitiert (gültiges CSS). 
+- Profilseite: Kalendereintrag-Link aktualisiert auf richtigen Endpunkt. 
+- Template-Feld-Checks im Backend leicht gelockert für mehr Flexibilität. 
+- Bilddaten im Portfolio werden nicht doppelt kodiert — effizientere Darstellung. 
+- Versions-Build-Nummer aktualisiert. 
+
+
+<time datetime="2026-02-10">10.02.2026</time>
+<a class="anchor" href="#version-1.8.1" id="version-1.8.1"></a>
+
+## Version 1.8.1
+
+Dieses Update bringt wichtige Sicherheitsverbesserungen, viele kleine Bugfixes sowie spürbare Verbesserungen in Einstellungen, Organisationen, Reports und im Admin-Bereich.
+
+### Sicherheit & Stabilität
+
+Es wurde ein kritisches Problem behoben, durch das Nutzer:innen ohne Bearbeitungsrechten für Nutzer:innenprofile auch die Profile anderer Nutzer:innen bearbeiten und sogar inaktivieren oder löschen konnten. Wir entschuldigen uns für dieses Problem und bedanken uns bei dem OSIRIS-Nutzer Jochen, der uns darauf aufmerksam gemacht hat [#408](https://github.com/OSIRIS-Solutions/osiris/issues/408).
+
+- Einheitliches Escaping von Nutzereingaben auf Portal-Seiten (Personen, Infrastrukturen, Einheiten, Topics) zur besseren Absicherung gegen fehlerhafte oder manipulierte Inhalte (Fixes #404)
+- Verbesserte Fehlerbehandlung bei Datei-Uploads inkl. Maximalgrößen-Validierung (#394)
+- Upload-Fehler und Erfolgsmeldungen werden jetzt korrekt gerendert
+- Passwort-Reset für Gastaccounts mit Token-Validierung implementiert
+
+
+### Design, Einstellungen & UI
+- Neue Schriftarten-Optionen inkl. Header-Font in den Design-Einstellungen (#395)
+- Lange Links werden jetzt teilweise automatisch gekürzt
+- Beispiel-Button (nicht funktionsfähig) entfernt
+
+
+### Organisationen & Kollaborationen
+- Häufig genutzte Organisationen werden jetzt auch in Aktivitäten vorgeschlagen
+- Organisationen können jetzt mit URL gespeichert werden
+- „Organisation erstellen“-Button entfernt (war nicht funktionsfähig) (#393)
+- Alle Projekt-Kollaborationen können jetzt entfernt werden (#401)
+- Anzeige des Scopes in der Projektansicht wieder aktiviert (#407)
+
+
+### Reports & Editor
+- Report Builder:
+  - Blöcke lassen sich jetzt wieder duplizieren (#391)
+  - Tabellen-Aggregationen robuster (Strings werden korrekt behandelt) (#392)
+  - Mehr Styling-Optionen (fett, Links, Bilder)
+  - Standardfilter ist jetzt leer (besseres Startverhalten in Übersichten)
+- Quill-Editor:
+  - Bessere Behandlung von Leerzeilen und Mehrzeiligkeit (#387)
+- Validierung:
+  - Leere Strings und Zeilenumbrüche werden korrekt behandelt (#403)
+
+
+### API, Rendering & Backend
+- Neuer „Smart Render“-Endpoint zum Nachrendern noch nicht gerenderter Inhalte (z. B. extern hinzugefügte Aktivitäten)
+- Verbesserte getAuthors-Logik für dynamische Felder und API-Suche (inkl. Editor:innen & Supervisor:innen) (#399)
+
+### Kleinere Fixes
+- Bestätigungsdialog beim Löschen von Custom Fields (#389) und bessere damit zusammenhängende User Experience
+- Text-Handling in Formularen robuster gemacht
+- Diverse kleine UI- und Anzeigeprobleme behoben
+
+
+----
+
+<time datetime="2026-02-01">01.02.2026</time>
 <a class="anchor" href="#version-1.8.0" id="version-1.8.0"></a>
 
 ## Version 1.8.0

@@ -310,14 +310,14 @@ $active = function ($field) use ($data_fields) {
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
                                 <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= htmlspecialchars($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= e($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
                                 <?php if (in_array('position', $ldap_fields)) {
                                     echo $ldap_msg;
                                 } ?>
                             </div>
                             <div class="col-md-6">
                                 <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= htmlspecialchars($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
+                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= e($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
                                 <?php if (in_array('position', $ldap_fields)) {
                                     echo $ldap_msg;
                                 } ?>

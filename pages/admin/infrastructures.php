@@ -84,7 +84,7 @@ if (!is_null($data)) {
                                     </div>
                                 </td>
                                 <td>
-                                    <b><?= htmlspecialchars($field['name']) ?></b>
+                                    <b><?= e($field['name']) ?></b>
                                 </td>
 
                             </tr>

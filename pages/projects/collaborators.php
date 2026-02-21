@@ -240,18 +240,21 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                 $org = $osiris->organizations->findOne(['_id' => $con['organization']]);
                 if (empty($org)) { ?>
                     <tr>
-                        <td colspan="3">
+                        <td colspan="2">
                             <span class="text-danger">
                                 <i class="ph ph-warning-circle"></i>
-                                <b><?= htmlspecialchars($con['name'] ?? $con['organization']) ?></b>
+                                <b><?= e($con['name'] ?? $con['organization']) ?></b>
                                 <?= lang('Organization not found. It might have been deleted.', 'Organisation nicht gefunden. Sie wurde möglicherweise gelöscht.') ?>
                             </span>
                         </td>
+                        <td>
+                            <a class="text-danger my-10" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
+                        </td>
                     </tr>
-                    <?php
+                <?php
                     continue;
                 }
-            ?>
+                ?>
                 <tr id="collab-<?= $i ?>">
                     <td>
                         <?= $org['name'] ?? '' ?>

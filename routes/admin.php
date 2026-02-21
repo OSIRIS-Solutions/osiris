@@ -607,7 +607,7 @@ Route::post('/crud/admin/general', function () {
 
 
     if (isset($_FILES["logo"])) {
-        $filename = htmlspecialchars(basename($_FILES["logo"]["name"]));
+        $filename = e(basename($_FILES["logo"]["name"]));
         $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["logo"]["size"];
 
@@ -1120,7 +1120,7 @@ Route::post('/crud/admin/guest-account/update', function () {
         ]]
     );
 
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich aktualisiert.");
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
@@ -1139,7 +1139,28 @@ Route::post('/crud/admin/guest-account/delete', function () {
         ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
         ['$pull' => ['roles' => 'guest']]
     );
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . htmlspecialchars($_POST['username']) . "\">" . htmlspecialchars($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
+    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/guest-account");
+    die();
+});
+
+/**
+ * crud/admin/guest-account/generate-link
+ * Generate a link for changing the passwort 
+ * of the guest account that is valid for 24h
+ */
+Route::post('/crud/admin/guest-account/generate-link', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('user.synchronize')) die('You have no permission to be here.');
+    if (!isset($_POST['username'])) die("no username given");
+    $token = bin2hex(random_bytes(16));
+    $osiris->guestAccounts->updateOne(
+        ['username' => $_POST['username']],
+        ['$set' => ['reset_token' => $token, 'reset_token_valid_until' => date('Y-m-d H:i:s', time() + 24 * 60 * 60)]]
+    );
+    $link = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . "://" . ($_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH . "/reset-guest-password?token=$token";
+    $_SESSION['msg'] = lang("Password reset link for <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a>: <a href=\"$link\">$link</a>", "Passwort-Zurücksetzen Link für <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a>: <a href=\"$link\">$link</a>");
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();

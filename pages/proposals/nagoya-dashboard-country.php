@@ -12,8 +12,8 @@ $projectCount = count($projectsForCountry);
 <h1 class="mb-3">
     <i class="ph-duotone ph-globe-stand"></i>
     <?= lang('ABS overview for', 'ABS-Übersicht für') ?>
-    <?= htmlspecialchars($countryName) ?>
-    <span class="text-muted font-size-14">(<?= htmlspecialchars($code) ?>)</span>
+    <?= e($countryName) ?>
+    <span class="text-muted font-size-14">(<?= e($code) ?>)</span>
 </h1>
 
 <a href="<?= ROOTPATH ?>/nagoya"><i class="ph ph-arrow-left"></i> <?= lang('Back to dashboard', 'Zurück zum Dashboard') ?></a>
@@ -150,10 +150,10 @@ $projectCount = count($projectsForCountry);
                             <tr>
                                 <td class="font-size-12">
                                     <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
-                                        <strong><?= htmlspecialchars($p['name'] ?? '') ?></strong>
+                                        <strong><?= e($p['name'] ?? '') ?></strong>
                                     </a><br>
                                     <span class="text-muted">
-                                        <?= htmlspecialchars($p['id'] ?? '') ?>
+                                        <?= e($p['id'] ?? '') ?>
                                     </span>
                                 </td>
                                 <td class="font-size-12">
@@ -251,10 +251,10 @@ $projectCount = count($projectsForCountry);
                             <tr>
                                 <td>
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $idStr ?>/<?= urlencode($c['id'] ?? '') ?>">
-                                        <?= htmlspecialchars($p['name'] ?? '') ?>
+                                        <?= e($p['name'] ?? '') ?>
                                     </a>
                                 </td>
-                                <td><?= htmlspecialchars($name ?: lang('Unnamed', 'Unbenannt')) ?></td>
+                                <td><?= e($name ?: lang('Unnamed', 'Unbenannt')) ?></td>
                                 <td><span class="<?= $statusClass ?>"><?= $statusLabel ?></span></td>
                                 <td>
                                     <?php if ($docCount > 0): ?>

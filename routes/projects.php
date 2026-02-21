@@ -1050,8 +1050,8 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
 Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) die("no values given");
-    $values = $_POST['values'];
+    
+    $values = $_POST['values'] ?? [];
 
     // get project
     $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);

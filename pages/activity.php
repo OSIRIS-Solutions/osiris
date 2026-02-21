@@ -144,9 +144,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
     }
     ?>
     <?php if (!empty($wf) && !empty($progress)): ?>
-        <a href="#workflow-modal" id="wf-mini" class="<?= htmlspecialchars($barState) ?> <?= !empty($actionableIds) ? 'has-action' : '' ?>" style="--workflow-width: <?= count($progress) * 5 ?>rem;">
-            <b><?= htmlspecialchars($tpl['name'] ?? $wf['workflow_id']) ?></b>
-            <div class="track <?= htmlspecialchars($barState) ?>">
+        <a href="#workflow-modal" id="wf-mini" class="<?= e($barState) ?> <?= !empty($actionableIds) ? 'has-action' : '' ?>" style="--workflow-width: <?= count($progress) * 5 ?>rem;">
+            <b><?= e($tpl['name'] ?? $wf['workflow_id']) ?></b>
+            <div class="track <?= e($barState) ?>">
                 <div class="tick"></div>
                 <?php foreach ($progress as $i => $s):
                     $pct = $total > 1 ? ($i / ($total - 1)) * 100 : 0; // dot-position
@@ -161,7 +161,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                         $cls = 'future';
                     }
                 ?>
-                    <div class="dot <?= $cls ?>" style="left: <?= round($pct, 2) ?>%;" title="<?= htmlspecialchars($s['label']) ?>">
+                    <div class="dot <?= $cls ?>" style="left: <?= round($pct, 2) ?>%;" title="<?= e($s['label']) ?>">
                         <?php if ($s['state'] === 'approved'): ?><i class="ph ph-check" style="font-size:11px"></i>
                         <?php elseif ($s['id'] === $rejectedStep): ?><i class="ph ph-x" style="font-size:11px"></i>
                         <?php endif; ?>
@@ -174,7 +174,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
         <?php if ($isRejected && $user_activity) { ?>
             <div class="alert info m-20">
                 <?= lang('Your activity has been rejected for the following reason:', 'Ihre Aktivität wurde aus folgendem Grund abgelehnt:') ?>
-                <pre class="m-0 text-primary"><?= htmlspecialchars($wf['rejectedDetails']['comment'] ?? '') ?></pre>
+                <pre class="m-0 text-primary"><?= e($wf['rejectedDetails']['comment'] ?? '') ?></pre>
 
                 <?= lang('You can update your activity and resubmit it for review.', 'Sie können Ihre Aktivität aktualisieren und erneut zur Überprüfung einreichen.') ?>
                 <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-reply/<?= $id ?>" method="post">
@@ -194,7 +194,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     <a href="#close-modal" class="close" role="button" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h5 class="title text-center"><?= htmlspecialchars($tpl['name'] ?? $wf['workflow_id']) ?></h5>
+                    <h5 class="title text-center"><?= e($tpl['name'] ?? $wf['workflow_id']) ?></h5>
 
                     <div class="quality-control" id="quality-control" style="--workflow-width: <?= count($progress ?? []) * 14 ?>rem">
                         <?php if (!$wf): ?>
@@ -221,7 +221,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                     }
                                     ?>
                                     <div class="wf-step <?= $isCurrent ? 'current' : '' ?> <?= $cls ?>"
-                                        data-step-id="<?= htmlspecialchars($s['id']) ?>"
+                                        data-step-id="<?= e($s['id']) ?>"
                                         data-index="<?= intval($s['index']) ?>"
                                         data-required="<?= !empty($s['required']) ? '1' : '0' ?>"
                                         <?= ($orgScope === 'same_org_only') ? 'title="' . lang('Restricted to reviewers from the same organizational unit', 'Nur Prüfer*innen aus der gleichen Organisationseinheit') . '"' : '' ?>>
@@ -232,7 +232,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                                 <i class="ph ph-x wf-icon"></i>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="wf-step-label"><?= htmlspecialchars($s['label']) ?></div>
+                                        <div class="wf-step-label"><?= e($s['label']) ?></div>
                                     </div>
                                     <?php if ($i < count($progress) - 1): ?>
                                         <div class="wf-line"></div>
@@ -243,12 +243,12 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                             <?php if (!empty($actionableIds)): ?>
                                 <div class="wf-actions" id="wf-actions">
                                     <?php foreach ($actionableIds as $sid): ?>
-                                        <?php $lbl = htmlspecialchars($tplById[$sid]['label'] ?? $sid); ?>
+                                        <?php $lbl = e($tplById[$sid]['label'] ?? $sid); ?>
                                         <div>
-                                            <button class="btn text-success border-success btn-approve" data-step-id="<?= htmlspecialchars($sid) ?>">
+                                            <button class="btn text-success border-success btn-approve" data-step-id="<?= e($sid) ?>">
                                                 <i class="ph ph-check"></i> <?= lang('Approve', 'Freigeben') ?>: <?= $lbl ?>
                                             </button>
-                                            <button class="btn text-danger border-danger btn-reject" data-step-id="<?= htmlspecialchars($sid) ?>">
+                                            <button class="btn text-danger border-danger btn-reject" data-step-id="<?= e($sid) ?>">
                                                 <i class="ph ph-x"></i> <?= lang('Reject', 'Zurückweisen') ?>
                                             </button>
                                         </div>
@@ -288,7 +288,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                             <?= date('d.m.Y', strtotime($wf['rejectedDetails']['at'] ?? '')); ?>
                                         </div>
                                         <div class="mt-5">
-                                            <?= nl2br(htmlspecialchars($wf['rejectedDetails']['comment'] ?? '')); ?>
+                                            <?= nl2br(e($wf['rejectedDetails']['comment'] ?? '')); ?>
                                         </div>
                                     </div>
                                     <?php if (!empty($wf['rejectedDetails']['reply'])) { ?>
@@ -298,7 +298,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                                 <?= date('d.m.Y', strtotime($wf['rejectedDetails']['reply']['at'] ?? '')); ?>
                                             </div>
                                             <div class="mt-5">
-                                                <?= nl2br(htmlspecialchars($wf['rejectedDetails']['reply']['comment'] ?? '')); ?>
+                                                <?= nl2br(e($wf['rejectedDetails']['reply']['comment'] ?? '')); ?>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -1002,7 +1002,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
         <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
 
         <div class="box padded overflow-x-scroll">
-            <pre><?= htmlspecialchars(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
+            <pre><?= e(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
         </div>
 
     </section>
@@ -1451,7 +1451,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                             </tr>
                         </thead>
 
-                        <tbody id="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                        <tbody id="<?= e($role) ?>">
                             <?php foreach ($authors as $i => $author):
 
                                 // --- Name "Last, First" (inline; used once) ---
@@ -1468,18 +1468,18 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                 <tr class="author-row">
                                     <td class="text-nowrap">
                                         <?php if ($hasUser): ?>
-                                            <a href="<?= ROOTPATH ?>/profile/<?= htmlspecialchars($author['user'], ENT_QUOTES) ?>">
-                                                <?= htmlspecialchars($name) ?>
+                                            <a href="<?= ROOTPATH ?>/profile/<?= e($author['user']) ?>">
+                                                <?= e($name) ?>
                                             </a>
                                         <?php else: ?>
-                                            <?= htmlspecialchars($name) ?>
+                                            <?= e($name) ?>
                                         <?php endif; ?>
 
                                         <?php if (!empty($author['orcid'])): ?>
-                                            <a href="https://orcid.org/<?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>"
+                                            <a href="https://orcid.org/<?= e($author['orcid']) ?>"
                                                 target="_blank" rel="noopener"
                                                 data-toggle="tooltip"
-                                                data-title="ORCID: <?= htmlspecialchars($author['orcid'], ENT_QUOTES) ?>">
+                                                data-title="ORCID: <?= e($author['orcid']) ?>">
                                                 <img loading="lazy" decoding="async" width="16" height="16"
                                                     class="orcid-img" style="width:16px;"
                                                     src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID">
@@ -1531,7 +1531,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                                                     ) ?>
                                                                 </div>
                                                                 <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
-                                                                    <input type="hidden" name="role" value="<?= htmlspecialchars($role, ENT_QUOTES) ?>">
+                                                                    <input type="hidden" name="role" value="<?= e($role) ?>">
                                                                     <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                     <button class="btn block small" type="submit">
@@ -1552,7 +1552,7 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                                                         <i class="ph ph-users-three"></i>
                                                     </span>
                                                     <?php foreach ($author['units'] as $unit):
-                                                        $u = htmlspecialchars((string)$unit, ENT_QUOTES);
+                                                        $u = e((string)$unit);
                                                     ?>
                                                         <a class="author-unit" href="<?= ROOTPATH ?>/groups/view/<?= $u ?>">
                                                             <?= $u ?>
@@ -1614,7 +1614,8 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                 <table class="table unit-table w-full">
                     <tbody>
                         <?php
-                        if (!empty($units)) {
+                        if (!empty($doc['units'] ?? [])) {
+                            $units = $doc['units'];
                             $hierarchy = $Groups->getPersonHierarchyTree($units);
                             $tree = $Groups->readableHierarchy($hierarchy);
 
@@ -2105,8 +2106,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
-                            <input type="file" id="upload-file" name="file" class="custom-file-input" required>
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
                             <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                            <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                     </div>
                     <input type="hidden" name="values[type]" value="activities">
@@ -2127,23 +2129,9 @@ $documents = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)
                     </div>
                     <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
                 </form>
-                <!-- <div class="box padded">
-                <form action="<?= ROOTPATH ?>/crud/activities/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
-                    <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                    <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
-                        <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
-                        <br><small class="text-danger">Max. 16 MB.</small>
-                    </div>
-                    <button class="btn">
-                        <i class="ph ph-upload"></i>
-                        Upload
-                    </button>
-                </form>
-            </div> -->
 
                 <script>
-                    var uploadField = document.getElementById("file-input");
+                    var uploadField = document.getElementById("upload-file");
 
                     uploadField.onchange = function() {
                         if (this.files[0].size > 16777216) {

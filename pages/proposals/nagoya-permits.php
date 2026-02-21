@@ -144,7 +144,7 @@ $canAddNotes = true; // later
                                     </a>
 
                                     <?php if ($Settings->hasPermission('nagoya.view')): ?>
-                                        <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $project['_id'] ?>#country-<?= htmlspecialchars($cid) ?>"
+                                        <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $project['_id'] ?>#country-<?= e($cid) ?>"
                                             class="btn">
                                             <i class="ph ph-scales"></i>
                                             <?= lang('Open ABS details', 'ABS-Details öffnen') ?>
@@ -182,7 +182,7 @@ $canAddNotes = true; // later
                                             ?>
                                                 <tr>
                                                     <td>
-                                                        <strong><?= htmlspecialchars($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
+                                                        <strong><?= e($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
                                                         <?php if (!empty($p['comment'])): ?>
                                                             <div class="font-size-12 text-muted">
                                                                 <?= get_preview($p['comment'], 50) ?>
@@ -216,7 +216,7 @@ $canAddNotes = true; // later
                                                         <span class="<?= $statusClass ?>"><?= $statusLabel ?></span>
                                                     </td>
                                                     <td class="small">
-                                                        <?= htmlspecialchars($identifier ?: '–') ?>
+                                                        <?= e($identifier ?: '–') ?>
                                                     </td>
                                                     <td class="small">
                                                         <?php if ($docCount > 0): ?>
@@ -283,11 +283,11 @@ $canAddNotes = true; // later
                         <tr>
                             <td>
                                 <div class="d-flex justify-content-between mb-5">
-                                    <strong><i class="ph-duotone ph-user text-primary"></i> <?= htmlspecialchars($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
+                                    <strong><i class="ph-duotone ph-user text-primary"></i> <?= e($DB->getNameFromId($note['by'] ?? '') ?: ($note['by'] ?? '')) ?></strong>
                                     <span class="text-muted"><?= !empty($note['at']) ? format_date($note['at']) : '' ?></span>
                                 </div>
                                 <div class="">
-                                    <?= nl2br(htmlspecialchars($note['message'] ?? '')) ?>
+                                    <?= nl2br(e($note['message'] ?? '')) ?>
                                 </div>
                             </td>
                         </tr>

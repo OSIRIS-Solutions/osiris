@@ -784,7 +784,25 @@ Route::get('/api/teaching', function () {
         ]];
     }
     $result = $osiris->teaching->find($filter)->toArray();
-    echo return_rest($result, count($result));
+    $teaching = [];
+    foreach ($result as $doc) {
+        $aff = $doc['affiliation'] ?? '';
+        if (DB::is_ObjectID($aff)) {
+            $aff = $osiris->organizations->findOne(['_id' => DB::to_ObjectID($aff)], ['projection' => ['name' => 1]]);
+            $aff = $aff['name'] ?? '';
+        }
+        $t = [
+            'id' => strval($doc['_id']),
+            'title' => $doc['title'] ?? '',
+            'module' => $doc['module'] ?? '',
+            'semester' => $doc['semester'] ?? '',
+            'contact_person' => $DB->getNameFromId($doc['contact_person'] ?? '') ?? '',
+            'affiliation' => $aff
+        ];
+        $teaching[] = $t;
+    }
+
+    echo return_rest($teaching, count($teaching));
 });
 
 
@@ -1067,7 +1085,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         $columns = $_GET['columns'];
         foreach ($columns as $c) {
             if ($c == 'id') continue;
-            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'title', 'departments'])) {
+            if ($type == 'activities' && in_array($c, ['web', 'print', 'icon', 'type', 'subtype', 'authors', 'editors', 'supervisors', 'title', 'departments'])) {
                 $projection[$c] = '$rendered.' . $c;
                 continue;
             }

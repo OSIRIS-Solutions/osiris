@@ -62,7 +62,7 @@ function val($index, $default = '')
 {
     $val = $GLOBALS['form'][$index] ?? $default;
     if (is_string($val)) {
-        return htmlspecialchars($val);
+        return e($val);
     }
     return $val;
 }
@@ -555,7 +555,7 @@ console.log(TYPES);
 
 <div class="box add-form" style="display:none" id="publication-form">
     <div class="content">
-        <button class="btn osiris small float-right" onclick="$('#publication-form').toggleClass('show-examples')"><?= lang('Examples', 'Beispiele') ?></button>
+        <!-- <button class="btn osiris small float-right" onclick="$('#publication-form').toggleClass('show-examples')"><?= lang('Examples', 'Beispiele') ?></button> -->
 
         <?php if (!empty($form) && isset($_GET['epub'])) { ?>
             <div class="alert signal mb-20">

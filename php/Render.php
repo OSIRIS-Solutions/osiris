@@ -1,11 +1,11 @@
 <?php
 include_once 'init.php';
-function renderActivities($filter = [])
+function renderActivities($filter = [], $return_updated = false)
 {
     // global $Groups;
     global $Settings;
     $Format = new Document(true);
-
+    $updated = 0;
     $renderLang = $Settings->get('render_language', lang('en', 'de'));
     $DB = new DB;
     $cursor = $DB->db->activities->find($filter);
@@ -111,10 +111,16 @@ function renderActivities($filter = [])
         $values['rendered']['quarter'] = $quarter;
         $values['rendered']['active'] = $active;
 
-        $DB->db->activities->updateOne(
+        $update = $DB->db->activities->updateOne(
             ['_id' => $id],
             ['$set' => $values]
         );
+        if ($update->getModifiedCount() > 0) {
+            $updated++;
+        }
+    }
+    if ($return_updated) {
+        return $updated;
     }
     // return last element in case that only one id has been rendered
     return $rendered;

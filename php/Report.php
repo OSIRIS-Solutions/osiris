@@ -192,7 +192,7 @@ class Report
             }
         } catch (Exception $e) {
             error_log("Report format error: " . $e->getMessage());
-            return "<div class='alert danger'><strong>Report Error:</strong> " . htmlspecialchars($e->getMessage()) . "</div>";
+            return "<div class='alert danger'><strong>Report Error:</strong> " . e($e->getMessage()) . "</div>";
         }
     }
 
@@ -205,10 +205,10 @@ class Report
     public function getText($item)
     {
         $text = $item['text'] ?? '';
+        // make sure that img and br tags are self-closing for HTML compatibility
+        $text = str_replace("<br>", "<br />", $text);
+        $text = preg_replace('/<img([^>]+)(?<!\/)>/', '<img$1 width="100%" />', $text);
         return $text;
-        // if (empty($text)) return '';
-        // $Parsedown = new Parsedown();
-        // return $Parsedown->line($text);
     }
 
     /**
@@ -440,7 +440,7 @@ class Report
             $table[] = [$label, 'Count'];
             foreach ($data as $row) {
                 $activity = $row['activity'];
-                if (!is_string($activity)) {
+                if (is_iterable($activity)) {
                     $activity = DB::doc2Arr($activity)[0] ?? '';
                 }
                 if (empty($activity)) {
@@ -456,10 +456,10 @@ class Report
             foreach ($data as $row) {
                 $g1 = $row['activity'][0];
                 $g2 = $row['activity'][1];
-                if (!is_string($g1)) {
+                if (is_iterable($g1)) {
                     $g1 = DB::doc2Arr($g1)[0] ?? '';
                 }
-                if (!is_string($g2)) {
+                if (is_iterable($g2)) {
                     $g2 = DB::doc2Arr($g2)[0] ?? '';
                 }
                 $activities[$g1][$g2] = $row['count'];

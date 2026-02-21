@@ -21,6 +21,19 @@ if (!function_exists('str_ends_with')) {
     }
 }
 
+/**
+ * Escape output for safe HTML rendering (attributes + text).
+ * Always use this when echoing user or DB content.
+ */
+function e($value): string
+{
+    return htmlspecialchars(
+        (string) ($value ?? ''),
+        ENT_QUOTES | ENT_SUBSTITUTE,
+        'UTF-8'
+    );
+}
+
 // helper functions for all CRUD methods
 function validateValues($values, $DB)
 {
@@ -40,6 +53,8 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $values[$key] = "10." . $value[1];
             }
+            // save as lowercase
+            $values[$key] = strtolower($value);
         } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;
@@ -135,6 +150,9 @@ function validateValues($values, $DB)
             // strip <p> tags
             $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
             $values[$key] = trim($values[$key]);
+            if ($values[$key] === '' || $values[$key] == '<br>' || $values[$key] == '<br/>') {
+                $values[$key] = null;
+            }
         } else if ($key === 'epub') {
             $values['epub-delay'] = endOfCurrentQuarter(true);
             // value is boolean
@@ -175,6 +193,9 @@ function validateValues($values, $DB)
             }
         } else if (is_string($value)) {
             $values[$key] = trim($value);
+            if ($values[$key] === '') {
+                $values[$key] = null;
+            }
         }
     }
 
@@ -289,14 +310,14 @@ function printMsg($msg = null, $type = 'info', $header = "default")
         }
     } elseif ($type == 'info') {
         $class = "primary";
-        if ($header == "default") {
-            $header = "";
-        }
     } elseif ($type == 'warning') {
         $class = "signal";
         if ($header == "default") {
             $header = lang("Warning", "Warnung");
         }
+    }
+    if ($header == "default") {
+        $header = "";
     }
     switch ($msg) {
 
@@ -377,7 +398,10 @@ function printMsg($msg = null, $type = 'info', $header = "default")
             break;
 
         default:
-            $text = str_replace("-", " ", $msg);
+            $text = $msg;
+            if (isset($_GET['msg']) && str_contains($_GET['msg'], '-')) {
+                $text = str_replace("-", " ", $msg);
+            }
             break;
     }
     if ($sessionMsg) {
@@ -680,7 +704,7 @@ function dump($element, $as_json = true)
         $element = $element->bsonSerialize();
     }
     if ($as_json) {
-        echo htmlspecialchars(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        echo e(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         if (!empty(json_last_error())) {
             var_dump(json_last_error_msg()) . PHP_EOL;
             var_export($element);

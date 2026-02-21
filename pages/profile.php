@@ -1063,7 +1063,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                                         <small class="btn small cursor-default">
                                                             <?= $days ?>
                                                         </small>
-                                                        <a class="btn small" href="<?= ROOTPATH ?>/conferences/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
+                                                        <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
                                                             <i class="ph ph-calendar-plus"></i>
                                                         </a>
                                                     </div>

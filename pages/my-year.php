@@ -101,7 +101,7 @@ foreach ($cursor as $doc) {
         'starting_time' => $starttime,
         'type' => $doc['type'],
         'id' => strval($doc['_id']),
-        'title' => htmlspecialchars(strip_tags($doc['rendered']['title'])),
+        'title' => e(strip_tags($doc['rendered']['title'])),
     ];
     $timeline[] = $event;
 }

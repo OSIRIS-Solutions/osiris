@@ -66,11 +66,11 @@ function buildNotificationMail($title, $html, $linkText, $linkUrl)
     $linkUrl = $_SERVER['HTTP_HOST'] . ROOTPATH . $linkUrl;
     return '
         <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2 style="color: #008083;">' . htmlspecialchars($title) . '</h2>
+            <h2 style="color: #008083;">' . e($title) . '</h2>
             ' . $html . '
             <p style="margin-top:20px;">
-                <a href="' . htmlspecialchars($linkUrl) . '" style="background-color: #f78104; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-                    ' . htmlspecialchars($linkText) . '
+                <a href="' . e($linkUrl) . '" style="background-color: #f78104; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                    ' . e($linkText) . '
                 </a>
             </p>
             <p style="font-size: 12px; color: #777; margin-top:40px;">Dies ist eine automatische Nachricht von OSIRIS. Bitte antworte nicht darauf.</p>
@@ -86,7 +86,7 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
         return $language === 'de' ? $de : $en;
     };
 
-    $username     = htmlspecialchars($user['displayname'] ?? $user['username'] ?? '');
+    $username     = e($user['displayname'] ?? $user['username'] ?? '');
     $issuesCount  = (int)($n['activity']['count'] ?? 0);
     $issuesList   = $n['activity']['values'] ?? [];
     $queueCount   = (int)($n['queue']['count'] ?? 0);
@@ -136,7 +136,7 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
                             <div style="font-weight:bold;color:#B61F29;margin-bottom:6px;"><?= $lang('Activity issues', 'Aktivitäts-Hinweise') ?> (<?= $issuesCount ?>)</div>
                             <ul style="margin:0 0 8px 18px;padding:0;color:#B61F29">
                                 <?php foreach ($issuesList as $it): ?>
-                                    <li><?= htmlspecialchars($it['name']) ?>: <strong><?= (int)$it['count'] ?></strong></li>
+                                    <li><?= e($it['name']) ?>: <strong><?= (int)$it['count'] ?></strong></li>
                                 <?php endforeach; ?>
                             </ul>
                             <a href="<?= $baseUrl ?>/issues" style="display:inline-block;padding:8px 12px;background:#B61F29;color:#fff;text-decoration:none;border-radius:.5rem;"><?= $lang('View all', 'Alle anzeigen') ?></a>
@@ -189,7 +189,7 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
         </div>
 
         <div style="background:#f3f4f6;color:#6b7280;font-size:12px;padding:10px 14px;text-align:center;">
-            OSIRIS • <?= htmlspecialchars($baseUrl ?? 'localhost') ?>
+            OSIRIS • <?= e($baseUrl ?? 'localhost') ?>
         </div>
     </div>
 <?php

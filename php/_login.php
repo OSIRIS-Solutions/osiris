@@ -32,7 +32,13 @@ function login($username, $password)
         if ($guest['success']) {
             return $guest;
         } else {
-            return $login; // return LDAP login failure message
+            if ($guest['code'] == 1) {
+                // if guest account not found or password incorrect, return LDAP error message
+                return $login;
+            } else {
+                // if guest account found but other error (e.g. expired), return guest error message
+                return $guest;
+            }
         }
     }
 }
@@ -41,25 +47,29 @@ function loginGuest($username, $password)
 {
     $DB = new DB();
     $osiris = $DB->db;
-    $return = array("msg" => '', "success" => false);
+    $return = array("msg" => '', "success" => false, 'code' => 0);
     
     // find user and check password
     $USER = $osiris->guestAccounts->findOne(['username' => $username]);
     if (empty($USER)) {
-        $return["msg"] = lang("Account not found or password incorrect.", "Account nicht gefunden oder Passwort falsch.");
+        $return["msg"] = lang("Guest-Account not found or password incorrect.", "Gast-Account nicht gefunden oder Passwort falsch.");
+        $return['code'] = 1;
         return $return;
     }
     if (!empty($USER['valid_until']) && $USER['valid_until'] < date('Y-m-d')) {
-        $return["msg"] = lang("Account has expired.", "Account ist abgelaufen.");
+        $return["msg"] = lang("Guest-Account has expired.", "Gast-Account ist abgelaufen.");
+        $return['code'] = 2;
         return $return;
     }
     if (empty($USER['password'])) {
-        $return["msg"] = lang("User has no password.", "Benutzer hat kein Passwort.");
+        $return["msg"] = lang("Guest-Account has no password. Please contact the administrator.", "Gast-Account hat kein Passwort. Bitte kontaktieren Sie den Administrator.");
+        $return['code'] = 3;
         return $return;
     }
     // check if password is correct
     if (!password_verify($password, $USER['password'])) {
-        $return["msg"] = lang("Login failed.", "Anmeldung fehlgeschlagen.");
+        $return["msg"] = lang("Guest-Account not found or password incorrect.", "Gast-Account nicht gefunden oder Passwort falsch.");
+        $return['code'] = 4;
         return $return;
     }
     $_SESSION['username'] = $username;

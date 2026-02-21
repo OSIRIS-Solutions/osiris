@@ -68,7 +68,7 @@ $name = $data['name'];
                         <?= lang($data['description'], $data['description_de'] ?? null); ?>
                     </div>
                     <?php if (isset($data['link'])) { ?>
-                        <a class="btn primary" href="<?= htmlspecialchars($data['link']) ?>" target="_blank" rel="noopener noreferrer">
+                        <a class="btn primary" href="<?= e($data['link']) ?>" target="_blank" rel="noopener noreferrer">
                             <i class="ph ph-globe"></i>
                             <?= lang('Visit website', 'Webseite besuchen') ?>
                         </a>
@@ -266,7 +266,7 @@ $name = $data['name'];
                             <tr>
                                 <td>
                                     <span class="key"><?= lang("Contact Email", "Kontakt E-Mail") ?></span>
-                                    <a href="mailto:<?= htmlspecialchars($data['contact_email']) ?>"><?= htmlspecialchars($data['contact_email']) ?></a>
+                                    <a href="mailto:<?= e($data['contact_email']) ?>"><?= e($data['contact_email']) ?></a>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -284,7 +284,7 @@ $name = $data['name'];
                             <tr>
                                 <td>
                                     <span class="key"><?= lang("Category", "Kategorie"); ?></span>
-                                    <?= htmlspecialchars($data['category']) ?>
+                                    <?= e($data['category']) ?>
                                 </td>
                             </tr>
 
@@ -292,7 +292,7 @@ $name = $data['name'];
                                 <tr>
                                     <td>
                                         <span class="key"><?= lang("Type", "Typ"); ?></span>
-                                        <?= htmlspecialchars($data['type']) ?>
+                                        <?= e($data['type']) ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -300,7 +300,7 @@ $name = $data['name'];
                                 <tr>
                                     <td>
                                         <span class="key"><?= lang("Access", "Zugang"); ?></span>
-                                        <?= htmlspecialchars($data['access']) ?>
+                                        <?= e($data['access']) ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>

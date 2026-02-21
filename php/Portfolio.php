@@ -75,7 +75,7 @@ class Portfolio extends Settings
             if ($img['ext'] == 'svg') {
                 $img['ext'] = 'svg+xml';
             }
-            return '<img src="data:image/' . $img['ext'] . ';base64,' . base64_encode($img['img']) . ' " class="' . $class . '" />';
+            return '<img src="data:image/' . $img['ext'] . ';base64,' . ($img['img']) . ' " class="' . $class . '" />';
         } else {
             $img_exist = file_exists(BASEPATH . "/img/users/{$user['username']}.jpg");
             if (!$img_exist) {
@@ -414,7 +414,7 @@ class Portfolio extends Settings
     <ul class="breadcrumb">';
         foreach ($items as $i => $el) {
             $isLast = ($i === count($items) - 1);
-            $name = htmlspecialchars($el['name'] ?? '', ENT_QUOTES);
+            $name = e($el['name'] ?? '');
             $url = $el['path'] ?? '#';
 
             if (!$isLast) {

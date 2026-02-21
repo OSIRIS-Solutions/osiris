@@ -51,7 +51,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
                 <?= $numGroups ?>
                 <?= lang('Sample collection(s)', 'Probensammlung(en)') ?>
                 <?php if ($nagoya_perm && !empty($review['comment'])): ?>
-                    · <?= htmlspecialchars($review['comment']) ?>
+                    · <?= e($review['comment']) ?>
                 <?php endif; ?>
                 <?php if ($permTotal > 0): ?>
                     <?= $permTotal ?> <?= lang('Permit(s)', 'Genehmigung(en)') ?>
@@ -77,8 +77,8 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
                             <i class="ph ph-dots-three-vertical"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
-                            <form action="<?= ROOTPATH ?>/crud/nagoya/remove-country/<?= htmlspecialchars($project['_id']) ?>" method="post" class="p-5">
-                                <input type="hidden" name="country_id" value="<?= htmlspecialchars($countryId) ?>">
+                            <form action="<?= ROOTPATH ?>/crud/nagoya/remove-country/<?= e($project['_id']) ?>" method="post" class="p-5">
+                                <input type="hidden" name="country_id" value="<?= e($countryId) ?>">
                                 <small class="text-muted">
                                     <?= lang('Removing this country will also delete all associated scope groups and permits.', 'Das Entfernen dieses Landes löscht auch alle zugehörigen Umfangsgruppen und Genehmigungen.') ?>
                                 </small>

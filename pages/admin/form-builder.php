@@ -509,9 +509,9 @@ $tagLabels = [
                         <?php foreach ($custom_fields as $field) { ?>
                             <li class="drag-item"
                                 data-type="custom"
-                                data-id="<?= htmlspecialchars($field['id']) ?>"
-                                data-label="<?= htmlspecialchars($field['name']) ?>"
-                                data-label-de="<?= htmlspecialchars($field['name_de'] ?? $field['name']) ?>">
+                                data-id="<?= e($field['id']) ?>"
+                                data-label="<?= e($field['name']) ?>"
+                                data-label-de="<?= e($field['name_de'] ?? $field['name']) ?>">
                                 <div class="d-flex justify-content-between">
                                     <span><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
                                     <a class="preview" href="#preview"><i class="ph ph-question"></i></a>
@@ -536,10 +536,10 @@ $tagLabels = [
                         ?>
                             <li class="drag-item"
                                 data-type="field"
-                                data-id="<?= htmlspecialchars($id) ?>"
+                                data-id="<?= e($id) ?>"
                                 data-label="<?= $def['label'] ?? $def['name'] ?>"
                                 data-label-de="<?= $def['label_de'] ?? null ?>"
-                                data-tags="<?= htmlspecialchars(implode(',', $def['tags'] ?? [])) ?>">
+                                data-tags="<?= e(implode(',', $def['tags'] ?? [])) ?>">
                                 <div class="d-flex justify-content-between">
                                     <span><?= lang($def['name'] ?? $id, $def['name_de'] ?? null) ?></span>
                                     <a class="preview" href="#preview"><i class="ph ph-question"></i></a>
@@ -686,7 +686,7 @@ $tagLabels = [
                             ?>
                                     <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?? 12 ?>"
                                         data-type="field"
-                                        data-id="<?= htmlspecialchars($it['id']) ?>"
+                                        data-id="<?= e($it['id']) ?>"
                                         data-props='<?= json_encode($props ?? []) ?>'>
                                         <div class="handle"></div>
                                         <div class="icon">
@@ -697,7 +697,7 @@ $tagLabels = [
                                             <?php } ?>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= htmlspecialchars($all[$it['id']]['name_de'] ?? $all[$it['id']]['name'] ?? $it['id']) ?></div>
+                                            <div class="title"><?= e($all[$it['id']]['name_de'] ?? $all[$it['id']]['name'] ?? $it['id']) ?></div>
                                             <div class="subtitle">
                                                 <code class="badge"><?= $it['id'] ?></code>
                                                 <?php if (!empty($props['required'])): ?>
@@ -729,7 +729,7 @@ $tagLabels = [
                                         </div>
                                         <div class="flex-fill">
                                             <div class="title"><?= lang('Header', 'Überschrift') ?></div>
-                                            <div class="subtitle"><?= strtoupper(htmlspecialchars($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                            <div class="subtitle"><?= strtoupper(e($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
                                         </div>
                                         <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
@@ -743,7 +743,7 @@ $tagLabels = [
                                         </div>
                                         <div class="flex-fill">
                                             <div class="title">Absatz</div>
-                                            <div class="subtitle"><?= htmlspecialchars(($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                            <div class="subtitle"><?= e(($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
                                         </div>
                                         <!-- <div class="actions ms-auto">
                                                 <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>

@@ -324,7 +324,7 @@ $count_wordcloud = 0;
                                     <span class="key"><?= lang('Synonyms', 'Synonyme') ?></span>
                                     <ul class="list m-0">
                                         <?php foreach ($synonyms as $synonym) { ?>
-                                            <li><?= htmlspecialchars($synonym) ?></li>
+                                            <li><?= e($synonym) ?></li>
                                         <?php } ?>
                                     </ul>
                                 </td>
