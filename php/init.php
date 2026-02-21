@@ -17,7 +17,7 @@ $osiris = $DB->db;
 $version = $osiris->system->findOne(['key' => 'version']);
 define('OSIRIS_DB_VERSION', $version['value'] ?? '0.0.0');
 
-if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
+if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     // just let the install script run
 } elseif (empty($version)) { ?>
     <!-- include css -->
@@ -46,7 +46,7 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
     </div>
 <?php
     die;
-} elseif (version_compare($version['value'], OSIRIS_VERSION, '<')) { 
+} elseif (version_compare($version['value'], OSIRIS_VERSION, '<')) {
     $allowed_routes = [
         '/migrate',
         '/migration-needed',
@@ -54,11 +54,24 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
         '/user/login'
     ];
     if (!in_array($_SERVER['REQUEST_URI'], $allowed_routes)) {
-      header('Location: ' . ROOTPATH . '/migration-needed');
-      die;
+        header('Location: ' . ROOTPATH . '/migration-needed');
+        die;
     }
-} 
+}
 
+
+// initialize user
+global $USER;
+$USER = $DB->initUser();
+// check if user is not empty, if not, log out
+if ($_SESSION['loggedin'] && (empty($USER) || !isset($USER['username']))) {
+    $_SESSION['username'] = null;
+    $_SESSION['loggedin'] = false;
+    $_SESSION['msg'] = lang('Your session has expired. Please log in again.', 'Deine Sitzung ist abgelaufen. Bitte logge dich erneut ein.');
+    $_SESSION['msg_type'] = "error";
+    header("Location: " . ROOTPATH . '/user/login');
+    die();
+}
 
 
 // Get organizational units (Groups)
@@ -78,10 +91,6 @@ if (!empty($Groups->tree)) {
 include_once BASEPATH . "/php/Categories.php";
 global $Categories;
 $Categories = new Categories();
-
-// initialize user
-global $USER;
-$USER = $DB->initUser();
 
 // Get all Settings
 global $Settings;
