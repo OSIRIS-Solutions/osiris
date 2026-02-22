@@ -262,7 +262,6 @@ if (array_sum($a) === 0) { ?>
             <div class="dropdown-menu w-300" aria-labelledby="dropdown-1">
                 <div class="content">
                     <form action="<?= ROOTPATH ?>/crud/activities/approve-all" method="post">
-                        <input type="hidden" name="user" value="<?= $user ?>">
                         <?= lang(
                             'I confirm that I am the author of <b>all</b> of the following publications and that my affiliation has always been the ' . $Settings->get('affiliation') . '.',
                             'Ich bestätige, dass ich Autor:in <b>aller</b> folgenden Publikationen bin und meine Affiliation dabei immer die ' . $Settings->get('affiliation') . ' war.'

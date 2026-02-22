@@ -9,12 +9,12 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
     if (! $Settings->featureEnabled('portal')) {
-        die('Portal feature is disabled.');
+        abortwith(500, lang('The Portfolio feature is not enabled.', 'Die Portfolio-Funktion ist nicht aktiviert.'), "/");
     }
     $Portfolio = new Portfolio(true);
     if ($section == 'portal') {
         if (!$Settings->featureEnabled('portal-public')) {
-            die('Public portal is disabled.');
+            abortwith(500, lang('Public portal is disabled.', 'Öffentliches Portal ist deaktiviert.'), "/");
         }
         $base = ROOTPATH . '/portal';
         $Portfolio->setBasePath($base);
@@ -75,10 +75,10 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 Route::get('/(preview|portal)/(info|activities|publications|persons|projects|groups|infrastructures|topics)', function ($section, $pagename) {
     include_once BASEPATH . "/php/init.php";
     if (! $Settings->featureEnabled('portal')) {
-        die('Portal feature is disabled.');
+        abortwith(500, lang('The Portfolio feature is not enabled.', 'Die Portfolio-Funktion ist nicht aktiviert.'), "/");
     }
     if (!$Settings->featureEnabled('portal-public')) {
-        die('Public portal is disabled.');
+        abortwith(500, lang('Public Portfolio is disabled.', 'Öffentliches Portfolio ist deaktiviert.'), "/");
     }
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(true);

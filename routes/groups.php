@@ -52,10 +52,7 @@ Route::get('/groups/view/(.*)', function ($id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage(lang("Unit", "Einheit"), '/groups');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang("Unit", "Einheit"), '/groups');
     }
     $breadcrumb = [
         ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
@@ -81,8 +78,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        header("Location: " . ROOTPATH . "/groups?msg=not-found");
-        die;
+        abortwith(404, lang("Unit", "Einheit"), '/groups');
     }
     $breadcrumb = [
         ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
@@ -104,7 +100,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
 
 Route::post('/crud/groups/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->groups;
 
     $values = validateValues($_POST['values'], $DB);
@@ -112,7 +108,9 @@ Route::post('/crud/groups/create', function () {
     // check if group name already exists:
     $group_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($group_exist)) {
-        header("Location: " . ROOTPATH . "/groups/new?msg=Group ID does already exist.");
+        $_SESSION['msg'] = lang("Group ID does already exist.", "Gruppen-ID existiert bereits.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/groups/new");
         die();
     }
 
@@ -153,7 +151,9 @@ Route::post('/crud/groups/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=success");
+        $_SESSION['msg'] = lang("Group created successfully.", "Gruppe erfolgreich erstellt.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $red);
         die();
     }
 
@@ -165,7 +165,7 @@ Route::post('/crud/groups/create', function () {
 
 Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
     $id = $DB->to_ObjectID($id);
 
@@ -292,7 +292,9 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Unit updated successfully.", "Einheit erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
         die();
     }
 
@@ -327,7 +329,9 @@ Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=deleted-" . $deletedCount);
+        $_SESSION['msg'] = lang("Unit deleted successfully.", "Einheit erfolgreich gelöscht.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -374,8 +378,9 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
         renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
     }
 
-
-    header("Location: " . ROOTPATH . "/groups/edit/$id?msg=added-person#section-personnel");
+    $_SESSION['msg'] = lang("Person added successfully.", "Person erfolgreich hinzugefügt.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
 
 Route::post('/crud/groups/removeperson/(.*)', function ($id) {
@@ -390,7 +395,9 @@ Route::post('/crud/groups/removeperson/(.*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     renderAuthorUnitsMany(['authors.user' => $_POST['username']]);
 
-    header("Location: " . ROOTPATH . "/groups/edit/$id?msg=removed-person#section-personnel");
+    $_SESSION['msg'] = lang("Person removed successfully.", "Person erfolgreich entfernt.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
 
 
@@ -409,8 +416,9 @@ Route::post('/crud/groups/editorperson/(.*)', function ($id) {
         ]
     );
 
-    dump($updateResult);
-    header("Location: " . ROOTPATH . "/groups/edit/$id?msg=updated-editor#section-personnel");
+    $_SESSION['msg'] = lang("Editor rights updated successfully.", "Bearbeitungsrechte erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
 
 
@@ -427,6 +435,7 @@ Route::post('/crud/groups/reorder/(.*)', function ($id) {
         $i++;
     }
 
-    // addUserActivity('delete');
-    header("Location: " . ROOTPATH . "/groups/view/$id?msg=reordered");
+    $_SESSION['msg'] = lang("Group reordered successfully.", "Gruppe erfolgreich neu geordnet.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/groups/view/$id");
 });

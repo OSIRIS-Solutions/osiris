@@ -318,7 +318,7 @@ Route::get('/api/all-activities', function () {
     include_once BASEPATH . "/php/Render.php";
 
     // render all activities that have not rendered yet (e.g. after data import)
-    $updated = renderActivities(['rendered' => ['$exists' => false]], true);
+    renderActivities(['rendered' => ['$exists' => false]], false);
 
     include_once BASEPATH . "/php/Document.php";
 

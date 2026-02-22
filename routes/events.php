@@ -51,10 +51,7 @@ Route::get('/conferences/view/(.*)', function ($id) {
     // get conference
     $conference = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$conference) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage(lang('Event', "Veranstaltung"), '/conferences');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang('Event', "Veranstaltung"), '/conferences');
     }
 
     $breadcrumb = [
@@ -78,10 +75,7 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     $new = false;
     $form = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$form) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage(lang('Event', "Veranstaltung"), '/conferences');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang('Event', "Veranstaltung"), '/conferences');
     }
 
     $breadcrumb = [
@@ -130,6 +124,14 @@ Route::post('/crud/conferences/add', function () {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
     $accept_json = strpos($accept, 'application/json') !== false;
 
+    if (!isset($_POST['values'])) {
+        if ($accept_json) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'msg' => lang('No values provided.', 'Keine Werte angegeben.')]);
+            exit;
+        }
+        abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    }
     $values = $_POST['values'];
 
     // required fields:
@@ -193,8 +195,9 @@ Route::post('/crud/conferences/add', function () {
         echo json_encode(['status' => 'success', 'id' => (string)$id]);
         exit;
     }
-
-    header("Location: " . ROOTPATH . "/conferences/view/$id?msg=update-success");
+    $_SESSION['msg'] = lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
 
 
@@ -221,7 +224,9 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    header("Location: " . ROOTPATH . "/conferences/view/$id?msg=update-success");
+    $_SESSION['msg'] = lang('Event updated successfully.', 'Veranstaltung erfolgreich aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
 
 

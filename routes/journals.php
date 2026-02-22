@@ -50,9 +50,7 @@ Route::get('/journals?/view/([a-zA-Z0-9]*)', function ($id) {
 
     $data = $osiris->journals->findOne(['_id' => $id]);
     if (empty($data)) {
-        $_SESSION['msg'] = lang("Journal not found", "Journal nicht gefunden");
-        header("Location: " . ROOTPATH . "/journal");
-        die;
+        abortwith(404, $Settings->journalLabel(), '/journals');
     }
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
@@ -86,6 +84,9 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
 
     $data = $osiris->journals->findOne(['_id' => $id]);
+    if (empty($data)) {
+        abortwith(404, $Settings->journalLabel(), '/journal');
+    }
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
@@ -329,7 +330,7 @@ Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
 
 Route::post('/crud/journal/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->journals;
 
     $values = validateValues($_POST['values'], $DB);
@@ -406,7 +407,9 @@ Route::post('/crud/journal/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=success");
+        $_SESSION['msg'] = lang("Journal created successfully.", "Journal erfolgreich erstellt.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $red);
         die();
     }
 
@@ -433,7 +436,9 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
 
     $journal = $collection->findOne(['_id' => $mongoid]);
     if (empty($journal['issn'] ?? null)) {
-        header("Location: " . ROOTPATH . "/journal/view/$id?msg=error-no-issn");
+        $_SESSION['msg'] = lang("Journal has no ISSN. Please add an ISSN to update metrics.", "Journal hat keine ISSN. Bitte fügen Sie eine ISSN hinzu, um die Metriken zu aktualisieren.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
     }
 
@@ -463,7 +468,9 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
     }
 
     if (empty($metrics)) {
-        header("Location: " . ROOTPATH . "/journal/view/$id?msg=error-no-metrics");
+        $_SESSION['msg'] = lang("No metrics found for this journal.", "Keine Metriken für dieses Journal gefunden.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
     }
 
@@ -493,7 +500,9 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    header("Location: " . ROOTPATH . "/journal/view/$id?msg=update-success");
+    $_SESSION['msg'] = lang("Journal metrics updated successfully.", "Journal-Metriken erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/journal/view/$id");
 });
 
 
@@ -594,7 +603,9 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Journal updated successfully.", "Journal erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -642,5 +653,5 @@ Route::post('/crud/journal/delete/([A-Za-z0-9]*)', function ($id) {
     );
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/journal");
-    
+    die();
 });

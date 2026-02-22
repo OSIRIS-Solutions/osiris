@@ -75,14 +75,14 @@ $types = [
     </div>
 <?php } ?>
 
-<?php if (empty($messages)) { ?>
-    <div class="text-center">
-        <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-messages.png" alt="" class="sophie-img w-400">
-        <h2 class="mt-0"><?= lang('No messages', 'Keine Nachrichten') ?></h2>
-        <p><?= lang('You have no messages at the moment.', 'Du hast momentan keine Nachrichten.') ?></p>
-    </div>
 
-<?php } else { ?>
+<div id="no-messages" class="text-center" style="<?= empty($messages) ? '' : 'display:none;' ?>">
+    <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-messages.png" alt="" class="sophie-img w-400">
+    <h2 class="mt-0"><?= lang('No messages', 'Keine Nachrichten') ?></h2>
+    <p><?= lang('You have no messages at the moment.', 'Du hast momentan keine Nachrichten.') ?></p>
+</div>
+
+<?php if (!empty($messages)) { ?>
     <table class="table" id="messages-table">
         <?php foreach ($messages as $message) {
             $time = date('d.m.Y H:i', $message['created_at']);
@@ -175,20 +175,20 @@ $types = [
             } else {
                 toastError(lang('Error deleting message', 'Fehler beim Löschen der Nachricht'));
             }
+            if ($('#messages-table tbody tr').length == 0) {
+                $('#messages-table').hide();
+                $('.btn-toolbar').hide();
+                $('#no-messages').show();
+            }
         }, 'json');
     }
 
     function deleteAllMessages() {
         $.post(ROOTPATH + '/crud/messages/delete-all', function(data) {
             if (data.success) {
-                $('#messages-table tbody tr').remove();
-                $('#messages-table tbody').append(
-                    `<tr>
-                        <td colspan="2" class="text-center">
-                            <i class="ph ph-chat-circle text-muted"></i>
-                            <?= lang('No messages', 'Keine Nachrichten') ?>
-                        </td>
-                    </tr>`);
+                $('#messages-table').hide();
+                $('.btn-toolbar').hide();
+                $('#no-messages').show();
             } else {
                 toastError(lang('Error deleting all messages', 'Fehler beim Löschen aller Nachrichten'));
             }

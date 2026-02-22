@@ -100,8 +100,7 @@ Route::post('/auth/forgot-password', function () {
 Route::get('/user/password-reset/(.*)', function ($user_id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        header("Location: " . ROOTPATH . "/?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to reset passwords.', 'Du hast keine Berechtigung, Passwörter zurückzusetzen.'), '/profile/' . $user_id);
     }
     $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($user_id)]);
     $person = DB::doc2Arr($person);
@@ -123,8 +122,7 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
 Route::post('/auth/admin-reset-password', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        header("Location: " . ROOTPATH . "/?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to reset passwords.', 'Du hast keine Berechtigung, Passwörter zurückzusetzen.'), '/profile/' . $user_id);
     }
     if (!isset($_POST['id'])) {
         header("Location: " . ROOTPATH . "/user/browse");
@@ -272,7 +270,6 @@ Route::post('/auth/new-user', function () {
     }
 
     $person = $_POST['values'];
-
     $username = $_POST['username'];
     $password = $_POST['password'];
     $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -296,5 +293,7 @@ Route::post('/auth/new-user', function () {
     $person['is_active'] = true;
     $osiris->persons->insertOne($person);
 
-    header("Location: " . ROOTPATH . "/user/login?msg=account-created");
+    $_SESSION['msg'] = lang('Account created successfully. Please login with your new account.', 'Konto erfolgreich erstellt. Bitte logge dich mit deinem neuen Konto ein.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/user/login");
 });

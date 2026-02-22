@@ -52,8 +52,7 @@ Route::get('/admin/fields/(.*)', function ($id) {
 
     $category = $osiris->adminFields->findOne(['id' => $id]);
     if (empty($category)) {
-        header("Location: " . ROOTPATH . "/fields?msg=not-found");
-        die;
+        abortwith(404, lang("Custom Field", "Benutzerdefiniertes Feld"), '/admin/fields');
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
@@ -80,7 +79,7 @@ Route::post('/crud/fields/create', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -100,20 +99,24 @@ Route::post('/crud/fields/create', function () {
     // check if category ID already exists:
     $category_exist = $osiris->adminFields->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        header("Location: " . ROOTPATH . "/fields/new?msg=Field Name does already exist.");
+        $_SESSION['msg'] = lang("Field Name does already exist.", "Feldname existiert bereits.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/admin/fields/new");
         die();
     }
 
     $osiris->adminFields->insertOne($values);
 
-    header("Location: " . ROOTPATH . "/admin/fields?msg=success");
+    $_SESSION['msg'] = lang("Custom field created successfully.", "Benutzerdefiniertes Feld erfolgreich erstellt.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/fields");
 });
 
 Route::post('/crud/fields/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
     $values = validateValues($_POST['values'], $DB);
     $values['id'] = $id;
@@ -137,7 +140,9 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    header("Location: " . ROOTPATH . "/admin/fields?msg=success");
+    $_SESSION['msg'] = lang("Custom field updated successfully.", "Benutzerdefiniertes Feld erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/fields/$id");
 });
 
 
@@ -150,5 +155,7 @@ Route::post('/crud/fields/delete/(.*)', function ($id) {
         ['_id' => $mongo_id]
     );
 
-    header("Location: " . ROOTPATH . "/admin/fields?msg=success");
+    $_SESSION['msg'] = lang("Custom field deleted successfully.", "Benutzerdefiniertes Feld erfolgreich gelöscht.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/fields");
 });

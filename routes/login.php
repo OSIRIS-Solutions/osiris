@@ -128,7 +128,6 @@ Route::get('/user/oauth-callback', function () {
 
 Route::post('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
-    $msg = "?msg=welcome";
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         header("Location: " . ROOTPATH . "/profile/$_SESSION[username]");
         die;
@@ -149,16 +148,16 @@ Route::post('/user/login', function () {
                 $blacklist = explode(',', $blacklist);
                 $blacklist = array_filter(array_map('trim', $blacklist));
                 if (in_array($_POST['username'], $blacklist)) {
-                    $_SESSION['msg'] = lang("You are not allowed to login, please contact the system administrator!", 'Du bist nicht berechtigt, dich einzuloggen, bitte kontaktiere den Systemadministrator!');
-                    header("Location: " . ROOTPATH . "/user/login");
-                    die();
+                    $_SESSION['loggedin'] = false;
+                    abortwith(500, lang("Your account is blocked. Please contact the administrator.", "Dein Konto ist gesperrt. Bitte kontaktiere den Administrator."), "/user/login");
                 }
             }
         }
         // check if user is allowed to login
         $auth = login($_POST['username'], $_POST['password']);
         if (isset($auth["success"]) && $auth["success"] == false) {
-            $msg = "?msg=" . $auth["msg"];
+            $_SESSION['msg'] = $auth["msg"];
+            $_SESSION['msg_type'] = 'error';
         } else if (isset($auth["success"]) && $auth["success"] == true) {
             // check if user exists in our database
             $USER = null;
@@ -204,10 +203,10 @@ Route::post('/user/login', function () {
             $_SESSION['name'] = $USER['displayname'];
 
             if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-                header("Location: " . $_POST['redirect'] . $msg);
+                header("Location: " . $_POST['redirect']);
                 die();
             }
-            header("Location: " . ROOTPATH . "/" . $msg);
+            header("Location: " . ROOTPATH . "/");
             die();
         }
     }
@@ -217,13 +216,13 @@ Route::post('/user/login', function () {
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/userlogin.php";
     if (isset($auth)) {
-        printMsg($auth["msg"] ?? 'Something went wrong', "error", "");
+        printMsg($auth["msg"] ?? lang('Something went wrong', 'Etwas ist schief gelaufen'), "error", "");
     }
     if (empty($_POST['username'])) {
-        printMsg("Username is required!", "error", "");
+        printMsg(lang("Username is required!", "Benutzername ist erforderlich!"), "error", "");
     }
     if (empty($_POST['password'])) {
-        printMsg("Password is required!", "error", "");
+        printMsg(lang("Password is required!", "Passwort ist erforderlich!"), "error", "");
     }
     include BASEPATH . "/footer.php";
 });

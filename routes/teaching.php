@@ -29,10 +29,7 @@ Route::get('/teaching', function () {
 Route::get('/teaching/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching", lang('Go back to teaching modules', 'Zurück zu Lehrveranstaltungen'));
     }
     $breadcrumb = [
         ['name' => lang('Teaching', 'Lehrveranstaltungen'), 'path' => '/teaching'],
@@ -56,10 +53,7 @@ Route::get('/teaching/view/(.*)', function ($id) {
     // get teaching module
     $module = $osiris->teaching->findOne(['_id' => $mongo_id]);
     if (!$module) {
-        include_once BASEPATH . "/header.php";
-        echo notFoundPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang("Teaching module", "Lehrveranstaltung"), "/teaching");
     }
 
     $breadcrumb = [
@@ -78,10 +72,7 @@ Route::get('/teaching/view/(.*)', function ($id) {
 Route::get('/teaching/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching/view/$id");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching/view/$id", lang('Go back to the module', 'Zurück zu der Lehrveranstaltung'));
     }
     $mongo_id = DB::to_ObjectID($id);
     // get teaching module
@@ -89,10 +80,7 @@ Route::get('/teaching/edit/(.*)', function ($id) {
     global $form;
     $form = $osiris->teaching->findOne(['_id' => $mongo_id]);
     if (!$form) {
-        include_once BASEPATH . "/header.php";
-        echo notFoundPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang("Teaching module", "Lehrveranstaltung"), "/teaching");
     }
 
     $breadcrumb = [
@@ -127,12 +115,9 @@ Route::get('/teaching/statistics', function () {
 
  Route::post('/crud/teaching/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     if (!$Settings->hasPermission('teaching.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching", lang('Go back to teaching modules', 'Zurück zu Lehrveranstaltungen'));
     }
     $collection = $osiris->teaching;
 
@@ -185,10 +170,7 @@ Route::get('/teaching/statistics', function () {
  Route::post('/crud/teaching/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching/view/$id", lang('Go back to teaching module', 'Zurück zu der Lehrveranstaltung'));
     }
 
     $values = validateValues($_POST['values'], $DB);
@@ -215,10 +197,7 @@ Route::get('/teaching/statistics', function () {
 Route::post('/crud/teaching/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('teaching.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage(lang("Teaching module", "Lehrveranstaltung"), "/teaching");
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching/view/$id", lang('Go back to teaching module', 'Zurück zu der Lehrveranstaltung'));
     }
     //chack that no activities are connected
     $activities = $osiris->activities->count(['module_id' => strval($module['_id'])]);

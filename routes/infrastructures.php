@@ -43,10 +43,7 @@ Route::get('/infrastructures/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     if (!$Settings->hasPermission('infrastructures.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang('You do not have permission to create a new infrastructure.', 'Du hast keine Berechtigung, eine neue Infrastruktur zu erstellen.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
 
     $breadcrumb = [
@@ -80,17 +77,11 @@ Route::get('/infrastructures/view/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            include_once BASEPATH . "/header.php";
-            echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-            include_once BASEPATH . "/footer.php";
-            die();
+            abortwith(403, lang('You do not have permission to view this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu sehen.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
     if (empty($infrastructure)) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
@@ -110,10 +101,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
     global $form;
 
@@ -125,10 +113,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
         $id = strval($infrastructure['_id'] ?? '');
     }
     if (empty($form)) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     // check if user is allowed to edit the infrastructure
     if (!$Settings->hasPermission('infrastructures.edit') && $Settings->hasPermission('infrastructures.edit-own')) {
@@ -140,10 +125,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            include_once BASEPATH . "/header.php";
-            echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-            include_once BASEPATH . "/footer.php";
-            die();
+            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
     $breadcrumb = [
@@ -163,10 +145,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
 
     global $form;
@@ -178,10 +157,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
         $id = strval($infrastructure['_id'] ?? '');
     }
     if (empty($form)) {
-        include BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include BASEPATH . "/footer.php";
-        die();
+        abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     if (!$Settings->hasPermission('infrastructures.edit') && $Settings->hasPermission('infrastructures.edit-own')) {
         $permission = false;
@@ -192,10 +168,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            include BASEPATH . "/header.php";
-            echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures');
-            include BASEPATH . "/footer.php";
-            die();
+            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
     $breadcrumb = [
@@ -222,13 +195,10 @@ Route::post('/crud/infrastructures/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('infrastructures.edit')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures');
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang('You do not have permission to create a new infrastructure.', 'Du hast keine Berechtigung, eine neue Infrastruktur zu erstellen.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -238,7 +208,9 @@ Route::post('/crud/infrastructures/create', function () {
     // check if infrastructure id already exists:
     $infrastructure_exist = $collection->findOne(['id' => $id]);
     if (!empty($infrastructure_exist)) {
-        header("Location: " . $red . "?msg=infrastructure ID does already exist.");
+        $_SESSION['msg'] = lang("Infrastructure ID already exists. Please choose a different one.", "Infrastruktur-ID existiert bereits. Bitte wählen Sie eine andere.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . $red);
         die();
     }
     // dump($values, true);
@@ -270,7 +242,9 @@ Route::post('/crud/infrastructures/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=success");
+        $_SESSION['msg'] = lang("Infrastructure created successfully.", "Infrastruktur erfolgreich erstellt.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $red);
         die();
     }
 
@@ -297,13 +271,10 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         if (!$permission) {
-            include_once BASEPATH . "/header.php";
-            echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures');
-            include_once BASEPATH . "/footer.php";
-            die();
+            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -333,7 +304,9 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Infrastructure updated successfully.", "Infrastruktur erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
         die();
     }
 
@@ -350,12 +323,9 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     // get infrastructure
     $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($infrastructure)) {
-        include_once BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(404, lang('Infrastructure not found', 'Infrastruktur nicht gefunden'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
     $year = intval($_POST['year'] ?? 0);
     $base = [
@@ -516,10 +486,7 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
             }
         }
         if (!$permission) {
-            include_once BASEPATH . "/header.php";
-            echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-            include_once BASEPATH . "/footer.php";
-            die();
+            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
 
@@ -559,8 +526,9 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
         ['_id' => $DB::to_ObjectID($id)],
         ['$set' => ["persons" => $values]]
     );
-
-    header("Location: " . ROOTPATH . "/infrastructures/view/$id?msg=update-success");
+    $_SESSION['msg'] = lang("Persons updated successfully.", "Personen erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/infrastructures/view/$id");
 });
 
 
@@ -568,10 +536,7 @@ Route::post('/crud/infrastructures/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('infrastructures.delete')) {
-        include_once BASEPATH . "/header.php";
-        echo noPermissionPage($Settings->infrastructureLabel(), '/infrastructures/view/' . $id);
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(403, lang('You do not have permission to delete this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu löschen.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
 
     $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -598,6 +563,7 @@ Route::post('/crud/infrastructures/delete/([A-Za-z0-9]*)', function ($id) {
     );
 
     $_SESSION['msg'] = lang("Infrastructure has been deleted successfully.", "Infrastruktur wurde erfolgreich gelöscht.");
+    $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/infrastructures");
 });
 
@@ -608,10 +574,7 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
     // get infrastructure id    
     $infrastructure = $osiris->infrastructures->findOne(['id' => $infrastructure_id]);
     if (empty($infrastructure)) {
-        include_once BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include_once BASEPATH . "/footer.php";
-        die();
+        abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
@@ -679,10 +642,7 @@ Route::get('/infrastructures/image/(.*)', function ($id) {
     // get infrastructure id    
     $infrastructure = $osiris->infrastructures->findOne(['_id' => $mongo_id]);
     if (empty($infrastructure)) {
-        include_once BASEPATH . "/header.php";
-        echo notFoundPage($Settings->infrastructureLabel(), '/infrastructures');
-        include_once BASEPATH . "/footer.php";
-        die;
+        abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     include_once BASEPATH . "/php/Infrastructure.php";
     echo Infrastructure::getLogo($infrastructure, "", "Logo of " . $infrastructure['name'], $infrastructure['type'] ?? "");

@@ -318,11 +318,7 @@ Route::get('/(expertise|keywords)', function ($collection) {
         $breadcrumb[] = ['name' => lang('Keywords', 'Schlagwörter')];
     } else if ($collection == 'expertise') {
         $breadcrumb[] = ['name' => lang('Expertise search', 'Experten-Suche')];
-    } else {
-        header("Location: " . ROOTPATH . "/user/browse?msg=invalid-collection");
-        die;
     }
-    // include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/expertise.php";
     include BASEPATH . "/footer.php";
@@ -561,7 +557,9 @@ Route::post('/switch-user', function () {
         }
 
         // do nothing if user is not allowed
-        header("Location: " . ROOTPATH . "/profile/" . $_SESSION['username'] . "?msg=not-allowed");
+        $_SESSION['msg'] = lang("You are not allowed to switch to this user.", "Du darfst dich nicht als diesen Benutzer anmelden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/" . $_SESSION['username']);
     }
 });
 
@@ -571,9 +569,9 @@ Route::post('/switch-user', function () {
 
 Route::post('/crud/users/update/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-         $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");    
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -607,8 +605,8 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['search_text'] = build_person_search_text($complete_person);
     }
 
-    // $person['updated'] = date('Y-m-d');
-    // $person['updated_by'] = $_SESSION['username'];
+    $person['updated'] = date('Y-m-d');
+    $person['updated_by'] = $_SESSION['username'];
 
     if (isset($values['cv'])) {
         $cv = $values['cv'];
@@ -693,7 +691,9 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("User updated successfully.", "Benutzer erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -706,10 +706,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
-        $_SESSION['msg_type'] = "error";
-        header("Location: " . ROOTPATH . "/profile/$user");
-        die;
+        abortwith(403, lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten."));
     }
 
     if (!isset($_POST['values']) && isset($_POST['id'])) {
@@ -719,10 +716,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['projection' => ['units.$' => 1]]
         );
         if (empty($unit)) {
-            $_SESSION['msg'] = lang("Unit not found.", "Einheit nicht gefunden.");
-            $_SESSION['msg_type'] = "error";
-            header("Location: " . ROOTPATH . "/profile/$user");
-            die();
+            abortwith(404, lang("Unit", "Einheit"), "/user/units/$user");
         }
         $unit = $unit['units'][0];
 
@@ -746,7 +740,9 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             renderAuthorUnitsMany($filter);
         }
 
-        header("Location: " . ROOTPATH . "/user/units/$user?msg=delete-success");
+        $_SESSION['msg'] = lang("Unit deleted successfully.", "Einheit erfolgreich gelöscht.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . ROOTPATH . "/user/units/$user");
         die();
     }
 
@@ -773,12 +769,13 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     }
 
     // update all activities that have this user as author
-
     $filter = ['authors.user' => $user];
     renderAuthorUnitsMany($filter);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Unit updated successfully.", "Einheit erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -836,7 +833,9 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         unlink(BASEPATH . "/img/users/$user.jpg");
     }
 
-    header("Location: " . ROOTPATH . "/profile/" . $user . "?msg=user-inactivated");
+    $_SESSION['msg'] = lang("User inactivated successfully.", "Benutzer erfolgreich deaktiviert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/profile/" . $user);
     die();
 });
 
@@ -916,12 +915,9 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
  */
 Route::post('/crud/users/profile-picture/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-    
+
     if (!$Settings->hasPermission('user.image') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
-        $_SESSION['msg_type'] = "error";
-        header("Location: " . ROOTPATH . "/profile/$user");
-        die;
+        abortwith(403, lang("You don't have permission to change profile picture.", "Du hast keine Berechtigung, das Profilbild zu ändern."));
     }
 
     if (isset($_FILES["file"])) {
@@ -938,12 +934,11 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
             };
-            printMsg($errorMsg, "error");
+            $_SESSION['msg'] = $errorMsg;
+            $_SESSION['msg_type'] = 'error';
         } else if ($_FILES["file"]["size"] > 2000000) {
-            printMsg(lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt."), "error");
-            // } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            //     header("Location: " . ROOTPATH . "/profile/$user?msg=success");
-            //     die;
+            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg_type'] = 'error';
         } else {
             // check image settings
             if ($Settings->featureEnabled('db_pictures')) {
@@ -962,17 +957,19 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
             } else {
                 $target_dir = BASEPATH . "/img/users";
                 if (!is_writable($target_dir)) {
-                    die("User image directory is unwritable. Please contact admin.");
+                    abortwith(500, "User image directory is unwritable. Please contact admin.");
                 }
                 $target_dir .= "/";
                 $filename = "$user.jpg";
                 // upload to file system
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-                    header("Location: " . ROOTPATH . "/profile/$user?msg=success");
+                    $_SESSION['msg'] = lang("Profile picture updated.", "Profilbild aktualisiert.");
+                    $_SESSION['msg_type'] = 'success';
+                    header("Location: " . ROOTPATH . "/profile/$user");
                     die;
                 }
             }
-            header("Location: " . ROOTPATH . "/profile/$user?msg=success");
+            header("Location: " . ROOTPATH . "/profile/$user");
             die;
             // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
         }
@@ -984,41 +981,21 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
         } else {
             $target_dir = BASEPATH . "/img/users/";
             if (!is_writable($target_dir)) {
-                $_SESSION['msg'] = "User image directory is unwritable. Please contact admin.";
+                abortwith(500, "User image directory is unwritable. Please contact admin.");
             } else if (!unlink($target_dir . $filename)) {
                 // get error message
                 $error = error_get_last();
                 $_SESSION['msg'] = lang("Error deleting file.", "Fehler beim Löschen der Datei.") . " " . $error['message'];
+                $_SESSION['msg_type'] = 'error';
             } else {
                 $_SESSION['msg'] = lang("Profile picture deleted.", "Profilbild gelöscht.");
+                $_SESSION['msg_type'] = 'success';
             }
         }
         header("Location: " . ROOTPATH . "/profile/$user");
-        die;
+        die();
     }
 });
-
-
-// Route::post('/crud/users/update-expertise/(.*)', function ($user) {
-//     include_once BASEPATH . "/php/init.php";
-//     if (!isset($_POST['values'])) die("no values given");
-
-//     $values = $_POST['values'];
-//     $values = validateValues($values, $DB);
-
-//     $updateResult = $osiris->persons->updateOne(
-//         ['username' => $user],
-//         ['$set' => $values]
-//     );
-
-//     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-//         header("Location: " . $_POST['redirect'] . "?msg=update-success");
-//         die();
-//     }
-//     echo json_encode([
-//         'updated' => $updateResult->getModifiedCount()
-//     ]);
-// });
 
 
 Route::post('/crud/users/approve', function () {
@@ -1038,7 +1015,9 @@ Route::post('/crud/users/approve', function () {
     $_SESSION['last_notification_check'] = 0;
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=approved");
+        $_SESSION['msg'] = lang("You approved the activities for quarter $q.", "Du hast die Aktivitäten für Quartal $q genehmigt.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -1118,12 +1097,16 @@ Route::post('/claim/?(.*)', function ($user) {
     if (empty($user)) $user = $_SESSION['username'];
 
     if (empty($_POST['activity'])) {
-        header("Location: " . ROOTPATH . "/claim/$user?msg=no+activity+selected");
+        $_SESSION['msg'] = lang("No activity selected.", "Keine Aktivität ausgewählt.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/claim/$user");
         die;
     }
 
     if (empty($_POST['last']) || empty($_POST['first'])) {
-        header("Location: " . ROOTPATH . "/claim/$user?msg=no+valid+submission");
+        $_SESSION['msg'] = lang("No valid submission.", "Keine gültige Eingabe.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/claim/$user");
         die;
     }
 
@@ -1145,6 +1128,7 @@ Route::post('/claim/?(.*)', function ($user) {
     }
 
     $_SESSION['msg'] = lang("Claim successful: You claimed $N activities.", "Beanspruchung erfolgreich: Du hast $N Aktivitäten beansprucht.");
+    $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/profile/$user");
 }, 'login');
 

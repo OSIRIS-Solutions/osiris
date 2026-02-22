@@ -32,7 +32,9 @@ Route::get('/workflow-reviews', function () {
 
 Route::get('/admin/workflows', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to see workflows.", "Du hast keine Berechtigung, Workflows zu sehen."), '/');
+    }
 
     $breadcrumb = [
         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
@@ -46,7 +48,9 @@ Route::get('/admin/workflows', function () {
 
 Route::get('/admin/workflows/new', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to create workflows.", "Du hast keine Berechtigung, Workflows zu erstellen."), '/');
+    }
 
     $form = [];
     $breadcrumb = [
@@ -61,19 +65,20 @@ Route::get('/admin/workflows/new', function () {
 
 Route::get('/admin/workflows/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to see workflows.", "Du hast keine Berechtigung, Workflows zu sehen."), '/');
+    }
 
     $form = $osiris->adminWorkflows->findOne(['id' => $id]);
     if (empty($form)) {
-        header("Location: " . ROOTPATH . "/admin/workflows?msg=not-found");
-        die;
+        abortwith(404, lang('Workflow', 'Workflow'), '/');
     }
-    $name = $form['name'];
+    $name = $form['name'] ?? $id;
 
     $breadcrumb = [
         ['name' => lang('Content', 'Inhalte'), 'path' => '/admin'],
         ['name' => lang("Workflows", "Workflows"), 'path' => '/admin/workflows'],
-        ['name' => lang('New workflow', 'Neuer Workflow')]
+        ['name' => $name]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/workflow.php";
@@ -83,9 +88,11 @@ Route::get('/admin/workflows/(.*)', function ($id) {
 
 Route::post('/crud/workflows/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to create workflows.", "Du hast keine Berechtigung, Workflows zu erstellen."), '/');
+    }
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -99,15 +106,20 @@ Route::post('/crud/workflows/create', function () {
     }
 
     $osiris->adminWorkflows->insertOne($values);
+    
+    $_SESSION['msg'] = lang('Workflow created successfully.', 'Workflow erfolgreich erstellt.');
+    $_SESSION['msg_type'] = 'success';
 
-    header("Location: " . ROOTPATH . "/admin/workflows/" . $values['id'] . "?msg=success");
+    header("Location: " . ROOTPATH . "/admin/workflows/" . $values['id']);
 });
 
 Route::post('/crud/workflows/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to update workflows.", "Du hast keine Berechtigung, Workflows zu aktualisieren."), '/');
+    }
 
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $values = validateValues($_POST['values'], $DB);
 
     /**
@@ -222,25 +234,33 @@ Route::post('/crud/workflows/update/(.*)', function ($id) {
         ['upsert' => false]
     );
 
-    header("Location: " . ROOTPATH . "/admin/workflows?msg=success");
+    $_SESSION['msg'] = lang('Workflow updated successfully.', 'Workflow erfolgreich aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/workflows");
 });
 
 Route::post('/crud/workflows/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to delete workflows.", "Du hast keine Berechtigung, Workflows zu löschen."), '/');
+    }
 
     $mongo_id = DB::to_ObjectID($id);
     $updateResult = $osiris->adminWorkflows->deleteOne(
         ['_id' => $mongo_id]
     );
 
-    header("Location: " . ROOTPATH . "/admin/workflows?msg=success");
+    $_SESSION['msg'] = lang('Workflow deleted successfully.', 'Workflow erfolgreich gelöscht.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/admin/workflows");
 });
 
 Route::post('/crud/workflows/apply/(.*)', function ($wfId) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to apply workflows.", "Du hast keine Berechtigung, Workflows anzuwenden."), '/');
+    }
 
     $template = $osiris->adminWorkflows->findOne(['id' => $wfId]);
     if (!$template) return JSON::error('Workflow not found', 404);
@@ -301,7 +321,9 @@ Route::post('/crud/workflows/apply/(.*)', function ($wfId) {
 Route::post('/crud/workflows/reset-action', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
-    if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang("You don't have permission to reset workflows.", "Du hast keine Berechtigung, Workflows zurückzusetzen."), '/');
+    }
 
     $action = $_POST['action'] ?? null;
     $activity = $_POST['activity'] ?? 'all';
@@ -531,8 +553,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=not-found");
-        die;
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
     $wf = DB::doc2Arr($act['workflow']);
 
@@ -568,14 +589,15 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
     }
 
     if (!$canResolve) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=no-permission");
-        die;
+        abortwith(403, lang("You don't have permission to resolve this rejection.", "Du hast keine Berechtigung, diese Ablehnung als gelöst zu markieren."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
     // Reset workflow to before rejection
     unset($wf['rejectedDetails']);
     $wf['status'] = 'in_progress';
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf]]);
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=success#workflow-modal");
+    $_SESSION['msg'] = lang('Rejection marked as resolved.', 'Ablehnung als gelöst markiert.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 // POST /crud/activities/workflow/reset/{id}
@@ -584,20 +606,17 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     include_once BASEPATH . "/php/Workflows.php";
 
     if (!$Settings->hasPermission('workflows.reset')) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=no-permission");
-        die;
+        abortwith(403, lang("You don't have permission to reset this workflow.", "Du hast keine Berechtigung, diesen Workflow zurückzusetzen."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=not-found");
-        die;
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
     $wf = DB::doc2Arr($act['workflow']);
     $tpl = $osiris->adminWorkflows->findOne(['id' => $wf['workflow_id']]);
     if (!$tpl) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=template-not-found");
-        die;
+        abortwith(404, lang('Workflow template not found', 'Workflow-Vorlage nicht gefunden'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
     $tpl = DB::doc2Arr($tpl);
 
@@ -611,7 +630,9 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     ];
     $history[] = $hist;
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $initial, 'locked' => false, 'history' => $history]]);
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=success#workflow-modal");
+    $_SESSION['msg'] = lang('Workflow reset successfully.', 'Workflow erfolgreich zurückgesetzt.');
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 // API
