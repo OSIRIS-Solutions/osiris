@@ -331,13 +331,13 @@ Route::get('/api/dashboard/author-role', function () {
             ['$project' => ['_id' => 0, 'x' => '$_id', 'y' => '$count']],
         ])->toArray();
 
-        $editorials = $osiris->activities->count(['editors.user' => $user]);
+        $editorials = $osiris->activities->count(['editors.user' => $user, 'type' => 'publication']);
         if ($editorials !== 0)
             $data[] = [
                 'x' => 'editor',
                 'y' => $editorials
             ];
-        $supervisorships = $osiris->activities->count(['supervisors.user' => $user]);
+        $supervisorships = $osiris->activities->count(['supervisors.user' => $user, 'type' => 'publication']);
         if ($supervisorships !== 0)
             $data[] = [
                 'x' => 'supervisor',
