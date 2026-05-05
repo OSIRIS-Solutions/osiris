@@ -26,17 +26,18 @@ if (isset($_GET['code'])) {
     ));
 
     $response = curl_exec($ch);
+    echo ($response);
 
     curl_close($ch);
 
     $orcid_data = json_decode($response, true);
 
+    
+
     if (empty($orcid_data) || !isset($orcid_data['orcid'])) {
         // Handle error, e.g. log it and show an error message to the user
         error_log('ORCID authentication failed: ' . $response);
-        include BASEPATH . "/header.php";
         echo "<div class='alert alert-danger'>ORCID authentication failed. Please try again.</div>";
-        include BASEPATH . "/footer.php";
         exit;
     }
 
@@ -46,9 +47,10 @@ if (isset($_GET['code'])) {
         ['username' => $username],
         ['$set' => [
             'orcid' => $orcid_data['orcid'],
-            'orcid_validated' => $orcid_data['orcid'],
+            'orcid_validated' => true,
             'orcid_access_token' => $orcid_data['access_token'], 
-            'orcid_refresh_token' => $orcid_data['refresh_token']
+            'orcid_refresh_token' => $orcid_data['refresh_token'],
+            'orcid_token_scope' => $orcid_data['scope'],
           ]
         ]
     );

@@ -1306,14 +1306,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             </tr>
                         <?php } ?>
 
-                        <?php if (!empty($scientist['orcid_validated'] ?? null)) { ?>
+                        <?php if (isset($scientist['orcid_validated']) && $scientist['orcid_validated']) { ?>
                             <tr>
                                 <td>
                                     <span class="key">ORCID</span>
 
-                                    <a href="http://orcid.org/<?= $scientist['orcid_validated'] ?>" target="_blank" rel="noopener noreferrer">
+                                    <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
                                         <img src="/img/orcid.svg" alt="ORCID iD" width="16" height="16"/>
-                                        <?= $scientist['orcid_validated'] ?>
+                                        <?= $scientist['orcid'] ?>
                                     </a>
 
                                 </td>

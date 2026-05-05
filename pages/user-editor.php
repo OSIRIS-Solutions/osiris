@@ -528,12 +528,20 @@ $active = function ($field) use ($data_fields) {
         <div class="form-row row-eq-spacing">
             <div class="col-sm-6">
                 <label for="orcid">ORCID</label>
-                <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" onchange="validateORCID(this);">
-                <small class="text-danger" id="orcid-wrong" style="display: none;">
-                    <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
-                </small>
-                <?php if ($data['username'] == $_SESSION['username']) {
-                    $orcid = $Settings->get('orcid');
+                <?php if (!isset($data['orcid_validated']) || !$data['orcid_validated']) {?>
+                    <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" onchange="validateORCID(this);">
+                    <small class="text-danger" id="orcid-wrong" style="display: none;">
+                        <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
+                    </small>
+                <?php } else { ?>
+                    <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" readonly>
+                    <small class="text-muted">
+                        <?= lang('ORCID is already authenticated', 'Die ORCID ist bereits authentifiziert') ?>
+                    </small>
+                    <br>
+                <?php } ?>
+                <?php $orcid = $Settings->get('orcid');
+                    if ($data['username'] == $_SESSION['username'] && !empty($orcid['client_id'] && null) && !empty($orcid['client_secret'] && null)) { 
                     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                     ?>    
                     <a href="https://sandbox.orcid.org/oauth/authorize?client_id=<?= $orcid['client_id'] ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid" id="orcid-validation" class="btn">
