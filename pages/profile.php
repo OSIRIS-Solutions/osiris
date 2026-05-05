@@ -1205,12 +1205,27 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             </tr>
                         <?php } ?>
 
-                        <?php if (!empty($scientist['orcid'] ?? null)) { ?>
+                        <?php if (!empty($scientist['orcid_validated'] ?? null)) { ?>
                             <tr>
                                 <td>
                                     <span class="key">ORCID</span>
 
-                                    <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer"><?= $scientist['orcid'] ?></a>
+                                    <a href="http://orcid.org/<?= $scientist['orcid_validated'] ?>" target="_blank" rel="noopener noreferrer">
+                                        <img src="/img/orcid.svg" alt="ORCID iD" width="16" height="16"/>
+                                        <?= $scientist['orcid_validated'] ?>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        <?php } elseif  (!empty($scientist['orcid'] ?? null)) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key">ORCID</span>
+
+                                    <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
+                                        <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
+                                        <?= $scientist['orcid'] ?> 
+                                    </a><?= lang('(unauthenticated)', '(nicht authentifiziert)') ?>
 
                                 </td>
                             </tr>

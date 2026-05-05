@@ -89,6 +89,11 @@ $affiliation = $Settings->get('affiliation_details');
         <i class="ph ph-globe" aria-hidden="true"></i>
         <?= lang('Countries', 'Länder') ?>
     </a>
+    <!-- ORCID -->
+    <a onclick="navigate('orcid')" id="btn-orcid" class="btn">
+        <i class="ph ph-tree-structure" aria-hidden="true"></i>
+        <?= lang('ORCID', 'ORCID') ?>
+    </a>
 
 </nav>
 
@@ -2016,4 +2021,41 @@ $affiliation = $Settings->get('affiliation_details');
     </div>
 
 </div> -->
+</section>
+
+
+
+
+<section id="orcid" style="display: none;">
+
+    <?php
+    $orcid = $Settings->get('orcid');
+    ?>
+
+
+    <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+        <div class="box primary">
+
+
+            <div class="content">
+                <h2 class="title"><?= lang('ORCID Settings', 'ORCID Einstellungen') ?></h2>
+                <div class="row row-eq-spacing">
+                    <div class="col-sm">
+                        <label for="client_id">Client ID</label>
+                        <input type="float" class="form-control" name="general[orcid][client_id]" value="<?= $orcid['client_id'] ?? '' ?>">
+                    </div>
+                    <div class="col-sm">
+                        <label for="client_secret">Client Secret</label>
+                        <input type="float" class="form-control" name="general[orcid][client_secret]" value="<?= $orcid['client_secret'] ?? '' ?>">
+                    </div>
+                </div>
+
+                <button class="btn primary">
+                    <i class="ph ph-floppy-disk"></i>
+                    <?= lang('Save', 'Speichern') ?>
+                </button>
+            </div>
+
+        </div>
+    </form>
 </section>
