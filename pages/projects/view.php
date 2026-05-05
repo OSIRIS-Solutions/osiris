@@ -4,14 +4,14 @@
  * Page to see details on a single project
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /project/<id>
  *
  * @package     OSIRIS
  * @since       1.2.2
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -33,7 +33,11 @@ foreach ($persons as $p) {
 }
 $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
 
-$N = $osiris->activities->count(['projects' => $project['_id']]);
+$count_activities = $osiris->activities->count(['projects' => $project['_id']]);
+$count_spectrum = 0;
+if ($Settings->featureEnabled('spectrum')) {
+    $count_spectrum = $osiris->activities->count(['projects' => $project['_id'], 'openalex.topics.id' => ['$exists' => true]]);
+}
 
 $institute = $Settings->get('affiliation_details');
 
@@ -266,11 +270,11 @@ if ($topicsEnabled) {
         </a>
     <?php } ?>
 
-    <?php if ($N > 0) { ?>
+    <?php if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
             <?= lang('Activities', 'Aktivitäten') ?>
-            <span class="index"><?= $N ?></span>
+            <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
         <a id="btn-activities" class="btn" href="#add-activity">
@@ -678,7 +682,7 @@ if ($topicsEnabled) {
 
     <h2>
         <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
-        (<?= $N ?>)
+        (<?= $count_activities ?>)
     </h2>
 
     <div class="btn-toolbar mb-10">
@@ -691,7 +695,7 @@ if ($topicsEnabled) {
 
 
         <div class="dropdown with-arrow btn-group ">
-            <button class="btn primary" <?= $N == 0 ? 'disabled' : '' ?> data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
+            <button class="btn primary" <?= $count_activities == 0 ? 'disabled' : '' ?> data-toggle="dropdown" type="button" id="download-btn" aria-haspopup="true" aria-expanded="false">
                 <i class="ph ph-download"></i> Download
                 <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
             </button>
@@ -766,20 +770,80 @@ if ($topicsEnabled) {
         <div id="timeline"></div>
     </div>
 
-    <div class="mt-20 w-full">
-        <table class="table dataTable responsive" id="activities-table">
-            <thead>
-                <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <div class="row row-eq-spacing">
+        <div class="col-md">
 
+            <div class="mt-20 w-full">
+                <table class="table dataTable responsive" id="activities-table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('Type', 'Typ') ?></th>
+                            <th><?= lang('Activity', 'Aktivität') ?></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+        <?php
+        if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
+            $spectrum = $osiris->activities->aggregate([
+                ['$match' => [
+                    'projects' => $project['_id'],
+                    'type' => 'publication',
+                    'openalex.topics' => ['$exists' => true, '$ne' => []]
+                ]],
+
+                // total number of matched activities
+                ['$unwind' => '$openalex.topics'],
+
+                // group by topic id
+                ['$group' => [
+                    '_id' => '$openalex.topics.id',
+                    'count' => ['$sum' => 1],
+                    'sumScore' => ['$sum' => '$openalex.topics.score'],
+                    'topic' => ['$first' => '$openalex.topics']
+                ]],
+
+                // compute averages + share
+                ['$addFields' => [
+                    'avg_score' => ['$divide' => ['$sumScore', '$count']],
+                    'share' => ['$divide' => ['$count', $count_spectrum]],
+                    // optional combined weight (tweakable)
+                    'weight' => ['$multiply' => [
+                        ['$divide' => ['$count', $count_spectrum]],
+                        ['$divide' => ['$sumScore', $count_spectrum]]
+                    ]]
+                ]],
+
+                // filter noise
+                ['$match' => ['share' => ['$gte' => 0.05]]],
+
+                ['$sort' => ['weight' => -1]],
+                ['$limit' => 25]
+            ])->toArray();
+        ?>
+            <div class="col-md">
+                <h3>
+                    <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                </h3>
+                <?php
+                if (!empty($spectrum)) :
+                    include_once BASEPATH . "/php/Spectrum.php";
+                    Spectrum::render($spectrum, $count_spectrum);
+                else : ?>
+                    <p>
+                        <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+        <?php } ?>
+    </div>
 </section>
 
 

@@ -220,6 +220,59 @@ class Document extends Settings
         return $en;
     }
 
+
+    public static function selectContributorPreviewIndices(array $authors, int $limit = 10): array
+    {
+        $n = count($authors);
+        if ($n === 0) return [];
+
+        // If small enough, show all
+        if ($n <= $limit) {
+            return range(0, $n - 1);
+        }
+
+        $isAffiliated = function (array $a): bool {
+            return (!empty($a['aoi']) && $a['aoi'] === true) || (!empty($a['username']));
+        };
+
+        $selected = [];
+        $selected[0] = true;
+        $selected[$n - 1] = true;
+
+        // Add affiliated (in order, between first/last)
+        for ($i = 1; $i < $n - 1 && count($selected) < $limit; $i++) {
+            if ($isAffiliated($authors[$i])) {
+                $selected[$i] = true;
+            }
+        }
+
+        // Fill remaining from the front
+        for ($i = 1; $i < $n - 1 && count($selected) < $limit; $i++) {
+            if (!isset($selected[$i])) {
+                $selected[$i] = true;
+            }
+        }
+
+        ksort($selected);
+        return array_keys($selected);
+    }
+
+    // --- Minimal helper: central role mapping (business logic) ---
+    public static function author_role_from_field(string $field_id): ?string
+    {
+        return match ($field_id) {
+            'supervisor', 'supervisor-thesis' => 'supervisors',
+            'editor' => 'editors',
+            'authors', 'author-table', 'scientist' => 'authors',
+            default => null,
+        };
+    }
+
+    public static function isAffiliated(array $a): bool
+    {
+        return (!empty($a['aoi']) && $a['aoi'] === true) || (!empty($a['username']));
+    }
+
     public function schema()
     {
         if (!$this->hasSchema()) return "";
@@ -542,7 +595,6 @@ class Document extends Settings
         $raw_authors = DB::doc2Arr($raw_authors);
         if (!empty($raw_authors) && is_array($raw_authors)) {
             $pos = array_count_values(array_column($raw_authors, 'position'));
-            // dump($pos);
             $first = $pos['first'] ?? 1;
             $last = $pos['last'] ?? 1;
             $corresponding = array_key_exists('corresponding', $pos);
@@ -1099,10 +1151,8 @@ class Document extends Settings
 
     public function get_field($module, $default = '')
     {
-        // dump($module);
-        // dump($this->getVal($module, $default));
         if ($this->usecase == 'list') $default = '-';
-        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-')) {
+        if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }
         $Vocabulary = new Vocabulary();
@@ -1114,6 +1164,7 @@ class Document extends Settings
             case "author-table": // ["authors"],
                 return $this->formatAuthorsNew('authors-last-f.');
             case "supervisor": // ["authors"],
+            case "supervisors": // ["authors"],
             case "supervisor-thesis": // ["authors"],
                 return $this->formatAuthorsNew('supervisors-last-f.');
             case "book-series": // ["series"],
@@ -1259,14 +1310,18 @@ class Document extends Settings
             case "software-link": // ["link"],
                 $val = $this->getVal('link');
                 if (empty($val) || $val == $default) return $default;
+                $val = e($val);
+                if ($this->usecase == 'list') {
+                    return '<a target="_blank" rel="noopener noreferrer" href="' . $val . '" class="short-link" >' . $val . '</a>';
+                }
                 if ($module != 'link-short' || $module == 'link-full' || $this->usecase != 'list') {
-                    return "<a target='_blank' href='$val'>$val</a>";
+                    return '<a target="_blank" href="' . $val . '">' . $val . '</a>';
                 }
                 $short_url = str_replace(['https://', 'http://'], '', $val);
                 if (strlen($short_url) > 50) {
                     $short_url = substr($short_url, 0, 50) . '...';
                 }
-                return "<a target='_blank' href='$val'>$short_url</a>";
+                return '<a target="_blank" href="' . $val . '">' . $short_url . '</a>';
             case "location": // ["location"],
                 return $this->getVal('location');
             case "magazine": // ["magazine"],
@@ -1296,7 +1351,16 @@ class Document extends Settings
                 return '';
             case "oa_status": // ["oa_status"],
             case "openaccess-status": // ["oa_status"],
-                return $this->getVal('oa_status', 'Unknown Status');
+                $status = $this->getVal('oa_status', 'Unknown Status');
+                if (!empty($this->getVal('open_access', false))) {
+                    $status = 'Open Access (' . $status . ')';
+                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
+                } else {
+                    $status = 'Closed Access';
+                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
+                }
+                if ($this->usecase == 'list') return $oa . ' ' . $status;
+                return $status;
 
             case "organization": // ["organization"],
                 $value = $this->getVal('organization');
@@ -1394,7 +1458,7 @@ class Document extends Settings
                 return $this->getVal('publisher');
             case "pubmed": // ["pubmed"],
                 $val = $this->getVal('pubmed');
-                if ($val == $default) return $val;
+                if ($val == $default || empty($val)) return $val;
                 return "<a target='_blank' href='https://pubmed.ncbi.nlm.nih.gov/$val'>$val</a>";
             case "pubtype": // ["pubtype"],
                 switch ($this->getVal('pubtype')) {
@@ -1480,6 +1544,13 @@ class Document extends Settings
                     return $m['module'];
                 }
                 return 'Unknown';
+            case "teaching-course-title": // ["title", "module", "module_id"],
+                if (isset($this->doc['module_id'])) {
+                    $m = $this->DB->getConnected('teaching', $this->getVal('module_id'));
+                    if (empty($m)) return $this->getVal('title') ?? '';
+                    return $m['title'];
+                }
+                return $default;
             case "title": // ["title"],
                 return $this->getVal('title');
             case "topics": // ["topic"],
@@ -1580,7 +1651,9 @@ class Document extends Settings
                     $label = '[' . $this->lang($field['name'], $field['name_de'] ?? null) . ']';
                     return $val ? $label : '';
                 }
-                if (is_array($val)) return implode(", ", $val);
+                if (is_array($val)) {
+                    return implode(", ", $val);
+                }
                 return $val;
         }
     }
@@ -1701,7 +1774,8 @@ class Document extends Settings
         $ids = [];
         $doc = $this->doc;
         // generate a unique ID 
-        $id = $doc['authors'][0]['last'] . $doc['year'];
+        $id = $doc['authors'][0]['last'] ?? $doc['supervisors'][0]['last'] ?? 'unknown';
+        $id .= $doc['year'];
         $oid = $id;
         $i = 'a';
         while (in_array($id, $ids)) {
@@ -1860,41 +1934,7 @@ class Document extends Settings
 
     private function template($template)
     {
-
         $vars = array();
-
-        $pattern = "/{([^}]*)}/";
-        preg_match_all($pattern, $template, $matches);
-
-        foreach ($matches[1] as $match) {
-            $m = explode('|', $match, 2);
-            $value = $this->get_field($m[0]);
-
-            if (empty($value) && count($m) == 2) {
-                $value = $m[1];
-                // check if value is enquoted
-                if (preg_match('/^["\'](.*)["\']$/', $value, $value_match)) {
-                    $value = $value_match[1];
-                }
-                // check if the value is a field
-                else {
-                    // if (in_array($value, $this->field_ids))
-                    $value = $this->get_field($value, '');
-                }
-            }
-            if ($this->isEmptyValue($value)) {
-                $value = '';
-            } elseif (is_array($value)) {
-                $value = implode(', ', $value);
-            } elseif ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
-                $value = implode(', ', DB::doc2Arr($value));
-            }
-            if (!is_string($value)) {
-                $value = strval($value);
-            }
-            $vars['{' . $match . '}'] = ($value);
-        }
-        $template = strtr($template, $vars);
 
         $pattern = "/%([^%]*)%/";
         preg_match_all($pattern, $template, $matches);
@@ -1962,6 +2002,39 @@ class Document extends Settings
             $vars['%' . $match . '%'] = $text;
         }
         $line = strtr($template, $vars);
+        
+        $pattern = "/{([^}]*)}/";
+        preg_match_all($pattern, $line, $matches);
+
+        $vars = array();
+        foreach ($matches[1] as $match) {
+            $m = explode('|', $match, 2);
+            $value = $this->get_field($m[0]);
+
+            if (empty($value) && count($m) == 2) {
+                $value = $m[1];
+                // check if value is enquoted
+                if (preg_match('/^["\'](.*)["\']$/', $value, $value_match)) {
+                    $value = $value_match[1];
+                }
+                // check if the value is a field
+                else {
+                    $value = $this->get_field($value, '');
+                }
+            }
+            if ($this->isEmptyValue($value)) {
+                $value = '';
+            } elseif (is_array($value)) {
+                $value = implode(', ', $value);
+            } elseif ($value instanceof MongoDB\Model\BSONArray || $value instanceof MongoDB\Model\BSONDocument) {
+                $value = implode(', ', DB::doc2Arr($value));
+            }
+            if (!is_string($value)) {
+                $value = strval($value);
+            }
+            $vars['{' . $match . '}'] = ($value);
+        }
+        $line = strtr($line, $vars);
 
         $line = preg_replace('/\(\s*\)/', '', $line);
         $line = preg_replace('/\[\s*\]/', '', $line);

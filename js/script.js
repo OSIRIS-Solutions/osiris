@@ -1,18 +1,27 @@
 
 
-var SCIENTISTS;
 $(document).ready(function () {
-    var scientists = $('#scientist-list option').map(function (index, item) {
-        return item.value
-    })
-    SCIENTISTS = Object.values(scientists)
-
     // scroll to active sidebar menu if available
     if ($('.sidebar-menu a.active').length !== 0) {
         $('.sidebar').animate({
             scrollTop: $(".sidebar-menu a.active").offset().top - 200
         }, 100);
     }
+
+    // Hide decorative Phosphor icons from screen readers
+    $('i.ph, i.ph-duotone').each(function () {
+        const $icon = $(this);
+
+        // Skip if explicitly labeled
+        if ($icon.attr('aria-label') || $icon.attr('aria-labelledby')) {
+            return;
+        }
+
+        $icon.attr({
+            'aria-hidden': 'true',
+            'role': 'presentation'
+        });
+    });
 })
 
 function initQuill(element, controls = 'basic') {
@@ -461,13 +470,14 @@ function updateCart(add = true) {
 function addToCart(el, id) {//.addClass('animate__flip')
     // document.cookie = "username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC"; 
     var fav = osirisJS.readCookie('osiris-cart')
+    var action;
     if (fav) {
         var favlist = fav.split(',')
         // console.log(favlist);
         const index = favlist.indexOf(id);
         if (index > -1) {
             favlist.splice(index, 1);
-            console.info("remove");
+            action = "remove";
             updateCart(false)
             toastInfo(lang('Item removed from your collection.', 'Aktivität aus deiner Sammlung entfernt.'))
         } else {
@@ -476,14 +486,14 @@ function addToCart(el, id) {//.addClass('animate__flip')
                 return;
             }
             favlist.push(id)
-            console.info("add");
+            action = "add";
             toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
             updateCart(true)
         }
         fav = favlist.join(',')
     } else {
         fav = id
-        console.info("add");
+        action = "add";
         updateCart(true)
         toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
     }
@@ -491,7 +501,12 @@ function addToCart(el, id) {//.addClass('animate__flip')
     if (el === null) {
         location.reload()
     } else {
-        $(el).find('i').toggleClass('ph ph-duotone').toggleClass('ph').toggleClass('text-success')
+        if (action == "add") {
+            $(el).find('i').addClass('text-success').removeClass('ph').addClass('ph-duotone')
+        } else {
+            $(el).find('i').removeClass('text-success').removeClass('ph-duotone').addClass('ph')
+        }
+        console.log(action);
     }
 
 }

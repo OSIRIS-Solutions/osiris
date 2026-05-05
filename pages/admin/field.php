@@ -1,4 +1,21 @@
 <?php
+
+/**
+ * Page to manage custom fields
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * 
+ * @link        /admin/fields/<field_id>
+ *
+ * @package     OSIRIS
+ * @since       1.3.1
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
@@ -302,24 +319,25 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 <?php } ?>
 
+<?php if (!empty($form) && isset($form['id'])) { ?>
+    <div class="alert danger mt-20">
+        <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post">
+            <h5 class="title">
+                <?= lang('Delete this field', 'Dieses Feld löschen') ?>
+            </h5>
+            <p>
+                <?= lang('Are you sure you want to delete this field? This action cannot be undone.', 'Bist du sicher, dass du dieses Feld löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
+                <br>
+                <?= lang('<b>Hint:</b> this won\'t automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
+                <br>
+                <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
+            </p>
 
-<div class="alert danger mt-20">
-    <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post">
-        <h5 class="title">
-            <?= lang('Delete this field', 'Dieses Feld löschen') ?>
-        </h5>
-        <p>
-            <?= lang('Are you sure you want to delete this field? This action cannot be undone.', 'Bist du sicher, dass du dieses Feld löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
-        <br>
-            <?= lang('<b>Hint:</b> this won\'t automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
-        <br>
-            <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
-        </p>
+            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('Delete', 'Löschen') ?></button>
 
-        <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('Delete', 'Löschen') ?></button>
-
-    </form>
-</div>
+        </form>
+    </div>
+<?php } ?>
 
 
 

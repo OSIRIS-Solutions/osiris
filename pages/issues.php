@@ -4,14 +4,14 @@
  * Page to show open issues
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /issues
  *
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -172,11 +172,14 @@ $issues = $DB->getUserIssues($user);
 $a = array_map(function ($a) {
     return empty($a) ? 0 : 1;
 }, $issues);
-if (array_sum($a) === 0) {
-    echo "<p>" . lang(
-        "No problems found.",
-        "Keine Probleme gefunden."
-    ) . "</p>";
+if (array_sum($a) === 0) { ?>
+
+    <div class="text-center">
+        <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-tasks.png" alt="" class="sophie-img w-300">
+        <h2 class="mt-0"><?= lang('No warnings', 'Keine Warnmeldungen') ?></h2>
+        <p><?= lang('Here is currently nothing that requires your attention. Great work!', 'Hier gibt es momentan nichts, was deine Aufmerksamkeit erfordert. Großartige Arbeit!') ?></p>
+    </div>
+<?php
 }
 ?>
 
@@ -195,6 +198,7 @@ if (array_sum($a) === 0) {
         $doc = $DB->getActivity($doc['id']);
         $id = $doc['_id'];
         $type = $doc['type'];
+        if (!isset($doc['rendered'])) continue;
     ?>
         <div id="tr-<?= $id ?>">
             <div class="box padded mt-0" id="<?= $id ?>">
@@ -259,7 +263,6 @@ if (array_sum($a) === 0) {
             <div class="dropdown-menu w-300" aria-labelledby="dropdown-1">
                 <div class="content">
                     <form action="<?= ROOTPATH ?>/crud/activities/approve-all" method="post">
-                        <input type="hidden" name="user" value="<?= $user ?>">
                         <?= lang(
                             'I confirm that I am the author of <b>all</b> of the following publications and that my affiliation has always been the ' . $Settings->get('affiliation') . '.',
                             'Ich bestätige, dass ich Autor:in <b>aller</b> folgenden Publikationen bin und meine Affiliation dabei immer die ' . $Settings->get('affiliation') . ' war.'
@@ -733,4 +736,3 @@ if (array_sum($a) === 0) {
             <?php } ?>
         </table>
     <?php } ?>
-    

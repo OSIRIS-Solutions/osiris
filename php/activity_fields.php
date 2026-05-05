@@ -1011,6 +1011,17 @@ class ActivityFields extends Fields
                 'input' => 'date'
             ],
             [
+                'id' => 'updated',
+                'module_of' => $typeModules['updated'] ?? [],
+                'usage' => [
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Updated at', 'Aktualisiert am'),
+                'type' => 'datetime',
+                'input' => 'date'
+            ],
+            [
                 'id' => 'updated_by',
                 'module_of' => $typeModules['updated_by'] ?? [],
                 'usage' => [
@@ -1020,6 +1031,17 @@ class ActivityFields extends Fields
                 ],
                 'label' => lang('Updated by (Abbreviation)', 'Aktualisiert von (Kürzel)'),
                 'type' => 'string'
+            ],
+            [
+                'id' => 'exclude_from_reports',
+                'module_of' => ['general'],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Reports: exclude', 'Berichte: ausschließen'),
+                'type' => 'boolean',
             ]
         ];
 
@@ -1095,15 +1117,9 @@ class ActivityFields extends Fields
             ];
         }
 
+        
+
         $FIELDS = parent::addCustomFields($FIELDS, $osiris, $typeModules);
-        // remove 'filter' from all fields where module_of is empty
-        // foreach ($FIELDS as &$f) {
-        //     if (empty($f['module_of'])) {
-        //         $f['usage'] = array_filter($f['usage'], function ($u) {
-        //             return $u != 'filter';
-        //         });
-        //     }
-        // }
         $this->fields = array_values($FIELDS);
         // Sort fields by name
         usort($this->fields, function ($a, $b) {

@@ -4,6 +4,14 @@ let SELECTED_CAT = null;
 let SELECTED_TYPE = null;
 let DOIDATA = null;
 
+var SCIENTISTS;
+$(document).ready(function () {
+    var scientists = $('#scientist-list option').map(function (index, item) {
+        return item.value
+    })
+    SCIENTISTS = Object.values(scientists)
+
+});
 // escape HTML special chars to avoid breaking the surrounding markup
 const escapeHtml = (str) => {
     if (str === null || str === undefined) return '';
@@ -329,7 +337,7 @@ function verifyForm(event, form) {
         }
     });
 
-
+    // some form elements store lists and can only be validated as a whole, e.g. countries, authors, topics. Check if they are required and not empty:
     // check if authors are defined
     if ($('#author-widget').length > 0) {
         if ($('.author-list').find('.author').length === 0) {
@@ -349,9 +357,22 @@ function verifyForm(event, form) {
 
             var topicName = $('#topic-widget h5').first().text().trim();
             errors.push(topicName)
-
         }
     }
+
+    // more marked modules:
+    $('.data-module.required').each(function () {
+        console.log($(this).find(':input[name]'));
+        if ($(this).find(':input[name]:not(:disabled)').length === 0) {
+            $(this).addClass('is-invalid').removeClass('is-valid')
+            correct = false
+            var name = $(this).find('.floating-title').text().trim();
+            errors.push(name)
+        } else {
+            $(this).addClass('is-valid').removeClass('is-invalid')
+        }
+
+    })
 
     if (correct) {
         return true;
@@ -414,7 +435,6 @@ function getTeaching(name) {
                 teaching.push({
                     title: j.title,
                     affiliation: j.affiliation,
-                    contact_person: j.contact_person,
                     module: j.module,
                     id: j.id
                 })
@@ -437,7 +457,6 @@ function getTeaching(name) {
 
                     var data = $('<td>')
                     data.append(`<h5 class="m-0"><span class="highlight-text" >${j.module}</span> ${j.title}</h5>`)
-                    data.append(`<span class="float-right">${j.contact_person}</span>`)
                     data.append(`<span class="text-muted">${j.affiliation}</span>`)
                     row.append(data)
 

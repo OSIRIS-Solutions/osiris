@@ -862,6 +862,7 @@ function initActivities(selector, data = {}, highlights = []) {
                 },
                 className: 'btn small',
                 text: `<i class="ph ph-clipboard"></i> ${lang('Copy', 'Kopieren')}`,
+                title: null
             },
             {
                 extend: 'excelHtml5',
@@ -883,10 +884,10 @@ function initActivities(selector, data = {}, highlights = []) {
                         }
                     }
                 },
-                title: TITLE,
                 className: 'btn small',
                 title: 'OSIRIS_activities',
                 text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+                title: null
             },
             {
                 extend: 'print',
@@ -895,7 +896,7 @@ function initActivities(selector, data = {}, highlights = []) {
                     // do not strip HTML tags in the links column
                     stripHtml: false
                 },
-                title: TITLE,
+                title: null,
                 className: 'btn small',
                 text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
                 customize: function (win) {
@@ -1652,35 +1653,42 @@ function coauthorNetwork(selector, data = {}) {
 }
 
 
-function conceptTooltip() {
-    $('.concept').each(function () {
+function spectrumTooltip() {
+    $('.spectrum').each(function () {
         var el = $(this)
         var data = {
             score: el.attr('data-score'),
             name: el.attr('data-name'),
-            count: el.attr('data-count'),
-            wikidata: el.attr('data-wikidata'),
+            count: el.attr('data-count') || 0,
+            id: el.attr('data-id'),
+            domain: el.attr('data-domain') || 'unknown'
         }
+        data.score = parseFloat(data.score);
+        data.score = isNaN(data.score) ? lang('No score', 'Kein Score') : data.score.toFixed(2);
         el.popover({
-            placement: 'auto bottom',
-            container: '#concepts',
+            placement: 'auto top',
+            container: '#spectrum',
             mouseOffset: 10,
             trigger: 'click',
+            // add extra classes to popover
+            template: `<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title spectrum-${data.domain}"></h3><div class="popover-content"></div></div>`,
             html: true,
             content: function () {
-                var label = lang('Activities', 'Aktivitäten')
-                if (data.count == 1) label = lang('Activity', 'Aktivität');
+                var label = ''
+                if (data.count > 0) label = `In ${data.count} ${data.count > 1 ? lang('Activities', 'Aktivitäten') : lang('Activity', 'Aktivität')}`
                 return `<b>${data.name}</b><br>
                     Score: ${data.score} %</br>
-                    In ${data.count} ${label}<br>
+                    ${label}
                     <hr>
-                    <a href="${ROOTPATH}/concepts/${data.name}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-right"></i> Concept page</a><br>
-                    <a href="${data.wikidata}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-up-right"></i> Wikidata</a>
+                    <a href="${ROOTPATH}/spectrum/topic/${data.id}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-right"></i> ${lang('Spectrum page', 'Spektrum-Seite')}</a><br>
                     `;
             }
         });
     }
     );
+    $(document).on('click', '.spectrum', function () {
+        $('.spectrum').not(this).popover('hide');
+    });
 }
 
 function wordcloud(selector, data = {}) {
@@ -1874,9 +1882,6 @@ function userTable(selector, data = {}) {
         dom: 'frtipP',
         deferRender: true,
         responsive: true,
-        language: {
-            url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-        },
         columnDefs: [
             {
                 targets: 0,

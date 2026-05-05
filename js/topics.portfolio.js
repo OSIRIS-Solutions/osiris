@@ -2,7 +2,7 @@ var activitiesTable = false,
     publicationTable = false,
     projectsExists = false,
     coauthorsExists = false,
-    conceptsExists = false,
+    spectrumExists = false,
     // collaboratorsExists = false,
     collabExists = false,
     personsExists = false,
@@ -157,9 +157,6 @@ function navigate(key) {
                 dom: 'frtipP',
                 deferRender: true,
                 responsive: true,
-                language: {
-                    url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-                },
                 "order": [
                     [1, 'asc'],
                 ],
@@ -183,10 +180,10 @@ function navigate(key) {
         //     collaboratorsExists = true;
         //     break;
 
-        case 'concepts':
-            if (conceptsExists) break;
-            conceptsExists = true;
-            conceptTooltip()
+        case 'spectrum':
+            if (spectrumExists) break;
+            spectrumExists = true;
+            spectrumTooltip()
             break;
 
         case 'wordcloud':

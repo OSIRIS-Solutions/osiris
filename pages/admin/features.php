@@ -1,0 +1,745 @@
+<?php
+
+/**
+ * Admin page for managing features
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * 
+ * @link        /admin/features
+ *
+ * @package     OSIRIS
+ * @since       1.0.0
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+?>
+<style>
+    .table td.description {
+        color: var(--muted-color);
+        padding-top: 0;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .with-description td {
+        border-bottom: 0;
+    }
+
+    .box>.form-group>label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0;
+    }
+
+    .box .custom-radio {
+        display: inline-block;
+        margin-right: 1rem;
+    }
+
+    .box small {
+        color: var(--muted-color);
+        display: block;
+    }
+
+    #features-settings-page label.label {
+        font-weight: bold;
+        display: block;
+    }
+
+    #features-settings-page .on-this-page-nav a {
+        padding-left: 1rem;
+    }
+
+    #features-settings-page .on-this-page-nav a.submenu {
+        font-size: 1.2rem;
+        padding-top: 0;
+        padding-left: 3rem;
+    }
+
+    #features-settings-page p.description {
+        font-size: 1.2rem;
+        color: var(--muted-color-dark);
+    }
+</style>
+
+<h1>
+    <i class="ph-duotone ph-wrench"></i>
+    <?= lang('Features', 'Funktionen') ?>
+</h1>
+<p class="text-muted">
+    <?= lang('Here you can enable or disable features of OSIRIS. Some features may require additional configuration after activation. Please check the documentation for more information on each feature.', 'Hier kannst du Funktionen von OSIRIS aktivieren oder deaktivieren. Einige Funktionen erfordern möglicherweise zusätzliche Konfiguration nach der Aktivierung. Bitte überprüfe die Dokumentation für weitere Informationen zu jeder Funktion.') ?>
+</p>
+
+<form action="<?= ROOTPATH ?>/crud/admin/general" method="post" id="role-form">
+    <?php
+    function renderCheckbox($feature, $default = false)
+    {
+        global $Settings;
+        $enabled = $Settings->featureEnabled($feature, $default);
+    ?>
+        <div class="custom-radio">
+            <input type="radio" id="<?= $feature ?>-true" value="1" name="features[<?= $feature ?>]" <?= $enabled ? 'checked' : '' ?>>
+            <label for="<?= $feature ?>-true">
+                <?= lang('Enabled', 'Aktiviert') ?>
+            </label>
+        </div>
+        <div class="custom-radio">
+            <input type="radio" id="<?= $feature ?>-false" value="0" name="features[<?= $feature ?>]" <?= $enabled ? '' : 'checked' ?>>
+            <label for="<?= $feature ?>-false">
+                <?= lang('Disabled', 'Deaktiviert') ?>
+            </label>
+        </div>
+    <?php
+    }
+
+    function badgeDeprecated()
+    { ?>
+        <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('This feature is deprecated and is currently not maintained.', 'Diese Funktion ist veraltet und wird aktuell nicht gepflegt.') ?>">
+            <i class="ph ph-warning"></i>
+            <?= lang('Deprecated', 'Veraltet') ?>
+        </span>
+    <?php
+    }
+
+    function badgeBeta()
+    { ?>
+        <span class="badge signal" data-toggle="tooltip" data-title="<?= lang('This is a beta feature and may not work as expected. Use at your own risk.', 'Dies ist eine Beta-Funktion und funktioniert möglicherweise nicht wie erwartet. Nutzung auf eigene Gefahr.') ?>">
+            <i class="ph ph-flask"></i>
+            <?= lang('Beta', 'Beta') ?>
+        </span>
+    <?php
+    }
+    ?>
+
+    <div class="row row-eq-spacing mt-0" id="features-settings-page">
+        <div class="col-md-9">
+
+            <!-- Core Features Section -->
+
+            <div class="box" id="core-features">
+                <h3 class="header">
+                    <?= lang('Core Features', 'Kernfunktionen') ?>
+                </h3>
+
+                <div class="content">
+                    <h4 id="portal">
+                        <?= lang('OSIRIS Portfolio') ?>
+                    </h4>
+
+                    <p class="description">
+                        <?= lang('The OSIRIS Portfolio is a public-facing website that showcases the research activities of your institute. If you enable Portfolio here, you will be able to manage public visibility settings of user profiles, activities and more. Furthermore you enable the Portfolio-API, which will deliver only selected information.', 'Das OSIRIS-Portfolio ist eine öffentlich zugängliche Website, die die Forschungsaktivitäten deines Instituts präsentiert. Wenn du das Portfolio hier aktivierst, kannst du die Sichtbarkeitseinstellungen von Nutzerprofilen, Aktivitäten und mehr verwalten. Außerdem wird die Portfolio-API aktiviert, die nur die ausgewählten Informationen bereitstellt.') ?>
+                    </p>
+
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Portfolio previews and API', 'Portfolio-Vorschau und API') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('portal');
+                        ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Public Portal without Login on start page', 'Öffentliches Portal ohne Anmeldung auf der Startseite') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('portal-public');
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="projects">
+                        <?= lang('Projects and Proposals', 'Projekte und Anträge') ?>
+                    </h4>
+
+                    <p class="description">
+                        <?= lang('OSIRIS is able to manage complete project life cycles, from proposal submission to project reporting. By enabling this feature, you can create and manage projects and proposals within OSIRIS. It is possible to define your own project types and manage data fields.', 'OSIRIS kann komplette Projektlebenszyklen verwalten, von der Antragstellung bis zum Projektbericht. Durch die Aktivierung dieser Funktion kannst du Projekte und Anträge innerhalb von OSIRIS erstellen und verwalten. Es ist möglich, eigene Projekttypen zu definieren und Datenfelder zu verwalten.') ?>
+                    </p>
+
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('projects');
+                        ?>
+                    </div>
+
+                    <h5>Nagoya Protocol Compliance</h5>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Add Nagoya Protocol Compliance to proposals', 'Füge Nagoya-Protokoll Compliance zu Anträgen hinzu') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('nagoya');
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="teaching-modules">
+                        <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
+                    </h4>
+                    <p class="description">
+                        <?= lang('It is possible to centrally manage teaching modules (e.g. at universities) and add them to activities, such as lectures or seminars. By enabling this feature, you can create and manage teaching modules within OSIRIS. To use teaching modules within activities, use the teaching module datafield.', 'Es ist möglich, Lehrveranstaltungen (z.B. an Universitäten) zentral zu verwalten und sie Aktivitäten wie Vorlesungen oder Seminaren hinzuzufügen. Durch die Aktivierung dieser Funktion kannst du Lehrveranstaltungen innerhalb von OSIRIS erstellen und verwalten. Um Lehrveranstaltungen in Aktivitäten zu verwenden, nutze das Datenfeld für Lehrveranstaltungen.') ?>
+                    </p>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Show Teaching modules in Sidebar', 'Zeige Lehrveranstaltungen in der Seitennavigation') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('teaching-modules', true);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="research-topics">
+                        <?= lang('Research Topics', 'Forschungsbereiche') ?>
+                    </h4>
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('topics');
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $label = $Settings->get('topics_label');
+                        ?>
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="topics_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Research topics') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="topics_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Forschungsbereiche') ?>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php
+                    $n_topics = $osiris->topics->count();
+                    $list_fields = $osiris->adminFields->find(['format' => 'list'])->toArray();
+                    if ($n_topics == 0 && count($list_fields) > 0) { ?>
+                        <div class="mb-20">
+                            <a href="#migrate-topics" class="btn">
+                                <?= lang('Migrate custom fields to topics', 'Custom Fields in Bereiche migrieren') ?>
+                            </a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="infrastructures">
+                        <?= lang('Infrastructures in OSIRIS', 'Infrastrukturen in OSIRIS') ?>
+                    </h4>
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('infrastructures');
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $label = $Settings->get('infrastructures_label');
+                        ?>
+
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="infrastructures_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Infrastructures') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="infrastructures_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Infrastrukturen') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="calendar">
+                        <?= lang('Calendar and Events', 'Kalender und Events') ?>
+                    </h4>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Enable central event management', 'Aktiviere das zentrale Event-Management') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('events', true);
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="events" class="label">
+                            <?= lang('Add deadlines to central event management', 'Füge Deadlines zum zentralen Event-Management hinzu') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('deadlines', false);
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Show the calendar in Sidebar', 'Zeige den Kalender in der Seitennavigation') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('calendar', false);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="tags">
+                        <?= lang('Tags', 'Schlagwörter') ?>
+                    </h4>
+                    <p class="description">
+                        <?= lang('Tags can be used to label and categorize activities, projects and events. By enabling this feature, you can create and manage tags within OSIRIS. Once activated, you can manage tags in the content section of the admin panel.', 'Schlagwörter können verwendet werden, um Aktivitäten, Projekte und Events zu kennzeichnen und zu kategorisieren. Durch die Aktivierung dieser Funktion kannst du Schlagwörter innerhalb von OSIRIS erstellen und verwalten. Nach der Aktivierung kannst du Schlagwörter im Inhalte-Bereich des Admin-Panels verwalten.') ?>
+                    </p>
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('tags');
+                        ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php
+                        $label = $Settings->get('tags_label');
+                        ?>
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="tags_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Tags') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tags_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Schlagwörter') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="trips">
+                        <?= lang('Research Trips', 'Forschungsreisen') ?>
+                    </h4>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Enable a module for analysing research trips', 'Aktiviere ein Modul, das Forschungsreisen analysieren kann') ?>
+                        </label>
+
+                        <p class="text-muted">
+                            <?= lang('The add-on requires an activity type called <kbd>travel</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>travel</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.') ?>
+                        </p>
+                        <?php
+                        $trips = $Settings->featureEnabled('trips');
+
+                        $travel_available = $osiris->adminTypes->count(['id' => 'travel']);
+                        $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+
+                        if ($travel_available == 0) { ?>
+                            <p>
+                                <i class="ph ph-warning text-danger"></i>
+                                <?= lang('The activity type <kbd>travel</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>travel</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
+                            </p>
+                        <?php } else if ($modules_available == 0) { ?>
+                            <p>
+                                <i class="ph ph-warning text-danger"></i>
+                                <?= lang('The activity type <kbd>travel</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>travel</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>
+                            </p>
+                        <?php } else { ?>
+                            <p>
+                                <i class="ph ph-seal-check text-success"></i>
+                                <?= lang('The module is available and can be activated here.', 'Das Modul ist verfügbar und kann hier aktiviert werden.') ?>
+                            </p>
+
+                            <div class="custom-radio">
+                                <input type="radio" id="trips-true" value="1" name="features[trips]" <?= $trips ? 'checked' : '' ?>>
+                                <label for="trips-true"><?= lang('enabled', 'aktiviert') ?></label>
+                            </div>
+
+                            <div class="custom-radio">
+                                <input type="radio" id="trips-false" value="0" name="features[trips]" <?= $trips ? '' : 'checked' ?>>
+                                <label for="trips-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="wordcloud">
+                        <?= lang('Word Clouds', 'Word Clouds') ?>
+                    </h4>
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('wordcloud');
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reporting & Quality Features Section -->
+
+            <div class="box" id="reporting-quality-features">
+                <h3 class="header">
+                    <?= lang('Reporting & Quality', 'Reporting & Qualität') ?>
+                </h3>
+                <div class="content">
+                    <h4 id="quarterly-reporting">
+                        <?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?>
+                    </h4>
+                    <div class="form-group">
+
+                        <p class="description">
+                            <?= lang('OSIRIS reminds users every 3 months to update their activities and submit them for reporting. They can check the data on the "My year" page and confirm the quarter. The controlling dashboard then provides an overview of all those who have not yet updated their data.', 'OSIRIS erinnert Nutzende alle 3 Monate daran, ihre Aktivitäten zu aktualisieren und für die Berichterstattung zu übermitteln. Dabei können sie auf der Seite "Mein Jahr" die Daten überprüfen und dann das Quartal bestätigen. Im Controlling-Dashbord gibt es dann eine Übersicht über alle Personen, die ihre Daten noch nicht aktualisiert haben.') ?>
+                            <br>
+                            <?= lang('If you do not wish to use this function, you can deactivate it here. Reminders will then no longer be sent to users and there will no longer be an option to confirm the data on the "My year" page.', 'Wenn ihr diese Funktion nicht nutzen wollt, könnt ihr sie hier deaktivieren. Es wird dann keine Erinnerung mehr an die Nutzenden geschickt und in der Seite "Mein Jahr" gibt es keine Möglichkeit mehr, die Daten zu bestätigen.') ?>
+                        </p>
+
+                        <?php
+                        renderCheckbox('quarterly-reporting', true);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="quality-workflow">
+                        <?= lang('Quality workflows of activities', 'Qualitäts-Workflows von Aktivitäten') ?>
+                    </h4>
+                    <div class="form-group">
+                        <p class="description">
+                            <?= lang('You can enable a quality workflow for activities. This means that users can submit their activities for review and an admin or editor can approve or reject them. This is useful if you want to ensure that only verified activities are visible in the system.', 'Du kannst einen Qualitäts-Workflow für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten zur Überprüfung einreichen können und ein Admin oder Editor diese dann genehmigen oder ablehnen kann. Das ist nützlich, wenn du sicherstellen möchtest, dass nur verifizierte Aktivitäten im System sichtbar sind.') ?>
+                        </p>
+                        <?php
+                        renderCheckbox('quality-workflow', false);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="journal-metrics">
+                        <?= lang('Journals', 'Journale') ?>
+                    </h4>
+                    <div class="form-group">
+                        <?php
+                        $label = $Settings->get('journals_label');
+                        ?>
+
+                        <div class="row row-eq-spacing my-0">
+                            <div class="col-md-6">
+                                <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('no-journal-metrics', false);
+                        ?>
+                        <p class="description">
+                            <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
+                        </p>
+                    </div>
+                    <!-- <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Enable impact factors', 'Aktiviere Impact Faktoren') ?>
+                                <?= badgeBeta() ?>
+                            </label>
+                            <?php
+                            renderCheckbox('journal-impact-factors', true);
+                            ?>
+                            <p class="description">
+                                <?= lang('Impact factors will be displayed in the journal information and in corresponding activities.', 'Impact Faktoren werden in den Journal-Informationen angezeigt. Wenn du diese Option deaktivierst, werden nur Quartile angezeigt.') ?>
+                            </p>
+                        </div> -->
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="drafts">
+                        <?= lang('Drafts', 'Entwürfe') ?>
+                    </h4>
+                    <div class="form-group">
+                        <p class="description">
+                            <?= lang('You can enable drafts for activities. This means that users can save their activities as drafts and complete them later.', 'Du kannst Entwürfe für Aktivitäten aktivieren. Das bedeutet, dass Nutzende ihre Aktivitäten als Entwürfe speichern und später vervollständigen können. ') ?>
+                        </p>
+                        <?php
+                        renderCheckbox('drafts', false);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4>
+                        <?= lang('IDA Integration', 'IDA-Integration') ?>
+                    </h4>
+                    <?= badgeDeprecated() ?>
+                    <p class="description">
+                        <?= lang('IDA is an information system for data collection and evaluation used by the Leibniz Association. In theory, OSIRIS has an interface to IDA, but due to frequent changes to the IDA API, it does not function reliably and is no longer maintained. If the pact query stabilizes over several years, we will resume maintenance of the interface.', 'IDA ist ein Informationssystem zur Datenerfassung und Auswertung der Leibniz-Gemeinschaft. Theoretisch hat OSIRIS eine Schnittstelle zu IDA, die jedoch aufgrund der häufigen Änderungen der IDA-API nicht zuverlässig funktioniert und auch nicht mehr gepflegt wird. Sollte sich die Paktabfrage über mehrere Jahre stabilisieren, werden wir die Schnittstelle wieder pflegen.') ?>
+                    </p>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Enable integration with the IDA tool', 'Aktiviere die Integration mit dem IDA-Tool') ?>
+                        </label>
+
+                        <?php
+                        renderCheckbox('ida');
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Imports & External Features Section -->
+
+            <div class="box" id="imports-external-features">
+                <h3 class="header">
+                    <?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?>
+                </h3>
+                <div class="content">
+                    <h4 id="imports">
+                        <?= lang('Imports', 'Importe') ?>
+                    </h4>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Allow user import from Google Scholar', 'Import von Nutzerdaten aus Google Scholar erlauben') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('googlescholar', true);
+                        ?>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Allow user import from OpenAlex', 'Import von Nutzerdaten aus OpenAlex erlauben') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('openalex', true);
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="altmetrics">
+                        <?= lang('Altmetrics', 'Altmetriken') ?>
+                    </h4>
+                    <?= badgeBeta() ?>
+                    <p class="description">
+                        <?= lang('Altmetrics are alternative metrics that measure the attention and impact of research outputs based on online activity. By enabling this feature, you can display altmetric badges in activities that have a DOI, ISBN or PubMed ID in OSIRIS.', 'Altmetriken sind alternative Metriken, die die Aufmerksamkeit und den Einfluss von Forschungsergebnissen basierend auf Online-Aktivitäten messen. Durch die Aktivierung dieser Funktion kannst du Altmetrik-Badges in Aktivitäten anzeigen, die eine DOI, ISBN oder PubMed ID in OSIRIS haben.') ?>
+                        <br>
+                        <?= lang('In this first version, only public badges are supported.', 'In dieser ersten Version werden nur öffentliche Badges unterstützt.') ?>
+                    </p>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Enable Altmetrics for publications', 'Aktiviere Altmetriken für Publikationen') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('altmetrics');
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="spectrum">
+                        <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                    </h4>
+
+                    <?= badgeBeta() ?>
+
+                    <p class="description">
+                        <?= lang('The research spectrum is based on OpenAlex Topics and provides a visual representation of the research topics covered by individuals, groups or the entire institute.', 'Das Forschungs-Spektrum basiert auf OpenAlex Topics und bietet eine visuelle Darstellung der Forschungsthemen, die von Einzelpersonen, Gruppen oder dem gesamten Institut abgedeckt werden.') ?>
+                    </p>
+
+                    <div class="form-group">
+                        <?php
+                        renderCheckbox('spectrum');
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="box" id="guest-management-features">
+                <h3 class="header">
+                    <?= lang('Profiles and Guests', 'Profile und Gäste') ?>
+                </h3>
+
+
+                <div class="content">
+                    <h4 id="new-publications">
+                        <?= lang('New Publications', 'Neue Publikationen') ?>
+                    </h4>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Show new publications in the news section of peoples profile page', 'Zeige neue Publikationen im News-Bereich der Personen-Profilseite') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('new-publications', true);
+                        ?>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <h4 id="new-colleagues">
+                        <?= lang('New Colleagues', 'Neue Kolleg:innen') ?>
+                    </h4>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Show new colleagues in the news section of peoples profile page', 'Zeige neue Kolleg:innen im News-Bereich der Personen-Profilseite') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('new-colleagues');
+                        ?>
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <h4 id="guest-forms">
+                        <?= lang('Guest forms', 'Gästeformulare') ?>
+                    </h4>
+
+                    <?= badgeBeta() ?>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Guests can be registered in OSIRIS', 'Gäste können in OSIRIS angemeldet werden') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('guests');
+                        ?>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('External guest forms to complete registration', 'Externe Gästeformulare, um die Registration abzuschließen') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('guest-forms');
+                        ?>
+
+                        <div class="row mt-10">
+                            <label for="guest-forms-server" class="w-150 col flex-reset"><?= lang('Server address', 'Server-Adresse') ?></label>
+                            <input type="text" class="form-control small col" name="general[guest-forms-server]" id="guest-forms-server" value="<?= $Settings->get('guest-forms-server') ?>">
+                        </div>
+                        <div class="row mt-10">
+                            <label for="guest-forms-secret-key" class="w-150 col flex-reset"><?= lang('Secret key') ?></label>
+                            <input type="text" class="form-control small col" name="general[guest-forms-secret-key]" id="guest-forms-secret-key" value="<?= $Settings->get('guest-forms-secret-key') ?>">
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bottom-buttons">
+                <button class="btn success" type="submit">
+                    <i class="ph ph-floppy-disk"></i>
+                    <?= lang('Save changes', 'Änderungen speichern') ?>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 d-none d-md-block">
+            <nav class="on-this-page-nav">
+                <div class="content">
+                    <div class="title"><?= lang('Features', 'Funktionen') ?></div>
+
+                    <a href="#core-features"><?= lang('Core Features', 'Kernfunktionen') ?></a>
+                    <a href="#portal" class="submenu"><?= lang('OSIRIS Portfolio') ?></a>
+                    <a href="#projects" class="submenu"><?= lang('Projects and Proposals', 'Projekte und Anträge') ?></a>
+                    <a href="#teaching-modules" class="submenu"><?= lang('Teaching modules', 'Lehrveranstaltungen') ?></a>
+                    <a href="#research-topics" class="submenu"><?= lang('Research Topics', 'Forschungsbereiche') ?></a>
+                    <a href="#infrastructures" class="submenu"><?= lang('Infrastructures', 'Infrastrukturen') ?></a>
+                    <a href="#calendar" class="submenu"><?= lang('Calendar and Events', 'Kalender und Events') ?></a>
+                    <a href="#tags" class="submenu"><?= lang('Tags', 'Schlagwörter') ?></a>
+                    <a href="#trips" class="submenu"><?= lang('Research Trips', 'Forschungsreisen') ?></a>
+                    <a href="#wordcloud" class="submenu"><?= lang('Word Clouds', 'Word Clouds') ?></a>
+
+                    <a href="#reporting-quality-features"><?= lang('Reporting & Quality', 'Reporting & Qualität') ?></a>
+                    <a href="#quarterly-reporting" class="submenu"><?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?></a>
+                    <a href="#quality-workflow" class="submenu"><?= lang('Quality workflows', 'Qualitäts-Workflows') ?></a>
+                    <a href="#journal-metrics" class="submenu"><?= lang('Journals', 'Journale') ?></a>
+                    <a href="#drafts" class="submenu"><?= lang('Drafts', 'Entwürfe') ?></a>
+                    <a href="#ida" class="submenu"><?= lang('IDA Integration', 'IDA-Integration') ?></a>
+
+                    <a href="#imports-external-features"><?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?></a>
+                    <a href="#imports" class="submenu"><?= lang('Imports', 'Importe') ?></a>
+                    <a href="#altmetrics" class="submenu"><?= lang('Altmetrics', 'Altmetriken') ?></a>
+                    <a href="#spectrum" class="submenu"><?= lang('Research Spectrum', 'Forschungs-Spektrum') ?></a>
+
+                    <a href="#guest-management-features"><?= lang('Profiles and Guests', 'Profile und Gäste') ?></a>
+                    <a href="#new-colleagues" class="submenu"><?= lang('New Colleagues', 'Neue Kolleg:innen') ?></a>
+                    <a href="#guest-forms" class="submenu"><?= lang('Guest forms', 'Gästeformulare') ?></a>
+                </div>
+
+            </nav>
+
+        </div>
+
+    </div>
+
+
+</form>
+
+
+
+
+<?php if ($n_topics == 0 && count($list_fields) > 0) { ?>
+
+    <div class="modal" id="migrate-topics" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#!">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+                <h5 class="modal-title">
+                    <?= lang('Migrate custom fields to research topics', 'Benutzerdefinierte Felder in Forschungsbereiche migrieren') ?>
+                </h5>
+
+                <form action="<?= ROOTPATH ?>/migrate/custom-fields-to-topics" method="post">
+                    <div class="form-group ">
+                        <label for="field"><?= lang('Select a field you want to use', 'Wähle ein Custom Field, dass du migrieren willst') ?></label>
+
+                        <select name="field" id="field" class="form-control">
+                            <?php foreach ($list_fields as $field) { ?>
+                                <option value="<?= $field['id'] ?>"><?= lang($field['name'], $field['name_de'] ?? null) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <?= lang('The following will happen if you click on migrate:', 'Wenn du auf migrieren klickst, wird das Folgende passieren:') ?>
+
+                    <ul class="list">
+                        <li>
+                            <?= lang('The selected custom field is used to create new research areas on this basis. Don\'t worry, you can still edit them later.', 'Das ausgewählte Custom Field wird genommen, um auf dieser Grundlage neue Forschungsbereiche anzulegen. Keine Sorge, du kannst sie später noch bearbeiten.') ?>
+                        </li>
+                        <li>
+                            <?= lang('All activities for which the custom field was completed are assigned to the respective research areas.', 'Alle Aktivitäten, bei denen das Custom Field ausgefüllt war, werden den jeweiligen Forschungsbereichen zugeordnet.') ?>
+                        </li>
+                        <li>
+                            <?= lang('The custom field is then deleted, i.e. the field itself, the assignment to forms and the values set for the activities are removed.', 'Das Custom Field wird daraufhin gelöscht, d.h. das Feld selbst, die Zuordnung zu Formularen und die gesetzten Werte bei den Aktivitäten werden entfernt.') ?>
+                        </li>
+                    </ul>
+
+                    <button class="btn primary">
+                        <?= lang('Migrate', 'Migrieren') ?>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+<?php } ?>

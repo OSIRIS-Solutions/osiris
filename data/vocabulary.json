@@ -650,6 +650,41 @@
     ]
   },
   {
+    "id": "deadline-type",
+    "category": "Event",
+    "name": "Deadline Type",
+    "name_de": "Deadline-Typ",
+    "description": "The type of a deadline.",
+    "description_de": "Die Art einer Frist.",
+    "values": [
+      {
+        "id": "submission",
+        "en": "Submission deadline",
+        "de": "Einreichungsfrist"
+      },
+      {
+        "id": "reporting",
+        "en": "Reporting deadline",
+        "de": "Berichtsfrist"
+      },
+      {
+        "id": "evaluation",
+        "en": "Evaluation deadline",
+        "de": "Begutachtungsfrist"
+      },
+      {
+        "id": "registration",
+        "en": "Registration deadline",
+        "de": "Anmeldungsfrist"
+      },
+      {
+        "id": "other",
+        "en": "Other deadline",
+        "de": "Sonstige Frist"
+      }
+    ]
+  },
+  {
     "id": "thesis",
     "category": "Activity",
     "name": "Thesis Category",

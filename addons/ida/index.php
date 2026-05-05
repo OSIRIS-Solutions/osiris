@@ -5,7 +5,7 @@ define('IDA_PATH', BASEPATH . '/addons/ida');
 Route::get('/ida/auth', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('ida')) {
-        die('IDA Integration is not enabled. Please contact admin.');
+        abortwith(500, lang("The IDA module is not enabled.", "Das IDA Modul ist nicht aktiviert."), "/");
     }
     include BASEPATH . "/header.php";
     include IDA_PATH . "/pages/ida-login.php";
@@ -16,7 +16,7 @@ Route::post('/ida/auth', function () {
 
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('ida')) {
-        die('IDA Integration is not enabled. Please contact admin.');
+        abortwith(500, lang("The IDA module is not enabled.", "Das IDA Modul ist nicht aktiviert."), "/");
     }
 
     require_once IDA_PATH . "/php/IDA.php";
@@ -37,7 +37,7 @@ Route::post('/ida/auth', function () {
 Route::get('/ida/dashboard', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('ida')) {
-        die('IDA Integration is not enabled. Please contact admin.');
+        abortwith(500, lang("The IDA module is not enabled.", "Das IDA Modul ist nicht aktiviert."), "/");
     }
     require_once IDA_PATH . "/php/IDA.php";
 
@@ -64,9 +64,11 @@ Route::get('/ida/dashboard', function () {
 Route::post('/ida/update-institute', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('ida')) {
-        die('IDA Integration is not enabled. Please contact admin.');
+        abortwith(500, lang("The IDA module is not enabled.", "Das IDA Modul ist nicht aktiviert."), "/");
     }
-    if (!isset($_POST['institute'])) die('No institute selected');
+    if (!isset($_POST['institute'])) {
+        abortwith(500, lang("No institute selected.", "Kein Institut ausgewählt."), "/ida/dashboard");
+    }
     $_SESSION['ida-institute_id'] = $_POST['institute'];
     redirect('/ida/dashboard');
 });
@@ -76,7 +78,7 @@ Route::get('/ida/formular/(\d+)', function ($formular_id) {
 
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('ida')) {
-        die('IDA Integration is not enabled. Please contact admin.');
+        abortwith(500, lang("The IDA module is not enabled.", "Das IDA Modul ist nicht aktiviert."), "/");
     }
 
     require_once IDA_PATH . "/php/IDA.php";

@@ -51,7 +51,7 @@ function validateValues($values, $DB)
             if (!str_contains($value, '10.')) $value = null;
             elseif (!str_starts_with($value, '10.')) {
                 $value = explode('10.', $value, 2);
-                $values[$key] = "10." . $value[1];
+                $value = "10." . $value[1];
             }
             // save as lowercase
             $values[$key] = strtolower($value);
@@ -276,152 +276,44 @@ function valiDate($date)
     );
 }
 
-function printMsg($msg = null, $type = 'info', $header = "default")
+function printMsg($msg = '', $type = 'info', $header = '')
 {
-    if ($msg === null && isset($_SESSION['msg'])) {
+    if (isset($_SESSION['msg']) && !empty($_SESSION['msg'])) {
         $msg = $_SESSION['msg'];
         unset($_SESSION["msg"]);
     }
-    if (isset($_SESSION['msg_type'])) {
+    if (isset($_SESSION['msg_type']) && !empty($_SESSION['msg_type'])) {
         $type = $_SESSION['msg_type'];
         unset($_SESSION["msg_type"]);
     }
-    if ($msg === null && isset($_GET['error'])) {
-        $msg = $_GET['error'];
-        $type = 'error';
-        $header = lang('Error', 'Fehler');
-    }
-    if ($msg === null && !isset($_GET["msg"])) return;
-    $msg = $msg ?? $_GET["msg"];
-    $text = "";
-    $header = $header;
-    $class = "";
+    if (empty($msg)) return;
+    $class = "blue";
     if ($type == 'success') {
         $class = "success";
-        if ($header == "default") {
-            $header = lang("Success!", "Erfolg!");
-        }
+        $header = lang("Success!", "Erfolg!");
     } elseif ($type == 'error') {
         $class = "danger";
-        if ($header == "default") {
+        if ($header == "") {
             $header = lang("Error", "Fehler");
         }
-    } elseif ($type == 'info') {
-        $class = "primary";
     } elseif ($type == 'warning') {
         $class = "signal";
-        if ($header == "default") {
+        if ($header == "") {
             $header = lang("Warning", "Warnung");
         }
     }
-    if ($header == "default") {
-        $header = "";
-    }
-    switch ($msg) {
 
-        case 'welcome':
-            $header = lang("Welcome,", "Willkommen,") . " " . ($_SESSION["name"] ?? '') . ".";
-            $text = lang("You are now logged in.", "Du bist jetzt eingeloggt.");
-            if (isset($_GET['new'])) {
-                $text = lang(
-                    '',
-                    'Du bist zum ersten Mal hier? Ich habe dir einen neuen Account angelegt. 
-                    Bitte überprüfe <a class="link" href="' . ROOTPATH . '/user/edit/' . $_SESSION['username'] . '">dein Profil</a> und ergänze bzw. korrigiere die Angaben.'
-                );
-                if (!empty($_GET['new'])) {
-                    $text .=  '<br/>' . lang('Ich habe außerdem <b>' . $_GET['new'] . ' Aktivitäten</b> gefunden, die vielleicht zu dir gehören. Du kannst sie <a class="link" href="' . ROOTPATH . '/issues">hier</a> überprüfen.');
-                }
-            }
-
-
-            $class = "success";
-            break;
-        case 'approved':
-            $header = lang("Quarter approved.", "Quartal freigegeben.");
-            $text = lang("Thank you.", "Vielen Dank.");
-            $class = "success";
-            break;
-
-        case 'account-created':
-            $text = lang("Account has been created. Please log in.", "Der Account wurde erstellt. Bitte logge dich ein.");
-            // $text = lang("Thank you.", "Vielen Dank.");
-            $class = "success";
-            break;
-
-        case 'settings-saved':
-            $text = lang("Settings saved", "Einstellungen gespeichert.");
-            // $text = lang("Thank you.", "Vielen Dank.");
-            $class = "success";
-            break;
-        case 'settings-resetted':
-            $text = lang("Settings resetted to the default values.", "Einstellungen wurden auf den Standard zurückgesetzt.");
-            // $text = lang("Thank you.", "Vielen Dank.");
-            $class = "success";
-            break;
-        case 'settings-replaced':
-            $text = lang("Settings replaced by uploaded file.", "Einstellungen wurden durch den Upload ersetzt.");
-            // $text = lang("Thank you.", "Vielen Dank.");
-            $class = "success";
-            break;
-        case 'success':
-            $text = lang("Success", "Erfolg");
-            // $text = lang("Dataset was added successfully.", "Der Datensatz wurde erfolgreich hinzufügt.");
-            // $text .= '<br/><a class="btn mt-10" href="' . ROOTPATH . '/add-activity">' . lang('Add another activity', 'Weitere Aktivität hinzufügen') . '</a>';
-            $class = "success";
-            break;
-
-        case 'add-success':
-            $header = lang("Success", "Erfolg");
-            $text = lang("Dataset was added successfully.", "Der Datensatz wurde erfolgreich hinzufügt.");
-            // $text .= '<br/><a class="btn mt-10" href="' . ROOTPATH . '/add-activity">' . lang('Add another activity', 'Weitere Aktivität hinzufügen') . '</a>';
-            $class = "success";
-            break;
-
-        case 'update-success':
-            $header = lang("Success", "Erfolg");
-            $text = lang("Dataset was updated successfully.", "Der Datensatz wurde erfolgreich bearbeitet.");
-            $class = "success";
-            break;
-
-        case 'deleted':
-        case 'deleted-1':
-            $header = lang("Deleted", "Gelöscht");
-            $text = lang("You have deleted a dataset.", "Du hast einen Datensatz gelöscht.");
-            $class = "danger";
-            break;
-
-        case 'locked':
-            $header = lang("This activity is locked.", "Diese Aktivität ist gesperrt.");
-            $text = lang(
-                "You cannot edit or delete this activity because of our reporting rules. Contact the OSIRIS editors if there are any issues.",
-                "Du kannst diese Aktivität aufgrund unserer Report-Richtlinien nicht bearbeiten oder löschen. Kontaktiere die OSIRIS-Editoren, falls dadurch irgendwelche Probleme entstehen."
-            );
-            $class = "danger";
-            break;
-
-        case 'ali':
-            $header = '';
-            $text = lang("You are already logged in.", "Du bist bereits eingeloggt");
-            $class = "signal";
-            break;
-
-        default:
-            $text = $msg;
-            if (isset($_GET['msg']) && str_contains($_GET['msg'], '-')) {
-                $text = str_replace("-", " ", $msg);
-            }
-            break;
-    }
-    $get = currentGET(['msg']) ?? "";
     echo "<div class='alert $class block show my-10' role='alert'>
-          <a class='close' href='$get' aria-label='Close'>
+          <a class='close' onclick=\"$(this).closest('.alert').remove()\" aria-label='Close'>
           <span aria-hidden='true'>&times;</span>
         </a> ";
+    echo "<div>";
     if (!empty($header)) {
         echo " <h4 class='title'>$header</h4>";
     }
-    echo "$text
-      </div>";
+    echo "$msg";
+    echo "</div>";
+    echo "</div>";
 }
 
 function readCart()
@@ -457,43 +349,44 @@ function currentGET(array $exclude = [], array $include = [])
     }
     return $get;
 }
-
 function CallAPI($method, $url, $data = [])
 {
     $curl = curl_init();
 
+    $headers = ['Accept: application/json'];
+    // Optional: identify your app (helpful for API operators)
+    $userAgent = 'OSIRIS/1.0 (+https://osiris-app.de)';
+
     switch ($method) {
         case "POST":
             curl_setopt($curl, CURLOPT_POST, 1);
-
-            if ($data)
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            if ($data) curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             break;
         case "JSON":
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            $headers[] = 'Content-Type: application/json';
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             break;
         case "PUT":
             curl_setopt($curl, CURLOPT_PUT, 1);
             break;
         default:
-            if ($data)
-                $url = sprintf("%s?%s", $url, http_build_query($data));
+            if ($data) $url = sprintf("%s?%s", $url, http_build_query($data));
     }
 
-    // Optional Authentication:
-    // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    // curl_setopt($curl, CURLOPT_USERPWD, "username:password");
-
     curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_USERAGENT, $userAgent);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    // Timeouts (important for "async-ish" background calls)
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 8);
+
     $result = curl_exec($curl);
     if ($result === false) {
         throw new Exception(curl_error($curl), curl_errno($curl));
     }
-    curl_close($curl);
 
     return $result;
 }
@@ -545,8 +438,6 @@ function getDateTime($date)
     }
     return $d;
 }
-
-
 
 function valueFromDateArray($date)
 {
@@ -697,7 +588,14 @@ function format_date($date, $format = "d.m.Y")
     if ($d === null) return '';
     return date_format($d, $format);
 }
-
+function rawdump($element)
+{
+    echo json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (!empty(json_last_error())) {
+        var_dump(json_last_error_msg()) . PHP_EOL;
+        var_export($element);
+    }
+}
 function dump($element, $as_json = true)
 {
     echo '<pre class="code">';
@@ -960,4 +858,123 @@ function format_month($month)
         12 => lang("December", "Dezember")
     ];
     return $array[$month];
+}
+
+/**
+ * Render the page view for a not found item
+ *
+ * @param string $entity The type of the item (e.g. "activity", "person", etc.)
+ * @param string $link The link to the overview page of the item type (default: "/activities")
+ * @return string $html
+ */
+function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
+{
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-nothing-here.png" alt="Nothing here">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang($entity . '<br> not found', $entity . '<br> nicht gefunden');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= lang('The ' . $entity . ' you are looking for does not exist or has been deleted.', 'Die gesuchte ' . $entity . ' existiert nicht mehr oder wurde entfernt.');
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
+    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
+}
+
+// no permission page
+function noPermissionPage($message = "", $link = '', $linkMsg = '')
+{
+    if ($message == '') {
+        $message = lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.');
+    }
+    // if no link is provided, link to last page
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-no-permission.png" alt="No permission">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang('No permission', 'Keine Berechtigung');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= $message;
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
+    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zurück zur Übersicht');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
+}
+
+function lockedPage($id)
+{
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-locked.png" alt="Locked">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang('This activity is locked', 'Diese Aktivität ist gesperrt');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= lang('This activity is locked and cannot be edited or deleted due to our reporting rules. Please contact the OSIRIS editors if there are any issues.', 'Diese Aktivität ist aufgrund unserer Report-Richtlinien gesperrt und kann nicht bearbeitet oder gelöscht werden. Bitte kontaktiere die OSIRIS-Redaktion, falls dadurch irgendwelche Probleme entstehen.');
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
+    $html .= lang('Go back to activity', 'Zurück zur Aktivität');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
+}
+
+function errorPage($message, $link = '/', $linkMsg = '')
+{
+    $html = '<div class="not-found">';
+    $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-error.png" alt="Error">';
+    $html .= '<div class="">';
+    $html .= '<h1>';
+    $html .= lang('An error occurred', 'Ein Fehler ist aufgetreten');
+    $html .= '</h1>';
+    $html .= '<p>';
+    $html .= lang($message, $message);
+    $html .= '</p>';
+    $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
+    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
+    $html .= '</a>';
+    $html .= '</div>';
+    $html .= '</div>';
+    return $html;
+}
+
+function abortwith($code, $item = '', $link = '', $linkMsg = '')
+{
+    include BASEPATH . "/php/init.php";
+    include BASEPATH . "/header.php";
+    if ($link == '') {
+        $link = $_SERVER['HTTP_REFERER'] ?? '/activities';
+        $linkMsg = lang('Go back', 'Geh zurück');
+    }
+    switch ($code) {
+        case 403:
+            echo noPermissionPage($item, $link, $linkMsg);
+            break;
+        case 404:
+            echo notFoundPage($item, $link, $linkMsg);
+            break;
+        default:
+            echo errorPage($item, $link, $linkMsg);
+            break;
+    }
+    include BASEPATH . "/footer.php";
+    die();
+}
+
+
+function formatBytes($bytes, $precision = 1)
+{
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $factor = floor((strlen($bytes) - 1) / 3);
+    return sprintf("%.{$precision}f", $bytes / pow(1024, $factor)) . ' ' . $units[$factor];
 }

@@ -7,56 +7,68 @@ function sendMail(
     $message,
     $altMessage = null
 ) {
-    global $osiris;
+    $DB = new DB();
+    $osiris = $DB->db;
     // get mail settings:
     $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
     $mail = DB::doc2Arr($mail['value'] ?? []);
 
-    $msg = 'mail-sent';
+    $msg = lang('Mail sent successfully.', 'Mail erfolgreich gesendet.');
 
     $Mailer = new PHPMailer\PHPMailer\PHPMailer(true);
+    $Mailer->CharSet = 'UTF-8';
+    $Mailer->Encoding = 'quoted-printable';
 
-    $Mailer->CharSet  = 'UTF-8';
-    $Mailer->Encoding = 'quoted-printable'; // or 'base64'
+    $smtpServer = trim((string)($mail['smtp_server'] ?? ''));
+    $smtpUser = trim((string)($mail['smtp_user'] ?? ''));
+    $smtpPassword = (string)($mail['smtp_password'] ?? '');
+    $smtpSecurity = strtolower(trim((string)($mail['smtp_security'] ?? 'none')));
+    $smtpPort = !empty($mail['smtp_port']) ? (int)$mail['smtp_port'] : 25;
+    $fromEmail = trim((string)($mail['email'] ?? ''));
 
-    if (!empty($mail['smtp_server'])) {
+    if ($fromEmail === '') {
+        $fromEmail = 'no-reply@osiris-app.de';
+    }
+
+    if ($smtpServer !== '') {
         $Mailer->isSMTP();
-        $Mailer->Host = $mail['smtp_server'] ?? 'localhost';
-        if (isset($mail['smtp_user']) && isset($mail['smtp_password'])) {
+        $Mailer->Host = $smtpServer;
+        $Mailer->Port = $smtpPort;
+
+        if ($smtpUser !== '' && $smtpPassword !== '') {
             $Mailer->SMTPAuth = true;
-            $Mailer->Username = $mail['smtp_user'];
-            $Mailer->Password = $mail['smtp_password'];
+            $Mailer->Username = $smtpUser;
+            $Mailer->Password = $smtpPassword;
         } else {
             $Mailer->SMTPAuth = false;
         }
 
-        if (isset($mail['smtp_security'])) {
-            if ($mail['smtp_security'] == 'ssl')
-                $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-            elseif ($mail['smtp_security'] == 'tls')
-                $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        if ($smtpSecurity === 'ssl') {
+            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } elseif ($smtpSecurity === 'tls') {
+            $Mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        } else { // none
+            $Mailer->SMTPSecure = false;
         }
-
-        $Mailer->Port = $mail['smtp_port'] ?? 25;
     }
 
-    // $Mailer->SMTPDebug = 2; // oder 3
-    // $Mailer->Debugoutput = 'html';
-
-    $Mailer->setFrom($mail['email'] ?? 'no-reply@osiris-app.de', 'OSIRIS');
+    $Mailer->setFrom($fromEmail, 'OSIRIS');
     $Mailer->addAddress($to);
     $Mailer->isHTML(true);
-
     $Mailer->Subject = $subject;
     $Mailer->Body = $message;
-    if ($altMessage !== null) $Mailer->AltBody = $altMessage;
+
+    if ($altMessage !== null) {
+        $Mailer->AltBody = $altMessage;
+    }
 
     try {
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
-        $msg = $Mailer->ErrorInfo;
+        $msg = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
+        // Log the error for debugging
+        error_log("Mail sending failed: " . $msg);
     }
-    $_SESSION['msg'] = $msg;
     return $msg;
 }
 
@@ -73,7 +85,7 @@ function buildNotificationMail($title, $html, $linkText, $linkUrl)
                     ' . e($linkText) . '
                 </a>
             </p>
-            <p style="font-size: 12px; color: #777; margin-top:40px;">Dies ist eine automatische Nachricht von OSIRIS. Bitte antworte nicht darauf.</p>
+            <p style="font-size: 12px; color: #777; margin-top:40px;">This is an automated message from OSIRIS. Please do not reply.</p>
         </div>
     ';
 }

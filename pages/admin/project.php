@@ -4,12 +4,12 @@
  * Admin page for project settings
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -144,13 +144,6 @@ if ($process == 'project') {
     .checkbox-badge.custom-checkbox.required-state input[type=checkbox]:checked~label:before {
         background-color: var(--danger-color);
         border-color: var(--danger-color);
-    }
-
-    .kdsf-icon {
-        width: 1.4em;
-        height: 1.4em;
-        margin-left: 0.5rem;
-        vertical-align: middle;
     }
 
     .kdsf {
@@ -468,7 +461,6 @@ if ($process == 'project') {
                                 <?= lang($field['en'], $field['de']) ?>
                                 <?php if ($kdsf) { ?>
                                     <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
-                                        <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
                                         KDSF
                                     </small>
                                 <?php } ?>
@@ -534,7 +526,6 @@ if ($process == 'project') {
                                 <?= lang($field['en'], $field['de']) ?>
                                 <?php if ($kdsf) { ?>
                                     <small class="kdsf" data-toggle="tooltip" data-title="<?= $kdsf ?>">
-                                        <!-- <img src="<?= ROOTPATH ?>/img/kdsf-icon.svg" alt="KDSF" class="kdsf-icon"> -->
                                         KDSF
                                     </small>
                                 <?php } ?>

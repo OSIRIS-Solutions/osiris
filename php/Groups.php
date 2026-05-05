@@ -4,12 +4,12 @@
  * Class for all project associated methods.
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @package OSIRIS
  * @since 1.3.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -265,22 +265,6 @@ class Groups
             }
         }
         return $edit_perm;
-    }
-
-    public function getDeptFromAuthors($authors)
-    {
-        $result = [];
-        $authors = DB::doc2Arr($authors);
-        if (empty($authors)) return [];
-        $users = array_filter(array_column($authors, 'user'));
-        foreach ($users as $user) {
-            $user = $this->DB->getPerson($user);
-            if (empty($user) || empty($user['depts'])) continue;
-            $dept = $this->deptHierarchy($user['depts'], 1)['id'];
-            if (in_array($dept, $result)) continue;
-            $result[] = $dept;
-        }
-        return $result;
     }
 
     public function getHierarchy()

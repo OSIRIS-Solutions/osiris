@@ -4,12 +4,12 @@
  * Footer component
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -43,6 +43,11 @@
 
                 <a href="<?= ROOTPATH ?>/docs" class="">
                     <?= lang('Documentation', 'Dokumentation') ?>
+                </a>
+
+                <!-- accessibility -->
+                <a href="<?= ROOTPATH ?>/accessibility" class="">
+                    <?= lang('Accessibility', 'Barrierefreiheit') ?>
                 </a>
 
                 <a href="https://github.com/OSIRIS-Solutions/osiris/issues" target="_blank" class="">

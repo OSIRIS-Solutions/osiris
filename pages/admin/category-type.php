@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * Page to add or edit category of activity types
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * 
+ * @link        /admin/types/new
+ * @link        /admin/types/<type_id>
+ *
+ * @package     OSIRIS
+ * @since       1.3.0
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
 include_once BASEPATH . '/php/Modules.php';
 $Modules = new Modules();
 
@@ -121,39 +138,39 @@ if (!empty($form) && isset($form['_id'])) {
 
                 <div class="col-sm-2">
                     <label for="id" class="required">ID</label>
-                    <input type="text" class="form-control" name="values[id]" required value="<?= $type['id'] ?>" data-value="<?= $type['id'] ?>" oninput="sanitizeID(this)">
+                    <input type="text" class="form-control" name="values[id]" required value="<?= e($type['id']) ?>" data-value="<?= e($type['id']) ?>" oninput="sanitizeID(this)">
                     <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
                 </div>
                 <div class="col-sm-2">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
 
                     <div class="input-group">
-                        <input type="text" class="form-control" name="values[icon]" required value="<?= $type['icon'] ?? 'folder-open' ?>" onchange="iconTest(this.value)">
+                        <input type="text" class="form-control" name="values[icon]" required value="<?= e($type['icon'] ?? 'folder-open') ?>" onchange="iconTest(this.value)">
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                <i class="ph ph-<?= $type['icon'] ?? 'folder-open' ?>" id="test-icon"></i>
+                                <i class="ph ph-<?= e($type['icon'] ?? 'folder-open') ?>" id="test-icon"></i>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm">
                     <label for="name" class="required ">Name (en)</label>
-                    <input type="text" class="form-control" name="values[name]" required value="<?= $type['name'] ?? '' ?>">
+                    <input type="text" class="form-control" name="values[name]" required value="<?= e($type['name'] ?? '') ?>">
                 </div>
                 <div class="col-sm">
                     <label for="name_de" class="">Name (de)</label>
-                    <input type="text" class="form-control" name="values[name_de]" value="<?= $type['name_de'] ?? '' ?>">
+                    <input type="text" class="form-control" name="values[name_de]" value="<?= e($type['name_de'] ?? '') ?>">
                 </div>
             </div>
 
             <div class="row row-eq-spacing">
                 <div class="col-sm">
                     <label for="description"><?= lang('Description', 'Beschreibung') ?> (en)</label>
-                    <textarea class="form-control" name="values[description]"><?= $type['description'] ?? '' ?></textarea>
+                    <textarea class="form-control" name="values[description]"><?= e($type['description'] ?? '') ?></textarea>
                 </div>
                 <div class="col-sm">
                     <label for="description_de" class=""><?= lang('Description', 'Beschreibung') ?> (de)</label>
-                    <textarea class="form-control" name="values[description_de]"><?= $type['description_de'] ?? '' ?></textarea>
+                    <textarea class="form-control" name="values[description_de]"><?= e($type['description_de'] ?? '') ?></textarea>
                 </div>
             </div>
 
@@ -166,12 +183,12 @@ if (!empty($form) && isset($form['_id'])) {
                     </label>
                 </div>
             </div> -->
-            <?php if ($Settings->featureEnabled('portal')) { 
+            <?php if ($Settings->featureEnabled('portal')) {
                 $portfolio = $type['portfolio'] ?? false;
                 if (!isset($type['portfolio']) && $type['parent'] == 'publication') {
                     $portfolio = true;
                 }
-                ?>
+            ?>
                 <div class="mt-20">
                     <input type="hidden" name="values[portfolio]" value="false">
                     <div class="custom-checkbox">
@@ -217,6 +234,21 @@ if (!empty($form) && isset($form['_id'])) {
 
             <div id="data-fields">
                 <?php
+                $available = [];
+                $all_fields = $Modules->all_modules;
+                include_once BASEPATH . '/php/Document.php';
+                $Format = new Document();
+                $templates = $Format->templates;
+                $fields_from_templates = [];
+                foreach ($templates as $template => $template_fields) {
+                    foreach ($template_fields as $f) {
+                        if (isset($fields_from_templates[$f])) {
+                            $fields_from_templates[$f][] = $template;
+                        } else {
+                            $fields_from_templates[$f] = [$template];
+                        }
+                    }
+                }
                 if (isset($type['fields'])) {
                     foreach ($type['fields'] as $field) {
                         $field_type = $field['type'] ?? 'field';
@@ -229,6 +261,11 @@ if (!empty($form) && isset($form['_id'])) {
                                 $f = $Modules->all_modules[$field['id']] ?? array();
                                 $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
                                 $icon = 'ph-database';
+
+                                $tem = $fields_from_templates[$field['id']] ?? array();
+                                if (!empty($tem)) {
+                                    $available = array_merge($available, $tem);
+                                }
                                 break;
                             case 'custom':
                                 $f = $osiris->adminFields->findOne(['id' => $field['id']]);
@@ -263,9 +300,14 @@ if (!empty($form) && isset($form['_id'])) {
                         if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
                             $name = str_replace('*', '', $name);
                         }
-                        $f = $Modules->all_modules[$name] ?? array();
-                        if (!empty($f)) {
-                            echo "<span class='badge'><i class='ph ph-database'></i> " . lang($f['name'], $f['name_de'] ?? null) . "</span>";
+                        $tem = $fields_from_templates[$name] ?? array();
+                        if (!empty($tem)) {
+                            $available = array_merge($available, $tem);
+                        }
+
+                        $mod = $all_fields[$name] ?? array();
+                        if (!empty($mod)) {
+                            echo "<span class='badge'><i class='ph ph-database'></i> " . lang($mod['name'], $mod['name_de'] ?? null) . "</span>";
                         } else {
                             echo "<span class='badge'><i class='ph ph-textbox'></i> " . lang($name) . "</span>";
                         }
@@ -283,71 +325,62 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="content">
             <label for="format" class="font-weight-bold">Templates:</label>
 
-            <a href="<?= ROOTPATH ?>/admin/templates?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10">
-                <?= lang('Template builder', 'Template-Baukasten') ?> <i class="ph ph-arrow-square-out ml-5"></i>
-            </a>
-
-            <a onclick="$(this).next().toggle();"><?=lang('Show cheat sheet', 'Zeige die Cheat-Sheet')?></a>
-                <div style="display: none; font-size: 0.9em;">
-                    <strong><?=lang('Available fields:', 'Verfügbare Felder:')?></strong>
-                    <ul class="list">
-                <?php
-                    // based on selected modules, show available fields
-                    $available = [];
-                    $all_fields = $Modules->all_modules;
-                    foreach ($type['fields'] ?? array() as $field) {
-                        $mod = $all_fields[$field['id']] ?? array();
-                        if (isset($mod['fields']) && is_array($mod['fields'])) {
-                            $available = array_merge($available, array_keys($mod['fields']));
-                        }
-                        
-                    }
-                    $available = array_unique($available);
-                    sort($available);
-                    foreach ($available as $a) { ?>
-                        <li><code>{<?= $a ?>}</code></li>
-                    <?php } ?>
-                    </ul>
-                </div>
-
             <div class="input-group mb-10">
                 <div class="input-group-prepend">
                     <span class="input-group-text w-100">Print</span>
                 </div>
-                <input type="text" class="form-control" name="values[template][print]" value="<?= $type['template']['print'] ?? '{title}' ?>">
+                <input type="text" class="form-control" name="values[template][print]" value="<?= e($type['template']['print'] ?? '{title}') ?>">
             </div>
 
             <div class="input-group mb-10">
                 <div class="input-group-prepend">
                     <span class="input-group-text w-100">Web Title</span>
                 </div>
-                <input type="text" class="form-control" name="values[template][title]" value="<?= $type['template']['title'] ?? '{title}' ?>">
+                <input type="text" class="form-control" name="values[template][title]" value="<?= e($type['template']['title'] ?? '{title}') ?>">
             </div>
 
             <div class="input-group mb-10">
                 <div class="input-group-prepend">
                     <span class="input-group-text w-100">Web Subtitle</span>
                 </div>
-                <input type="text" class="form-control" name="values[template][subtitle]" value="<?= $type['template']['subtitle'] ?? '{authors}' ?>">
+                <input type="text" class="form-control" name="values[template][subtitle]" value="<?= e($type['template']['subtitle'] ?? '{authors}') ?>">
             </div>
 
+            <?= lang('How to use templates:', 'Wie man Templates verwendet:') ?>
 
-            <!-- <div class="alert primary ">
-                <h3 class="title text-primary">
-                    <?= lang('Example', 'Beispiel') ?>
-                    <span data-toggle="tooltip" data-title="<?= lang('Will be updated as soon as you save the type.', 'Wird aktualisiert, sobald der Typ gespeichert wird.') ?>">
-                        <i class="ph ph-question"></i>
-                    </span>
-                </h3>
-                <b>Print</b> <br>
-                < $type['example'] ?? '- save current form to generate an example -' ?>
-                <hr>
+            <a href="<?= ROOTPATH ?>/admin/templates?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 link">
+                <?= lang('Template builder', 'Template-Baukasten') ?>
+            </a>
 
-                <b>Web</b> <br>
-                < $type['example_web'] ?? '- save current form to generate an example -' ?>
-            </div> -->
+            <a href="https://wiki.osiris-app.de/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
+                <?= lang('Documentation', 'Dokumentation') ?>
+            </a>
+            <style>
+                .cheat-sheet {
+                    display: none;
+                    font-size: 0.9em;
+                    background: var(--body-color);
+                    padding: 0.5rem 1rem;
+                    border-radius: var(--border-radius);
+                }
+            </style>
+
+            <a onclick="$(this).next().slideToggle();" class="ml-10"><?= lang('Show cheat sheet', 'Zeige die Cheat-Sheet') ?></a>
+            <div class="cheat-sheet">
+                <strong><?= lang('Available fields:', 'Verfügbare Felder:') ?></strong>
+                <ul class="list">
+                    <?php
+                    $available = array_unique($available);
+                    sort($available);
+                    foreach ($available as $a) { ?>
+                        <li><code>{<?= e($a) ?>}</code></li>
+                    <?php } ?>
+                </ul>
+                <p>
+                    <?= lang('Please note that this list is not exhaustive, as some fields (e.g. authors) can be displayed with many different templates.', 'Bitte beachten Sie, dass diese Liste nicht vollständig ist, da einige Felder (z.B. Autoren) mit vielen verschiedenen Templates angezeigt werden können.') ?>
+                </p>
+            </div>
         </div>
-
 
 
         <hr>
@@ -405,6 +438,12 @@ if (!empty($form) && isset($form['_id'])) {
 
 <?php } ?>
 
+<br>
+<!-- rerender only this type -->
+<a href='<?= ROOTPATH ?>/rerender?subtype=<?= $id ?>' target="_blank" class="text-primary">
+    <i class="ph ph-arrow-clockwise"></i>
+    <?= lang('Rerender all activities of this type', 'Alle Aktivitäten dieses Typs neu rendern') ?>
+</a>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/admin-categories.js"></script>

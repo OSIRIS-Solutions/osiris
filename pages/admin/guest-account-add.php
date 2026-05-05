@@ -1,4 +1,21 @@
-<?php include_once BASEPATH . '/header-editor.php'; ?>
+<?php
+
+/**
+ * Add new guest account while in LDAP user management
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ *
+ * @package     OSIRIS
+ * @since       1.6.2
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
+include_once BASEPATH . '/header-editor.php';
+?>
 <form action="<?= ROOTPATH ?>/crud/admin/add-user" method="post" class="box padded">
 
     <input type="hidden" name="guestaccount" value="1">
@@ -17,7 +34,7 @@
 
         <div class="col floating-form">
             <input class="form-control" type="password" id="password" name="password" required placeholder="password">
-            <label class="required" for="password">Password</label>
+            <label class="required" for="password"><?= lang('Password', 'Passwort') ?></label>
         </div>
     </div>
 
@@ -35,7 +52,7 @@
                 <option value="PD" <?= $title == 'PD' ? 'selected' : '' ?>>PD</option>
                 <!-- <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option> -->
             </select>
-            <label for="academic_title">Title</label>
+            <label for="academic_title"><?= lang('Title', 'Titel') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
@@ -53,7 +70,7 @@
 
         <div class="col-sm floating-form">
             <input type="text" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required placeholder="mail">
-            <label for="mail" class="required">Mail</label>
+            <label for="mail" class="required"><?= lang('Mail', 'E-Mail') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">

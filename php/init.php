@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Berlin');
 
 require_once BASEPATH . '/php/Settings.php';
 include_once BASEPATH . "/php/_config.php";
@@ -12,10 +13,13 @@ $DB = new DB;
 global $osiris;
 $osiris = $DB->db;
 
-
 // get installed OSIRIS version
+if (!defined('OSIRIS_VERSION')) {
+    define('OSIRIS_VERSION', '0.0.0');
+}
+
 $version = $osiris->system->findOne(['key' => 'version']);
-if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
+if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     // just let the install script run
 } elseif (empty($version)) { ?>
     <!-- include css -->
@@ -44,37 +48,35 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')){
     </div>
 <?php
     die;
-} else if (version_compare($version['value'], OSIRIS_VERSION, '<') && !str_ends_with($_SERVER['REQUEST_URI'], '/migrate')) { ?>
-    <!-- include css -->
-    <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
-    <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
-    <div class="align-items-center container d-flex h-full">
-        <div class="alert danger mb-20 w-full">
-            <h3 class="title"><?= lang('A new OSIRIS-Version has been found.', 'Eine neue OSIRIS-Version wurde gefunden.') ?></h3>
-            <p>
-                <?= lang(
-                    'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
-                    'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
-                ) ?>
-            </p>
-            <p class="text-muted">
-                <small>Installed: <?= $version['value'] ?></small> | <small>Latest: <?= OSIRIS_VERSION ?></small>
-            </p>
-            <a href="<?= ROOTPATH ?>/migrate" class="btn danger">
-                <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
-            </a>
-        </div>
-    </div>
-<?php
-    die;
-} 
-// if (empty($version)) {
-//     $osiris->system->insertOne(['key' => 'version', 'value' => OSIRIS_VERSION]);
-//     $version = $osiris->system->findOne(['key' => 'version']);
-// }
-define('OSIRIS_DB_VERSION', $version['value'] ?? '0.0.0');
+} elseif (version_compare($version['value'], OSIRIS_VERSION, '<')) {
+    $allowed_routes = [
+        ROOTPATH . '/migrate',
+        ROOTPATH . '/migration-needed',
+        ROOTPATH . '/user/logout',
+        ROOTPATH . '/user/login',
+        ROOTPATH . '/user/oauth',
+        ROOTPATH . '/user/oauth-callback',
+    ];
+    $uri = strtok($_SERVER['REQUEST_URI'], '?');   // strip query string
+    if (!in_array($uri, $allowed_routes)) {
+        header('Location: ' . ROOTPATH . '/migration-needed');
+        die;
+    }
+}
 
 
+// initialize user
+global $USER;
+$USER = $DB->initUser();
+// check if user is not empty, if not, log out
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && (empty($USER) || !isset($USER['username']))) {
+    $_SESSION['username'] = null;
+    $_SESSION['loggedin'] = false;
+    $_SESSION['msg'] = lang('Your session has expired. Please log in again.', 'Deine Sitzung ist abgelaufen. Bitte logge dich erneut ein.');
+    $_SESSION['msg_type'] = "error";
+    header("Location: " . ROOTPATH . '/user/login');
+    die();
+}
 
 
 // Get organizational units (Groups)
@@ -94,10 +96,6 @@ if (!empty($Groups->tree)) {
 include_once BASEPATH . "/php/Categories.php";
 global $Categories;
 $Categories = new Categories();
-
-// initialize user
-global $USER;
-$USER = $DB->initUser();
 
 // Get all Settings
 global $Settings;

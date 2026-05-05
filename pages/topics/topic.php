@@ -5,15 +5,17 @@
  * Created in cooperation with bicc
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.3.8
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$topicLabel = $Settings->topicLabel();
 
 $group_filter = [
     'topics' => $topic['id'],
@@ -29,10 +31,10 @@ $publication_filter = [
     'topics' => $topic['id'],
     'type' => 'publication'
 ];
-$count_publications = $osiris->activities->count($publication_filter);
+$count_publications = 4; //$osiris->activities->count($publication_filter);
 $activities_filter = [
     'topics' => $topic['id'],
-    // 'type' => ['$ne' => 'publication']
+    'type' => ['$ne' => 'publication']
 ];
 $count_activities = $osiris->activities->count($activities_filter);
 
@@ -49,12 +51,17 @@ if ($count_groups > 0) {
     $active_page = 'groups';
 } elseif ($count_persons > 0) {
     $active_page = 'persons';
-    // } elseif ($count_publications > 0) {
-    // $active_page = 'publications';
+} elseif ($count_publications > 0) {
+    $active_page = 'publications';
 } elseif ($count_activities > 0) {
     $active_page = 'activities';
 } elseif ($count_projects > 0) {
     $active_page = 'projects';
+}
+
+$count_spectrum = 0;
+if ($Settings->featureEnabled('spectrum')) {
+    $count_spectrum = $osiris->activities->count(['topics' => $topic['id'], 'openalex.topics.id' => ['$exists' => true]]);
 }
 ?>
 
@@ -226,8 +233,12 @@ if ($count_groups > 0) {
 </div>
 
 <nav class="pills mt-20 mb-0">
-    <?php
+    <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        <?= lang('General', 'Allgemein') ?>
+    </a>
 
+    <?php
     if ($count_groups > 0) { ?>
         <a onclick="navigate('groups')" id="btn-groups" class="btn <?= $active_page == 'groups' ? 'active' : '' ?>">
             <i class="ph ph-users-three" aria-hidden="true"></i>
@@ -249,11 +260,11 @@ if ($count_groups > 0) {
     <?php
 
     if ($count_publications > 0) { ?>
-        <!-- <a onclick="navigate('publications')" id="btn-publications" class="btn">
+        <a onclick="navigate('publications')" id="btn-publications" class="btn <?= $active_page == 'publications' ? 'active' : '' ?>">
             <i class="ph ph-books" aria-hidden="true"></i>
             <?= lang('Publications', 'Publikationen')  ?>
             <span class="index"><?= $count_publications ?></span>
-        </a> -->
+        </a>
     <?php } ?>
 
     <?php
@@ -266,7 +277,6 @@ if ($count_groups > 0) {
         </a>
     <?php } ?>
 
-    <?php  ?>
     <?php
 
     if ($count_projects > 0) { ?>
@@ -276,7 +286,6 @@ if ($count_groups > 0) {
             <span class="index"><?= $count_projects ?></span>
         </a>
     <?php } ?>
-    <?php  ?>
     <?php if ($count_publications > 0) { ?>
         <a onclick="navigate('graph')" id="btn-graph" class="btn">
             <i class="ph ph-graph" aria-hidden="true"></i>
@@ -288,10 +297,6 @@ if ($count_groups > 0) {
         </a>
     <?php } ?>
 
-    <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
-        <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
-    </a>
 </nav>
 
 
@@ -300,29 +305,58 @@ if ($count_groups > 0) {
         <?= lang($topic['description'], $topic['description_de'] ?? null) ?>
     </p>
 
-    <?php if ($Settings->hasPermission('topics.delete')) { ?>
-        <br>
-        <div class="alert danger mt-20">
-            <a onclick="$('#delete').slideToggle()">
-                <?= lang('Delete', 'Löschen') ?>
-                <i class="ph ph-caret-down"></i>
-            </a>
+    <?php
+    if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
+        $spectrum = $osiris->activities->aggregate([
+            ['$match' => [
+                'topics' => $topic['id'],
+                'type' => 'publication',
+                'openalex.topics' => ['$exists' => true, '$ne' => []]
+            ]],
 
-            <div id="delete" style="display: none;">
-                <form action="<?= ROOTPATH ?>/crud/topics/delete/<?= $topic['_id'] ?>" method="post">
-                    <p>
-                        <?= lang(
-                            'Do you really want to delete this topic? If you delete, it will be removed from all connected persons, activities and projects.',
-                            'Möchten Sie diesen Bereich wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
-                        ) ?>
-                    </p>
-                    <button type="submit" class="btn danger"><?= lang('Delete', 'Löschen') ?></button>
-                </form>
-            </div>
-        </div>
+            // total number of matched activities
+            ['$unwind' => '$openalex.topics'],
 
-    <?php } ?>
+            // group by topic id
+            ['$group' => [
+                '_id' => '$openalex.topics.id',
+                'count' => ['$sum' => 1],
+                'sumScore' => ['$sum' => '$openalex.topics.score'],
+                'topic' => ['$first' => '$openalex.topics']
+            ]],
 
+            // compute averages + share
+            ['$addFields' => [
+                'avg_score' => ['$divide' => ['$sumScore', '$count']],
+                'share' => ['$divide' => ['$count', $count_spectrum]],
+                // optional combined weight (tweakable)
+                'weight' => ['$multiply' => [
+                    ['$divide' => ['$count', $count_spectrum]],
+                    ['$divide' => ['$sumScore', $count_spectrum]]
+                ]]
+            ]],
+
+            // filter noise
+            ['$match' => ['share' => ['$gte' => 0.05]]],
+
+            ['$sort' => ['weight' => -1]],
+            ['$limit' => 25]
+        ])->toArray();
+    ?>
+        <div class="col-md">
+            <h3>
+                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+            </h3>
+            <?php
+            if (!empty($spectrum)) :
+                include_once BASEPATH . "/php/Spectrum.php";
+                Spectrum::render($spectrum, $count_spectrum);
+            else : ?>
+                <p>
+                    <?= lang('No Research Spectrum is assigned to this ' . $topicLabel . '.', 'Zu diesem ' . $topicLabel . ' ist kein Forschungs-Spektrum zugewiesen.') ?>
+                </p>
+            <?php endif; ?>
+        <?php } ?>
 </section>
 
 
@@ -541,39 +575,6 @@ if ($count_groups > 0) {
 
 </section>
 
-
-<!-- 
-<script>
-    userTable('#user-table', {
-        filter: {
-            topics: '<?= $topic['id'] ?>'
-        }
-    });
-</script>
-
-<script>
-    initActivities('#activities-table', {
-        page: 'all-activities',
-        display_activities: 'web',
-        filter: {
-            topics: '<?= $topic['id'] ?>',
-            type: {
-                $ne: 'publication'
-            }
-        }
-    });
-</script>
-
-<script>
-    initActivities('#publication-table', {
-        page: 'all-activities',
-        display_activities: 'web',
-        filter: {
-            topics: '<?= $topic['id'] ?>',
-            type: 'publication'
-        }
-    });
-</script> -->
 
 <script>
     $(document).ready(function() {

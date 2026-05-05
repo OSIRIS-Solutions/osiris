@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Admin interface for building templates for activities
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ *
+ * @package     OSIRIS
+ * @since       1.3.0
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
+
 include_once BASEPATH . "/php/Document.php";
 include_once BASEPATH . "/php/example-document.php";
 $Document = new Document();

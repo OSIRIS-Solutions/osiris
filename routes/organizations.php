@@ -5,12 +5,12 @@
  * Created in cooperation with DSMZ
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -31,8 +31,7 @@ Route::get('/organizations/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     if (!$Settings->hasPermission('organizations.edit')) {
-        header("Location: " . ROOTPATH . "/organizations?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
     }
 
     $breadcrumb = [
@@ -59,8 +58,7 @@ Route::get('/organizations/view/(.*)', function ($id) {
         $id = strval($organization['_id'] ?? '');
     }
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations?msg=not-found");
-        die;
+        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
     }
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
@@ -78,8 +76,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
     }
 
     global $form;
@@ -89,11 +86,10 @@ Route::get('/organizations/edit/(.*)', function ($id) {
         $form = $osiris->organizations->findOne(['_id' => $mongo_id]);
     } else {
         $form = $osiris->organizations->findOne(['name' => $id]);
-        $id = strval($organization['_id'] ?? '');
+        $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
-        header("Location: " . ROOTPATH . "/organizations?msg=not-found");
-        die;
+        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
     }
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
@@ -114,7 +110,11 @@ Route::get('/organizations/edit/(.*)', function ($id) {
 Route::post('/crud/organizations/create', function () {
     include_once BASEPATH . "/php/init.php";
 
-    if (!isset($_POST['values']) || empty($_POST['values'])) die("no values given");
+    if (!$Settings->hasPermission('organizations.edit')) {
+        abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
+    }
+
+    if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
@@ -176,7 +176,9 @@ Route::post('/crud/organizations/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $new_id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=success");
+        $_SESSION['msg'] = lang("Organization has been created successfully.", "Organisation wurde erfolgreich erstellt.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $red);
         die();
     }
 
@@ -194,10 +196,9 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        header("Location: " . ROOTPATH . "/organizations?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
     }
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
@@ -212,7 +213,9 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Organization has been updated successfully.", "Organisation wurde erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
 
@@ -228,8 +231,7 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.delete')) {
-        header("Location: " . ROOTPATH . "/organizations?msg=no-permission");
-        die;
+        abortwith(403, lang('You do not have permission to delete this organization.', 'Du hast keine Berechtigung, diese Organisation zu löschen.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
     }
 
     // $organization = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -242,10 +244,11 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
 
     // remove organization
     $osiris->organizations->deleteOne(
-        ['_id' => $DB::to_ObjectID($id)]
+        ['_id' => $DB->to_ObjectID($id)]
     );
 
     $_SESSION['msg'] = lang("Organisation has been deleted successfully.", "Organisation wurde erfolgreich gelöscht.");
+    $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/organizations");
 });
 
@@ -256,8 +259,7 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
-        die;
+        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
@@ -326,8 +328,7 @@ Route::get('/organizations/image/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        header("Location: " . ROOTPATH . "/organizations/view/$id?msg=not-found");
-        die;
+        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
     }
     include_once BASEPATH . "/php/Organization.php";
     echo Organization::getLogo($organization, "", "Logo of " . $organization['name'], $organization['type'] ?? "");

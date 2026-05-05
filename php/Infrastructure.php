@@ -4,12 +4,12 @@
  * Class for all infrastructure associated methods.
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @package OSIRIS
  * @since 1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -24,32 +24,41 @@ class Infrastructure extends DB
     {
         parent::__construct('infrastructures');
         $this->roles = [
-            'head' => lang('Head', 'Leitung'),
-            'manager' => lang('Manager', 'Manager:in'),
-            'coordinator' => lang('Coordinator', 'Koordinator:in'),
-            'admin' => lang('Admin', 'Admin'),
-            'maintainer' => lang('Maintainer', 'Betreuer:in'),
-            'developer' => lang('Developer', 'Entwickler:in'),
-            'curator' => lang('Curator', 'Kurator:in'),
-            'support' => lang('Support/Helpdesk', 'Support/Helpdesk'),
-            'contact' => lang('Contact', 'Kontakt'),
-            'operator' => lang('Operator', 'Operator:in'),
-            'analyst' => lang('Analyst', 'Analyst:in'),
-            'researcher' => lang('Researcher', 'Forscher:in'),
-            'security' => lang('Security Officer', 'Sicherheitsbeauftragte:r '),
-            'user' => lang('User', 'Nutzer:in'),
-            'other' => lang('Other', 'Sonstige')
+            'head' => ['en' => 'Head', 'de' => 'Leitung'],
+            'manager' => ['en' => 'Manager', 'de' => 'Manager:in'],
+            'coordinator' => ['en' => 'Coordinator', 'de' => 'Koordinator:in'],
+            'admin' => ['en' => 'Admin', 'de' => 'Admin'],
+            'maintainer' => ['en' => 'Maintainer', 'de' => 'Betreuer:in'],
+            'developer' => ['en' => 'Developer', 'de' => 'Entwickler:in'],
+            'curator' => ['en' => 'Curator', 'de' => 'Kurator:in'],
+            'support' => ['en' => 'Support/Helpdesk', 'de' => 'Support/Helpdesk'],
+            'contact' => ['en' => 'Contact', 'de' => 'Kontakt'],
+            'operator' => ['en' => 'Operator', 'de' => 'Operator:in'],
+            'analyst' => ['en' => 'Analyst', 'de' => 'Analyst:in'],
+            'researcher' => ['en' => 'Researcher', 'de' => 'Forscher:in'],
+            'security' => ['en' => 'Security Officer', 'de' => 'Sicherheitsbeauftragte:r '],
+            'user' => ['en' => 'User', 'de' => 'Nutzer:in'],
+            'other' => ['en' => 'Other', 'de' => 'Sonstige']
         ];
     }
 
     public function getRoles()
     {
-        return $this->roles;
+        // map roles to current language
+        $lang = lang('en', 'de');
+        $roles = [];
+        foreach ($this->roles as $key => $role) {
+            $roles[$key] = $role[$lang];
+        }
+        return $roles;
     }
 
-    public function getRole($role)
+    public function getRole($role, $raw = false)
     {
-        return $this->roles[$role] ?? $role;
+        if ($raw) {
+            return $this->roles[$role] ?? $role;
+        }
+        return $this->roles[$role][lang('en', 'de')] ?? $role;
     }
 
 

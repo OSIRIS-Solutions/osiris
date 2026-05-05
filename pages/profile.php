@@ -4,14 +4,14 @@
  * Page to see scientists profile
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /profile/<username>
  *
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -38,6 +38,7 @@ if (!isset($scientist['is_active'])) {
     // update in database because it leads to problems in the frontend otherwise
     $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
 }
+$full_spectrum = $_GET['fullspectrum'] ?? false;
 ?>
 
 
@@ -382,17 +383,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
+            <!-- <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
                 <i class="ph-duotone ph-plus-circle ph-fw"></i>
-                <!-- <?= lang('Add activity', 'Aktivität hinzufügen') ?> -->
-            </a>
+            </a> -->
             <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
-                <!-- <?= lang('My activities', 'Meine Aktivitäten ') ?> -->
             </a>
             <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
-                <!-- <?= lang('My Year', 'Mein Jahr') ?> -->
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
@@ -420,8 +418,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
             </a>
         </div>
-        <form action="<?= ROOTPATH ?>/download" method="post">
 
+        <form action="<?= ROOTPATH ?>/download" method="post">
             <input type="hidden" name="filter[user]" value="<?= $user ?>">
             <input type="hidden" name="highlight" value="user">
             <input type="hidden" name="format" value="word">
@@ -431,7 +429,21 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
+
+        <!-- <div class="dropdown with-arrow">
+            <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
+                <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
+                <a href="<?= ROOTPATH ?>/user/permissions" class="item">
+                    <i class="ph ph-users-three ph-fw text-primary"></i>
+                    <?= lang('Show permissions', 'Einheiten bearbeiten') ?>
+                </a>
+            </div>
+        </div> -->
     </div>
+
+
 
 
     <?php
@@ -574,7 +586,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         ],
     ])->toArray();
     $count_coauthors = count($coauthors) - 1;
-    if ($count_coauthors > 0) { ?>
+    if ($count_coauthors > 3) { ?>
         <a onclick="navigate('coauthors')" id="btn-coauthors" class="btn">
             <i class="ph ph-users" aria-hidden="true"></i>
             <?= lang('Coauthors', 'Koautoren')  ?>
@@ -606,7 +618,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_memberships > 0) { ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
-            <?= lang('Ongoing works', 'Laufende Arbeiten')  ?>
+            <?= lang('Ongoing activities', 'Laufende Aktivitäten')  ?>
             <span class="index"><?= $count_memberships ?></span>
         </a>
     <?php } ?>
@@ -653,7 +665,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     $teaching = $osiris->activities->aggregate([
         ['$match' => [
             'rendered.users' => $user,
-            'type' => 'teaching',
             'module_id' => ['$ne' => null]
         ]],
         [
@@ -676,6 +687,23 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <?php } ?>
 
 
+    <?php if ($Settings->featureEnabled('spectrum')) { ?>
+        <?php
+        $spectrum_filter = [
+            'rendered.users' => $user,
+            'type' => 'publication',
+            'openalex.topics' => ['$exists' => true, '$ne' => []]
+        ];
+        $count_spectrum = $osiris->activities->count($spectrum_filter);
+
+        if ($count_spectrum > 0) { ?>
+            <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
+                <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                <?= lang('Research Spectrum', 'Forschungs-Spektrum')  ?>
+            </a>
+    <?php }
+    } ?>
+
 
     <?php if ($Settings->featureEnabled('wordcloud')) { ?>
         <?php
@@ -688,71 +716,136 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <?php } ?>
     <?php } ?>
 
-    <?php if ($Settings->featureEnabled('concepts')) { ?>
-        <?php
-        $concepts = [];
-        $concepts = $osiris->activities->aggregate(
-            [
-                ['$match' => ['rendered.users' => $user, 'concepts' => ['$exists' => true]]],
-                ['$project' => ['concepts' => 1]],
-                [
-                    '$group' => [
-                        '_id' => null,
-                        'total' => ['$sum' => 1],
-                        'concepts' => ['$push' => '$concepts']
-                    ]
-                ],
-                ['$unwind' => '$concepts'],
-                ['$unwind' => '$concepts'],
-                ['$group' => [
-                    '_id' => '$concepts.display_name',
-                    'count' => ['$sum' => 1],
-                    'score' => ['$sum' => ['$divide' => [
-                        ['$multiply' => ['$concepts.score', ['$sum' => 1]]],
-                        '$total'
-                    ]]],
-                    'concept' => ['$first' => '$concepts']
-                ]],
-                ['$match' => ['score' => ['$gte' => 0.05]]],
-                ['$sort' => ['score' => -1]]
-            ]
-        )->toArray();
-        $count_concepts = count($concepts);
-        if ($count_concepts > 0) { ?>
-            <a onclick="navigate('concepts')" id="btn-concepts" class="btn">
-                <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Concepts', 'Konzepte')  ?>
-                <span class="index"><?= $count_concepts ?></span>
-            </a>
-        <?php } ?>
-    <?php } ?>
-
 </nav>
 
 
 <?php if ($currentuser) { ?>
     <section id="news">
+
+        <?php
+        $announcement_active = $Settings->isAnnouncementActive();
+        if ($announcement_active) {
+            $announcement = $Settings->get('announcement'); ?>
+
+            <style>
+                #announcement {
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    padding: 1.5rem;
+                }
+
+                #announcement img#sophie-announcement {
+                    max-width: 120px;
+                    margin: -1rem 2rem -1rem 0;
+                }
+
+                #announcement h1,
+                #announcement h2,
+                #announcement h3,
+                #announcement h4,
+                #announcement h5,
+                #announcement h6 {
+                    color: var(--primary-color);
+                    margin-top: 0;
+                }
+
+                #announcement h1 {
+                    font-size: 2.2rem;
+                }
+
+                #announcement h2 {
+                    font-size: 1.8rem;
+                }
+
+                #announcement h3 {
+                    font-size: 1.6rem;
+                }
+            </style>
+            <div class="box mb-0 border-primary primary" id="announcement" data-announcement-version="<?= strtotime($announcement['updated_at'] ?? 'now') ?>">
+
+                <img src="<?= ROOTPATH ?>/img/sophie/sophie-announced.png" alt="Announcement" id="sophie-announcement">
+                <div>
+                    <a data-dismiss="modal" class="float-right" role="button" aria-label="Close" onclick="dismissAnnouncementSession()">
+                        <i class="ph ph-x"></i>
+                    </a>
+                    <?php
+                    $en = trim($announcement['en'] ?? null);
+                    $de = trim($announcement['de'] ?? null);
+                    if (!empty(strip_tags($en)) && !empty(strip_tags($de))) {
+                        echo  lang($en, $de);
+                    } elseif (!empty(strip_tags($en))) {
+                        echo $en;
+                    } elseif (!empty(strip_tags($de))) {
+                        echo $de;
+                    }
+                    ?>
+                    <button class="btn primary small" onclick="dismissAnnouncement()">
+                        <i class="ph ph-x-circle"></i>
+                        <?= lang('Don’t show again', 'Nicht mehr anzeigen') ?>
+                    </button>
+                </div>
+            </div>
+            <script>
+                function dismissAnnouncement() {
+                    fetch('<?= ROOTPATH ?>/crud/users/dismiss-announcement', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(() => {
+                        document.getElementById('announcement').remove();
+                    });
+                }
+
+                function dismissAnnouncementSession() {
+                    const announcementVersion = $('#announcement').data('announcement-version');
+                    localStorage.setItem('osiris_hide_announcement_hidden_' + announcementVersion, Date.now() + 24 * 60 * 60 * 1000);
+                    document.getElementById('announcement').remove();
+                }
+                $(document).ready(function() {
+                    const announcementVersion = $('#announcement').data('announcement-version');
+                    const hideUntil = localStorage.getItem('osiris_hide_announcement_hidden_' + announcementVersion);
+                    if (hideUntil && Date.now() < hideUntil) {
+                        $('#announcement').remove();
+                    }
+                });
+            </script>
+        <?php
+
+        }
+
+        ?>
+
+        <style>
+            .dashboard {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+        </style>
         <div class="row row-eq-spacing my-0">
             <div class="col-md-6">
                 <?php if (isset($n_notifications) && $n_notifications) { ?>
-                    <div class="box padded">
-                        <p class="lead cursor-pointer" onclick="openNotifications()">
-                            <i class="ph ph-bell-ringing ph-fw text-danger mr-5"></i>
-                            <?= lang('You have <strong class="text-danger">' . $n_notifications . '</strong> new notifications.', 'Du hast <strong class="text-danger">' . $n_notifications . '</strong> neue Benachrichtigungen.') ?>
-                        </p>
-                    </div>
                     <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
                     ?>
                         <div class="box padded d-flex align-items-center">
-                            <i class="ph ph-calendar-check ph-fw text-success mr-10" style="font-size: 2.7rem;"></i>
-
-                            <p>
-                                <?= lang("You can now approve the past quarter:", "Du kannst jetzt das vergangene Quartal freigeben:") ?>
-                                <br>
+                            <div>
+                                <b>
+                                    <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
+                                </b>
+                                <p class="text-muted my-5 font-size-12">
+                                    <?= lang(
+                                        'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
+                                        'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
+                                    ) ?>
+                                </p>
                                 <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
                                     <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
                                 </a>
-                            </p>
+                            </div>
+
+                            <img src="<?= ROOTPATH ?>/img/sophie/sophie-checklist.png" class="w-100">
                         </div>
                     <?php } ?>
 
@@ -762,47 +855,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         }
                     </script>
                 <?php } ?>
-
-                <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
-                    <div class="box">
-                        <div class="content">
-                            <h4 class="title">
-                                <?= lang('Newest publications', 'Neuste Publikationen') ?>
-                            </h4>
-                            <p class="text-muted">
-                                <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
-                            </p>
-
-                            <?php
-                            $pubs = $osiris->activities->find(
-                                ['authors.aoi' => true, 'type' => 'publication'],
-                                [
-                                    'sort' => ['start_date' => -1],
-                                    'limit' => 5,
-                                    'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
-                                ]
-                            )->toArray();
-                            ?>
-                            <table class="table simple">
-                                <?php foreach ($pubs as $doc) { ?>
-                                    <tr>
-                                        <td>
-                                            <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
-                                            <?= $doc['html'] ?>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-
-                            </table>
-
-                            <a href="<?= ROOTPATH ?>/activities" class="btn primary">
-                                <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
-                            </a>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-            <div class="col-md-6 h-full">
 
                 <?php if ($Settings->featureEnabled('new-colleagues')) { ?>
                     <!-- Show new users -->
@@ -846,116 +898,158 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     </div>
                 <?php } ?>
 
+                <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
+                    <div class="box">
+                        <div class="content">
+                            <h4 class="title">
+                                <?= lang('Newest publications', 'Neuste Publikationen') ?>
+                            </h4>
+                            <p class="text-muted">
+                                <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
+                            </p>
 
-                <?php if (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) || $Settings->hasPermission('report.generate')) { ?>
+                            <?php
+                            $pubs = $osiris->activities->find(
+                                ['authors.aoi' => true, 'type' => 'publication'],
+                                [
+                                    'sort' => ['start_date' => -1],
+                                    'limit' => 5,
+                                    'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
+                                ]
+                            )->toArray();
+                            ?>
+                            <table class="table simple">
+                                <?php foreach ($pubs as $doc) { ?>
+                                    <tr>
+                                        <td>
+                                            <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
+                                            <?= $doc['html'] ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
 
-                    <div class="row row-eq-spacing mt-0">
+                            </table>
 
-                        <?php if ($Settings->featureEnabled('quarterly-reporting', true) && $currentuser && $Settings->hasPermission('report.dashboard')) {
+                            <a href="<?= ROOTPATH ?>/activities" class="btn primary">
+                                <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
+                            </a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
 
-                            $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);
-                            $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
-                        ?>
-                            <div class="col-6">
-                                <div class="box">
-                                    <div class="chart content">
-                                        <h5 class="title text-center"><?= $lastquarter ?></h5>
+            <div class="col-md-6 h-full">
 
-                                        <canvas id="approved-<?= $lastquarter ?>"></canvas>
-                                        <div class="text-right mt-5">
-                                            <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
-                                                <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
-                                            </button>
-                                        </div>
-
-                                        <script>
-                                            var ctx = document.getElementById('approved-<?= $lastquarter ?>')
-                                            var myChart = new Chart(ctx, {
-                                                type: 'doughnut',
-                                                data: {
-                                                    labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
-                                                    datasets: [{
-                                                        label: '# of Scientists',
-                                                        data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],
-                                                        backgroundColor: [
-                                                            '#00808395',
-                                                            '#f7810495',
-                                                        ],
-                                                        borderColor: '#464646', //'',
-                                                        borderWidth: 1,
-                                                    }]
-                                                },
-                                                plugins: [ChartDataLabels],
-                                                options: {
-                                                    responsive: true,
-                                                    plugins: {
-                                                        datalabels: {
-                                                            color: 'black',
-                                                            // anchor: 'end',
-                                                            // align: 'end',
-                                                            // offset: 10,
-                                                            font: {
-                                                                size: 20
-                                                            }
-                                                        },
-                                                        legend: {
-                                                            position: 'bottom',
-                                                            display: false,
-                                                        },
-                                                        title: {
-                                                            display: false,
-                                                            text: 'Scientists approvation'
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                        </script>
-
-                                    </div>
-                                </div>
+                <?php if (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) && $currentuser) {
+                    $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);
+                    $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
+                    $progress = ($n_scientists > 0) ? ($n_approved / $n_scientists) * 100 : 0;
+                ?>
+                    <div class="box">
+                        <div class="content">
+                            <div class="d-flex justify-content-between align-items-center mb-10">
+                                <h5 class="title m-0"><?= lang('Last quarter', 'Vergangenes Quartal') ?></h5>
+                                <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
+                                    <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
+                                </button>
                             </div>
-                        <?php } ?>
-
-
-                        <?php if ($currentuser && $Settings->hasPermission('report.generate')) { ?>
-                            <div class="col-6">
-                                <div class=" h-full">
-                                    <div class="py-10">
-                                        <div class="link-list">
-                                            <?php if ($Settings->hasPermission('report.dashboard')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/dashboard"><?= lang('Dashboard', 'Dashboard') ?></a>
-                                            <?php } ?>
-
-                                            <?php if ($Settings->hasPermission('report.queue')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/queue/editor"><?= lang('Queue', 'Warteschlange') ?></a>
-                                            <?php } ?>
-
-                                            <?php if ($Settings->hasPermission('report.generate')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/reports"><?= lang('Reports', 'Berichte') ?></a>
-                                            <?php } ?>
-
-                                            <?php if ($Settings->hasPermission('activities.lock')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/activities/locking"><?= lang('Lock activities', 'Aktivitäten sperren') ?></a>
-                                            <?php } ?>
-
-                                            <?php if ($Settings->hasPermission('admin.see')) { ?>
-                                                <a class="border" href="<?= ROOTPATH ?>/admin/general"><?= lang('Admin-Panel') ?></a>
-                                            <?php } ?>
-                                        </div>
-                                        </a>
-                                    </div>
-                                </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                        <?php } ?>
-
+                            <div class="d-flex justify-content-between align-items-center mt-10 font-size-12">
+                                <span class="text-muted">
+                                    <?= lang(
+                                        "$n_approved of $n_scientists scientists have approved their activities.",
+                                        "$n_approved von $n_scientists Wissenschaftler:innen haben ihre Aktivitäten freigegeben."
+                                    ) ?>
+                                </span>
+                                <b class="badge success"><?= $lastquarter ?></b>
+                            </div>
+                        </div>
                     </div>
                 <?php } ?>
 
+
+
                 <?php if ($Settings->featureEnabled('events', true)) { ?>
+
+                    <?php if ($Settings->featureEnabled('deadlines', false)) {
+                        include_once BASEPATH . '/php/Vocabulary.php';
+                        $Vocabulary = new Vocabulary();
+                    ?>
+                        <div class="box mb-20">
+                            <div class="content">
+                                <?php if ($Settings->hasPermission('deadlines.edit')) { ?>
+                                    <a href="<?= ROOTPATH ?>/deadlines/new" class="float-md-right btn small">
+                                        <i class="ph ph-plus"></i>
+                                        <?= lang('Add', 'Hinzufügen') ?>
+                                    </a>
+                                <?php } ?>
+                                <h4 class="title">
+                                    <a href="<?= ROOTPATH ?>/deadlines" class="link">
+                                        <?= lang('Deadlines') ?>
+                                    </a>
+                                </h4>
+                                <?php
+                                $deadlines = $osiris->deadlines->find(
+                                    [
+                                        '$and' => [
+                                            ['date' => ['$gte' => date('Y-m-d', strtotime('-3 days'))]],
+                                            ['date' => ['$lte' => date('Y-m-d', strtotime('+12 month'))]]
+                                        ],
+                                        // 'dismissed' => ['$ne' => $user],
+                                        'roles' => ['$in' => $Settings->roles]
+                                    ],
+                                    ['sort' => ['date' => 1], 'projection' => [
+                                        '_id' => 0,
+                                        'id' => ['$toString' => '$_id'],
+                                        'date' => 1,
+                                        'type' => 1,
+                                        'title' => 1
+                                    ]]
+                                )->toArray();
+                                $deadlineTypes = $Vocabulary->getValues('deadline-type');
+                                $deadlineTypes = array_column($deadlineTypes, null, 'id');
+                                ?>
+                                <div id="deadline-timeline" class="mt-20 mb-10"></div>
+                                <style>
+                                    #deadline-timeline {
+                                        position: relative;
+                                    }
+
+                                    #deadline-timeline svg {
+                                        width: 100%;
+                                        height: auto;
+                                        display: block;
+                                    }
+
+                                    #deadline-timeline .deadline-dot {
+                                        transition: transform .15s ease;
+                                    }
+                                </style>
+                                <script>
+                                    $(document).ready(function() {
+
+                                        deadlineTimeline({
+                                            divSelector: '#deadline-timeline',
+                                            monthsAhead: 12,
+                                            startLabel: lang('Today', 'Heute'),
+                                            endLabel: lang('+12 months', '+12 Monate'),
+                                            typeInfo: <?= json_encode($deadlineTypes) ?>,
+                                            deadlines: <?= json_encode($deadlines) ?>
+                                        });
+                                        // deadlineTimeline(options);
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+                    <?php } ?>
+
                     <div class="box">
                         <div class="content">
                             <?php if ($Settings->hasPermission('conferences.edit')) { ?>
-                                <a href="<?= ROOTPATH ?>/conferences#add-conference" class="float-md-right btn primary">
+                                <a href="<?= ROOTPATH ?>/conferences/new" class="float-md-right btn small">
                                     <i class="ph ph-plus"></i>
                                     <?= lang('Add', 'Hinzufügen') ?>
                                 </a>
@@ -966,7 +1060,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <?= lang('Events') ?>
                                 </a>
                             </h4>
-                            <p class="text-muted">
+                            <p class="text-muted font-size-12">
                                 <?= lang('Shown are approaching events in the next 6 month and events you attended within the past six month.', 'Gezeigt sind zukünftige Events in den nächsten 6 Monaten und vergangene, an denen du in den letzten sechs Monaten teilgenommen hast.') ?>
                             </p>
 
@@ -1069,7 +1163,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <?php } ?>
 
                             </table>
-                            <small class="text-muted"> <?= lang('Events were added by users of the OSIRIS system.', 'Events wurden von Nutzenden des OSIRIS-Systems angelegt.') ?></small>
 
                         </div>
                     </div>
@@ -1104,6 +1197,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <?= $user ?>
                             </td>
                         </tr>
+                        <?php if ($Settings->hasPermission('raw-data')) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang('OSIRIS-ID', 'OSIRIS-ID') ?></span>
+                                    <?= $scientist['_id'] ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <?php if ($active('internal_id') && isset($scientist['internal_id'])) { ?>
                             <tr>
                                 <td>
@@ -1187,20 +1288,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <?php if ($active('room') && isset($scientist['room'])) { ?>
-                            <tr>
-                                <td>
-                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
-                                    <?= $scientist['room'] ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-
                         <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
                                     <span class="key"><?= lang('Mobile', 'Mobil') ?></span>
                                     <a href="tel:<?= $scientist['mobile'] ?>"><?= $scientist['mobile'] ?></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if ($active('room') && isset($scientist['room'])) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
+                                    <?= $scientist['room'] ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -1515,7 +1616,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <section id="memberships" style="display:none">
 
     <?php
-
     if ($count_memberships > 0) {
         $memberships = $osiris->activities->find($membership_filter, ['sort' => ["type" => 1, "year" => -1, "month" => -1, "day" => -1]]);
         $ongoing = [];
@@ -1539,7 +1639,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($ongoing)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Ongoing works', 'Laufende Arbeiten') ?></h4>
+                        <h4 class="title"><?= lang('Ongoing activities', 'Laufende Aktivitäten') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>
@@ -1565,32 +1665,34 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </div>
             <?php } ?>
             <?php if (!empty($past)) { ?>
-                <div class="box">
-                    <div class="content">
-                        <h4 class="title"><?= lang('Past works', 'Vergangene Arbeiten') ?></h4>
+                <details class="collapse-panel">
+                    <summary class="collapse-header">
+                        <h4 class="m-0"><?= lang('Past activities', 'Vergangene Tätigkeiten') ?></h4>
+                    </summary>
+                    <div class="collapse-content p-0 pb-5">
+                        <table class="table simple">
+                            <tbody>
+                                <?php
+                                $i = 0;
+                                foreach ($past as $doc) {
+                                    $id = $doc['_id'];
+                                ?>
+                                    <tr id='tr-<?= $id ?>'>
+                                        <td class="w-50"><?= $doc['icon']; ?></td>
+                                        <td>
+                                            <?= $doc['web'] ?>
+                                        </td>
+                                        <td class="unbreakable w-25">
+                                            <a class="btn link square" href="<?= ROOTPATH . "/activities/view/" . $id ?>">
+                                                <i class="ph ph-arrow-fat-line-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="table simple">
-                        <tbody>
-                            <?php
-                            $i = 0;
-                            foreach ($past as $doc) {
-                                $id = $doc['_id'];
-                            ?>
-                                <tr id='tr-<?= $id ?>'>
-                                    <td class="w-50"><?= $doc['icon']; ?></td>
-                                    <td>
-                                        <?= $doc['web'] ?>
-                                    </td>
-                                    <td class="unbreakable w-25">
-                                        <a class="btn link square" href="<?= ROOTPATH . "/activities/view/" . $id ?>">
-                                            <i class="ph ph-arrow-fat-line-right"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                </details>
             <?php } ?>
 
         </div>
@@ -1774,74 +1876,138 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
         <h2><?= lang('Teaching activities', 'Lehrtätigkeiten') ?></h2>
 
-        <div class="row row-eq-spacing">
+        <div class="collapse-group">
             <?php foreach ($teaching as $t) {
                 $module = $osiris->teaching->findOne(['_id' => DB::to_ObjectID($t['_id'])]);
+                $aff = $module['affiliation'] ?? '';
+                if (DB::is_ObjectID($aff)) {
+                    $aff = $osiris->organizations->findOne(['_id' => DB::to_ObjectID($aff)], ['projection' => ['name' => 1]]);
+                    $aff = $aff['name'] ?? '';
+                }
+                $activities = $t['doc'] ?? [];
             ?>
-                <div class="col-md-6">
-                    <div class="box mb-0" id="<?= $t['_id'] ?>">
-                        <div class="content">
-                            <h5 class="mt-0">
-                                <span class="highlight-text"><?= $module['module'] ?></span>
-                                <?= $module['title'] ?>
-                            </h5>
+                <details class="collapse-panel" id="<?= $t['_id'] ?>">
+                    <summary class="collapse-header">
+                        <h5 class="mt-0">
+                            <strong class="text-primary"><?= $module['module'] ?></strong>:
+                            <?= $module['title'] ?>
+                            <span class="index-pill"><?= count($activities) ?></span>
+                        </h5>
 
-                            <em><?= $module['affiliation'] ?></em>
-                        </div>
+                        <em><?= $aff ?></em>
+                    </summary>
 
-                        <hr>
-                        <div class="content">
-                            <?php
-                            $activities = $t['doc'] ?? [];
-                            if (count($activities) != 0) {
-                            ?>
-                                <table class="w-full">
-                                    <?php foreach ($activities as $n => $doc) :
-                                        if (!isset($doc['rendered'])) renderActivities(['_id' => $doc['_id']]);
-                                    ?>
-                                        <tr>
-                                            <td class="pb-5">
-                                                <?= $doc['rendered']['icon'] ?>
-                                                <?= $doc['rendered']['web'] ?>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </table>
+                    <div class="collapse-content p-0">
+                        <?php
+                        if (count($activities) != 0) {
+                        ?>
+                            <table class="table simple">
+                                <?php foreach ($activities as $n => $doc) :
+                                    if (!isset($doc['rendered'])) renderActivities(['_id' => $doc['_id']]);
+                                ?>
+                                    <tr>
+                                        <td style="padding-left: 4rem;">
+                                            <?= $doc['rendered']['icon'] ?>
+                                            <?= $doc['rendered']['web'] ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
 
 
-                            <?php } else { ?>
+                        <?php } else { ?>
 
-                                <?= lang('No activities connected.', 'Keine Aktivitäten verknüpft.') ?>
+                            <?= lang('No activities connected.', 'Keine Aktivitäten verknüpft.') ?>
 
-                            <?php } ?>
-                        </div>
+                        <?php } ?>
                     </div>
-                </div>
+                </details>
             <?php } ?>
 
     </section>
 <?php } ?>
 
 
-<?php if ($Settings->featureEnabled('concepts')) { ?>
-    <section id="concepts" style="display:none">
-        <?php if (!empty($concepts)) :
-        ?>
+<?php if ($Settings->featureEnabled('spectrum')) { ?>
+    <section id="spectrum" style="display:none">
+        <h2>
+            <?= lang('Research spectrum of', 'Forschungsspektrum von') ?> <?= $scientist['displayname'] ?>
+        </h2>
+        <?php
+        $show_link = true;
+        if (!$full_spectrum) {
+            if ($count_spectrum < 10) {
+                // if there are less than 10 publications with topics, show the full spectrum without filtering by year to ensure meaningful results
+                $full_spectrum = true;
+                $show_link = false;
+            } else {
+                // limit spectrum by default to the last 5 years to show current research focus
+                // but only if there are more than 10 publications in the last 5 years to ensure meaningful results
+                $spectrum_filter['year'] = ['$gte' => CURRENTYEAR - 4];
+                if ($osiris->activities->count($spectrum_filter) < 10) {
+                    unset($spectrum_filter['year']);
+                    $full_spectrum = true;
+                    $show_link = false;
+                }
+            }
+        }
 
-            <h3 class=""><?= lang('Concepts', 'Konzepte') ?></h3>
-            <div class="box" id="concepts">
-                <div class="content">
-                    <?php foreach ($concepts as $concept) {
-                        $score =  round($concept['score'] * 100);
-                    ?><span class="concept" target="_blank" data-score='<?= $score ?>' data-name='<?= $concept['_id'] ?>' data-count='<?= $concept['count'] ?>' data-wikidata='<?= $concept['concept']['wikidata'] ?>'>
-                            <div role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="--value: <?= $score ?>"></div>
-                            <?= $concept['_id'] ?>
-                        </span><?php } ?>
-                </div>
-            </div>
-        <?php else : ?>
+        $spectrum = $osiris->activities->aggregate([
+            ['$match' => $spectrum_filter],
+
+            // total number of matched activities
+            ['$group' => [
+                '_id' => null,
+                'total' => ['$sum' => 1],
+                'docs' => ['$push' => '$$ROOT']
+            ]],
+            ['$unwind' => '$docs'],
+            ['$unwind' => '$docs.openalex.topics'],
+
+            // group by topic id
+            ['$group' => [
+                '_id' => '$docs.openalex.topics.id',
+                'count' => ['$sum' => 1],
+                'sumScore' => ['$sum' => '$docs.openalex.topics.score'],
+                'topic' => ['$first' => '$docs.openalex.topics'],
+                'total' => ['$first' => '$total']
+            ]],
+
+            // compute averages + share
+            ['$addFields' => [
+                'avg_score' => ['$divide' => ['$sumScore', '$count']],
+                'share' => ['$divide' => ['$count', '$total']],
+                // optional combined weight (tweakable)
+                'weight' => ['$multiply' => [
+                    ['$divide' => ['$count', '$total']],
+                    ['$divide' => ['$sumScore', '$count']]
+                ]]
+            ]],
+
+            // filter noise
+            ['$match' => ['share' => ['$gte' => 0.05], 'count' => ['$gte' => 2]]],
+            ['$sort' => ['weight' => -1]],
+            ['$limit' => 25]
+        ])->toArray();
+        if (!empty($spectrum)) :
+        ?>
+            <?php if ($show_link) { ?>
+                <p class="text-muted mb-0">
+                    <?php if (!$full_spectrum && $count_spectrum > 10) { ?>
+                        <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
+                        <a href="?fullspectrum=1#section-spectrum"><?= lang('View full spectrum', 'Vollständiges Spektrum anzeigen') ?></a>
+                    <?php } elseif ($full_spectrum) { ?>
+                        <?= lang('Based on all publications in OSIRIS.', 'Basierend auf allen Publikationen in OSIRIS.') ?>
+                        <a href="?#section-spectrum"><?= lang('View recent spectrum', 'Aktuelles Spektrum anzeigen') ?></a>
+                    <?php } ?>
+                </p>
+            <?php } ?>
+        <?php
+            include_once BASEPATH . "/php/Spectrum.php";
+            Spectrum::render($spectrum, $count_spectrum);
+        else : ?>
             <p>
-                <?= lang('No concepts are assigned to this person.', 'Zu dieser Person sind keine Konzepte zugewiesen.') ?>
+                <?= lang('We do not have enough data to display a research spectrum for this scientist yet. This could be because there are not enough publications in OSIRIS, or because the publications are not well covered by OpenAlex data.', 'Wir haben noch nicht genügend Daten, um ein Forschungsspektrum für diese Person anzuzeigen. Das könnte daran liegen, dass es noch nicht genügend Publikationen in OSIRIS gibt oder dass die Publikationen nicht gut von OpenAlex abgedeckt sind.') ?>
             </p>
         <?php endif; ?>
     </section>

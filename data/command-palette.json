@@ -1,0 +1,344 @@
+[
+  {
+    "id": "nav_activities",
+    "kind": "navigation",
+    "title": "Activities",
+    "title_de": "Aktivitäten",
+    "subtitle": "/activities",
+    "icon": "ph ph-clipboard-text",
+    "url": "/activities",
+    "keywords": [
+      "activity",
+      "activities",
+      "publication",
+      "publications",
+      "event",
+      "events",
+      "teaching",
+      "lecture"
+    ],
+    "priority": 110
+  },
+  {
+    "id": "nav_projects",
+    "kind": "navigation",
+    "title": "Projects",
+    "title_de": "Projekte",
+    "subtitle": "/projects",
+    "icon": "ph ph-tree-structure",
+    "url": "/projects",
+    "keywords": [
+      "project",
+      "projects",
+      "proposal",
+      "proposals",
+      "application",
+      "applications"
+    ],
+    "priority": 105
+  },
+  {
+    "id": "nav_persons",
+    "kind": "navigation",
+    "title": "People",
+    "title_de": "Personen",
+    "subtitle": "/user/browse",
+    "icon": "ph ph-users-three",
+    "url": "/user/browse",
+    "keywords": [
+      "person",
+      "people",
+      "researcher",
+      "staff",
+      "employee",
+      "guest"
+    ],
+    "priority": 100
+  },
+  {
+    "id": "nav_research_areas",
+    "kind": "navigation",
+    "title": "Research areas",
+    "title_de": "Forschungsbereiche",
+    "subtitle": "/research-areas",
+    "icon": "ph ph-puzzle-piece",
+    "url": "/research-areas",
+    "keywords": [
+      "research area",
+      "research areas",
+      "topic",
+      "topics",
+      "field",
+      "fields"
+    ],
+    "priority": 90
+  },
+  {
+    "id": "nav_events",
+    "kind": "navigation",
+    "title": "Events",
+    "title_de": "Veranstaltungen",
+    "subtitle": "/events",
+    "icon": "ph ph-calendar",
+    "url": "/events",
+    "keywords": [
+      "event",
+      "events",
+      "conference",
+      "workshop",
+      "symposium",
+      "seminar",
+      "webinar"
+    ],
+    "priority": 80
+  },
+  {
+    "id": "nav_journals",
+    "kind": "navigation",
+    "title": "Journals",
+    "title_de": "Zeitschriften",
+    "subtitle": "/journals",
+    "icon": "ph ph-newspaper-clipping",
+    "url": "/journals",
+    "keywords": [
+      "journal",
+      "journals",
+      "publication",
+      "publications",
+      "article",
+      "articles"
+    ],
+    "priority": 70
+  },
+  {
+    "id": "nav_teaching",
+    "kind": "navigation",
+    "title": "Teaching",
+    "title_de": "Lehre",
+    "subtitle": "/teaching",
+    "icon": "ph ph-chalkboard-teacher",
+    "url": "/teaching",
+    "keywords": [
+      "teaching",
+      "course",
+      "courses",
+      "lecture",
+      "lectures",
+      "seminar",
+      "seminars"
+    ],
+    "priority": 60
+  },
+  {
+    "id": "nav_proposals",
+    "kind": "navigation",
+    "title": "Proposals",
+    "title_de": "Anträge",
+    "subtitle": "/proposals",
+    "icon": "ph ph-file-text",
+    "url": "/proposals",
+    "keywords": [
+      "proposal",
+      "proposals",
+      "application",
+      "applications",
+      "project proposal",
+      "project proposals"
+    ],
+    "priority": 50
+  },
+  {
+    "id": "nav_infrastructures",
+    "kind": "navigation",
+    "title": "Infrastructures",
+    "title_de": "Infrastrukturen",
+    "subtitle": "/infrastructures",
+    "icon": "ph ph-building",
+    "url": "/infrastructures",
+    "keywords": [
+      "infrastructure",
+      "infrastructures",
+      "facility",
+      "facilities",
+      "lab",
+      "labs"
+    ],
+    "priority": 40
+  },
+  {
+    "id": "nav_units",
+    "kind": "navigation",
+    "title": "Units",
+    "title_de": "Einheiten",
+    "subtitle": "/units",
+    "icon": "ph ph-cubes-three",
+    "url": "/units",
+    "keywords": [
+      "unit",
+      "units",
+      "department",
+      "departments",
+      "group",
+      "groups"
+    ],
+    "priority": 30
+  },
+  {
+    "id": "nav_organizations",
+    "kind": "navigation",
+    "title": "Organisations",
+    "title_de": "Organisationen",
+    "subtitle": "/organizations",
+    "icon": "ph ph-building-warehouse",
+    "url": "/organizations",
+    "keywords": [
+      "organizations",
+      "organisations",
+      "institutions",
+      "company",
+      "companies"
+    ],
+    "priority": 20
+  },
+  {
+    "id": "nav_documents",
+    "kind": "navigation",
+    "title": "Documents",
+    "title_de": "Dokumente",
+    "subtitle": "/documents",
+    "icon": "ph ph-folder-opened",
+    "url": "/documents",
+    "keywords": ["document", "documents", "file", "files"],
+    "priority": 10
+  },
+  {
+    "id": "nav_guests",
+    "kind": "navigation",
+    "title": "Guests",
+    "title_de": "Gäste",
+    "subtitle": "/guests",
+    "icon": "ph ph-user-gear",
+    "url": "/guests",
+    "keywords": ["guest", "guests", "visitor", "visitors"],
+    "priority": 0
+  },
+  {
+    "id": "nav_import",
+    "kind": "navigation",
+    "title": "Import",
+    "title_de": "Importieren",
+    "subtitle": "/import",
+    "icon": "ph ph-file-arrow-up",
+    "url": "/import",
+    "keywords": ["import", "data import", "csv import"],
+    "priority": 0
+  },
+  {
+    "id": "nav_export",
+    "kind": "navigation",
+    "title": "Export",
+    "title_de": "Exportieren",
+    "subtitle": "/export",
+    "icon": "ph ph-file-arrow-down",
+    "url": "/export",
+    "keywords": [
+      "export",
+      "data export",
+      "word export",
+      "bibtex export",
+      "download"
+    ],
+    "priority": 0
+  },
+  {
+    "id": "nav_collection",
+    "kind": "navigation",
+    "title": "Collection",
+    "title_de": "Sammlung",
+    "subtitle": "/cart",
+    "icon": "ph ph-collection",
+    "url": "/collection",
+    "keywords": [
+      "collection",
+      "collections",
+      "cart",
+      "carts",
+      "downloads",
+      "download"
+    ],
+    "priority": 0
+  },
+  {
+    "id": "nav_expertise",
+    "kind": "navigation",
+    "title": "Expertise",
+    "title_de": "Expertise",
+    "subtitle": "/expertise",
+    "icon": "ph ph-lightning",
+    "url": "/expertise",
+    "keywords": [
+      "expertise",
+      "expertises",
+      "skill",
+      "skills",
+      "competence",
+      "competences"
+    ],
+    "priority": 0
+  },
+  {
+    "id": "nav_pivot",
+    "kind": "navigation",
+    "title": "Pivot",
+    "title_de": "Pivot",
+    "subtitle": "/pivot",
+    "icon": "ph ph-table",
+    "url": "/pivot",
+    "keywords": [
+      "pivot",
+      "pivots",
+      "analysis",
+      "table",
+      "data analysis",
+      "data analyses"
+    ],
+    "priority": 0
+  },
+  {
+    "id": "nav_dashboard",
+    "kind": "navigation",
+    "title": "Dashboard",
+    "title_de": "Dashboard",
+    "subtitle": "/dashboard",
+    "icon": "ph ph-screen-desktop",
+    "url": "/dashboard",
+    "keywords": [
+      "dashboard",
+      "dashboards",
+      "overview",
+      "overviews",
+      "analytics",
+      "report",
+      "reports"
+    ],
+    "priority": 0
+  },
+  {
+    "id": "nav_visualization",
+    "kind": "navigation",
+    "title": "Visualisation",
+    "title_de": "Visualisierung",
+    "subtitle": "/visualize",
+    "icon": "ph ph-chart-bar-horizontal",
+    "url": "/visualize",
+    "keywords": [
+      "visualization",
+      "visualisation",
+      "chart",
+      "charts",
+      "graph",
+      "graphs"
+    ],
+    "priority": 0
+  }
+]

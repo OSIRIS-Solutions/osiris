@@ -67,7 +67,7 @@
                     switch ($doc['type']) {
                         case 'activities':
                             $con = $osiris->activities->findOne(['_id' => $id], ['projection' => ['name' => '$rendered.title', 'type' => 1, 'icon' => '$rendered.icon']]);
-                            $icon = $con['icon'];
+                            $icon = $con['icon'] ?? '';
                             break;
                         case 'proposals':
                         case 'nagoya-permit':
@@ -76,6 +76,9 @@
                             break;
                         default:
                             continue 2;
+                    }
+                    if (!$con) {
+                        continue;
                     }
 
                     $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('Other', 'Sonstiges'));
@@ -267,9 +270,10 @@
         ],
     });
 
-    createFilterTable(3, '#filter-category');
-    createFilterTable(4, '#filter-type');
-
+    $(document).ready(function() {
+        createFilterTable(3, '#filter-category');
+        createFilterTable(4, '#filter-type');
+    });
 
     function createFilterTable(columnIndex, filter) {
         // get unique values from the specified column
@@ -281,12 +285,10 @@
                 uniqueValues[value] = 1;
             }
         });
-        console.log(uniqueValues);
         // sort by number of entries descending
         uniqueValues = Object.fromEntries(
             Object.entries(uniqueValues).sort(([, a], [, b]) => b - a)
         );
-
         // create table rows for each unique value
         var filterTable = $(filter);
         $.each(uniqueValues, function(value, count) {

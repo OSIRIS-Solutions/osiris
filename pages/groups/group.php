@@ -4,14 +4,14 @@
  * Page to view a selected group
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /groups/view/<id>
  *
  * @package     OSIRIS
  * @since       1.3.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -43,6 +43,46 @@ $count_activities = 0;
 $count_projects = 0;
 $count_publications = 0;
 $count_wordcloud = 0;
+$count_spectrum = 0;
+if ($Settings->featureEnabled('spectrum')) {
+    $count_spectrum = $osiris->activities->count([
+        'units' => $id,
+        'type' => 'publication',
+        'openalex.topics' => ['$exists' => true, '$ne' => []]
+    ]);
+}
+
+$publication_filter = [
+    'units' => $id,
+    'type' => 'publication'
+];
+$count_publications = $osiris->activities->count($publication_filter);
+
+
+$activities_filter = [
+    'units' => $id,
+    'type' => ['$ne' => 'publication']
+];
+$count_activities = $osiris->activities->count($activities_filter);
+
+if ($Settings->featureEnabled('projects')) {
+    $project_filter = [
+        '$or' => array(
+            ['contact' => ['$in' => $users]],
+            ['persons.user' => ['$in' => $users]]
+        ),
+    ];
+    $count_projects = $osiris->projects->count($project_filter);
+}
+
+
+if ($Settings->featureEnabled('wordcloud')) {
+    $count_wordcloud = $osiris->activities->count([
+        'title' => ['$exists' => true],
+        'units' => $id,
+        'type' => 'publication'
+    ]);
+}
 ?>
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
@@ -158,8 +198,6 @@ $count_wordcloud = 0;
 
     <?= $Settings->printTopics($group['topics'] ?? [], 'mt-10'); ?>
 
-
-
     <!-- TAB AREA -->
 
     <nav class="pills mt-20 mb-0">
@@ -167,7 +205,14 @@ $count_wordcloud = 0;
             <i class="ph ph-info" aria-hidden="true"></i>
             <?= lang('General', 'Allgemein') ?>
         </a>
-        <?php if (!empty($group['research'] ?? null)) { ?>
+        <a onclick="navigate('persons')" id="btn-persons" class="btn <?= !$show_general ? 'active' : '' ?>">
+            <i class="ph ph-users" aria-hidden="true"></i>
+            <?= lang('Persons', 'Personen') ?>
+            <span class="index"><?= count($users) ?></span>
+        </a>
+
+
+        <?php if (!empty($group['research'] ?? null) || $count_spectrum > 0) { ?>
 
             <a onclick="navigate('research')" id="btn-research" class="btn <?= !$show_general ? 'active' : '' ?>">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
@@ -175,12 +220,6 @@ $count_wordcloud = 0;
             </a>
         <?php } ?>
 
-
-        <a onclick="navigate('persons')" id="btn-persons" class="btn <?= !$show_general ? 'active' : '' ?>">
-            <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Persons', 'Personen') ?>
-            <span class="index"><?= count($users) ?></span>
-        </a>
 
         <?php if ($level !== 0) { ?>
             <a onclick="navigate('graph')" id="btn-graph" class="btn">
@@ -191,12 +230,6 @@ $count_wordcloud = 0;
 
 
         <?php
-        $publication_filter = [
-            'units' => $id,
-            'type' => 'publication'
-        ];
-        $count_publications = $osiris->activities->count($publication_filter);
-
         if ($count_publications > 0) { ?>
             <a onclick="navigate('publications')" id="btn-publications" class="btn">
                 <i class="ph ph-books" aria-hidden="true"></i>
@@ -206,12 +239,6 @@ $count_wordcloud = 0;
         <?php } ?>
 
         <?php
-        $activities_filter = [
-            'units' => $id,
-            'type' => ['$ne' => 'publication']
-        ];
-        $count_activities = $osiris->activities->count($activities_filter);
-
         if ($count_activities > 0) { ?>
             <a onclick="navigate('activities')" id="btn-activities" class="btn">
                 <i class="ph ph-briefcase" aria-hidden="true"></i>
@@ -220,39 +247,21 @@ $count_wordcloud = 0;
             </a>
         <?php } ?>
 
-        <?php if ($Settings->featureEnabled('projects')) { ?>
-            <?php
-            $project_filter = [
-                '$or' => array(
-                    ['contact' => ['$in' => $users]],
-                    ['persons.user' => ['$in' => $users]]
-                ),
-                // "status" => ['$nin' => ["rejected", "applied"]]
-            ];
-
-            $count_projects = $osiris->projects->count($project_filter);
-            if ($count_projects > 0) { ?>
-                <a onclick="navigate('projects')" id="btn-projects" class="btn">
-                    <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('Projects', 'Projekte')  ?>
-                    <span class="index"><?= $count_projects ?></span>
-                </a>
-            <?php } ?>
+        <?php
+        if ($count_projects > 0) { ?>
+            <a onclick="navigate('projects')" id="btn-projects" class="btn">
+                <i class="ph ph-tree-structure" aria-hidden="true"></i>
+                <?= lang('Projects', 'Projekte')  ?>
+                <span class="index"><?= $count_projects ?></span>
+            </a>
         <?php } ?>
 
-        <?php if ($Settings->featureEnabled('wordcloud')) { ?>
-            <?php
-            $count_wordcloud = $osiris->activities->count([
-                'title' => ['$exists' => true],
-                'units' => $id,
-                'type' => 'publication'
-            ]);
-            if ($count_wordcloud > 0) { ?>
-                <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
-                    <i class="ph ph-cloud" aria-hidden="true"></i>
-                    <?= lang('Word cloud')  ?>
-                </a>
-            <?php } ?>
+        <?php
+        if ($count_wordcloud > 0) { ?>
+            <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
+                <i class="ph ph-cloud" aria-hidden="true"></i>
+                <?= lang('Word cloud')  ?>
+            </a>
         <?php } ?>
 
         <?php if ($level != 0) { ?>
@@ -431,51 +440,111 @@ $count_wordcloud = 0;
 
     <section id="research" style="display:none;">
 
-        <h3><?= lang('Research interests', 'Forschungsinteressen') ?></h3>
+        <div class="row row-eq-spacing mt-0">
+            <?php if (isset($group['research']) && !empty($group['research'])) { ?>
+                <div class="col-md">
+                    <h3>
+                        <?= lang('Research interests', 'Forschungsinteressen') ?>
+                        <?php if ($edit_perm) { ?>
+                            <a class="font-size-16" href="<?= ROOTPATH ?>/groups/public/<?= $id ?>#section-research-interest">
+                                <i class="ph ph-note-pencil ph-fw"></i>
+                                <span class="sr-only"><?= lang('Edit', 'Bearbeiten') ?></span>
+                            </a>
+                        <?php } ?>
+                    </h3>
+                    <?php foreach ($group['research'] as $r) { ?>
+                        <div class="box">
+                            <div class="content">
+                                <h5 class="title">
+                                    <?= lang($r['title'], $r['title_de'] ?? null) ?>
+                                </h5>
+                                <h6 class="subtitle font-size-16"><?= lang($r['subtitle'] ?? '', $r['subtitle_de'] ?? null) ?></h6>
+                                <?= lang($r['info'], $r['info_de'] ?? null) ?>
+                            </div>
+                            <?php if (!empty($r['projects'] ?? null)) {
+                                echo '<hr>';
+                                echo '<div class="content">';
+                                echo '<h4>' . lang('Selected Projects', 'Ausgewählte Projekte') . '</h4>';
+                                foreach ($r['projects'] as $a) {
+                                    echo $a;
+                                }
+                                echo '</div>';
+                            } ?>
 
-        <?php if ($edit_perm) { ?>
-            <a class="btn" href="<?= ROOTPATH ?>/groups/public/<?= $id ?>">
-                <i class="ph ph-note-pencil ph-fw"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
-            </a>
-        <?php } ?>
+                            <?php if (!empty($r['activities'] ?? null)) {
+                                echo '<hr>';
+                                echo '<div class="content">';
+                                echo '<h4>' . lang('Selected Research Activities', 'Ausgewählte Forschungsaktivitäten') . '</h4>';
+                                foreach ($r['activities'] as $i => $a) {
+                                    $doc = $DB->getActivity($a);
+                                    echo $doc['rendered']['web'];
+                                    if ($i < count($r['activities']) - 1) {
+                                        echo '<br>';
+                                    }
+                                }
+                                echo '</div>';
+                            } ?>
 
-        <?php if (isset($group['research']) && !empty($group['research'])) { ?>
-            <?php foreach ($group['research'] as $r) { ?>
-                <div class="box">
-                    <div class="content">
-                        <h5 class="title">
-                            <?= lang($r['title'], $r['title_de'] ?? null) ?>
-                            <br>
-                            <small class="text-muted"><?= lang($r['subtitle'] ?? '', $r['subtitle_de'] ?? null) ?></small>
-                        </h5>
-                        <?= lang($r['info'], $r['info_de'] ?? null) ?>
-                    </div>
-                    <?php if (!empty($r['projects'] ?? null)) {
-                        echo '<hr>';
-                        echo '<div class="content">';
-                        echo '<h2>' . lang('Selected Projects', 'Ausgewählte Projekte') . '</h2>';
-                        foreach ($r['projects'] as $a) {
-                            echo $a;
-                        }
-                        echo '</div>';
-                    } ?>
+                        </div>
 
-                    <?php if (!empty($r['activities'] ?? null)) {
-                        echo '<hr>';
-                        echo '<div class="content">';
-                        echo '<h2>' . lang('Selected Research Activities', 'Ausgewählte Forschungsaktivitäten') . '</h2>';
-                        foreach ($r['activities'] as $a) {
-                            $doc = $DB->getActivity($a);
-                            echo $doc['rendered']['web'];
-                        }
-                        echo '</div>';
-                    } ?>
-
+                    <?php } ?>
                 </div>
-
             <?php } ?>
-        <?php } ?>
+
+            <?php
+            if ($Settings->featureEnabled('spectrum')) {
+                $spectrum = $osiris->activities->aggregate([
+                    ['$match' => [
+                        'units' => $id,
+                        'type' => 'publication',
+                        'openalex.topics' => ['$exists' => true, '$ne' => []]
+                    ]],
+
+                    // total number of matched activities
+                    ['$unwind' => '$openalex.topics'],
+
+                    // group by topic id
+                    ['$group' => [
+                        '_id' => '$openalex.topics.id',
+                        'count' => ['$sum' => 1],
+                        'sumScore' => ['$sum' => '$openalex.topics.score'],
+                        'topic' => ['$first' => '$openalex.topics']
+                    ]],
+
+                    // compute averages + share
+                    ['$addFields' => [
+                        'avg_score' => ['$divide' => ['$sumScore', '$count']],
+                        'share' => ['$divide' => ['$count', $count_spectrum]],
+                        // optional combined weight (tweakable)
+                        'weight' => ['$multiply' => [
+                            ['$divide' => ['$count', $count_spectrum]],
+                            ['$divide' => ['$sumScore', $count_spectrum]]
+                        ]]
+                    ]],
+
+                    // filter noise
+                    ['$match' => ['share' => ['$gte' => 0.05]]],
+
+                    ['$sort' => ['weight' => -1]],
+                    ['$limit' => 25]
+                ])->toArray();
+            ?>
+                <div class="col-md">
+                    <h3>
+                        <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                    </h3>
+                    <?php
+                    if (!empty($spectrum)) :
+                        include_once BASEPATH . "/php/Spectrum.php";
+                        Spectrum::render($spectrum, $count_spectrum);
+                    else : ?>
+                        <p>
+                            <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+            <?php } ?>
+        </div>
 
     </section>
 

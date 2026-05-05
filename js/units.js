@@ -2,7 +2,7 @@ var activitiesTable = false,
     publicationTable = false,
     projectsExists = false,
     coauthorsExists = false,
-    conceptsExists = false,
+    spectrumExists = false,
     collabExists = false,
     collabGraphExists = false,
     personsExists = false,
@@ -76,6 +76,7 @@ function navigate(key) {
                     'units': DEPT_TREE,
                     is_active: { '$ne': false }
                 },
+                unit: DEPT,
                 subtitle: 'position',
             })
             break;
@@ -87,12 +88,6 @@ function navigate(key) {
                 type: 'publication',
                 dept: DEPT,
             })
-            break;
-
-        case 'concepts':
-            if (conceptsExists) break;
-            conceptsExists = true;
-            conceptTooltip()
             break;
 
         case 'wordcloud':

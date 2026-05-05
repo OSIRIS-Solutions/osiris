@@ -5,12 +5,12 @@
  * Created in cooperation with DSMZ
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -324,9 +324,6 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     $(document).ready(function() {
         dataTable = new DataTable('#infrastructure-table', {
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             columnDefs: [{
                 targets: [1, 2, 3, 4, 5, 6, 7],
                 visible: false
@@ -391,11 +388,9 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            var search = settings.oPreviousSearch.sSearch;
-            if (search === undefined) search = '';
             writeHash({
                 page: info.page + 1,
-                search: search
+                search: dataTable.search(),
             })
         });
 

@@ -4,7 +4,7 @@
  * Page to see all proposals
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /proposals
  *
@@ -12,7 +12,7 @@
  * @since       1.5.0
  * @category   Projects
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -530,9 +530,6 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             type: 'GET',
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
@@ -768,15 +765,9 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            var search = settings.oPreviousSearch.sSearch;
-            if (search) {
-                search = encodeURIComponent(search);
-            } else {
-                search = null;
-            }
             writeHash({
                 page: info.page + 1,
-                search: search
+                search: dataTable.search(),
             })
         });
 

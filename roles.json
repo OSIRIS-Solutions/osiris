@@ -6,8 +6,8 @@
         "fields": [
             {
                 "id": "admin.see",
-                "de": "Auf das Admin-Panel zugreifen",
-                "en": "Access to the admin panel"
+                "de": "Auf das Admin-Panel zugreifen, Einstellungen anpassen und Versionen migrieren",
+                "en": "Access to the admin panel, modify settings and migrate versions"
             }
         ]
     },
@@ -25,6 +25,11 @@
                 "id": "activities.delete",
                 "de": "Aktivitäten löschen",
                 "en": "Delete activities"
+            },
+            {
+                "id": "activities.delete-own",
+                "de": "Eigene Aktivitäten löschen",
+                "en": "Delete own activities"
             },
             {
                 "id": "activities.lock",
@@ -59,6 +64,25 @@
                 "en": "Add and edit events"
             },
             {
+                "id": "conferences.delete",
+                "de": "Events löschen",
+                "en": "Delete events",
+                "comment_de": "Standardmäßig können Events nur von den Nutzenden selbst gelöscht werden, die sie angelegt haben.",
+                "comment_en": "By default, events can only be deleted by the users themselves who created them."
+            },
+            {
+                "id": "deadlines.edit",
+                "de": "Deadlines hinzufügen und bearbeiten",
+                "en": "Add and edit deadlines"
+            },
+            {
+                "id": "deadlines.delete",
+                "de": "Deadlines löschen",
+                "en": "Delete deadlines",
+                "comment_de": "Standardmäßig können Deadlines nur von den Nutzenden selbst gelöscht werden, die sie angelegt haben.",
+                "comment_en": "By default, deadlines can only be deleted by the users themselves who created them."
+            },
+            {
                 "id": "teaching.edit",
                 "de": "Lehrveranstaltungen hinzufügen, bearbeiten und löschen",
                 "en": "Add, edit and delete teaching modules",
@@ -72,6 +96,11 @@
         "en": "Metrics and Reports",
         "icon": "chart-line-up",
         "fields": [
+            {
+                "id": "activities.exclude",
+                "de": "Aktivitäten aus Berichten ausschließen",
+                "en": "Exclude activities from reports"
+            },
             {
                 "id": "report.dashboard",
                 "de": "Quartalsübersichten sehen (im Dashboard und Profil)",

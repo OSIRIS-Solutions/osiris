@@ -4,14 +4,14 @@
  * Component to connect infrastructures to activities.
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link /activity
  *
  * @package OSIRIS
  * @since 1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -21,9 +21,9 @@ $filter = [];
 if (!$permission) {
     $filter = ['persons.user' => $user];
 }
- $infrastructures = $osiris->infrastructures->find(
+ $all_infrastructures = $osiris->infrastructures->find(
      $filter,
-     ['sort' => ['end_date' => -1, 'start_date' => 1], 'infrastructureion' => ['id' => 1, 'name' => 1]]
+     ['sort' => ['end_date' => -1, 'start_date' => 1], 'projection' => ['id' => 1, 'name' => 1]]
  )->toArray();
 ?>
 
@@ -47,7 +47,7 @@ if (!$permission) {
                         <select name="infrastructures[<?= $i ?>]" id="infrastructures-<?= $i ?>" class="form-control" required>
                             <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?> --</option>
                             <?php
-                            foreach ($infrastructures as $s) { ?>
+                            foreach ($all_infrastructures as $s) { ?>
                                 <option <?= $con == $s['id'] ? 'selected' : '' ?> value="<?=$s['id']?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>

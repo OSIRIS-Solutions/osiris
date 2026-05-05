@@ -4,14 +4,14 @@
  * Page to see a journal
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /journal/view/<journal_id>
  *
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -263,67 +263,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 </script>
 
 
-<h3>
-    <?= lang('Peer-Reviews & Editorial board memberships', 'Peer-Reviews & Mitglieder des Editorial Board') ?>
-</h3>
-
-<table class="table" id="review-table">
-    <thead>
-        <th>Name</th>
-        <th><?= lang('Reviewer count', 'Anzahl Reviews') ?></th>
-        <th><?= lang('Editor activity', 'Editoren-Tätigkeit') ?></th>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<script>
-    $(document).ready(function() {
-        $('#review-table').DataTable({
-            ajax: {
-                "url": ROOTPATH + '/api/reviews',
-                "data": {
-                    "filter": {
-                        journal_id: '<?= $id ?>'
-                    }
-                }
-            },
-            language: {
-                "zeroRecords": "No matching records found",
-                "emptyTable": lang("No reviews/editorials available for this <?= $label ?>.", "Für dieses <?= $label ?> sind noch keine Reviews/Editorials verfügbar."),
-            },
-            "pageLength": 5,
-            columnDefs: [{
-                    "targets": 2,
-                    "data": "Editor",
-                    "render": function(data, type, full, meta) {
-                        var res = []
-                        full.Editorials.forEach(el => {
-                            res.push(`${el.date} (${el.details == '' ? 'Editor' : el.details})`)
-                        });
-                        return res.join('<br>');
-                    }
-                },
-                {
-                    targets: 1,
-                    data: 'Reviewer'
-                },
-                {
-                    "targets": 0,
-                    "data": "Name",
-                    "render": function(data, type, full, meta) {
-                        return `<a href="${ROOTPATH}/profile/${full.User}">${data}</a>`;
-                    }
-                },
-            ],
-            "order": [
-                [1, 'desc'],
-            ],
-        });
-    });
-</script>
-
-
-
 <h3><?= lang('Impact factors', 'Impact-Faktoren') ?></h3>
 <?php
 $impacts = DB::doc2Arr($data['impact'] ?? array());
@@ -331,25 +270,42 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
 
 <div class="box">
     <div class="content">
-
+<style>
+    .form-row {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    .form-row label {
+        margin-bottom: 0;
+        width: 5rem;
+    }
+    .form-row .form-control {
+        flex: 1;
+    }
+</style>
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
                     <?= lang('Add IF', 'Füge IF hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-2">
+                <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="dropdown-2">
                     <div class="content">
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                            <div class="form-group">
+                            <div class="form-row">
                                 <label for="year"><?= lang('Year', 'Jahr') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-row">
                                 <label for="if"><?= lang('Impact') ?></label>
                                 <input type="number" min="0" max="300" step="0.001" class="form-control" name="values[if]" id="if">
                             </div>
-                            <button class="btn block"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+                            
+                            <small class="text-muted">
+                                <?= lang('Existing years will be overwritten. Enter 0 to remove.', 'Bestehende Jahre werden überschrieben. Gib eine 0 ein, um zu entfernen.') ?>
+                            </small>
                         </form>
                     </div>
                 </div>
@@ -362,7 +318,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
             sort($impacts);
             $years = array_column((array) $impacts, 'year');
         ?>
-            <canvas id="chart-if" style="max-height: 400px;"></canvas>
+            <canvas id="chart-if" style="max-height: 300px;"></canvas>
 
             <script>
                 var barChartConfig = {
@@ -448,15 +404,15 @@ foreach ($metrics as $metric) {
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
                     <?= lang('Add quartile', 'Füge Quartil hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-2">
+                <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="dropdown-2">
                     <div class="content">
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                            <div class="form-group">
+                            <div class="form-row">
                                 <label for="year"><?= lang('Year', 'Jahr') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-row">
                                 <label for="quartile"><?= lang('Quartile', 'Quartil') ?></label>
                                 <select class="form-control" name="values[quartile]" id="quartile">
                                     <option>Q1</option>
@@ -466,7 +422,11 @@ foreach ($metrics as $metric) {
                                     <option value=""><?= lang('Not available', 'Nicht verfügbar') ?></option>
                                 </select>
                             </div>
-                            <button class="btn block"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+
+                                <small class="text-muted">
+                                <?= lang('Existing years will be overwritten. Select "Not available" to remove.', 'Bestehende Jahre werden überschrieben. Wähle "Nicht verfügbar", um zu entfernen.') ?>
+                            </small>
                         </form>
                     </div>
                 </div>
@@ -479,7 +439,7 @@ foreach ($metrics as $metric) {
             sort($quartiles);
             $years = array_column((array) $quartiles, 'year');
         ?>
-            <canvas id="chart-quartiles" style="max-height: 400px;"></canvas>
+            <canvas id="chart-quartiles" style="max-height: 300px;"></canvas>
 
             <script>
                 var ctx = document.getElementById('chart-quartiles')

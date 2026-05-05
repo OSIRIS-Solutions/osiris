@@ -5,7 +5,7 @@
  *
  * This file is part of the OSIRIS package 
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @link		https://github.com/JKoblitz/osiris
  * @version		1.2
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
@@ -659,33 +659,6 @@ class DB
     }
 
     /**
-     * Get journal impact factor for a specific year (minus one)
-     *
-     * @param array $journal Journal document.
-     * @param int $year Optional. year, defaults to current year.
-     * @return float impact factor.
-     */
-    public function impact_from_year($journal, $year = null)
-    {
-        if (empty($year)) $year = CURRENTYEAR;
-        $if = 0;
-        if (!isset($journal['impact']) || empty($journal['impact'])) return 0;
-
-        // get impact factors from journal
-        $impact = DB::doc2Arr($journal['impact']);
-        // sort ascending by year
-        usort($impact, function ($a, $b) {
-            return $a['year'] - $b['year'];
-        });
-
-        foreach ($impact as $i) {
-            if ($i['year'] >= $year) break;
-            $if = $i['impact'];
-        }
-        return $if;
-    }
-
-    /**
      * Get latest journal impact factor
      *
      * @param array $journal Journal document.
@@ -724,19 +697,19 @@ class DB
      * Get document impact factor
      *
      * @param array $doc Activity document.
-     * @param int $year Optional. Year. Defaults to document year
      * @return float impact factor.
      */
-    public function get_impact($doc, $year = null)
+    public function get_impact($doc)
     {
-        $journal = $this->getJournal($doc);
-
-        if (empty($journal)) return null;
-
-        if ($year == null) {
-            $year = intval($doc['year'] ?? 1);
-        }
-        return $this->impact_from_year($journal, $year);
+        if (!isset($doc['journal_id']) || empty($doc['journal_id'])) return null;
+        $impact = $this->db->journals->aggregate([
+            ['$match' => ['_id' => $this->to_ObjectID($doc['journal_id'] ?? null)]],
+            ['$unwind' => '$impact'],
+            ['$match' => ['impact.year' => intval($doc['year'] ?? 1) - 1]],
+            ['$project' => ['impact_factor' => '$impact.impact', '_id' => 0]]
+        ])->toArray();
+        if (empty($impact)) return null;
+        return $impact[0]['impact_factor'] ?? null;
     }
     /**
      * Get document quartile
@@ -879,32 +852,6 @@ class DB
         return $result;
     }
 
-
-    /**
-     * Convert list of authors into unique list of departments
-     *
-     * @param array $authors List of activity authors.
-     * @return array unique list of departments.
-     * 
-     * @deprecated 1.3.0
-     */
-    public function getDeptFromAuthors($authors)
-    {
-        $result = [];
-        $authors = $this->doc2Arr($authors);
-        $authors = array_filter($authors, function ($a) {
-            return boolval($a['aoi'] ?? false);
-        });
-        if (empty($authors)) return [];
-        $users = array_filter(array_column($authors, 'user'));
-        foreach ($users as $user) {
-            $user = $this->getPerson($user);
-            if (empty($user) || empty($user['dept'])) continue;
-            if (in_array($user['dept'], $result)) continue;
-            $result[] = $user['dept'];
-        }
-        return $result;
-    }
 
     private function featureEnabled($feature, $default = false)
     {

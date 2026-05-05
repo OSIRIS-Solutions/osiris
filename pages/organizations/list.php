@@ -5,12 +5,12 @@
  * Created in cooperation with DSMZ
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.4.1
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -81,9 +81,6 @@ $organizations  = $osiris->organizations->find(
 <script>
     $('#organizations-table').DataTable({
         responsive: true,
-        language: {
-            url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-        },
         columnDefs: [{
             targets: [1, 2, 3, 4, 5],
             visible: false

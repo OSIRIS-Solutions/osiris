@@ -24,7 +24,6 @@ function navigate(key) {
             if (activitiesTable) break;
             activitiesTable = initActivities('#activities-table', {
                 page: 'activities',
-                display_activities: 'web',
                 // user: CURRENT_USER,
                 filter: { 'projects': PROJECT }
             });

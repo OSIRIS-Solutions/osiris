@@ -128,7 +128,7 @@ Route::post('/guests/save', function () {
         }
     }
 
-    $msg = "success";
+    $msg = lang("Guest saved successfully.", "Gast erfolgreich gespeichert.");
 
     if (!$finished && $Settings->featureEnabled('guest-forms')) {
 
@@ -136,9 +136,9 @@ Route::post('/guests/save', function () {
         $guest_server = $Settings->get('guest-forms-server');
         $guest_secret = $Settings->get('guest-forms-secret-key');
         if (empty($guest_server)) {
-            $msg = "Guest+server+is+not+defined.+Please+contact+admin.";
+            $msg = lang("Guest server is not defined. Please contact admin.", "Gast-Server ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
         } else if (empty($guest_secret)) {
-            $msg = "Secret+key+is+not+defined.+Please+contact+admin.";
+            $msg = lang("Secret key is not defined. Please contact admin.", "Geheimer Schlüssel ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
         } else {
             // if server and key is defined:
             // send data to guest server
@@ -164,7 +164,9 @@ Route::post('/guests/save', function () {
         $insertOneResult  = $collection->insertOne($values);
     }
 
-    header("Location: " . ROOTPATH . "/guests/view/$id?msg=$msg");
+    $_SESSION['msg'] = $msg;
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/guests/view/$id");
 }, 'login');
 
 
@@ -180,14 +182,14 @@ Route::post('/guests/activity-qr/(.*)', function ($id) {
     $activity = $osiris->activities->findOne(['id' => $mongo_id]);
 
     $values = $_POST['values'];
-
+    $msg = lang("QR code updated successfully.", "QR-Code erfolgreich aktualisiert.");
     // check if server and secret key are defined
     $guest_server = $Settings->get('guest-forms-server');
     $guest_secret = $Settings->get('guest-forms-secret-key');
     if (empty($guest_server)) {
-        $msg = "Guest+server+is+not+defined.+Please+contact+admin.";
+        $msg = lang("Guest server is not defined. Please contact admin.", "Gast-Server ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
     } else if (empty($guest_secret)) {
-        $msg = "Secret+key+is+not+defined.+Please+contact+admin.";
+        $msg = lang("Secret key is not defined. Please contact admin.", "Geheimer Schlüssel ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
     } else {
         // if server and key is defined:
         // send data to guest server
@@ -206,7 +208,9 @@ Route::post('/guests/activity-qr/(.*)', function ($id) {
         ['$set' => ['guest-qrcode' => true]]
     );
 
-    header("Location: " . ROOTPATH . "/guests/view/$id?msg=$msg");
+    $_SESSION['msg'] = $msg;
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/guests/view/$id");
 }, 'login');
 
 
@@ -219,12 +223,16 @@ Route::post('/guests/synchronize/([a-z0-9]*)', function ($id) {
 
     $guest_server = $Settings->get('guest-forms-server');
     if (empty($guest_server)) {
-        header("Location: " . ROOTPATH . "/guests?msg=Guest+server+is+not+defined.+Please+contact+admin.");
+        $_SESSION['msg'] = lang("Guest server is not defined. Please contact admin.", "Gast-Server ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/guests");
         die;
     }
     $guest_secret = $Settings->get('guest-forms-secret-key');
     if (empty($guest_secret)) {
-        header("Location: " . ROOTPATH . "/guests?msg=Secret+key+is+not+defined.+Please+contact+admin.");
+        $_SESSION['msg'] = lang("Secret key is not defined. Please contact admin.", "Geheimer Schlüssel ist nicht definiert. Bitte kontaktieren Sie den Administrator.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/guests");
         die;
     }
 
@@ -244,10 +252,14 @@ Route::post('/guests/synchronize/([a-z0-9]*)', function ($id) {
             ['$set' => $values]
         );
 
-        header("Location: " . ROOTPATH . "/guests/view/$id?msg=success");
+        $_SESSION['msg'] = lang("Guest synchronized successfully.", "Gast erfolgreich synchronisiert.");
+        $_SESSION['msg_type'] = 'success';
+        header("Location: " . ROOTPATH . "/guests/view/$id");
         die;
     } else {
-        header("Location: " . ROOTPATH . "/guests?msg=guest+not+found");
+        $_SESSION['msg'] = lang("Guest not found.", "Gast nicht gefunden.");
+        $_SESSION['msg_type'] = 'error';
+        header("Location: " . ROOTPATH . "/guests");
         die;
     }
 }, 'login');
@@ -267,7 +279,9 @@ Route::post('/guests/update/([a-z0-9]*)', function ($id) {
         ['$set' => $values]
     );
 
-    header("Location: " . ROOTPATH . "/guests/view/$id?msg=success");
+    $_SESSION['msg'] = lang("Guest updated successfully.", "Gast erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/guests/view/$id");
 }, 'login');
 
 
@@ -299,6 +313,8 @@ Route::post('/guests/cancel/([a-z0-9]*)', function ($id) {
         ['$set' => $values]
     );
 
+    $_SESSION['msg'] = lang("Guest cancelled successfully.", "Gast erfolgreich storniert.");
+    $_SESSION['msg_type'] = 'success'; 
     header("Location: " . ROOTPATH . "/guests/view/$id");
 }, 'login');
 
@@ -309,7 +325,7 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
 
     $target_dir = BASEPATH . "/uploads/";
     if (!is_writable($target_dir)) {
-        die("Upload directory $target_dir is unwritable. Please contact admin.");
+        abortwith(500, lang("Upload directory $target_dir is unwritable. Please contact admin.", "Upload-Verzeichnis $target_dir ist nicht beschreibbar. Bitte kontaktieren Sie den Administrator."));
     }
     $target_dir .= "$id/";
     if (!file_exists($target_dir)) {
@@ -338,13 +354,17 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
             };
-            printMsg($errorMsg, "error");
+            $_SESSION['msg'] = $errorMsg;
+            $_SESSION['msg_type'] = 'error';
         } else if ($filesize > 16000000) {
-            printMsg(lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."), "error");
+            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+            $_SESSION['msg_type'] = 'error';
         } else if (file_exists($target_dir . $filename)) {
-            printMsg(lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden."), "error");
+            $_SESSION['msg'] = lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden.");
+            $_SESSION['msg_type'] = 'error';
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            printMsg(lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."), "success");
+            $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
+            $_SESSION['msg_type'] = 'success';
             $values = [
                 "filename" => $filename,
                 "filetype" => $filetype,
@@ -358,19 +378,22 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
             );
             // $files[] = $values;
         } else {
-            printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
+            $_SESSION['msg_type'] = 'error';
         }
 
-        header("Location: " . ROOTPATH . "/guests/view/" . $id . "?msg=upload-successful");
+        header("Location: " . ROOTPATH . "/guests/view/" . $id);
         die();
     } else if (isset($_POST['delete'])) {
         $filename = $_POST['delete'];
         if (file_exists($target_dir . $filename)) {
             // Use unlink() function to delete a file
             if (!unlink($target_dir . $filename)) {
-                printMsg("$filename cannot be deleted due to an error.", "error");
+                $_SESSION['msg'] = "$filename cannot be deleted due to an error.";
+                $_SESSION['msg_type'] = 'error';
             } else {
-                printMsg(lang("$filename has been deleted.", "$filename wurde gelöscht."), "success");
+                $_SESSION['msg'] = lang("$filename has been deleted.", "$filename wurde gelöscht.");
+                $_SESSION['msg_type'] = 'success';
             }
         }
 
@@ -378,9 +401,8 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
             ['id' => $id],
             ['$pull' => ["files" => ["filename" => $filename]]]
         );
-        // printMsg("File has been deleted from the database.", "success");
 
-        header("Location: " . ROOTPATH . "/guests/view/" . $id . "?msg=file-deleted-successfully");
+        header("Location: " . ROOTPATH . "/guests/view/" . $id);
         die();
     }
 });
@@ -391,8 +413,7 @@ Route::post('/crud/activities/guests', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!isset($_POST['id'])) {
-        echo "no id given";
-        die;
+        abortwith(500, lang("No activity id given.", "Keine Aktivitäts-ID angegeben."), "/activities");
     }
     $activity_id = $_POST['id'];
     $mongo_id = DB::to_ObjectID($activity_id);
@@ -435,9 +456,10 @@ Route::post('/crud/activities/guests', function () {
         ['_id' => $mongo_id],
         ['$set' => ['guests' => $result]]
     );
-
-    header("Location: " . ROOTPATH . "/activities/view/$activity_id?msg=success");
-
+    
+    $_SESSION['msg'] = lang("Guests updated successfully.", "Gäste erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/activities/view/$activity_id");
 }, 'login');
 
 
@@ -445,8 +467,7 @@ Route::post('/crud/activities/guests/qr', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!isset($_POST['id'])) {
-        echo "no id given";
-        die;
+        abortwith(500, lang("No activity id given.", "Keine Aktivitäts-ID angegeben."), "/activities");
     }
     $activity_id = $_POST['id'];
     $mongo_id = DB::to_ObjectID($activity_id);
@@ -484,6 +505,7 @@ Route::post('/crud/activities/guests/qr', function () {
         ['$set' => ['guests' => $result]]
     );
 
-    header("Location: " . ROOTPATH . "/activities/view/$activity_id?msg=success");
-
+    $_SESSION['msg'] = lang("Guest QR codes updated successfully.", "QR-Codes der Gäste erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = 'success';
+    header("Location: " . ROOTPATH . "/activities/view/$activity_id");
 }, 'login');

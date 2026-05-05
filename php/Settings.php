@@ -8,10 +8,6 @@ include_once "Groups.php";
  */
 class Settings
 {
-    /**
-     * @deprecated 1.3.0
-     */
-    public $settings = array();
     // private $user = array();
     public $roles = array();
     public $allowedTypes = array();
@@ -19,6 +15,10 @@ class Settings
     public $osiris = null;
     private $features = array();
     public $continuousTypes = [];
+    public $topics = [];
+    public $activityCategories = [];
+    public $sidebarFavorites = [];
+    private $dismissedAnnouncement = false;
 
     function __construct($user = array())
     {
@@ -34,6 +34,12 @@ class Settings
                 if ($user['is_' . $key] ?? false) $this->roles[] = $key;
             }
         }
+        if (isset($user['sidebar_favorites']) && is_iterable($user['sidebar_favorites'])) {
+            $this->sidebarFavorites = DB::doc2Arr($user['sidebar_favorites']);
+        }
+        if (isset($user['dismissed_announcement_at']) && !empty($user['dismissed_announcement_at'])) {
+            $this->dismissedAnnouncement = $user['dismissed_announcement_at'];
+        }
         // everyone is a user
         $this->roles[] = 'user';
         if (defined('ADMIN') && isset($user['username']) && $user['username'] == ADMIN) {
@@ -46,6 +52,8 @@ class Settings
             ['visible_role' => null],
             ['visible_role' => ['$in' => $this->roles]]
         ]];
+        $this->activityCategories = $this->osiris->adminCategories->find()->toArray();
+
         $allowedTypes = $this->osiris->adminCategories->find($catFilter, ['projection' => ['_id' => 0, 'id' => 1]]);
         $this->allowedTypes = array_column($allowedTypes->toArray(), 'id');
 
@@ -64,6 +72,11 @@ class Settings
             ['projection' => ['_id' => 0, 'id' => 1]]
         )->toArray();
         $this->continuousTypes = array_column($continuous, 'id');
+
+        // get topics
+        if ($this->featureEnabled('topics')) {
+            $this->topics =  $this->osiris->topics->find([], ['sort' => ['inactive' => 1]])->toArray();
+        }
     }
 
     /**
@@ -102,6 +115,11 @@ class Settings
                 ]]
             ]
         ];
+    }
+
+    function getQueueCount()
+    {
+        return $this->osiris->queue->count(['declined' => ['$ne' => true]]);
     }
 
     function get($key, $default = null)
@@ -240,6 +258,9 @@ class Settings
      */
     function featureEnabled($feature, $default = false)
     {
+        if ($feature == 'proposals') {
+            return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
+        }
         return $this->features[$feature] ?? $default;
     }
 
@@ -333,15 +354,22 @@ class Settings
         $root = '--affiliation: "' . $this->get('affiliation') . '";';
 
         foreach ($this->getActivities() as $val) {
+
+            $color = $val['color'] ?? '#06667d';
+            $color_dark = adjustBrightness($color, -20);
+            $color_light = adjustBrightness($color, 20);
             $style .= "
-            .text-$val[id] { color: $val[color] !important; }
-            .box-$val[id] { border-left: 4px solid $val[color] !important; }
-            .badge-$val[id] { color:  $val[color] !important; border-color:  $val[color] !important; }
+            .text-$val[id] { color: $color !important; }
+            .box-$val[id] { border-left: 4px solid $color !important; }
+            .badge-$val[id] { color:  $color !important; border-color:  $color !important; }
+            ";
+            $style .= "
+            .adjust-color-$val[id] { --primary-color: $color; --primary-color-dark: $color_dark; --primary-color-light: $color_light; --link-color-hover: $color_light; }
             ";
         }
         $style = preg_replace('/\s+/', ' ', $style);
 
-        foreach ($this->osiris->topics->find() as $t) {
+        foreach ($this->topics as $t) {
             $style .= " .topic-" . $t['id'] . " { --topic-color: " . $t['color'] . "; } ";
         }
 
@@ -349,10 +377,12 @@ class Settings
         if (!empty($colors)) {
             $primary = $colors['primary'] ?? '#008083';
             $secondary = $colors['secondary'] ?? '#f78104';
+            $link = $colors['link'] ?? '#0e7b96';
             $primary_hex = sscanf($primary, "#%02x%02x%02x");
             $secondary_hex = sscanf($secondary, "#%02x%02x%02x");
             $root .= "--primary-color: $primary; --primary-color-light: " . adjustBrightness($primary, 20) . "; --primary-color-very-light: " . adjustBrightness($primary, 200) . "; --primary-color-dark: " . adjustBrightness($primary, -20) . "; --primary-color-very-dark: " . adjustBrightness($primary, -200) . "; --primary-color-20: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.2); --primary-color-30: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.3); --primary-color-60: rgba($primary_hex[0], $primary_hex[1], $primary_hex[2], 0.6);";
             $root .= "--secondary-color: $secondary; --secondary-color-light: " . adjustBrightness($secondary, 20) . "; --secondary-color-very-light: " . adjustBrightness($secondary, 200) . "; --secondary-color-dark: " . adjustBrightness($secondary, -20) . "; --secondary-color-very-dark: " . adjustBrightness($secondary, -200) . "; --secondary-color-20: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.2); --secondary-color-30: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.3); --secondary-color-60: rgba($secondary_hex[0], $secondary_hex[1], $secondary_hex[2], 0.6); ";
+            $root .= "--link-color: $link; --link-color-hover: " . adjustBrightness($link, 20) . ";";
         }
 
         $design = $this->get('design');
@@ -724,7 +754,7 @@ class Settings
     {
         if (!$this->featureEnabled('topics')) return '';
 
-        $topics = $this->osiris->topics->find([], ['sort' => ['inactive' => 1]]);
+        $topics = $this->topics;
         if (empty($topics)) return '';
 
         $selected = DB::doc2Arr($selected);
@@ -973,5 +1003,39 @@ class Settings
             ];
         }
         return DB::doc2Arr($mappings);
+    }
+
+    public function isAnnouncementActive(): bool
+    {
+        $announcement = $this->get('announcement');
+
+        if (empty($announcement) || empty($announcement['active'])) {
+            return false;
+        }
+
+        // Check expiration
+        if (!empty($announcement['expires'])) {
+            $expires = strtotime($announcement['expires']);
+            if ($expires !== false && $expires < time()) {
+                return false;
+            }
+        }
+
+        // If no user context given, just check global state
+        if ($this->dismissedAnnouncement === false) {
+            return true;
+        }
+
+        // Check if user dismissed after last update
+        $dismissedAt = $this->dismissedAnnouncement ?? null;
+        $updatedAt   = $announcement['updated_at'] ?? null;
+
+        if ($dismissedAt && $updatedAt) {
+            if (strtotime($dismissedAt) >= strtotime($updatedAt)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

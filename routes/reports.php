@@ -4,12 +4,12 @@
  * Routing for export
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -21,7 +21,9 @@ Route::get('/reports', function () {
         // ['name' => 'Export', 'path' => "/export"],
         ['name' => lang("Reports", "Berichte")]
     ];
-
+    if (!$Settings->hasPermission('report.generate')) {
+        abortwith(403, lang('You do not have permission to generate reports.', 'Du hast keine Berechtigung, Berichte zu erstellen.'), "/", lang('Go back', 'Zurück'));
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports.php";
     include BASEPATH . "/footer.php";
@@ -34,7 +36,9 @@ Route::get('/admin/reports', function () {
         ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen')],
     ];
-    $page = 'reports-templates';
+    if (!$Settings->hasPermission('report.templates')) {
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/reports", lang('Go back', 'Zurück'));
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
     include BASEPATH . "/footer.php";
@@ -47,6 +51,9 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
         ['name' => lang("Builder", "Editor")]
     ];
+    if (!$Settings->hasPermission('report.templates')) {
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('Go back', 'Zurück'));
+    }
 
     $report = [];
     $title = '';
@@ -58,7 +65,6 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         $steps = $report['steps'];
     }
 
-    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-builder.php";
     include BASEPATH . "/footer.php";
@@ -73,12 +79,14 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
         ['name' => lang('Builder', 'Editor'), 'path' => "/admin/reports/builder/$id"],
         ['name' => lang("Preview", "Vorschau")]
     ];
-    if (!DB::is_ObjectID($id)) {
-        die('The Report does not exist.');
+    if (!$Settings->hasPermission('report.templates')) {
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('Go back', 'Zurück'));
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($report)) {
+        abortwith(404, lang('Report', 'Bericht'), "/admin/reports");
+    }
 
-    $page = 'admin/reports';
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/report-preview.php";
     include BASEPATH . "/footer.php";
@@ -101,7 +109,9 @@ Route::post('/crud/reports/create', function () {
         'steps' => []
     ]);
     $id = $insertOneResult->getInsertedId();
-    header("Location: " . ROOTPATH . "/admin/reports/builder/$id?msg=success");
+    $_SESSION['msg'] = lang("Report template has been created successfully.", "Berichtsvorlage wurde erfolgreich erstellt.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
 
 
@@ -113,7 +123,9 @@ Route::post('/crud/reports/delete', function () {
     $id = $_POST['id'];
     $osiris->adminReports->deleteOne(['_id' => DB::to_ObjectID($id)]);
 
-    header("Location: " . ROOTPATH . "/admin/reports?msg=deleted");
+    $_SESSION['msg'] = lang("Report template has been deleted successfully.", "Berichtsvorlage wurde erfolgreich gelöscht.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/reports");
 }, 'login');
 
 
@@ -174,8 +186,9 @@ Route::post('/crud/reports/update', function () {
         ]
     );
 
-    // id
-    header("Location: " . ROOTPATH . "/admin/reports/builder/$id?msg=success");
+    $_SESSION['msg'] = lang("Report template has been updated successfully.", "Berichtsvorlage wurde erfolgreich aktualisiert.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
 
 
@@ -192,12 +205,12 @@ Route::post('/reports', function () {
     }
     require_once BASEPATH . '/php/init.php';
     if (!isset($_POST['id'])) {
-        die('No Report ID provided');
+        abortwith(500, lang('No report ID provided.', 'Keine Bericht-ID angegeben.'), "/reports");
     }
     $id = $_POST['id'];
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($report)) {
-        die('Report not found');
+        abortwith(404, lang('Report not found.', 'Bericht nicht gefunden.'), "/reports", lang('Go back to reports', 'Zurück zu den Berichten'));
     }
 
     // select reportable data

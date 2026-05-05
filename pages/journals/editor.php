@@ -4,7 +4,7 @@
  * Page to add or edit journal
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /journal/add
  * @link        /journal/edit/<journal_id>
@@ -12,10 +12,12 @@
  * @package     OSIRIS
  * @since       1.0.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+
+$oa = $data['oa'] ?? false;
 ?>
 
 <h1>
@@ -77,26 +79,34 @@ if ($id === null || empty($data)) {
             <input type="text" name="values[publisher]" id="publisher" class="form-control" value="<?= $data['publisher'] ?? '' ?>" required>
         </div>
         <div class="col-sm">
-            <label for="open_access">Open access <?= lang('seit', 'since') ?></label>
-            <?php
-            $oa = $data['oa'] ?? 'false';
-            if ($oa === false) $oa = 'false';
-            ?>
+            <label for="oa">Open Access</label>
+            <div class="d-flex gap-10">
+                <select name="values[oa]" id="oa" class="form-control">
+                    <option value="false" <?= $oa === false ? 'selected' : '' ?>>Not open access</option>
+                    <option value="true" <?= $oa === true ? 'selected' : '' ?>>Always open access</option>
+                    <option value="year" <?= !is_bool($oa) ? 'selected' : '' ?>>Open access since…</option>
+                </select>
 
-            <input type="text" name="values[oa]" id="oa" class="form-control" value="<?= $oa ?>">
-            <small class="text-muted">
-                </code>
-                <?= lang(
-                    'enter <code class="code">false</code> if not open access, <code class="code">0</code> if always, <code class="code">2010</code> if since 2010 ',
-                    'Trage ein: <code class="code">false</code> wenn nicht open access, <code class="code">0</code> wenn immer OA, <code class="code">2010</code> wenn OA seit 2010 '
-                ) ?>
-            </small>
+                <input type="number" name="values[oa_since]" id="oa_since"
+                    class="form-control mt-1" placeholder="Year (e.g. 2018)" value="<?= $data['oa_since'] ?? (is_numeric($oa) ? $oa : '') ?>"
+                    style="width: 150px;">
+            </div>
         </div>
 
+        <script>
+            $('#oa').on('change', function() {
+                if ($(this).val() === 'year') {
+                    $('#oa_since').show();
+                } else {
+                    $('#oa_since').hide();
+                }
+            }).trigger('change');
+        </script>
     </div>
 
 
-    <button type="submit" class="btn secondary">
-        Update
+    <button type="submit" class="btn success">
+        <i class="ph ph-floppy-disk"></i>
+        <?= lang('Save', 'Speichern') ?>
     </button>
 </form>

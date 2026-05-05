@@ -144,7 +144,7 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
 
     var opacityDefault = 0.8;
 
-    if (type == 'all'){
+    if (type == 'all') {
         type = 'activities';
     } else {
         // Make type plural
@@ -182,8 +182,6 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
 
     var svg = d3.select(selector).append("svg")
         .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
-        // .attr("width", width + margin.left + margin.right)
-        // .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
 
@@ -258,38 +256,6 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
             return colors(d.index);
         })
         .attr("d", arc)
-    // .each(function (d, i) {
-    //     //Search pattern for everything between the start and the first capital L
-    //     var firstArcSection = /(^.+?)L/;
-
-    //     //Grab everything up to the first Line statement
-    //     var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
-    //     //Replace all the comma's so that IE can handle it
-    //     newArc = newArc.replace(/,/g, " ");
-
-    //     //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2) 
-    //     //flip the end and start position
-    //     if (d.endAngle > 90 * Math.PI / 180 & d.startAngle < 270 * Math.PI / 180) {
-    //         var startLoc = /M(.*?)A/, //Everything between the first capital M and first capital A
-    //             middleLoc = /A(.*?)0 0 1/, //Everything between the first capital A and 0 0 1
-    //             endLoc = /0 0 1 (.*?)$/; //Everything between the first 0 0 1 and the end of the string (denoted by $)
-    //         //Flip the direction of the arc by switching the start en end point (and sweep flag)
-    //         //of those elements that are below the horizontal line
-    //         var newStart = endLoc.exec(newArc)[1];
-    //         var newEnd = startLoc.exec(newArc)[1];
-    //         var middleSec = middleLoc.exec(newArc)[1];
-
-    //         //Build up the new arc notation, set the sweep-flag to 0
-    //         newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
-    //     } //if
-
-    //     // Create a new invisible arc that the text can flow along
-    //     svg.append("path")
-    //         .attr("class", "hiddenArcs")
-    //         .attr("id", "arc" + i)
-    //         .attr("d", newArc)
-    //         .style("fill", "none");
-    // });
 
     /// Append labels ///
 
@@ -390,11 +356,14 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
                 trigger: 'hover',
                 html: true,
                 content: function () {
+                    console.log(data[d.index]);
+                    let row = data[d.index]
                     return `
-                    <h6>${data[d.index]['name']}</h6>
+                    <h6>${row['name']}</h6>
                     Total of
                     <span style='font-weight:900'>
-                        ${data[d.index]['totalCount']}
+                        ${row['totalCount'] ?? row['count'] ?? 0}
+
                     </span> ${type}
                     `
                 }
@@ -426,7 +395,7 @@ function Chords(selector, matrix, labels, colors, data, links, useGradient, labe
             content: function () {
                 let labelsSource = data[d.source.index]['name'];
                 let labelsTarget = data[d.target.index]['name'];
-                if (d.source.index == d.target.index) { 
+                if (d.source.index == d.target.index) {
                     return `
                 <h6>${labelsSource}</h6>
                     <span style='font-weight:900'>

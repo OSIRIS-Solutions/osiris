@@ -1,4 +1,21 @@
 <?php
+
+/**
+ * Admin page for managing DOI mappings
+ * 
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * 
+ * @link        /admin/doi-mappings
+ *
+ * @package     OSIRIS
+ * @since       1.7.0
+ * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
+ * @license     MIT
+ */
+
 $mappings = $Settings->getDOImappings();
 $types = $osiris->adminTypes->find([], ['sort' => ['parent' => 1, 'order' => 1]])->toArray();
 $type_options = [];

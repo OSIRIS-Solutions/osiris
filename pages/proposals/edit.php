@@ -4,14 +4,14 @@
  * Page to add new proposals
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /projects/new
  *
  * @package     OSIRIS
  * @since       1.5.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -1502,6 +1502,10 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('ressources', $fields)) {
                     $res = $form['ressources'] ?? [];
+                    $material = ($res['material'] ?? 'no') === 'yes';
+                    $personnel = ($res['personnel'] ?? 'no') === 'yes';
+                    $room = ($res['room'] ?? 'no') === 'yes';
+                    $other = ($res['other'] ?? 'no') === 'yes';
                 ?>
                     <div class="ressources">
                         <div class="form-group">
@@ -1509,13 +1513,13 @@ if ($is_subproject) {
                                 <?= lang('Additional material resources', 'Zusätzliche Sachmittel') ?>
                             </label>
                             <div>
-                                <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= ($res['material'] ?? false) ? 'checked' : '' ?>>
+                                <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= $material ? 'checked' : '' ?>>
                                 <label for="material-yes"><?= lang('Yes', 'Ja') ?></label>
-                                <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= ($res['material'] ?? false) ? '' : 'checked' ?>>
+                                <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= $material ? '' : 'checked' ?>>
                                 <label for="material-no"><?= lang('No', 'Nein') ?></label>
                             </div>
 
-                            <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= ($res['material'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
+                            <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= $material ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
                             <script>
                                 document.getElementById('material-yes').addEventListener('change', function() {
                                     document.getElementById('ressource-material').style.display = 'block';
@@ -1531,13 +1535,13 @@ if ($is_subproject) {
                                 <?= lang('Additional personnel resources', 'Zusätzliche Personalmittel') ?>
                             </label>
                             <div>
-                                <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= ($res['personnel'] ?? false) ? 'checked' : '' ?>>
+                                <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= $personnel ? 'checked' : '' ?>>
                                 <label for="personnel-yes"><?= lang('Yes', 'Ja') ?></label>
-                                <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= ($res['personnel'] ?? false) ? '' : 'checked' ?>>
+                                <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= $personnel ? '' : 'checked' ?>>
                                 <label for="personnel-no"><?= lang('No', 'Nein') ?></label>
                             </div>
 
-                            <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= ($res['personnel'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
+                            <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= $personnel ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
                             <script>
                                 document.getElementById('personnel-yes').addEventListener('change', function() {
                                     document.getElementById('ressource-personnel').style.display = 'block';
@@ -1552,13 +1556,13 @@ if ($is_subproject) {
                                 <?= lang('Additional room capacities', 'Zusätzliche Raumkapazitäten') ?>
                             </label>
                             <div>
-                                <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= ($res['room'] ?? false) ? 'checked' : '' ?>>
+                                <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= $room ? 'checked' : '' ?>>
                                 <label for="room-yes"><?= lang('Yes', 'Ja') ?></label>
-                                <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= ($res['room'] ?? false) ? '' : 'checked' ?>>
+                                <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= $room ? '' : 'checked' ?>>
                                 <label for="room-no"><?= lang('No', 'Nein') ?></label>
                             </div>
 
-                            <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= ($res['room'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
+                            <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= $room ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
                             <script>
                                 document.getElementById('room-yes').addEventListener('change', function() {
                                     document.getElementById('ressource-room').style.display = 'block';
@@ -1574,13 +1578,13 @@ if ($is_subproject) {
                                 <?= lang('Other resources', 'Sonstige Ressourcen') ?>
                             </label>
                             <div>
-                                <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= ($res['other'] ?? false) ? 'checked' : '' ?>>
+                                <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= $other ? 'checked' : '' ?>>
                                 <label for="other-yes"><?= lang('Yes', 'Ja') ?></label>
-                                <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= ($res['other'] ?? false) ? '' : 'checked' ?>>
+                                <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= $other ? '' : 'checked' ?>>
                                 <label for="other-no"><?= lang('No', 'Nein') ?></label>
                             </div>
 
-                            <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= ($res['other'] ?? false) ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>
+                            <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= $other ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>
                             <script>
                                 document.getElementById('other-yes').addEventListener('change', function() {
                                     document.getElementById('ressource-other').style.display = 'block';

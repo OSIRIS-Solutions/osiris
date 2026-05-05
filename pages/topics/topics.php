@@ -5,12 +5,12 @@
  * Created in cooperation with bicc
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.3.8
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -57,12 +57,9 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
                     <?= get_preview(lang($topic['description'], $topic['description_de'] ?? null), 300) ?>
                 <?php } ?>
             </p>
-            <?php if ($Settings->hasPermission('topics.edit')) { ?>
-                <a class="btn" href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
-                    <i class="ph ph-edit"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
-                </a>
-            <?php } ?>
+            <a href="<?= ROOTPATH ?>/topics/view/<?= $topic['_id'] ?>" class="link">
+                <?= lang('View details', 'Details ansehen') ?>
+            </a>
         </div>
     <?php } ?>
 </div>

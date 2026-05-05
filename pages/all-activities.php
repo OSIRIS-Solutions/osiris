@@ -4,7 +4,7 @@
  * Page to see all activities
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link /activities
  * @link /my-activities
@@ -12,7 +12,7 @@
  * @package OSIRIS
  * @since 1.0 
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -120,8 +120,8 @@ $cart = readCart();
 
 
             <h6>
-                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('By type', 'Nach Typ') ?>
+                <a onclick="filterToggle(this, 'filter-type')"><i class="ph ph-caret-down"></i></a>
+                <?= lang('Type', 'Typ') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <style>
@@ -187,8 +187,8 @@ $cart = readCart();
             </div>
 
             <h6>
-                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('By affiliation', 'Nach Zugehörigkeit') ?>
+                <a onclick="filterToggle(this, 'filter-affiliated')"><i class="ph ph-caret-down"></i></a>
+                <?= lang('Affiliation', 'Zugehörigkeit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-affiliated .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -217,8 +217,10 @@ $cart = readCart();
             </div>
 
             <?php if ($topicsEnabled) { ?>
-                <h6><?= $Settings->topicLabel() ?></h6>
-
+                <h6>
+                    <a onclick="filterToggle(this, 'filter-topics')"><i class="ph ph-caret-down"></i></a>
+                    <?= $Settings->topicLabel() ?>
+                </h6>
                 <div class="filter">
                     <table id="filter-topics" class="table small simple">
                         <?php foreach ($osiris->topics->find([], ['sort' => ['inactive' => 1]]) as $a) {
@@ -241,7 +243,10 @@ $cart = readCart();
 
 
             <?php if ($workflowsEnabled) { ?>
-                <h6><?= lang('By workflow status', 'Nach Workflow Status') ?></h6>
+                <h6>
+                    <a onclick="filterToggle(this, 'filter-workflows')"><i class="ph ph-caret-down"></i></a>
+                    <?= lang('Workflow status', 'Workflow Status') ?>
+                </h6>
 
                 <div class="filter">
                     <table id="filter-workflows" class="table small simple">
@@ -269,8 +274,8 @@ $cart = readCart();
             <?php } ?>
 
             <h6>
-                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
+                <a onclick="filterToggle(this, 'filter-unit')"><i class="ph ph-caret-down"></i></a>
+                <?= lang('Organisational unit', 'Organisationseinheit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -289,6 +294,7 @@ $cart = readCart();
 
             <?php if ($tagsEnabled) { ?>
                 <h6>
+                    <a onclick="filterToggle(this, 'filter-tags')"><i class="ph ph-caret-down"></i></a>
                     <?= $Settings->tagLabel() ?>
                     <a class="float-right" onclick="filterActivities('#filter-tags .active', null, 17)"><i class="ph ph-x"></i></a>
                 </h6>
@@ -313,8 +319,8 @@ $cart = readCart();
 
 
             <h6>
-                <a onclick="filterToggle('')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('By time', 'Nach Zeitraum') ?>
+                <a onclick="filterToggle(this, 'filter-time')"><i class="ph ph-caret-down"></i></a>
+                <?= lang('Time', 'Zeitraum') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
 
@@ -326,7 +332,7 @@ $cart = readCart();
             </div>
             <div class="input-group mt-10">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('To', 'Bis') ?></label>
+                    <label for="filter-to" class="input-group-text w-50"><?= lang('To', 'Bis') ?></label>
                 </div>
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div>
@@ -427,22 +433,28 @@ $cart = readCart();
     ]
     let cart = JSON.parse('<?= json_encode($cart) ?>') || [];
 
+    function filterToggle(element, id) {
+        if (id) {
+            $el = $('#' + id).closest('.filter');
+            $el.slideToggle();
+            $(element).find('i').toggleClass('ph-caret-down').toggleClass('ph-caret-right');
+        } else {
+            $('.filter').slideToggle();
+        }
+    }
+
     $(document).ready(function() {
         dataTable = $('#result-table').DataTable({
             "ajax": {
                 "url": ROOTPATH + '/api/all-activities',
                 "data": {
                     "page": '<?= $page ?>',
-                    'display_activities': '<?= $USER['display_activities'] ?>',
                     'user': '<?= $user ?>'
                 },
                 dataSrc: 'data'
             },
             deferRender: true,
             responsive: true,
-            language: {
-                url: lang(null, ROOTPATH + '/js/datatables/de-DE.json')
-            },
             layout: {
                 top1Start: 'search',
                 topStart: 'buttons',
@@ -458,6 +470,7 @@ $cart = readCart();
                     extend: 'colvis',
                     className: 'btn small',
                     text: '<i class="ph ph-columns"></i> <?= lang('Columns', 'Spalten') ?>',
+                    title: null,
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15]
                 },
                 {
@@ -467,6 +480,7 @@ $cart = readCart();
                     },
                     className: 'btn small',
                     text: '<i class="ph ph-clipboard"></i> <?= lang('Copy', 'Kopieren') ?>',
+                    title: null,
                 },
                 {
                     extend: 'excelHtml5',
@@ -483,6 +497,7 @@ $cart = readCart();
                         return 'OSIRIS ' + filters.join('_')
                     },
                     text: '<i class="ph ph-file-xls"></i> <?= lang('Excel', 'Excel') ?>',
+                    title: null,
                 },
                 {
                     extend: 'csvHtml5',
@@ -500,6 +515,7 @@ $cart = readCart();
                         return 'OSIRIS ' + filters.join('_')
                     },
                     text: '<i class="ph ph-file-csv"></i> <?= lang('CSV', 'CSV') ?>',
+                    title: null,
                 },
                 // {
                 //     extend: 'pdfHtml5',
@@ -852,12 +868,9 @@ $cart = readCart();
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            var search = settings.oPreviousSearch.sSearch
-            if (search == null) search = ''
-            console.log(settings.oPreviousSearch.sSearch);
             writeHash({
                 page: info.page + 1,
-                search: search
+                search: dataTable.search(),
             })
         });
 

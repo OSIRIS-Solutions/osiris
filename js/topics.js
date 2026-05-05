@@ -2,7 +2,7 @@ var activitiesTable = false,
     publicationTable = false,
     projectsExists = false,
     coauthorsExists = false,
-    conceptsExists = false,
+    spectrumExists = false,
     collabExists = false,
     collabGraphExists = false,
     personsExists = false,
@@ -30,21 +30,22 @@ function navigate(key) {
     $('.pills .btn#btn-' + key).addClass('active')
 
     switch (key) {
-        // case 'publications':
-        //     if (publicationTable) break;
-        //     publicationTable = initActivities('#publication-table', {
-        //         filter: {
-        //             topics: TOPIC,
-        //             type: 'publication'
-        //         }
-        //     })
-        //     break;
+        case 'publications':
+            if (publicationTable) break;
+            publicationTable = initActivities('#publication-table', {
+                filter: {
+                    topics: TOPIC,
+                    type: 'publication'
+                }
+            })
+            break;
 
         case 'activities':
             if (activitiesTable) break;
             activitiesTable = initActivities('#activities-table', {
                 filter: {
                     topics: TOPIC,
+                    type: { '$ne': 'publication' }
                 }
             })
             timelineChart({ 'topics': TOPIC });
@@ -88,10 +89,10 @@ function navigate(key) {
             })
             break;
 
-        // case 'concepts':
-        //     if (conceptsExists) break;
-        //     conceptsExists = true;
-        //     conceptTooltip()
+        // case 'spectrum':
+        //     if (spectrumExists) break;
+        //     spectrumExists = true;
+        //     spectrumTooltip()
         //     break;
 
         case 'wordcloud':

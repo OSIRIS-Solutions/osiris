@@ -4,12 +4,12 @@
  * Manage guest account while in LDAP user management
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.6.2
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -85,7 +85,7 @@ if (empty($accounts)) {
                             <span <?= $in_past ? 'class="text-danger"' : '' ?>><?= e($account['valid_until']) ?></span>
                         <?php } ?>
                     </td>
-                    <td class="w-100">
+                    <td class="w-200 nowrap">
                         <div class="dropdown">
                             <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-edit-<?= e($account['username']) ?>" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-pencil"></i>
@@ -105,7 +105,7 @@ if (empty($accounts)) {
                             </div>
                         </div>
 
-                        <?php if ($account['valid_until'] > date('Y-m-d') || empty($account['valid_until'])) { ?>
+                        <?php if (($account['valid_until'] ?? '') > date('Y-m-d') || empty($account['valid_until'])) { ?>
                             <div class="dropdown">
                                 <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-link-<?= e($account['username']) ?>" aria-haspopup="true" aria-expanded="false">
                                     <i class="ph ph-link"></i>

@@ -4,12 +4,12 @@
  * Routing file for activities
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.3.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -40,10 +40,19 @@ Route::get('/(activities|my-activities)', function ($page) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::get('/advanced-search/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (empty($query)) {
+        abortwith(404, lang('Query', "Abfrage"), '/activities/search');
+    }
+    $collection = $query['type'] ?? 'activities';
+    header("Location: " . ROOTPATH . "/$collection/search?query=$id");
+    die;
+}, 'login');
 
 Route::get('/(activities|projects|proposals|conferences|journals|persons)/search', function ($collection) {
     include_once BASEPATH . "/php/init.php";
-    $user = $_SESSION['username'];
 
     switch ($collection) {
         case 'activities':
@@ -102,8 +111,7 @@ Route::get('/add-activity', function () {
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
             if (empty($draft)) {
-                header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
-                die();
+                abortwith(404, lang('Activity', "Aktivität"), '/activities');
             }
             $form = DB::doc2Arr($draft);
             unset($form['created']);
@@ -170,8 +178,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($draft)) {
-        header("Location: " . ROOTPATH . "/activities/drafts?msg=draft-not-found");
-        die();
+        abortwith(404, lang('Activity', "Aktivität"), '/activities/drafts');
     }
 
     if (isset($_GET['frame'])) {
@@ -240,6 +247,7 @@ Route::get('/activities/(doi|pubmed)/(.*)', function ($type, $identifier) {
     }
     echo "$type $identifier not found.";
 });
+
 Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
@@ -247,51 +255,203 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
-
-    if (!empty($activity)) {
-        $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
-        $locked = $activity['locked'] ?? false;
-        if ($doc['type'] == 'publication' && isset($doc['journal'])) {
-            // fix old journal_ids
-            if (isset($doc['journal_id']) && !preg_match("/^[0-9a-fA-F]{24}$/", $doc['journal_id'])) {
-                $doc['journal_id'] = null;
-                $osiris->activities->updateOne(
-                    ['_id' => $activity['_id']],
-                    ['$unset' => ['journal_id' => '']]
-                );
-            }
-        }
-        renderActivities(['_id' =>  $activity['_id']]);
-        $user_activity = $DB->isUserActivity($doc, $user);
-
-        $Format = new Document;
-        $Format->setDocument($doc);
-
-        $name = $activity['title'] ?? $id;
-        // if (strlen($name) > 20)
-        //     $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
-        // $name = ucfirst($activity['type']) . ": " . $name;
-        $breadcrumb = [
-            ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-            ['name' => $name]
-        ];
-        if ($Format->hasSchema()) {
-            $additionalHead = $Format->schema();
-        }
+    if (empty($activity)) {
+        abortwith(404, lang('Activity', "Aktivität"), '/activities');
     }
+
+    $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
+    $locked = $activity['locked'] ?? false;
+    renderActivities(['_id' =>  $activity['_id']]);
+    $user_activity = $DB->isUserActivity($doc, $user);
+    // User context
+    $user_units = DB::doc2Arr($USER['units'] ?? []);
+    if (!empty($user_units)) {
+        $user_units = array_column($user_units, 'unit');
+    }
+
+    $Format = new Document;
+    $Format->setDocument($doc);
+
+    $name = $activity['rendered']['title'] ?? $id;
+
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => $name]
+    ];
+    if ($Format->hasSchema()) {
+        $additionalHead = $Format->schema();
+    }
+
+
+    include_once BASEPATH . "/php/Modules.php";
+    $Modules = new Modules($doc);
+
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+
+    // check if this is an ongoing activity type
+    $ongoing = false;
+    $sws = false;
+    $supervisorThesis = false;
+
+    $typeArr = $Format->typeArr;
+    $upload_possible = $typeArr['upload'] ?? true;
+    $subtypeArr = $Format->subtypeArr;
+    $typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
+    $typeFields = $Modules->getFields();
+    $fields = array_keys($typeFields);
+
+    foreach ($fields as $m) {
+        // if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
+        if ($m == 'date-range-ongoing') $ongoing = true;
+        if ($m == 'supervisor') $sws = true;
+        if ($m == 'supervisor-thesis') $supervisorThesis = true;
+    }
+    $visible_subtypes = $Settings->getActivitiesPortfolio(true);
+
+    // get connected projects, infrastructures and activities
+    $projects = [];
+    if ($Settings->featureEnabled('projects') && isset($activity['projects']) && count($activity['projects']) > 0) {
+        $projects = $osiris->projects->find(
+            ['_id' => ['$in' => $activity['projects']]],
+            ['projection' => ['_id' => 1, 'acronym' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
+        )->toArray();
+    }
+
+    $infrastructures = [];
+    if ($Settings->featureEnabled('infrastructures') && isset($activity['infrastructures']) && count($activity['infrastructures']) > 0) {
+        $infrastructures = $osiris->infrastructures->find(
+            ['id' => ['$in' => $activity['infrastructures']]],
+            ['projection' => ['_id' => 1, 'name' => 1, 'subtitle' => 1, 'start_date' => 1, 'end_date' => 1]]
+        )->toArray();
+    }
+
+    $connected_activities = $osiris->activitiesConnections->find(
+        ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+    )->toArray();
+
+    $guests_involved = false;
+    $guests = [];
+    if ($Settings->featureEnabled('guests')) {
+        $guests_involved = boolval($subtypeArr['guests'] ?? false);
+        $guests = $doc['guests'] ?? [];
+    }
+
+    $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+    $canEdit = ($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'));
+    $canDelete = false;
+    if ($locked) {
+        $canDelete = $Settings->hasPermission('activities.delete-locked');
+    } elseif ($Settings->hasPermission('activities.delete')) {
+        $canDelete = true;
+    } else if ($user_activity) {
+        $canDelete = $Settings->hasPermission('activities.delete-own');
+    }
+
+    $tagLabel = '';
+    if ($Settings->featureEnabled('tags')) {
+        $tagLabel = $Settings->tagLabel();
+    }
+
+    $files = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)])->toArray();
+
+    $openalex = null;
+    $spectrum = [];
+    if ($Settings->featureEnabled('spectrum') && isset($doc['doi']) && $doc['type'] == 'publication') {
+        $openalex = $doc['openalex'] ?? null;
+        if (empty($openalex)) {
+?>
+            <script>
+                $(document).ready(function() {
+                    fetchOpenAlex('<?= $doc['doi'] ?>');
+                });
+            </script>
+<?php
+        }
+        $spectrum = $openalex['topics'] ?? [];
+    }
+
+    // check user preference for activity view
+    $activity_view = $_GET['view'] ?? $USER['activity_view'] ?? 'none';
+
     $no_container = true;
     include BASEPATH . "/header.php";
-
-    if (empty($activity)) { ?>
-        <div class="content-container">
-            <div class="alert alert-danger">
-                <?php echo lang("Activity not found.", "Aktivität nicht gefunden."); ?>
-            </div>
-        </div>
-<?php
-    } else {
-        include BASEPATH . "/pages/activity.php";
+    if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) {
+        include_once BASEPATH . '/pages/activities/activity-workflow.php';
     }
+    if ($activity_view == 'new' || $activity_view == 'none') {
+        $currentView = 'new';
+        include BASEPATH . "/pages/activities/preference-banner.php";
+        include BASEPATH . "/pages/activities/view.php";
+    } else {
+        $currentView = 'legacy';
+        include BASEPATH . "/pages/activities/preference-banner.php";
+        include BASEPATH . "/pages/activities/activity.php";
+    }
+
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $id = $DB->to_ObjectID($id);
+
+    $user = $_SESSION['username'];
+    $id = $DB->to_ObjectID($id);
+    $doc = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
+    if (empty($doc)) {
+        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+    }
+
+    $user_activity = $DB->isUserActivity($doc, $user);
+    $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+    if (!$edit_perm) {
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+    }
+
+    $Format = new Document;
+    $Format->setDocument($doc);
+
+    $name = $doc['rendered']['title'] ?? $id;
+
+    // get connected projects, infrastructures and activities
+    $projects = [];
+    if ($Settings->featureEnabled('projects') && isset($doc['projects']) && count($doc['projects']) > 0) {
+        $projects = $osiris->projects->find(
+            ['_id' => ['$in' => $doc['projects']]],
+            ['projection' => ['_id' => 1, 'acronym' => 1, 'name' => 1, 'start' => 1, 'end' => 1, 'title' => 1, 'funder' => 1]]
+        )->toArray();
+    }
+
+    $infrastructures = [];
+    if ($Settings->featureEnabled('infrastructures') && isset($doc['infrastructures']) && count($doc['infrastructures']) > 0) {
+        $infrastructures = $osiris->infrastructures->find(
+            ['id' => ['$in' => $doc['infrastructures']]],
+            ['projection' => ['_id' => 1, 'id' => 1, 'name' => 1, 'subtitle' => 1, 'start_date' => 1, 'end_date' => 1]]
+        )->toArray();
+    }
+
+    $connected_activities = $osiris->activitiesConnections->find(
+        ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+    )->toArray();
+
+    // User context
+    $user_units = DB::doc2Arr($USER['units'] ?? []);
+    if (!empty($user_units)) {
+        $user_units = array_column($user_units, 'unit');
+    }
+
+    $breadcrumb = [
+        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => $name, 'path' => "/activities/view/$id"],
+        ['name' => lang("Connections", "Verknüpfungen")]
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . '/header-editor.php';
+    include BASEPATH . "/pages/activities/connections.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -306,9 +466,18 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
     $form = $osiris->activities->findOne(['_id' => $mongoid]);
     $copy = false;
     if (($form['locked'] ?? false) && !$Settings->hasPermission('activities.edit-locked')) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=locked");
+        include_once BASEPATH . "/header.php";
+        echo lockedPage($id);
+        include_once BASEPATH . "/footer.php";
+        die();
     }
 
+
+    $user_activity = $DB->isUserActivity($form, $user);
+    $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+    if (!$edit_perm) {
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+    }
 
     $name = $form['title'] ?? $id;
     if (strlen($name) > 20)
@@ -328,7 +497,9 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
 
 Route::get('/activities/locking', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('activities.lock')) {
+        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities', lang('Go back to activities', 'Zurück zu Aktivitäten'));
+    }
     $breadcrumb = [
         ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
         ['name' => lang("Locking", "Sperren")]
@@ -397,21 +568,20 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
         }
     }
 
-    // dump($form, true);
-
     include BASEPATH . "/pages/doublets.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
-
 Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
 
     global $form;
     $form = $osiris->activities->findOne(['_id' => $id]);
+    if (!$form) {
+        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+    }
     $copy = true;
 
     $breadcrumb = [
@@ -431,8 +601,21 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
     $id = $DB->to_ObjectID($id);
 
     $form = $osiris->activities->findOne(['_id' => $id]);
+    if (!$form) {
+        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+    }
+
     if (($form['locked'] ?? false) && !$Settings->hasPermission('activities.edit-locked')) {
-        header("Location: " . ROOTPATH . "/activities/view/$id?msg=locked");
+        include_once BASEPATH . "/header.php";
+        echo lockedPage($id);
+        include_once BASEPATH . "/footer.php";
+        die();
+    }
+
+    $user_activity = $DB->isUserActivity($form, $user);
+    $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+    if (!$edit_perm) {
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
     }
 
     $name = $form['title'] ?? $id;
@@ -459,11 +642,8 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 Route::post('/crud/activities/create', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) die("no values given");
-    // dump($_POST);
-    // die();
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
     $collection = $osiris->activities;
-    $required = [];
     $activityType = $_POST['values']['type'];
 
     $values = validateValues($_POST['values'], $DB);
@@ -473,30 +653,26 @@ Route::post('/crud/activities/create', function () {
     $values['created_by'] = ($_SESSION['username']);
 
     if (isset($values['doi']) && !empty($values['doi'])) {
-        $doi_exist = $collection->findOne(['doi' => $values['doi']]);
+        $doi_exist = $collection->findOne(['doi' => new MongoDB\BSON\Regex('^' . preg_quote($values['doi']) . '$', 'i')]);
         if (!empty($doi_exist)) {
-            header("Location: " . ROOTPATH . "/activities/view/$doi_exist[_id]?msg=DOI+already+exists");
+            $_SESSION['msg'] = lang("DOI already exists.", "DOI existiert bereits.");
+            $_SESSION['msg_type'] = "error";
+            header("Location: " . ROOTPATH . "/activities/view/$doi_exist[_id]");
             die;
         }
-
         // make sure that there is no duplicate entry in the queue
         $osiris->queue->deleteOne(['doi' => $values['doi']]);
     }
     if (isset($values['pubmed']) && !empty($values['pubmed'])) {
         $pubmed_exist = $collection->findOne(['pubmed' => $values['pubmed']]);
         if (!empty($pubmed_exist)) {
-            header("Location: " . ROOTPATH . "/activities/view/$pubmed_exist[_id]?msg=Pubmed-ID+already+exists");
+            $_SESSION['msg'] = lang("Pubmed-ID already exists.", "Pubmed-ID existiert bereits.");
+            $_SESSION['msg_type'] = "error";
+            header("Location: " . ROOTPATH . "/activities/view/$pubmed_exist[_id]");
             die;
         }
         // make sure that there is no duplicate entry in the queue
         $osiris->queue->deleteOne(['pubmed' => $values['pubmed']]);
-    }
-
-    foreach ($required as $req) {
-        if (!isset($values[$req]) || empty($values[$req])) {
-            echo "$req is required";
-            die;
-        }
     }
 
     // add projects if possible
@@ -569,22 +745,21 @@ Route::post('/crud/activities/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        header("Location: " . $red . "?msg=add-success");
+        $_SESSION['msg'] = lang("Activity added successfully.", "Aktivität erfolgreich hinzugefügt.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $red);
         die();
     }
-    // include_once BASEPATH . "/php/Document.php";
-    // $result = $collection->findOne(['_id' => $id]);
     echo json_encode([
         'inserted' => $insertOneResult->getInsertedCount(),
         'id' => $id,
-        // 'result' => format($col, $result)
     ]);
 });
 
 
 Route::post('/crud/activities/save-draft', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     $collection = $osiris->activitiesDrafts;
 
@@ -600,14 +775,28 @@ Route::post('/crud/activities/save-draft', function () {
             ['_id' => $draft_id],
             ['$set' => $values]
         );
-        header("Location: " . ROOTPATH . "/activities/drafts/" . $draft_id . "?msg=update-success");
+        if ($updateResult->getModifiedCount() == 0) {
+            $_SESSION['msg'] = lang("Draft could not be updated.", "Entwurf konnte nicht aktualisiert werden.");
+            $_SESSION['msg_type'] = "error";
+        } else {
+            $_SESSION['msg'] = lang("Draft updated successfully.", "Entwurf erfolgreich aktualisiert.");
+            $_SESSION['msg_type'] = "success";
+        }
+        header("Location: " . ROOTPATH . "/activities/drafts/" . $draft_id);
         die();
     }
 
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
-
-    header("Location: " . ROOTPATH . "/activities/drafts/" . $id . "?msg=add-success");
+    if ($insertOneResult->getInsertedCount() == 0) {
+        $_SESSION['msg'] = lang("Draft could not be saved.", "Entwurf konnte nicht gespeichert werden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/activities/drafts");
+        die();
+    }
+    $_SESSION['msg'] = lang("Draft saved successfully.", "Entwurf erfolgreich gespeichert.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/activities/drafts/" . $id);
 });
 
 // POST /crud/activities/delete-draft/([A-Za-z0-9]*)
@@ -695,7 +884,7 @@ Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) die("no values given");
+    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->activities;
     $values = validateValues($_POST['values'], $DB);
 
@@ -704,22 +893,27 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
         unset($values['editors']);
     }
 
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = ($_SESSION['username']);
+
     // add information on units
-    if (isset($values['authors'])) {
+    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
         // check if authors have been changed
-        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)], ['projection' => ['authors' => 1]]);
-        $old = DB::doc2Arr($old['authors'] ?? []);
-        // filter old authors without user
-        $old = array_filter($old, function ($a) {
-            return !empty($a['user']);
-        });
-        // avoid updating user if last and first name are the same
-        foreach ($old as $o) {
-            foreach ($values['authors'] as $i => $a) {
-                // if (empty($o['user'])) continue;
-                if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
-                    $values['authors'][$i]['user'] = $o['user'];
-                    break;
+        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
+        foreach (['authors', 'editors', 'supervisors'] as $role) {
+            $old_arr = DB::doc2Arr($old[$role] ?? []);
+            // filter old authors without user
+            $old_arr = array_filter($old_arr, function ($a) {
+                return !empty($a['user']);
+            });
+            // avoid updating users if last and first name are the same
+            foreach ($old_arr as $o) {
+                if (empty($o['user'])) continue;
+                foreach ($values[$role] as $i => $a) {
+                    if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
+                        $values[$role][$i]['user'] = $o['user'];
+                        break;
+                    }
                 }
             }
         }
@@ -759,9 +953,10 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
         $osiris->queue->deleteOne(['pubmed' => $values['pubmed']]);
     }
 
-    // addUserActivity('update');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Activity updated successfully.", "Aktivität erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -772,20 +967,30 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
 
 Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    // select the right collection
-
-    // prepare id
     $id = $DB->to_ObjectID($id);
+
+    // check permissions
+    $doc = $osiris->activities->findOne(['_id' => $id]);
+    if (empty($doc)) {
+        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+    }
+    $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
+    if (!$user_activity && !$Settings->hasPermission('activities.delete')) {
+        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+    }
+    // check if locked
+    if (($doc['locked'] ?? false) && !$Settings->hasPermission('activities.delete-locked')) {
+        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+    }
 
     $updateResult = $osiris->activities->deleteOne(
         ['_id' => $id]
     );
-
     $deletedCount = $updateResult->getDeletedCount();
-
-    // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=deleted-" . $deletedCount);
+        $_SESSION['msg'] = lang("Activity deleted successfully.", "Aktivität erfolgreich gelöscht.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -793,7 +998,45 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     ]);
 });
 
+Route::post('/crud/activities/connections/(.*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    $mongoid = $DB->to_ObjectID($id);
+    $update = [];
+    if (isset($_POST['projects'])) {
+        if (empty($_POST['projects'])) {
+            $update['projects'] = [];
+        } else {
+            $update['projects'] = array_map(function ($v) use ($DB) {
+                return $DB->to_ObjectID($v);
+            }, $_POST['projects']);
+        }
+    }
+    if (isset($_POST['infrastructures'])) {
+        if (empty($_POST['infrastructures'])) {
+            $update['infrastructures'] = [];
+        } else {
+            $update['infrastructures'] = $_POST['infrastructures'];
+        }
+    }
+    if (!empty($update)) {
+        $osiris->activities->updateOne(
+            ['_id' => $mongoid],
+            ['$set' => $update]
+        );
+    }
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Connections updated successfully.", "Verknüpfungen erfolgreich aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'updated' => $update
+    ]);
+});
 
+// DEPERCATED: use /upload endpoint instead
+// we keep this for backward compatibility and for deleting legacy files
 Route::post('/crud/activities/upload-files/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
@@ -811,11 +1054,7 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
         echo "<!-- The directory $target_dir exists.-->";
     }
 
-
     if (isset($_FILES["file"])) {
-
-        // $target_file = basename($_FILES["file"]["name"]);
-
         $filename = e(basename($_FILES["file"]["name"]));
         $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $filesize = $_FILES["file"]["size"];
@@ -832,13 +1071,17 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
                 8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
                 default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
             };
-            printMsg($errorMsg, "error");
+            $_SESSION['msg'] = ($errorMsg);
+            $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            printMsg(lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."), "error");
+            $_SESSION['msg'] = (lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."));
+            $_SESSION['msg_type'] = "error";
         } else if (file_exists($target_dir . $filename)) {
-            printMsg(lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden."), "error");
+            $_SESSION['msg'] = (lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden."));
+            $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            printMsg(lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."), "success");
+            $_SESSION['msg'] = (lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."));
+            $_SESSION['msg_type'] = "success";
             $values = [
                 "filename" => $filename,
                 "filetype" => $filetype,
@@ -850,31 +1093,32 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
                 ['_id' => $mongoid],
                 ['$push' => ["files" => $values]]
             );
-            // $files[] = $values;
         } else {
-            printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            $_SESSION['msg'] = (lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."));
+            $_SESSION['msg_type'] = "error";
         }
-
-        header("Location: " . ROOTPATH . "/activities/view/" . $id . "?msg=upload-successful");
+        header("Location: " . ROOTPATH . "/activities/view/" . $id);
         die();
     } else if (isset($_POST['delete'])) {
         $filename = $_POST['delete'];
         if (file_exists($target_dir . $filename)) {
             // Use unlink() function to delete a file
             if (!unlink($target_dir . $filename)) {
-                printMsg("$filename cannot be deleted due to an error.", "error");
+                $_SESSION['msg'] = ("$filename cannot be deleted due to an error.");
+                $_SESSION['msg_type'] = "error";
             } else {
-                printMsg(lang("$filename has been deleted.", "$filename wurde gelöscht."), "success");
+                $_SESSION['msg'] = (lang("$filename has been deleted.", "$filename wurde gelöscht."));
+                $_SESSION['msg_type'] = "success";
             }
+        } else {
+            $_SESSION['msg'] = (lang("File $filename not found.", "Datei $filename nicht gefunden."));
+            $_SESSION['msg_type'] = "error";
         }
-
         $osiris->activities->updateOne(
             ['_id' => $mongoid],
             ['$pull' => ["files" => ["filename" => $filename]]]
         );
-        // printMsg("File has been deleted from the database.", "success");
-
-        header("Location: " . ROOTPATH . "/activities/view/" . $id . "?msg=file-deleted-successfully");
+        header("Location: " . ROOTPATH . "/activities/view/" . $id);
         die();
     }
 });
@@ -884,7 +1128,7 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
 Route::post('/crud/activities/update-tags/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['connections'])) {
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$unset' => ["connections" => '']]
         );
@@ -892,20 +1136,27 @@ Route::post('/crud/activities/update-tags/(.*)', function ($id) {
         $values = $_POST['connections'];
         $values = validateValues($values, $DB);
 
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$set' => ["connections" => $values]]
         );
     }
+    if ($update->getModifiedCount() > 0) {
+        $_SESSION['msg'] = lang("Connections updated.", "Verbindungen aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $_SESSION['msg'] = lang("No changes made to connections.", "Keine Änderungen an den Verbindungen vorgenommen.");
+        $_SESSION['msg_type'] = "info";
+    }
 
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 
 Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['projects'])) {
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$unset' => ["projects" => '']]
         );
@@ -917,19 +1168,26 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
             return $DB->to_ObjectID($v);
         }, $values);
 
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$set' => ["projects" => $values]]
         );
     }
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+    if ($update->getModifiedCount() > 0) {
+        $_SESSION['msg'] = lang("Projects updated.", "Projekte aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $_SESSION['msg'] = lang("No changes made to projects.", "Keine Änderungen an den Projekten vorgenommen.");
+        $_SESSION['msg_type'] = "info";
+    }
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 
 Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!isset($_POST['infrastructures'])) {
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$unset' => ["infrastructures" => '']]
         );
@@ -937,12 +1195,20 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
         $values = $_POST['infrastructures'];
         $values = array_values($values);
 
-        $osiris->activities->updateOne(
+        $update = $osiris->activities->updateOne(
             ['_id' => $DB::to_ObjectID($id)],
             ['$set' => ["infrastructures" => $values]]
         );
     }
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+    if ($update->getModifiedCount() > 0) {
+        $_SESSION['msg'] = lang("Infrastructures updated.", "Infrastrukturen aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $_SESSION['msg'] = lang("No changes made to infrastructures.", "Keine Änderungen an den Infrastrukturen vorgenommen.");
+        $_SESSION['msg_type'] = "info";
+    }
+
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 
@@ -990,19 +1256,30 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
     $type = strtolower($type);
     $values = [$type => $authors];
 
+    $values['updated'] = date('Y-m-d');
+    $values['updated_by'] = ($_SESSION['username']);
+
     // update History
     $values = $DB->updateHistory($values, $id);
 
-    $osiris->activities->updateOne(
+    $update = $osiris->activities->updateOne(
         ['_id' => $id],
         ['$set' => $values]
     );
 
     // update units array
     include_once BASEPATH . "/php/Render.php";
+    renderActivities(['_id' =>  $id]);
     renderAuthorUnitsMany(['_id' => $id]);
 
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+    if ($update->getModifiedCount() > 0) {
+        $_SESSION['msg'] = lang(ucfirst($type) . " updated.", ucfirst($type) . " aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+    } else {
+        $_SESSION['msg'] = lang("No changes made to " . $type . ".", "Keine Änderungen an den " . $type . " vorgenommen.");
+        $_SESSION['msg_type'] = "info";
+    }
+    header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 
@@ -1088,7 +1365,9 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     $DB->notifications(true);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        header("Location: " . $_POST['redirect'] . "?msg=update-success");
+        $_SESSION['msg'] = lang("Approval status updated.", "Status der Bestätigung aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
         die();
     }
     echo json_encode([
@@ -1143,26 +1422,24 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
     renderAuthorUnitsMany(['_id' => $id]);
 
     // $updateCount = $updateResult->getModifiedCount();
-
-    header("Location: " . ROOTPATH . "/activities/view/$id?msg=update-success");
+    $_SESSION['msg'] = lang("You have claimed this authorship.", "Du hast diese Autorenschaft übernommen.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/activities/view/$id");
     die();
 });
 
 
 Route::post('/crud/activities/approve-all', function () {
     include_once BASEPATH . "/php/init.php";
-    // prepare id
-    $user = $_POST['user'] ?? $_SESSION['username'];
-
     $osiris->activities->updateMany(
-        ['authors.user' => $user],
+        ['authors.user' => $_SESSION['username']],
         ['$set' => ["authors.$.approved" => true]]
     );
-
     // force update of user notifications
     $DB->notifications(true);
-
-    header("Location: " . ROOTPATH . "/issues?msg=update-success");
+    $_SESSION['msg'] = lang("All pending approvals have been approved.", "Alle ausstehenden Bestätigungen wurden bestätigt.");
+    $_SESSION['msg_type'] = "success";
+    header("Location: " . ROOTPATH . "/issues");
 });
 
 
@@ -1215,7 +1492,9 @@ Route::post('/crud/activities/hide', function () {
 
 Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('activities.lock')) {
+        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities/view/' . $id);
+    }
 
     // prepare id
     $id = $DB->to_ObjectID($id);
@@ -1230,13 +1509,15 @@ Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
     );
 
     $_SESSION['msg'] = $locked ? lang('Activity unlocked.', 'Aktivität entsperrt.') : lang('Activity locked.', 'Aktivität gesperrt.');
-
+    $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/activities/view/$id");
 });
 
 Route::post('/crud/activities/lock', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('activities.lock')) die('You have no permission to be here.');
+    if (!$Settings->hasPermission('activities.lock')) {
+        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities/view/' . $id);
+    }
 
     $breadcrumb = [
         ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
@@ -1249,7 +1530,6 @@ Route::post('/crud/activities/lock', function () {
     if (isset($_POST['action']) && isset($_POST['start']) && isset($_POST['end'])) {
 
         $lock = ($_POST['action'] == 'lock');
-        // dump($lock);
 
         $cursor = $DB->get_reportable_activities($_POST['start'], $_POST['end']);
         foreach ($cursor as $doc) {
@@ -1291,7 +1571,6 @@ Route::post('/crud/activities/lock', function () {
 
 Route::post('/crud/activities/connect', function () {
     include_once BASEPATH . "/php/init.php";
-
     $target = $_POST['target_id'] ?? null;
     $source = $_POST['source_id'] ?? null;
 
@@ -1307,7 +1586,7 @@ Route::post('/crud/activities/connect', function () {
         $target = $source;
         $source = $temp;
     }
-                
+
     $data = [
         'target_id' => $DB->to_ObjectID($target),
         'source_id' => $DB->to_ObjectID($source),
@@ -1322,13 +1601,15 @@ Route::post('/crud/activities/connect', function () {
     ]);
     if (!empty($existing)) {
         if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-            header("Location: " . $_POST['redirect'] . "?msg=connection-exists");
+            $_SESSION['msg'] = lang("Connection already exists.", "Verbindung existiert bereits.");
+            $_SESSION['msg_type'] = "info";
+            header("Location: " . $_POST['redirect']);
             die();
         }
         echo json_encode([
             'inserted' => 0,
             'id' => (string)$existing['_id'],
-            'message' => 'Connection already exists.'
+            'message' => lang("Connection already exists.", "Verbindung existiert bereits.")
         ]);
         die();
     }
@@ -1343,7 +1624,7 @@ Route::post('/crud/activities/connect', function () {
     }
     echo json_encode([
         'inserted' => $insertOneResult->getInsertedCount(),
-        'id' => $id,
+        'id' => (string)$id,
     ]);
 });
 
@@ -1366,3 +1647,29 @@ Route::post('/crud/activities/disconnect', function () {
     ]);
 });
 
+Route::post('/crud/activities/exclude-from-reports', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!isset($_POST['activity'])) {
+        die('Error: no activity id given.');
+    }
+    $activity_id = $DB->to_ObjectID($_POST['activity']);
+    // toggle exclude from reports
+    $activity = $osiris->activities->findOne(['_id' => $activity_id]);
+    if (empty($activity)) die('Error: No Activity found');
+    $exclude = $activity['exclude_from_reports'] ?? false;
+    $updateResult = $osiris->activities->updateOne(
+        ['_id' => $activity['_id']],
+        ['$set' => ["exclude_from_reports" => !$exclude]]
+    );
+    if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+        $_SESSION['msg'] = lang("Activity report status updated.", "Status der Aktivität im Bericht aktualisiert.");
+        $_SESSION['msg_type'] = "success";
+        header("Location: " . $_POST['redirect']);
+        die();
+    }
+    echo json_encode([
+        'updated' => $updateResult->getModifiedCount(),
+        'exclude_from_reports' => $exclude,
+        'success' => $updateResult->getModifiedCount() > 0
+    ]);
+});

@@ -15,9 +15,10 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
 <div class="container w-600 mw-full">
 
-    <h4 class="title mt-0">
+    <h1>
+        <i class="ph-duotone ph-calendar-plus"></i>
         <?= lang('Add event', 'Event hinzufügen') ?>
-    </h4>
+    </h1>
 
     <blockquote>
         <i class="ph ph-info text-primary"></i>
@@ -84,7 +85,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             <div class="col floating-form">
                 <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                    <?php 
+                    <?php
                     $c = $form['country'] ?? '';
                     foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>

@@ -4,32 +4,31 @@
  * Page for admins to define keywords for activities and projects
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2025 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026  Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link /admin/general
  *
  * @package OSIRIS
  * @since 1.6.0
  * 
- * @copyright	Copyright (c) 2025 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026  Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
 
-
 ?>
+<div class="container w-800 mw-full">
+    <h1>
+        <i class="ph-duotone ph-tag" aria-hidden="true"></i>
+        <?= lang('Tags', 'Schlagwörter') ?>
+    </h1>
 
-<form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
-    <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/tags">
-    <div class="box primary padded">
-        <h1 class="title">
-            <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-            <?= lang('Tags', 'Schlagwörter') ?>
-        </h1>
+    <p>
+        <?= lang('Define tags that can be attached to activities and projects.', 'Definiere Schlagworte, die für Aktivitäten und Projekte verwendet werden können.') ?>
+    </p>
 
-        <p>
-            <?= lang('Define tags that can be attached to activities and projects.', 'Definiere Schlagworte, die für Aktivitäten und Projekte verwendet werden können.') ?>
-        </p>
+    <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
+        <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/tags">
 
         <!-- input for name of this keyword -->
         <div class="form-group">
@@ -66,9 +65,9 @@
             <textarea name="general[tags]" id="tags" class="form-control" rows="10"><?= implode(PHP_EOL, $keywords) ?></textarea>
         </div>
 
-        <button class="btn signal">
+        <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            Save
+            <?= lang('Save changes', 'Änderungen speichern') ?>
         </button>
-    </div>
-</form>
+    </form>
+</div>

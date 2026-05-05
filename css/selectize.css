@@ -34,6 +34,7 @@
     color: var(--text-color);
     background-color: white;
     border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
 }
 .selectize-dropdown {
     height: 20.2rem;

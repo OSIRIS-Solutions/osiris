@@ -4,12 +4,12 @@
  * Routing for the Portfolio-API
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.3.0
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -96,6 +96,58 @@ function help_getGroup($osiris, $id)
     return $group;
 }
 
+Route::get('/portfolio/settings', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio();
+    // get Portfolio settings and other Data for the portfolio overview
+
+    $result = [
+        'features' => [
+            'projects' => $Settings->featureEnabled('projects'),
+            'infrastructures' => $Settings->featureEnabled('infrastructures'),
+            'topics' => $Settings->featureEnabled('topics'),
+        ]
+    ];
+
+    $labels = [
+        'topics' => ['en' => 'Research Topics', 'de' => 'Forschungsbereiche'],
+        'journals' => ['en' => 'Journals', 'de' => 'Journale'],
+        'infrastructures' => ['en' => 'Infrastructures', 'de' => 'Infrastrukturen'],
+    ];
+    $topicLabel = $Settings->get('topics_label');
+    if (!empty($topicLabel) && isset($topicLabel['en'])) {
+        $labels['topics'] = $topicLabel;
+    }
+    $journalLabel = $Settings->get('journals_label');
+    if (!empty($journalLabel) && isset($journalLabel['en'])) {
+        $labels['journals'] = $journalLabel;
+    }
+    $infrastructureLabel = $Settings->get('infrastructures_label');
+    if (!empty($infrastructureLabel) && isset($infrastructureLabel['en'])) {
+        $labels['infrastructures'] = $infrastructureLabel;
+    }
+    $result['labels'] = $labels;
+
+    $result['publication_types'] = $osiris->adminTypes->find(
+        ['parent' => 'publication', 'portfolio' => ['$in' => [1, true]]],
+        ['sort' => ['order' => 1], 'projection' => ['_id' => 0, 'id' => 1, 'en' => '$name', 'de' => '$name_de']]
+    )->toArray();
+
+    $portfolioCats = $osiris->adminTypes->distinct('parent', ['portfolio' => ['$in' => [true, 1]], 'parent' => ['$ne' => 'publication']]);
+    $result['activity_categories'] = $osiris->adminCategories->find(
+        ['id' => ['$in' => $portfolioCats]],
+        ['sort' => ['order' => 1], 'projection' => ['_id' => 0, 'id' => 1, 'en' => '$name', 'de' => '$name_de']]
+    )->toArray();
+
+    echo rest($result);
+});
+
 Route::get('/portfolio/topics', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
@@ -146,7 +198,31 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             'topics' => $id,
             'public' => true,
         ]),
+        'collaborators' => 0
     ];
+    if ($result['numbers']['projects'] > 0) {
+        $collabs = $osiris->projects->aggregate([
+            ['$match' => [
+                'topics' => $id,
+                'collaborators' => ['$exists' => true, '$ne' => []],
+            ]],
+            ['$project' => ['collaborators' => 1]],
+            ['$unwind' => '$collaborators'],
+            [
+                '$group' => [
+                    '_id' => '$collaborators.name',
+                ]
+            ],
+            ['$count' => 'count']
+        ])->toArray();
+        $result['numbers']['collaborators'] = $collabs[0]['count'] ?? 0;
+    }
+
+    // general information for navigation:
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio();
+    $result['nav_topics'] = $Portfolio->getTopics();
+    $result["nav_units"] = $Portfolio->build_unit_hierarchy($id);
     echo rest($result);
 });
 
@@ -174,6 +250,8 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         echo return_permission_denied();
         die;
     }
+    include_once BASEPATH . "/php/Portfolio.php";
+    $Portfolio = new Portfolio();
     if ($id == 0) {
         $group = $osiris->groups->findOne(['level' => 0]);
         $id = $group['id'];
@@ -188,6 +266,12 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
 
     $unit = $Groups->getUnit($group['unit'] ?? null);
     $group['unit'] = $unit;
+
+    // general information for navigation:
+    $group['nav_topics'] = $Portfolio->getTopics();
+    $group["nav_units"] = $Portfolio->build_unit_hierarchy($id);
+    //     $topics_and_groups =
+    // $group['topics_and_groups'] = !empty($topics) && !empty($hierarchy);
 
     if (!empty($head)) {
         $group['heads'] = [];
@@ -583,6 +667,8 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
     $options = [
         'sort' => ['year' => -1, 'month' => -1, 'day' => -1],
         'projection' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
             'html' => '$rendered.portfolio',
             'print' => '$rendered.print',
             'search' => '$rendered.plain',
@@ -1276,7 +1362,9 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     foreach ($connected_activities as $conn) {
         $reverse = ($conn['target_id'] == $id);
         $doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
-            'rendered' => 1, 'subtype' => 1, 'hide' => 1
+            'rendered' => 1,
+            'subtype' => 1,
+            'hide' => 1
         ]]);
         $conLabel = $Format->getRelationshipLabel($conn['relationship'], $reverse);
         if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
@@ -1337,7 +1425,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         'persons' => [],
         'activities' => 0,
         'subprojects' => [],
-        'collaborators' => $result['collaborators'] ?? [],
+        'collaborators' => [],
         'website' => $result['website'] ?? null,
         'img' => null
     ];
@@ -1345,6 +1433,25 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         $project[$key] = $Project->printField($key, $result[$key] ?? null, true);
     }
 
+    if (!empty($result['collaborators'])) {
+        foreach ($result['collaborators'] as $c) {
+            $org_id = $c['organization'] ?? null;
+            if (empty($org_id)) continue;
+            $org = $osiris->organizations->findOne(['_id' => $org_id]);
+            if (empty($org)) continue;
+            $project['collaborators'][] = [
+                'id' => strval($org['_id']),
+                'role' => $c['role'] ?? null,
+                'name' => $org['name'],
+                'type' => $org['type'] ?? null,
+                'location' => $org['location'] ?? null,
+                'country' => $org['country'] ?? null,
+                'ror' => $org['ror'] ?? null,
+                'lat' => $org['lat'] ?? null,
+                'lng' => $org['lng'] ?? null,
+            ];
+        }
+    }
 
     if (isset($result['image']) && !empty($result['image'])) {
         $project['img'] = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . '/uploads/' . $result['image'];
@@ -1539,11 +1646,22 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             ];
         }
     }
+
+    $user = $person['username'];
+    $url = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH;
+    $result['img'] = $url . "/img/no-photo.png";
+    $result['show_image'] = false;
     if ($person['public_image'] ?? false) {
-        $result['img'] = $Settings->printProfilePicture($person['username'], 'profile-img');
-    } else {
-        $result['img'] = $Settings->printProfilePicture(null, 'profile-img');
+        $result['show_image'] = true;
+        if ($Settings->featureEnabled('db_pictures')) {
+            $result['img'] = $url . "/image/$user";
+        } elseif (file_exists(BASEPATH . "/img/users/$user.jpg")) {
+            $result['img'] = $url . "/img/users/$user.jpg";
+        } else {
+            $result['show_image'] = false;
+        }
     }
+
     $result['id'] = strval($person['_id']);
     if (!empty($person['units'])) {
         $units = DB::doc2Arr($person['units'] ?? []);
@@ -1599,19 +1717,46 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         }
     }
 
-    // public_other_activities
+
     // public_teaching
     $result['numbers'] = [
         'publications' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'publication'])),
-        // 'activities' => $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]])),
-        // 'teaching' => $osiris->activities->count(array_merge($defaultFilter, ['type' => 'teaching', 'module_id' => ['$ne' => null]])),
+        'activities' => 0,
+        'teaching' => 0,
         'projects' => $osiris->projects->count(['persons.user' => $person['username'], "public" => true,]),
+        'infrastructures' => 0
     ];
     if ($person['public_other_activities'] ?? true) {
         $result['numbers']['activities'] = $osiris->activities->count(array_merge($defaultFilter, ['subtype' => ['$in' => $Settings->getActivitiesPortfolio()]]));
     }
+    $person['teaching'] = [];
     if ($person['public_teaching'] ?? true) {
-        $result['numbers']['teaching'] = $osiris->activities->count(array_merge($defaultFilter, ['module_id' => ['$ne' => null]]));
+        $teaching_filter = array_merge($defaultFilter, ['module_id' => ['$ne' => null]]);
+        $result['numbers']['teaching'] = $osiris->activities->count($teaching_filter);
+
+        $teaching = $osiris->activities->aggregate([
+            ['$match' => $teaching_filter],
+            [
+                '$group' => [
+                    '_id' => '$module_id',
+                    'count' => ['$sum' => 1],
+                    // 'doc' => ['$push' => '$$ROOT']
+                ]
+            ],
+            ['$sort' => ['count' => -1]]
+        ])->toArray();
+
+        foreach ($teaching as $t) {
+            $module = $osiris->teaching->findOne(['_id' => DB::to_ObjectID($t['_id'])]);
+            if (empty($module)) continue;
+            $result['teaching'][] = [
+                'id' => strval($module['_id']),
+                'name' => $module['module'],
+                'title' => $module['title'],
+                'affiliation' => $module['affiliation'],
+                'count' => $t['count']
+            ];
+        }
     }
 
     if ($result['numbers']['projects'] > 0) {
@@ -1644,12 +1789,50 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         }
         $result['projects'] = $projects;
     }
-    $result['numbers']['infrastructures'] = 0;
+    $result['infrastructures'] = [];
     if ($Settings->featureEnabled('infrastructures')) {
+
+        include_once(BASEPATH . '/php/Infrastructure.php');
+        $Infra = new Infrastructure();
+
         $result['numbers']['infrastructures'] = $osiris->infrastructures->count([
             'persons.user' => $person['username'],
             'public' => true,
         ]);
+
+        $data = $osiris->infrastructures->find(
+            [
+                'public' => true,
+                'persons.user' => $person['username']
+            ],
+            [
+                'sort' => ['name' => 1],
+                'projection' => [
+                    'id' => 1,
+                    'name' => 1,
+                    'persons' => 1,
+                ]
+            ]
+        )->toArray();
+
+        foreach ($data as $infrastructure) {
+            $self = [];
+            if (isset($infrastructure['persons'])) {
+                foreach ($infrastructure['persons'] as $p) {
+                    if ($p['user'] == $person['username']) {
+                        $self = $p;
+                        break;
+                    }
+                }
+            }
+            $result['infrastructures'][] = [
+                'id' => $infrastructure['id'],
+                'name' => $infrastructure['name'],
+                'role' => $Infra->getRole($self['role'] ?? null),
+                'start' => $self['start'] ?? '',
+                'end' => $self['end'] ?? '',
+            ];
+        }
     }
 
     // add topic details
@@ -1725,11 +1908,12 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
 
         if (DB::is_ObjectID($id)) {
             $mongo_id = $DB->to_ObjectID($id);
-            $project = $osiris->projects->findOne(['_id' => $mongo_id]);
+            $filter = ['_id' => $mongo_id];
         } else {
-            $project = $osiris->projects->findOne(['name' => $id]);
+            $filter = ['name' => $id];
             $id = strval($project['_id'] ?? '');
         }
+        $project = $osiris->projects->findOne($filter);
         if (empty($project)) {
             rest("Project could not be found.", 0, 404);
             exit;
@@ -1748,15 +1932,26 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
         } else {
             $result = [];
             // order by role
-            $collabs = DB::doc2Arr($project['collaborators']);
-            usort($collabs, function ($a, $b) {
-                return $b['role'] <=> $a['role'];
-            });
+            $collabs = $project['collaborators'];
+            // usort($collabs, function ($a, $b) {
+            //     return $b['role'] <=> $a['role'];
+            // });
             foreach ($collabs as $c) {
+                $org = $osiris->organizations->findOne(['_id' => $c['organization']]);
+                if (empty($org)) continue;
                 $result[] = [
-                    "_id" => $c['name'],
+                    "_id" => strval($org['_id']),
                     "count" => 1,
-                    "data" => $c
+                    "data" => [
+                        'name' => $org['name'],
+                        'type' => $org['type'] ?? null,
+                        'location' => $org['location'] ?? null,
+                        'country' => $org['country'] ?? null,
+                        'ror' => $org['ror'] ?? null,
+                        'lat' => $org['lat'] ?? null,
+                        'lng' => $org['lng'] ?? null,
+                        'role' => $c['role'] ?? null
+                    ]
                 ];
             }
         }
@@ -1779,7 +1974,7 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
             ['$unwind' => '$collaborators'],
             [
                 '$group' => [
-                    '_id' => '$collaborators.name',
+                    '_id' => '$collaborators.organization',
                     'count' => ['$sum' => 1],
                     'public_count' => [
                         '$sum' => [
@@ -1795,6 +1990,27 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
                     ]
                 ]
             ],
+            ['$lookup' => [
+                'from' => 'organizations',
+                'localField' => '_id',
+                'foreignField' => '_id',
+                'as' => 'org'
+            ]],
+            ['$unwind' => '$org'],
+             ['$project' => [
+                '_id' => 1,
+                'count' => 1,
+                'public_count' => 1,
+                'data.name' => '$org.name',
+                'data.type' => '$org.type',
+                'data.location' => '$org.location',
+                'data.country' => '$org.country',
+                'data.ror' => '$org.ror',
+                'data.lat' => '$org.lat',
+                'data.lng' => '$org.lng'
+            ]],
+             ['$sort' => ['count' => -1]]
+
         ])->toArray();
 
         // set all roles to 'partner'
@@ -2039,7 +2255,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
                 $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
             }
             $row['id'] = strval($person['_id']);
-            $row['role'] = $Infra->getRole($p['role'] ?? null);
+            $row['role'] = $Infra->getRole($p['role'] ?? null, $raw = true);
             $units = $Groups->getPersonUnit($person, null, true, false);
             if (!empty($units)) {
                 foreach ($units as $u) {
@@ -2176,6 +2392,8 @@ Route::get('/portfolio/projects', function () {
     $options = [
         'sort' => ['year' => -1, 'month' => -1],
         'projection' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
             'name' => 1,
             'title' => 1,
             'funder' => 1,
@@ -2216,6 +2434,7 @@ Route::get('/portfolio/persons', function () {
         [
             'sort' => ['last' => 1],
             'projection' => [
+                'id' => ['$toString' => '$_id'],
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
@@ -2253,10 +2472,10 @@ Route::get('/portfolio/person-images', function () {
 
     $result = [];
     foreach ($persons as $person) {
+        $user = $person['username'];
         if ($Settings->featureEnabled('db_pictures')) {
-            $img = $Settings->printProfilePicture($person['username'], 'profile-img');
+            $img = $Settings->getRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH . "/image/$user";
         } else {
-            $user = $person['username'];
             if (!file_exists(BASEPATH . "/img/users/$user.jpg")) {
                 continue;
             } else {

@@ -4,14 +4,14 @@
  * Page to see details on a single project
  * 
  * This file is part of the OSIRIS package.
- * Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * 
  * @link        /project/<id>
  *
  * @package     OSIRIS
  * @since       1.2.2
  * 
- * @copyright	Copyright (c) 2024 Julia Koblitz, OSIRIS Solutions GmbH
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
@@ -500,7 +500,7 @@
                         <tr>
                             <td>
                                 <span class="key"><?= lang('Funding reference number(s)', 'Förderkennzeichen') ?></span>
-                                <b><?= implode(', ', $data['funding_number'] ?? []) ?></b>
+                                <b><?= is_iterable($data['funding_number'] ?? null) ? implode(', ', $data['funding_number']) : '-' ?></b>
                             </td>
                         </tr>
                     <?php endif; ?>

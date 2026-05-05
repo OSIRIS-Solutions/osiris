@@ -41,8 +41,8 @@ return [
             'en' => 'Digital economy',
         ],
         'scope_notes' => [
-            'de' => 'Forschung zu ökonomischen Fragestellungen, die sich mit Digitalisierung und deren Auswirkung beschäftigen; zu Konzepten der Digitalisierung von Wirtschaft',
-            'en' => 'Research on economic issues concerning digitalisation and its effects; research on concepts for digitising the economy',
+            'de' => 'Forschung zu ökonomischen Fragestellungen, die sich mit Digitalisierung und deren Auswirkung beschäftigen; zu Forschungs-Spektrumn der Digitalisierung von Wirtschaft',
+            'en' => 'Research on economic issues concerning digitalisation and its effects; research on spectrum for digitising the economy',
         ],
         'examples' => [
             'de' => 'Internetwirtschaft, Digitale Güter, Globales digitales Wirtschaftssystem, Neue Märkte, Digitaler Wirtschaftssektor, Digitale Geschäftsmodelle, Neue Unternehmensformen',
@@ -432,7 +432,7 @@ return [
         ],
         'examples' => [
             'de' => 'Stadtplanung, Stadtentwicklungspolitik, Stadtentwicklungsplanung, Stadtentwicklungskonzept, Kommunalplanung, Urbane Räume, Verdichtungsraum, Verdichtungsgebiet, Stadtregion, Metropolregion, Agglomerationsraum',
-            'en' => 'Urban planning, urban development policy, urban development planning, urban development concept, municipal planning, urban spaces, conurbation, high-density areas, urban region, metropolitan region, agglomeration area',
+            'en' => 'Urban planning, urban development policy, urban development planning, urban development spectrum, municipal planning, urban spaces, conurbation, high-density areas, urban region, metropolitan region, agglomeration area',
         ],
         'broader' => [
             'Infrastruktur',
