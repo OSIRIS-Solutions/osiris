@@ -533,20 +533,26 @@ $active = function ($field) use ($data_fields) {
                     <small class="text-danger" id="orcid-wrong" style="display: none;">
                         <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
                     </small>
+                    <small class="text-muted">
+                        <?= lang('or', 'oder') ?>
+                    </small>
+                    <br>
                 <?php } else { ?>
                     <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" readonly>
                     <small class="text-muted">
-                        <?= lang('ORCID is already authenticated', 'Die ORCID ist bereits authentifiziert') ?>
+                        <?= lang('ORCID is already connected', 'Die ORCID ist bereits verknüpft') ?>
                     </small>
                     <br>
                 <?php } ?>
+
                 <?php $orcid = $Settings->get('orcid');
-                    if ($data['username'] == $_SESSION['username'] && !empty($orcid['client_id'] && null) && !empty($orcid['client_secret'] && null)) { 
+                    if ($data['username'] == $_SESSION['username'] && !empty($orcid['client_id']) && !empty($orcid['client_secret'])) { 
                     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+                    // TODO change the sandbox link to production when going live
                     ?>    
                     <a href="https://sandbox.orcid.org/oauth/authorize?client_id=<?= $orcid['client_id'] ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-                        <?= lang('Validate ORCID', 'ORCID validieren') ?>
+                        <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
                     </a>
                 <?php } ?>
             </div>
