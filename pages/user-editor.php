@@ -550,7 +550,7 @@ $active = function ($field) use ($data_fields) {
                     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                     // TODO change the sandbox link to production when going live
                     ?>    
-                    <a href="https://sandbox.orcid.org/oauth/authorize?client_id=<?= $orcid['client_id'] ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid" id="orcid-validation" class="btn">
+                    <a href="https://sandbox.orcid.org/oauth/authorize?client_id=<?= $orcid['client_id'] ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
                         <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
                     </a>
