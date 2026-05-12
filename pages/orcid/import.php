@@ -14,9 +14,16 @@ require_once BASEPATH . '/php/OrcidParser.php';
 $username = $_SESSION['username'];
 
 $orcid_parser = new OrcidParser($username);
-$data = $orcid_parser->getWorks();
+$data = $orcid_parser->getWork('2489030');
 
 echo '<pre>';
-print_r($data);
+#print_r($data);
+echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 echo '</pre>';
+
+foreach ($orcid_parser->getWorksForImport() as $work) {
+    echo '<pre>';
+    print_r($work);
+    echo '</pre>';
+}
 ?>
