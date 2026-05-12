@@ -14,39 +14,8 @@ require_once 'FullNameParser.php';
 class OrcidParser
 {
      public const TYPES = [
-        "book-section" => "chapter",
-        "monograph" => "book",
-        "report-component" => "others",
-        "report" => "others",
-        "peer-review" => "others",
-        "book-track" => "book",
-        "article" => "article",
-        "book-part" => "book",
-        "other" => "others",
-        "book" => "book",
-        "journal-volume" => "article",
-        "book-set" => "book",
-        "reference-entry" => "others",
-        "proceedings-article" => "others",
-        "journal" => "others",
-        "component" => "others",
-        "book-chapter" => "chapter",
-        "proceedings-series" => "others",
-        "report-series" => "others",
-        "proceedings" => "others",
-        "database" => "others",
-        "standard" => "others",
-        "reference-book" => "book",
-        "posted-content" => "others",
-        "journal-issue" => "others",
-        "dissertation" => "dissertation",
-        "grant" => "others",
-        "dataset" => "others",
-        "book-series" => "book",
-        "edited-book" => "book",
-        # Used by ORCID
-        
-        
+        // according to https://info.orcid.org/ufaqs/what-work-types-does-orcid-support/
+        // Academic Publications
         "book" => "book",
         "book-chapter" => "chapter",
         "conference-paper" => "others",
@@ -59,6 +28,59 @@ class OrcidParser
         "dissertation-thesis" => "dissertation",
         "working-paper" => "others",
         "other" => "others",
+        //Review and editing
+        "annotation" => "others",
+        "book-review" => "others",
+        "journal-issue" => "others",
+        "review" => "others",
+        "transcription" => "others",
+        "translation" => "others",
+        //Dissemination
+        "blog-post" => "others",
+        "dictionary-entry" => "others",
+        "encyclopedia-entry" => "others",
+        "magazine-article" => "article",
+        "newspaper-article" => "article",
+        "report" => "report",
+        "public-speech" => "others",
+        "website" => "others",
+        // Creative
+        "artistic-performance" => "others",
+        "design" => "others",
+        "image" => "others",
+        "online-resource" => "others",
+        "moving-image" => "others",
+        "musical-composition" => "others",
+        "sound" => "others",
+        // Data and process
+        "cartographic-material" => "others",
+        "clinical-study" => "others",
+        "data-set" => "dataset",
+        "data-management-plan" => "others",
+        "physical-object" => "others",
+        "research-technique" => "others",
+        "research-tool" => "others",
+        "software" => "software",
+        // Legal and IP
+        "invention" => "others",
+        "license" => "others",
+        "patent" => "others",
+        "registered-copyright" => "others",
+        "standards-and-policy" => "others",
+        "trademark" => "others",
+        // Teaching and supervision
+        "lecture-speech" => "others",
+        "learning-object" => "others",
+        "supervised-student-publication" => "others",
+        //Legacy Worktypes
+        "conference-abstract" => "others",
+        "disclosure" => "others",
+        "edited-book" => "book",
+        "manual" => "others",
+        "newsletter-article" => "others",
+        "spin-off-company" => "others",
+        "technical-standards" => "others",
+        "test" => "others",
     ];
 
 
@@ -201,7 +223,12 @@ class OrcidParser
 
         // type
         $parsed_work['type'] = 'publication';
-        $parsed_work['subtype'] = self::TYPES[$work['type']] ?? null;
+        $subtype = self::TYPES[$work['type']] ?? null;
+        if (!$subtype) {
+            error_log('Warning: Unknown ORCID work type: ' . $work['type']);
+            $subtype = 'unknown';
+        }
+        $parsed_work['subtype'] = $subtype;
 
         // title
         $parsed_work['title'] = $work['title']['title']['value'] ?? null;
