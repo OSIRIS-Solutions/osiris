@@ -165,10 +165,14 @@ class OrcidParser
     }
 
     private function filterWorksNotInOsiris($works) {
-        // TODO filter the works to get only those that are not yet in Osiris
-        // e.g. by checking the DOI or other identifiers against the database
+        // Checking which works are not yet in Osiris
+        // Comparing works based on DOI
 
         $not_in_osiris = [];
+
+        if (!isset($works['group'])) {
+            throw new Exception('No works found for ORCID: ' . $this->orcid);
+        }
 
         foreach ($works['group'] as $work) {
             $work_summary = $work['work-summary'][0];
@@ -256,9 +260,20 @@ class OrcidParser
         $parsed_work['journal'] = $work['journal-title']['value'] ?? null;
 
         $parsed_work['authors'] = [];
+        $last_contributor = null;
         foreach ($work['contributors']['contributor'] as $contributor) {
+            # skip duplicate contributors (sometimes the same contributor is listed multiple times with different roles, e.g. as author and as editor)
+
+            if (isset($last_contributor['credit-name']['value']) 
+                && isset($contributor['credit-name']['value']) 
+                && $contributor['credit-name']['value'] === $last_contributor['credit-name']['value']) {
+                continue; 
+            }
+            $last_contributor = $contributor;
+
             $name = $this->NameParser->parse_name($contributor['credit-name']['value'] ?? null);
             $orcid = $contributor['contributor-orcid']['path'] ?? null;
+            
             $parsed_work['authors'][] = [
                 'last' => $name['lname'] ?? null,
                 'first' => $name['fname'] ?? null,

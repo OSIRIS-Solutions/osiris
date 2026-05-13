@@ -26,12 +26,13 @@ $orcid_parser = new OrcidParser($username);
 foreach ($orcid_parser->getWorksForImport() as $doc) {
 ?>
     <div class="alert mb-10">
-        Ready to import:
+        Ready to import - <?= $doc['type'], ' ', $doc['subtype'] ?>:
         <br>
         <strong><?= $doc['title'] ?></strong>
+        <?php if (!empty($doc['journal'])) { ?><br>in <em><?= $doc['journal'] ?></em><?php } ?>
         <br>
         <?php foreach ($doc['authors'] as $author) { ?>
-            <span><?= $author['last'], '; ' ?></span><br>
+            <span><?= $author['first'] ?? '', ' ', $author['last'] ?? '', ', ' ?></span>
         <?php } ?>
     </div>
 <?php } ?>
