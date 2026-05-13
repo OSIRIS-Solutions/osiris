@@ -14,5 +14,10 @@
         include BASEPATH . "/footer.php";
     });
 
+    Route::post('/orcid/import', function () {
+        include_once BASEPATH . "/php/init.php";
+        include BASEPATH . "/pages/orcid/import.php";
+    });
+
 
 ?>

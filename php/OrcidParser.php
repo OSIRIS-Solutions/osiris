@@ -184,27 +184,27 @@ class OrcidParser
                 }
             }
             if ($doi) {
-                $existing_work = $this->osiris->works->findOne(['doi' => $doi]);
+                $existing_work = $this->osiris->activities->findOne(['doi' => $doi]);
                 if (!$existing_work) {
                     $not_in_osiris[] = $work;
                 }
-            } else {
-                // If there is no DOI, we could use other identifiers or metadata to check for duplicates
-                // For now, we will just add it to the list of works not in Osiris
-                $not_in_osiris[] = $work;
             }
+            // If there is no DOI, we could use other identifiers or metadata to check for duplicates
+            // For now, we will just add it to the list of works not in Osiris
+                
+            
         }
 
         return $not_in_osiris;
     }
 
-    private function getUserId($name, $orcid = null)
+    private function getUser($name, $orcid = null)
     // Copy pasted from OpenAlexParser, could be moved to a helper class
     {
         if ($orcid) {
             $user = $this->osiris->persons->findOne(['orcid' => $orcid]);
             if ($user) {
-                return $user->_id;
+                return $user;
             }
         }
         $user = $this->osiris->persons->findOne([
@@ -212,7 +212,7 @@ class OrcidParser
             'first' => ['$regex' => '^' . $name['fname'] . '.*']
         ]);
         if ($user) {
-            return $user->_id;
+            return $user;
         }
         return null;
     }
@@ -277,7 +277,7 @@ class OrcidParser
             $parsed_work['authors'][] = [
                 'last' => $name['lname'] ?? null,
                 'first' => $name['fname'] ?? null,
-                'user' => $this->getUserId($name, $orcid),
+                'user' => $this->getUser($name, $orcid),
                 'position' => ($contributor === reset($work['contributors']['contributor'])) 
                             ? 'first' 
                             : (($contributor === end($work['contributors']['contributor'])) 
@@ -287,6 +287,11 @@ class OrcidParser
             ];
         }
 
+        $parsed_work["history"] = [
+            ['date' => date('Y-m-d'), 'type' => 'imported', 'user' => $this->username]
+        ];
+
+        $parsed_work['created_by'] = $this->username;
         return $parsed_work;
     }
 
@@ -301,6 +306,14 @@ class OrcidParser
             $parsed_work[] = $this->parseWork($work_details);
         }
         return $parsed_work;
+    }
+
+    function importWork($work) {
+        // TODO implement function to import the work into Osiris
+        // This would involve checking if the work already exists (e.g. by DOI), and if not, inserting it into the database
+        $add = $this->osiris->activities->insertOne($work);
+        $id = $add->getInsertedId();
+        return $id;
     }
 
 }

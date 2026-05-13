@@ -10,10 +10,17 @@
 */
 
 require_once BASEPATH . '/php/OrcidParser.php';
-
 $username = $_SESSION['username'];
-
 $orcid_parser = new OrcidParser($username);
+
+
+if (isset($_POST['import'])){
+    $work = json_decode($_POST['import'], true);
+    $work_id = $orcid_parser->importWork($work);
+    # redirect to the work page after import
+    header('Location: ' . ROOTPATH . '/activities/view/' . $work_id);
+    exit;
+}
 
 // $data = $orcid_parser->getWorks();
 // $data = $orcid_parser->getWork('2489030');
@@ -26,7 +33,7 @@ $orcid_parser = new OrcidParser($username);
 foreach ($orcid_parser->getWorksForImport() as $doc) {
 ?>
     <div class="alert mb-10">
-        Ready to import - <?= $doc['type'], ' ', $doc['subtype'] ?>:
+        <?= lang('Ready to import', 'Bereit zum Importieren')?> - <em><?= $doc['type'], ' ', $doc['subtype']?></em>:
         <br>
         <strong><?= $doc['title'] ?></strong>
         <?php if (!empty($doc['journal'])) { ?><br>in <em><?= $doc['journal'] ?></em><?php } ?>
@@ -34,5 +41,11 @@ foreach ($orcid_parser->getWorksForImport() as $doc) {
         <?php foreach ($doc['authors'] as $author) { ?>
             <span><?= $author['first'] ?? '', ' ', $author['last'] ?? '', ', ' ?></span>
         <?php } ?>
+        <br>
+        <form method="post">
+            <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn btn-success">
+                <?= lang('Import', 'Importieren')?>
+            </button>
+        </form>
     </div>
 <?php } ?>
