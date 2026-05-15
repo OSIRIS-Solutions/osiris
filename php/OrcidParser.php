@@ -198,7 +198,7 @@ class OrcidParser
         return $not_in_osiris;
     }
 
-    private function getUser($name, $orcid = null)
+    private function getUsername($name, $orcid = null)
     // Copy pasted from OpenAlexParser, could be moved to a helper class
     {
         if ($orcid) {
@@ -273,7 +273,7 @@ class OrcidParser
 
             $name = $this->NameParser->parse_name($contributor['credit-name']['value'] ?? null);
             $orcid = $contributor['contributor-orcid']['path'] ?? null;
-            $username = $this->getUser($name, $orcid);
+            $username = $this->getUsername($name, $orcid);
 
             $parsed_work['authors'][] = [
                 'last' => $name['lname'] ?? null,
