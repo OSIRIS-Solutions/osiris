@@ -204,7 +204,7 @@ class OrcidParser
         if ($orcid) {
             $user = $this->osiris->persons->findOne(['orcid' => $orcid]);
             if ($user) {
-                return $user;
+                return $user->username;
             }
         }
         $user = $this->osiris->persons->findOne([
@@ -212,7 +212,7 @@ class OrcidParser
             'first' => ['$regex' => '^' . $name['fname'] . '.*']
         ]);
         if ($user) {
-            return $user;
+            return $user->username;
         }
         return null;
     }
