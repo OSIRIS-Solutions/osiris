@@ -28,6 +28,10 @@ $organizations  = $osiris->organizations->find(
     <?= lang('External Organisations', 'Externe Organisationen') ?>
 </h1>
 <div class="btn-toolbar">
+    <a href="<?= ROOTPATH ?>/organizations/map" class="btn">
+        <i class="ph ph-map-pin"></i>
+        <?= lang('Organization map', 'Organisations-Karte') ?>
+    </a>
     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
         <a href="<?= ROOTPATH ?>/organizations/new">
             <i class="ph ph-plus"></i>

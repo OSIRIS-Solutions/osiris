@@ -19,7 +19,8 @@ include_once BASEPATH . "/php/Project.php";
 
 $Project = new Project();
 
-$edit_perm = ($organization['created_by'] == $_SESSION['username'] || $Settings->hasPermission('organizations.edit'));
+$created_by = $organization['created_by'] ?? null;
+$edit_perm = ($created_by == $_SESSION['username'] || $Settings->hasPermission('organizations.edit'));
 
 $mongo_id = $organization['_id'];
 $str_id = strval($mongo_id);

@@ -574,7 +574,7 @@ Route::get('/api/users', function () {
         }
         $topics = '';
         if ($topicsEnabled && $user['topics'] ?? false) {
-            $topics = '<span class="float-right topic-icons">';
+            $topics = '<span class="topic-icons">';
             foreach ($user['topics'] as $topic) {
                 $topics .= '<a href="' . ROOTPATH . '/topics/view/' . $topic . '" class="topic-icon topic-' . $topic . '"></a> ';
             }

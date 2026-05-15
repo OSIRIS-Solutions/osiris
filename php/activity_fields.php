@@ -1045,8 +1045,8 @@ class ActivityFields extends Fields
             ]
         ];
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1]])->toArray();
-        $units = array_column($units, lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1], 'projection' => ['_id' => 1, 'name' => 1, 'name_de' => 1]])->toArray();
+        $units = array_column(DB::doc2Arr($units), lang('name', 'name_de'), 'id');
         $FIELDS[] = [
             'id' => 'units',
             'module_of' => ['general'],

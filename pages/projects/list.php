@@ -549,7 +549,7 @@ $Vocabulary = new Vocabulary();
     function renderTopic(data) {
         let topics = '';
         if (topicsEnabled && data && data.length > 0 && Array.isArray(data)) {
-            topics = '<span class="float-right topic-icons">'
+            topics = '<span class="topic-icons">'
             data.forEach(function(topic) {
                 topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
             })

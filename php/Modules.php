@@ -874,7 +874,7 @@ class Modules
             "label" => "Course for the following module",
             "label_de" => "Veranstaltung zu folgendem Modul",
             "description" => "A field for selecting a teaching course from the database. If the course does not exist yet, the user will be prompted to add a new one that will be then saved into the database.",
-            "description_de" => "Ein Feld zum Auswählen eines Lehrmoduls aus der Datenbank. Wenn das Modul noch nicht existiert, wird der Benutzer aufgefordert, ein neues hinzuzufügen, das dann in die Datenbank gespeichert wird.",
+            "description_de" => "Ein Feld zum Auswählen einer Lehrveranstaltung aus der Datenbank. Wenn die Veranstaltung noch nicht existiert, wird der Benutzer aufgefordert, eine neue hinzuzufügen, die dann in die Datenbank gespeichert wird.",
             "width" => 12,
             "tags" => ['teaching'],
             "section" => "others",
@@ -1117,6 +1117,8 @@ class Modules
     {
         if (!empty($this->fields)) {
             return $this->fields;
+        } else {
+            return array();
         }
     }
 
@@ -2864,9 +2866,9 @@ class Modules
                             <?php if (!empty($this->form) && isset($this->form['journal_id'])) :
                                 $journal = $this->DB->getConnected('journal', $this->form['journal_id']);
                             ?>
-                                <h5 class="m-0"><?= $journal['journal'] ?></h5>
-                                <span class="float-right text-muted"><?= $journal['publisher'] ?></span>
-                                <span class="text-muted">ISSN: <?= print_list($journal['issn']) ?></span>
+                                <h5 class="m-0"><?= $journal['journal'] ?? $this->form['journal'] ?? '' ?></h5>
+                                <span class="float-right text-muted"><?= $journal['publisher'] ?? '' ?></span>
+                                <span class="text-muted">ISSN: <?= print_list($journal['issn'] ?? []) ?></span>
                             <?php else : ?>
                                 <span class="font-weight-bold"><?= lang('Not selected', 'Nichts ausgewählt') ?></span>
                             <?php endif; ?>

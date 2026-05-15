@@ -308,6 +308,7 @@ Route::get('/api/dashboard/collaborators', function () {
         }
     } else {
         $filter = ['collaborators' => ['$exists' => 1]];
+        // only for portal
         if (isset($_GET['dept'])) {
             // only for portal
             $dept = $_GET['dept'];
@@ -324,18 +325,53 @@ Route::get('/api/dashboard/collaborators', function () {
         }
         $result = $osiris->projects->aggregate([
             ['$match' => $filter],
-            ['$project' => ['collaborators' => 1]],
+            ['$project' => ['collaborators' => 1, 'public' => 1]],
             ['$unwind' => '$collaborators'],
             [
                 '$group' => [
-                    '_id' => '$collaborators.name',
+                    '_id' => '$collaborators.organization',
                     'count' => ['$sum' => 1],
+                    'public_count' => [
+                        '$sum' => [
+                            '$cond' => [
+                                'if' => ['$eq' => ['$public', true]],
+                                'then' => 1,
+                                'else' => 0
+                            ]
+                        ]
+                    ],
                     'data' => [
                         '$first' => '$collaborators'
                     ]
                 ]
             ],
+            ['$lookup' => [
+                'from' => 'organizations',
+                'localField' => '_id',
+                'foreignField' => '_id',
+                'as' => 'org'
+            ]],
+            ['$unwind' => '$org'],
+             ['$project' => [
+                '_id' => 1,
+                'count' => 1,
+                'public_count' => 1,
+                'data.name' => '$org.name',
+                'data.type' => '$org.type',
+                'data.location' => '$org.location',
+                'data.country' => '$org.country',
+                'data.ror' => '$org.ror',
+                'data.lat' => '$org.lat',
+                'data.lng' => '$org.lng'
+            ]],
+             ['$sort' => ['count' => -1]]
+
         ])->toArray();
+
+        // set all roles to 'partner'
+        foreach ($result as $r) {
+            $r['data']['role'] = 'partner';
+        }
 
         $institute = $Settings->get('affiliation_details');
         if (isset($institute['lat']) && isset($institute['lng'])) {
@@ -348,9 +384,32 @@ Route::get('/api/dashboard/collaborators', function () {
         }
     }
 
+    echo return_rest($result, count($result));
+});
 
 
 
+Route::get('/api/dashboard/organizations', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    $filter = ['lat' => ['$exists' => 1], 'lng' => ['$exists' => 1]];
+    
+    $result = $osiris->organizations->find($filter)->toArray();
+
+    $institute = $Settings->get('affiliation_details');
+    if (isset($institute['lat']) && isset($institute['lng'])) {
+        $result[] = [
+            '_id' => $institute['ror'] ?? '',
+            'count' => 3,
+            'data' => $institute,
+            'color' => '#f78104'
+        ];
+    }
     echo return_rest($result, count($result));
 });
 
@@ -626,6 +685,7 @@ Route::get('/api/dashboard/wordcloud', function () {
     }
 
     $filter = ['type' => 'publication'];
+    $filter = [];
     if (isset($_GET['user'])) {
         $filter['rendered.users'] = $_GET['user'];
     } else if (isset($_GET['units'])) {

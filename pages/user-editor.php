@@ -1190,24 +1190,37 @@ $active = function ($field) use ($data_fields) {
             <br>
             <small class="text-muted float-right"><?= lang('Sorting will be done automatically', 'Wir sortieren das automatisch für dich') ?></small>
             <br>
-            <div id="cv-list">
+            <div id="cv-list" class="w-800 mw-full">
                 <?php
                 if (isset($data['cv']) && !empty($data['cv'])) {
 
-                    foreach ($data['cv'] as $i => $con) { ?>
+                    foreach ($data['cv'] as $i => $con) {
+                        // try to fix dates saved in old format (array instead of string with month and year)
+                        // if (!isset($con['from']) || is_null($con['from']['year'] ?? 'not set')) {
+                        //     $con['from'] = '';
+                        // }
+                        // if (!is_string($con['from'] ?? null) && isset($con['from']['year'])) {
+                        //     $con['from'] = ($con['from']['year'] ?? '') . '-' . str_pad(($con['from']['month'] ?? ''), 2, '0', STR_PAD_LEFT);
+                        // }
+                        // if (!isset($con['to']) || is_null($con['to']['year'] ?? 'not set')) {
+                        //     $con['to'] = '';
+                        // }
+                        // if (!is_string($con['to'] ?? null) && isset($con['to']['year'])) {
+                        //     $con['to'] = ($con['to']['year'] ?? '') . '-' . str_pad(($con['to']['month'] ?? ''), 2, '0', STR_PAD_LEFT);
+                        // }
+
+                ?>
 
                         <div class="alert mb-10">
                             <div class="input-group my-10">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('From', 'Von') ?></span>
+                                    <span class="input-group-text"><?= lang('From', 'Von') ?>*</span>
                                 </div>
-                                <input type="number" name="values[cv][<?= $i ?>][from][month]" value="<?= $con['from']['month'] ?? '' ?>" class="form-control" placeholder="month *" min="1" max="12" step="1" id="from-month" required>
-                                <input type="number" name="values[cv][<?= $i ?>][from][year]" value="<?= $con['from']['year'] ?? '' ?>" class="form-control" placeholder="year *" min="1900" max="<?= CURRENTYEAR ?>" step="1" id="from-year" required>
+                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="month *" required>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><?= lang('to', 'bis') ?></span>
                                 </div>
-                                <input type="number" name="values[cv][<?= $i ?>][to][month]" value="<?= $con['to']['month'] ?? '' ?>" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month">
-                                <input type="number" name="values[cv][<?= $i ?>][to][year]" value="<?= $con['to']['year'] ?? '' ?>" class="form-control" placeholder="year" min="1900" step="1" id="to-year">
+                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="month">
                             </div>
 
                             <div class="form-group mb-10">
@@ -1237,7 +1250,7 @@ $active = function ($field) use ($data_fields) {
             </div>
 
             <script>
-                var i = <?= $i ?? 0 ?>
+                var i = <?= $i ?? 0 ?>;
 
                 var CURRENTYEAR = <?= CURRENTYEAR ?>;
 
@@ -1247,15 +1260,13 @@ $active = function ($field) use ($data_fields) {
             <div class="alert mb-10">
                     <div class="input-group my-10">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">${lang('From', 'Von')}</span>
+                            <span class="input-group-text">${lang('From', 'Von')}*</span>
                         </div>
-                        <input type="number" name="values[cv][${i}][from][month]" class="form-control" placeholder="month *" min="1" max="12" step="1" id="from-month" required>
-                        <input type="number" name="values[cv][${i}][from][year]" class="form-control" placeholder="year *" min="1900" max="${CURRENTYEAR}" step="1" id="from-year" required>
+                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="month *" required>
                         <div class="input-group-prepend">
                             <span class="input-group-text">${lang('to', 'bis')}</span>
                         </div>
-                        <input type="number" name="values[cv][${i}][to][month]" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month">
-                        <input type="number" name="values[cv][${i}][to][year]" class="form-control" placeholder="year" min="1900" step="1" id="to-year">
+                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="month">
                     </div>
 
                     <div class="form-group mb-10">
@@ -1266,13 +1277,49 @@ $active = function ($field) use ($data_fields) {
                         <input name="values[cv][${i}][affiliation]" type="text" class="form-control" placeholder="Affiliation *" list="affiliation-list" required>
                     </div>
 
-                    <small class="text-muted">* required</small><br>
+                    <small class="text-muted">* <?= lang('required', 'benötigt') ?></small><br>
 
                     <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
                 </div>
                 `;
                     $(parent).prepend(el);
                 }
+
+                function validateFeedback(item = null, pass = false) {
+                    if (item !== null) {
+                        $(item).toggleClass('is-invalid', !pass);
+                    }
+                    $('.btn[type="submit"]').prop('disabled', !pass);
+                }
+
+                // when month field is blurred, check if month is correctly formatted, if not, try to fix it, otherwise give an error
+                $(document).on('blur', '.month-field', function() {
+                    var val = $(this).val();
+                    if (val.length == 0) {
+                        validateFeedback(this, true);
+                        return;
+                    }
+                    // check if value is in format YYYY-MM
+                    if (!/^\d{4}-\d{2}$/.test(val)) {
+                        // try to fix common mistakes like YYYY/MM or MM/YYYY
+                        var fixed = val.replace('/', '-');
+                        if (/^\d{4}-\d{2}$/.test(fixed)) {
+                            validateFeedback(this, true);
+                            $(this).val(fixed);
+                            return;
+                        }
+                        fixed = val.replace('/', '-').split('-').reverse().join('-');
+                        if (/^\d{4}-\d{2}$/.test(fixed)) {
+                            validateFeedback(this, true);
+                            $(this).val(fixed);
+                            return;
+                        }
+                        validateFeedback(this, false);
+                        toastError('<?= lang('Please enter a valid month in the format YYYY-MM', 'Bitte gib einen gültigen Monat im Format JJJJ-MM ein') ?>');
+                    } else {
+                        validateFeedback(this, true);
+                    }
+                });
             </script>
 
 

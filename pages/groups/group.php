@@ -85,7 +85,7 @@ if ($Settings->featureEnabled('wordcloud')) {
 }
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=2">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <!-- all necessary javascript -->
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
@@ -688,7 +688,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <h3 class=""><?= lang('Word cloud') ?></h3>
 
             <p class="text-muted">
-                <?= lang('Based on the title and abstract (if available) of publications in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Publikationen in OSIRIS.') ?>
+                <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
             </p>
             <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
         </section>

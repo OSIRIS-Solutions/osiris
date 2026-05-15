@@ -195,14 +195,18 @@ $deadlines = $osiris->deadlines->find(
             'key': 'type',
             'title': lang('Type', 'Typ')
         },
-            {
-                'key': 'relevance',
-                'title': lang('Relevance', 'Relevanz')
-            },
+        {
+            'key': 'relevance',
+            'title': lang('Relevance', 'Relevanz')
+        },
     ]
 
 
     var typeInfo = <?= json_encode($Vocabulary->getValues('deadline-type')) ?>;
+    // in case it is an object convert it to array
+    if (typeof typeInfo === 'object' && !Array.isArray(typeInfo)) {
+        typeInfo = Object.values(typeInfo);
+    }
     // convert to object with id as key
     typeInfo = typeInfo.reduce(function(obj, item) {
         obj[item.id] = {
@@ -343,7 +347,7 @@ $deadlines = $osiris->deadlines->find(
             if (initializing) return;
             var info = dataTable.page.info();
             writeHash({
-                page: info.page + 1,                
+                page: info.page + 1,
                 search: dataTable.search(),
             })
         });

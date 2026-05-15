@@ -243,7 +243,7 @@ class CommandPalette
                 "url" => "/teaching",
                 "type" => "Navigation",
                 "icon" => "chalkboard-simple",
-                "label" => lang("Teaching modules", "Lehrmodule"),
+                "label" => lang("Teaching modules", "Lehrveranstaltungen"),
                 "feature" => "teaching-modules",
                 "keywords" => ["teaching modules", "lehrmodule"],
                 "priority" => 40
@@ -252,7 +252,7 @@ class CommandPalette
                 "url" => "/teaching/new",
                 "type" => lang("Action", "Aktion"),
                 "icon" => "chalkboard-simple",
-                "label" => lang("Add teaching module", "Lehrmodul hinzufügen"),
+                "label" => lang("Add teaching module", "Lehrveranstaltung hinzufügen"),
                 "feature" => "teaching-modules",
                 "keywords" => ["add teaching module", "lehrmodul hinzufügen", "new teaching module", "neues lehrmodul", "create teaching module", "lehrmodul erstellen"],
                 "priority" => 30

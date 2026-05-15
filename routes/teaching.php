@@ -33,7 +33,7 @@ Route::get('/teaching/new', function () {
     }
     $breadcrumb = [
         ['name' => lang('Teaching', 'Lehrveranstaltungen'), 'path' => '/teaching'],
-        ['name' => lang('New teaching module', 'Neues Lehrmodul')]
+        ['name' => lang('New teaching module', 'Neue Lehrveranstaltung')]
     ];
 
     $form = [];

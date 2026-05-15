@@ -573,7 +573,7 @@ $cart = readCart();
                     render: function(data, type, row) {
                         var text = data;
                         if (topicsEnabled && row.topics && row.topics.length > 0) {
-                            text = '<span class="float-right topic-icons">'
+                            text = '<span class="topic-icons">'
                             row.topics.forEach(function(topic) {
                                 text += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
                             })

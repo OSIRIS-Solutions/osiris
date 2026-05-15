@@ -18,6 +18,7 @@ class Report
     private $endyear = CURRENTYEAR - 1;
     public $fields = array();
     private $variables = array();
+    private $headers = array();
 
     public function __construct($report)
     {
@@ -43,7 +44,8 @@ class Report
         $startmonth = $this->report['start'] ?? 1;
         $duration = $this->report['duration'] ?? 12;
         $endmonth = $startmonth + $duration - 1;
-        if ($endmonth > 12) {
+        // make sure endmonth does not exceed 12 and adjust endyear accordingly
+        while ($endmonth > 12) {
             $endmonth -= 12;
             $endyear++;
         }
@@ -72,13 +74,11 @@ class Report
         // 1) Continuous / long-running activities:
         // Include if they overlap with the selected year range.
         $continuousFilter = [
+            'subtype' => ['$in' => $Settings->continuousTypes],
             'start.year' => ['$lte' => $this->endyear],
             '$or' => [
+                ['end'     => null],
                 ['end.year' => ['$gte' => $this->startyear]],
-                [
-                    'end'     => null,
-                    'subtype' => ['$in' => $Settings->continuousTypes],
-                ],
             ],
         ];
 
@@ -128,6 +128,9 @@ class Report
                 $discreteFilter,
             ],
         ];
+        // dump($this->startmonth . '/'. $this->startyear);
+        // dump($this->endmonth . '/'. $this->endyear);
+        // dump($this->timefilter);
         // OLD code for reference:
         // $this->startmonth = intval($startmonth);
         // $this->endmonth = intval($endmonth);
@@ -164,21 +167,36 @@ class Report
 
     public function getReport()
     {
+        $this->headers = [];
         $html = "";
         $steps = $this->report['steps'] ?? array();
         foreach ($steps as $step) {
-            $html .= $this->format($step);
+            $vars = [];
+            if ($step['type'] == 'text' && ($step['level'] == 'h1' || $step['level'] == 'h2')) {
+                $id = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $step['text']));
+                $vars['id'] = $id;
+                $text = $step['text'];
+                if ($step['level'] == 'h2') {
+                    $text = ' <i class="ph ph-caret-right"></i> ' . $text;
+                } 
+                $this->headers[$id] = $text;
+            }
+            $html .= $this->format($step, $vars);
         }
         return $html;
     }
 
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
 
-    public function format($item)
+    public function format($item, $vars = [])
     {
         try {
             switch ($item['type']) {
                 case 'text':
-                    return $this->formatText($item);
+                    return $this->formatText($item, $vars);
                 case 'activities':
                     return $this->formatActivities($item);
                 case 'activities-field':
@@ -217,11 +235,11 @@ class Report
      * @param array $item
      * @return string formatted HTML
      */
-    private function formatText($item)
+    private function formatText($item, $vars = [])
     {
         $level = $item['level'] ?? 'p';
         $text = $this->getText($item);
-        return "<$level>" . $text . "</$level>";
+        return "<$level" . (isset($vars['id']) ? " id=\"" . e($vars['id']) . "\"" : "") . ">" . $text . "</$level>";
     }
 
     private function formatLine()
@@ -284,8 +302,12 @@ class Report
 
         // add time limit filter
         if ($timelimit)
-            $filter = array_merge_recursive($this->timefilter, $filter);
-
+            $filter = [
+                '$and' => [
+                    $this->timefilter,
+                    $filter
+                ]
+            ];
         $filter['exclude_from_reports'] = ['$ne' => true];
         // default sorting by type, year, month
         $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
@@ -405,7 +427,12 @@ class Report
         }
 
         if ($timelimit)
-            $filter = array_merge_recursive($this->timefilter, $filter);
+            $filter = [
+                '$and' => [
+                    $this->timefilter,
+                    $filter
+                ]
+            ];
 
         $DB = new DB();
         $aggregate = [

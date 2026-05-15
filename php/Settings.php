@@ -872,7 +872,7 @@ class Settings
 
     public function canProjectsBeCreated()
     {
-        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'project']);
+        $ability = $this->osiris->adminProjects->count(['disabled' => ['$ne' => true], 'process' => 'project']);
         if ($ability > 0) {
             return ($this->hasPermission('projects.add'));
         }
@@ -881,7 +881,7 @@ class Settings
 
     public function canProposalsBeCreated()
     {
-        $ability = $this->osiris->adminProjects->count(['disabled' => false, 'process' => 'proposal']);
+        $ability = $this->osiris->adminProjects->count(['disabled' => ['$ne' => true], 'process' => 'proposal']);
         if ($ability > 0) {
             return ($this->hasPermission('proposals.add'));
         }

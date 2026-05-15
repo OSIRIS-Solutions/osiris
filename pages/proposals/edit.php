@@ -501,10 +501,23 @@ if ($is_subproject) {
 
 
 
-                <?php if (array_key_exists('start', $fields)) { ?>
+                <?php if (array_key_exists('start', $fields)) { 
+                    $start = null;
+                    $end = null;
+                    if (isset($form['start'])){
+                        $start = valueFromDateArray($form['start']);
+                    } else if (isset($form['start_date'])){
+                        $start = $form['start_date'];
+                    }
+                    if (isset($form['end'])){
+                        $end = valueFromDateArray($form['end']);
+                    } else if (isset($form['end_date'])){
+                        $end = $form['end_date'];
+                    }
+                    ?>
                     <div class="row row-eq-spacing mt-0 align-items-end ">
                         <div class="col-sm-4 floating-form">
-                            <input type="date" class="form-control" name="values[start]" value="<?= valueFromDateArray(val('start')) ?>" id="start" required>
+                            <input type="date" class="form-control" name="values[start]" value="<?= $start ?>" id="start" required>
 
                             <label for="start" class="required">
                                 <?= lang('Project Start', 'Projektbeginn') ?>
@@ -521,7 +534,7 @@ if ($is_subproject) {
                             </div>
                         </div>
                         <div class="col-sm-4 floating-form">
-                            <input type="date" class="form-control" name="values[end]" value="<?= valueFromDateArray(val('end')) ?>" id="end" required>
+                            <input type="date" class="form-control" name="values[end]" value="<?= $end ?>" id="end" required>
 
                             <label for="end" class="required">
                                 <?= lang('Project End', 'Projektende') ?>
@@ -1671,24 +1684,24 @@ if ($is_subproject) {
         }
     }
 
-    $('.money-input').on('blur', function() {
-        let value = $(this).val();
+    // $('.money-input').on('blur', function() {
+    //     let value = $(this).val();
 
-        // Nur Ziffern und Komma/Punkt behalten
-        value = value.replace(/[^\d,\.]/g, '');
+    //     // Nur Ziffern und Komma/Punkt behalten
+    //     value = value.replace(/[^\d,\.]/g, '');
 
-        // In float umwandeln
-        const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    //     // In float umwandeln
+    //     const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
 
-        if (!isNaN(num)) {
-            // Formatiert anzeigen
-            const formatted = num.toLocaleString('de-DE', {
-                style: 'currency',
-                currency: 'EUR'
-            });
-            $(this).val(formatted);
-        } else {
-            $(this).val('');
-        }
-    });
+    //     if (!isNaN(num)) {
+    //         // Formatiert anzeigen
+    //         const formatted = num.toLocaleString('de-DE', {
+    //             style: 'currency',
+    //             currency: 'EUR'
+    //         });
+    //         $(this).val(formatted);
+    //     } else {
+    //         $(this).val('');
+    //     }
+    // });
 </script>

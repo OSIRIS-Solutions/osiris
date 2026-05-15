@@ -103,11 +103,12 @@ Route::get('/portfolio/settings', function () {
         echo return_permission_denied();
         die;
     }
-    include_once BASEPATH . "/php/Portfolio.php";
-    $Portfolio = new Portfolio();
+    // include_once BASEPATH . "/php/Portfolio.php";
+    // $Portfolio = new Portfolio();
     // get Portfolio settings and other Data for the portfolio overview
 
     $result = [
+        'version' => OSIRIS_VERSION,
         'features' => [
             'projects' => $Settings->featureEnabled('projects'),
             'infrastructures' => $Settings->featureEnabled('infrastructures'),
@@ -144,6 +145,8 @@ Route::get('/portfolio/settings', function () {
         ['id' => ['$in' => $portfolioCats]],
         ['sort' => ['order' => 1], 'projection' => ['_id' => 0, 'id' => 1, 'en' => '$name', 'de' => '$name_de']]
     )->toArray();
+
+    $result['affiliation'] = $Settings->get('affiliation_details', null);
 
     echo rest($result);
 });
@@ -1244,13 +1247,16 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     foreach ($doc['authors'] as $a) {
         if ($a['aoi']) $result['affiliated'] = true;
         $i = null;
+        $orcid = $a['orcid'] ?? null;
         if (!empty($a['user'])) {
             $person = $DB->getPerson($a['user']);
             if (!empty($person) && !($person['hide'] ?? false)) $i = strval($person['_id']);
+            if (empty($orcid) && !empty($person['orcid'])) $orcid = $person['orcid'];
         }
         $result['authors'][] = [
             'id' => $i,
             'name' => ($a['first'] ?? '') . ' ' . ($a['last'] ?? ''),
+            'orcid' => $orcid
         ];
     }
 
@@ -1301,27 +1307,62 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
         if (in_array($module, $hidden_modules)) continue;
         if ($module == 'teaching-course' && isset($doc['module_id'])) :
-            $module = $DB->getConnected('teaching', $doc['module_id']);
-            $fields[] = [
-                'key_en' => 'Teaching Module',
-                'key_de' => 'Lehrveranstaltung',
-                'value' => $module['module']
-            ];
+            $teaching = $DB->getConnected('teaching', $doc['module_id']);
+            $value = $teaching['module'];
         elseif ($module == 'journal' && isset($doc['journal_id'])) :
             $journal = $DB->getConnected('journal', $doc['journal_id']);
-            $fields[] = [
-                'key_en' => 'Journal',
-                'key_de' => 'Journal',
-                'value' => $journal['journal']
+            $value = $journal['journal'];
+            $result['journal'] = [
+                'id' => strval($journal['_id']),
+                'name' => $journal['journal'],
+                'issn' => $journal['issn'] ?? null
+            ];
+        elseif ($module == 'organizations' || $module == 'organization') :
+            $names = [];
+            $orgs = [];
+            $arr = $module == 'organizations' ? ($doc['organizations'] ?? []) : (isset($doc['organization']) ? [$doc['organization']] : []);
+            foreach ($arr as $o) {
+                $org = $DB->getConnected('organization', $o);
+                if (!empty($org)) {
+                    $names[] = $org['name'];
+                    $orgs[] = [
+                        'id' => strval($org['_id']),
+                        'name' => $org['name'],
+                        'country' => $org['country'] ?? null,
+                        'location' => $org['location'] ?? null,
+                        'synonyms' => $org['synonyms'] ?? [],
+                        'ror' => $org['ror'] ?? null
+                    ];
+                }
+            }
+            $value = implode(', ', $names);
+            $result['organizations'] = $orgs;
+            
+        elseif ($module == 'conference' && isset($doc['conference_id'])) :
+            $conf = $DB->getConnected('conference', $doc['conference_id']);
+            $value = $conf['title'];
+            $result['event'] = [
+                'id' => strval($conf['_id']),
+                'name' => $conf['title'],
+                'title' => $conf['title_full'] ?? null,
+                'location' => $conf['location'] ?? null,
+                'country' => $conf['country'] ?? null,
+                'start' => $conf['start'] ?? null,
+                'end' => $conf['end'] ?? null,
+                'link' => $conf['url'] ?? null
             ];
         elseif ($Format->get_field($module) != '-') :
-            $names = $Modules->all_modules[$module] ?? [];
-            $fields[] = [
-                'key_en' => $names['name'] ?? ucfirst($module),
-                'key_de' => $names['name_de'] ?? ucfirst($module),
-                'value' => $Format->get_field($module)
-            ];
+            $value = $Format->get_field($module);
+        else :
+            continue;
         endif;
+        $names = $Modules->all_modules[$module] ?? [];
+        $fields[] = [
+            'id' => $module,
+            'key_en' => $names['name'] ?? ucfirst($module),
+            'key_de' => $names['name_de'] ?? ucfirst($module),
+            'value' => $value
+        ];
     }
     $result['fields'] = $fields;
 
@@ -1395,6 +1436,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
     header('Content-Type: application/json');
     $result = $DB->getProject($id);
+    $mongo_id = DB::to_ObjectID($id);
     if (empty($result)) {
         echo rest('Project not found', 0, 404);
         die;
@@ -1492,11 +1534,6 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         foreach ($persons as $row) {
             $person = $DB->getPerson($row['user']);
             if (empty($person) || ($person['hide'] ?? false)) continue;
-            if ($person['public_image'] ?? false) {
-                $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img small mr-20');
-            } else {
-                $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
-            }
             unset($row['user']);
             $row['id'] = strval($person['_id']);
             $row['role'] = $Project->personRoleRaw($row['role']);
@@ -1537,7 +1574,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     }
 
     // add subprojects
-    $subprojects = $osiris->projects->find(['parent' => $id], ['projection' => ['name' => 1, 'title' => 1]])->toArray();
+    $subprojects = $osiris->projects->find(['parent_id' => $mongo_id], ['projection' => ['name' => 1, 'title' => 1]])->toArray();
     foreach ($subprojects as $sub) {
         if ($sub['public'] ?? false) continue;
         $project['subprojects'][] = [
@@ -1594,7 +1631,15 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         'position_de' => $person['position_de'] ?? null,
         'depts' => [],
         'cv' => $person['cv'] ?? [],
-        'contact' => []
+        'contact' => [],
+        'biography' => [
+            'en' => $person['biography'] ?? null,
+            'de' => $person['biography_de'] ?? null
+        ],
+        'research_profile' => [
+            'en' => $person['research_profile'] ?? null,
+            'de' => $person['research_profile_de'] ?? null
+        ]
     ];
 
     if (!($person['is_active'] ?? true)) {

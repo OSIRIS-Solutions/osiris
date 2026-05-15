@@ -94,13 +94,41 @@ Route::get('/migrate/files', function () {
     include BASEPATH . "/footer.php";
 });
 
-Route::get('/migrate/test', function () {
+Route::get('/migrate/cv', function () {
     // error_reporting(E_ERROR | E_PARSE);
     set_time_limit(6000);
     include_once BASEPATH . "/php/init.php";
 
     include BASEPATH . "/header.php";
 
+    // migrate cv dates
+    $users = $osiris->persons->find(['cv' => ['$exists' => true]])->toArray();
+    foreach ($users as $user) {
+        $cv = $user['cv'];
+        if (empty($cv)) continue;
+        foreach ($cv as $i => $con) {
+            $con = json_encode($con);
+            $con = json_decode($con, true); // convert to array if it is still an object
+            if (!isset($con['from']) || (is_array($con['from']) && array_key_exists('year', $con['from']) && is_null($con['from']['year']))) {
+                $con['from'] = null;
+            }
+            if (!is_string($con['from'] ?? null) && isset($con['from']['year'])) {
+                $con['from'] = ($con['from']['year'] ?? '') . '-' . str_pad(($con['from']['month'] ?? ''), 2, '0', STR_PAD_LEFT);
+            }
+            if (!isset($con['to']) || (is_array($con['to']) && array_key_exists('year', $con['to']) && is_null($con['to']['year']))) {
+                $con['to'] = null;
+            }
+            if (!is_string($con['to'] ?? null) && isset($con['to']['year'])) {
+                $con['to'] = ($con['to']['year'] ?? '') . '-' . str_pad(($con['to']['month'] ?? ''), 2, '0', STR_PAD_LEFT);
+            }
+            $cv[$i] = $con;
+        }
+        $osiris->persons->updateOne(
+            ['_id' => $user['_id']],
+            ['$set' => ['cv' => $cv]]
+        );
+    }
+    echo lang('CV dates migrated successfully.', 'CV-Daten wurden erfolgreich migriert.');
 
     include BASEPATH . "/footer.php";
 });

@@ -15,9 +15,14 @@ $fields_aggregate = array_filter($FIELDS->fields, function ($f) {
 $fields_sort = array_filter($FIELDS->fields, function ($f) {
     return !empty($f['module_of']) && in_array('filter', $f['usage']);
 });
+
+$report_id = $report['_id'] ?? null;
 ?>
 
 <style>
+    #report {
+        min-height: 30rem;
+    }
     .step {
         margin-bottom: 1rem;
         padding: 1rem;
@@ -50,6 +55,8 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     .step {
         margin-bottom: .75rem;
         padding: .75rem;
+        margin-left: 2.5rem;
+        position: relative;
     }
 
     .step .step-header {
@@ -75,6 +82,11 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
         content: "\e536";
     }
 
+    .step .handle {
+        position: absolute;
+        left: -2.5rem;
+    }
+
     .handle {
         cursor: move;
         font-size: 1.6rem !important;
@@ -87,14 +99,33 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     .table#vars-table td {
         vertical-align: baseline !important;
     }
+
+    .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--secondary-color);
+        /* font-size: .85rem; */
+        font-weight: 700;
+        margin-bottom: -.5rem;
+    }
+
+    .editor-toolbar {
+        font-weight: bold;
+        position: sticky;
+        bottom: 0;
+        right: 0;
+        z-index: 40;
+        background-color: var(--muted-color-very-light);
+        padding: .5rem 4.5rem 2rem;
+        /* border-radius: calc(var(--border-radius) + .5rem); */
+        box-shadow: 0 0 8px rgba(0, 0, 0, .15);
+        border-top: var(--border-width) solid var(--border-color);
+        margin: 0 -2rem -2rem;
+    }
 </style>
 
-<?php if (!empty($report) && isset($report['_id'])) { ?>
+<?php if (!empty($report) && isset($report_id)) { ?>
     <div class="btn-toolbox  float-right">
-        <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report['_id'] ?>" class="btn primary">
-            <i class="ph ph-eye"></i>
-            <?= lang('Preview', 'Vorschau') ?>
-        </a>
         <!-- Help -->
         <a href="https://wiki.osiris-app.de/users/reporting/" class="btn tour" target="_blank">
             <i class="ph ph-question"></i>
@@ -103,226 +134,269 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     </div>
 <?php } ?>
 
+<div style="margin-left: 2.5rem;">
 
-<h1>
-    <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('Report Builder', 'Berichtseditor') ?>
-</h1>
+    <div class="eyebrow">
+        <?= lang('Report Builder', 'Berichtseditor') ?>
+    </div>
+    <h1>
+        <i class="ph-duotone ph-clipboard-text"></i>
+        <?= $report['title'] ?? lang('Untitled Report', 'Unbenannter Bericht') ?>
+    </h1>
 
+</div>
 
 <form action="<?= ROOTPATH ?>/crud/reports/update" method="post">
-    <input type="hidden" name="id" value="<?= $report['_id'] ?>">
-    <div class="form-group">
-        <label for="title"><?= lang('Title', 'Titel') ?></label>
-        <input type="text" class="form-control" name="title" value="<?= $report['title'] ?? '' ?>" required>
-    </div>
-    <div class="form-group">
-        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-        <textarea type="text" class="form-control" name="description"><?= $report['description'] ?? '' ?></textarea>
-    </div>
+    <input type="hidden" name="id" value="<?= $report_id ?>">
 
-    <!-- start month and duration -->
-    <div class="form-row row-eq-spacing">
-        <div class="col-sm">
-            <label for="start"><?= lang('Start month', 'Startmonat') ?></label>
-            <input type="number" class="form-control" name="start" id="start" value="<?= $report['start'] ?? '' ?>" required>
-        </div>
-        <div class="col-sm">
-            <label for="duration"><?= lang('Duration in months', 'Dauer in Monaten') ?></label>
-            <input type="number" class="form-control" name="duration" id="duration" value="<?= $report['duration'] ?? '' ?>" required>
-        </div>
-    </div>
+    <div style="margin-left: 2.5rem;">
+        <?php if (isset($report['title'])) { ?>
+            <button type="button" class="btn" onclick="$('#report-settings').slideToggle()">
+                <i class="ph ph-edit"></i>
+                <?= lang('Edit report settings', 'Berichtseinstellungen bearbeiten') ?>
+            </button>
+        <?php } ?>
 
-    <hr>
+        <div style="<?= isset($report['title']) ? 'display:none;' : '' ?>" id="report-settings" class="box padded mt-0">
+            <h2 class="title">
+                <?= lang('Report settings', 'Berichtseinstellungen') ?>
+            </h2>
+            <div class="form-group">
+                <label for="title" class="required"><?= lang('Name of the report', 'Name des Berichts') ?></label>
+                <input type="text" class="form-control" name="title" value="<?= $report['title'] ?? '' ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                <textarea type="text" class="form-control" name="description"><?= $report['description'] ?? '' ?></textarea>
+            </div>
 
-    <h3>
-        <?= lang('Template building blocks', 'Template-Bausteine') ?>
-    </h3>
-
-
-    <div class="modal" id="variables" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <a href="#close-modal" class="close" role="button" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </a>
-                <h5 class="title"><?= lang('Parameters (Variables)', 'Parameter (Variablen)') ?></h5>
-
-                <div id="vars-help" class="text-muted small mb-10">
-                    <?= lang(
-                        'Define variables here and use them anywhere in your template using {{vars.KEY}}. In filters: quote strings, do not quote numbers/booleans.',
-                        'Definiere hier Variablen und nutze sie im Template mit {{vars.KEY}}. In Filtern: Strings in Anführungszeichen, Zahlen/Booleans ohne.'
-                    ) ?>
-                    <button type="button" class="btn link small" onclick="$('#vars-cheatsheet').toggle();">Cheatsheet</button>
+            <!-- start month and duration -->
+            <div class="form-row row-eq-spacing">
+                <div class="col-sm">
+                    <label for="start" class="required"><?= lang('Start month', 'Startmonat') ?></label>
+                    <input type="number" class="form-control" name="start" id="start" value="<?= $report['start'] ?? '' ?>" required>
                 </div>
-
-                <div id="vars-cheatsheet" class="card p-10 mb-10" style="display:none;">
-                    <div class="small">
-                        <strong>Text:</strong> <code>{{vars.orgName}}</code><br>
-                        <strong>Filter (String):</strong> <code>{"units":"{{vars.orgId}}"}</code><br>
-                        <strong>Filter (Number):</strong> <code>{"year":{{vars.year}}}</code><br>
-                        <strong>Filter (Boolean):</strong> <code>{"peerReviewed":{{vars.peer}}}</code><br>
-                    </div>
-                </div>
-
-                <table class="table mb-20" id="vars-table">
-                    <thead>
-                        <tr>
-                            <th style="width:18%"><?= lang('Key', 'Key') ?></th>
-                            <th style="width:18%"><?= lang('Type', 'Typ') ?></th>
-                            <th><?= lang('Label', 'Bezeichnung') ?></th>
-                            <th style="width:22%"><?= lang('Default value', 'Standardwert') ?></th>
-                            <th style="width:10%"></th>
-                        </tr>
-                    </thead>
-                    <tbody><!-- rows injected --></tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5">
-                                <button type="button" class="btn" onclick="addVarRow();">
-                                    <i class="ph ph-plus"></i> <?= lang('Add variable', 'Variable hinzufügen') ?>
-                                </button>
-                            </td>
-                        </tr>
-                </table>
-
-                <style>
-                    .copy-to-clipboard {
-                        cursor: pointer;
-                        color: var(--muted-color);
-                    }
-
-                    .copy-to-clipboard:hover {
-                        text-decoration: underline;
-                    }
-                </style>
-
-                <p class="font-size-12">
-                    <b><?= lang('Tip', 'Tipp') ?>:</b>
-                    <?= lang('You can use the following built-in variables for the reporting period:', 'Du kannst folgende vordefinierte Variablen für den Berichtszeitraum verwenden:') ?><br>
-                    <span class="copy-to-clipboard">{{vars.startyear}}</span>: <?= lang('Start year of the reporting period', 'Startjahr des Berichtszeitraums') ?><br>
-                    <span class="copy-to-clipboard">{{vars.endyear}}</span>: <?= lang('End year of the reporting period', 'Endjahr des Berichtszeitraums') ?><br>
-                    <span class="copy-to-clipboard">{{vars.startmonth}}</span>: <?= lang('Start month of the reporting period (1-12)', 'Startmonat des Berichtszeitraums (1-12)') ?><br>
-                    <span class="copy-to-clipboard">{{vars.endmonth}}</span>: <?= lang('End month of the reporting period (1-12)', 'Endmonat des Berichtszeitraums (1-12)') ?><br>
-                </p>
-
-                <script>
-                    $('.copy-to-clipboard').on('click', function() {
-                        const text = $(this).text();
-                        navigator.clipboard.writeText(text).then(function() {
-                            toastSuccess('<?= lang('Copied to clipboard', 'In die Zwischenablage kopiert') ?>: ' + text);
-                        }, function(err) {
-                            toastError('<?= lang('Could not copy text: ', 'Konnte Text nicht kopieren: ') ?>' + err);
-                        });
-                    });
-                </script>
-
-                <div class="modal-footer">
-                    <!-- save -->
-                    <button type="submit" class="btn success"><?= lang('Save', 'Speichern') ?></button>
-
-                    <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <div class="col-sm">
+                    <label for="duration" class="required"><?= lang('Duration in months', 'Dauer in Monaten') ?></label>
+                    <input type="number" class="form-control" name="duration" id="duration" value="<?= $report['duration'] ?? '' ?>" required>
                 </div>
             </div>
         </div>
+
+
+
+        <div class="modal" id="variables" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <a href="#close-modal" class="close" role="button" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                    <h5 class="title"><?= lang('Parameters (Variables)', 'Parameter (Variablen)') ?></h5>
+
+                    <div id="vars-help" class="text-muted small mb-10">
+                        <?= lang(
+                            'Define variables here and use them anywhere in your template using {{vars.KEY}}. In filters: quote strings, do not quote numbers/booleans.',
+                            'Definiere hier Variablen und nutze sie im Template mit {{vars.KEY}}. In Filtern: Strings in Anführungszeichen, Zahlen/Booleans ohne.'
+                        ) ?>
+                        <button type="button" class="btn link small" onclick="$('#vars-cheatsheet').toggle();">Cheatsheet</button>
+                    </div>
+
+                    <div id="vars-cheatsheet" class="card p-10 mb-10" style="display:none;">
+                        <div class="small">
+                            <strong>Text:</strong> <code>{{vars.orgName}}</code><br>
+                            <strong>Filter (String):</strong> <code>{"units":"{{vars.orgId}}"}</code><br>
+                            <strong>Filter (Number):</strong> <code>{"year":{{vars.year}}}</code><br>
+                            <strong>Filter (Boolean):</strong> <code>{"peerReviewed":{{vars.peer}}}</code><br>
+                        </div>
+                    </div>
+
+                    <table class="table mb-20" id="vars-table">
+                        <thead>
+                            <tr>
+                                <th style="width:18%"><?= lang('Key', 'Key') ?></th>
+                                <th style="width:18%"><?= lang('Type', 'Typ') ?></th>
+                                <th><?= lang('Label', 'Bezeichnung') ?></th>
+                                <th style="width:22%"><?= lang('Default value', 'Standardwert') ?></th>
+                                <th style="width:10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- rows injected --></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                    <button type="button" class="btn" onclick="addVarRow();">
+                                        <i class="ph ph-plus"></i> <?= lang('Add variable', 'Variable hinzufügen') ?>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <style>
+                        .copy-to-clipboard {
+                            cursor: pointer;
+                            color: var(--muted-color);
+                        }
+
+                        .copy-to-clipboard:hover {
+                            text-decoration: underline;
+                        }
+                    </style>
+
+                    <p class="font-size-12">
+                        <b><?= lang('Tip', 'Tipp') ?>:</b>
+                        <?= lang('You can use the following built-in variables for the reporting period:', 'Du kannst folgende vordefinierte Variablen für den Berichtszeitraum verwenden:') ?><br>
+                        <span class="copy-to-clipboard">{{vars.startyear}}</span>: <?= lang('Start year of the reporting period', 'Startjahr des Berichtszeitraums') ?><br>
+                        <span class="copy-to-clipboard">{{vars.endyear}}</span>: <?= lang('End year of the reporting period', 'Endjahr des Berichtszeitraums') ?><br>
+                        <span class="copy-to-clipboard">{{vars.startmonth}}</span>: <?= lang('Start month of the reporting period (1-12)', 'Startmonat des Berichtszeitraums (1-12)') ?><br>
+                        <span class="copy-to-clipboard">{{vars.endmonth}}</span>: <?= lang('End month of the reporting period (1-12)', 'Endmonat des Berichtszeitraums (1-12)') ?><br>
+                    </p>
+
+                    <script>
+                        $('.copy-to-clipboard').on('click', function() {
+                            const text = $(this).text();
+                            navigator.clipboard.writeText(text).then(function() {
+                                toastSuccess('<?= lang('Copied to clipboard', 'In die Zwischenablage kopiert') ?>: ' + text);
+                            }, function(err) {
+                                toastError('<?= lang('Could not copy text: ', 'Konnte Text nicht kopieren: ') ?>' + err);
+                            });
+                        });
+                    </script>
+
+                    <div class="modal-footer">
+                        <!-- save -->
+                        <button type="submit" class="btn success"><?= lang('Save', 'Speichern') ?></button>
+
+                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- toolbar -->
+        <div class="d-flex align-items-center gap-5 my-10">
+            <a href="#variables" class="btn primary" data-toggle="modal">
+                <i class="ph ph-code-block"></i>
+                <?= lang('Variables', 'Variablen') ?>
+            </a>
+
+            <!-- collapse all -->
+            <button type="button" class="btn ml-auto" onclick="$('#report .step').addClass('is-collapsed')">
+                <i class="ph ph-arrows-in-line-vertical"></i>
+                <?= lang('Collapse all', 'Alle einklappen') ?>
+            </button>
+            <button type="button" class="btn" onclick="$('#report .step').removeClass('is-collapsed')">
+                <i class="ph ph-arrows-out-line-vertical"></i>
+                <?= lang('Expand all', 'Alle ausklappen') ?>
+            </button>
+        </div>
+
     </div>
-
-    <!-- toolbar -->
-    <div class="d-flex align-items-center gap-5 mb-10">
-        <a href="#variables" class="btn">
-            <i class="ph ph-code-block"></i>
-            <?= lang('Variables', 'Variablen') ?>
-        </a>
-
-        <!-- collapse all -->
-        <button type="button" class="btn ml-auto" onclick="$('.step').addClass('is-collapsed')">
-            <i class="ph ph-arrows-in-line-vertical"></i>
-            <?= lang('Collapse all', 'Alle einklappen') ?>
-        </button>
-        <button type="button" class="btn" onclick="$('.step').removeClass('is-collapsed')">
-            <i class="ph ph-arrows-out-line-vertical"></i>
-            <?= lang('Expand all', 'Alle ausklappen') ?>
-        </button>
-    </div>
-
     <div id="report">
         <!-- steps will be added here -->
     </div>
 
-    <!-- dropdown to add stuff -->
-    <div class="dropdown dropup">
-        <button class="btn primary dropdown-toggle" type="button" id="addNewRowButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ph ph-plus"></i>
-            <?= lang('Add new block', 'Neuen Baustein hinzufügen') ?>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="addNewRowButton">
-            <a class="item" onclick="addRow('text')">
-                <b class="text-primary d-block"><?= lang('Text', 'Text') ?></b>
-                <small class="text-muted"><?= lang('A block that contains headings or paragraphs', 'Ein Block, der Überschriften oder Absätze enthält') ?></small>
-            </a>
-            <a class="item" onclick="addRow('activities')">
-                <b class="text-primary d-block"><?= lang('Activities', 'Aktivitäten') ?></b>
-                <small class="text-muted"><?= lang('A block that contains a list of activities', 'Ein Block, der eine Liste von Aktivitäten enthält') ?></small>
-            </a>
-            <a class="item" onclick="addRow('activities-field')">
-                <b class="text-primary d-block"><?= lang('Activities (incl. additional Feld)', 'Aktivitäten (mit weiterem Feld)') ?></b>
-                <small class="text-muted"><?= lang('A block that contains a table of activities with another field in a seperate column', 'Ein Block, der eine Tabelle von Aktivitäten mit einem weiteren Feld in einer separaten Spalte enthält') ?></small>
-            </a>
-            <a class="item" onclick="addRow('table')">
-                <b class="text-primary d-block"><?= lang('Table', 'Tabelle') ?></b>
-                <small class="text-muted"><?= lang('A block that contains a table of aggregated activities', 'Ein Block, der eine Tabelle von aggregierten Aktivitäten enthält') ?></small>
-            </a>
-            <a class="item" onclick="addRow('line')">
-                <b class="text-primary d-block"><?= lang('Line', 'Linie') ?></b>
-                <small class="text-muted"><?= lang('A simple line to divide content', 'Eine einfache Linie zur Trennung von Inhalten') ?></small>
-            </a>
-        </div>
-    </div>
 
-    <div class="mt-20">
-        <button class="btn large success" type="submit">
+    <div class="editor-toolbar">
+
+        <!-- dropdown to add stuff -->
+        <div class="dropdown dropup">
+            <button class="btn primary dropdown-toggle mr-20" type="button" id="addNewRowButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ph ph-plus"></i>
+                <?= lang('Add new block', 'Neuen Baustein hinzufügen') ?>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="addNewRowButton">
+                <a class="item" onclick="addRow('text')">
+                    <b class="text-primary d-block"><?= lang('Text', 'Text') ?></b>
+                    <small class="text-muted"><?= lang('A block that contains headings or paragraphs', 'Ein Block, der Überschriften oder Absätze enthält') ?></small>
+                </a>
+                <a class="item" onclick="addRow('activities')">
+                    <b class="text-primary d-block"><?= lang('Activities', 'Aktivitäten') ?></b>
+                    <small class="text-muted"><?= lang('A block that contains a list of activities', 'Ein Block, der eine Liste von Aktivitäten enthält') ?></small>
+                </a>
+                <a class="item" onclick="addRow('activities-field')">
+                    <b class="text-primary d-block"><?= lang('Activities (incl. additional Feld)', 'Aktivitäten (mit weiterem Feld)') ?></b>
+                    <small class="text-muted"><?= lang('A block that contains a table of activities with another field in a seperate column', 'Ein Block, der eine Tabelle von Aktivitäten mit einem weiteren Feld in einer separaten Spalte enthält') ?></small>
+                </a>
+                <a class="item" onclick="addRow('table')">
+                    <b class="text-primary d-block"><?= lang('Table', 'Tabelle') ?></b>
+                    <small class="text-muted"><?= lang('A block that contains a table of aggregated activities', 'Ein Block, der eine Tabelle von aggregierten Aktivitäten enthält') ?></small>
+                </a>
+                <a class="item" onclick="addRow('line')">
+                    <b class="text-primary d-block"><?= lang('Line', 'Linie') ?></b>
+                    <small class="text-muted"><?= lang('A simple line to divide content', 'Eine einfache Linie zur Trennung von Inhalten') ?></small>
+                </a>
+            </div>
+        </div>
+
+        <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
             <?= lang('Save', 'Speichern') ?>
         </button>
+
+        <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">
+            <i class="ph ph-eye"></i>
+            <?= lang('Preview', 'Vorschau') ?>
+        </a>
     </div>
 </form>
 
+<style>
+    .preview {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
 
+    .step-container {
+        /* margin-bottom: 1rem; */
+    }
+</style>
 
 <!-- modules to copy -->
 <div class="hidden" id="templates" style="display:none">
-    <div class="step" id="text">
-        <div class="step-header">
+    <div id="text" class="step-container">
+        <div class="preview">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-text-t ph-fw text-secondary"></i>
-            <span class="step-title"><?= lang('Text', 'Text') ?></span>
-            <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
-                <i class="ph ph-arrows-in-line-vertical"></i>
-            </button>
-            <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
-                <i class="ph ph-copy"></i>
-            </button>
-            <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step').remove()" title="Delete">
-                <i class="ph ph-trash" aria-label="Delete"></i>
-            </button>
+
+            <div class="preview-content">Text</div>
+            <a data-toggle="modal" onclick="$(this).closest('.step-container').find('.step').slideToggle()">
+                <i class="ph ph-edit"></i>
+            </a>
         </div>
-        <div class="step-body">
-            <input type="hidden" class="hidden" name="values[*][type]" value="text">
+        <div class="step" style="display:none;">
 
-            <select name="values[*][level]" class="form-control small w-auto step-level" required>
-                <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
-                <option value="h2"><?= lang('Heading 2', 'Überschrift 2') ?></option>
-                <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
-                <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
-            </select>
-            <!-- <div class="mt-10">
-                <textarea type="text" class="form-control step-text" name="values[*][text]" placeholder="<?= lang('Content', 'Inhalt') ?>" required></textarea>
-            </div> -->
-            <div class="form-group lang-<?= lang('en', 'de') ?>">
-                <div class="title-editor form-group"></div>
-                <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
+            <div class="step-header">
+                <i class="ph ph-dots-six-vertical text-muted handle"></i>
+                <i class="ph ph-text-t ph-fw text-secondary"></i>
+                <span class="step-title"><?= lang('Text', 'Text') ?></span>
+                <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
+                    <i class="ph ph-arrows-in-line-vertical"></i>
+                </button>
+                <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
+                    <i class="ph ph-copy"></i>
+                </button>
+                <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step-container').remove()" title="Delete">
+                    <i class="ph ph-trash" aria-label="Delete"></i>
+                </button>
             </div>
+            <div class="step-body">
+                <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
+                <select name="values[*][level]" class="form-control small w-auto step-level" required>
+                    <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
+                    <option value="h2"><?= lang('Heading 2', 'Überschrift 2') ?></option>
+                    <option value="h3"><?= lang('Heading 3', 'Überschrift 3') ?></option>
+                    <option value="h4"><?= lang('Heading 4', 'Überschrift 4') ?></option>
+                    <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
+                </select>
+
+                <div class="form-group lang-<?= lang('en', 'de') ?> mb-0">
+                    <div class="title-editor form-group"></div>
+                    <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -545,12 +619,28 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
                 data.sort.forEach(sortCriterion => {
                     addSortRow($tpl.find('.sort-rows'), sortCriterion);
                 });
-            } 
+            }
             if (data.table_sort && typeof data.table_sort === 'string') {
                 $tpl.find('.step-select').val(data.table_sort);
             }
+            if (data.text && type === 'text') {
+                // set preview
+                const preview = $tpl.find('.preview-content');
+                const level = $tpl.find('.step-level').val();
+                preview.html(`<${level}>${data.text}</${level}>`);
+            }
         }
         $('#report').append($tpl);
+        // close dropdown if open
+        // check first if dropdown is open to avoid unnecessary DOM manipulation and reflow
+        if ($('#addNewRowButton').hasClass('active')) {
+            $('.dropdown').removeClass('show');
+            $('.dropdown .btn').removeClass('active');
+            // scroll to new step        
+            $('html, body').animate({
+                scrollTop: $tpl.offset().top - 100
+            }, 100);
+        }
 
         if (type === 'text') {
             // init editor
@@ -561,12 +651,50 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
             }
             editorInput.attr('id', editorId);
             editorInput.next().attr('id', editorId + '-field');
-            initQuill(editorInput.get(0), 'full');
+            var quill = new Quill(editorInput.get(0), {
+                // modules: {
+                //     toolbar: toolbar
+                // },
+                // formats: formats,
+                // placeholder: '',
+                theme: 'snow' // or 'bubble'
+            });
+
+            quill.on('text-change', function() {
+                var str = ''
+                editorInput.find('.ql-editor p').each(function(i, el) {
+                    var el = $(el)
+                    if (el.html() == '<br>') return;
+                    var html = el.html()
+                    if (str != '') str += "<br>"
+                    str += html
+                })
+                editorInput.next().val(str)
+
+                // change header in preview
+                const preview = $tpl.find('.preview-content');
+                const level = $tpl.find('.step-level').val();
+                preview.html(`<${level}>${editorInput.find('.ql-editor').html()}</${level}>`);
+            });
+
         }
+
+        $tpl.find('.step-filter').on('input', function() {
+            const isValid = validateFilterJSON($(this).val());
+            $(this).toggleClass('is-invalid', !isValid);
+        });
 
         templateIndex++;
     }
 
+    function validateFilterJSON(str) {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
     // Toggle + Duplicate
     function toggleStep(btn) {
@@ -576,10 +704,21 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     function duplicateStep(btn) {
         const $orig = $(btn).closest('.step');
         const $clone = $orig.clone(true, true);
+        // assign new id to clone
+        $clone.attr('id', $orig.attr('id') + '-copy-' + templateIndex);
         // re-index names (*) -> n
-        $clone.html($clone.html().replace(/\[\*\]/g, '[' + templateIndex + ']'));
-        templateIndex++;
+        $clone.find('input,select,textarea').each(function() {
+            const name = $(this).attr('name');
+            if (!name) return;
+            $(this).attr('name', name.replace(/\[\d+\]/g, '[' + templateIndex + ']'));
+        });
         $('#report').append($clone);
+        if ($clone.find('.title-editor').length) {
+            $clone.find('.title-editor').attr('id', 'title-editor-' + templateIndex);
+            $clone.find('.title-editor').next().attr('id', 'title-editor-' + templateIndex + '-field');
+            initQuill($clone.find('.title-editor').get(0), 'full');
+        }
+        templateIndex++;
     }
 
     // Add one sort row to the nearest .sort-rows container
@@ -593,6 +732,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
     <div class="sort-row d-flex align-items-center gap-5 mb-5">
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
         <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
+        <option value="rendered.plain"><?= lang('Alphabetically', 'Alphabetisch') ?></option>
         <?php foreach ($fields_sort as $f) { ?>
             <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
         <?php } ?>
@@ -605,11 +745,6 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
       </button>
     </div>
   `);
-        // <select class="form-control w-20" name="${namePrefix}[${idx}][nulls]">
-        //         <option value="">nulls default</option>
-        //         <option value="first">nulls first</option>
-        //         <option value="last">nulls last</option>
-        //       </select>
         $container.append(row);
 
         if (data) { // prefill
@@ -666,8 +801,7 @@ $fields_sort = array_filter($FIELDS->fields, function ($f) {
 
 
     $(document).ready(function() {
-        var steps = <?= json_encode($steps) ?>;
-        console.log(steps);
+        var steps = <?= json_encode($steps ?? []) ?>;
         // load existing steps
         steps.forEach(step => addRow(step.type, step));
 

@@ -24,12 +24,12 @@ foreach ($teaching as $module) {
 if ($N_ == 0) {
     echo "<p>" . lang(
         "No teaching modules found. No changes made.",
-        "Keine Lehrmodule gefunden. Es wurden keine Änderungen vorgenommen."
+        "Keine Lehrveranstaltungen gefunden. Es wurden keine Änderungen vorgenommen."
     ) . "</p>";
 } else {
     echo "<p>" . lang(
         "Transformed module numbers into strings for " . $updated . " out of " . $N_ . " teaching modules.",
-        "Modulnummern für " . $updated . " von " . $N_ . " Lehrmodulen in Zeichenketten umgewandelt."
+        "Modulnummern für " . $updated . " von " . $N_ . " Lehrveranstaltungen in Zeichenketten umgewandelt."
     ) . "</p>";
 }
 

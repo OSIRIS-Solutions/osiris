@@ -114,7 +114,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'teaching-modules',
-                        'label' => lang('Teaching Modules', 'Lehrmodule'),
+                        'label' => lang('Teaching Modules', 'Lehrveranstaltungen'),
                         'icon' => 'chalkboard-simple',
                         'url' => '/teaching',
                         'active' => ['^/teaching($|/)'],

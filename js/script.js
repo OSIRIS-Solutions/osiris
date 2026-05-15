@@ -82,6 +82,7 @@ function initQuill(element, controls = 'basic') {
         $(element).parent().find('.ql-toolbar').append(additional)
     }
 
+    return quill;
 
 }
 

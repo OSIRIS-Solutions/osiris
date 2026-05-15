@@ -16,6 +16,21 @@
  * @license     MIT
  */
 
+if (!$Settings->featureEnabled('projects')) {
+?>
+    <div class="alert danger">
+        <h3 class="title">
+            <?= lang('The collaborator map is not available.', 'Die Kooperations-Karte ist nicht verfügbar.') ?>
+        </h3>
+
+        <p>
+            <?= lang('The collaborator map is based on project collaborations and thus requires the projects module to be enabled. Please contact your administrator.', 'Die Kooperations-Karte basiert auf Projekt-Kooperationen und benötigt daher das Projekte-Modul. Bitte kontaktiere deinen Administrator.') ?>
+        </p>
+    </div>
+<?php
+    return;
+}
+
 $institute = $Settings->get('affiliation_details');
 $lat = $institute['lat'] ?? 52;
 $lng = $institute['lng'] ?? 10;

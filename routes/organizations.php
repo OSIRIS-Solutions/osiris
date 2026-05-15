@@ -103,6 +103,18 @@ Route::get('/organizations/edit/(.*)', function ($id) {
 }, 'login');
 
 
+Route::get('/organizations/map', function () {
+    include_once BASEPATH . "/php/init.php";
+    $user = $_SESSION['username'];
+    $breadcrumb = [
+        ['name' => lang("Organisations", "Organisationen"), 'path' => "/organizations"],
+        ['name' => lang("Map", "Karte")]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/organizations/map.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 /**
  * CRUD routes
  */

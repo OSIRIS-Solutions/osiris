@@ -39,7 +39,7 @@ $filter = [];
 $tagsEnabled = $Settings->featureEnabled('tags');
 ?>
 
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/projecttable.css?v=<?= OSIRIS_BUILD ?>">
 
 <style>
     .index {
@@ -485,7 +485,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     function renderTopic(data) {
         let topics = '';
         if (data && data.length > 0) {
-            topics = '<span class="float-right topic-icons">'
+            topics = '<span class="topic-icons">'
             data.forEach(function(topic) {
                 topics += `<a href="<?= ROOTPATH ?>/topics/view/${topic}" class="topic-icon topic-${topic}"></a> `
             })

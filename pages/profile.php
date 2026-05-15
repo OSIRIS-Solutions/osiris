@@ -371,7 +371,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if (isset($scientist['new']) && defined('USER_MANAGEMENT') && USER_MANAGEMENT == 'AUTH' && $scientist['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])) { ?>
         <!-- print message to change password -->
         <div class="alert danger mt-10">
-            <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account'>
+            <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>#section-account'>
                 <?= lang(
                     "You have not yet set a password. Please change your password now.",
                     "Du hast noch kein Passwort gesetzt. Bitte ändere jetzt dein Passwort."
@@ -409,7 +409,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
                 <i class="ph-duotone ph-note-pencil ph-fw"></i>
                 <!-- <?= lang('Edit user profile', 'Bearbeite Profil') ?> -->
             </a>
@@ -485,7 +485,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
 
         <?php if ($Settings->hasPermission('user.edit')) { ?>
-            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
                 <i class="ph ph-edit ph-fw"></i>
             </a>
         <?php } ?>
@@ -2019,7 +2019,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <h3 class=""><?= lang('Word cloud') ?></h3>
 
         <p class="text-muted">
-            <?= lang('Based on the title and abstract (if available) of publications in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Publikationen in OSIRIS.') ?>
+            <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
         </p>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
     </section>

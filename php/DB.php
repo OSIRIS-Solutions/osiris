@@ -413,6 +413,8 @@ class DB
             $con = $this->db->activities->findOne(['_id' => $id]);
         } elseif ($type == 'conference') {
             $con = $this->db->conferences->findOne(['_id' => $id]);
+        } elseif ($type == 'organization') {
+            $con = $this->db->organizations->findOne(['_id' => $id]);
         }
         return $this->doc2Arr($con);
     }

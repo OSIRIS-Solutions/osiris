@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page for overview on visualizations
  * 
@@ -39,7 +40,7 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
         </a>
         <a href="<?= ROOTPATH ?>/visualize/sunburst" class="tile">
             <h5 class="title">
-    <?= lang('Department overview', 'Abteilungs-Übersicht') ?>
+                <?= lang('Department overview', 'Abteilungs-Übersicht') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/sunburst.svg" alt="" class="w-full">
         </a>
@@ -55,11 +56,13 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/open-access.png" alt="" class="w-full">
         </a>
-        <a href="<?= ROOTPATH ?>/visualize/map" class="tile">
-            <h5 class="title">
-                <?= lang('Collaborator-Map', 'Kooperations-Karte') ?>
-            </h5>
-            <img src="<?= ROOTPATH ?>/img/charts/map.png" alt="" class="w-full">
-        </a>
+        <?php if ($Settings->featureEnabled('projects')) { ?>
+            <a href="<?= ROOTPATH ?>/visualize/map" class="tile">
+                <h5 class="title">
+                    <?= lang('Collaborator-Map', 'Kooperations-Karte') ?>
+                </h5>
+                <img src="<?= ROOTPATH ?>/img/charts/map.png" alt="" class="w-full">
+            </a>
+        <?php } ?>
     </div>
 </div>
