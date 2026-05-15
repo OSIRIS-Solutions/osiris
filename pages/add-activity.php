@@ -465,6 +465,15 @@ console.log(TYPES);
     </h1>
 
     <a href="<?= ROOTPATH ?>/activities/online-search" class="link mb-10 d-inline-block"><?= lang('Search in Pubmed', 'Suche in Pubmed') ?></a>
+    
+    <?php 
+        $orcid = $Settings->get('orcid');
+        $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
+        if (!empty($orcid['client_id']) 
+              && !empty($orcid['client_secret'])
+              && $user['orcid_validated']) { ?>
+        <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('Import from ORCID', 'Von ORCID importieren') ?></a>
+    <?php } ?>
 
     <form method="get" onsubmit="getPubData(event, this)">
         <div class="form-group">
@@ -477,6 +486,7 @@ console.log(TYPES);
             </div>
         </div>
     </form>
+
 
     <div class="alert danger" id="id-exists" style="display:none;">
         <h4 class="title">

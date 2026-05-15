@@ -8,6 +8,13 @@
 * Visualize a list of all works of the user found in ORCID that are not yet in Osiris
 * Make import/reject buttons for each work
 */
+$orcid = $Settings->get('orcid');
+$user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
+
+if (!($user['orcid_validated'] ?? false)) {
+    echo '<div class="alert error">' . lang('Your ORCID is not yet validated. Please validate your ORCID before importing works.', 'Deine ORCID ist noch nicht validiert. Bitte validiere deine ORCID, bevor du Werke importierst.') . '</div>';
+    exit;
+}
 
 require_once BASEPATH . '/php/OrcidParser.php';
 $username = $_SESSION['username'];
@@ -30,7 +37,9 @@ if (isset($_POST['import'])){
 // echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 // echo '</pre>';
 
-foreach ($orcid_parser->getWorksForImport() as $doc) {
+$works_to_import= $orcid_parser->getWorksForImport();
+if ($works_to_import) {
+    foreach ($works_to_import as $doc) {
 ?>
     <div class="alert mb-10">
         <?= lang('Ready to import', 'Bereit zum Importieren')?> - <em><?= $doc['type'], ' ', $doc['subtype']?></em>:
@@ -47,5 +56,9 @@ foreach ($orcid_parser->getWorksForImport() as $doc) {
                 <?= lang('Import', 'Importieren')?>
             </button>
         </form>
+    </div>
+<?php } } else { ?>
+    <div class="alert info">
+        <?= lang('No further works to import found', 'Keine weiteren Werke zum Importieren gefunden') ?>
     </div>
 <?php } ?>
