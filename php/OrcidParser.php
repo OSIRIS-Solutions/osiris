@@ -273,17 +273,20 @@ class OrcidParser
 
             $name = $this->NameParser->parse_name($contributor['credit-name']['value'] ?? null);
             $orcid = $contributor['contributor-orcid']['path'] ?? null;
-            
+            $username = $this->getUser($name, $orcid);
+
             $parsed_work['authors'][] = [
                 'last' => $name['lname'] ?? null,
                 'first' => $name['fname'] ?? null,
-                'user' => $this->getUser($name, $orcid),
+                'user' => $username,
+                'aoi' => (is_string($username) && strlen($username) > 0) ? true : false,
                 'position' => ($contributor === reset($work['contributors']['contributor'])) 
                             ? 'first' 
                             : (($contributor === end($work['contributors']['contributor'])) 
                                 ? 'last' 
                                 : 'middle'),
                 'orcid' => $orcid,
+                'approved' => false
             ];
         }
 
