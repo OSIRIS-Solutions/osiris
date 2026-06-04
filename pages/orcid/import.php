@@ -8,7 +8,7 @@
 * Visualize a list of all works of the user found in ORCID that are not yet in Osiris
 * Make import/reject buttons for each work
 */
-$orcid = $Settings->get('orcid');
+
 $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
 
 if (!($user['orcid_validated'] ?? false)) {
@@ -29,15 +29,12 @@ if (isset($_POST['import'])){
     exit;
 }
 
-// $data = $orcid_parser->getWorks();
-// $data = $orcid_parser->getWork('2489030');
-
-// echo '<pre>';
-// print_r($data);
-// echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-// echo '</pre>';
-
-$works_to_import= $orcid_parser->getWorksForImport();
+try {
+    $works_to_import= $orcid_parser->getWorksForImport();
+} catch (Exception $e) {
+    echo '<div class="alert error">' . lang('Error fetching works from ORCID ', 'Fehler beim Abrufen der Werke von ORCID ') . '</div>';
+    exit;
+}
 if ($works_to_import) {
     foreach ($works_to_import as $doc) {
 ?>

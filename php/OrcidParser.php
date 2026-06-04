@@ -10,6 +10,7 @@
 
 require_once 'DB.php';
 require_once 'FullNameParser.php';
+require_once 'Orcid.php';
 
 class OrcidParser
 {
@@ -84,7 +85,7 @@ class OrcidParser
     ];
 
 
-    private $orcid_api_url = 'https://pub.sandbox.orcid.org/v3.0/';
+    private $orcid_settings;
 
     private $username;
     private $osiris;
@@ -102,8 +103,9 @@ class OrcidParser
         $this->username = $username;
         
         $user = $this->osiris->persons->findOne(['username' => $username]);
-
         $this->orcid = $user['orcid'] ?? null;
+        $this->orcid_settings = new Orcid_Settings();
+        
 
         $ACCOUNT = $this->osiris->accounts->findOne(['username' => $username]);
         $this->token = $ACCOUNT['orcid_access_token'] ?? null;
@@ -117,7 +119,7 @@ class OrcidParser
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->orcid_api_url . $this->orcid . '/works',
+            CURLOPT_URL => $this->orcid_settings->api_base_url . $this->orcid . '/works',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -132,9 +134,15 @@ class OrcidParser
         ));
 
         $response = curl_exec($curl);
-
         curl_close($curl);
-        return json_decode($response, true);
+
+        $works = json_decode($response, true);
+        if (!isset($works['group'])) {
+            print_r($response);
+            throw new Exception('No works found for ORCID: ' . $this->orcid . '. Response: ' . $response);
+        }
+        
+        return $works;
     }
 
     function getWork($put_code) {
@@ -144,7 +152,7 @@ class OrcidParser
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->orcid_api_url . $this->orcid . '/work/' . $put_code,
+            CURLOPT_URL => $this->orcid_settings->api_base_url . $this->orcid . '/work/' . $put_code,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -291,10 +299,12 @@ class OrcidParser
         }
 
         $parsed_work["history"] = [
-            ['date' => date('Y-m-d'), 'type' => 'imported', 'user' => $this->username]
+            ['date' => date('Y-m-d'), 'type' => 'imported', 'subtype' => 'from orcid', 'user' => $this->username]
         ];
 
         $parsed_work['created_by'] = $this->username;
+
+        $parsed_work['raw_input'] = $work;
         return $parsed_work;
     }
 

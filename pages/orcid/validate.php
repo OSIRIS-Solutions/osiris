@@ -1,22 +1,23 @@
 <?php
+require_once BASEPATH . '/php/Orcid.php';
+
 $username = $_SESSION['username'];
 $user = $osiris->persons->findOne(['username' => $username]);
 
 $last_code = $osiris->accounts->findOne(['username' => $username])['orcid_activation_code'] ?? null;
 
 
+$orcid = new Orcid_Settings();
 /**
  * If there is an orcid authentication code in the URL
  */
 
 if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
     $code = $_GET['code'];
-
-    $orcid = $Settings->get('orcid');
+    
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 
-    // TODO change the sandbox link to production when going live
-    $ch = curl_init('https://sandbox.orcid.org/oauth/token');
+    $ch = curl_init($orcid->api_auth_url . 'oauth/token');
 
     curl_setopt_array($ch, array(
       CURLOPT_RETURNTRANSFER => true,
@@ -25,8 +26,8 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
       CURLOPT_POST => true,
       CURLOPT_POSTFIELDS => http_build_query(array(
         'code' => $code,
-        'client_id' => $orcid['client_id'],
-        'client_secret' => $orcid['client_secret'],
+        'client_id' => $orcid->client_id,
+        'client_secret' => $orcid->client_secret,
         'grant_type' => 'authorization_code',
         'redirect_uri' => $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH . '/orcid/validate'
       )),
@@ -36,7 +37,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
     ));
 
     $response = curl_exec($ch);
-    // echo ($response);
+    # echo ($response);
 
     curl_close($ch);
 
@@ -85,12 +86,11 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
     </a>
     <?php } else {?>
         <h1><?= lang('ORCID not authenticated', 'Noch nicht mit ORCID authentifiziert') ?></h1>
-        <?php $orcid = $Settings->get('orcid');
-            if ($data['username'] == $_SESSION['username'] && !empty($orcid['client_id']) && !empty($orcid['client_secret'])) { 
+        <?php
+            if ($data['username'] == $_SESSION['username'] && !empty($orcid->client_id) && !empty($orcid->client_secret)) { 
                 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-                // TODO change the sandbox link to production when going live
                 ?>    
-                <a href="https://sandbox.orcid.org/oauth/authorize?client_id=<?= $orcid['client_id'] ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
+                <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                     <i class="ph ph-user-circle-check" aria-hidden="true"></i>
                     <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
                 </a>
