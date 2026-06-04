@@ -87,7 +87,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
     <?php } else {?>
         <h1><?= lang('ORCID not authenticated', 'Noch nicht mit ORCID authentifiziert') ?></h1>
         <?php
-            if ($data['username'] == $_SESSION['username'] && !empty($orcid->client_id) && !empty($orcid->client_secret)) { 
+            if (!empty($orcid->client_id) && !empty($orcid->client_secret)) { 
                 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                 ?>    
                 <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">

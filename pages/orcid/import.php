@@ -42,7 +42,10 @@ if ($works_to_import) {
         <?= lang('Ready to import', 'Bereit zum Importieren')?> - <em><?= $doc['type'], ' ', $doc['subtype']?></em>:
         <br>
         <strong><?= $doc['title'] ?></strong>
-        <?php if (!empty($doc['journal'])) { ?><br>in <em><?= $doc['journal'] ?></em><?php } ?>
+        <?php if (!empty($doc['year'])) { ?>
+            <br><?= (int) $doc['year'] ?><?php if (!empty($doc['month'])) { ?>-<?= str_pad((string) ((int) $doc['month']), 2, '0', STR_PAD_LEFT) ?><?php } ?><?php if (!empty($doc['day'])) { ?>-<?= str_pad((string) ((int) $doc['day']), 2, '0', STR_PAD_LEFT) ?><?php } ?>
+        <?php } ?>
+        <?php if (!empty($doc['journal'])) { ?><br>in <em><?= $doc['journal'] ?></em> <?php } ?>
         <br>
         <?php foreach ($doc['authors'] as $author) { ?>
             <span><?= $author['first'] ?? '', ' ', $author['last'] ?? '', ', ' ?></span>
