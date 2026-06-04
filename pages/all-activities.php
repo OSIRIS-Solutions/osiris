@@ -142,6 +142,9 @@ $cart = readCart();
                 .filter tr td .submenu a.active {
                     font-weight: bold;
                 }
+                .topic-icons {
+                    float: right;
+                }
             </style>
             <div class="filter" style="max-height: 22rem;">
                 <table id="filter-type" class="table small simple">

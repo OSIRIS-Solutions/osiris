@@ -231,6 +231,8 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             ['modules' => ['$in' => [$id, $id . '*']]],
             ['fields.id' => $id]
         ]
+    ], [
+        'projection' => ['icon' => 1, 'name' => 1, 'id' => 1, 'name_de' => 1, 'parent' => 1]
     ])->toArray();
 
     $projects = $osiris->adminProjects->find([
@@ -260,13 +262,13 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <td>
                     <?php if (!empty($activities)) { ?>
                         <?php foreach ($activities as $a) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge primary">
-                                <i class="ph ph-folder-open ph-<?= $a['icon'] ?? '' ?>"></i>
+                            <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge badge-<?= $a['parent'] ?> mb-5">
+                                <i class="ph ph-<?= $a['icon'] ?? 'folder-open' ?>"></i>
                                 <?= lang($a['name'] ?? $a['id'], $a['name_de'] ?? null) ?>
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em><?= lang('No activity type uses this field.', 'Keine Aktivitätstyp verwendet dieses Feld.') ?></em>
+                        <em class="text-muted"><?= lang('No activity type uses this field.', 'Keine Aktivitätstyp verwendet dieses Feld.') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -283,7 +285,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em><?= lang('No project type uses this field.', 'Kein Projekttyp verwendet dieses Feld.') ?></em>
+                        <em class="text-muted"><?= lang('No project type uses this field.', 'Kein Projekttyp verwendet dieses Feld.') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -296,7 +298,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                         <i class="ph ph-check-circle text-success"></i>
                         <?= lang('Persons use this field.', 'Personen verwenden dieses Feld.') ?>
                     <?php } else { ?>
-                        <em><?= lang('Persons do not use this field.', 'Personen verwenden dieses Feld nicht.') ?></em>
+                        <em class="text-muted"><?= lang('Persons do not use this field.', 'Personen verwenden dieses Feld nicht.') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -309,7 +311,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                         <i class="ph ph-check-circle text-success"></i>
                         <?= lang('Infrastructures use this field.', 'Infrastrukturen verwenden dieses Feld.') ?>
                     <?php } else { ?>
-                        <em><?= lang('Infrastructures do not use this field.', 'Infrastrukturen verwenden dieses Feld nicht.') ?></em>
+                        <em class="text-muted"><?= lang('Infrastructures do not use this field.', 'Infrastrukturen verwenden dieses Feld nicht.') ?></em>
                     <?php } ?>
                 </td>
             </tr>

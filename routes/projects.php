@@ -429,13 +429,13 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['persons'] = $persons;
     } else {
         // add current user as applicant
-        $values['persons'] = [
-            [
-                'user' => $_SESSION['username'],
-                'role' => 'applicant',
-                'name' => $DB->getNameFromId($_SESSION['username'])
-            ]
-        ];
+        // $values['persons'] = [
+        //     [
+        //         'user' => $_SESSION['username'],
+        //         'role' => 'applicant',
+        //         'name' => $DB->getNameFromId($_SESSION['username'])
+        //     ]
+        // ];
     }
     if (isset($values['parent_id'])) {
         $values['parent_id'] = $DB->to_ObjectID($values['parent_id']);
@@ -618,6 +618,15 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
+
+        // check if project/proposal contains persons, else redirect to edit page and promt user to add persons
+        if (empty($values['persons'] ?? [])) {
+            $_SESSION['msg'] = lang("Project created successfully. Please add at least one person to the project.", "Projekt erfolgreich erstellt. Bitte füge mindestens eine Person zum Projekt hinzu.");
+            $_SESSION['msg_type'] = "success";
+            header("Location: " . ROOTPATH . "/" . $collection . "/persons/" . $id . "?new");
+            die();
+        }
+
         $red = str_replace("*", $id, $_POST['redirect']);
         $_SESSION['msg'] = lang("Project created successfully.", "Projekt erfolgreich erstellt.");
         $_SESSION['msg_type'] = "success";

@@ -22,13 +22,12 @@ foreach ($fields as $field_id) {
     } else {
         $section = $Modules->all_modules[$field_id]['section'] ?? '';
     }
-    if (empty($section)) continue; // if no section is defined, do not show the field
+    if (empty($section)) $section = 'others';
     if (in_array($field_id, $hidden_fields)) continue;
 
-    $names = $Modules->all_modules[$field_id] ?? [];
+    $name = $Modules->get_name($field_id);
     $field = [
-        'key_en' => $names['name'] ?? ucfirst($field_id),
-        'key_de' => $names['name_de'] ?? ucfirst($field_id),
+        'label' => $name,
         'value' => null,
     ];
     if ($field_id == 'teaching-course' && isset($doc['module_id'])) :
@@ -44,7 +43,7 @@ foreach ($fields as $field_id) {
         $field['value'] = $Format->get_field($field_id);
     endif;
     if ($field['value'] === null || $field['value'] === '' || $field['value'] === '-') {
-        $empty_fields[] = $field_id;
+        $empty_fields[] = $name;
         continue;
     }
     $sections[$section][] = $field;
@@ -466,8 +465,7 @@ if ($edit_perm) {
                         if (!empty($doc['abstract']) || ($displayAltmetric)): ?>
                             <hr>
                             <div class="content">
-
-                                <h3 class="section-title"><?= lang("Abstract", "Zusammenfassung"); ?></h3>
+                                <h3 class="section-title"><?= $Modules->get_name('abstract') ?></h3>
                                 <!-- floating container for altmetric badge -->
                                 <?php if ($displayAltmetric) { ?>
                                     <div id="altmetric-container" class="float-right ml-20">
@@ -609,6 +607,7 @@ if ($edit_perm) {
                                 $connections['infrastructures'] = count($infrastructures);
                             }
                             $connections['activities'] = count($connected_activities);
+                            $connections['news'] = count($connected_news ?? []);
                             $count_connections = array_sum($connections);
                             ?>
                             <h3 class="section-title">
@@ -651,6 +650,9 @@ if ($edit_perm) {
                                         <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('Infrastructures', 'Infrastrukturen') ?> <b><?= $connections['infrastructures'] ?></b></span>
                                     <?php } ?>
                                     <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('Activities', 'Aktivitäten') ?> <b><?= $connections['activities'] ?></b></span>
+                                    <?php if (isset($connections['news'])) { ?>
+                                        <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('News', 'News') ?> <b><?= $connections['news'] ?></b></span>
+                                    <?php } ?>
                                 </p>
                             <?php } ?>
 
@@ -699,6 +701,21 @@ if ($edit_perm) {
                                             <span class="badge activity-badge"><?= $activity['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
                                             <div><?= lang($conLabel['en'], $conLabel['de']) ?></div>
                                             <?= $activity['rendered']['web'] ?? '' ?>
+                                        </div>
+                                    <?php } ?>
+                                <?php endif; ?>
+
+                                <?php if (!empty($connected_news)) : ?>
+                                    <?php foreach ($connected_news as $news) { ?>
+                                        <div class="connection">
+                                            <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang("News", "News") ?></span>
+                                            <h5>
+                                                <a href="<?= ROOTPATH ?>/news/view/<?= $news['_id']; ?>"> <?= $news['title']; ?> </a>
+                                            </h5>
+                                            <ul class="horizontal">
+                                                <li><?= date('d.m.Y', strtotime($news['published'] ?? $news['created'])) ?></li>
+                                            </ul>
+                                            <p><?= $news['teaser'] ?? '' ?></p>
                                         </div>
                                     <?php } ?>
                                 <?php endif; ?>
@@ -783,6 +800,7 @@ if ($edit_perm) {
                                 } elseif ($is_favorite) {
                                     $selected_state = 'highlight';
                                 }
+                                $highlighted_by = $osiris->persons->count(['highlighted' => strval($id), 'username' => ['$ne' => $_SESSION['username']]]);
                             ?>
                                 <tr>
                                     <td>
@@ -800,6 +818,10 @@ if ($edit_perm) {
                                                 </button>
                                             <?php } ?>
                                         </div>
+                                        <?php if ($highlighted_by > 0) { ?>
+                                            <span data-toggle="tooltip" data-title="<?= lang('This activity is highlighted by ' . $highlighted_by . ' other person(s).', 'Diese Aktivität wurde von ' . $highlighted_by . ' weiteren Person(en) hervorgehoben.') ?>"><i class="ph ph-star text-signal"></i></span>
+                                        <?php } ?>
+
 
                                         <script>
                                             let visibilityState = '<?= $selected_state ?>';
@@ -952,7 +974,7 @@ if ($edit_perm) {
                                 <?php foreach ($sections['key'] as $field) : ?>
                                     <tr>
                                         <td>
-                                            <span class="key"><?= lang($field['key_en'], $field['key_de']); ?></span>
+                                            <span class="key"><?= $field['label'] ?></span>
                                             <span><?= $field['value'] ?></span>
                                         </td>
                                     </tr>
@@ -971,7 +993,7 @@ if ($edit_perm) {
                             'events' => lang('Events', 'Veranstaltungen'),
                             'people' => lang('People and Organizations', 'Personen und Organisationen'),
                             'software' => lang('Software', 'Software'),
-                            'others' => lang('Others', 'Andere')
+                            'others' => lang('Other data', 'Weitere Daten')
                         ] as $section => $section_label
                     ) {
                         if (array_key_exists($section, $sections) && !empty($sections[$section])) { ?>
@@ -982,7 +1004,7 @@ if ($edit_perm) {
                                     ?>
                                         <tr>
                                             <td>
-                                                <span class="key"><?= lang($field['key_en'], $field['key_de']); ?></span>
+                                                <span class="key"><?= $field['label'] ?></span>
                                                 <span><?= $field['value']; ?></span>
                                             </td>
                                         </tr>
@@ -999,10 +1021,7 @@ if ($edit_perm) {
                             <small>
                                 <?= lang("The following fields are empty: ", "Die folgenden Felder sind leer: ") ?>
                             </small>
-                            <?= implode(", ", array_map(function ($f) use ($Modules) {
-                                $names = $Modules->all_modules[$f] ?? [];
-                                return lang($names['name_en'] ?? ucfirst($f), $names['name_de'] ?? ucfirst($f));
-                            }, $empty_fields)) ?>
+                            <?= implode(", ", $empty_fields) ?>
                         </p>
                     <?php } ?>
                     </table>
@@ -1222,7 +1241,7 @@ if ($edit_perm) {
                                                         <?php endif; ?>
 
                                                         <?php if ($hasUser): ?>
-                                                            <?php if ($author['approved']) { ?>
+                                                            <?php if ($author['approved'] ?? false) { ?>
                                                                 <span class="author-chip neutral"
                                                                     data-toggle="tooltip"
                                                                     data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">

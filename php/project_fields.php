@@ -107,7 +107,7 @@ class ProjectFields extends Fields
                     'filter'
                 ],
                 'label' => lang('Project staff (name)', 'Projektmitarbeitende (Name)'),
-                'type' => 'string'
+                'type' => 'list'
             ],
             [
                 'id' => 'persons.user',
@@ -117,7 +117,7 @@ class ProjectFields extends Fields
                     'filter'
                 ],
                 'label' => lang('Project staff (username)', 'Projektmitarbeitende (Nutzername)'),
-                'type' => 'string'
+                'type' => 'list'
             ],
             [
                 'id' => 'persons.role',
@@ -127,7 +127,7 @@ class ProjectFields extends Fields
                     'filter'
                 ],
                 'label' => lang('Project staff (role)', 'Projektmitarbeitende (Rolle)'),
-                'type' => 'string',
+                'type' => 'list',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('project-person-role'),
             ],
@@ -201,6 +201,7 @@ class ProjectFields extends Fields
                     'proposed' => lang('Proposed', 'Beantragt'),
                     'approved' => lang('Approved', 'Bewilligt'),
                     'rejected' => lang('Rejected', 'Abgelehnt'),
+                    'withdrawn' => lang('Withdrawn', 'Zurückgezogen'),
                 ],
                 'usage' => [
                     'aggregate',
@@ -658,7 +659,7 @@ class ProjectFields extends Fields
             [
                 "id" => "scholar",
                 "module_of" => $typeModules["scholar"] ?? [],
-                "label" => lang("Scholar", "Forschende Person"),
+                "label" => lang("Scholar", "Stipendiat:in"),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -721,7 +722,7 @@ class ProjectFields extends Fields
                 "id" => "countries",
                 "module_of" => $typeModules["countries"] ?? [],
                 "label" => lang("Countries of research", "Forschungsländer"),
-                'type' => 'string',
+                'type' => 'list',
                 'usage' => [
                     'aggregate',
                     'filter',
@@ -767,7 +768,7 @@ class ProjectFields extends Fields
                 "id" => "kdsf-ffk",
                 "module_of" => $typeModules["kdsf-ffk"] ?? [],
                 "label" => lang("Research fields (KDSF)", "Forschungsfelder (KDSF)"),
-                'type' => 'string',
+                'type' => 'list',
                 'usage' => [
                     'filter',
                     'columns'
@@ -833,7 +834,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (Country)', 'Kooperationspartner (Land)'),
-                "type" => 'string',
+                "type" => 'list',
                 "scope" => [
                     "project" => false,
                 ],
@@ -847,7 +848,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (Location)', 'Kooperationspartner (Ort)'),
-                "type" => 'string',
+                "type" => 'list',
                 "scope" => [
                     "project" => false,
                 ],
@@ -861,7 +862,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (Name)', 'Kooperationspartner (Name)'),
-                "type" => 'string',
+                "type" => 'list',
                 "scope" => [
                     "project" => false,
                 ],
@@ -875,7 +876,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (Role)', 'Kooperationspartner (Rolle)'),
-                "type" => 'string',
+                "type" => 'list',
                 "values" => ['gold', 'green', 'bronze', 'hybrid', 'open', 'closed'],
                 "input" => 'select',
                 "scope" => [
@@ -891,7 +892,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (ROR)', 'Kooperationspartner (ROR)'),
-                "type" => 'string',
+                "type" => 'list',
                 "scope" => [
                     "project" => false,
                 ],
@@ -905,7 +906,7 @@ class ProjectFields extends Fields
                     'aggregate'
                 ],
                 "label" => lang('Collaborators (Type)', 'Kooperationspartner (Typ)'),
-                "type" => 'string',
+                "type" => 'list',
                 "values" => ['Education', 'Healthcare', 'Company', 'Archive', 'Nonprofit', 'Government', 'Facility', 'Other'],
                 "input" => 'select',
                 "scope" => [

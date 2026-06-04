@@ -55,6 +55,14 @@ $UM = strtoupper(USER_MANAGEMENT);
             <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
             <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
         </div>
+
+        <div class="form-group">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="stay_logged_in" name="stay_logged_in" value="1">
+                <label for="stay_logged_in"><?= lang('Stay logged in', 'Eingeloggt bleiben') ?></label>
+            </div>
+        </div>
+
         <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />
     </form>
 
@@ -90,6 +98,14 @@ $UM = strtoupper(USER_MANAGEMENT);
             <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
             <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
         </div>
+
+        <div class="form-group">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="stay_logged_in" name="stay_logged_in" value="1">
+                <label for="stay_logged_in"><?= lang('Stay logged in', 'Eingeloggt bleiben') ?></label>
+            </div>
+        </div>
+
         <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />
 
         <hr>

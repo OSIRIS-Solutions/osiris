@@ -161,9 +161,10 @@ ul.authors>li.more-authors {
     border-bottom: 3px solid var(--gray-color);
     box-shadow: none !important;
     background-color: transparent;
-    height: 4rem;
+    height: 3rem;
     line-height: 4rem;
     padding: 0 2rem;
+    display: table-cell;
 }
 
 .new-pills .btn.active,
@@ -376,7 +377,8 @@ table.author-table tr.show-more-row td a:hover {
 
 .badge.project-badge,
 .badge.infrastructure-badge,
-.badge.activity-badge {
+.badge.activity-badge,
+.badge.news-badge {
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -388,7 +390,8 @@ table.author-table tr.show-more-row td a:hover {
 
 .badge.project-badge b,
 .badge.infrastructure-badge b,
-.badge.activity-badge b {
+.badge.activity-badge b,
+.badge.news-badge b {
     background-color: rgba(255, 255, 255, 0.8);
     color: inherit;
     border-radius: 50%;
@@ -417,6 +420,11 @@ table.author-table tr.show-more-row td a:hover {
     color: #9f4371;
 }
 
+.badge.news-badge {
+    color: #ff6f61;
+    background-color: #ff6f6133;
+}
+
 .connection a.colorless {
     font-size: 1.7rem;
     font-weight: var(--header-weight);
@@ -429,4 +437,8 @@ h3.section-title {
     /* padding-top: 1rem; */
     font-size: 1.6rem;
     /* border-top: 1px solid var(--border-color); */
+}
+
+table {
+    font-size: var(--base-font-size);
 }

@@ -470,7 +470,7 @@ $tagLabels = [
         <div class="col-4" id="catalog-panel">
             <div class="panel card catalog sticky-panel pt-0">
                 <div class="card-header" id="catalog-search-header">
-                    <input id="catalog-search" type="search" class="form-control" placeholder="Felder durchsuchen …">
+                    <input id="catalog-search" type="search" class="form-control" placeholder="<?= lang('Search in fields …', 'Felder durchsuchen …') ?>">
 
                     <!-- Layout-Sektion -->
                     <div class="pillbar">
@@ -489,22 +489,22 @@ $tagLabels = [
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-heading" data-label="Überschrift">
-                            <span>Überschrift</span>
+                            <span><?=lang('Heading', 'Überschrift')?></span>
                             <!-- <span class="badge bg-light ">H2–H4</span> -->
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-hr" data-label="Trennlinie">
-                            <span>Trennlinie</span>
+                            <span><?=lang('Horizontal line', 'Trennlinie')?></span>
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-paragraph" data-label="Absatz">
-                            <span>Absatz</span>
+                            <span><?=lang('Paragraph', 'Absatz')?></span>
                         </li>
                     </ul>
 
-                    <div class="font-size-12 text-muted">Custom Fields</div>
+                    <div class="font-size-12 text-muted"><?=lang('Custom Fields', 'Benutzerdefinierte Felder')?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($custom_fields as $field) { ?>
                             <li class="drag-item"
@@ -559,7 +559,7 @@ $tagLabels = [
                 <button type="button" class="close" role="button" aria-label="Close" id="close-properties-btn">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <div class="title">Eigenschaften</div>
+                <div class="title"><?=lang('Properties', 'Eigenschaften')?></div>
                 <div class="card-body">
 
                     <div class="action mb-20">
@@ -595,7 +595,7 @@ $tagLabels = [
                         <div class="mb-10">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="prop-required">
-                                <label class="form-check-label" for="prop-required">Pflichtfeld</label>
+                                <label class="form-check-label" for="prop-required"><?=lang('Required Field', 'Pflichtfeld')?></label>
                             </div>
                             <!-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="prop-portfolio">
@@ -617,7 +617,7 @@ $tagLabels = [
                             <label class="form-label"><?= lang('Width', 'Breite') ?></label>
                             <select class="form-control w-auto d-inline" id="prop-width">
                                 <option value="" selected>Default</option>
-                                <option value="12">Vollbreite</option>
+                                <option value="12"><?=lang('Full width', 'Vollbreite')?></option>
                                 <option value="9">3/4</option>
                                 <option value="8">2/3</option>
                                 <option value="6">1/2</option>
@@ -670,7 +670,7 @@ $tagLabels = [
         <div class="col-8">
             <div class="panel card">
                 <div class="card-header d-flex align-items-center">
-                    <div class="title">Dieses Formular</div>
+                    <div class="title"><?=lang('This form', 'Dieses Formular')?></div>
                     <div class="ml-auto">
                         <span class="badge" id="field-count">Felder: 0</span>
                     </div>
@@ -683,6 +683,10 @@ $tagLabels = [
                                 $props = $it['props'] ?? [];
                                 if ($field_type === 'field' || $field_type === 'custom'):
                                     $module = $all[$it['id']] ?? [];
+                                    $label = lang($module['name'] ?? $it['id'], $module['name_de'] ?? null);
+                                    if (!empty($props['label'] ?? null)){
+                                        $label = lang($props['label'], $props['label_de'] ?? null);
+                                    }
                             ?>
                                     <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?? 12 ?>"
                                         data-type="field"
@@ -697,7 +701,7 @@ $tagLabels = [
                                             <?php } ?>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= e($all[$it['id']]['name_de'] ?? $all[$it['id']]['name'] ?? $it['id']) ?></div>
+                                            <div class="title"><?= e($label) ?></div>
                                             <div class="subtitle">
                                                 <code class="badge"><?= $it['id'] ?></code>
                                                 <?php if (!empty($props['required'])): ?>
@@ -731,9 +735,6 @@ $tagLabels = [
                                             <div class="title"><?= lang('Header', 'Überschrift') ?></div>
                                             <div class="subtitle"><?= strtoupper(e($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
                                         </div>
-                                        <!-- <div class="actions ms-auto">
-                                                <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
-                                            </div> -->
                                     </li>
                                 <?php elseif ($field_type === 'paragraph'): ?>
                                     <li class="canvas-item" data-type="layout-paragraph" data-props='<?= json_encode($it['props'] ?? []) ?>'>
@@ -742,12 +743,9 @@ $tagLabels = [
                                             <i class="ph ph-paragraph"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title">Absatz</div>
-                                            <div class="subtitle"><?= e(($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                            <div class="title"><?=lang('Paragraph', 'Absatz')?></div>
+                                            <div class="subtitle"><?= e(($it['props']['text'] ?? 'Placeholder')) ?></div>
                                         </div>
-                                        <!-- <div class="actions ms-auto">
-                                                <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
-                                            </div> -->
                                     </li>
                                 <?php elseif ($field_type === 'hr'): ?>
                                     <li class="canvas-item" data-type="layout-hr">
@@ -756,11 +754,8 @@ $tagLabels = [
                                             <i class="ph ph-minus"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title">Trennlinie</div>
+                                            <div class="title"><?=lang('Horizontal Line', 'Trennlinie')?></div>
                                         </div>
-                                        <!-- <div class="actions ms-auto">
-                                                <button type="button" class="btn small text-danger js-del"><i class="ph ph-trash"></i></button>
-                                            </div> -->
                                     </li>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -1161,7 +1156,7 @@ $tagLabels = [
             console.log(schema);
             // check if schema is empty
             if (schema.items.length === 0) {
-                toastError('Das Formular enthält keine Felder. Bitte füge mindestens ein Feld hinzu.');
+                toastError(lang('The form does not contain any fields. Please add at least one field.', 'Das Formular enthält keine Felder. Bitte füge mindestens ein Feld hinzu.'));
                 return;
             }
 
@@ -1170,7 +1165,7 @@ $tagLabels = [
             ids = ids.filter(id => id); // remove empty IDs
             var duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
             if (duplicates.length > 0) {
-                toastError('Das Formular enthält doppelte IDs: ' + duplicates.join(', '));
+                toastError(lang('The form contains duplicate IDs:', 'Das Formular enthält doppelte IDs: ') + duplicates.join(', '));
                 return;
             }
 
@@ -1178,7 +1173,7 @@ $tagLabels = [
             let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
-                toastError('Das Formular muss mindestens ein Personen-Feld enthalten.');
+                toastError(lang('The form must contain at least one person field.', 'Das Formular muss mindestens ein Personen-Feld enthalten.'));
                 // filter by authors tag
                 $('.pillbar .tag').removeClass('active');
                 searchByTag('authors');
@@ -1190,7 +1185,7 @@ $tagLabels = [
             let dateFields = ["date", "date-range", "date-range-ongoing"];
             let hasDateField = schema.items.some(item => item.type === 'field' && dateFields.includes(item.id));
             if (!hasDateField) {
-                toastError('Das Formular muss mindestens ein Datumsfeld enthalten.');
+                toastError('The form must contain at least one date field', 'Das Formular muss mindestens ein Datumsfeld enthalten.');
                 // filter by date tag
                 $('.pillbar .tag').removeClass('active');
                 searchByTag('date');
@@ -1327,7 +1322,7 @@ $tagLabels = [
 
         function updateFieldCount() {
             var count = $('#canvas-list .canvas-item').length;
-            $('#field-count').text('Felder: ' + count);
+            $('#field-count').text(lang('Fields: ', 'Felder: ') + count);
         }
 
         // init count (falls serverseitig Items vorhanden)

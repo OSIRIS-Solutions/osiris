@@ -728,6 +728,10 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 filterProjects(document.getElementById(tagId), tag, 13)
             }
 
+            if (hash.type !== undefined) {
+                filterProjects(document.getElementById(hash.type + '-btn'), hash.type, 1)
+            }
+
             if (hash.search !== undefined) {
                 dataTable.search(decodeURIComponent(hash.search)).draw();
             }

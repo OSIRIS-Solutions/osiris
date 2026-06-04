@@ -253,6 +253,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
 
     $user = $_SESSION['username'];
+    $str_id = $id;
     $id = $DB->to_ObjectID($id);
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
     if (empty($activity)) {
@@ -330,6 +331,11 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         ['$or' => [['source_id' => $id], ['target_id' => $id]]]
     )->toArray();
 
+    $connected_news = [];
+    if ($Settings->featureEnabled('news', true)) {
+        $connected_news = $osiris->news->find(['activities' => $str_id])->toArray();
+    }
+
     $guests_involved = false;
     $guests = [];
     if ($Settings->featureEnabled('guests')) {
@@ -353,7 +359,13 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         $tagLabel = $Settings->tagLabel();
     }
 
-    $files = $osiris->uploads->find(['type' => 'activities', 'id' => strval($id)])->toArray();
+    $files = $osiris->uploads->find(['type' => 'activities', 'id' => $str_id])->toArray();
+
+    // check user preference for activity view
+    $activity_view = $_GET['view'] ?? $USER['activity_view'] ?? 'none';
+
+    $no_container = true;
+    include BASEPATH . "/header.php";
 
     $openalex = null;
     $spectrum = [];
@@ -371,11 +383,6 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         $spectrum = $openalex['topics'] ?? [];
     }
 
-    // check user preference for activity view
-    $activity_view = $_GET['view'] ?? $USER['activity_view'] ?? 'none';
-
-    $no_container = true;
-    include BASEPATH . "/header.php";
     if ($Settings->featureEnabled('quality-workflow', false) && ($user_activity || $Settings->hasPermission('workflows.view'))) {
         include_once BASEPATH . '/pages/activities/activity-workflow.php';
     }
@@ -1578,8 +1585,9 @@ Route::post('/crud/activities/connect', function () {
         die('Error: source or target missing.');
     }
 
+
     $relationship = $_POST['relationship'] ?? 'related';
-    $reverse = isset($_POST['reverse']);
+    $reverse = isset($_POST['reverse']) && $_POST['reverse'] == 1;
     if ($reverse) {
         // swap target and source
         $temp = $target;

@@ -74,7 +74,7 @@ if ($action === 'view') {
 <?php
 } elseif ($action === 'synchronize') {
 
-    echo "<h1>" . lang('Synchronize users', 'Synchronisiere Nutzer:innen') . "</h1>";
+    echo "<h1><i class='ph-duotone ph-arrows-clockwise'></i>" . lang('Synchronize users', 'Synchronisiere Nutzer:innen') . "</h1>";
 
     // get all users from LDAP
     $blacklist = [];

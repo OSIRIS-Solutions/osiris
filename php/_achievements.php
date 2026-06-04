@@ -171,8 +171,16 @@ class Achievement
                         break;
 
                     case 'theses':
+                        $thesis_cats = [
+                            'doctoral thesis',
+                            'master thesis',
+                            'bachelor thesis',
+                            'doctoral student',
+                            'master student',
+                            'bachelor student',
+                        ];
                         foreach ($activities as $a) {
-                            if ($a['type'] == "students" && isset($a['status']) && $a['status'] == 'completed') $value++;
+                            if (isset($a['category']) && in_array($a['category'], $thesis_cats) && isset($a['status']) && $a['status'] == 'completed') $value++;
                         }
                         break;
                     case 'network':
@@ -249,7 +257,10 @@ class Achievement
             }
             if ($new_lvl > $user_lvl || ($user_ac['new'] ?? false)) {
                 $this->userac[$key] = [
-                    'id' => $key, "level" => $new_lvl, "achieved" => date("d.m.Y"), "username" => $this->username
+                    'id' => $key,
+                    "level" => $new_lvl,
+                    "achieved" => date("d.m.Y"),
+                    "username" => $this->username
                 ];
                 $this->new[] = $this->userac[$key];
             }
@@ -387,4 +398,3 @@ class Achievement
         $this->osiris->achieved->insertMany($values);
     }
 }
-

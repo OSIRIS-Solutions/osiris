@@ -197,7 +197,7 @@ if (!empty($user_units)) {
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="format" id="format-bibtex" value="bibtex">
-                                    <label for="format-bibtex">BibTex</label>
+                                    <label for="format-bibtex">BibTeX</label>
                                 </div>
 
                             </div>
@@ -458,13 +458,19 @@ if (!empty($user_units)) {
                         <i class="ph ph-eye-slash m-0"></i>
                         <?= lang('Activity type not visible', 'Aktivitätstyp nicht sichtbar') ?>
                     </span>
-                <?php } else if ($edit_perm) { ?>
-                    <div class="custom-switch">
+                <?php } else if ($edit_perm) {
+                    $highlighted_by = $osiris->persons->count(['highlighted' => strval($id), 'username' => ['$ne' => $_SESSION['username']]]);
+                ?>
+                    <div class="custom-switch d-inline-block">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
                             <?= $doc['hide'] ? lang('Hidden', 'Versteckt') :  lang('Visible', 'Sichtbar')  ?>
                         </label>
                     </div>
+
+                    <?php if ($highlighted_by > 0) { ?>
+                        <span data-toggle="tooltip" data-title="<?= lang('This activity is highlighted by ' . $highlighted_by . ' other person(s).', 'Diese Aktivität wurde von ' . $highlighted_by . ' weiteren Person(en) hervorgehoben.') ?>"><i class="ph ph-star text-signal"></i></span>
+                    <?php } ?>
 
                     <script>
                         function hide() {

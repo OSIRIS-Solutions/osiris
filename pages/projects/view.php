@@ -31,7 +31,7 @@ foreach ($persons as $p) {
         break;
     }
 }
-$edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
+$edit_perm = (($project['created_by'] ?? '') == $_SESSION['username'] || $Settings->hasPermission('projects.edit') || ($Settings->hasPermission('projects.edit-own') && $user_project));
 
 $count_activities = $osiris->activities->count(['projects' => $project['_id']]);
 $count_spectrum = 0;
@@ -738,7 +738,7 @@ if ($topicsEnabled) {
 
                             <div class="custom-radio ml-10">
                                 <input type="radio" name="format" id="format-bibtex" value="bibtex">
-                                <label for="format-bibtex">BibTex</label>
+                                <label for="format-bibtex">BibTeX</label>
                             </div>
 
                         </div>
@@ -971,7 +971,7 @@ if ($topicsEnabled) {
                             console.log(data);
                             data.data.forEach(function(d) {
                                 $('#activity-suggest .suggestions').append(
-                                    `<a onclick="selectActivity(this)" data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
+                                    `<a  data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
                                 )
                             })
                             $('#activity-suggest .suggestions a')

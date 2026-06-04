@@ -340,6 +340,10 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
 
         const keys = spectrumEvolutionSeries.map(d => d.id);
 
+        const colorsRainbow = d3.scaleOrdinal()
+            .domain(keys)
+            .range(d3.quantize(d3.interpolatePlasma, keys.length));
+
         const metaById = {};
         spectrumEvolutionSeries.forEach(s => {
             metaById[s.id] = s;
@@ -383,8 +387,9 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
             .append("path")
             .attr("class", "layer")
             .attr("fill", d => {
-                const domainId = metaById[d.key]?.domain_id || "0";
-                return domainColors[domainId] || '#999999';
+                console.log(d.key);
+                // const domainId = metaById[d.key]?.domain_id || "0";
+                return colorsRainbow(d.key)
             })
             .attr("fill-opacity", 0.8)
             .attr("d", area)
@@ -404,31 +409,31 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
             });
 
         // Legend
-        const legend = svg.append("g")
-            .attr("transform", `translate(${width - margin.right + 20}, ${margin.top})`);
+        // const legend = svg.append("g")
+        //     .attr("transform", `translate(${width - margin.right + 20}, ${margin.top})`);
 
-        spectrumEvolutionSeries.forEach((s, i) => {
-            const row = legend.append("g")
-                .attr("transform", `translate(0, ${i * 22})`);
+        // spectrumEvolutionSeries.forEach((s, i) => {
+        //     const row = legend.append("g")
+        //         .attr("transform", `translate(0, ${i * 22})`);
 
-            row.append("rect")
-                .attr("width", 14)
-                .attr("height", 14)
-                .attr("rx", 3)
-                .attr("fill", domainColors[s.domain_id] || '#999999');
+        //     row.append("rect")
+        //         .attr("width", 14)
+        //         .attr("height", 14)
+        //         .attr("rx", 3)
+        //         .attr("fill", colorsRainbow(i % 30));
 
-            row.append("text")
-                .attr("x", 22)
-                .attr("y", 11)
-                .style("font-size", "12px")
-                .text(shortenLabel(s.name, 26));
-        });
+        //     row.append("text")
+        //         .attr("x", 22)
+        //         .attr("y", 11)
+        //         .style("font-size", "12px")
+        //         .text(shortenLabel(s.name, 26));
+        // });
 
-        function shortenLabel(text, max = 24) {
-            if (!text) return '';
-            if (text.length <= max) return text;
-            return text.slice(0, max - 1) + '…';
-        }
+        // function shortenLabel(text, max = 24) {
+        //     if (!text) return '';
+        //     if (text.length <= max) return text;
+        //     return text.slice(0, max - 1) + '…';
+        // }
     })();
 
 
@@ -443,7 +448,7 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
             top: 50,
             right: 20,
             bottom: 40,
-            left: 200
+            left: 20
         };
         const years = spectrumEvolutionData.map(d => d.year);
         const series = spectrumEvolutionSeries;

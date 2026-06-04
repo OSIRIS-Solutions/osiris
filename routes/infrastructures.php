@@ -425,7 +425,7 @@ Route::get('/api/infrastructure/stats', function () {
             'field' => ['$in' => $statistic_fields]
         ],
         [
-            'sort' => ['year' => -1]
+            'sort' => ['year' => 1, 'month' => 1, 'date' => 1]
         ]
     )->toArray();
 

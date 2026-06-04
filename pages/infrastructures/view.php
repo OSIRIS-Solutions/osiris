@@ -203,123 +203,130 @@ if ($edit_perm) { ?>
             </div>
         </div>
         <div class="col ml-20">
-            <h1 class="title m-0">
+            <h1 class="title mt-0">
                 <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
             </h1>
 
             <h2 class="subtitle">
                 <?= lang($infrastructure['subtitle'], $infrastructure['subtitle_de'] ?? null) ?>
             </h2>
+
+            <!-- show research topics -->
+            <?php
+            $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
+            if ($topicsEnabled) {
+                echo $Settings->printTopics($infrastructure['topics'] ?? [], '', false);
+            }
+            ?>
         </div>
     </div>
 
+    <div class="row row-eq-spacing">
 
-    <!-- show research topics -->
-    <?php
-    $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
-    if ($topicsEnabled) {
-        echo $Settings->printTopics($infrastructure['topics'] ?? [], 'mb-20', false);
-    }
-    ?>
-
-    <p class="font-size-12 text-muted">
-        <?= $infrastructure['description'] ?>
-    </p>
-
-    <?php if ($edit_perm) { ?>
-        <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="">
-            <i class="ph ph-edit"></i>
-            <span><?= lang('Edit', 'Bearbeiten') ?></span>
-        </a>
-    <?php } ?>
-    <table class="table mt-10 small">
-        <tr>
-            <td>
-                <span class="key">ID: </span>
-                <?= $infrastructure['id'] ?? '-' ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="key"><?= lang('Start date', 'Anfangsdatum') ?>: </span>
-                <?= format_date($infrastructure['start_date']) ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="key"><?= lang('End date', 'Enddatum') ?>: </span>
-                <?php if (!empty($infrastructure['end_date'])) {
-                    echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
-                } else {
-                    echo '<span class="badge primary">' . lang('Open', 'Offen') . '</span>';
-                } ?>
-            </td>
-        </tr>
-        <?php if ($active('type')) { ?>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('Category', 'Kategorie') ?>: </span>
-                    <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
-                </td>
-            </tr>
-        <?php } ?>
-        <?php if ($active('infrastructure_type')) { ?>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('Type', 'Art') ?>: </span>
-                    <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
-                </td>
-            </tr>
-        <?php } ?>
-        <?php if ($active('access')) { ?>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('User Access', 'Art des Zugangs') ?>: </span>
-                    <?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?>
-                </td>
-            </tr>
-        <?php } ?>
-        <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('Collaborative infrastructure', 'Verbundinfrastruktur') ?>: </span>
-                    <a href="#collaborative" class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></a>
-                </td>
-            </tr>
-        <?php } ?>
-        <?php if ($active('link') && !empty($infrastructure['link'])) : ?>
-        <tr>
-            <td>
-                <span class="key"><?= lang('Link', 'Link') ?>: </span>
-                <a href="<?= e($infrastructure['link']) ?>" target="_blank"><?= e($infrastructure['link']) ?></a>
-            </td>
-        </tr>
-        <?php endif; ?>
-        <?php if ($active('contact_email') && !empty($infrastructure['contact_email'])) : ?>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('Contact Email', 'Kontakt E-Mail') ?>: </span>
-                    <a href="mailto:<?= e($infrastructure['contact_email']) ?>"><?= e($infrastructure['contact_email']) ?></a>
-                </td>
-            </tr>
-        <?php endif; ?>
-        <?php
-        // check if user has custom fields
-        $custom_fields = $osiris->adminFields->find()->toArray();
-        if (!empty($custom_fields)) {
-            foreach ($custom_fields as $field) {
-                if ($active($field['id']) && isset($infrastructure[$field['id']])) { ?>
+        <div class="col-md-6">
+            <?php if ($edit_perm) { ?>
+                <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
+                    <i class="ph ph-edit"></i>
+                    <span><?= lang('Edit', 'Bearbeiten') ?></span>
+                </a>
+            <?php } ?>
+            <table class="table mt-10 small">
+                <tr>
+                    <td>
+                        <span class="key">ID: </span>
+                        <?= $infrastructure['id'] ?? '-' ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="key"><?= lang('Start date', 'Anfangsdatum') ?>: </span>
+                        <?= format_date($infrastructure['start_date']) ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="key"><?= lang('End date', 'Enddatum') ?>: </span>
+                        <?php if (!empty($infrastructure['end_date'])) {
+                            echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
+                        } else {
+                            echo '<span class="badge primary">' . lang('Open', 'Offen') . '</span>';
+                        } ?>
+                    </td>
+                </tr>
+                <?php if ($active('type')) { ?>
                     <tr>
                         <td>
-                            <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
-                            <?= $infrastructure[$field['id']] ?>
+                            <span class="key"><?= lang('Category', 'Kategorie') ?>: </span>
+                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                         </td>
                     </tr>
-        <?php }
-            }
-        } ?>
-    </table>
-
+                <?php } ?>
+                <?php if ($active('infrastructure_type')) { ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Type', 'Art') ?>: </span>
+                            <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                <?php if ($active('access')) { ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('User Access', 'Art des Zugangs') ?>: </span>
+                            <?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Collaborative infrastructure', 'Verbundinfrastruktur') ?>: </span>
+                            <a href="#collaborative" class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('partners', 'Partner') ?></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                <?php if ($active('link') && !empty($infrastructure['link'])) : ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Link', 'Link') ?>: </span>
+                            <a href="<?= e($infrastructure['link']) ?>" target="_blank"><?= e($infrastructure['link']) ?></a>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($active('contact_email') && !empty($infrastructure['contact_email'])) : ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Contact Email', 'Kontakt E-Mail') ?>: </span>
+                            <a href="mailto:<?= e($infrastructure['contact_email']) ?>"><?= e($infrastructure['contact_email']) ?></a>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php
+                // check if user has custom fields
+                $custom_fields = $osiris->adminFields->find()->toArray();
+                if (!empty($custom_fields)) {
+                    foreach ($custom_fields as $field) {
+                        if ($active($field['id']) && isset($infrastructure[$field['id']])) { ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
+                                    <?= $infrastructure[$field['id']] ?>
+                                </td>
+                            </tr>
+                <?php }
+                    }
+                } ?>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>
+                <?=lang('About', 'Über')?>
+            </h3>
+            <p class="font-size-12">
+                <?= $infrastructure['description'] ?? '-' ?>
+            </p>
+        </div>
+    </div>
 
 
     <h2>
@@ -383,7 +390,6 @@ if ($edit_perm) { ?>
 
     </div>
 
-    <hr>
 
     <h2>
         <i class="ph ph-book-bookmark text-primary"></i>
@@ -455,7 +461,6 @@ if ($edit_perm) { ?>
     </script>
 
 
-    <hr>
 
     <h2 id="statistics">
         <i class="ph ph-chart-line-up text-primary"></i>
@@ -676,7 +681,7 @@ if ($edit_perm) { ?>
 
         <!-- table with all yearly statistics ordered by year -->
         <div class="table-responsive-not">
-            <table class="table small my-20" id="yearly-statistics">
+            <table class="table small my-20 w-auto" id="yearly-statistics">
                 <thead>
                     <tr>
                         <th><?= lang('Year', 'Jahr') ?></th>
@@ -767,7 +772,6 @@ if ($edit_perm) { ?>
 
 
     <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
-        <hr>
         <div id="collaborative">
             <h2>
                 <i class="ph ph-handshake text-primary"></i>

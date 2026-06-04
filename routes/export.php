@@ -332,15 +332,24 @@ Route::post('/download', function () {
         \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-        $phpWord->setDefaultFontName('Calibri');
-        $phpWord->setDefaultFontSize(11);
+        // Apply export design styles
+        include_once BASEPATH . "/php/ReportTemplate.php";
+        $ReportTemplate = new ReportTemplate();
+        $exportStyle = $ReportTemplate->getStyle();
+        $ReportTemplate->applyReportStyle($phpWord, $_POST['type'] ?? '');
 
-        $phpWord->addTitleStyle(1, ["bold" => true, "size" => 16], ["spaceBefore" => 12]);
-        $phpWord->addTitleStyle(2, ["bold" => true, "size" => 14], ["spaceBefore" => 8]);
-        $phpWord->addTitleStyle(3, ["bold" => false, "size" => 11], ["spaceBefore" => 0]);
+
+        // $phpWord->setDefaultFontName('Calibri');
+        // $phpWord->setDefaultFontSize(11);
+
+        // $phpWord->addTitleStyle(1, ["bold" => true, "size" => 16], ["spaceBefore" => 12]);
+        // $phpWord->addTitleStyle(2, ["bold" => true, "size" => 14], ["spaceBefore" => 8]);
+        // $phpWord->addTitleStyle(3, ["bold" => false, "size" => 11], ["spaceBefore" => 0]);
         // $phpWord->setOutputEscapingEnabled(true);
         /* Note: any element you append to a document must reside inside of a Section. */
         // $phpWord->addTableStyle('CVTable', ['borderSize' => 0, 'borderColor' => '#ffffff', 'cellMargin' => 60, 'unit' => \PhpOffice\PhpWord\SimpleType\TblWidth::PERCENT, 'width' => 100 * 50]);
+
+        // Table style for CV export
         $table_style = new \PhpOffice\PhpWord\Style\Table;
         $table_style->setBorderColor('ffffff');
         $table_style->setBorderSize(0);
@@ -356,12 +365,14 @@ Route::post('/download', function () {
 
         $headerlvl = 1;
         // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
+        $section = $ReportTemplate->addReportSection($phpWord);
         // CV
         if (isset($_POST['type']) && $_POST['type'] == 'cv') {
             $headerlvl = 2;
 
             $scientist = $DB->getPerson($params['user']);
+
+            $ReportTemplate->addReportFooter($section, lang('Curriculum Vitae of ', 'Lebenslauf von ') . $scientist['displayname'] . " – " . date('d.m.Y'));
 
             $section->addTitle($scientist['displayname'], 1);
             $section->addTitle(lang($scientist['position'] ?? '', $scientist['position_de'] ?? null), 3);
@@ -384,7 +395,6 @@ Route::post('/download', function () {
                 $section->addTitle(lang('Curriculum Vitae'), 2);
 
                 $table = $section->addTable($table_style);
-
 
                 foreach ($scientist['cv'] as $entry) {
 
@@ -572,6 +582,9 @@ function clean_comment_export($subject, $front_addition_text = '')
     // Clean style tags
     $subject = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $subject);
 
+    // remove everything that should not be allowed
+    // $subject = preg_replace('/<(?!(b|i|u|strike|sub|sup|br)\/?)[^>]+>/i', '', $subject);
+
     // Remove multiple br tags
     $subject = preg_replace('#(<br */?>\s*)+#i', '<br />', $subject);
 
@@ -609,7 +622,7 @@ function clean_comment_export($subject, $front_addition_text = '')
     $subject = preg_replace('!\s+!', ' ', $subject);
 
     // Strip all tags, except <b><i><strike><u><sub><sup>
-    $subject = strip_tags($subject, '<b><i><u><strike><sub><sup><br>');
+    $subject = strip_tags($subject, '<b><i><u><strike><a><sub><sup><br>');
 
     // Remove any ### at the start
     $subject = rtrim(ltrim($subject, "#"), "#");

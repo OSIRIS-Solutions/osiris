@@ -32,17 +32,11 @@ Route::get('/user/browse', function () {
 Route::get('/user/edit/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Document.php";
-    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
-        $_SESSION['msg_type'] = "error";
-        header("Location: " . ROOTPATH . "/profile/$user");
-        die;
-    }
-    // $id = $DB->to_ObjectID($id);
+
     if (empty($user)) {
-        header("Location: " . ROOTPATH . "/user/browse");
-        die;
+        $user = $_SESSION['username'];
     }
+
     if (DB::is_ObjectID($user)) {
         $mongo_id = DB::to_ObjectID($user);
         $scientist = $osiris->persons->findOne(['_id' => $mongo_id]);
@@ -53,6 +47,12 @@ Route::get('/user/edit/(.*)', function ($user) {
         $user = $scientist['username'];
     }
 
+    if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
+        $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/profile/$user");
+        die;
+    }
     $data = $DB->getPerson($user);
     if (empty($data)) {
         header("Location: " . ROOTPATH . "/user/browse");
@@ -351,7 +351,7 @@ Route::get('/user/picture/(.*)', function ($user, $cls = 'profile-img') {
 
 // Synchronize users
 
-Route::get('/synchronize-users', function () {
+Route::get('/(synchronize-users)', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/_login.php";
     include BASEPATH . "/header.php";
@@ -359,11 +359,10 @@ Route::get('/synchronize-users', function () {
     include BASEPATH . "/footer.php";
 });
 
-Route::post('/synchronize-users', function () {
+Route::post('/(synchronize-users|admin/ldap-users)', function ($both) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        echo "<p>Permission denied.</p>";
-        die();
+        abortwith(403, lang('You do not have permission to synchronize users.', 'Du hast keine Berechtigung, Nutzende zu synchronisieren.'), '/admin', lang('Go back to settings', 'Zurück zu den Einstellungen'));
     }
     include_once BASEPATH . "/php/_login.php";
     include BASEPATH . "/header.php";
@@ -796,7 +795,73 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         ['$set' => $arr]
     );
 
+    // end person "end" in projects
+    $today = date('Y-m-d');
 
+    $running_projects = $osiris->projects->updateMany(
+        [
+            'persons' => ['$elemMatch' => ['user' => $user, '$or' => [['end' => null], ['end' => ['$gt' => date('Y-m-d')]]]]],
+            'end_date' => ['$gt' => date('Y-m-d')]
+        ],
+        [
+            '$set' => [
+                'persons.$[elem].end' => $today
+            ]
+        ],
+        [
+            'arrayFilters' => [
+                [
+                    'elem.user' => $user
+                ]
+            ]
+        ]
+    );
+
+    // set end_date for activities where user is author to today
+    $ongoing_activities = $osiris->activities->updateMany(
+        [
+            'subtype' => ['$in' => $Settings->continuousTypes],
+            'rendered.users' => $user,
+            // has only one user
+            'authors' => ['$size' => 1],
+            '$or' => [
+                ['end_date' => null],
+                ['end_date' => ['$gt' => $today]]
+            ]
+        ],
+        ['$set' => ['end_date' => $today, 'end' => ['year' => date('Y'), 'month' => date('m'), 'day' => date('d')]]]
+    );
+
+    $ongoing_infrastructures = $osiris->infrastructures->updateMany(
+        [
+            'persons' => ['$elemMatch' => ['user' => $user, '$or' => [['end' => null], ['end' => ['$gt' => date('Y-m-d')]]]]],
+            '$or' => [
+                ['end_date' => null],
+                ['end_date' => ['$gt' => date('Y-m-d')]]
+            ]
+        ],
+        [
+            '$set' => [
+                'persons.$[elem].end' => $today
+            ]
+        ],
+        [
+            'arrayFilters' => [
+                [
+                    'elem.user' => $user
+                ]
+            ]
+        ]
+    );
+    // we need to rerender all activities where user is author, because they might have a different end date now
+    include_once BASEPATH . "/php/Render.php";
+    renderActivities([
+        'subtype' => ['$in' => $Settings->continuousTypes],
+        'rendered.users' => $user,
+        // has only one user
+        'authors' => ['$size' => 1],
+        'end_date' => $today
+    ]);
 
     if (file_exists(BASEPATH . "/img/users/$user.jpg")) {
         unlink(BASEPATH . "/img/users/$user.jpg");

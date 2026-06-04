@@ -229,6 +229,11 @@
                 <b><?= lang('Report Templates', 'Berichtsvorlagen') ?></b>
                 <p><?= lang('Settings for managing report templates', 'Einstellungen zur Verwaltung von Berichtsvorlagen') ?></p>
             </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/export-design">
+                <i class="ph-duotone ph-file-doc"></i>
+                <b><?= lang('Export Design', 'Export-Design') ?></b>
+                <p><?= lang('Customize the design of your Word exports', 'Passe das Design deiner Word-Exporte an') ?></p>
+            </a>
             <?php if ($Settings->featureEnabled('quality-workflow') && $adminPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/workflows">
                     <i class="ph-duotone ph-seal-check" aria-hidden="true"></i>

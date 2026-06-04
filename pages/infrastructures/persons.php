@@ -30,7 +30,7 @@ $end = $form['end_date'] ?? '';
 
 
 <h2>
-    <?= lang('Connect persons', 'Personen verknüpfen') ?>
+    <?= lang('Operating personnel', 'Betriebspersonal') ?>
 </h2>
 <form action="<?= ROOTPATH ?>/crud/infrastructures/update-persons/<?= $id ?>" method="post">
 

@@ -54,7 +54,7 @@ $um = strtoupper(USER_MANAGEMENT);
                     <small class="text-muted">
                         <?= lang('Please make sure that the username equals the username in LDAP (case-sensitive)', 'Vergewisser dich, dass der Benutzername mit dem Benutzernamen in LDAP übereinstimmt (Groß- und Kleinschreibung wird beachtet)') ?>
                     </small>
-                <?php } elseif ($um == 'OAUTH2') { ?>
+                <?php } elseif ($um == 'OAUTH') { ?>
                     <small class="text-muted">
                         <?= lang('Please use the exact user name from the email address of the user (everything before @)', 'Bitte verwende den genauen Benutzernamen aus der E-Mail-Adresse des Benutzers (alles vor @)') ?>
                     </small>

@@ -56,7 +56,7 @@ function searchActivities(index) {
         }
         data.data.forEach(function(d) {
             suggest.append(
-                `<a onclick="selectActivity(this)" data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
+                `<a  data-id="${d.id.toString()}">${d.details.icon} ${d.details.plain}</a>`
             )
         })
         suggest.find('a')

@@ -903,5 +903,35 @@
         "de": "Sonstiges"
       }
     ]
+  },
+  {
+    "id": "news-category",
+    "category": "News",
+    "name": "News Category",
+    "name_de": "Nachrichtenkategorie",
+    "description": "The category of a news item.",
+    "description_de": "Die Kategorie eines Nachrichtenartikels.",
+    "values": [
+      {
+        "id": "research",
+        "en": "Research",
+        "de": "Forschung"
+      },
+      {
+        "id": "system",
+        "en": "System",
+        "de": "System"
+      },
+      {
+        "id": "event",
+        "en": "Event",
+        "de": "Event"
+      },
+      {
+        "id": "other",
+        "en": "Other news",
+        "de": "Sonstige Nachrichten"
+      }
+    ]
   }
 ]

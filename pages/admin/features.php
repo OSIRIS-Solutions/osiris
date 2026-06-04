@@ -573,34 +573,53 @@
                 </h3>
 
 
+
                 <div class="content">
-                    <h4 id="new-publications">
-                        <?= lang('New Publications', 'Neue Publikationen') ?>
+                    <h4 id="home-page">
+                        <?= lang('Home page features', 'Funktionen der Startseite') ?>
                     </h4>
 
-                    <div class="form-group mt-10">
+                    <div class="form-group mt-10" id="new-publications">
                         <label for="" class="label">
-                            <?= lang('Show new publications in the news section of peoples profile page', 'Zeige neue Publikationen im News-Bereich der Personen-Profilseite') ?>
+                            <?= lang('Show new publications on the home page', 'Zeige neue Publikationen auf der Startseite') ?>
                         </label>
                         <?php
                         renderCheckbox('new-publications', true);
                         ?>
                     </div>
-                </div>
 
-                <div class="content">
-                    <h4 id="new-colleagues">
-                        <?= lang('New Colleagues', 'Neue Kolleg:innen') ?>
-                    </h4>
-
-                    <div class="form-group mt-10">
+                    <div class="form-group mt-10" id="new-colleagues">
                         <label for="" class="label">
-                            <?= lang('Show new colleagues in the news section of peoples profile page', 'Zeige neue Kolleg:innen im News-Bereich der Personen-Profilseite') ?>
+                            <?= lang('Show new colleagues on the home page', 'Zeige neue Kolleg:innen auf der Startseite') ?>
                         </label>
                         <?php
                         renderCheckbox('new-colleagues');
                         ?>
                     </div>
+
+                    <div class="form-group mt-10" id="news">
+                        <label for="" class="label">
+                            <?= lang('Show news on the home page', 'Zeige Neuigkeiten auf der Startseite') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('news', true);
+                        ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php
+                        $news_lang = $Settings->get('news-language', 'both');
+                        ?>
+
+                        <label for="news-language">
+                            <?= lang('Language of news', 'Sprache der Neuigkeiten') ?>
+                        </label>
+                        <select name="general[news-language]" id="news-language" class="form-control small">
+                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?=lang('Only one language', 'Nur einsprachig')?></option>
+                            <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option>
+                        </select>
+                    </div>
+
                 </div>
                 <hr>
                 <div class="content">
@@ -680,7 +699,7 @@
                     <a href="#spectrum" class="submenu"><?= lang('Research Spectrum', 'Forschungs-Spektrum') ?></a>
 
                     <a href="#guest-management-features"><?= lang('Profiles and Guests', 'Profile und Gäste') ?></a>
-                    <a href="#new-colleagues" class="submenu"><?= lang('New Colleagues', 'Neue Kolleg:innen') ?></a>
+                    <a href="#home-page" class="submenu"><?= lang('Home Page', 'Startseite') ?></a>
                     <a href="#guest-forms" class="submenu"><?= lang('Guest forms', 'Gästeformulare') ?></a>
                 </div>
 

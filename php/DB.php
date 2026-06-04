@@ -39,6 +39,19 @@ class DB
 {
 
     public $db = null;
+    public static $colors = [
+        "#af0832",
+        "#0a8a1b",
+        "#d1b70b",
+        "#183bba",
+        "#f58231",
+        "#911eb4",
+        "#46f0f0",
+        "#f032e6",
+        "#bcf60c",
+        "#fabebe",
+        "#008080"
+    ];
 
     public function __construct()
     {
@@ -200,15 +213,15 @@ class DB
             }
 
             // Prüfe auf neue OSIRIS-Version
-            $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
-            if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
-                $issues['version'] = [
-                    'name' => lang('New version available', 'Neue Version verfügbar'),
-                    'count' => 1,
-                    'key' => 'version',
-                ];
-                $hasNotification += 1;
-            }
+            // $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
+            // if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
+            //     $issues['version'] = [
+            //         'name' => lang('New version available', 'Neue Version verfügbar'),
+            //         'count' => 1,
+            //         'key' => 'version',
+            //     ];
+            //     $hasNotification += 1;
+            // }
 
             // Prüfe auf Quartalsfreigabe
             $reportingEnabled = $this->db->adminFeatures->findOne(['feature' => 'quarterly-reporting']);
@@ -542,7 +555,7 @@ class DB
 
     public function portfolioPersonLink($username, $basepath = null)
     {
-        if (empty($basepath)){
+        if (empty($basepath)) {
             $basepath = $this->db->adminGeneral->findOne(['key' => 'portfolio_url'], ['projection' => ['value' => 1]]);
             $basepath = $basepath['value'] ?? ROOTPATH;
         }
@@ -1028,7 +1041,7 @@ class DB
             ];
         }
 
-        if ($this->featureEnabled('nagoya', false)){
+        if ($this->featureEnabled('nagoya', false)) {
             $proposals = $this->db->proposals->find(
                 [
                     'persons.user' => $user,
@@ -1174,5 +1187,32 @@ class DB
         // sort by name
         asort($result);
         return $result;
+    }
+
+
+
+    public static function getLogo($item, $class = "org-logo", $alt = "")
+    {
+        $placeholder = '<div class="' . $class . '-placeholder">' . $alt . '</div> ';
+        if (!isset($item) || empty($item) || !isset($item['image'])) {
+            return $placeholder;
+        }
+        $img = $item['image'];
+        if (!isset($img) || empty($img)) {
+            return $placeholder;
+        }
+        $type = $img['type'];
+        if ($img['type'] == 'svg') {
+            $type = 'image/svg+xml';
+        } else {
+            $type = 'image/' . $img['type'];
+        }
+        $img = $img['data']->getData();
+        return "<img src='data:$type;base64,$img' alt='" . e($alt) . "' class='$class'>";
+    }
+
+    public static function printLogo($item, $class = "org-logo", $alt = "")
+    {
+        echo self::getLogo($item, $class, $alt);
     }
 }

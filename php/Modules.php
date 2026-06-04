@@ -2156,7 +2156,9 @@ class Modules
 
             case "event-select":
                 $events = $this->DB->db->conferences->find(
-                    ['end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]],
+                    [
+                        // 'end' => ['$lte' => date('Y-m-d', strtotime('+5 days'))]
+                    ],
                     ['sort' => ['start' => -1], 'projection' => ['title' => 1, 'start' => 1, 'end' => 1, 'location' => 1, 'country' => 1]]
                     // ['sort' => ['start' => -1], 'limit' => 10]
                 );
@@ -2629,7 +2631,7 @@ class Modules
                         <option value="long" <?= $this->val('lecture_type') == 'long' ? 'selected' : '' ?>><?= lang('long', 'lang') ?> (> 30 min.)</option>
                         <option value="repetition" <?= $this->val('lecture_type') == 'repetition' || $this->copy === true ? 'selected' : '' ?>><?= lang('repetition', 'Wiederholung') ?></option>
                     </select>
-                    <label class="<?= $labelClass ?> " for="lecture_type"><?= lang('Type of lecture', 'Art des Vortrages') ?></label>
+                    <label class="<?= $labelClass ?> " for="lecture_type"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php

@@ -2536,3 +2536,43 @@ Route::get('/portfolio/person-images', function () {
 
     echo rest($result);
 });
+
+
+
+
+// get all news
+Route::get('/portfolio/news', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('news', true)) {
+        echo rest([], 0);
+        die;
+    }
+    $filter = [
+        'visibility' => 'public',
+    ];
+    $news = $osiris->news->find(
+        $filter,
+        [
+            'sort' => ['date' => -1],
+            'projection' => [
+                'id' => ['$toString' => '$_id'],
+                'title' => 1,
+                'title_de' => 1,
+                'teaser' => 1,
+                'teaser_de' => 1,
+                'content' => 1,
+                'content_de' => 1,
+                'date' => 1,
+                'image' => 1,
+                'activities' => 1
+            ]
+        ]
+    )->toArray();
+
+    echo rest($news);
+});

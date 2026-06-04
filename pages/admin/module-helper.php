@@ -49,6 +49,15 @@
             } else {
                 $Modules->set($vals['fields']);
             }
+
+            $activities = $osiris->adminTypes->find([
+                '$or' => [
+                    ['modules' => ['$in' => [$key, $key . '*']]],
+                    ['fields.id' => $key]
+                ]
+            ], [
+                'projection' => ['icon' => 1, 'name' => 1, 'id' => 1, 'name_de' => 1, 'parent' => 1]
+            ])->toArray();
         ?>
             <tr>
                 <td>
@@ -72,6 +81,21 @@
                         $Modules->print_module($key);
                         ?>
                     </div>
+
+                    <?php if (count($activities) > 0) { ?>
+                        <?= lang('This field is used in the following activity types:', 'Dieses Feld wird zurzeit in folgenden Aktivitätstypen verwendet:') ?>
+                        <?php foreach ($activities as $a) { ?>
+                            <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge badge-<?= $a['parent'] ?> mb-5">
+                                <i class="ph ph-<?= $a['icon'] ?? 'folder-open' ?>"></i>
+                                <?= lang($a['name'] ?? $a['id'], $a['name_de'] ?? null) ?>
+                            </a>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <em class="text-muted">
+                            <?= lang('This field is currently not used in any activity types.', 'Dieses Feld wird zurzeit in keinen Aktivitätstypen verwendet.') ?>
+                        </em>
+                    <?php } ?>
+
                 </td>
             </tr>
         <?php } ?>

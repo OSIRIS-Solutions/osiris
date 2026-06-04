@@ -341,7 +341,7 @@ if (!empty($form) && isset($form['_id'])) {
 
             <div class="input-group mb-10">
                 <div class="input-group-prepend">
-                    <span class="input-group-text w-100">Web Subtitle</span>
+                    <span class="input-group-text w-100">Web Subtitle*</span>
                 </div>
                 <input type="text" class="form-control" name="values[template][subtitle]" value="<?= e($type['template']['subtitle'] ?? '{authors}') ?>">
             </div>
@@ -380,6 +380,10 @@ if (!empty($form) && isset($form['_id'])) {
                     <?= lang('Please note that this list is not exhaustive, as some fields (e.g. authors) can be displayed with many different templates.', 'Bitte beachten Sie, dass diese Liste nicht vollständig ist, da einige Felder (z.B. Autoren) mit vielen verschiedenen Templates angezeigt werden können.') ?>
                 </p>
             </div>
+            <br>
+            <small class="text-muted">
+                * <?= lang('OSIRIS will display a max of 12 people (e.g. authors) in the subtitle, if you do not define the number (et al or ellipses) yourself.', 'OSIRIS zeigt maximal 12 Personen (z.B. Autoren) im Untertitel an, wenn Sie die Anzahl (et al oder Ellipses) nicht selbst definieren.') ?>
+            </small>
         </div>
 
 

@@ -71,6 +71,11 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         margin-right: 2rem;
         font-size: 2.5rem;
     }
+    .topic-icons {
+        position: absolute;
+    right: 1rem;
+    top: 1rem;
+    }
 </style>
 
 <h1>
@@ -113,7 +118,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                             <?php
                             $Infrastructure->printLogo($infra, "infrastructure-logo", lang('Logo of', 'Logo von') . ' ' . $infra['name']);
                             ?>
-                            <div>
+                            <div class="position-relative w-full">
                                 <h6 class="m-0">
                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
                                         <?= lang($infra['name'], $infra['name_de'] ?? null) ?>

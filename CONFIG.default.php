@@ -26,7 +26,7 @@ define('USER_MANAGEMENT', 'AUTH');
 // define('LDAP_BIND_METHOD', 'username'); // <-- 'dn' or 'username' or 'userPrincipalName'
 
 // OAUTH user management:
-// define('OAUTH', 'Microsoft');
+// define('OAUTH', 'Microsoft'); // Microsoft | Keycloak | Generic
 // define('CLIENT_ID', 'DEINE_CLIENT_ID');
 // define('CLIENT_SECRET', 'DEIN_CLIENT_SECRET');
 // define('REDIRECT_URI', 'http://localhost/login-callback.php');

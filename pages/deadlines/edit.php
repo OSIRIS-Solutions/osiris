@@ -76,7 +76,6 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
             $selected = DB::doc2Arr($form['roles'] ?? []);
             foreach ($roles as $role) {
-                if ($role === 'user') continue;
                 $checked = in_array($role, $selected) ? 'checked' : '';
             ?>
                 <div class="pill-checkbox ">

@@ -759,11 +759,72 @@ $active = function ($field) use ($data_fields) {
         <h5>
             <?= lang('Transfer the maintenance of your profile', 'Übertrage die Pflege deines Profils') ?>
         </h5>
+        <?php
+        if (is_string($data['maintenance'] ?? null)) $data['maintenance'] = [$data['maintenance']];
+        $maintenance = DB::doc2Arr($data['maintenance'] ?? []);
+        ?>
 
         <div class="form-group mb-0">
-            <label for="maintenance"><?= lang('User', 'Nutzende Person') ?>:</label>
+            <input type="hidden" name="values[maintenance]" value="">
 
-            <!-- <input type="text" list="user-list" name="values[maintenance]" id="maintenance" class="form-control" value="<?= $data['maintenance'] ?? '' ?>"> -->
+            <style>
+                #maintenance-list:empty::before {
+                    content: "<?= lang('This profile is not shared with someone.', 'Dieses Profil wurde mit niemandem geteilt.') ?>";
+                    color: var(--muted-color);
+                    font-style: italic;
+                }
+                #maintenance-list:not(:empty)::before {
+                    content: "<?= lang('This profile was shared with:', 'Dieses Profil wurde geteilt mit:') ?>";
+                }
+            </style>
+            <div class="author-widget">
+                <div class="author-list p-10" id="maintenance-list"><?php
+                        $module_lst = [];
+                        foreach ($maintenance as $u) { 
+                            $mP = $DB->getPerson($u);
+                            ?><div class='author'>
+                            <?= e($mP['displayname']) ?>
+                            <input type='hidden' name='values[maintenance][]' value='<?= e($u) ?>'>
+                            <a onclick='$(this).parent().remove()'>&times;</a>
+                        </div><?php } ?></div>
+                <div class="footer">
+                    <div class="input-group small d-inline-flex w-auto">
+                        <select class="form-control" id="maintenance-select">
+                            <option value="" disabled selected><?= lang("Select a person to share with ...", "Wähle eine Person zum Teilen aus ...") ?></option>
+                            <?php
+                            $all_users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['sort' => ['last' => 1, 'first' => 1]]);
+                            foreach ($all_users as $s) { ?>
+                                <option value="<?= e($s['username']) ?>"><?= e("$s[last], $s[first] ($s[username])") ?></option>
+                            <?php } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn small primary" type="button" onclick="addMaintenance();">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function addMaintenance() {
+                    const selected = $('#maintenance-select option:selected');
+                    const user = selected.val()
+                    const name = selected.html()
+
+                    console.log(user);
+                    if (user.length === 0) return;
+                    // check if already exists
+                    if ($('#maintenance-list').find(`input[value="${user}"]`).length > 0) {
+                        toastError('<?= lang('Person already exists', 'Person existiert bereits') ?>');
+                        return;
+                    }
+                    var html = `<div class='author'>${name} <input type='hidden' name='values[maintenance][]' value='${user}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
+                    $('#maintenance-list').append(html);
+                    // add hidden input to form
+                    // $('#keyword-list').append(``);
+                }
+            </script>
+<!-- 
             <select name="values[maintenance]" id="maintenance" class="form-control">
                 <option value="">
                     <?= lang('Profile is not shared with someone', 'Du hast dein Profil an niemanden übertragen') ?>
@@ -775,7 +836,7 @@ $active = function ($field) use ($data_fields) {
                 foreach ($all_users as $s) { ?>
                     <option value="<?= $s['username'] ?>" <?= $selected == $s['username'] ? 'selected' : '' ?>><?= "$s[last], $s[first] ($s[username])" ?></option>
                 <?php } ?>
-            </select>
+            </select> -->
         </div>
 
         <p class=" text-danger">
@@ -1097,7 +1158,7 @@ $active = function ($field) use ($data_fields) {
             <!-- ensure to save empty research interests -->
             <input type="hidden" name="values[research]" value="">
             <small class="text-muted">Max. 5</small><br>
-            <table class="table simple">
+            <table class="table">
                 <thead>
                     <tr>
                         <th><label for="research" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label></th>

@@ -835,10 +835,9 @@ class Document extends Settings
             $this->appendix .= " <sup>§</sup> Corresponding author";
         }
 
-        if ($etalLimit === null && $this->usecase == 'web') {
+        if (($etalLimit === null && $ellipsesLimit === null) && $this->usecase == 'web') {
             $etalLimit = 12; // default limit for web use case
         }
-
         if ($etalLimit !== null  && $N > $etalLimit) {
             $formatted = array_slice($formatted, 0, $etalLimit);
             $result = implode($delimiter, $formatted);

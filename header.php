@@ -162,7 +162,11 @@ $pageactive = function ($p) use ($page) {
         <span></span>
     </div>
 
-    <?php include_once BASEPATH . "/components/command-palette.php"; ?>
+    <?php
+    if ($_SESSION['loggedin'] ?? false && isset($_SESSION['username'])) {
+        include_once BASEPATH . "/components/command-palette.php";
+    }
+    ?>
 
     <!-- Page wrapper start -->
     <div class="page-wrapper 

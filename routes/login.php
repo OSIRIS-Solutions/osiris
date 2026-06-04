@@ -20,7 +20,7 @@ Route::get('/user/login', function () {
         ['name' => lang('User login', 'Login')]
     ];
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true  && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-        header("Location: " . ROOTPATH . "/profile/$_SESSION[username]");
+        header("Location: " . ROOTPATH . "/home");
         die;
     }
     include BASEPATH . "/header.php";
@@ -28,108 +28,160 @@ Route::get('/user/login', function () {
     include BASEPATH . "/footer.php";
 });
 
-
 Route::get('/user/oauth', function () {
     include_once BASEPATH . "/php/init.php";
-    $authorizationUrl = AUTHORITY . '/oauth2/v2.0/authorize' .
-        '?client_id=' . CLIENT_ID .
-        '&response_type=code' .
-        '&redirect_uri=' . urlencode(REDIRECT_URI) .
-        '&response_mode=query' .
-        '&scope=' . urlencode(SCOPES);
+
+    $provider = defined('OAUTH') ? OAUTH : 'microsoft';
+    switch (strtolower($provider)) {
+        case 'keycloak':
+        case 'generic':
+            $authorizationEndpoint = AUTHORITY . '/auth';
+            break;
+
+        case 'microsoft':
+        default:
+            $authorizationEndpoint = AUTHORITY . '/oauth2/v2.0/authorize';
+            break;
+    }
+
+    $params = [
+        'client_id' => CLIENT_ID,
+        'response_type' => 'code',
+        'redirect_uri' => REDIRECT_URI,
+        'scope' => SCOPES,
+    ];
+
+    if ($provider === 'microsoft') {
+        $params['response_mode'] = 'query';
+    }
+
+    $authorizationUrl = $authorizationEndpoint . '?' . http_build_query($params);
+
     header("Location: $authorizationUrl");
     exit();
 });
 
-
 Route::get('/user/oauth-callback', function () {
     include_once BASEPATH . "/php/init.php";
-    // dump($_SESSION);
-    // die;
-    if (isset($_GET['code'])) {
-        $code = $_GET['code'];
-        $tokenUrl = AUTHORITY . '/oauth2/v2.0/token';
-        $postData = [
-            'client_id' => CLIENT_ID,
-            'scope' => SCOPES,
-            'code' => $code,
-            'redirect_uri' => REDIRECT_URI,
-            'grant_type' => 'authorization_code',
-            'client_secret' => CLIENT_SECRET
-        ];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $tokenUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $data = json_decode($response, true);
-        if (isset($data['access_token'])) {
-            // Zugangstoken verwenden, um Benutzerinformationen zu erhalten
-            $accessToken = $data['access_token'];
-            $userInfoUrl = 'https://graph.microsoft.com/v1.0/me';
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $userInfoUrl);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $accessToken"]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $userInfoResponse = curl_exec($ch);
-            curl_close($ch);
-            $user = json_decode($userInfoResponse, true);
-            // session_start();
 
-            // username not supported by Microsoft
-            // take username from mail
-            $username = explode('@', $user['mail'])[0];
+    $provider = defined('OAUTH') ? OAUTH : 'microsoft';
 
-            // check if user exists in our database
-            $USER = $DB->getPerson($username);
-            if (empty($USER)) {
-                // create user from LDAP
-                $new_user = array(
-                    'username' => $username,
-                    'displayname' => $user['displayName'],
-                    'first' => $user['givenName'],
-                    'last' => $user['surname'],
-                    'mail' => $user['mail'],
-                    'position' => $user['jobTitle'],
-                    'telephone' => $user['businessPhones'][0],
-                    'lastlogin' => date('d.m.Y'),
-                    'created' => date('d.m.Y'),
-                );
-                $osiris->persons->insertOne($new_user);
-
-                $USER = $DB->getPerson($username);
-            } else {
-                $updateResult = $osiris->persons->updateOne(
-                    ['username' => $USER['username']],
-                    ['$set' => ["lastlogin" => date('d.m.Y')]]
-                );
-            }
-
-            $_SESSION['username'] = $USER['username'];
-            $_SESSION['name'] = $USER['displayname'];
-            $_SESSION['loggedin'] = true;
-
-            if (isset($_GET['redirect'])) {
-                header("Location: " . $_GET['redirect']);
-                die();
-            }
-            header("Location: " . ROOTPATH . "/");
-
-            exit();
-        } else {
-            echo "Error getting access token.";
-        }
-    } else {
-        echo "No authorization code returned.";
+    if (!isset($_GET['code'])) {
+        die("No authorization code returned.");
     }
+
+    $code = $_GET['code'];
+
+    switch (strtolower($provider)) {
+        case 'keycloak':
+        case 'generic':
+            $tokenUrl = AUTHORITY . '/token';
+            $userInfoUrl = AUTHORITY . '/userinfo';
+            break;
+
+        case 'microsoft':
+        default:
+            $tokenUrl = AUTHORITY . '/oauth2/v2.0/token';
+            $userInfoUrl = 'https://graph.microsoft.com/v1.0/me';
+            break;
+    }
+
+    $postData = [
+        'client_id' => CLIENT_ID,
+        'scope' => SCOPES,
+        'code' => $code,
+        'redirect_uri' => REDIRECT_URI,
+        'grant_type' => 'authorization_code',
+        'client_secret' => CLIENT_SECRET
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $tokenUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($response, true);
+
+    if (!isset($data['access_token'])) {
+        dump($data);
+        die("Error getting access token.");
+    }
+
+    $accessToken = $data['access_token'];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $userInfoUrl);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $accessToken"]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $userInfoResponse = curl_exec($ch);
+
+    $user = json_decode($userInfoResponse, true);
+
+    if ($provider === 'microsoft') {
+        $mail = $user['mail'] ?? $user['userPrincipalName'] ?? '';
+        $username = explode('@', $mail)[0];
+
+        $new_user = [
+            'username' => $username,
+            'displayname' => $user['displayName'] ?? $username,
+            'first' => $user['givenName'] ?? '',
+            'last' => $user['surname'] ?? '',
+            'mail' => $mail,
+            'position' => $user['jobTitle'] ?? '',
+            'telephone' => $user['businessPhones'][0] ?? '',
+            'lastlogin' => date('d.m.Y'),
+            'created' => date('d.m.Y'),
+        ];
+    } else {
+        $mail = $user['email'] ?? '';
+        $preferred = $user['preferred_username'] ?? $mail;
+        $username = explode('@', $preferred)[0];
+
+        $new_user = [
+            'username' => $username,
+            'displayname' => $user['name'] ?? $user['preferred_username'] ?? $username,
+            'first' => $user['given_name'] ?? '',
+            'last' => $user['family_name'] ?? '',
+            'mail' => $mail,
+            'position' => '',
+            'telephone' => '',
+            'lastlogin' => date('d.m.Y'),
+            'created' => date('d.m.Y'),
+        ];
+    }
+
+    if (empty($username)) {
+        dump($user);
+        die("Could not determine username from OAuth provider.");
+    }
+
+    $USER = $DB->getPerson($username);
+
+    if (empty($USER)) {
+        $osiris->persons->insertOne($new_user);
+        $USER = $DB->getPerson($username);
+    } else {
+        $osiris->persons->updateOne(
+            ['username' => $USER['username']],
+            ['$set' => ["lastlogin" => date('d.m.Y')]]
+        );
+    }
+
+    $_SESSION['username'] = $USER['username'];
+    $_SESSION['name'] = $USER['displayname'];
+    $_SESSION['loggedin'] = true;
+
+    header("Location: " . ROOTPATH . "/");
+    exit();
 });
 
 Route::post('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-        header("Location: " . ROOTPATH . "/profile/$_SESSION[username]");
+        header("Location: " . ROOTPATH . "/home");
         die;
     }
 
@@ -202,6 +254,29 @@ Route::post('/user/login', function () {
             $_SESSION['username'] = $USER['username'];
             $_SESSION['name'] = $USER['displayname'];
 
+            if (!empty($_POST['stay_logged_in'])) {
+                $selector = bin2hex(random_bytes(12));
+                $token = bin2hex(random_bytes(32));
+
+                $expires = time() + (86400 * 30);
+
+                $osiris->rememberTokens->insertOne([
+                    'selector' => $selector,
+                    'token_hash' => password_hash($token, PASSWORD_DEFAULT),
+                    'username' => $USER['username'],
+                    'expires' => date('Y-m-d H:i:s', $expires),
+                    'created' => date('Y-m-d H:i:s'),
+                ]);
+
+                setcookie('osiris-remember', $selector . ':' . $token, [
+                    'expires' => $expires,
+                    'path' => ROOTPATH . '/',
+                    'secure' => !empty($_SERVER['HTTPS']),
+                    'httponly' => true,
+                    'samesite' => 'Lax',
+                ]);
+            }
+
             if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
                 header("Location: " . $_POST['redirect']);
                 die();
@@ -229,10 +304,27 @@ Route::post('/user/login', function () {
 
 
 Route::get('/user/logout', function () {
+    include_once BASEPATH . "/php/init.php";
     unset($_SESSION["username"]);
     unset($_SESSION["name"]);
     unset($_SESSION["realuser"]);
     $_SESSION['loggedin'] = false;
+
+    if (!empty($_COOKIE['osiris-remember'])) {
+        [$selector] = explode(':', $_COOKIE['osiris-remember'], 2);
+
+        $osiris->rememberTokens->deleteOne([
+            'selector' => $selector
+        ]);
+
+        setcookie('osiris-remember', '', [
+            'expires' => time() - 3600,
+            'path' => ROOTPATH . '/',
+            'secure' => !empty($_SERVER['HTTPS']),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+    }
     header("Location: " . ROOTPATH . "/");
 }, 'login');
 
@@ -257,7 +349,7 @@ Route::get('/user/logout', function () {
 
 
 
-// OAUTH2
+// OAUTH
 Route::get('/user/oauth', function () {
     include BASEPATH . "/php/init.php";
     // league/oauth2-client

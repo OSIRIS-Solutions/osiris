@@ -11,6 +11,12 @@ if (!defined('ADMIN'))
 if (!defined('USER_MANAGEMENT'))
     define('USER_MANAGEMENT', 'AUTH');
 
+// check if USER_MANAGEMENT is valid:
+$valid_user_management = ['AUTH', 'LDAP', 'OAUTH'];
+if (!in_array(strtoupper(USER_MANAGEMENT), $valid_user_management)) {
+    die("Error in your CONFIG: USER_MANAGEMENT must be one of the following: " . implode(', ', $valid_user_management));
+}
+
 if (!defined('LIVE'))
     define('LIVE', true);
 

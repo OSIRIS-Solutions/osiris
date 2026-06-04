@@ -534,12 +534,12 @@ class SidebarNav
         return $options;
     }
 
-    protected function renderItem(array $item): string
+    protected function renderItem(array $item, bool $includeSearch = true): string
     {
         $html = '';
         $activeClass = $item['is_active'] ? ' active' : '';
 
-        if ($item['hasSearch'] ?? false) {
+        if (($item['hasSearch'] ?? false) && $includeSearch) {
             $searchUrl = ROOTPATH . $item['url'] . '/search';
             if ($item['id'] === 'users') {
                 $searchUrl = ROOTPATH . '/persons/search';
@@ -598,6 +598,20 @@ class SidebarNav
         $nav = $this->get();
         foreach ($nav as $group) {
             $items[] = $this->renderGroup($group);
+        }
+        return implode("\n", $items);
+    }
+
+    public function renderFav(): string
+    {
+        $items = [];
+        $nav = $this->get();
+        foreach ($nav as $group) {
+            if ($group['id'] === 'favorites') {
+                foreach ($group['items'] as $item) {
+                    $items[] = $this->renderItem($item, false);
+                }
+            }
         }
         return implode("\n", $items);
     }

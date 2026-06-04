@@ -81,6 +81,10 @@ $headers = [];
                 echo $Report->getReport();
                 ?>
             </div>
+
+            <p class="text-muted">
+                <?= lang('<b>Note:</b> This is a preview of the report. The actual report may look different when exported. The selected UI language affects the language in the report.', '<b>Hinweis:</b> Dies ist eine Vorschau des Berichts. Der tatsächliche Bericht kann nach dem Export anders aussehen. Die ausgewählte UI-Sprache wirkt sich auf die Sprache im Report aus.') ?>
+            </p>
         </div>
 
 

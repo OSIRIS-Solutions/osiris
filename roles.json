@@ -447,6 +447,23 @@
         ]
     },
     {
+        "de": "News",
+        "en": "News",
+        "icon": "newspaper",
+        "fields": [
+            {
+                "id": "news.edit",
+                "de": "Nachrichten hinzufügen und bearbeiten",
+                "en": "Add and edit news"
+            },
+            {
+                "id": "news.delete",
+                "de": "Nachrichten löschen",
+                "en": "Delete news"
+            }
+        ]
+    },
+    {
         "de": "Gäste",
         "en": "Guests",
         "icon": "user-switch",

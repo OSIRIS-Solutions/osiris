@@ -14,6 +14,25 @@
  * @license     MIT
  */
 
+
+function migrationCard($title_en, $title_de, $text_en, $text_de, $count = null, $label_en = null, $label_de = null)
+{
+    echo '<div class="migration-card">';
+    echo '<h3 class="migration-ok">✓ ' . lang($title_en, $title_de) . '</h3>';
+    echo '<p>' . lang($text_en, $text_de) . '</p>';
+
+    if ($count !== null) {
+        echo '<div class="migration-summary">';
+        echo '<div class="migration-stat">';
+        echo '<strong>' . intval($count) . '</strong>';
+        echo '<span>' . lang($label_en ?? 'documents updated', $label_de ?? 'Dokumente aktualisiert') . '</span>';
+        echo '</div>';
+        echo '</div>';
+    }
+
+    echo '</div>';
+}
+
 Route::get('/migration-needed', function () {
     include_once BASEPATH . "/php/init.php";
     // check if we need to run the migration
@@ -67,7 +86,7 @@ Route::get('/migration-needed', function () {
                 <?= lang('In case you are seeing this message for a long time, please contact your administrator.', 'Falls du diese Nachricht über einen längeren Zeitraum siehst, kontaktiere bitte deinen Administrator.') ?>
             </small>
         </div>
-<?php
+    <?php
     }
     include_once BASEPATH . "/footer.php";
     die;
@@ -94,12 +113,40 @@ Route::get('/migrate/files', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/migrate/(.*)', function ($v) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Country.php";
+    include_once BASEPATH . "/php/Render.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403);
+    }
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+
+    echo '<div class="migration-report">';
+
+    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
+    flush();
+    ob_flush();
+
+    // check if version file exists
+    if (!file_exists(BASEPATH . "/routes/migration/v$v.php")) {
+        echo "<p>Migration file for version $v not found. Please check if the file <code>v$v.php</code> exists in the <code>routes/migration</code> folder.</p>";
+    } else {
+        include_once BASEPATH . "/routes/migration/v$v.php";
+    }
+    echo '</div>';
+    include BASEPATH . "/footer.php";
+});
+
+
 Route::get('/migrate/cv', function () {
     // error_reporting(E_ERROR | E_PARSE);
     set_time_limit(6000);
     include_once BASEPATH . "/php/init.php";
 
     include BASEPATH . "/header.php";
+    include_once BASEPATH . "/php/Render.php";
 
     // migrate cv dates
     $users = $osiris->persons->find(['cv' => ['$exists' => true]])->toArray();
@@ -298,7 +345,10 @@ Route::get('/migrate', function () {
     error_reporting(E_ALL);
 
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Render.php";
+
     include BASEPATH . "/header.php";
+
 
     // check if user is logged in and has admin rights
     if (!$Settings->hasPermission('admin.see')) {
@@ -307,9 +357,9 @@ Route::get('/migrate', function () {
         die;
     }
 
-    echo "<h1>" . lang('OSIRIS Migration', 'OSIRIS Migration') . "</h1>";
-    echo "<p>" . lang('Please wait...', 'Bitte warten...') . "</p>";
-    // flush output buffer
+    echo '<div class="migration-report">';
+
+    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
     flush();
     ob_flush();
 
@@ -317,10 +367,33 @@ Route::get('/migrate', function () {
 
     // check if DB version is current version
     if (!empty($DBversion) && $DBversion['value'] == OSIRIS_VERSION) {
-        echo "OSIRIS is already up to date. Nothing to do.";
+        echo '
+        <div class="migration-report">
+            <div class="migration-card">
+                <h3 class="migration-ok">✓ ' . lang('Everything is up to date', 'Alles ist auf dem neuesten Stand') . '</h3>
+
+                <p>' . lang(
+            'No migration steps were required. OSIRIS is already using the latest database schema and configuration.',
+            'Es waren keine Migrationsschritte erforderlich. OSIRIS verwendet bereits das aktuelle Datenbankschema und die aktuelle Konfiguration.'
+        ) . '</p>
+            </div>
+        </div>
+        </div>';
         include BASEPATH . "/footer.php";
         die;
     }
+
+    ?>
+    <div class="migration-card">
+        <h2><?= lang('Database migration report', 'Bericht zur Datenbankmigration') ?></h2>
+        <p class="migration-muted">
+            <?= lang(
+                'OSIRIS is updating required database structures for the current version. Existing data is preserved and adapted where necessary.',
+                'OSIRIS aktualisiert notwendige Datenbankstrukturen für die aktuelle Version. Bestehende Daten bleiben erhalten und werden bei Bedarf angepasst.'
+            ) ?>
+        </p>
+    </div>
+<?php
 
     if (empty($DBversion)) {
         $DBversion = "1.0.0";
@@ -443,17 +516,21 @@ Route::get('/migrate', function () {
         ob_flush();
         $rerender = true;
     }
+    if (version_compare($DBversion, '2.0.0', '<')) {
+        include BASEPATH . "/routes/migration/v2.0.0.php";
+        flush();
+        ob_flush();
+        $rerender = true;
+    }
 
     if ($rerender) {
         echo "<p>Rerender activities, please wait ...</p>";
         flush();
         ob_flush();
 
-        include_once BASEPATH . "/php/Render.php";
         renderActivities();
     }
-    // echo '<p>Rerender projects</p>';
-    // renderAuthorUnitsProjects();
+
 
     echo "<p>" . lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
     $osiris->system->updateOne(
@@ -467,6 +544,8 @@ Route::get('/migrate', function () {
         ['$set' => ['value' => date('Y-m-d')]],
         ['upsert' => true]
     );
+
+    echo "</div>";
     include BASEPATH . "/footer.php";
 });
 

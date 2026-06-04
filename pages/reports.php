@@ -18,38 +18,106 @@
  * @license     MIT
  */
 
+$reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray();
+
 ?>
 
-<?php if ($Settings->hasPermission('report.templates')) { ?>
-    <a href="<?= ROOTPATH ?>/admin/reports" class="btn primary ">
-        <i class="ph ph-edit"></i>
-        <?= lang('Edit templates', 'Vorlagen bearbeiten') ?>
-    </a>
-<?php } ?>
+
+<div class="modal" id="order" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h5 class="title">
+                <i class="ph ph-list-numbers"></i>
+                <?= lang('Change order', 'Reihenfolge ändern') ?>
+            </h5>
+
+            <style>
+                tr.ui-sortable-helper {
+                    background-color: white;
+                    border: var(--border-width) solid var(--border-color);
+                }
+            </style>
+
+            <form action="<?= ROOTPATH ?>/crud/reports/update-order" method="post">
+                <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/reports">
+
+                <table class="table w-auto">
+                    <tbody id="authors">
+                        <?php foreach ($reports as $report) { ?>
+                            <tr>
+                                <td class="w-50">
+                                    <i class="ph ph-dots-six-vertical text-muted handle cursor-pointer"></i>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="order[]" value="<?= $report['_id'] ?>">
+                                    <?= $report['title'] ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+
+                </table>
+                <button class="btn secondary mt-20">
+                    <i class="ph ph-check"></i>
+                    <?= lang('Submit', 'Bestätigen') ?>
+                </button>
+            </form>
+            <?php include_once BASEPATH . '/header-editor.php'; ?>
+            <script>
+                $(document).ready(function() {
+                    $('#authors').sortable({
+                        handle: ".handle",
+                        // change: function( event, ui ) {}
+                    });
+                })
+            </script>
+
+
+        </div>
+    </div>
+</div>
+
 
 <h1>
     <i class="ph-duotone ph-clipboard-text"></i>
     <?= lang('Reports', 'Berichte') ?>
 </h1>
 
-<?php
-$reports = $osiris->adminReports->find();
+<?php if ($Settings->hasPermission('report.templates')) { ?>
+    <div class="btn-toolbar mb-20">
+        <a href="<?= ROOTPATH ?>/admin/reports" class="btn primary ">
+            <i class="ph ph-edit"></i>
+            <?= lang('Edit templates', 'Vorlagen bearbeiten') ?>
+        </a>
+        <a href="<?= ROOTPATH ?>/admin/export-design" class="btn ">
+            <i class="ph ph-palette"></i>
+            <?= lang('Export design', 'Export-Design') ?>
+        </a>
+        <a href="#order" class="btn " data-toggle="modal">
+            <i class="ph ph-list-numbers"></i>
+            <?= lang('Change order', 'Reihenfolge ändern') ?>
+        </a>
+    </div>
+<?php } ?>
 
+<?php
 if (empty($reports)) {
     echo '<div class="alert alert-info">' . lang('No reports found.', 'Keine Berichte gefunden.') . '</div>';
 } else foreach ($reports as $report) { ?>
-    <div class="box">
-        <div class="content">
+    <details class="collapse-panel mb-20">
+        <summary class="collapse-header">
             <?php if ($Settings->hasPermission('report.templates')) { ?>
                 <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn btn-sm btn-secondary float-right" title="<?= lang('Edit report template', 'Report-Vorlage bearbeiten') ?>">
                     <i class="ph ph-pencil" aria-hidden="true"></i>
                 </a>
             <?php } ?>
-            <h3><?= $report['title'] ?></h3>
-            <p class="text-primary"><?= $report['description'] ?? '' ?></p>
-        </div>
-        <hr>
-        <div class="content">
+            <h3 class="m-0"><?= $report['title'] ?></h3>
+            <p class="text-primary m-0"><?= $report['description'] ?? '' ?></p>
+        </summary>
+        <div class="collapse-content">
             <form action="<?= ROOTPATH ?>/reports" method="post">
                 <input type="hidden" name="id" value="<?= $report['_id'] ?>">
 
@@ -93,7 +161,7 @@ if (empty($reports)) {
 
             </form>
         </div>
-    </div>
+    </details>
 <?php } ?>
 
 

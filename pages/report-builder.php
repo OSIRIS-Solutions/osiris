@@ -5,24 +5,143 @@
  * A report may consists of text blocks (markdown), paragraphs with filtered activities, and tables with aggregated numbers.
  */
 
-// report is defined in the controller
+$aggregate_filter = fn($f) => !empty($f['module_of']) && in_array('aggregate', $f['usage']);
+$sort_filter = fn($f) => !in_array($f['type'], ['boolean', 'list']) && !str_contains($f['id'], '.') && !empty($f['module_of']) && in_array('filter', $f['usage']);
+
+$data_fields = [];
 
 include_once BASEPATH . "/php/activity_fields.php";
 $FIELDS = new ActivityFields();
-$fields_aggregate = array_filter($FIELDS->fields, function ($f) {
-    return !empty($f['module_of']) && in_array('aggregate', $f['usage']);
-});
-$fields_sort = array_filter($FIELDS->fields, function ($f) {
-    return !empty($f['module_of']) && in_array('filter', $f['usage']);
-});
+$data_fields['activities']['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
+$data_fields['activities']['sort'] = array_filter($FIELDS->fields, $sort_filter);
+$data_fields['activities']['add'] = array_filter($data_fields['activities']['sort'], $sort_filter);
+$data_fields['activities']['sort'][] = [
+    'id' => 'rendered.plain',
+    'label' => lang('Alphabetically', 'Alphabetisch'),
+    'type' => 'string'
+];
+
+// include_once BASEPATH . "/php/person_fields.php";
+// $FIELDS = new PersonFields();
+// $data_fields['persons']['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
+// $data_fields['persons']['sort'] = array_filter($FIELDS->fields, $sort_filter);
+// $data_fields['persons']['add'] = array_filter($data_fields['persons']['sort'], $sort_filter);
+
+
+if ($Settings->featureEnabled('projects')) {
+    include_once BASEPATH . "/php/project_fields.php";
+    foreach (['projects', 'proposals'] as $collection) {
+        $FIELDS = new ProjectFields($collection);
+
+        $data_fields[$collection]['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
+        $data_fields[$collection]['sort'] = array_filter($FIELDS->fields, $sort_filter);
+        $data_fields[$collection]['add'] = array_filter($data_fields[$collection]['sort'], $sort_filter);
+    }
+}
+
+if ($Settings->featureEnabled('events')) {
+    include_once BASEPATH . "/php/event_fields.php";
+    $FIELDS = new EventFields();
+
+    $data_fields['conferences']['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
+    $data_fields['conferences']['sort'] = array_filter($FIELDS->fields, $sort_filter);
+    $data_fields['conferences']['add'] = array_filter($data_fields['conferences']['sort'], $sort_filter);
+}
+
+// convert all into arrays for easier access in js
+foreach ($data_fields as $key => $value) {
+    foreach ($value as $usage => $fields) {
+        $data_fields[$key][$usage] = array_values($fields);
+    }
+}
+
 
 $report_id = $report['_id'] ?? null;
+
+
+$collections = [
+    'activities' => lang('Activities', 'Aktivitäten'),
+    // 'persons' => lang('Persons', 'Personen')
+];
+if ($Settings->featureEnabled('events')) {
+    $collections['conferences'] = lang('Events', 'Ereignisse');
+}
+if ($Settings->featureEnabled('projects')) {
+    $collections['projects'] = lang('Projects', 'Projekte');
+    $collections['proposals'] = lang('Proposals', 'Anträge');
+}
 ?>
 
 <style>
     #report {
-        min-height: 30rem;
+        min-height: 320px;
+        border: 2px dashed #e5e7eb;
+        border-radius: .5rem;
+        padding: 1rem;
+        margin: 2rem 0;
+        /* background: #fff; */
     }
+
+    .preview-content {
+        cursor: pointer;
+    }
+
+    .preview-content h1,
+    .preview-content h2,
+    .preview-content h3,
+    .preview-content h4 {
+        display: flex;
+        align-items: center;
+    }
+
+    .preview-content h1::before,
+    .preview-content h2::before,
+    .preview-content h3::before,
+    .preview-content h4::before {
+        content: "H1";
+        /* font-family: var(--icon-font); */
+        display: inline-block;
+        color: var(--muted-color);
+        margin-right: 1rem;
+        background: var(--gray-color);
+        width: 3rem;
+        text-align: center;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--border-color);
+        font-size: .6em;
+        font-weight: normal;
+        font-family: monospace;
+    }
+
+    .preview-content h1 {
+        font-size: 2.4rem;
+    }
+
+
+    .preview-content h2 {
+        font-size: 2rem;
+    }
+
+    .preview-content h2::before {
+        content: "H2";
+    }
+
+    .preview-content h3 {
+        font-size: 1.6rem;
+    }
+
+    .preview-content h3::before {
+        content: "H3";
+    }
+
+    .preview-content h4 {
+        font-size: 1.4rem;
+    }
+
+    .preview-content h4::before {
+        content: "H4";
+    }
+
     .step {
         margin-bottom: 1rem;
         padding: 1rem;
@@ -71,7 +190,7 @@ $report_id = $report['_id'] ?? null;
     }
 
     .step .step-body {
-        margin-top: .5rem;
+        margin-top: 1rem;
     }
 
     .step.is-collapsed .step-body {
@@ -116,11 +235,53 @@ $report_id = $report['_id'] ?? null;
         right: 0;
         z-index: 40;
         background-color: var(--muted-color-very-light);
-        padding: .5rem 4.5rem 2rem;
-        /* border-radius: calc(var(--border-radius) + .5rem); */
-        box-shadow: 0 0 8px rgba(0, 0, 0, .15);
+        background-color: var(--gray-color-very-light);
+        padding: 1rem 4.5rem 2rem;
         border-top: var(--border-width) solid var(--border-color);
         margin: 0 -2rem -2rem;
+    }
+
+    .step .step-name {
+        font-weight: 600;
+        font-size: 1.4rem;
+        border: none;
+        /* border-bottom: 1px solid var(--border-color); */
+        /* border-radius: 0; */
+        box-shadow: none;
+        background-color: var(--body-color);
+        width: 100%;
+    }
+
+    .step .step-name::placeholder {
+        font-weight: 600;
+        font-size: 1.4rem;
+        color: var(--muted-color);
+    }
+
+    .step .label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: .25rem;
+    }
+
+    .line-step {
+        display: flex;
+        align-items: center;
+    }
+
+    .rule {
+        margin: 1rem 0;
+        width: 100%;
+        margin-bottom: .75rem;
+        padding: .75rem;
+        margin-left: 2.5rem;
+        position: relative;
+    }
+
+    .dragging {
+        background-color: var(--muted-color-very-light);
+        opacity: .9;
+        border: none;
     }
 </style>
 
@@ -150,12 +311,32 @@ $report_id = $report['_id'] ?? null;
     <input type="hidden" name="id" value="<?= $report_id ?>">
 
     <div style="margin-left: 2.5rem;">
-        <?php if (isset($report['title'])) { ?>
-            <button type="button" class="btn" onclick="$('#report-settings').slideToggle()">
-                <i class="ph ph-edit"></i>
-                <?= lang('Edit report settings', 'Berichtseinstellungen bearbeiten') ?>
+
+        <!-- toolbar -->
+        <div class="d-flex align-items-center gap-5 my-10">
+
+            <?php if (isset($report['title'])) { ?>
+                <button type="button" class="btn" onclick="$('#report-settings').slideToggle()">
+                    <i class="ph ph-edit"></i>
+                    <?= lang('Edit report settings', 'Berichtseinstellungen bearbeiten') ?>
+                </button>
+            <?php } ?>
+            <a href="#variables" class="btn" data-toggle="modal">
+                <i class="ph ph-code-block"></i>
+                <?= lang('Variables', 'Variablen') ?>
+            </a>
+
+            <!-- collapse all -->
+            <button type="button" class="btn ml-auto" onclick="$('#report .step').addClass('is-collapsed')">
+                <i class="ph ph-arrows-in-line-vertical"></i>
+                <?= lang('Collapse all', 'Alle einklappen') ?>
             </button>
-        <?php } ?>
+            <button type="button" class="btn" onclick="$('#report .step').removeClass('is-collapsed')">
+                <i class="ph ph-arrows-out-line-vertical"></i>
+                <?= lang('Expand all', 'Alle ausklappen') ?>
+            </button>
+        </div>
+
 
         <div style="<?= isset($report['title']) ? 'display:none;' : '' ?>" id="report-settings" class="box padded mt-0">
             <h2 class="title">
@@ -273,25 +454,8 @@ $report_id = $report['_id'] ?? null;
             </div>
         </div>
 
-        <!-- toolbar -->
-        <div class="d-flex align-items-center gap-5 my-10">
-            <a href="#variables" class="btn primary" data-toggle="modal">
-                <i class="ph ph-code-block"></i>
-                <?= lang('Variables', 'Variablen') ?>
-            </a>
-
-            <!-- collapse all -->
-            <button type="button" class="btn ml-auto" onclick="$('#report .step').addClass('is-collapsed')">
-                <i class="ph ph-arrows-in-line-vertical"></i>
-                <?= lang('Collapse all', 'Alle einklappen') ?>
-            </button>
-            <button type="button" class="btn" onclick="$('#report .step').removeClass('is-collapsed')">
-                <i class="ph ph-arrows-out-line-vertical"></i>
-                <?= lang('Expand all', 'Alle ausklappen') ?>
-            </button>
-        </div>
-
     </div>
+
     <div id="report">
         <!-- steps will be added here -->
     </div>
@@ -310,17 +474,17 @@ $report_id = $report['_id'] ?? null;
                     <b class="text-primary d-block"><?= lang('Text', 'Text') ?></b>
                     <small class="text-muted"><?= lang('A block that contains headings or paragraphs', 'Ein Block, der Überschriften oder Absätze enthält') ?></small>
                 </a>
-                <a class="item" onclick="addRow('activities')">
-                    <b class="text-primary d-block"><?= lang('Activities', 'Aktivitäten') ?></b>
-                    <small class="text-muted"><?= lang('A block that contains a list of activities', 'Ein Block, der eine Liste von Aktivitäten enthält') ?></small>
-                </a>
-                <a class="item" onclick="addRow('activities-field')">
-                    <b class="text-primary d-block"><?= lang('Activities (incl. additional Feld)', 'Aktivitäten (mit weiterem Feld)') ?></b>
-                    <small class="text-muted"><?= lang('A block that contains a table of activities with another field in a seperate column', 'Ein Block, der eine Tabelle von Aktivitäten mit einem weiteren Feld in einer separaten Spalte enthält') ?></small>
+                <a class="item" onclick="addRow('list')">
+                    <b class="text-primary d-block"><?= lang('List', 'Liste') ?></b>
+                    <small class="text-muted"><?= lang('A block that contains a list of items of different types', 'Ein Block, der eine Liste von Elementen unterschiedlicher Typen enthält') ?></small>
                 </a>
                 <a class="item" onclick="addRow('table')">
                     <b class="text-primary d-block"><?= lang('Table', 'Tabelle') ?></b>
-                    <small class="text-muted"><?= lang('A block that contains a table of aggregated activities', 'Ein Block, der eine Tabelle von aggregierten Aktivitäten enthält') ?></small>
+                    <small class="text-muted"><?= lang('Aggregate information as a table containing number of items', 'Aggregiere Informationen in einer Tabelle, die die Anzahl der Elemente enthält') ?></small>
+                </a>
+                <a class="item" onclick="addRow('toc')">
+                    <b class="text-primary d-block"><?= lang('Table of contents', 'Inhaltsverzeichnis') ?></b>
+                    <small class="text-muted"><?= lang('A block that automatically generates a table of contents based on the headings in the report', 'Ein Block, der automatisch ein Inhaltsverzeichnis basierend auf den Überschriften im Bericht generiert') ?></small>
                 </a>
                 <a class="item" onclick="addRow('line')">
                     <b class="text-primary d-block"><?= lang('Line', 'Linie') ?></b>
@@ -348,8 +512,19 @@ $report_id = $report['_id'] ?? null;
         gap: 1rem;
     }
 
+    .preview-content {
+        flex-grow: 1;
+    }
+
     .step-container {
         /* margin-bottom: 1rem; */
+    }
+
+    .preview-content h1 p,
+    .preview-content h2 p,
+    .preview-content h3 p,
+    .preview-content h4 p {
+        margin: 0;
     }
 </style>
 
@@ -359,29 +534,17 @@ $report_id = $report['_id'] ?? null;
         <div class="preview">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
 
-            <div class="preview-content">Text</div>
-            <a data-toggle="modal" onclick="$(this).closest('.step-container').find('.step').slideToggle()">
-                <i class="ph ph-edit"></i>
+            <div class="preview-content" onclick="openTextEditor(this)">
+                <p><?= lang('Text block without content', 'Textblock ohne Inhalt') ?></p>
+            </div>
+            <a data-toggle="modal" onclick="openTextEditor(this)">
+                <i class="ph ph-pencil-simple-line"></i>
             </a>
         </div>
         <div class="step" style="display:none;">
 
             <div class="step-header">
-                <i class="ph ph-dots-six-vertical text-muted handle"></i>
                 <i class="ph ph-text-t ph-fw text-secondary"></i>
-                <span class="step-title"><?= lang('Text', 'Text') ?></span>
-                <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
-                    <i class="ph ph-arrows-in-line-vertical"></i>
-                </button>
-                <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
-                    <i class="ph ph-copy"></i>
-                </button>
-                <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step-container').remove()" title="Delete">
-                    <i class="ph ph-trash" aria-label="Delete"></i>
-                </button>
-            </div>
-            <div class="step-body">
-                <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
                 <select name="values[*][level]" class="form-control small w-auto step-level" required>
                     <option value="h1"><?= lang('Heading 1', 'Überschrift 1') ?></option>
@@ -390,6 +553,14 @@ $report_id = $report['_id'] ?? null;
                     <option value="h4"><?= lang('Heading 4', 'Überschrift 4') ?></option>
                     <option value="p"><?= lang('Paragraph', 'Absatz') ?></option>
                 </select>
+
+                <button type="button" class="btn small link text-danger ml-auto" onclick="$(this).closest('.step-container').remove()" title="Delete">
+                    <i class="ph ph-trash" aria-label="Delete"></i>
+                </button>
+            </div>
+            <div class="step-body">
+                <input type="hidden" class="hidden" name="values[*][type]" value="text">
+
 
                 <div class="form-group lang-<?= lang('en', 'de') ?> mb-0">
                     <div class="title-editor form-group"></div>
@@ -400,10 +571,66 @@ $report_id = $report['_id'] ?? null;
         </div>
     </div>
 
+    <div class="step" id="list">
+        <div class="step-header">
+            <i class="ph ph-dots-six-vertical text-muted handle"></i>
+            <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
+            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= lang('List of items', 'Liste von Elementen') ?>">
+            <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
+                <i class="ph ph-arrows-in-line-vertical"></i>
+            </button>
+            <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
+                <i class="ph ph-copy"></i>
+            </button>
+            <button type="button" class="btn link btn-icon text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
+                <i class="ph ph-trash" aria-label="Delete"></i>
+            </button>
+        </div>
+        <div class="step-body">
+            <div class="collection-options">
+                <?php
+                foreach ($collections as $col => $label) {
+                ?>
+                    <div class="pill-checkbox ">
+                        <input type="radio" id="col-<?= $col ?>-*" value="<?= $col ?>" name="values[*][collection]" class="step-collection" required>
+                        <label for="col-<?= $col ?>-*"><?= $label ?></label>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+
+            <input type="hidden" class="hidden" name="values[*][type]" value="list">
+            <label for="filter" class="label">Filter <a onclick="$(this).parent().next().toggle()" class="btn link small"><i class="ph ph-question"></i></a></label>
+            <small style="display:none;">
+                <?= lang('Find filters in the <a href="' . ROOTPATH . '/activities/search" target="_blank">advanced search</a> and copy from "Show filter".', 'Filter findest du in der <a href="' . ROOTPATH . '/activities/search" target="_blank">erweiterten Suche</a> und kannst sie im Fenster "Zeige Filter" kopieren.') ?>
+            </small>
+            <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
+
+            <div class="mt-10">
+                <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
+                <label for="timelimit"><?= lang('Limit to reporting time', 'Auf den Berichtszeitraum beschränken') ?></label>
+            </div>
+            <div class="row row-eq-spacing my-0">
+                <div class="col-sm">
+                    <label class="label"><?= lang('Additional fields', 'Zusätzliche Felder') ?></label>
+                    <div class="additional-fields" data-name="values[*][field]"><!-- rows injected by JS --></div>
+                    <button type="button" class="btn small" onclick="addAdditionalField(this)"><?= lang('Add field', '+ Feld') ?></button>
+                </div>
+                <div class="col-sm">
+                    <label class="label"><?= lang('Sorting', 'Sortierung') ?></label>
+                    <div class="sort-rows" data-name="values[*][sort]"><!-- rows injected by JS --></div>
+                    <button type="button" class="btn small" onclick="addSortRow(this)"><?= lang('Add criterion', '+ Kriterium') ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="step" id="activities">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-article ph-fw text-secondary"></i>
+            <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
             <span class="step-title"><?= lang('Activities', 'Aktivitäten') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -411,7 +638,7 @@ $report_id = $report['_id'] ?? null;
             <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
                 <i class="ph ph-copy"></i>
             </button>
-            <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step').remove()" title="Delete">
+            <button type="button" class="btn link btn-icon text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
                 <i class="ph ph-trash" aria-label="Delete"></i>
             </button>
         </div>
@@ -436,7 +663,7 @@ $report_id = $report['_id'] ?? null;
     <div class="step" id="activities-field">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-columns-plus-right ph-fw text-secondary"></i>
+            <a onclick="toggleStep(this)"><i class="ph ph-columns-plus-right ph-fw text-secondary"></i></a>
             <span class="step-title"><?= lang('Activities (incl. additional Field)', 'Aktivitäten (mit weiterem Feld)') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
@@ -444,7 +671,7 @@ $report_id = $report['_id'] ?? null;
             <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
                 <i class="ph ph-copy"></i>
             </button>
-            <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step').remove()" title="Delete">
+            <button type="button" class="btn link btn-icon text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
                 <i class="ph ph-trash" aria-label="Delete"></i>
             </button>
         </div>
@@ -458,10 +685,7 @@ $report_id = $report['_id'] ?? null;
                 <label for="field"><?= lang('Additional field', 'Weiteres Feld') ?></label>
                 <select name="values[*][field]" required class="form-control step-field">
                     <?php
-                    $fields_add = array_filter($fields_sort, function ($f) {
-                        return $f['type'] !== 'boolean' && $f['type'] !== 'list' && !str_starts_with($f['id'], 'authors.');
-                    });
-                    foreach ($fields_add as $f) { ?>
+                    foreach ($data_fields['activities']['add'] as $f) { ?>
                         <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
                     <?php } ?>
                 </select>
@@ -478,41 +702,51 @@ $report_id = $report['_id'] ?? null;
         </div>
     </div>
 
+
     <div class="step" id="table">
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-table ph-fw text-secondary"></i>
-            <span class="step-title"><?= lang('Table', 'Tabelle') ?></span>
+            <a onclick="toggleStep(this)"><i class="ph ph-table ph-fw text-secondary"></i></a>
+            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= lang('Table', 'Tabelle') ?>">
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
             <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
                 <i class="ph ph-copy"></i>
             </button>
-            <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step').remove()" title="Delete">
+            <button type="button" class="btn link btn-icon text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
                 <i class="ph ph-trash" aria-label="Delete"></i>
             </button>
         </div>
         <div class="step-body">
+            <div class="collection-options">
+                <?php
+                foreach ($collections as $col => $label) {
+                ?>
+                    <div class="pill-checkbox ">
+                        <input type="radio" id="col-<?= $col ?>-*" value="<?= $col ?>" name="values[*][collection]" class="step-collection" required>
+                        <label for="col-<?= $col ?>-*"><?= $label ?></label>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
             <input type="hidden" class="hidden" name="values[*][type]" value="table">
             <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
 
             <div class="form-row row-eq-spacing mt-10">
                 <div class="col">
-                    <label for="aggregate"><?= lang('First aggregation', 'Erste Aggregation') ?></label>
+                    <label for="aggregate" class="label"><i class="ph ph-columns-plus-left"></i> <?= lang('Rows', 'Zeilen') ?></label>
                     <select name="values[*][aggregate]" required class="form-control step-aggregate">
-                        <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
-                        <?php } ?>
+                        <option value=""><?= lang('Select field for the left column', 'Feld für die linke Spalte auswählen') ?></option>
+                        <!-- options injected by JS -->
                     </select>
                 </div>
                 <div class="col">
-                    <label for="aggregate2"><?= lang('Second aggregation', 'Zweite Aggregation (optional)') ?></label>
+                    <label for="aggregate2" class="label"><i class="ph ph-rows-plus-top"></i> <?= lang('Columns', 'Spalten (optional)') ?></label>
                     <select name="values[*][aggregate2]" class="form-control step-aggregate2">
-                        <option value=""><?= lang('Without second aggregation', 'Ohne zweite Aggregation') ?></option>
-                        <?php foreach ($fields_aggregate as $f) { ?>
-                            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
-                        <?php } ?>
+                        <option value=""><?= lang('Choose field for the column header (optional)', 'Feld für die Spaltenüberschrift auswählen (optional)') ?></option>
+                        <!-- options injected by JS -->
                     </select>
                 </div>
             </div>
@@ -526,32 +760,43 @@ $report_id = $report['_id'] ?? null;
                     <label for="field" class="d-inline-block"><?= lang('Sort by', 'Sortieren nach') ?>: </label>
                     <select name="values[*][table_sort]" required class="form-control step-select small d-inline-block w-auto">
                         <option value="count-desc"><?= lang('Count descending', 'Anzahl absteigend') ?></option>
-                        <option value="aggregation-asc"><?= lang('Name of aggregation asc', 'Name der Aggregation aufsteigend') ?></option>
-                        <option value="aggregation-desc"><?= lang('Name of aggregation desc', 'Name der Aggregation absteigend') ?></option>
                         <option value="count-asc"><?= lang('Count ascending', 'Anzahl aufsteigend') ?></option>
+                        <option value="aggregation-asc"><?= lang('Name of aggregation asc', 'Zeilenbezeichnung aufsteigend') ?></option>
+                        <option value="aggregation-desc"><?= lang('Name of aggregation desc', 'Zeilenbezeichnung absteigend') ?></option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="step" id="line">
-        <div class="step-header">
-            <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            <i class="ph ph-minus ph-fw text-secondary"></i>
-            <span class="step-title"><?= lang('Line', 'Trennlinie') ?></span>
-            <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
-                <i class="ph ph-arrows-in-line-vertical"></i>
-            </button>
-            <button type="button" class="btn link btn-icon" onclick="duplicateStep(this)" title="Duplicate">
-                <i class="ph ph-copy"></i>
-            </button>
-            <button type="button" class="btn link btn-icon" onclick="$(this).closest('.step').remove()" title="Delete">
-                <i class="ph ph-trash" aria-label="Delete"></i>
-            </button>
+    <div id="line" class="line-step">
+        <i class="ph ph-dots-six-vertical text-muted handle"></i>
+        <div class="rule">
+            <hr>
         </div>
+
+        <button type="button" class="btn small link text-danger" onclick="$(this).closest('.line-step').remove()" title="Delete">
+            <i class="ph ph-trash" aria-label="Delete"></i>
+        </button>
         <input type="hidden" class="hidden" name="values[*][type]" value="line">
     </div>
+
+    <div id="toc" class="step ">
+        <i class="ph ph-dots-six-vertical text-muted handle"></i>
+        <div class="d-flex d-align-center gap-10">
+        <i class="ph ph-list ph-fw text-secondary"></i>
+        <span class="step-title"><?= lang('Table of contents', 'Inhaltsverzeichnis') ?></span>
+
+        <button type="button" class="btn small link text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
+            <i class="ph ph-trash" aria-label="Delete"></i>
+        </button>
+    </div>
+    <small class="text-muted">
+    <?= lang('Automatically generates a table of contents based on the headings in the report. You might be asked by Word to update the fields when opening the report. Just confirm with "Yes" and the table of contents will be updated.', 'Generiert automatisch ein Inhaltsverzeichnis basierend auf den Überschriften im Bericht. Beim Öffnen des Berichts könnte Word fragen, ob die Felder aktualisiert werden sollen. Einfach mit "Ja" bestätigen, dann wird das Inhaltsverzeichnis aktualisiert.') ?>
+    </small>
+        <input type="hidden" class="hidden" name="values[*][type]" value="toc">
+    </div>
+
 
     <!-- Hidden template for one variable row -->
     <table id="vars-row-template" class="hidden">
@@ -598,6 +843,7 @@ $report_id = $report['_id'] ?? null;
         const $tpl = $('#' + type).clone(true, true);
         // new id
         $tpl.attr('id', type + '-' + templateIndex);
+        let collection = data && data.collection ? data.collection : 'activities';
 
         // replace [*] → [varIndex]
         $tpl.find('input,select,textarea').each(function() {
@@ -605,6 +851,29 @@ $report_id = $report['_id'] ?? null;
             if (!name) return;
             $(this).attr('name', name.replace('[*]', '[' + templateIndex + ']'));
         });
+        $tpl.find('input,select,textarea').each(function() {
+            const id = $(this).attr('id');
+            if (!id) return;
+            $(this).attr('id', id.replace('*', templateIndex));
+        });
+        $tpl.find('label').each(function() {
+            const forAttr = $(this).attr('for');
+            if (!forAttr) return;
+            $(this).attr('for', forAttr.replace('*', templateIndex));
+        });
+
+        $tpl.find('.step-collection').prop('checked', false);
+        $tpl.find(`.step-collection[value="${collection}"]`).prop('checked', true);
+
+        if (type === 'table') {
+            // inject options for aggregation
+            const aggregateSelect = $tpl.find('.step-aggregate');
+            const aggregate2Select = $tpl.find('.step-aggregate2');
+            const options = buildOptions(collection, 'aggregate');
+            aggregateSelect.append(options);
+            aggregate2Select.append(options);
+        }
+
         // prefill
         if (data) {
             $tpl.find('.step-text').val(data.text || '');
@@ -613,12 +882,19 @@ $report_id = $report['_id'] ?? null;
             $tpl.find('.step-timelimit').prop('checked', data.timelimit ? true : false);
             $tpl.find('.step-aggregate').val(data.aggregate || '');
             $tpl.find('.step-aggregate2').val(data.aggregate2 || '');
-            $tpl.find('.step-field').val(data.field || '');
+            $tpl.find('.step-name').val(data.title || '');
+            // $tpl.find('.step-field').val(data.field || '');
             // sort rows
-            if (data.sort && Array.isArray(data.sort)) {
+            if (data.sort && Array.isArray(data.sort) && data.sort.length > 0) {
                 data.sort.forEach(sortCriterion => {
                     addSortRow($tpl.find('.sort-rows'), sortCriterion);
                 });
+            }
+            if (data.field && Array.isArray(data.field) && data.field.length > 0) {
+                data.field.forEach(field => {
+                    addAdditionalField($tpl.find('.additional-fields'), field);
+                });
+
             }
             if (data.table_sort && typeof data.table_sort === 'string') {
                 $tpl.find('.step-select').val(data.table_sort);
@@ -628,6 +904,16 @@ $report_id = $report['_id'] ?? null;
                 const preview = $tpl.find('.preview-content');
                 const level = $tpl.find('.step-level').val();
                 preview.html(`<${level}>${data.text}</${level}>`);
+            }
+
+            // if data exist: collapse step by default
+            $tpl.addClass('is-collapsed');
+        } else {
+            // if no data: open step by default
+            $tpl.removeClass('is-collapsed');
+            // for text blocks: also open editor
+            if (type === 'text') {
+                $tpl.find('.step').show();
             }
         }
         $('#report').append($tpl);
@@ -727,15 +1013,16 @@ $report_id = $report['_id'] ?? null;
         const base = $container.data('name'); // e.g. values[*][sort]
         const idx = $container.children('.sort-row').length;
         const namePrefix = base.replace('*', getIndexFromContainer($container));
+
+        // inject options based on selected collection
+        const collection = $container.closest('.step-body').find('.step-collection:checked').val();
+        const options = buildOptions(collection, 'sort', data);
         // copy options from select fields
         const row = $(`
     <div class="sort-row d-flex align-items-center gap-5 mb-5">
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
         <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
-        <option value="rendered.plain"><?= lang('Alphabetically', 'Alphabetisch') ?></option>
-        <?php foreach ($fields_sort as $f) { ?>
-            <option value="<?= e($f['id']) ?>"><?= $f['label'] ?></option>
-        <?php } ?>
+        ${options}
       </select>
       <select class="form-control small w-150 flex-grow-0" name="${namePrefix}[${idx}][dir]" required>
         <option value="asc">${lang('Ascending', 'Aufsteigend')}</option><option value="desc">${lang('Descending', 'Absteigend')}</option>
@@ -745,6 +1032,7 @@ $report_id = $report['_id'] ?? null;
       </button>
     </div>
   `);
+
         $container.append(row);
 
         if (data) { // prefill
@@ -754,12 +1042,40 @@ $report_id = $report['_id'] ?? null;
         }
     }
 
+    function addAdditionalField(elOrContainer, data) {
+        const $elOrContainer = $(elOrContainer);
+        const $container = $elOrContainer.hasClass('additional-fields') ? $elOrContainer : $elOrContainer.closest('.step-body').find('.additional-fields');
+        const base = $container.data('name'); // e.g. values[*][field]
+        const idx = $container.children('.additional-field-row').length;
+        const namePrefix = base.replace('*', getIndexFromContainer($container));
+        // inject options based on selected collection
+        const collection = $container.closest('.step-body').find('.step-collection:checked').val();
+        const options = buildOptions(collection, 'add', data);
+
+        // copy options from select fields
+        const row = $(`
+    <div class="additional-field-row d-flex align-items-center gap-5 mb-5">
+      <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}]" required>
+        <option value="" disabled selected><?= lang('Select field', 'Feld wählen') ?></option>
+        ${options}
+      </select>
+      <button type="button" class="btn small link text-danger" title="Remove" onclick="$(this).closest('.additional-field-row').remove()">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+  `);
+        $container.append(row);
+        if (data) { // prefill
+            row.find('select').val(data || '');
+        }
+    }
+
     // Helper: find the numeric index actually used in this block (replaces *)
     function getIndexFromContainer($container) {
         // Find any input name under step and extract [N]
         const $inp = $container.closest('.step').find('input,textarea,select').first();
         const m = ($inp.attr('name') || '').match(/\[(\d+)\]/);
-        return m ? m[1] : n; // fallback
+        return m ? m[1] : 0; // fallback
     }
 
 
@@ -806,7 +1122,14 @@ $report_id = $report['_id'] ?? null;
         steps.forEach(step => addRow(step.type, step));
 
         $('#report').sortable({
-            handle: ".handle"
+            handle: ".handle",
+            // add classes for styling during drag (optional)
+            start: function(e, ui) {
+                ui.item.addClass('dragging');
+            },
+            stop: function(e, ui) {
+                ui.item.removeClass('dragging');
+            }
         });
     });
 
@@ -842,4 +1165,53 @@ $report_id = $report['_id'] ?? null;
         }
         // });
     });
+
+    // when changing the collection: 
+    // check if sort and additional fields are filled in, 
+    // if yes, hint to user that they will be lost if they change the collection
+    $(document).on('click', '.step-collection', function(event) {
+        console.log('Collection change detected');
+        // disable default behavior of radio button to allow reverting change if user cancels
+        const $step = $(this).closest('.step');
+        const hasSort = $step.find('.sort-rows .sort-row').length > 0;
+        const hasFields = $step.find('.additional-fields .additional-field-row').length > 0;
+        const hasAggregations = $step.find('.step-aggregate').val() || $step.find('.step-aggregate2').val();
+        console.log(hasAggregations);
+        if (hasSort || hasFields || hasAggregations) {
+            if (!confirm(lang('Changing the collection will remove any additional fields, sorting criteria, and aggregations you have set up. Do you want to continue?', 'Wenn du die Sammlung änderst, werden alle zusätzlichen Felder, Sortierkriterien und Aggregationen entfernt, die du eingerichtet hast. Möchtest du fortfahren?'))) {
+                // make sure radio button does not change
+                event.preventDefault();
+                return;
+            } else {
+                // remove sort and additional fields
+                $step.find('.sort-rows').empty();
+                $step.find('.additional-fields').empty();
+            }
+        }
+        if ($step.find('.step-aggregate')) {
+            // remove aggregation options except placeholder
+            $step.find('.step-aggregate option:not(:first)').remove();
+            $step.find('.step-aggregate2 option:not(:first)').remove();
+
+            // populate new aggregation options based on new collection
+            const collection = $(this).val();
+            console.log(collection);
+            const options = buildOptions(collection, 'aggregate');
+            $step.find('.step-aggregate').append(options);
+            $step.find('.step-aggregate2').append(options);
+        }
+    });
+
+
+    function buildOptions(collection, subset = 'add', selected = '') {
+        const FIELDS = <?= json_encode($data_fields) ?>;
+        if (!FIELDS[collection]) return '';
+        return FIELDS[collection][subset].map(f => `<option value="${f.id}" ${f.id === selected ? 'selected' : ''}>${f.label}</option>`).join('');
+    }
+
+    function openTextEditor(btn) {
+        // toggle editor visibility
+        const $step = $(btn).closest('.step-container');
+        $step.find('.step').slideToggle()
+    }
 </script>

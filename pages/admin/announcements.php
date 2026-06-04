@@ -39,8 +39,8 @@
 
         <p class="text-muted">
             <?= lang(
-                'Announcements are displayed in the news section of user profiles. Use them for important information such as maintenance or specific notices.',
-                'Ankündigungen erscheinen im News-Bereich der Nutzerprofile. Nutze sie für wichtige Infos wie Wartungen oder spezifische Hinweise.'
+                'Announcements are displayed in the news section of the home page. Use them for important information such as maintenance or specific notices.',
+                'Ankündigungen erscheinen im News-Bereich der Startseite. Nutze sie für wichtige Infos wie Wartungen oder spezifische Hinweise.'
             ) ?>
         </p>
 

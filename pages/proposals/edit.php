@@ -42,7 +42,7 @@ if (!$new_project) {
             break;
         }
     }
-    if ($user_project == false && $form['created_by'] == $_SESSION['username']) {
+    if ($user_project == false && ($form['created_by'] ?? '') == $_SESSION['username']) {
         $user_project = True;
     }
     $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));

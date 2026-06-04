@@ -227,6 +227,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
     </div>
     <div class="col ml-20">
+        <div class="text-muted"><?= $scientist['academic_title'] ?? '' ?></div>
         <h1 class="mt-0"><?= $name ?></h1>
         <h5 class="subtitle">
             <?= lang($scientist['position'] ?? '', $scientist['position_de'] ?? null) ?>
@@ -546,14 +547,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <!-- TAB AREA -->
 
 <nav class="pills mt-20 mb-0">
-    <?php if ($currentuser) { ?>
-        <a onclick="navigate('news')" id="btn-news" class="btn active">
-            <i class="ph ph-star" aria-hidden="true"></i>
-            <?= lang('News') ?>
-        </a>
-    <?php } ?>
 
-    <a onclick="navigate('general')" id="btn-general" class="btn <?= $currentuser ? '' : 'active' ?>">
+    <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-info" aria-hidden="true"></i>
         <?= lang('General', 'Allgemein') ?>
     </a>
@@ -615,11 +610,21 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         'subtype' => ['$in' => $Settings->continuousTypes]
     ];
     $count_memberships = $osiris->activities->count($membership_filter);
-    if ($count_memberships > 0) { ?>
+    if ($count_memberships > 0) {
+        // count ongoing memberships
+        $count_memberships_ongoing = $osiris->activities->count([
+            'rendered.users' => $user,
+            'subtype' => ['$in' => $Settings->continuousTypes],
+            '$or' => [
+                ['end' => null],
+                ['end' => ['$gt' => date('Y-m-d')]]
+            ]
+        ]);
+    ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
             <?= lang('Ongoing activities', 'Laufende Aktivitäten')  ?>
-            <span class="index"><?= $count_memberships ?></span>
+            <span class="index"><?= $count_memberships_ongoing ?></span>
         </a>
     <?php } ?>
 
@@ -719,462 +724,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 </nav>
 
 
-<?php if ($currentuser) { ?>
-    <section id="news">
-
-        <?php
-        $announcement_active = $Settings->isAnnouncementActive();
-        if ($announcement_active) {
-            $announcement = $Settings->get('announcement'); ?>
-
-            <style>
-                #announcement {
-                    display: flex;
-                    align-items: center;
-                    position: relative;
-                    padding: 1.5rem;
-                }
-
-                #announcement img#sophie-announcement {
-                    max-width: 120px;
-                    margin: -1rem 2rem -1rem 0;
-                }
-
-                #announcement h1,
-                #announcement h2,
-                #announcement h3,
-                #announcement h4,
-                #announcement h5,
-                #announcement h6 {
-                    color: var(--primary-color);
-                    margin-top: 0;
-                }
-
-                #announcement h1 {
-                    font-size: 2.2rem;
-                }
-
-                #announcement h2 {
-                    font-size: 1.8rem;
-                }
-
-                #announcement h3 {
-                    font-size: 1.6rem;
-                }
-            </style>
-            <div class="box mb-0 border-primary primary" id="announcement" data-announcement-version="<?= strtotime($announcement['updated_at'] ?? 'now') ?>">
-
-                <img src="<?= ROOTPATH ?>/img/sophie/sophie-announced.png" alt="Announcement" id="sophie-announcement">
-                <div>
-                    <a data-dismiss="modal" class="float-right" role="button" aria-label="Close" onclick="dismissAnnouncementSession()">
-                        <i class="ph ph-x"></i>
-                    </a>
-                    <?php
-                    $en = trim($announcement['en'] ?? null);
-                    $de = trim($announcement['de'] ?? null);
-                    if (!empty(strip_tags($en)) && !empty(strip_tags($de))) {
-                        echo  lang($en, $de);
-                    } elseif (!empty(strip_tags($en))) {
-                        echo $en;
-                    } elseif (!empty(strip_tags($de))) {
-                        echo $de;
-                    }
-                    ?>
-                    <button class="btn primary small" onclick="dismissAnnouncement()">
-                        <i class="ph ph-x-circle"></i>
-                        <?= lang('Don’t show again', 'Nicht mehr anzeigen') ?>
-                    </button>
-                </div>
-            </div>
-            <script>
-                function dismissAnnouncement() {
-                    fetch('<?= ROOTPATH ?>/crud/users/dismiss-announcement', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(() => {
-                        document.getElementById('announcement').remove();
-                    });
-                }
-
-                function dismissAnnouncementSession() {
-                    const announcementVersion = $('#announcement').data('announcement-version');
-                    localStorage.setItem('osiris_hide_announcement_hidden_' + announcementVersion, Date.now() + 24 * 60 * 60 * 1000);
-                    document.getElementById('announcement').remove();
-                }
-                $(document).ready(function() {
-                    const announcementVersion = $('#announcement').data('announcement-version');
-                    const hideUntil = localStorage.getItem('osiris_hide_announcement_hidden_' + announcementVersion);
-                    if (hideUntil && Date.now() < hideUntil) {
-                        $('#announcement').remove();
-                    }
-                });
-            </script>
-        <?php
-
-        }
-
-        ?>
-
-        <style>
-            .dashboard {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-            }
-        </style>
-        <div class="row row-eq-spacing my-0">
-            <div class="col-md-6">
-                <?php if (isset($n_notifications) && $n_notifications) { ?>
-                    <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
-                    ?>
-                        <div class="box padded d-flex align-items-center">
-                            <div>
-                                <b>
-                                    <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
-                                </b>
-                                <p class="text-muted my-5 font-size-12">
-                                    <?= lang(
-                                        'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
-                                        'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
-                                    ) ?>
-                                </p>
-                                <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
-                                    <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
-                                </a>
-                            </div>
-
-                            <img src="<?= ROOTPATH ?>/img/sophie/sophie-checklist.png" class="w-100">
-                        </div>
-                    <?php } ?>
-
-                    <script>
-                        function openNotifications() {
-                            $('.dropdown-menu.dropdown-menu-center.notifications').closest('.dropdown').toggleClass('show');
-                        }
-                    </script>
-                <?php } ?>
-
-                <?php if ($Settings->featureEnabled('new-colleagues')) { ?>
-                    <!-- Show new users -->
-                    <div class="box">
-                        <div class="content">
-                            <h4 class="title">
-                                <?= lang('New Colleagues', 'Neue Kolleg:innen') ?>
-                            </h4>
-                            <p class="text-muted">
-                                <?= lang('Recently added colleagues in OSIRIS.', 'Kürzlich hinzugefügte Kolleg:innen in OSIRIS.') ?>
-                            </p>
-                            <?php
-                            $new_colleagues = $osiris->persons->find(
-                                ['created' => ['$exists' => true], 'is_active' => ['$ne' => false]],
-                                [
-                                    'sort' => ['created' => -1],
-                                    'limit' => 3,
-                                ]
-                            )->toArray();
-                            ?>
-                            <table class="table simple">
-                                <?php foreach ($new_colleagues as $colleague) { ?>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <?= $Settings->printProfilePicture($colleague['username'], 'profile-img small mr-20') ?>
-                                                <div>
-                                                    <h5 class="my-0">
-                                                        <a href="<?= ROOTPATH ?>/profile/<?= $colleague['username'] ?>" class="">
-                                                            <?= $colleague['displayname'] ?? $colleague['username'] ?>
-                                                        </a>
-                                                    </h5>
-                                                    <?= lang($colleague['position'] ?? '', $colleague['position_de'] ?? null) ?>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-                            </table>
-                        </div>
-                    </div>
-                <?php } ?>
-
-                <?php if ($Settings->featureEnabled('new-publications', true)) { ?>
-                    <div class="box">
-                        <div class="content">
-                            <h4 class="title">
-                                <?= lang('Newest publications', 'Neuste Publikationen') ?>
-                            </h4>
-                            <p class="text-muted">
-                                <?= lang('Here you can find the latest publications from your institute.', 'Hier findest du die neusten Publikationen deines Instituts.') ?>
-                            </p>
-
-                            <?php
-                            $pubs = $osiris->activities->find(
-                                ['authors.aoi' => true, 'type' => 'publication'],
-                                [
-                                    'sort' => ['start_date' => -1],
-                                    'limit' => 5,
-                                    'projection' => ['html' => '$rendered.web', 'date' => '$start_date']
-                                ]
-                            )->toArray();
-                            ?>
-                            <table class="table simple">
-                                <?php foreach ($pubs as $doc) { ?>
-                                    <tr>
-                                        <td>
-                                            <small class="badge primary font-weight-bold"><?= format_date($doc['date']) ?></small><br>
-                                            <?= $doc['html'] ?>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-
-                            </table>
-
-                            <a href="<?= ROOTPATH ?>/activities" class="btn primary">
-                                <?= lang('All activities', 'Zeige alle Aktivitäten') ?>
-                            </a>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-
-            <div class="col-md-6 h-full">
-
-                <?php if (($Settings->featureEnabled('quarterly-reporting', true) && $Settings->hasPermission('report.dashboard')) && $currentuser) {
-                    $n_scientists = $osiris->persons->count(["roles" => 'scientist', "is_active" => true]);
-                    $n_approved = $osiris->persons->count(["roles" => 'scientist', "is_active" => true, "approved" => $lastquarter]);
-                    $progress = ($n_scientists > 0) ? ($n_approved / $n_scientists) * 100 : 0;
-                ?>
-                    <div class="box">
-                        <div class="content">
-                            <div class="d-flex justify-content-between align-items-center mb-10">
-                                <h5 class="title m-0"><?= lang('Last quarter', 'Vergangenes Quartal') ?></h5>
-                                <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
-                                    <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
-                                </button>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mt-10 font-size-12">
-                                <span class="text-muted">
-                                    <?= lang(
-                                        "$n_approved of $n_scientists scientists have approved their activities.",
-                                        "$n_approved von $n_scientists Wissenschaftler:innen haben ihre Aktivitäten freigegeben."
-                                    ) ?>
-                                </span>
-                                <b class="badge success"><?= $lastquarter ?></b>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
 
 
 
-                <?php if ($Settings->featureEnabled('events', true)) { ?>
-
-                    <?php if ($Settings->featureEnabled('deadlines', false)) {
-                        include_once BASEPATH . '/php/Vocabulary.php';
-                        $Vocabulary = new Vocabulary();
-                    ?>
-                        <div class="box mb-20">
-                            <div class="content">
-                                <?php if ($Settings->hasPermission('deadlines.edit')) { ?>
-                                    <a href="<?= ROOTPATH ?>/deadlines/new" class="float-md-right btn small">
-                                        <i class="ph ph-plus"></i>
-                                        <?= lang('Add', 'Hinzufügen') ?>
-                                    </a>
-                                <?php } ?>
-                                <h4 class="title">
-                                    <a href="<?= ROOTPATH ?>/deadlines" class="link">
-                                        <?= lang('Deadlines') ?>
-                                    </a>
-                                </h4>
-                                <?php
-                                $deadlines = $osiris->deadlines->find(
-                                    [
-                                        '$and' => [
-                                            ['date' => ['$gte' => date('Y-m-d', strtotime('-3 days'))]],
-                                            ['date' => ['$lte' => date('Y-m-d', strtotime('+12 month'))]]
-                                        ],
-                                        // 'dismissed' => ['$ne' => $user],
-                                        'roles' => ['$in' => $Settings->roles]
-                                    ],
-                                    ['sort' => ['date' => 1], 'projection' => [
-                                        '_id' => 0,
-                                        'id' => ['$toString' => '$_id'],
-                                        'date' => 1,
-                                        'type' => 1,
-                                        'title' => 1
-                                    ]]
-                                )->toArray();
-                                $deadlineTypes = $Vocabulary->getValues('deadline-type');
-                                $deadlineTypes = array_column($deadlineTypes, null, 'id');
-                                ?>
-                                <div id="deadline-timeline" class="mt-20 mb-10"></div>
-                                <style>
-                                    #deadline-timeline {
-                                        position: relative;
-                                    }
-
-                                    #deadline-timeline svg {
-                                        width: 100%;
-                                        height: auto;
-                                        display: block;
-                                    }
-
-                                    #deadline-timeline .deadline-dot {
-                                        transition: transform .15s ease;
-                                    }
-                                </style>
-                                <script>
-                                    $(document).ready(function() {
-
-                                        deadlineTimeline({
-                                            divSelector: '#deadline-timeline',
-                                            monthsAhead: 12,
-                                            startLabel: lang('Today', 'Heute'),
-                                            endLabel: lang('+12 months', '+12 Monate'),
-                                            typeInfo: <?= json_encode($deadlineTypes) ?>,
-                                            deadlines: <?= json_encode($deadlines) ?>
-                                        });
-                                        // deadlineTimeline(options);
-                                    });
-                                </script>
-                            </div>
-                        </div>
-
-                    <?php } ?>
-
-                    <div class="box">
-                        <div class="content">
-                            <?php if ($Settings->hasPermission('conferences.edit')) { ?>
-                                <a href="<?= ROOTPATH ?>/conferences/new" class="float-md-right btn small">
-                                    <i class="ph ph-plus"></i>
-                                    <?= lang('Add', 'Hinzufügen') ?>
-                                </a>
-                            <?php } ?>
-
-                            <h4 class="title">
-                                <a href="<?= ROOTPATH ?>/conferences" class="link">
-                                    <?= lang('Events') ?>
-                                </a>
-                            </h4>
-                            <p class="text-muted font-size-12">
-                                <?= lang('Shown are approaching events in the next 6 month and events you attended within the past six month.', 'Gezeigt sind zukünftige Events in den nächsten 6 Monaten und vergangene, an denen du in den letzten sechs Monaten teilgenommen hast.') ?>
-                            </p>
-
-                            <?php
-                            // conferences max past 3 month
-                            $conferences = $osiris->conferences->find(
-                                [
-                                    '$or' => [
-                                        ['end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))], 'start' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]],
-                                        [
-                                            'start' => ['$gte' => date('Y-m-d', strtotime('-6 month'))],
-                                            '$or' => [
-                                                ['participants' => $user],
-                                                ['interests' => $user]
-                                            ]
-                                        ]
-                                    ],
-                                    'dismissed' => ['$ne' => $user]
-                                ],
-                                ['sort' => ['start' => 1]]
-                            )->toArray();
-                            ?>
-                            <table class="table simple">
-                                <?php foreach ($conferences as $n => $c) {
-                                    $past = strtotime($c['end']) > time();
-                                    if ($past) {
-                                        $days = ceil((strtotime($c['start']) - time()) / 86400);
-                                        $days = $days > 0 ? $days : 0;
-                                        $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
-                                    }
-                                    // user is interested in conference
-                                    $interest = in_array($user, DB::doc2Arr($c['interests'] ?? []));
-                                    $participate = in_array($user, DB::doc2Arr($c['participants'] ?? []));
-                                    $interestTooltip = $interest ? lang('Click to remove interest', 'Klicken um Interesse zu entfernen') : lang('Click to show interest', 'Klicken um Interesse zu zeigen');
-                                    $participateTooltip = $participate ? lang('Click to remove participation', 'Klicken um Teilnahme zu entfernen') : lang('Click to show participation', 'Klicken um Teilnahme zu zeigen');
-
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="m-0">
-                                                    <a href="<?= ROOTPATH ?>/conferences/view/<?= $c['_id'] ?>">
-                                                        <?= $c['title'] ?>
-                                                    </a>
-                                                    <?php if (!empty($c['url'] ?? null)) { ?>
-                                                        <a href="<?= $c['url'] ?>" target="_blank" rel="noopener noreferrer">
-                                                            <i class="ph ph-link"></i>
-                                                        </a>
-                                                    <?php } ?>
-                                                </h6>
-                                                <!-- dismiss btn -->
-                                                <a class="text-danger" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'dismissed')" data-toggle="tooltip" data-title="<?= lang('Dismiss', 'Verwerfen') ?>">
-                                                    <i class="ph ph-x"></i>
-                                                </a>
-                                            </div>
-                                            <p class="my-5 text-muted">
-                                                <?= $c['title_full'] ?? '' ?>
-                                            </p>
-                                            <p class="my-5 text-muted">
-                                                <small class="text- mr-10">
-                                                    <?= fromToDate($c['start'], $c['end']) ?>
-                                                </small>
-                                                <small>
-                                                    <?= $c['location'] ?>
-                                                </small>
-                                            </p>
-
-                                            <div class="btn-toolbar font-size-12">
-                                                <?php
-                                                // check if conference is in the future
-                                                if ($past) {
-                                                ?>
-                                                    <div class="btn-group">
-                                                        <small class="btn small cursor-default">
-                                                            <?= $days ?>
-                                                        </small>
-                                                        <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $c['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>">
-                                                            <i class="ph ph-calendar-plus"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="btn-group">
-                                                        <a class="btn small <?= $interest ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'interests')" data-toggle="tooltip" data-title="<?= $interestTooltip ?>">
-                                                            <b><?= count($c['interests'] ?? []) ?></b>
-                                                            <?= lang('Interested', 'Interessiert') ?>
-                                                        </a>
-                                                        <a class="btn small <?= $participate ? 'active primary' : '' ?>" onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'participants')" data-toggle="tooltip" data-title="<?= $participateTooltip ?>">
-                                                            <b><?= count($c['participants'] ?? []) ?></b>
-                                                            <?= lang('Participants', 'Teilnehmer') ?>
-                                                        </a>
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <a class="btn small primary" href="<?= ROOTPATH ?>/add-activity?type=poster&conference=<?= $c['_id'] ?>">
-                                                        <i class="ph ph-plus-circle"></i>
-                                                        <?= lang('Add contribution', 'Beitrag hinzufügen') ?>
-                                                    </a>
-                                                <?php } ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-
-                            </table>
-
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-        </div>
-    </section>
-<?php } ?>
-
-
-
-<section id="general" <?= $currentuser ? 'style="display:none"' : '' ?>>
+<section id="general">
 
     <div class="row row-eq-spacing my-0">
         <div class="col-md-6 col-lg-4">
@@ -1855,8 +1408,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <i class="ph ph-graph" aria-hidden="true"></i>
         <?= lang('Coauthor network of', 'Koautoren-Netzwerk von') ?> <?= $scientist['displayname'] ?>
     </h2>
-    <p class="text-muted">
+    <p class="text-muted" id="coauthor-network-info-5">
         <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
+    </p>
+    <p class="text-muted" id="coauthor-network-info-all" style="display:none">
+        <?= lang('Based on all publications.', 'Basierend auf allen Publikationen.') ?>
     </p>
     <div class="box">
         <div class="row">
@@ -1864,6 +1420,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <div id="chord"></div>
             </div>
             <div class="col-md-4">
+                <div class="btn-group mt-20">
+                    <button class="btn small" id="toggle-show-5" disabled>
+                        <?= lang('Last 5 years', 'Letzte 5 Jahre') ?>
+                    </button>
+                    <button class="btn small" id="toggle-show-all">
+                        <?= lang('All years', 'Alle Jahre') ?>
+                    </button>
+                </div>
                 <div id="legend"></div>
             </div>
         </div>
@@ -2021,6 +1585,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <p class="text-muted">
             <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
         </p>
+        <div class="btn-group mt-20">
+            <button class="btn small" id="toggle-wordcloud-activities" disabled>
+                <?= lang('All activities', 'Alle Aktivitäten') ?>
+            </button>
+            <button class="btn small" id="toggle-wordcloud-publications">
+                <?= lang('Only publications', 'Nur Publikationen') ?>
+            </button>
+        </div>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
     </section>
 <?php } ?>

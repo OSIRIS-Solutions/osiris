@@ -46,10 +46,6 @@ function lang($en, $de = null)
     return $lang == 'de' ? $de : $en;
 }
 
-// $_SESSION['loggedin'] = true;
-// $_SESSION['username'] = 'jko'; // default user for testing purposes
-
-
 include_once BASEPATH . "/php/Route.php";
 
 Route::get('/', function () {
@@ -61,7 +57,7 @@ Route::get('/', function () {
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
         header("Location: " . ROOTPATH . "/user/login");
     } else {
-        $path = ROOTPATH . "/profile/" . $_SESSION['username'];
+        $path = ROOTPATH . "/home";
         if (!empty($_SERVER['QUERY_STRING'])) $path .= "?" . $_SERVER['QUERY_STRING'];
         header("Location: $path");
     }
@@ -74,22 +70,32 @@ if (defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'AUTH') {
 
 include_once BASEPATH . "/routes/login.php";
 
-// Route::get('/test', function () {
-//     include_once BASEPATH . "/php/init.php";
-//     include_once BASEPATH . "/php/LDAPInterface.php";
+// check if user 
+if (empty($_SESSION['loggedin']) && !empty($_COOKIE['osiris-remember'])) {
+    include_once BASEPATH . "/php/DB.php";
+    $DB = new DB();
+    $osiris = $DB->db;
+    [$selector, $token] = explode(':', $_COOKIE['osiris-remember'], 2) + [null, null];
 
-//     include BASEPATH . "/header.php";
+    if ($selector && $token) {
+        $remember = $osiris->rememberTokens->findOne([
+            'selector' => $selector,
+            'expires' => ['$gt' => date('Y-m-d H:i:s')]
+        ]);
 
-//     $LDAP = new LDAPInterface();
-//     // $LDAP->attributes = [];
-//     // $user = $LDAP->fetchUser('juk20');
-//     // echo $LDAP->convertObjectGUID($user['objectguid'][0]);
-//     $user = $LDAP->newUser('ironman');
-//     dump($user, true);
+        if ($remember && password_verify($token, $remember['token_hash'])) {
+            $USER = $osiris->persons->findOne(['username' => $remember['username']]);
 
-//     include BASEPATH . "/footer.php";
-// });
-
+            if ($USER) {
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $USER['username'];
+                $_SESSION['name'] = $USER['displayname'];
+            }
+        }
+    }
+    // clean up expired tokens
+    $osiris->rememberTokens->deleteMany(['expires' => ['$lte' => date('Y-m-d H:i:s')]]);
+}
 
 // route for language setting
 Route::get('/set-preferences', function () {
@@ -107,7 +113,8 @@ Route::get('/set-preferences', function () {
             'samesite' => 'Lax',
         ]);
         // save language in user profile
-        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
+        if (
+            isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true
             && isset($_SESSION['username']) && !empty($_SESSION['username'])
         ) {
             $osiris->persons->updateOne(
@@ -156,6 +163,14 @@ if (
     &&
     isset($_SESSION['username']) && !empty($_SESSION['username'])
 ) {
+
+    Route::get('/home', function () {
+        include_once BASEPATH . "/php/init.php";
+        include BASEPATH . "/header.php";
+        include BASEPATH . "/pages/home.php";
+        include BASEPATH . "/footer.php";
+    });
+
     include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
     include_once BASEPATH . "/routes/database.php";
@@ -175,6 +190,7 @@ if (
     include_once BASEPATH . "/routes/spectrum.php";
     include_once BASEPATH . "/routes/events.php";
     require_once BASEPATH . '/routes/guests.php';
+    require_once BASEPATH . '/routes/news.php';
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";
     include_once BASEPATH . "/routes/organizations.php";
