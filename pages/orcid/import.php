@@ -25,7 +25,7 @@ if (isset($_POST['import'])){
     $work = json_decode($_POST['import'], true);
     $work_id = $orcid_parser->importWork($work);
     # redirect to the work page after import
-    header('Location: ' . ROOTPATH . '/activities/view/' . $work_id);
+    header('Location: ' . ROOTPATH . '/activities/edit/' . $work_id);
     exit;
 }
 

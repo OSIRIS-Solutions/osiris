@@ -300,7 +300,7 @@ class OrcidParser
         }
 
         $parsed_work["history"] = [
-            ['date' => date('Y-m-d'), 'type' => 'imported', 'subtype' => 'from orcid', 'user' => $this->username]
+            ['date' => date('Y-m-d'), 'type' => 'imported', 'source' => 'ORCID', 'user' => $this->username]
         ];
 
         $parsed_work['created_by'] = $this->username;
