@@ -1,5 +1,5 @@
 <?php
-class Orcid_Settings
+class Orcid_Settings extends Settings
 {
     private $orcid_settings;
 
@@ -10,8 +10,9 @@ class Orcid_Settings
 
     public function __construct()
     {
-        $Settings = new Settings();
-        $this->orcid_settings = $Settings->get('orcid');
+        // Initialize parent
+        parent::__construct();
+        $this->orcid_settings = $this->get('orcid');
         $this->client_id = $this->orcid_settings['client_id'];
         $this->client_secret = $this->orcid_settings['client_secret'];
         if (isset($this->orcid_settings['api'])) {
