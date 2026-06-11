@@ -14,103 +14,38 @@ require_once 'Orcid.php';
 
 class OrcidParser
 {
-     public const TYPES = [
-        // according to https://info.orcid.org/ufaqs/what-work-types-does-orcid-support/
-        // Academic Publications
-        "book" => ["publication", "book"],
-        "book-chapter" => ["publication", "chapter"],
-        "conference-paper" => ["publication", "article"],
-        "conference-output" => ["publication", "others"],
-        "conference-presentation" => ["publication", "others"],
-        "conference-poster" => ["poster", "poster"],
-        "conference-proceedings" => ["publication", "others"],
-        "journal-article" => ["publication", "article"],
-        "preprint" => ["publication", "preprint"],
-        "dissertation-thesis" => ["publication", "dissertation"],
-        "working-paper" => ["publication", "others"],
-        "other" => ["publication", "others"],
-        //Review and editing
-        "annotation" => ["publication", "others"],
-        "book-review" => ["publication", "others"],
-        "journal-issue" => ["publication", "others"],
-        "review" => ["review", "review"],
-        "transcription" => ["publication", "others"],
-        "translation" => ["publication", "others"],
-        //Dissemination
-        "blog-post" => ["publication", "others"],
-        "dictionary-entry" => ["publication", "others"],
-        "encyclopedia-entry" => ["publication", "others"],
-        "magazine-article" => ["publication", "article"],
-        "newspaper-article" => ["publication", "article"],
-        "report" => ["publication", "report"],
-        "public-speech" => ["publication", "others"],
-        "website" => ["publication", "others"],
-        // Creative
-        "artistic-performance" => ["publication", "others"],
-        "design" => ["publication", "others"],
-        "image" => ["publication", "others"],
-        "online-resource" => ["publication", "others"],
-        "moving-image" => ["publication", "others"],
-        "musical-composition" => ["publication", "others"],
-        "sound" => ["publication", "others"],
-        // Data and process
-        "cartographic-material" => ["publication", "others"],
-        "clinical-study" => ["publication", "others"],
-        "data-set" => ["publication", "dataset"],
-        "data-management-plan" => ["publication", "others"],
-        "physical-object" => ["publication", "others"],
-        "research-technique" => ["publication", "others"],
-        "research-tool" => ["publication", "others"],
-        "software" => ["software", "software"],
-        // Legal and IP
-        "invention" => ["publication", "others"],
-        "license" => ["publication", "others"],
-        "patent" => ["publication", "others"],
-        "registered-copyright" => ["publication", "others"],
-        "standards-and-policy" => ["publication", "others"],
-        "trademark" => ["publication", "others"],
-        // Teaching and supervision
-        "lecture-speech" => ["lecture", "lecture"],
-        "learning-object" => ["publication", "others"],
-        "supervised-student-publication" => ["teaching", "theses"],
-        //Legacy Worktypes
-        "conference-abstract" => ["publication", "others"],
-        "disclosure" => ["publication", "others"],
-        "edited-book" => ["publication", "book"],
-        "manual" => ["publication", "others"],
-        "newsletter-article" => ["publication", "others"],
-        "spin-off-company" => ["publication", "others"],
-        "technical-standards" => ["publication", "others"],
-        "test" => ["publication", "others"],
-    ];
-
-
+    private $types;
+    private $DB;
     private $orcid_settings;
-
     private $username;
     private $osiris;
-
     private $orcid;
     private $token;
     private $NameParser;
 
-
     function __construct($username) {
         $this->NameParser = new FullNameParser();
-        $DB = new DB();
-        $this->osiris = $DB->db;
+        $this->DB = new DB();
+        $this->osiris = $this->DB->db;
 
         $this->username = $username;
         
         $user = $this->osiris->persons->findOne(['username' => $username]);
         $this->orcid = $user['orcid'] ?? null;
         $this->orcid_settings = new Orcid_Settings();
-        
 
         $ACCOUNT = $this->osiris->accounts->findOne(['username' => $username]);
         $this->token = $ACCOUNT['orcid_access_token'] ?? null;
 
-        
+        $this->types = array_filter(
+            $this->orcid_settings->getDOImappings(),
+            fn($value, $key) => str_starts_with($key, 'orcid.'),
+            ARRAY_FILTER_USE_BOTH
+        );
+        if (empty($this->types)) {
+            throw new Exception('No ORCID types found in DOI mappings. Please ask your admin to set the ORCID settings.');
+        }
+
     }
 
 
@@ -233,15 +168,15 @@ class OrcidParser
 
         $parsed_work = [];
 
-        // type
-        [$type, $subtype] = self::TYPES[$work['type']] ?? ['publication', 'others'];
-        $parsed_work['type'] = $type;
-        $parsed_work['subtype'] = $subtype;
-        if (!$subtype) {
-            error_log('Warning: Unknown ORCID work type: ' . $work['type']);
-            $subtype = 'unknown';
+        
+        $key = 'orcid.' . $work['type'];
+        if (isset($this->types[$key]) && !empty($this->types[$key])) {
+            $parsed_work['subtype'] = $this->types[$key];
+            $parsed_work['type'] = $this->osiris->adminTypes->findOne(['id' => $parsed_work['subtype']])['parent'];
         }
-        $parsed_work['subtype'] = $subtype;
+        else {
+            return null; // skip works that are not in the ORCID types defined in the settings
+        }
 
         // title
         $parsed_work['title'] = $work['title']['title']['value'] ?? null;
@@ -261,12 +196,15 @@ class OrcidParser
         }
 
         //date
-        $parsed_work['year'] = $work['publication-date']['year']['value'] ?? null;
-        $parsed_work['month'] = $work['publication-date']['month']['value'] ?? null;
-        $parsed_work['day'] = $work['publication-date']['day']['value'] ?? null;
+        $parsed_work['year'] = (int)($work['publication-date']['year']['value'] ?? null);
+        $parsed_work['month'] = (int)($work['publication-date']['month']['value'] ?? null);
+        $parsed_work['day'] = (int)($work['publication-date']['day']['value'] ?? null);
         $parsed_work['start_date'] = $parsed_work['year'] . '-' . ($parsed_work['month'] ?? '01') . '-' . ($parsed_work['day'] ?? '01');
-
-        $parsed_work['journal'] = $work['journal-title']['value'] ?? null;
+        $parsed_work['start'] = [
+                'year' => (int)$parsed_work['year'] ?? null,
+                'month' => (int)$parsed_work['month'] ?? null,
+                'day' => (int)$parsed_work['day'] ?? null,
+        ];
 
         $parsed_work['authors'] = [];
         $last_contributor = null;
@@ -295,9 +233,19 @@ class OrcidParser
                                 ? 'last' 
                                 : 'middle'),
                 'orcid' => $orcid,
-                'approved' => false
+                'approved' => $username == $this->username ? true : false, // if the contributor is the same as the user importing, we can approve it directly
             ];
         }
+
+        $parsed_work['journal'] = $work['journal-title']['value'] ?? null;
+        $journal = $this->DB->getJournal($parsed_work);
+        if (!empty($journal)) {
+            if (isset($journal['_id'])) {
+                $parsed_work['journal_id'] = (string)($journal['_id']);
+            }
+            $parsed_work['journal'] = $this->DB->getJournalName($parsed_work);
+        };
+        $parsed_work['open_access'] = $this->DB->get_oa($parsed_work);
 
         $parsed_work["history"] = [
             ['date' => date('Y-m-d'), 'type' => 'imported', 'source' => 'ORCID', 'user' => $this->username]
@@ -313,13 +261,15 @@ class OrcidParser
         $works = $this->getWorks();
         $not_in_osiris = $this->filterWorksNotInOsiris($works);
         
-        $parsed_work = [];
+        $parsed_works = [];
         foreach ($not_in_osiris as $work) {
             $put_code = $work['work-summary'][0]['put-code'];
             $work_details = $this->getWork($put_code);
-            $parsed_work[] = $this->parseWork($work_details);
+            if ($parsed_work = $this->parseWork($work_details)) {
+                $parsed_works[] = $parsed_work;
+            }
         }
-        return $parsed_work;
+        return $parsed_works;
     }
 
     function importWork($work) {

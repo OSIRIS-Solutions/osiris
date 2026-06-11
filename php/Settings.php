@@ -999,7 +999,16 @@ class Settings
                 'datacite.workflow' => 'misc',
                 'datacite.other' => 'misc',
                 'datacite.presentation' => 'lecture',
-                'datacite.poster' => 'poster'
+                'datacite.poster' => 'poster',
+                'orcid.book' => 'book',
+                'orcid.book-chapter' => 'chapter',
+                'orcid.journal-article' => 'article',
+                'orcid.conference-paper' => 'article',
+                'orcid.preprint' => 'preprint',
+                'orcid.data-set' => 'dataset',
+                'orcid.software' => 'software',
+                'orcid.conference-poster' => 'poster',
+                'orcid.other' => 'others',
             ];
         }
         return DB::doc2Arr($mappings);
