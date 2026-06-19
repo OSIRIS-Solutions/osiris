@@ -381,12 +381,34 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
     <?php  } ?>
 
+
+    <?php if ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval'])) {
+    ?>
+        <div class="box padded success">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <b>
+                        <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
+                    </b>
+                    <p class="text-muted my-5 font-size-12">
+                        <?= lang(
+                            'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
+                            'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
+                        ) ?>
+                    </p>
+                    <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
+                        <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
+                    </a>
+                </div>
+
+                <img src="<?= ROOTPATH ?>/img/sophie/sophie-checklist.png" class="w-100">
+            </div>
+        </div>
+    <?php } ?>
+
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <!-- <a class="btn primary outline" href="<?= ROOTPATH ?>/add-activity" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzufügen') ?>">
-                <i class="ph-duotone ph-plus-circle ph-fw"></i>
-            </a> -->
             <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
             </a>
@@ -431,17 +453,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </button>
         </form>
 
-        <!-- <div class="dropdown with-arrow">
-            <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
-                <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
-                <a href="<?= ROOTPATH ?>/user/permissions" class="item">
-                    <i class="ph ph-users-three ph-fw text-primary"></i>
-                    <?= lang('Show permissions', 'Einheiten bearbeiten') ?>
-                </a>
-            </div>
-        </div> -->
     </div>
 
 

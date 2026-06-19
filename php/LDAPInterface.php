@@ -443,9 +443,13 @@ class LDAPInterface
                 // first get the current units
                 $currentUnits = [];
                 $pastUnits = [];
-                $currentUser = $osiris->persons->findOne(['$or' => [['username' => $username], ['uniqueid' => $userData['uniqueid']]]], ['projection' => ['units' => 1]]);
+                $filter = ['username' => $username];
+                if (!empty($userData['uniqueid'] ?? null)) {
+                    $filter = ['$or' => [['username' => $username], ['uniqueid' => $userData['uniqueid']]]];
+                }
+                $currentUser = $osiris->persons->findOne($filter, ['projection' => ['units' => 1]]);
                 if (!empty($currentUser)) {
-                    foreach ($currentUser['units'] as $unit) {
+                    foreach (($currentUser['units'] ?? []) as $unit) {
                         if (!is_string($unit['unit'])) continue;
                         // check if unit is in the past
                         if (!empty($unit['end']) && $unit['end'] < date('Y-m-d')) {
@@ -453,19 +457,21 @@ class LDAPInterface
                             continue;
                         }
                         $group = $Groups->getGroup($unit['unit']);
-                        if (!empty($group)) {
+                        if (!empty($group) && !empty($group['id'])) {
                             $u = [
                                 'id' => $unit['id'],
                                 'unit' => $group['id'],
                                 'start' => $unit['start'],
                                 'end' => $unit['end'] ?? null,
-                                'scientific' => $unit['scientific'] ?? null,
+                                'scientific' => $unit['scientific'] ?? true,
                             ];
                             $currentUnits[] = $u;
                             $updatedUnits[$group['id']] = $u;
                         }
                     }
                 }
+                $hadUnitsBefore = !empty($currentUnits) || !empty($pastUnits);
+                $today = date('Y-m-d');
 
                 // then get the new units
                 $ldapUnits = $entry[$ldapMappings['department']];
@@ -480,7 +486,7 @@ class LDAPInterface
                                 'unit' => $unit['id'],
                                 'start' => $unit['start'] ?? null,
                                 'end' => $unit['end'] ?? null,
-                                'scientific' => $unit['scientific'] ?? null,
+                                'scientific' => $unit['scientific'] ?? true,
                             ];
                         }
                     }
@@ -507,9 +513,9 @@ class LDAPInterface
                                 $updatedUnits[$u['unit']] = [
                                     'id' => uniqid(),
                                     'unit' => $u['unit'],
-                                    'start' => $u['start'] ?? date('Y-m-d'),
+                                    'start' => $hadUnitsBefore ? $today : null,
                                     'end' => null,
-                                    'scientific' => $u['scientific'] ?? null,
+                                    'scientific' => $u['scientific'] ?? true,
                                 ];
                             }
                         }
@@ -521,20 +527,20 @@ class LDAPInterface
                             if (!in_array($oldUnit, $new)) {
                                 // unit is not found anymore
                                 if (isset($updatedUnits[$oldUnit])) {
-                                    $updatedUnits[$oldUnit]['end'] = date('Y-m-d');
+                                    $updatedUnits[$oldUnit]['end'] = $today;
                                 }
                             }
                         }
                     }
 
                     if (!empty($updatedUnits)) {
-                        $userData['units'] = array_values($updatedUnits);
-                    }
-                    // finally add past units again (can be duplicates, so without keys)
-                    if (!empty($pastUnits)) {
-                        foreach ($pastUnits as $pUnit) {
-                            $updatedUnits[] = $pUnit;
+                        // finally add past units again (can be duplicates, so without keys)
+                        if (!empty($pastUnits)) {
+                            foreach ($pastUnits as $pUnit) {
+                                $updatedUnits[] = $pUnit;
+                            }
                         }
+                        $userData['units'] = array_values($updatedUnits);
                     }
                 }
             }

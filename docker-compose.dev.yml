@@ -7,6 +7,7 @@ services:
     container_name: osiris
     volumes:
       - .:/var/www/html
+      - vendor-data-dev:/var/www/html/vendor
       - ./img:/var/www/html/img:rw
 
     ports:
@@ -31,3 +32,4 @@ services:
 
 volumes:
   mongo-data-dev:
+  vendor-data-dev:

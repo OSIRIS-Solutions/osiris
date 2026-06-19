@@ -967,7 +967,7 @@ class ActivityFields extends Fields
                 'input' => 'select'
             ],
             [
-                'id' => 'lecture-invited',
+                'id' => 'invited_lecture',
                 'module_of' => $typeModules['lecture-invited'] ?? [],
                 'usage' => [
                     'aggregate',

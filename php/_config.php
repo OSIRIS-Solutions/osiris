@@ -694,7 +694,7 @@ function time_elapsed_string(string $date): string
         'y' => [lang('year', 'Jahr'), lang('years', 'Jahre')],
         'm' => [lang('month', 'Monat'), lang('months', 'Monaten')],
         'w' => [lang('week', 'Woche'), lang('weeks', 'Wochen')],
-        'd' => [lang('day', 'Tag'), lang('days', 'Tage')],
+        'd' => [lang('day', 'Tag'), lang('days', 'Tagen')],
     ];
 
     $value = null;
@@ -969,6 +969,8 @@ function socialLogo($type)
             return 'ph-facebook-logo';
         case 'X':
             return 'ph-x-logo';
+        case 'matrix':
+            return 'ph-matrix-logo';
         case 'website':
             return 'ph-browser';
         case 'twitter':

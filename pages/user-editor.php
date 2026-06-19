@@ -653,7 +653,7 @@ $active = function ($field) use ($data_fields) {
                     <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
-                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'website'] as $s) {
+                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'website'] as $s) {
                         if (array_key_exists($s, $socials)) continue;
                         $logo = socialLogo($s);
                     ?>

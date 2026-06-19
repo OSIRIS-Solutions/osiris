@@ -384,15 +384,13 @@ Route::get('/migrate', function () {
     }
 
     ?>
-    <div class="migration-card">
-        <h2><?= lang('Database migration report', 'Bericht zur Datenbankmigration') ?></h2>
-        <p class="migration-muted">
-            <?= lang(
-                'OSIRIS is updating required database structures for the current version. Existing data is preserved and adapted where necessary.',
-                'OSIRIS aktualisiert notwendige Datenbankstrukturen für die aktuelle Version. Bestehende Daten bleiben erhalten und werden bei Bedarf angepasst.'
-            ) ?>
-        </p>
-    </div>
+    <h2><?= lang('Database migration report', 'Bericht zur Datenbankmigration') ?></h2>
+    <p class="migration-muted">
+        <?= lang(
+            'OSIRIS is updating required database structures for the current version. Existing data is preserved and adapted where necessary.',
+            'OSIRIS aktualisiert notwendige Datenbankstrukturen für die aktuelle Version. Bestehende Daten bleiben erhalten und werden bei Bedarf angepasst.'
+        ) ?>
+    </p>
 <?php
 
     if (empty($DBversion)) {

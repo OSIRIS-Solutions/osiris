@@ -167,6 +167,10 @@ class DB
 
         if (empty($user)) return $issues;
 
+        if (!isset($scientist)) {
+            $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
+        }
+
         // Immer: aktuelles Notifications-Dokument laden (falls vorhanden)
         $existing = $this->db->notifications->findOne(['user' => $user]);
         $messages = $existing['messages'] ?? []; // bestehende Nachrichten beibehalten
@@ -174,7 +178,7 @@ class DB
         $messages = array_filter($messages, function ($msg) {
             return !($msg['read'] ?? false);
         });
-
+        $force = true;
         if ($now - $last > 60 || $force) {
             // ➤ Nur bei Bedarf: aufwendige Checks durchführen
             $hasNotification = count($messages);
@@ -959,18 +963,6 @@ class DB
         $y = CURRENTYEAR - 1;
         $m = CURRENTMONTH;
         $q = ceil($m / 3);
-        // $infrastructures = $this->db->infrastructures->find([
-        //     'persons' => ['$elemMatch' => ['user' => $user, 'reporter' => true]],
-        //     'start_date' => ['$lte' => $y . '-12-31'],
-        //     '$or' => [
-        //         ['end_date' => null],
-        //         ['end_date' => ['$gte' => $y . '-01-01']]
-        //     ],
-        //     'statistics.year' => ['$ne' => $y]
-        // ], ['projection' => ['id' => ['$toString' => '$_id']]]);
-        // foreach ($infrastructures as $infra) {
-        //     $issues['infrastructure'][] = $infra['id'];
-        // }
 
         // 1) Infrastrukturen holen, für die die Person Reporter ist und die im aktuellen Jahr aktiv sind
         $infrasCursor = $this->db->infrastructures->find([

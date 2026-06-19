@@ -62,11 +62,15 @@ function searchActivities(index) {
         suggest.find('a')
             .on('click', function(event) {
                 event.preventDefault();
-                console.log(this);
-                const el = $('<li>')
+                const tr = $('<tr>')
+                tr.append('<td><span class="handle"><i class="ph ph-dots-six-vertical"></i></span></td>')
+                const el = $('<td>')
                     .text($(this).text())
                 el.append(`<input type="hidden" name="values[research][${index}][activities][]" value="${$(this).data('id')}">`)
-                section.find('ul').append(el);
+                tr.append(el);
+                tr.append('<td><button class="btn link text-danger small" type="button" onclick="$(this).closest(\'tr\').remove()"><i class="ph ph-trash"></i></button></td>')
+                console.log(tr);
+                section.find('.activity-list').append(tr);
             })
         // $('#activity-suggest .suggest').html(data);
     })

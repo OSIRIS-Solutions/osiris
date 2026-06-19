@@ -1,7 +1,7 @@
 (function ($) {
 
-  const API_BASE = '/api/command-palette';
-  const API_SEARCH = '/api/command-palette/search';
+  const API_BASE = ROOTPATH+'/api/command-palette';
+  const API_SEARCH = ROOTPATH+'/api/command-palette/search';
   const MIN_CHARS = 3;
   const DEBOUNCE_MS = 260;
 

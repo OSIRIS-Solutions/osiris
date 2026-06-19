@@ -50,12 +50,17 @@ if (empty($institute) || !isset($institute['lat']) || empty($institute['lat'])) 
 
 $project_type = $Project->getProjectType($project['type'] ?? 'third-party');
 $parent = [];
-if (isset($project['parent_id'])) {
+$is_subproject = $project['subproject'] ?? false;
+if (isset($project['parent_id']) && $is_subproject) {
     $parent = $osiris->projects->findOne(['_id' => $project['parent_id']]);
     $project['collaborators'] = $parent['collaborators'] ?? [];
 }
 
-$subproject = $project['subproject'] ?? false;
+$has_subprojects = ($project_type['subprojects'] ?? false) && !$is_subproject;
+$children =[];
+if ($has_subprojects) {
+    $children = $osiris->projects->find(['parent_id' => $project['_id']])->toArray();
+}
 
 $nagoyaRelevant = false;
 // Nagoya information might be stored in proposal
@@ -135,7 +140,7 @@ $scope = $Project->getScope($collaborators);
 <div class="title mb-20">
 
     <b class="badge text-uppercase primary">
-        <?php if ($subproject) { ?>
+        <?php if ($is_subproject) { ?>
             <?= lang('Subproject', 'Teilprojekt') ?>
         <?php } else { ?>
             <?= lang('Project', 'Projekt') ?>
@@ -242,7 +247,7 @@ if ($topicsEnabled) {
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
         <?= lang('Project', 'Projektdetails') ?>
     </a>
-    <?php if ($subproject) {
+    <?php if ($is_subproject) {
         // collaborators are inherited from parent project
         if (count($parent['collaborators'] ?? []) > 0) { ?>
             <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
@@ -395,19 +400,17 @@ if ($topicsEnabled) {
                             </td>
                         </tr>
                     <?php } ?>
-                    <?php if (($project_type['subprojects'] ?? false) && !($subproject)) { ?>
+                    <?php if (($project_type['subprojects'] ?? false) && !($is_subproject)) { ?>
                         <tr>
                             <td>
                                 <span class="key">
                                     <?= lang('Subprojects', 'Teilprojekte') ?>
                                 </span>
-                                <?php if (count($project['subprojects'] ?? []) > 0) {
-                                    $Subproject = new Project();
-                                    foreach ($project['subprojects'] as $sub) {
-                                        $sub = $osiris->projects->findOne(['_id' => $sub]);
-                                        if (empty($sub)) continue;
-                                        $Subproject->setProject($sub);
-                                        echo $Subproject->widgetSubproject();
+                                <?php if (count($children ?? []) > 0) {
+                                    $SubProjectClass = new Project();
+                                    foreach ($children as $sub) {
+                                        $SubProjectClass->setProject($sub);
+                                        echo $SubProjectClass->widgetSubproject();
                                     }
                                 } ?>
                                 <?php if ($Settings->hasPermission('projects.add-subprojects')) { ?>
@@ -571,7 +574,7 @@ if ($topicsEnabled) {
         <?= lang('Collaborators', 'Kooperationspartner') ?>
     </h2>
 
-    <?php if ($edit_perm && !$subproject) { ?>
+    <?php if ($edit_perm && !$is_subproject) { ?>
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
@@ -580,7 +583,7 @@ if ($topicsEnabled) {
         </div>
     <?php } ?>
 
-    <?php if ($subproject) { ?>
+    <?php if ($is_subproject) { ?>
         <p class="text-primary">
             <i class="ph ph-info"></i>
             <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
@@ -669,7 +672,7 @@ if ($topicsEnabled) {
 
     <script>
         const id = '<?= $_GET['project'] ?? null ?>';
-        const collaborator_id = '<?= ($subproject) ? strval($project['parent_id']) : $id ?>';
+        const collaborator_id = '<?= ($is_subproject) ? strval($project['parent_id']) : $id ?>';
         <?php if (empty($project['collaborators'] ?? array())) { ?>
             collabChart = true;
         <?php } ?>

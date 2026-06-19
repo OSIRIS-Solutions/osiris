@@ -65,9 +65,6 @@ $fields = $osiris->adminFields->find()->toArray();
     </table>
 </div>
 
-<!-- <script src="<?= ROOTPATH ?>/js/datatables/dataTables.scroller.js"></script> -->
-<!-- <script src="<?= ROOTPATH ?>/js/datatables/scroller.dataTables.js"></script> -->
-
 <script>
     $(document).ready(function() {
         // Initialize sortable for the table
@@ -75,13 +72,6 @@ $fields = $osiris->adminFields->find()->toArray();
             "order": [
                 [0, "asc"]
             ],
-            //         scrollCollapse: true,
-            // scroller: true,
-            // scrollY: 500,
-            // "columnDefs": [{
-            //     "targets": [0, 1],
-            //     "orderable": false
-            // }],
             "language": {
                 "emptyTable": "<?= lang('No custom fields defined yet.', 'Es wurden noch keine benutzerdefinierten Felder definiert.') ?>"
             }

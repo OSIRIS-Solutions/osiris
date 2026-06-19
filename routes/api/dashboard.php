@@ -214,7 +214,7 @@ Route::get('/api/dashboard/upcoming-events', function () {
     // first get all events that are upcoming or have ended in the last 3 days
     $events = $osiris->conferences->find(
         [
-            'end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))],
+            'end' => ['$gte' => date('Y-m-d', strtotime('today'))],
             'start' => ['$lte' => date('Y-m-d', strtotime('+6 month'))],
             'dismissed' => ['$ne' => $_SESSION['username']]
         ],
@@ -243,33 +243,35 @@ Route::get('/api/dashboard/upcoming-events', function () {
         unset($event['start_date'], $event['end_date']);
     }
 
-    $deadlines = $osiris->deadlines->find(
-        [
-            '$and' => [
-                ['date' => ['$gte' => date('Y-m-d', strtotime('-3 days'))]],
-                ['date' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]]
+    if ($Settings->featureEnabled('deadlines')) {
+        $deadlines = $osiris->deadlines->find(
+            [
+                '$and' => [
+                    ['date' => ['$gte' => date('Y-m-d', strtotime('today'))]],
+                    ['date' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]]
+                ],
+                'roles' => ['$in' => $Settings->roles]
             ],
-            'roles' => ['$in' => $Settings->roles]
-        ],
-        ['sort' => ['date' => 1], 'projection' => [
-            '_id' => 0,
-            'id' => ['$toString' => '$_id'],
-            'date' => 1,
-            'type' => 1,
-            'title' => 1,
-            'category' => 'deadline'
-        ]]
-    )->toArray();
+            ['sort' => ['date' => 1], 'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'date' => 1,
+                'type' => 1,
+                'title' => 1,
+                'category' => 'deadline'
+            ]]
+        )->toArray();
 
-    // Convert ISO date string to timestamp in PHP if needed
-    foreach ($deadlines as &$deadline) {
-        if (!empty($deadline['date'])) {
-            $deadline['starting_time'] = strtotime($deadline['date']);
+        // Convert ISO date string to timestamp in PHP if needed
+        foreach ($deadlines as &$deadline) {
+            if (!empty($deadline['date'])) {
+                $deadline['starting_time'] = strtotime($deadline['date']);
+            }
+            unset($deadline['date']);
         }
-        unset($deadline['date']);
+        $events = array_merge($events, $deadlines);
     }
 
-    $events = array_merge($events, $deadlines);
     $result['events'] = $events;
 
     if (!empty($events)) {
@@ -2152,6 +2154,67 @@ Route::get('/api/command-palette/search', function () {
             ];
         }
     }
+
+    if ($Settings->featureEnabled('deadlines')) {
+        $pipeline = [
+            [
+                '$match' => [
+                    '$or' => [
+                        ['title' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ]
+                ]
+            ],
+            [
+                '$addFields' => [
+                    '_cp_prefix' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$title', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                    ],
+                    '_cp_contain' => [
+                        '$cond' => [['$regexMatch' => ['input' => '$title', 'regex' => $rxContain, 'options' => 'i']], 1, 0]
+                    ],
+                ]
+            ],
+            [
+                '$addFields' => [
+                    '_cp_score' => [
+                        '$add' => [
+                            ['$multiply' => ['$_cp_prefix', 40]],
+                            ['$multiply' => ['$_cp_contain', 10]],
+                        ]
+                    ]
+                ]
+            ],
+            ['$sort' => ['_cp_score' => -1, 'title' => 1]],
+            ['$limit' => 6],
+            ['$project' => ['_id' => 1, 'title' => 1, '_cp_score' => 1]]
+        ];
+
+        $cursor = $osiris->deadlines->aggregate($pipeline);
+        $items = [];
+
+        foreach ($cursor as $doc) {
+            $id = (string)$doc->_id;
+
+            $items[] = [
+                'id' => 'deadline:' . $id,
+                'type' => lang('Entity', 'Entität'),
+                'entity' => 'deadline',
+                'label' => $doc->title ?? $id,
+                'url' => '/deadlines/view/' . $id,
+                'icon' => 'flag',
+                'priority' => (int)$doc->_cp_score,
+            ];
+        }
+
+        if ($items) {
+            $groups[] = [
+                'id' => 'deadlines',
+                'label' => lang('Deadlines', 'Fristen'),
+                'items' => $items
+            ];
+        }
+    }
+
     // --- Groups / Units
     $pipeline = [
         [

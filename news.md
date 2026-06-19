@@ -66,33 +66,11 @@ Autorinnen, Herausgeber, Supervisoren und weitere Rollen werden nun in einem eig
 - Es gibt Optionen, nur affiliierte Personen oder alle Mitwirkenden anzuzeigen.
 - Eine grafische Übersicht ergänzt die tabellarische Darstellung.
 
-### <i class="ph-duotone ph-prohibit"></i> Aktivitäten vom Berichtswesen ausschließen
+### <i class="ph-duotone ph-sign-in"></i> Eingeloggt bleiben
 
-Für berechtigte Personen wurde eine neue Funktion eingeführt:
+Es gibt nun eine Checkbox beim Login, mit der Nutzer:innen auswählen können, dass sie eingeloggt bleiben möchten. Sie sind dann für 30 Tage automatisch eingeloggt, ohne sich erneut anmelden zu müssen. Das erleichtert den Zugriff auf OSIRIS, insbesondere für Nutzer:innen, die regelmäßig darauf zugreifen.
 
-Aktivitäten können nun vom Berichtswesen ausgeschlossen werden, ohne sie zu löschen.
-
-- Die Aktivität bleibt sichtbar und editierbar.
-- Sie erscheint jedoch nicht mehr in automatisch generierten Berichten.
-- Der Status ist nur für berechtigte Personen sichtbar, die Aktivität wird weiterhin in allen Listen und Suchen angezeigt.
-- Es gibt in der erweiterten Suche einen Filter, um Aktivitäten mit diesem Status zu finden oder auszuschließen. Für Berichte muss dieser Filter jedoch nicht manuell gesetzt werden, da er automatisch berücksichtigt wird.
-- Die Entscheidung ist jederzeit reversibel.
-
-Diese Funktion ermöglicht eine differenziertere Steuerung ohne Datenverlust. Dazu wurde auch ein neues Recht eingeführt, ihr findet es in Rollen und Rechte unter "Metriken und Berichte".
-
-### <i class="ph-duotone ph-chart-bar"></i> Verbesserte Berichte und Exporte
-
-Der Berichte-Editor wurde noch einmal überarbeitet und die Nutzererfahrung wurde verbessert.
-
-- Die Blöcke mit Aktivitätslisten und Aktivitäten mit einem weiteren Feld wurden abgeschafft. Sie werden für die Abwärtskompatibilität weiterhin unterstützt, es können jedoch keine neuen Berichte mit diesen Blöcken erstellt werden.
-- Stattdessen gibt es jetzt einen neuen Block „Liste“. Dieses kombiniert beide vorherigen Blöcke und ermöglicht dabei nicht nur Aktivitäten, sondern auch Events, Projekte und Anträge anzuzeigen. Außerdem kann man optional beliebig viele weitere Felder anzeigen lassen.
-- Ein neuer Block „Inhaltsverzeichnis“ ermöglicht es, automatisch ein Inhaltsverzeichnis zu generieren, das die Struktur eines Berichts widerspiegelt. Bitte beachtet, dass ihr beim Öffnen des Word-Dokuments zur Aktualisierung des Inhaltsverzeichnisses aufgefordert werden könntet.
-- Listen- und Tabellen-Blöcke können jetzt benannt werden und werden nach dem Speichern automatisch zusammengeklappt. Dies verbessert die Übersichtlichkeit, insbesondere bei umfangreichen Berichten, und ermöglicht es, sich auf die wichtigsten Inhalte zu konzentrieren. Die Blöcke können jederzeit wieder aufgeklappt werden, um die Inhalte zu bearbeiten oder anzuzeigen.
-- Text-Blöcke zeigen jetzt den formatierten Text als Vorschau an und lassen sich ebenfalls mit einem Klick auf den Block bearbeiten. Das verbessert die Übersicht und ermöglicht es, die Inhalte direkt im Kontext zu sehen, ohne sie erst öffnen zu müssen. Überschriften sind dadurch deutlich besser erkennbar, was die Navigation innerhalb des Berichts erleichtert.
-- Listen können jetzt auch alphabetisch sortiert werden.
-- Es wurden einige Bugs behoben, z.B. dass Blöcke nicht kopiert werden konnten, dass nur maximal 2 Jahre im Bericht auftauchen konnten und dass der Filter nicht mit ODER-Bedingungen umgehen konnte.
-
-Neu ist auch, dass man das **Layout von Berichten und anderen Exporten anpassen** kann. Dazu gibt es im Admin-Bereich unter "Berichte & Werkzeuge" > "Export-Design" die Möglichkeit, Schriftarten, -größen, Farben und weitere Design-Elemente für die verschiedenen Export-Formate (Word, Excel, PDF) anzupassen.
+Bitte beachtet, dass bei der Nutzung von Microsoft Single Sign-On (SSO), Keycloak und anderen externen Authentifizierungsdiensten die Funktion „Eingeloggt bleiben“ nicht verfügbar ist.
 
 ### <i class="ph-duotone ph-command"></i> Command Palette
 
@@ -108,7 +86,7 @@ Sie ermöglicht es, Navigation und Daten übergreifend zu durchsuchen – ohne d
 - Organisationen
 - Infrastrukturen
 - Journale
-- Veranstaltungen
+- Veranstaltungen und Deadlines
 - Berücksichtigt aktivierte Features und individuelle Berechtigungen
 - Ergebnisse werden in Echtzeit aktualisiert
 - Vollständig keyboard-nutzbar
@@ -184,13 +162,6 @@ Zusätzlich zu den bereits vorhandenen Events können nun auch zentral Deadlines
 
 Das Deadlines-Feature kann in den **Feature-Einstellungen** ein- oder ausgeschaltet werden. Bitte beachtet, dass zum Anlegen und Löschen von Deadlines auch neue Berechtigungen erforderlich sind (Deadlines erstellen, Deadlines löschen), die standardmäßig nicht zugewiesen sind.
 
-### <i class="ph-duotone ph-sliders"></i> Das neue Admin-Interface
-
-Das Admin-Interface wurde vollständig überarbeitet und bietet nun eine deutlich verbesserte Übersicht und Benutzerfreundlichkeit.
-
-- Alle Einstellungen sind jetzt in einer einzigen, übersichtlichen Seite organisiert, anstatt auf mehreren Unterseiten verteilt zu sein. Dabei wurden viele Einstellungen neu strukturiert und in logischere Kategorien gruppiert. Außerdem wurde das visuelle Design vieler Einstellungen angeglichen, um ein konsistentes Nutzererlebnis zu schaffen.
-- Das Vokabular-Management wurde ebenfalls komplett überarbeitet und bietet nun eine deutlich verbesserte Übersicht. Die Übersichtsseite wurde verbessert und ist jetzt durchsuchbar. Die Bearbeitung der Vokabulare erfolgt nun auf einzelnen Unterseiten.
-
 ### <i class="ph-duotone ph-feather"></i> Sophie – Die Hüterin eurer Daten
 
 Mit Version 2.0 bekommt OSIRIS ein neues Gesicht:
@@ -256,10 +227,54 @@ Das Forschungs-Spektrum basiert vollständig auf extern berechneten Themencluste
 
 Auf der Übersichtsseite steht eine ausführliche Infobox zur Verfügung.
 
+### <i class="ph-duotone ph-prohibit"></i> Aktivitäten vom Berichtswesen ausschließen
+
+Für berechtigte Personen wurde eine neue Funktion eingeführt:
+
+Aktivitäten können nun vom Berichtswesen ausgeschlossen werden, ohne sie zu löschen.
+
+- Die Aktivität bleibt sichtbar und editierbar.
+- Sie erscheint jedoch nicht mehr in automatisch generierten Berichten.
+- Der Status ist nur für berechtigte Personen sichtbar, die Aktivität wird weiterhin in allen Listen und Suchen angezeigt.
+- Es gibt in der erweiterten Suche einen Filter, um Aktivitäten mit diesem Status zu finden oder auszuschließen. Für Berichte muss dieser Filter jedoch nicht manuell gesetzt werden, da er automatisch berücksichtigt wird.
+- Die Entscheidung ist jederzeit reversibel.
+
+Diese Funktion ermöglicht eine differenziertere Steuerung ohne Datenverlust. Dazu wurde auch ein neues Recht eingeführt, ihr findet es in Rollen und Rechte unter "Metriken und Berichte".
+
+### <i class="ph-duotone ph-chart-bar"></i> Verbesserte Berichte und Exporte
+
+Der Berichte-Editor wurde noch einmal überarbeitet und die Nutzererfahrung wurde verbessert.
+
+- Die Blöcke mit Aktivitätslisten und Aktivitäten mit einem weiteren Feld wurden abgeschafft. Sie werden für die Abwärtskompatibilität weiterhin unterstützt, es können jedoch keine neuen Berichte mit diesen Blöcken erstellt werden.
+- Stattdessen gibt es jetzt einen neuen Block „Liste“. Dieses kombiniert beide vorherigen Blöcke und ermöglicht dabei nicht nur Aktivitäten, sondern auch Events, Projekte und Anträge anzuzeigen. Außerdem kann man optional beliebig viele weitere Felder anzeigen lassen.
+- Ein neuer Block „Inhaltsverzeichnis“ ermöglicht es, automatisch ein Inhaltsverzeichnis zu generieren, das die Struktur eines Berichts widerspiegelt. Bitte beachtet, dass ihr beim Öffnen des Word-Dokuments zur Aktualisierung des Inhaltsverzeichnisses aufgefordert werden könntet.
+- Listen- und Tabellen-Blöcke können jetzt benannt werden und werden nach dem Speichern automatisch zusammengeklappt. Dies verbessert die Übersichtlichkeit, insbesondere bei umfangreichen Berichten, und ermöglicht es, sich auf die wichtigsten Inhalte zu konzentrieren. Die Blöcke können jederzeit wieder aufgeklappt werden, um die Inhalte zu bearbeiten oder anzuzeigen.
+- Text-Blöcke zeigen jetzt den formatierten Text als Vorschau an und lassen sich ebenfalls mit einem Klick auf den Block bearbeiten. Das verbessert die Übersicht und ermöglicht es, die Inhalte direkt im Kontext zu sehen, ohne sie erst öffnen zu müssen. Überschriften sind dadurch deutlich besser erkennbar, was die Navigation innerhalb des Berichts erleichtert.
+- Listen können jetzt auch alphabetisch sortiert werden.
+- Es wurden einige Bugs behoben, z.B. dass Blöcke nicht kopiert werden konnten, dass nur maximal 2 Jahre im Bericht auftauchen konnten und dass der Filter nicht mit ODER-Bedingungen umgehen konnte.
+
+Neu ist auch, dass man das **Layout von Berichten und anderen Exporten anpassen** kann. Dazu gibt es im Admin-Bereich unter "Berichte & Werkzeuge" > "Export-Design" die Möglichkeit, Schriftarten, -größen, Farben und weitere Design-Elemente für die verschiedenen Export-Formate (Word, Excel, PDF) anzupassen.
+
+### <i class="ph-duotone ph-sliders"></i> Das neue Admin-Interface
+
+Das Admin-Interface wurde vollständig überarbeitet und bietet nun eine deutlich verbesserte Übersicht und Benutzerfreundlichkeit.
+
+- Alle Einstellungen sind jetzt in einer einzigen, übersichtlichen Seite organisiert, anstatt auf mehreren Unterseiten verteilt zu sein. Dabei wurden viele Einstellungen neu strukturiert und in logischere Kategorien gruppiert. Außerdem wurde das visuelle Design vieler Einstellungen angeglichen, um ein konsistentes Nutzererlebnis zu schaffen.
+- Das Vokabular-Management wurde ebenfalls komplett überarbeitet und bietet nun eine deutlich verbesserte Übersicht. Die Übersichtsseite wurde verbessert und ist jetzt durchsuchbar. Die Bearbeitung der Vokabulare erfolgt nun auf einzelnen Unterseiten.
+
+### <i class="ph-duotone ph-key"></i> Keycloak-Integration
+
+Es ist nun möglich, Keycloak und andere generische Dienste als externe Authentifizierungsdienste zu integrieren. Damit können Nutzer:innen sich mit ihren Keycloak-Zugangsdaten anmelden und OSIRIS nahtlos in bestehende Identity-Management-Systeme eingebunden werden. Die Integration wurde zusätzlich zu bestehenden Anmeldungsmöglichkeiten implementiert, um maximale Flexibilität zu gewährleisten. Bitte beachtet, dass die Funktion „Eingeloggt bleiben“ bei der Nutzung von Keycloak und anderen externen Authentifizierungsdiensten nicht verfügbar ist.
+
 ### <i class="ph-duotone ph-quotes"></i> Integration von Zitationszahlen
 
 Zusätzlich zur Anzahl der Publikationen werden nun auch Zitationsdaten (OpenAlex) integriert. Auf den Schwerpunkt-Seiten werden die durchschnittlichen Zitationszahlen pro Publikation dargestellt. In Publikationen mit Zitationsdaten wird die Anzahl der Zitationen angezeigt, zusammen mit einem Zeitstempel der letzten Aktualisierung.
 
+### <i class="ph-duotone ph-globe"></i> Support für Portfolio 2.0
+
+OSIRIS Portfolio wurde ebenfalls komplett überarbeitet, läuft stabiler und bietet viele neue Funktionen. Die neue Version von Portfolio ist nur mit OSIRIS 2.0 aufwärts kompatibel, da sie von einigen neuen Funktionen und Datenstrukturen in OSIRIS 2.0 profitiert. Daher ist die Unterstützung für Portfolio 2.0 ein wichtiger Bestandteil dieses Updates.
+
+Disclaimer: OSIRIS Portfolio ist eine separat lizenzierbare Erweiterung, die nicht automatisch mit OSIRIS 2.0 installiert wird. Bitte kontaktiert uns, wenn ihr Interesse an OSIRIS Portfolio habt oder mehr darüber erfahren möchtet. 
 
 ### <i class="ph-duotone ph-bell"></i> Mitteilungen, Hinweise und Texte
 
@@ -310,8 +325,11 @@ Diese Überarbeitung sorgt für mehr Sicherheit, Klarheit und Konsistenz in der 
 - Bilddaten im Portfolio werden nicht doppelt kodiert — effizientere Darstellung.
 - Neues /activity-fields API-Endpoint ergänzt — liefert alle Aktivitäts-Felder für Frontend-Use-Cases.
 - Teaching-API gibt nun immer eine String-ID zurück und löst zugehörige Organisationsnamen auf, für klare API-Antworten.
+- Es ist nun möglich, die Reihenfolge der Forschungsinteressen von Organisationseinheiten zu ändern. Ebenso die damit assoziierten Aktivitäten.
 
 Plus zahlreiche weitere kleinere Verbesserungen, Fehlerbehebungen und Optimierungen, die das Nutzererlebnis insgesamt ruhiger, klarer und konsistenter machen.
+
+----
 
 <time datetime="2026-02-10">10.02.2026</time>
 <a class="anchor" href="#version-1.8.1" id="version-1.8.1"></a>

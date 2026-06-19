@@ -1,14 +1,22 @@
 <?php
-$today = date('Y-m-d') == $conference['end'];
-$in_past = !$today && strtotime($conference['end']) < time();
+$today = date('Y-m-d');
+$start = $conference['start'];
+$end = $conference['end'];
+
+$is_today = ($today == $start && $today == $end);
+$in_past = $end < $today;
 
 $days = false;
-if ($today) {
+if ($is_today) {
     $days = lang('today', 'heute');
 } elseif (!$in_past) {
-    $days = ceil((strtotime($conference['start']) - time()) / 86400);
+    $days = ceil((strtotime($start) - time()) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+    $days = $days == 0 ? lang('currently ongoing', 'derzeit im Gange') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+} elseif ($in_past) {
+    $days = ceil((time() - strtotime($end)) / 86400);
+    $days = $days > 0 ? $days : 0;
+    $days = $days == 0 ? lang('until today', 'bis heute') : lang('ended', 'vor') . ' ' . $days . ' ' . lang('days ago', 'Tagen geendet');
 }
 
 $conference['participants'] = DB::doc2Arr($conference['participants']);
@@ -83,20 +91,20 @@ if ($topicsEnabled) {
 
         <table class="table">
             <tr>
-                <td>
+                <td colspan="2">
                     <span class="key"><?= lang('Location', 'Ort') ?></span>
                     <?= $conference['location'] ?>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="2">
                     <span class="key"><?= lang('Country', 'Land') ?></span>
                     <?= $DB->getCountry($conference['country'] ?? '', lang('name', 'name_de')) ?>
                 </td>
             </tr>
             <?php if (isset($conference['type'])) { ?>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <span class="key"><?= lang('Type', 'Typ') ?></span>
                         <?= $conference['type'] ?>
                     </td>
@@ -105,7 +113,7 @@ if ($topicsEnabled) {
 
             <?php if (isset($conference['internal_id'])) { ?>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
                         <?= $conference['internal_id'] ?>
                     </td>
@@ -115,24 +123,16 @@ if ($topicsEnabled) {
             <tr>
                 <td>
                     <span class="key"><?= lang('Start', 'Beginn') ?></span>
-                    <?= format_date($conference['start']) ?>
-
-                    <?php if (!$in_past) { ?>
-                        <b class="badge success ml-10"><?= $days ?></b>
-                    <?php } else { ?>
-                        <b class="badge danger ml-10"> <?= lang('already over', 'bereits vorbei') ?></b>
-                    <?php } ?>
-
+                    <?= format_date($conference['start']) ?><br>
+                    <b class="badge <?= ($in_past ? 'danger' : 'success') ?>"><?= $days ?></b>
                 </td>
-            </tr>
-            <tr>
                 <td>
                     <span class="key"><?= lang('End', 'Ende') ?></span>
                     <?= format_date($conference['end']) ?>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="2">
                     <span class="key"><?= lang('URL', 'URL') ?></span>
                     <?php if (!empty($conference['url'])) {
                         $short_url = str_replace('https://', '', $conference['url']);
@@ -148,7 +148,7 @@ if ($topicsEnabled) {
             </tr>
             <?php if ($Settings->featureEnabled('tags')) { ?>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <span class="key"><?= $Settings->tagLabel() ?></span>
                         <?= $Settings->printTags($conference['tags'] ?? [], 'conferences') ?>
                     </td>
@@ -156,7 +156,7 @@ if ($topicsEnabled) {
             <?php } ?>
             <?php if (!$in_past) { ?>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $conference['_id'] ?>">
                             <i class="ph ph-calendar-plus"></i>
                             <?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>

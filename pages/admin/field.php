@@ -120,6 +120,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                     <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)">
                         <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('Normal Text', 'Normaler Text') ?></option>
                         <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('Long text', 'Langer Text') ?></option>
+                        <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= lang('Text with formatting', 'Text mit Formatierung') ?></option>
                         <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('Integer', 'Ganzzahl') ?></option>
                         <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('Float', 'Gleitkommazahl') ?></option>
                         <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)') ?></option>

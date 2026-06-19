@@ -20,7 +20,8 @@
 $user = $user ?? $_SESSION['username'];
 $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
 $workflowsEnabled = $Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view');
-$tagsEnabled = $Settings->featureEnabled('tags');
+$keywords = DB::doc2Arr($Settings->get('tags', []));
+$tagsEnabled = $Settings->featureEnabled('tags') && count($keywords) > 0;
 
 $cart = readCart();
 ?>
@@ -142,6 +143,7 @@ $cart = readCart();
                 .filter tr td .submenu a.active {
                     font-weight: bold;
                 }
+
                 .topic-icons {
                     float: right;
                 }
@@ -304,7 +306,6 @@ $cart = readCart();
                 <div class="filter" style="max-height: 15rem; overflow-y: auto;">
                     <table id="filter-tags" class="table small simple">
                         <?php
-                        $keywords = DB::doc2Arr($Settings->get('tags', []));
                         foreach ($keywords as $tag) {
                             $tagId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($tag));
                         ?>
@@ -327,19 +328,20 @@ $cart = readCart();
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
 
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+            <div id="filter-time" class="filter border-0 bg-transparent p-0 shadow-none">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                    </div>
+                    <input type="date" name="from" id="filter-from" class="form-control">
                 </div>
-                <input type="date" name="from" id="filter-from" class="form-control">
-            </div>
-            <div class="input-group mt-10">
-                <div class="input-group-prepend">
-                    <label for="filter-to" class="input-group-text w-50"><?= lang('To', 'Bis') ?></label>
+                <div class="input-group mt-10">
+                    <div class="input-group-prepend">
+                        <label for="filter-to" class="input-group-text w-50"><?= lang('To', 'Bis') ?></label>
+                    </div>
+                    <input type="date" name="to" id="filter-to" class="form-control">
                 </div>
-                <input type="date" name="to" id="filter-to" class="form-control">
             </div>
-
 
             <h6><?= lang('More', 'Weiteres') ?></h6>
             <div class="custom-switch">

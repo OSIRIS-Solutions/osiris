@@ -25,6 +25,7 @@ class Fields
             'list' => 'string',
             'url' => 'string',
             'text' => 'string',
+            'text-format' => 'string',
             default => 'string',
         };
     }
@@ -66,7 +67,6 @@ class Fields
                 'id' => $field['id'],
                 'module_of' => $typeModules[$field['id']] ?? [],
                 'usage' => [
-                    'aggregate',
                     'filter',
                     'columns'
                 ],
@@ -74,6 +74,9 @@ class Fields
                 'type' => self::typeConvert($field['format'] ?? 'string'),
                 'custom' => true
             ];
+            if (in_array($field['format'], ['string', 'int', 'list', 'date', 'bool', 'bool-check'])) {
+                $f['usage'][] = 'aggregate';
+            }
 
             if ($field['format'] == 'list') {
                 $values = DB::doc2Arr($field['values'] ?? []);

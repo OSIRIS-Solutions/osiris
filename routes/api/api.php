@@ -54,16 +54,6 @@ function apikey_check($key = null)
 
     // 5) Everything else: no access
     return false;
-    // $Settings = new Settings();
-    // $APIKEY = $Settings->get('apikey');
-    // // always true if API Key is not set
-    // if (!isset($APIKEY) || empty($APIKEY)) return true;
-    // // return true for same page origin
-    // if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') return true;
-    // // check if API key is valid
-    // if ($APIKEY == $key) return true;
-    // // otherwise return false
-    // return false;
 }
 
 function return_permission_denied()
@@ -270,7 +260,7 @@ Route::get('/api/html', function () {
     $docs = $osiris->activities->find([
         'type' => 'publication',
         'authors.aoi' => ['$in' => [true, 1, '1']],
-        'year' => ['$gte' => 2023]
+        'year' => ['$gte' => $Settings->get('startyear', 1900)]
     ]);
 
     foreach ($docs as $i => $doc) {
@@ -279,7 +269,7 @@ Route::get('/api/html', function () {
         if (isset($doc['rendered'])) {
             $rendered = $doc['rendered'];
         } else {
-            $rendered = renderActivities(['_id' => $id]);
+            $rendered = renderActivities(['_id' => $doc['_id']]);
         }
 
         $link = null;
@@ -466,10 +456,10 @@ Route::get('/api/(conferences|events|deadlines)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     $collection = 'conferences';
     $filter = [];
 
@@ -589,11 +579,27 @@ Route::get('/api/users', function () {
             }
             $user['last'] = $user['username'];
         }
-        $table[] = [
-            'id' => strval($user['_id']),
-            'username' => $user['username'],
-            'img' => $Settings->printProfilePicture($user['username'], 'profile-img'),
-            'html' =>  "<div class='w-full'>
+        if (isset($_GET['columns'])) {
+            $columns = $_GET['columns'];
+            $entry = [
+                'id' => strval($user['_id']),
+                'username' => $user['username'],
+                'name' => $user['first'] . " " . $user['last'],
+                'first' => $user['first'],
+                'last' => $user['last'],
+                'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
+                'mail' => $user['mail'] ?? '',
+            ];
+            foreach ($columns as $col){
+                $entry[$col] = $user[$col] ?? null;
+            }
+            $table[] = $entry;
+        } else {
+            $table[] = [
+                'id' => strval($user['_id']),
+                'username' => $user['username'],
+                'img' => $Settings->printProfilePicture($user['username'], 'profile-img'),
+                'html' =>  "<div class='w-full'>
                     <div style='display: none;'>" . $user['first'] . " " . $user['last'] . "</div>$guest
                     $topics
                     <h5 class='my-0'>
@@ -606,22 +612,23 @@ Route::get('/api/users', function () {
                     </small>
                     <span class='hidden'>$user[username]</span>
                 </div>",
-            'name' => $user['first'] . " " . $user['last'],
-            'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
-            'first' => $user['first'],
-            'last' => $user['last'],
-            'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
-            'mail' => $user['mail'] ?? '',
-            'telephone' => $user['telephone'] ?? '',
-            'orcid' => $user['orcid'] ?? '',
-            'academic_title' => $user['academic_title'],
-            'dept' => $units,
-            'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
-            'public_image' => $user['public_image'] ?? true,
-            'topics' => $user['topics'] ?? array(),
-            'keywords' => $user['keywords'] ?? array(),
-            'roles' => $user['roles'] ?? array(),
-        ];
+                'name' => $user['first'] . " " . $user['last'],
+                'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
+                'first' => $user['first'],
+                'last' => $user['last'],
+                'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
+                'mail' => $user['mail'] ?? '',
+                'telephone' => $user['telephone'] ?? '',
+                'orcid' => $user['orcid'] ?? '',
+                'academic_title' => $user['academic_title'],
+                'dept' => $units,
+                'active' => ($user['is_active'] ?? true) ? 'yes' : 'no',
+                'public_image' => $user['public_image'] ?? true,
+                'topics' => $user['topics'] ?? array(),
+                'keywords' => $user['keywords'] ?? array(),
+                'roles' => $user['roles'] ?? array(),
+            ];
+        }
     }
     echo return_rest($table, count($table));
 });
@@ -665,10 +672,10 @@ Route::get('/api/user-units/(.*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
     if (DB::is_ObjectID($id)) {
         $filter = ['_id' => DB::to_ObjectID($id)];
     } else {
@@ -1434,10 +1441,10 @@ Route::get('/api/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
 
     $options = [
         'projection' => [

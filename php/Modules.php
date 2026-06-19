@@ -1273,9 +1273,25 @@ class Modules
         if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
             $value = $field['default'];
         }
+        if ($field['format'] == 'text-format') {
+            $id = rand(1000, 9999);
+?>
+            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+                <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
+                <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
+                <textarea name="values[<?= $module ?>]" id="<?= $module ?>" class="d-none" readonly><?= $value ?></textarea>
+
+                <script>
+                    quillEditor('<?= $module ?>');
+                </script>
+                <?= $this->render_help($help) ?>
+            </div>
+        <?php
+            return;
+        }
         if ($field['format'] == 'str-list') {
             $rand_id = bin2hex(random_bytes(4));
-?>
+        ?>
 
             <div class="data-module col-sm-<?= $width ?>" data-module="<?= $module ?>">
                 <label for="list-input-<?= $rand_id ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
@@ -1330,14 +1346,7 @@ class Modules
                 </select>
             </div>
             <script>
-                $('#<?= $module ?>').multiSelect({
-                    // containerHTML: '<div class="btn-group">',
-                    // menuHTML: '<div class="dropdown-menu">',
-                    // buttonHTML: '<div class="form-control">',
-                    // menuItemHTML: '<label>',
-                    // noneText: '-- Choisir --',
-                    // allText: 'Tout le monde',
-                });
+                $('#<?= $module ?>').multiSelect({});
             </script>
             <?php
             return;
@@ -1361,7 +1370,7 @@ class Modules
                 echo '<input type="number" step="1" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'float':
-                echo '<input type="number" step="0.0001" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
+                echo '<input type="number" step="any" class="form-control" name="values[' . $module . ']" id="' . $module . '" ' . $labelClass . ' value="' . $value . '" placeholder="custom-field">';
                 break;
             case 'list':
                 $multiple = $field['multiple'] ?? false;

@@ -6,6 +6,7 @@ services:
       - 8080:80
     volumes:
       - .:/var/www/html/
+      - vendor-data:/var/www/html/vendor
       - ./img:/var/www/html/img:rw
 
   app:
@@ -19,6 +20,7 @@ services:
       - 9000
     volumes:
       - .:/var/www/html/
+      - vendor-data:/var/www/html/vendor
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
       - PHP_DISPLAY_ERRORS=0
@@ -36,3 +38,4 @@ services:
 
 volumes:
   mongo-data:
+  vendor-data:

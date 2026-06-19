@@ -387,8 +387,42 @@ foreach ($countries as $c) {
             var next = rows.length;
 
             // clone last row as template
-            var $tmpl = rows.last().clone();
+            // var $tmpl = rows.last().clone();
 
+            var $tmpl = $(`
+                <tr>
+                    <td>
+                        <input
+                            type="text"
+                            name="evaluation[${cid}][permits][${next}][name]"
+                            class="form-control form-control-sm"
+                            value="">
+                    </td>
+                    <td>
+                        <select
+                            name="evaluation[${cid}][permits][${next}][status]"
+                            class="form-control form-control-sm">
+                            <option value="">– select –</option>
+                            <option value="needed">Needed</option>
+                            <option value="requested">Requested</option>
+                            <option value="granted">Granted</option>
+                            <option value="not-applicable">Not applicable</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            name="evaluation[${cid}][permits][${next}][comment]"
+                            class="form-control form-control-sm"
+                            value="">
+                    </td>
+                    <td class="text-right">
+                        <button type="button" class="btn small text-danger remove-permit-row">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
             // clear values
             $tmpl.find('input').val('');
             $tmpl.find('select').val('');

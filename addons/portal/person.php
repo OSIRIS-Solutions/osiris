@@ -430,6 +430,17 @@
                                     </tr>
                                 <?php endif; ?>
 
+                                <?php if (!empty($data['contact']['matrix'])): ?>
+                                    <tr>
+                                        <td>
+                                            <span class="key">Matrix</span>
+                                            <a href="https://matrix.to/#/<?= e($data['contact']['matrix']) ?>" target="_blank" rel="noopener noreferrer">
+                                                <?= e($data['contact']['matrix']) ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+
                                 <?php if (!empty($data['contact']['webpage'])): ?>
                                     <tr>
                                         <td>

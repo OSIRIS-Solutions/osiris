@@ -87,27 +87,46 @@ function initQuill(element, controls = 'basic') {
 }
 
 function quillEditor(selector) {
+    const maxImageSize = 1024 * 1024; // 1 MB
     const quill = new Quill('#' + selector + '-quill', {
         modules: {
-            toolbar: [
-                [{
-                    header: [1, 2, 3, false]
-                }],
-                ['bold', 'italic', 'underline'],
-                [{
-                    'list': 'ordered'
-                },
-                {
-                    'list': 'bullet'
-                }],
-                [{
-                    'script': 'sub'
-                }, {
-                    'script': 'super'
-                }],
-                ['link', 'image'],
-                ['clean']
-            ],
+            toolbar: {
+                container: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ script: 'sub' }, { script: 'super' }],
+                    ['link', 'image'],
+                    ['clean']
+                ],
+                handlers: {
+                    image: function () {
+                        const input = document.createElement('input');
+                        input.setAttribute('type', 'file');
+                        input.setAttribute('accept', 'image/*');
+                        input.click();
+                        input.onchange = () => {
+                            const file = input.files[0];
+                            if (!file) return;
+                            if (file.size > maxImageSize) {
+                                toastError(lang(
+                                    'The selected image is too large. Maximum size is 1 MB.',
+                                    'Das ausgewählte Bild ist zu groß. Maximal erlaubt sind 1 MB.'
+                                ));
+                                return;
+                            }
+                            const reader = new FileReader();
+                            reader.onload = e => {
+                                const range = quill.getSelection(true);
+                                quill.insertEmbed(range.index, 'image', e.target.result);
+                                quill.setSelection(range.index + 1);
+                            };
+                            reader.readAsDataURL(file);
+                        };
+                    }
+                }
+
+            }
         },
         formats: ['italic', 'bold', 'underline', 'script', 'link', 'image', 'list', 'header'],
         placeholder: lang('Start typing here ...', 'Hier tippen ...'),

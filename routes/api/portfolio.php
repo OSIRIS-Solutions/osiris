@@ -1056,11 +1056,11 @@ Route::get('/portfolio/(unit|topic)/([^/]*)/staff', function ($context, $id) {
             'lastname' => $person['last'],
             'firstname' => $person['first'] ?? ''
         ];
-        if ($person['public_image'] ?? false) {
-            $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img');
-        } else {
-            $row['img'] = $Settings->printProfilePicture(null, 'profile-img');
-        }
+        // if ($person['public_image'] ?? false) {
+        //     $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img');
+        // } else {
+        //     $row['img'] = $Settings->printProfilePicture(null, 'profile-img');
+        // }
         $row['id'] = strval($person['_id']);
         $result[] = $row;
     }
@@ -1168,11 +1168,11 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
             'position_de' => $person['position_de'],
             'depts' => []
         ];
-        if ($person['public_image'] ?? false) {
-            $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img small mr-20');
-        } else {
-            $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
-        }
+        // if ($person['public_image'] ?? false) {
+        //     $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img small mr-20');
+        // } else {
+        //     $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
+        // }
         $row['id'] = strval($person['_id']);
         $row['role'] = $Project->personRole($row['role']);
 
@@ -1241,7 +1241,9 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         'authors' => [],
         'depts' => [],
         'projects' => [],
-        'affiliated' => false
+        'affiliated' => false,
+        'typeStr' => $doc['rendered']['type'] ?? $doc['type'],
+        'subtypeStr' => $doc['rendered']['subtype'] ?? $doc['subtype']
     ];
 
     foreach ($doc['authors'] as $a) {
@@ -1337,7 +1339,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             }
             $value = implode(', ', $names);
             $result['organizations'] = $orgs;
-            
+
         elseif ($module == 'conference' && isset($doc['conference_id'])) :
             $conf = $DB->getConnected('conference', $doc['conference_id']);
             $value = $conf['title'];
@@ -1436,6 +1438,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
     header('Content-Type: application/json');
     $result = $DB->getProject($id);
+    if (!($result['public'] ?? false)) {
+        echo rest('Project not found', 0, 404);
+        die;
+    }
     $mongo_id = DB::to_ObjectID($id);
     if (empty($result)) {
         echo rest('Project not found', 0, 404);
@@ -1557,7 +1563,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     // add parent project
     if (!empty($result['parent'] ?? null)) {
         $parent = $DB->getProject($result['parent']);
-        if (!empty($parent) && $parent['public'] ?? false) {
+        if (!empty($parent) && ($parent['public'] ?? false)) {
             $project['parent'] = [
                 'id' => strval($parent['_id']),
                 'name' => $parent['name'],
@@ -1574,11 +1580,11 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     }
 
     // add subprojects
-    $subprojects = $osiris->projects->find(['parent_id' => $mongo_id], ['projection' => ['name' => 1, 'title' => 1]])->toArray();
+    $subprojects = $osiris->projects->find(['parent_id' => $mongo_id], ['projection' => ['name' => 1, 'title' => 1, 'id' => ['$toString' => '$_id'], 'public' => 1]])->toArray();
     foreach ($subprojects as $sub) {
-        if ($sub['public'] ?? false) continue;
+        if (!($sub['public'] ?? false)) continue;
         $project['subprojects'][] = [
-            'id' => strval($sub['_id']),
+            'id' => $sub['id'],
             'name' => $sub['name'],
             'title' => $sub['title'] ?? ''
         ];
@@ -1661,6 +1667,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             'orcid',
             'researchgate',
             'google_scholar',
+            'matrix',
             'webpage'
         ] as $key
     ) {
@@ -2042,7 +2049,7 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
                 'as' => 'org'
             ]],
             ['$unwind' => '$org'],
-             ['$project' => [
+            ['$project' => [
                 '_id' => 1,
                 'count' => 1,
                 'public_count' => 1,
@@ -2054,7 +2061,7 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
                 'data.lat' => '$org.lat',
                 'data.lng' => '$org.lng'
             ]],
-             ['$sort' => ['count' => -1]]
+            ['$sort' => ['count' => -1]]
 
         ])->toArray();
 
@@ -2274,7 +2281,31 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
     $Vocabulary = new Vocabulary();
 
     $infrastructure = $osiris->infrastructures->findOne(
-        ['id' => $id, 'public' => true]
+        ['id' => $id, 'public' => true],
+        [
+            'projection' => [
+                'id' => 1,
+                'name' => 1,
+                'name_de' => 1,
+                'subtitle' => 1,
+                'subtitle_de' => 1,
+                'description' => 1,
+                'description_de' => 1,
+                'start_date' => 1,
+                'end_date' => 1,
+                'contact_email' => 1,
+                'link' => 1,
+                'image' => 1,
+                'type' => 1,
+                'infrastructure_type' => 1,
+                'access' => 1,
+                'collaborative' => 1,
+                'coordinator_institute' => 1,
+                'coordinator_organization' => 1,
+                'collaborators' => 1,
+                'persons' => 1
+            ]
+        ]
     );
     if (empty($infrastructure)) {
         echo rest('Infrastructure not found', 0, 404);
@@ -2287,18 +2318,24 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
         foreach (DB::doc2Arr($infrastructure['persons']) as $p) {
             $person = $DB->getPerson($p['user']);
             if (empty($person) || ($person['hide'] ?? false)) continue;
+            // check if end date is in the past
+            if (isset($p['end']) && strtotime($p['end']) < time()) {
+                continue;
+            }
+            $startyear = isset($p['start']) ? date('Y', strtotime($p['start'])) : null;
             $row = [
                 'displayname' => $person['displayname'],
                 'academic_title' => $person['academic_title'],
                 'position' => $person['position'],
                 'position_de' => $person['position_de'],
-                'depts' => []
+                'depts' => [],
+                'since' => $startyear
             ];
-            if ($person['public_image'] ?? false) {
-                $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img small mr-20');
-            } else {
-                $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
-            }
+            // if ($person['public_image'] ?? false) {
+            //     $row['img'] = $Settings->printProfilePicture($person['username'], 'profile-img small mr-20');
+            // } else {
+            //     $row['img'] = $Settings->printProfilePicture(null, 'profile-img small mr-20');
+            // }
             $row['id'] = strval($person['_id']);
             $row['role'] = $Infra->getRole($p['role'] ?? null, $raw = true);
             $units = $Groups->getPersonUnit($person, null, true, false);

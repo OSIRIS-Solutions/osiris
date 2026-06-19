@@ -117,15 +117,39 @@
     <div class="row row-eq-spacing mt-0" id="features-settings-page">
         <div class="col-md-9">
 
+        <!-- search -->
+         <input type="search" class="form-control" id="feature-search" placeholder="<?= lang('Search features...', 'Funktionen durchsuchen...') ?>" onkeyup="searchFeatures()">
+            <script>
+                function searchFeatures() {
+                    const input = document.getElementById('feature-search');
+                    const filter = input.value.toLowerCase();
+                    const boxes = $('#features-settings-page .box');
+
+                    if (filter === '') {
+                        boxes.show();
+                        return;
+                    }
+
+                    boxes.each(function() {
+                        const text = $(this).text().toLowerCase();
+                        if (text.includes(filter)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+            </script>
+
             <!-- Core Features Section -->
 
-            <div class="box" id="core-features">
+            <section id="core-features">
                 <h3 class="header">
                     <?= lang('Core Features', 'Kernfunktionen') ?>
                 </h3>
 
-                <div class="content">
-                    <h4 id="portal">
+                <div class="box padded">
+                    <h4 class="title" id="portal">
                         <?= lang('OSIRIS Portfolio') ?>
                     </h4>
 
@@ -151,9 +175,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="projects">
+
+                <div class="box padded">
+                    <h4 class="title" id="projects">
                         <?= lang('Projects and Proposals', 'Projekte und Anträge') ?>
                     </h4>
 
@@ -177,9 +201,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="teaching-modules">
+
+                <div class="box padded">
+                    <h4 class="title" id="teaching-modules">
                         <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
                     </h4>
                     <p class="description">
@@ -194,9 +218,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="research-topics">
+
+                <div class="box padded">
+                    <h4 class="title" id="research-topics">
                         <?= lang('Research Topics', 'Forschungsbereiche') ?>
                     </h4>
                     <div class="form-group">
@@ -231,9 +255,9 @@
                         </div>
                     <?php } ?>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="infrastructures">
+
+                <div class="box padded">
+                    <h4 class="title" id="infrastructures">
                         <?= lang('Infrastructures in OSIRIS', 'Infrastrukturen in OSIRIS') ?>
                     </h4>
                     <div class="form-group">
@@ -258,9 +282,9 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="calendar">
+
+                <div class="box padded">
+                    <h4 class="title" id="calendar">
                         <?= lang('Calendar and Events', 'Kalender und Events') ?>
                     </h4>
                     <div class="form-group">
@@ -288,9 +312,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="tags">
+
+                <div class="box padded">
+                    <h4 class="title" id="tags">
                         <?= lang('Tags', 'Schlagwörter') ?>
                     </h4>
                     <p class="description">
@@ -318,9 +342,9 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="trips">
+
+                <div class="box padded">
+                    <h4 class="title" id="trips">
                         <?= lang('Research Trips', 'Forschungsreisen') ?>
                     </h4>
                     <div class="form-group">
@@ -365,9 +389,9 @@
                         <?php } ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="wordcloud">
+
+                <div class="box padded">
+                    <h4 class="title" id="wordcloud">
                         <?= lang('Word Clouds', 'Word Clouds') ?>
                     </h4>
                     <div class="form-group">
@@ -376,16 +400,16 @@
                         ?>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Reporting & Quality Features Section -->
 
-            <div class="box" id="reporting-quality-features">
+            <section id="reporting-quality-features">
                 <h3 class="header">
                     <?= lang('Reporting & Quality', 'Reporting & Qualität') ?>
                 </h3>
-                <div class="content">
-                    <h4 id="quarterly-reporting">
+                <div class="box padded">
+                    <h4 class="title" id="quarterly-reporting">
                         <?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?>
                     </h4>
                     <div class="form-group">
@@ -401,9 +425,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="quality-workflow">
+
+                <div class="box padded">
+                    <h4 class="title" id="quality-workflow">
                         <?= lang('Quality workflows of activities', 'Qualitäts-Workflows von Aktivitäten') ?>
                     </h4>
                     <div class="form-group">
@@ -415,9 +439,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="journal-metrics">
+
+                <div class="box padded">
+                    <h4 class="title" id="journal-metrics">
                         <?= lang('Journals', 'Journale') ?>
                     </h4>
                     <div class="form-group">
@@ -460,9 +484,9 @@
                             </p>
                         </div> -->
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="drafts">
+
+                <div class="box padded">
+                    <h4 class="title" id="drafts">
                         <?= lang('Drafts', 'Entwürfe') ?>
                     </h4>
                     <div class="form-group">
@@ -474,8 +498,8 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
+
+                <div class="box padded">
                     <h4>
                         <?= lang('IDA Integration', 'IDA-Integration') ?>
                     </h4>
@@ -493,17 +517,17 @@
                         ?>
                     </div>
                 </div>
-            </div>
+            </section>
 
 
             <!-- Imports & External Features Section -->
 
-            <div class="box" id="imports-external-features">
+            <section id="imports-external-features">
                 <h3 class="header">
                     <?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?>
                 </h3>
-                <div class="content">
-                    <h4 id="imports">
+                <div class="box padded">
+                    <h4 class="title" id="imports">
                         <?= lang('Imports', 'Importe') ?>
                     </h4>
                     <div class="form-group">
@@ -525,9 +549,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="altmetrics">
+
+                <div class="box padded">
+                    <h4 class="title" id="altmetrics">
                         <?= lang('Altmetrics', 'Altmetriken') ?>
                     </h4>
                     <?= badgeBeta() ?>
@@ -545,9 +569,9 @@
                         ?>
                     </div>
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="spectrum">
+
+                <div class="box padded">
+                    <h4 class="title" id="spectrum">
                         <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
                     </h4>
 
@@ -563,19 +587,19 @@
                         ?>
                     </div>
                 </div>
-            </div>
+            </section>
 
 
 
-            <div class="box" id="guest-management-features">
+            <section id="guest-management-features">
                 <h3 class="header">
                     <?= lang('Profiles and Guests', 'Profile und Gäste') ?>
                 </h3>
 
 
 
-                <div class="content">
-                    <h4 id="home-page">
+                <div class="box padded">
+                    <h4 class="title" id="home-page">
                         <?= lang('Home page features', 'Funktionen der Startseite') ?>
                     </h4>
 
@@ -621,9 +645,9 @@
                     </div>
 
                 </div>
-                <hr>
-                <div class="content">
-                    <h4 id="guest-forms">
+
+                <div class="box padded">
+                    <h4 class="title" id="guest-forms">
                         <?= lang('Guest forms', 'Gästeformulare') ?>
                     </h4>
 
@@ -659,7 +683,7 @@
                     </div>
 
                 </div>
-            </div>
+            </section>
 
             <div class="bottom-buttons">
                 <button class="btn success" type="submit">
@@ -672,7 +696,7 @@
 
         <div class="col-md-3 d-none d-md-block">
             <nav class="on-this-page-nav">
-                <div class="content">
+                <div class="">
                     <div class="title"><?= lang('Features', 'Funktionen') ?></div>
 
                     <a href="#core-features"><?= lang('Core Features', 'Kernfunktionen') ?></a>

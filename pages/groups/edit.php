@@ -302,84 +302,105 @@ function sel($index, $value)
 
     <section id="research-interest" style="display:none;">
 
-        <h3>
-            <?= lang('Research Field Classification', 'Forschungsfeldklassifikation') ?>
-        </h3>
-        <?php
-        include_once BASEPATH . "/components/kdsf-ffk-select.php";
-        ?>
-
         <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
 
         <!-- ensure empty list gets still submitted -->
         <input type="hidden" name="values[research]" value="">
         <div id="research-list">
+            <script>
+                function moveResearchrow(btn, direction) {
+                    const row = btn.closest('.box');
+                    if (direction === 'up' && row.previousElementSibling) {
+                        row.parentNode.insertBefore(row, row.previousElementSibling);
+                    } else if (direction === 'down' && row.nextElementSibling) {
+                        row.parentNode.insertBefore(row.nextElementSibling, row);
+                    }
+                }
+            </script>
             <?php
             if (isset($form['research']) && !empty($form['research'])) {
 
                 foreach ($form['research'] as $i => $con) { ?>
 
-                    <div class="box padded">
-
-                        <div class="row row-eq-spacing my-0">
-                            <div class="col-md-6">
-                                <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                                <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
-                                    <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('Title', 'Titel') ?></label>
-                                </div>
-                                <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
-                                    <label for="values[research][<?= $i ?>][subtitle]"><?= lang('Subtitle', 'Untertitel') ?></label>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <div id="info-<?= $i ?>-quill"><?= $con['info'] ?? '' ?></div>
-                                    <textarea name="values[research][<?= $i ?>][info]" id="info-<?= $i ?>" class="d-none" readonly><?= $con['info'] ?? '' ?></textarea>
-                                    <script>
-                                        quillEditor('info-<?= $i ?>');
-                                    </script>
-                                </div>
-
-                            </div>
-                            <div class="col-md-6">
-                                <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                                <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
-                                    <label for="values[research][<?= $i ?>][title_de]"><?= lang('Title', 'Titel') ?></label>
-                                </div>
-                                <div class="form-group floating-form">
-                                    <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
-                                    <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('Subtitle', 'Untertitel') ?></label>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <div id="info_de-<?= $i ?>-quill"><?= $con['info_de'] ?? '' ?></div>
-                                    <textarea name="values[research][<?= $i ?>][info_de]" id="info_de-<?= $i ?>" class="d-none" readonly><?= $con['info_de'] ?? '' ?></textarea>
-                                    <script>
-                                        quillEditor('info_de-<?= $i ?>');
-                                    </script>
-                                </div>
+                    <div class="box">
+                        <div class="header">
+                            <h4 class="m-0"><q><?= e($con['title'] ?? lang('Research interest', 'Forschungsinteresse')) ?></q></h4>
+                            <div class="btn-group ml-auto">
+                                <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
+                                <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>
+                                <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i></button>
                             </div>
                         </div>
 
-                        <div id="activities-<?= $i ?>">
+                        <div class="content">
+                            <div class="row row-eq-spacing">
+                                <div class="col-md-6">
+                                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
+                                    <div class="form-group floating-form">
+                                        <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
+                                        <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('Title', 'Titel') ?></label>
+                                    </div>
+                                    <div class="form-group floating-form">
+                                        <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
+                                        <label for="values[research][<?= $i ?>][subtitle]"><?= lang('Subtitle', 'Untertitel') ?></label>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div id="info-<?= $i ?>-quill"><?= $con['info'] ?? '' ?></div>
+                                        <textarea name="values[research][<?= $i ?>][info]" id="info-<?= $i ?>" class="d-none" readonly><?= $con['info'] ?? '' ?></textarea>
+                                        <script>
+                                            quillEditor('info-<?= $i ?>');
+                                        </script>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
+                                    <div class="form-group floating-form">
+                                        <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
+                                        <label for="values[research][<?= $i ?>][title_de]"><?= lang('Title', 'Titel') ?></label>
+                                    </div>
+                                    <div class="form-group floating-form">
+                                        <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
+                                        <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('Subtitle', 'Untertitel') ?></label>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div id="info_de-<?= $i ?>-quill"><?= $con['info_de'] ?? '' ?></div>
+                                        <textarea name="values[research][<?= $i ?>][info_de]" id="info_de-<?= $i ?>" class="d-none" readonly><?= $con['info_de'] ?? '' ?></textarea>
+                                        <script>
+                                            quillEditor('info_de-<?= $i ?>');
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="activities-<?= $i ?>" class="content">
                             <h5><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?></h5>
 
-                            <ul>
+                            <table class="table simple small">
+                                <tbody class="activity-list">
+                                    
                                 <?php foreach ($con['activities'] ?? [] as $res) {
                                     $doc = $DB->getActivity($res);
                                 ?>
-                                    <li>
-                                        <?= $doc['rendered']['icon'] ?>
-                                        <?= $doc['rendered']['plain'] ?>
-                                        <input type="hidden" name="values[research][<?= $i ?>][activities][]" value="<?= $res ?>">
-                                        <button class="btn link text-danger small" type="button" onclick="$(this).closest('li').remove()"><i class="ph ph-trash"></i></button>
-                                    </li>
+                                    <tr>
+                                        <td><i class="ph ph-dots-six-vertical handle"></i></td>
+                                        <td>
+                                            <?= $doc['rendered']['icon'] ?>
+                                            <?= $doc['rendered']['plain'] ?>
+                                            <input type="hidden" name="values[research][<?= $i ?>][activities][]" value="<?= $res ?>">
+                                        </td>
+                                        <td>
+                                            <button class="btn link text-danger small" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
+                                </tbody>
 
-                            </ul>
+                            </table>
 
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for Activity">
+                                <input type="text" class="form-control" placeholder="Search for Activity" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
                                 <div class="input-group-append">
                                     <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('Search', 'Suchen') ?></button>
                                 </div>
@@ -388,19 +409,27 @@ function sel($index, $value)
                             <div class="suggestions" style="display:none;"></div>
 
                         </div>
-
-                        <button class="btn danger small my-10" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
                     </div>
             <?php }
             } ?>
 
         </div>
-        <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
+        <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')">
+            <i class="ph ph-plus text-success"></i> <?= lang('Add research interest', 'Forschungsinteresse hinzufügen') ?>
+        </button>
         <br>
-        <br>
+
+        <h3>
+            <?= lang('Research Field Classification', 'Forschungsfeldklassifikation') ?>
+        </h3>
+        <?php
+        include_once BASEPATH . "/components/kdsf-ffk-select.php";
+        ?>
+
         <button class="btn secondary" type="submit" id="submit-btn">
             <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
         </button>
+
 
     </section>
 
@@ -595,7 +624,7 @@ function sel($index, $value)
 </datalist>
 
 <script>
-    var i = <?= $i ?? 0 ?>
+    var i = <?= $i ?? 0 ?>;
     var CURRENTYEAR = <?= CURRENTYEAR ?>;
     // toggleVisibility();
 </script>
@@ -735,3 +764,16 @@ function sel($index, $value)
         </div>
     </div>
 </div>
+
+
+
+
+<script>
+    
+                $(document).ready(function() {
+                    $('.activity-list').sortable({
+                        handle: ".handle",
+                        // change: function( event, ui ) {}
+                    });
+                })
+</script>

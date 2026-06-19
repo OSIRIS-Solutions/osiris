@@ -76,7 +76,10 @@ class Groups
 
         $groups = $this->osiris->groups->find(
             [],
-            ['sort' => ['level' => 1, 'order' => 1, 'inactive' => 1]]
+            [
+                'sort' => ['level' => 1, 'order' => 1, 'inactive' => 1],
+                'projection' => ['id' => 1, 'name' => 1, 'name_de' => 1, 'parent' => 1, 'unit' => 1, 'color' => 1, 'inactive' => 1, 'level' => 1, 'head' => 1]
+            ]
         )->toArray();
         foreach ($groups as $g) {
             $this->groups[$g['id']] = $g;
