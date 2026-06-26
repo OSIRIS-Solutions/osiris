@@ -22,7 +22,7 @@ $googlescholar = $Settings->featureEnabled('googlescholar', true);
 $openalex = $Settings->featureEnabled('openalex', true);
 
 require_once BASEPATH . '/php/Orcid.php';
-$orcid = new Orcid_Settings();
+
 
 ?>
 
@@ -157,45 +157,48 @@ if ($googlescholar) {
 ?>
 
 <?php
-if ($orcid->client_id && $orcid->client_secret) {
-    if ($USER['orcid_validated'] ?? null) { ?>
+if(!empty($Settings->get('orcid'))){
+    $orcid = new Orcid_Settings();
+    if ($orcid->client_id && $orcid->client_secret) {
+        if ($USER['orcid_validated'] ?? null) { ?>
 
-        <div class="box">
-            <div class="content">
-                <h2 class="title">ORCID Import</h2>
-                <p>
-                    <?= lang(
-                        'You can import data from your ORCID account',
-                        'Du kannst Publikationen von deinem ORCID-Account importieren'
-                    ) ?>:
-                </p>
-                <p class="mt-0">
-                    Account-ID: <a href="<?= $orcid->api_base_url . $USER['orcid'] ?>"><?= $USER['orcid'] ?></a>
-                </p>
+            <div class="box">
+                <div class="content">
+                    <h2 class="title">ORCID Import</h2>
+                    <p>
+                        <?= lang(
+                            'You can import data from your ORCID account',
+                            'Du kannst Publikationen von deinem ORCID-Account importieren'
+                        ) ?>:
+                    </p>
+                    <p class="mt-0">
+                        Account-ID: <a href="<?= $orcid->api_base_url . $USER['orcid'] ?>"><?= $USER['orcid'] ?></a>
+                    </p>
 
-                <form action="<?= ROOTPATH ?>/orcid/import" method="get">
-                    <button type="submit" class="btn">Import</button>
-                </form>
+                    <form action="<?= ROOTPATH ?>/orcid/import" method="get">
+                        <button type="submit" class="btn">Import</button>
+                    </form>
+                </div>
             </div>
-        </div>
 
-    <?php } else { ?><!-- if empty(USER[orcid]) -->
-        <div class="box">
-            <div class="content">
-                <h2 class="title">ORCID Import</h2>
-                <p>
-                    <?= lang(
-                        'You must connect an ORCID account to your profile to use this feature.',
-                        'Du musst einen ORCID-Account in deinem Profil verifizieren, um dieses Feature zu nutzen.'
-                    ) ?>
-                </p>
+        <?php } else { ?><!-- if empty(USER[orcid]) -->
+            <div class="box">
+                <div class="content">
+                    <h2 class="title">ORCID Import</h2>
+                    <p>
+                        <?= lang(
+                            'You must connect an ORCID account to your profile to use this feature.',
+                            'Du musst einen ORCID-Account in deinem Profil verifizieren, um dieses Feature zu nutzen.'
+                        ) ?>
+                    </p>
 
-                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('Update Profile', 'Profil bearbeiten') ?></a>
+                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('Update Profile', 'Profil bearbeiten') ?></a>
 
+                </div>
             </div>
-        </div>
 
-<?php }
+    <?php }
+    }
 }
 ?>
 
