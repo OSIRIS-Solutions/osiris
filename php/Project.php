@@ -592,7 +592,7 @@ class Project extends Vocabulary
     public function getCountryRole($role)
     {
         $country_roles = [
-            'in' => lang('Research in', 'Forschund in'),
+            'in' => lang('Research in', 'Forschung in'),
             'about' => lang('Research about', 'Forschung über'),
             'both' => lang('Research in and about', 'Forschung in und über')
         ];
