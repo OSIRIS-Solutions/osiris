@@ -21,7 +21,7 @@ if (!defined('OSIRIS_VERSION')) {
 $version = $osiris->system->findOne(['key' => 'version']);
 if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     // just let the install script run
-} elseif (empty($version)) { ?>
+} elseif (!isset($version['value']) || !is_string($version['value'])) { ?>
     <!-- include css -->
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css">
     <link href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
@@ -48,7 +48,8 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     </div>
 <?php
     die;
-} elseif (version_compare($version['value'], OSIRIS_VERSION, '<')) {
+} elseif (version_compare(implode('.', array_slice(explode('.', $version['value']), 0, 2)), implode('.', array_slice(explode('.', OSIRIS_VERSION), 0, 2)), '<')) {
+    # compare if major.minor version is lower, ignore patch level
     $allowed_routes = [
         ROOTPATH . '/migrate',
         ROOTPATH . '/migration-needed',
@@ -62,6 +63,19 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
         header('Location: ' . ROOTPATH . '/migration-needed');
         die;
     }
+} elseif (version_compare($version['value'], OSIRIS_VERSION, '<')) {
+    # if version including patch level is lower, update the version in the database
+    $osiris->system->updateOne(
+        ['key' => 'version'],
+        ['$set' => ['value' => OSIRIS_VERSION]],
+        ['upsert' => true]
+    );
+
+    $osiris->system->updateOne(
+        ['key' => 'last_update'],
+        ['$set' => ['value' => date('Y-m-d')]],
+        ['upsert' => true]
+    );
 }
 
 

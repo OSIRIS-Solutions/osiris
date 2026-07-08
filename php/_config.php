@@ -53,8 +53,9 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $value = "10." . $value[1];
             }
-            // save as lowercase
-            $values[$key] = strtolower($value);
+            if ($value !== null) $values[$key] = strtolower($value);
+            else $values[$key] = null;
+           
         } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;

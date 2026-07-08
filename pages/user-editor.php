@@ -1279,11 +1279,11 @@ $active = function ($field) use ($data_fields) {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><?= lang('From', 'Von') ?>*</span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="month *" required>
+                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><?= lang('to', 'bis') ?></span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="month">
+                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?>">
                             </div>
 
                             <div class="form-group mb-10">
@@ -1325,11 +1325,11 @@ $active = function ($field) use ($data_fields) {
                         <div class="input-group-prepend">
                             <span class="input-group-text">${lang('From', 'Von')}*</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="month *" required>
+                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                         <div class="input-group-prepend">
                             <span class="input-group-text">${lang('to', 'bis')}</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="month">
+                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?>">
                     </div>
 
                     <div class="form-group mb-10">
@@ -1348,11 +1348,24 @@ $active = function ($field) use ($data_fields) {
                     $(parent).prepend(el);
                 }
 
+                function areAllMonthValid() {
+                    let allValid = true;
+                    $('.month-field').each(function() {
+                        const value = $(this).val();
+
+                        if (value.length > 0 && !/^\d{4}-\d{2}$/.test(value)) {
+                            allValid = false;
+                            return false; // break the loop
+                        }
+                    });
+                    return allValid;
+                }
+
                 function validateFeedback(item = null, pass = false) {
                     if (item !== null) {
                         $(item).toggleClass('is-invalid', !pass);
                     }
-                    $('.btn[type="submit"]').prop('disabled', !pass);
+                    $('.btn[type="submit"]').prop('disabled', !areAllMonthValid());
                 }
 
                 // when month field is blurred, check if month is correctly formatted, if not, try to fix it, otherwise give an error

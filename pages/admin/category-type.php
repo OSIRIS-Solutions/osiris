@@ -352,7 +352,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <?= lang('Template builder', 'Template-Baukasten') ?>
             </a>
 
-            <a href="https://wiki.osiris-app.de/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
+            <a href="https://wiki.osiris-app.de/latest/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
                 <?= lang('Documentation', 'Dokumentation') ?>
             </a>
             <style>

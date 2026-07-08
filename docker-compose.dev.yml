@@ -4,14 +4,14 @@ services:
     build:
       context: .
       dockerfile: dev.Dockerfile
-    container_name: osiris
+    container_name: osiris_dev
     volumes:
       - .:/var/www/html
       - vendor-data-dev:/var/www/html/vendor
       - ./img:/var/www/html/img:rw
 
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - mongo
     environment:
@@ -22,9 +22,9 @@ services:
 
   mongo:
     image: mongo:6.0
-    container_name: mongodb
+    container_name: mongodb_dev
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo-data-dev:/data/db
       - ./dump:/dump

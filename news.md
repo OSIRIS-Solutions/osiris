@@ -1,3 +1,25 @@
+<time datetime="2026-06-29">29.06.2026</time>
+<a class="anchor" href="#patch-2.0.1" id="patch-2.0.1"></a>
+
+## Version 2.0.1
+
+Bugfixes und technische Updates
+
+### CVs:
+  - Wenn User neue Einträge in ihren CVs anlegen, wird nun in den Feldern `Von`/`Bis` anstelle von `month` nun das korrekte Format `YYYY-MM` bzw. `JJJJ-MM` angezeigt ([#516](https://github.com/OSIRIS-Solutions/osiris/issues/408))
+  - Es wurde auch ein Bug behoben, bei dem die Eingaben in den Datumsfeldern nicht immer korrekt validiert wurden ([#518](https://github.com/OSIRIS-Solutions/osiris/issues/408))
+
+### OSIRIS Wiki
+
+Das OSIRIS Wiki wird ab sofort versioniert veröffentlicht. Das führt dazu, dass die Links die aus OSIRIS in das Wiki führen, teilweise in 404 enden. Mit diesem Patch werden die Links geupdatet.
+
+### Technisch
+  - Die Build-Dependencies wurden geupdatet
+  - Die Container für Development und Production Umgebungen können nun parallel laufen
+  - Es wird bei neuen Patches das Migrations-Tool nicht mehr aktiviert
+
+----
+
 <time datetime="2026-06-01">01.06.2026</time>
 <a class="anchor" href="#version-2.0.0" id="version-2.0.0"></a>
 
@@ -541,7 +563,7 @@ Hier die Highlights:
 - **Geteilte Notizen:** Für Kommunikation zwischen Projektteam und ABS-Compliance-Team.
 - **Dashboard für ABS-Teams:** Überblick über offene Bewertungen, fehlende Scopes, offene Permits und eingereichte Unterlagen.
 
-Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/topics/nagoya/).
+Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/latest/topics/nagoya/).
 
 ### Erweiterte Suche für fast alles
 

@@ -118,8 +118,8 @@ if (is_string($result)) {
 
 <p>
     <?= lang(
-        'You are now ready to synchronize attributes from LDAP to OSIRIS by <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">setting up a CRON-Job</a> or you can do it manually:',
-        'Du bist nun bereit, die Attribute von LDAP nach OSIRIS zu synchronisieren, indem du einen <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">CRON-Job</a> einrichtest oder es manuell tust:'
+        'You are now ready to synchronize attributes from LDAP to OSIRIS by <a href="https://wiki.osiris-app.de/latest/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">setting up a CRON-Job</a> or you can do it manually:',
+        'Du bist nun bereit, die Attribute von LDAP nach OSIRIS zu synchronisieren, indem du einen <a href="https://wiki.osiris-app.de/latest/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">CRON-Job</a> einrichtest oder es manuell tust:'
     ) ?>
 </p>
 
