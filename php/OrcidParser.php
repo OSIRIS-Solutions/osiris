@@ -1,11 +1,16 @@
 <?php
 /**
- * See OpenAlexParser.php and adapt to ORCID API
+ * Orcid Parser
  * 
- * Make a queue for all works of the user found in ORCID that are not yet in Osiris
+ * This file is part of the OSIRIS package.
+ * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ *
+ * @package     OSIRIS
+ * @since       2.1.0
  * 
- * Make "click to import/reject" functions for works in the queue
- * 
+ * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
+ * @author		Julius Witte <julius.witte@osiris-solutions.de>
+ * @license     MIT
  */
 
 require_once 'DB.php';
