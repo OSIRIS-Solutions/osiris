@@ -1,3 +1,17 @@
+<time datetime="2026-07-22">22.07.2026</time>
+<a class="anchor" href="#version-2.0.3" id="version-2.0.3"></a>
+
+## Version 2.0.3
+
+### Form Builder
+
+Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Felde einer Aktivität im Formularbaukasten gesteuert werden kann. Es kann ggf. eine Rolle ausgewählt werden. Für andere Rollen ist das Feld dann nicht sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um rollenspezifische Formulare zu bauen.
+
+### Bug Fixes
+- Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam
+
+
+
 <time datetime="2026-07-17">17.07.2026</time>
 <a class="anchor" href="#version-2.0.2" id="version-2.0.2"></a>
 

@@ -1182,8 +1182,14 @@ class Modules
             $this->print_modules($typeArr['modules']);
             return;
         }
+        $user = $this->DB->db->persons->findOne(['username' => $this->user]);
+        $user_roles = DB::doc2Arr($user['roles'] ?? []);
         foreach ($fields as $f) {
             $props = $f['props'] ?? [];
+            // check for role visibility
+            if (isset($props['roles']) && !empty($props['roles']) && !in_array($props['roles'], $user_roles)) {
+                continue;
+            }
             switch ($f['type'] ?? 'field') {
                 case 'field':
                     $this->print_module($f['id'], $props['required'] ?? false, $props);

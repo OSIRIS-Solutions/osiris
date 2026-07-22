@@ -117,6 +117,10 @@ $tagLabels = [
         background: #f7f7fb
     }
 
+    .subtitle {
+        text-transform: none;
+    }
+
     .editor-header {
         position: sticky;
         top: 0;
@@ -489,22 +493,22 @@ $tagLabels = [
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-heading" data-label="Überschrift">
-                            <span><?=lang('Heading', 'Überschrift')?></span>
+                            <span><?= lang('Heading', 'Überschrift') ?></span>
                             <!-- <span class="badge bg-light ">H2–H4</span> -->
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-hr" data-label="Trennlinie">
-                            <span><?=lang('Horizontal line', 'Trennlinie')?></span>
+                            <span><?= lang('Horizontal line', 'Trennlinie') ?></span>
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-paragraph" data-label="Absatz">
-                            <span><?=lang('Paragraph', 'Absatz')?></span>
+                            <span><?= lang('Paragraph', 'Absatz') ?></span>
                         </li>
                     </ul>
 
-                    <div class="font-size-12 text-muted"><?=lang('Custom Fields', 'Benutzerdefinierte Felder')?></div>
+                    <div class="font-size-12 text-muted"><?= lang('Custom Fields', 'Benutzerdefinierte Felder') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($custom_fields as $field) { ?>
                             <li class="drag-item"
@@ -559,7 +563,9 @@ $tagLabels = [
                 <button type="button" class="close" role="button" aria-label="Close" id="close-properties-btn">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <div class="title"><?=lang('Properties', 'Eigenschaften')?></div>
+                <!-- <b><?= lang('Properties of', 'Eigenschaften von') ?></b><br> -->
+                <div class="title text-monospace" id="prop-id">
+                </div>
                 <div class="card-body">
 
                     <div class="action mb-20">
@@ -568,34 +574,29 @@ $tagLabels = [
                         </button>
                     </div>
 
-
-                    <div class="mb-10" id="selected-element">
-                        <label class="form-label"><?= lang('Selected field', 'Ausgewähltes Feld') ?></label>
-                        <input type="text" class="form-control text-monospace" value="—" disabled id="prop-id">
-                    </div>
-
                     <div id="props-field" style="display:none;">
                         <b>
-                            <?= lang('Overwrite the default label', 'Standard-Label überschreiben') ?>
-                            <small data-toggle="tooltip" data-title="<?= lang('You can overwrite the default in the placeholder text with your own labels.', 'Der Default-Wert im Platzhaltertext kann mit deinem eigenen Wert überschrieben werden.') ?>"><i class="ph ph-info"></i></small>
+                            <?= lang('Overwrite the default label', 'Feldbezeichnung überschreiben') ?>
                         </b>
-                        <div class="input-group mb-10">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">EN</span>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">EN</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="z. B. „Journal“" id="prop-label-en">
                             </div>
-                            <input type="text" class="form-control" placeholder="z. B. „Journal“" id="prop-label-en">
-                        </div>
-                        <div class="input-group mb-10">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">DE</span>
+                            <div class="input-group mt-5">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">DE</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="z. B. Zeitschrift" id="prop-label-de">
                             </div>
-                            <input type="text" class="form-control" placeholder="z. B. Zeitschrift" id="prop-label-de">
                         </div>
 
-                        <div class="mb-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prop-required">
-                                <label class="form-check-label" for="prop-required"><?=lang('Required Field', 'Pflichtfeld')?></label>
+                        <div class="form-group">
+                            <div class="custom-switch">
+                                <input type="checkbox" id="prop-required" value="">
+                                <label for="prop-required"><?= lang('Required Field', 'Pflichtfeld') ?></label>
                             </div>
                             <!-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="prop-portfolio">
@@ -603,21 +604,45 @@ $tagLabels = [
                             </div> -->
                         </div>
 
-                        <div class="mb-10">
-                            <label class="form-label"><?= lang('Help text (en)', 'Hilfetext (en)') ?></label>
-                            <textarea class="form-control" rows="3" placeholder="Short help text …" id="prop-help"></textarea>
-
-                            <label class="form-label"><?= lang('Help text (de)', 'Hilfetext (de)') ?></label>
-                            <textarea class="form-control" rows="3" placeholder="Kurzer Hilfetext …" id="prop-help-de"></textarea>
+                        <!-- role visibility -->
+                        <div class="form-group">
+                            <label class="font-weight-bold d-block mb-0"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <select id="prop-roles" class="form-control">
+                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <?php foreach ($Settings->getRoles() as $role) {
+                                    if ($role === 'user') continue; // skip user role since it basically means everyone
+                                ?>
+                                    <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
 
 
 
-                        <div class="mb-10">
-                            <label class="form-label"><?= lang('Width', 'Breite') ?></label>
+
+                        <b>
+                            <?= lang('Help text', 'Hilfetext') ?>
+                        </b>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">EN</span>
+                                </div>
+                                <textarea class="form-control" rows="1" placeholder="Short help text …" id="prop-help"></textarea>
+                            </div>
+                            <div class="input-group mt-5">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">DE</span>
+                                </div>
+                                <textarea class="form-control" rows="1" placeholder="Kurzer Hilfetext …" id="prop-help-de"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-bold d-block mb-0"><?= lang('Width', 'Breite') ?></label>
                             <select class="form-control w-auto d-inline" id="prop-width">
                                 <option value="" selected>Default</option>
-                                <option value="12"><?=lang('Full width', 'Vollbreite')?></option>
+                                <option value="12"><?= lang('Full width', 'Vollbreite') ?></option>
                                 <option value="9">3/4</option>
                                 <option value="8">2/3</option>
                                 <option value="6">1/2</option>
@@ -634,28 +659,54 @@ $tagLabels = [
 
                     <div id="props-heading" style="display:none;">
 
-                        <div class="input-group mb-10">
+                        <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">EN</span>
                             </div>
                             <input type="text" class="form-control" placeholder="z. B. „Journal“" id="prop-heading">
                         </div>
-                        <div class="input-group mb-10">
+                        <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">DE</span>
                             </div>
                             <input type="text" class="form-control" placeholder="z. B. Zeitschrift" id="prop-heading-de">
                         </div>
+
+                        <!-- role visibility -->
+                        <div class="form-group">
+                            <label class="font-weight-bold d-block mb-0" for="prop-heading-roles"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <select id="prop-heading-roles" class="form-control">
+                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <?php foreach ($Settings->getRoles() as $role) {
+                                    if ($role === 'user') continue; // skip user role since it basically means everyone
+                                ?>
+                                    <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
                     </div>
 
                     <div id="props-paragraph" style="display:none;">
-                        <div class="mb-10">
+                        <div class="form-group">
                             <label class="form-label">EN</label>
                             <textarea class="form-control" rows="4" placeholder="Text für Absatz …" id="prop-paragraph"></textarea>
                         </div>
-                        <div class="mb-10">
+                        <div class="form-group">
                             <label class="form-label">DE</label>
                             <textarea class="form-control" rows="4" placeholder="Text für Absatz …" id="prop-paragraph-de"></textarea>
+                        </div>
+
+                        <!-- role visibility -->
+                        <div class="form-group">
+                            <label class="font-weight-bold d-block mb-0" for="prop-paragraph-roles"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <select id="prop-paragraph-roles" class="form-control">
+                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <?php foreach ($Settings->getRoles() as $role) {
+                                    if ($role === 'user') continue; // skip user role since it basically means everyone
+                                ?>
+                                    <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
 
@@ -670,7 +721,7 @@ $tagLabels = [
         <div class="col-8">
             <div class="panel card">
                 <div class="card-header d-flex align-items-center">
-                    <div class="title"><?=lang('This form', 'Dieses Formular')?></div>
+                    <div class="title"><?= lang('This form', 'Dieses Formular') ?></div>
                     <div class="ml-auto">
                         <span class="badge" id="field-count">Felder: 0</span>
                     </div>
@@ -684,7 +735,7 @@ $tagLabels = [
                                 if ($field_type === 'field' || $field_type === 'custom'):
                                     $module = $all[$it['id']] ?? [];
                                     $label = lang($module['name'] ?? $it['id'], $module['name_de'] ?? null);
-                                    if (!empty($props['label'] ?? null)){
+                                    if (!empty($props['label'] ?? null)) {
                                         $label = lang($props['label'], $props['label_de'] ?? null);
                                     }
                             ?>
@@ -719,6 +770,9 @@ $tagLabels = [
                                                 <?php if (!empty($props['portfolio'])): ?>
                                                     <span class="badge primary"><i class="ph ph-globe m-0"></i></span>
                                                 <?php endif; ?>
+                                                <?php if (!empty($props['roles'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-eye m-0"></i></span>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                         <!-- <div class="actions ms-auto">
@@ -733,7 +787,13 @@ $tagLabels = [
                                         </div>
                                         <div class="flex-fill">
                                             <div class="title"><?= lang('Header', 'Überschrift') ?></div>
-                                            <div class="subtitle"><?= strtoupper(e($it['props']['text'] ?? 'Platzhaltertext')) ?></div>
+                                            <div class="subtitle">
+                                                <?= (e($it['props']['text'] ?? 'Platzhaltertext')) ?>
+                                                <?php if (!empty($it['props']['roles'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-eye m-0"></i></span>
+                                                <?php endif; ?>
+
+                                            </div>
                                         </div>
                                     </li>
                                 <?php elseif ($field_type === 'paragraph'): ?>
@@ -743,8 +803,13 @@ $tagLabels = [
                                             <i class="ph ph-paragraph"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?=lang('Paragraph', 'Absatz')?></div>
-                                            <div class="subtitle"><?= e(($it['props']['text'] ?? 'Placeholder')) ?></div>
+                                            <div class="title"><?= lang('Paragraph', 'Absatz') ?></div>
+                                            <div class="subtitle">
+                                                <?= e(($it['props']['text'] ?? 'Placeholder')) ?>
+                                                <?php if (!empty($it['props']['roles'])): ?>
+                                                    <span class="badge primary"><i class="ph ph-eye m-0"></i></span>
+                                                <?php endif; ?>
+                                        </div>
                                         </div>
                                     </li>
                                 <?php elseif ($field_type === 'hr'): ?>
@@ -754,7 +819,7 @@ $tagLabels = [
                                             <i class="ph ph-minus"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?=lang('Horizontal Line', 'Trennlinie')?></div>
+                                            <div class="title"><?= lang('Horizontal Line', 'Trennlinie') ?></div>
                                         </div>
                                     </li>
                                 <?php endif; ?>
@@ -923,14 +988,10 @@ $tagLabels = [
             var type = $(this).data('type');
             var id = $(this).data('id') || '';
             var title = $(this).find('.title').text() || '—';
-            $('#selected-element').hide()
 
             if (type === 'field' || type === 'custom') {
                 const defaults = ALL[id] || {};
-                // 
-                console.log(defaults);
-                $('#selected-element').show();
-                $('#prop-id').val(id);
+                $('#prop-id').text(id);
                 $('#props-field').show();
 
                 $('#prop-label-en').attr('placeholder', defaults.label || title);
@@ -950,6 +1011,7 @@ $tagLabels = [
                 console.log('Feld-Eigenschaften:', props);
                 $('#prop-help').val(props.help || '');
                 $('#prop-help-de').val(props.help_de || props.help || '');
+                $('#prop-roles').val(props.roles || '');
                 $('#prop-width').val(props.width || '');
                 $('#prop-required').prop('checked', props.required || false);
                 $('#prop-label-en').val(props.label || '');
@@ -961,17 +1023,19 @@ $tagLabels = [
                 var props = $(this).data('props') || {};
                 $('#prop-heading').val(props.text || '');
                 $('#prop-heading-de').val(props.text_de || '');
+                $('#prop-heading-roles').val(props.roles || '');
             } else if (type === 'layout-paragraph') {
                 $('#props-paragraph').show();
                 // Absatz-Einstellungen laden
                 var props = $(this).data('props') || {};
                 $('#prop-paragraph').val(props.text || '');
                 $('#prop-paragraph-de').val(props.text_de || props.text || '');
+                $('#prop-paragraph-roles').val(props.roles || '');
             }
         });
 
         // on change of properties: update the selected item
-        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-width, #prop-required, #prop-portfolio, #prop-paragraph, #prop-paragraph-de, #prop-heading, #prop-heading-de', function() {
+        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-roles, #prop-width, #prop-required, #prop-portfolio, #prop-paragraph, #prop-paragraph-de, #prop-paragraph-roles, #prop-heading, #prop-heading-de, #prop-heading-roles', function() {
             var $selected = $('#canvas-list .canvas-item.is-selected');
             if ($selected.length === 0) return; // Nichts ausgewählt
 
@@ -1004,6 +1068,10 @@ $tagLabels = [
                 if ($('#prop-help-de').val()) {
                     props.help_de = $('#prop-help-de').val();
                 }
+                if ($('#prop-roles').val()) {
+                    props.roles = $('#prop-roles').val();
+                    $subtitle.append(' <span class="badge primary"><i class="ph ph-eye m-0"></i></span>');
+                }
                 if ($('#prop-width').val()) {
                     props.width = $('#prop-width').val();
                     $width = $('#prop-width').val();
@@ -1026,17 +1094,27 @@ $tagLabels = [
             } else if (type === 'layout-heading') {
                 var props = {
                     text: $('#prop-heading').val() || 'Überschrift',
-                    text_de: $('#prop-heading-de').val() || 'Überschrift'
+                    text_de: $('#prop-heading-de').val() || 'Überschrift',
+                    roles: $('#prop-heading-roles').val() || ''
                 };
                 $selected.data('props', props);
-                $selected.find('.title').text(props.text);
+                // $selected.find('.title').text(props.text);
+                $selected.find('.subtitle').text(props.text);
+                if (props.roles) {
+                    $selected.find('.subtitle').append(' <span class="badge primary"><i class="ph ph-eye m-0"></i></span>');
+                }
+
             } else if (type === 'layout-paragraph') {
                 var props = {
                     text: $('#prop-paragraph').val() || '',
-                    text_de: $('#prop-paragraph-de').val() || ''
+                    text_de: $('#prop-paragraph-de').val() || '',
+                    roles: $('#prop-paragraph-roles').val() || ''
                 };
                 $selected.data('props', props);
                 $selected.find('.subtitle').text(props.text);
+                if (props.roles) {
+                    $selected.find('.subtitle').append(' <span class="badge primary"><i class="ph ph-eye m-0"></i></span>');
+                }
             }
         });
 
