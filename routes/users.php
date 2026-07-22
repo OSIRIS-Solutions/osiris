@@ -575,7 +575,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         }
         require_once BASEPATH . "/php/Render.php";
         $complete_person = array_merge($old, $person);
-        $person['search_text'] = build_person_search_text($complete_person);
+        $person['search_text'] = DB::build_person_search_text($complete_person);
     }
 
     $person['updated'] = date('Y-m-d');

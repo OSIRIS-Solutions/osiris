@@ -1,5 +1,4 @@
 <?php
-include_once 'Render.php';
 require_once 'Groups.php';
 
 class LDAPInterface
@@ -563,7 +562,7 @@ class LDAPInterface
                 $userData['formalname'] = "$userData[last], $userData[first]";
                 $person = $osiris->persons->findOne(['username' => $username]);
                 $complete_person = array_merge($userData, DB::doc2Arr($person));
-                $userData['search_text'] = build_person_search_text($complete_person);
+                $userData['search_text'] = DB::build_person_search_text($complete_person);
             }
 
             // Update in der Datenbank speichern

@@ -24,7 +24,7 @@ $cursor = $coll->find(
 foreach ($cursor as $doc) {
     $arr = (array)$doc;
 
-    $new = build_person_search_text($arr);
+    $new = DB::build_person_search_text($arr);
 
     // Skip empty strings
     if ($new === '') continue;

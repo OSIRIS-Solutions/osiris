@@ -2,8 +2,6 @@
 <?php
 if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
     define('BASEPATH', __DIR__ . '/../');
-    include_once BASEPATH . '/CONFIG.php';
-    include_once BASEPATH . '/php/LDAPInterface.php';
 
     if (!function_exists('lang')) {
         function lang($text, $translation = null)
@@ -11,6 +9,9 @@ if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
             return $text;
         }
     }
+
+    include_once BASEPATH . '/CONFIG.php';
+    include_once BASEPATH . '/php/LDAPInterface.php';
 
     global $DB;
     $DB = new DB;
