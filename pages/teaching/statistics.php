@@ -16,7 +16,24 @@
 
 $Document = new Document();
 
-$selectedSemester = $_GET['semester'] ?? 'SoSe2025'; // default
+$month = date('n');
+$year = date('Y');
+$currentSemester = ($month >= 4 && $month <= 9) ? "SoSe$year" : "WiSe$year";
+
+$semesters = [];
+$years = $osiris->activities->distinct('year', ['module_id' => ['$exists' => true]]);
+// sort desc
+rsort($years);
+foreach ($years as $y) {
+    $semesters[] = "SoSe$y";
+    $semesters[] = "WiSe$y";
+}
+
+$selectedSemester = $_GET['semester'] ?? $currentSemester;
+// check if selectedSemester is in semesters, if not, set to first semester
+if (!in_array($selectedSemester, $semesters)) {
+    $selectedSemester = $semesters[0];
+}
 
 // Parse Semester → Start- & Enddatum
 preg_match('/(SoSe|WiSe)(\d{4})/', $selectedSemester, $matches);
@@ -90,7 +107,7 @@ $all = $osiris->activities->count(
     <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
         <h6 class="mb-0 mt-5"><?= lang('Select semester', 'Semester auswählen') ?>:</h6>
         <select name="semester" class="form-control w-auto">
-            <?php foreach (['SoSe2024', 'WiSe2024', 'SoSe2025'] as $s): ?>
+            <?php foreach ($semesters as $s): ?>
                 <option value="<?= $s ?>" <?= $s === $selectedSemester ? 'selected' : '' ?>><?= $s ?></option>
             <?php endforeach ?>
         </select>

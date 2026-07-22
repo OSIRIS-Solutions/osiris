@@ -619,8 +619,14 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $account = $osiris->accounts->findOne(['username' => $user]);
         if (!empty($account['password'] ?? null) && !password_verify($_POST['old_password'], $account['password'])) {
             $_SESSION['msg'] = lang("Old password is incorrect.", "Vorheriges Passwort ist falsch.");
+            $_SESSION['msg_type'] = "error";
+            header("Location: " . ROOTPATH . "/profile/$user");
+            die;
         } else if ($_POST['password'] != $_POST['password2']) {
             $_SESSION['msg'] = lang("Passwords do not match.", "Passwörter stimmen nicht überein.");
+            $_SESSION['msg_type'] = "error";
+            header("Location: " . ROOTPATH . "/profile/$user");
+            die;
         } else {
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $osiris->accounts->deleteOne(['username' => $user]);

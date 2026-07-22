@@ -302,18 +302,92 @@ function removeAuthor(event, el) {
     affiliationCheck();
 }
 
+function validateDoi(element) {
+
+    if (!element.jquery) {
+        element = $(element);
+    }
+
+    // DOI regex pattern
+    var doi = element.val().trim();
+    const doiPattern = /(10\.\d{4,9}\/[-._;()/:A-Z0-9]+$)/i;
+    if (doi === "") {
+        $(element).toggleClass("is-valid", false);
+        $(element).toggleClass("is-invalid", false);
+        return true;
+    } else if (doiPattern.test(doi)) {
+        $(element).toggleClass("is-valid", true);
+        $(element).toggleClass("is-invalid", false);
+        return true;
+    } else {
+        $(element).toggleClass("is-valid", false);
+        $(element).toggleClass("is-invalid", true);
+        return false;
+    }
+}
+
+function validateLink(element){
+
+    if (!element.jquery) {
+        element = $(element);
+    }
+
+    var url = element.val().trim();
+
+    if (url == '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        return true;
+    }
+
+    if (url && !url.match(/^(https?:\/\/)/)) {
+        url = 'https://' + url;
+    }
+    
+    try{
+        const parsed = new URL(url);
+        if (parsed.hostname.includes('.')) {
+            $(element).removeClass('is-invalid');
+            $(element).addClass('is-valid');
+            return true;
+        } else {
+            throw new Error('Invalid hostname');
+        }
+    } catch(e) {
+        $(element).removeClass('is-valid');
+        $(element).addClass('is-invalid');
+        return false;
+    }
+}
+
 
 function verifyForm(event, form) {
     // event.preventDefault()
     form = $(form)
     var correct = true
-    var errors = []
+    var errors_empty = []
+    var errors_invalid = []
     form.find(':input[name]').each(function () {
         //retrieve field name and value from the DOM
         var input = $(this)
         var selector = input
         if (input.attr('id') == 'title') {
             selector = $('.title-editor')
+        }
+        if (input.attr('id') == "link") {
+            if (!validateLink(input)) {
+                correct = false
+                errors_invalid.push("Link")
+            }
+            if (input.val() && !input.val().match(/^(https?:\/\/)/)) {
+                input.val('https://' + input.val());
+            }
+        }
+        if (input.attr('id') == "doi") {
+            if (!validateDoi(input)) {
+                correct = false
+                errors_invalid.push("DOI")
+            }
         }
         if ((input.prop('required') && !input.prop('disabled'))) {
             console.log($(this).val());
@@ -330,7 +404,7 @@ function verifyForm(event, form) {
                 }
                 if (name == 'journal_id') return;
                 correct = false;
-                errors.push(name)
+                errors_empty.push(name)
             } else {
                 selector.addClass('is-valid').removeClass('is-invalid');
             }
@@ -343,7 +417,7 @@ function verifyForm(event, form) {
         if ($('.author-list').find('.author').length === 0) {
             $('#author-widget').addClass('is-invalid').removeClass('is-valid')
             correct = false
-            errors.push("Authors")
+            errors_empty.push("Authors")
         } else {
             $('#author-widget').addClass('is-valid').removeClass('is-invalid')
         }
@@ -356,7 +430,7 @@ function verifyForm(event, form) {
             correct = false
 
             var topicName = $('#topic-widget h5').first().text().trim();
-            errors.push(topicName)
+            errors_empty.push(topicName)
         }
     }
 
@@ -367,7 +441,7 @@ function verifyForm(event, form) {
             $(this).addClass('is-invalid').removeClass('is-valid')
             correct = false
             var name = $(this).find('.floating-title').text().trim();
-            errors.push(name)
+            errors_empty.push(name)
         } else {
             $(this).addClass('is-valid').removeClass('is-invalid')
         }
@@ -380,9 +454,18 @@ function verifyForm(event, form) {
 
     event.preventDefault()
 
-    var msg = lang('The following fields cannot be empty: ', 'Die folgenden Felder dürfen nicht leer sein: ');
-    msg += errors.join(', ')
-    toastError(msg)
+    if (errors_invalid.length > 0) {
+        var msg = lang('The following fields are invalid: ', 'Die folgenden Felder sind ungültig: ');
+        msg += errors_invalid.join(', ')
+        toastError(msg)
+    }
+
+    if (errors_empty.length > 0) {
+        var msg = lang('The following fields cannot be empty: ', 'Die folgenden Felder dürfen nicht leer sein: ');
+        msg += errors_empty.join(', ')
+        toastError(msg)
+    }
+
     return false
 }
 

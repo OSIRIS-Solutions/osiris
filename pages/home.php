@@ -471,7 +471,7 @@ $lastquarter = $Y . "Q" . $Q;
                             <i class="ph-duotone ph-calendar"></i>
                             <?= $title ?>
                         </h2>
-                        <a href="<?= ROOTPATH ?>/events" class="link-sm">
+                        <a href="<?= ROOTPATH ?>/conferences" class="link-sm">
                             <?= lang('View all', 'Zeige alle') ?>
                         </a>
                     </div>

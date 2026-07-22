@@ -592,7 +592,7 @@ if ($topicsEnabled) {
 
 
     <div class="row row-eq-spacing">
-        <div class="col-lg-4">
+        <div class="col-md-4">
 
             <table class="table">
                 <tbody>
@@ -653,7 +653,7 @@ if ($topicsEnabled) {
                 background-color: #000;
             }
         </style>
-        <div class="col-lg-8">
+        <div class="col-md-8">
             <div class="box my-0">
                 <div id="map" class=""></div>
             </div>

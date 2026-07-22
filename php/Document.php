@@ -1530,15 +1530,16 @@ class Document extends Settings
             case "teaching-category": // ["category"],
                 return $this->translateCategory($this->getVal('category'));
             case "teaching-course": // ["title", "module", "module_id"],
+            case "module":
                 if (isset($this->doc['module_id'])) {
-                    $m = $this->DB->getConnected('teaching', $this->getVal('module_id'));
+                    $m = $this->DB->getConnected('teaching', $this->doc['module_id']);
                     if (empty($m)) return $this->getVal('module') ?? '';
                     return $m['module'] . ': ' . $m['title'];
                 }
                 return $this->getVal('title');
             case "teaching-course-short": // ["title", "module", "module_id"],
                 if (isset($this->doc['module_id'])) {
-                    $m = $this->DB->getConnected('teaching', $this->getVal('module_id'));
+                    $m = $this->DB->getConnected('teaching', $this->doc['module_id']);
                     if (empty($m)) return $this->getVal('module') ?? '';
                     return $m['module'];
                 }

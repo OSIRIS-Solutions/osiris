@@ -1,3 +1,30 @@
+<time datetime="2026-07-17">17.07.2026</time>
+<a class="anchor" href="#version-2.0.2" id="version-2.0.2"></a>
+
+## Version 2.0.2
+
+Datenvalidierung im User-Editor und Bugfixes
+
+### User-Editor:
+  - Auf Basis des feature request [#256](https://github.com/OSIRIS-Solutions/osiris/issues/256) gibt es nun Eingabevalidierungen
+  im Editor der Nutzerprofile für nahezu alle Felder im Bereich `Kontakt` mit visuellem Feedback
+  - Wenn Nutzer sich selbst ein neues Passwort vergeben gibt es nun Basisregeln zur Passwortsicherheit und sofortiges Feedback
+  - Ein Bug wurde behoben bei dem die Fehlernachricht bei einem falschen alten Passwort nicht zu sehen war
+
+### Sonstiges
+  - Die Sortierung nach Impact-Faktor wurde in der Journals-Übersicht gefixt [#535](https://github.com/OSIRIS-Solutions/osiris/issues/535)
+  - User Feedback für die Felder `DOI` und `Link` wurde im Activity-Editor hinzugefügt [#533](https://github.com/OSIRIS-Solutions/osiris/issues/533)
+  - Ein fehlerhafter Link von der Startseite zur Eventübersicht wurde gefixt
+  - Es wurde ein Konflikt mit Podman in den Dockerfiles gefixt
+  - Bugs an der Portfolio API wurden behoben - Issues [#544](https://github.com/OSIRIS-Solutions/osiris/issues/544) und [#545](https://github.com/OSIRIS-Solutions/osiris/issues/545)
+  - Abkürzungen von Einheiten können nun 9 Zeichen enthalten (war zuvor limitiert auf 8 Zeichen) [#537](https://github.com/OSIRIS-Solutions/osiris/issues/537)
+  - Style-Verbesserungen
+  - Die Semesterliste in den Statistiken der Lehrveranstaltungen wird nun aus den vorhandenen Daten generiert
+
+Vielen Dank an alle Issue Reporter!
+
+----
+
 <time datetime="2026-06-29">29.06.2026</time>
 <a class="anchor" href="#patch-2.0.1" id="patch-2.0.1"></a>
 

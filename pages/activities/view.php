@@ -52,7 +52,15 @@
         ];
         if ($field_id == 'teaching-course' && isset($doc['module_id'])) :
             $module = $DB->getConnected('teaching', $doc['module_id']);
-            $field['value'] = '<a class="link font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>';
+            if (isset($module['organization'])) {
+                $org_id = DB::to_ObjectID($module['organization']);
+                $org = $osiris->organizations->findOne(['_id' => $org_id]);
+                $affiliation = $org['name'] ?? '';
+            } else {
+                $affiliation = $module['affiliation'] ?? null;
+            }
+            $field['value'] = '<a class="font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>: '. $module['title'] ?? '';
+            $field['value'] .= '<br><small>'.$affiliation . '</small>';
         elseif ($field_id == 'journal' && isset($doc['journal_id'])) :
             $journal = $DB->getConnected('journal', $doc['journal_id']);
             $field['value'] = '<a class="link font-weight-bold" href="' . ROOTPATH . '/journal/view/' . ($journal['_id'] ?? '#') . '">' . ($journal['journal'] ?? '-') . '</a>';

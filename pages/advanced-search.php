@@ -510,7 +510,7 @@ function printRules($rules)
 </div>
 
 
-<div class="container">
+<div class="">
     <a href="https://wiki.osiris-app.de/latest/users/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
@@ -519,7 +519,7 @@ function printRules($rules)
     </h1>
 
     <div class="box">
-        <div class="content">
+        <div class="content mb-0">
 
             <h3 class="title"><?= lang('Filter', 'Filtern') ?></h3>
             <div id="builder" class="<?= $expert ? 'hidden' : '' ?>"></div>

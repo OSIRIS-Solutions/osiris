@@ -1273,9 +1273,86 @@ class Modules
         if (!array_key_exists($module, $this->form) && isset($field['default']) && !empty($field['default'])) {
             $value = $field['default'];
         }
+
+        if ($field['format'] == 'wikidata') {
+?>
+            <style>
+                .wikidata-results {
+                    margin-top: .5rem;
+                    border: 1px solid var(--border-color, #ddd);
+                    border-radius: .5rem;
+                    overflow: hidden;
+                }
+
+                .wikidata-result {
+                    display: block;
+                    width: 100%;
+                    padding: .75rem;
+                    text-align: left;
+                    background: white;
+                    border: 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                }
+
+                .wikidata-result:hover {
+                    background: #f6f8f8;
+                }
+
+                .wikidata-result span,
+                .wikidata-selection span {
+                    display: block;
+                    color: #666;
+                }
+
+                .wikidata-result small,
+                .wikidata-selection small {
+                    color: #888;
+                }
+
+                .wikidata-selection {
+                    margin-top: .75rem;
+                    padding: .75rem;
+                    border-radius: .5rem;
+                    background: #f3fafa;
+                    display: flex;
+                    gap: 1rem;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            </style>
+            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+                <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                <input type="text" class="wikidata-search form-control"
+                    placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
+
+                <input type="hidden" name="values[<?= $module ?>][id]" class="wikidata-id" value="<?= $value['id'] ?? '' ?>">
+                <input type="hidden" name="values[<?= $module ?>][label]" class="wikidata-label" value="<?= $value['label'] ?? '' ?>">
+                <input type="hidden" name="values[<?= $module ?>][description]" class="wikidata-description" value="<?= $value['description'] ?? '' ?>">
+
+                <div class="wikidata-results"></div>
+                <div class="wikidata-selected">
+                    <?php if (!empty($value) && isset($value['id'])): ?>
+                        <div class="wikidata-selection" data-id="<?= $value['id'] ?>">
+                            <div>
+                                <strong><?= $value['label'] ?? $value['id'] ?></strong>
+                                <span><?= $value['description'] ?? '' ?></span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-light" onclick="removeWikidataSelection(this);">&times;</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <script>
+                initWikidataWidget($("#wikidata-widget-<?= $module ?>"));
+            </script>
+        <?php
+            return;
+        }
+
         if ($field['format'] == 'text-format') {
             $id = rand(1000, 9999);
-?>
+        ?>
             <div class="data-module col-sm-<?= $width ?> lang-<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
                 <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                 <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
@@ -1696,9 +1773,16 @@ class Modules
                         <div id="selected-teaching">
                             <?php if (!empty($this->form) && isset($this->form['module_id'])) :
                                 $module = $this->DB->getConnected('teaching', $this->form['module_id']);
+                                if (isset($module['organization'])) {
+                                    $org_id = DB::to_ObjectID($module['organization']);
+                                    $org = $this->DB->db->organizations->findOne(['_id' => $org_id]);
+                                    $affiliation = $org['name'] ?? '';
+                                } else {
+                                    $affiliation = $module['affiliation'] ?? null;
+                                }
                             ?>
                                 <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
-                                <span class="text-muted"><?= $module['affiliation'] ?></span>
+                                <span class="text-muted"><?= $affiliation ?></span>
                             <?php else : ?>
                                 <span class="title"><?= lang('No module selected', 'Kein Modul ausgewählt') ?></span>
 
@@ -2913,7 +2997,7 @@ class Modules
             case "link":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="link">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[link]" value="<?= $this->val('link') ?>" id="link" placeholder="link">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[link]" value="<?= $this->val('link') ?>" id="link" placeholder="link" oninput="validateLink(this)">
                     <label for="link" class="element-link <?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
@@ -3065,7 +3149,7 @@ class Modules
             ?>
                 <?php if (empty($this->form)) { ?>
                     <div class="data-module floating-form col-sm-<?= $width ?>" data-module="doi">
-                        <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
+                        <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi" oninput="validateDoi(this)">
                         <label for="doi" class="element-link <?= $labelClass ?>"><?= $label ?></label>
                         <?= $this->render_help($help) ?>
                     </div>
@@ -3074,7 +3158,7 @@ class Modules
                         <label for="doi" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
 
                         <div class="input-group ">
-                            <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi">
+                            <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi" oninput="validateDoi(this)">
                             <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('Retreive updated information via DOI', 'Aktualisiere die Daten via DOI') ?>">
                                 <button class="btn" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i></button>
                                 <span class="sr-only">

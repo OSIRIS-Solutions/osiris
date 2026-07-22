@@ -30,7 +30,7 @@ $numbers = $data['numbers'] ?? [
     'infrastructures' => 0,
 ];
 ?>
-<div class="container">
+<div class="container-">
 
     <?php if ($Portfolio->isPreview()) { ?>
         <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">
@@ -217,7 +217,6 @@ $numbers = $data['numbers'] ?? [
                     <a onclick="navigate('collaborators')" id="btn-collaborators" class="<?= $preselect === 'collaborators' ? 'active' : '' ?>">
                         <i class="ph ph-handshake" aria-hidden="true"></i>
                         <?= lang('Collaborators', 'Kooperationspartner')  ?>
-                        <span class="index"><?= $numbers['collaborators'] ?></span>
                     </a>
                 <?php } ?>
 

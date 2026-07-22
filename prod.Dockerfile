@@ -1,11 +1,14 @@
+# Build-Stage for composer
+FROM composer:2 AS composer
+
 # Build-Stage for dependencies
-FROM php:8.1-fpm-alpine AS composer
+FROM php:8.1-fpm-alpine AS build_dependencies
 
 # Install composer and necessary dependencies
 RUN apk add --no-cache git unzip
 
 # Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Set workdir
 WORKDIR /app
@@ -38,7 +41,7 @@ RUN apk update && apk add --no-cache \
 WORKDIR /var/www/html
 
 # Copy dependencies from builder
-COPY --from=composer /app/vendor ./vendor
+COPY --from=build_dependencies /app/vendor ./vendor
 
 # Copy OSIRIS source code
 COPY . .

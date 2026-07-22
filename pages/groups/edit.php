@@ -232,7 +232,7 @@ function sel($index, $value)
                     <label for="id" class="required">
                         <?= lang('Acronym', 'Abkürzung') ?>
                     </label>
-                    <input type="text" class="form-control" name="values[id]" id="id" required value="<?= val('id') ?>" maxlength="8">
+                    <input type="text" class="form-control" name="values[id]" id="id" required value="<?= val('id') ?>" maxlength="9">
                 </div>
 
                 <div class="col-sm-5">

@@ -1100,7 +1100,7 @@ class DB
             if ($val instanceof BSONArray || $val instanceof BSONDocument) {
                 $val = DB::doc2Arr($val);
             }
-            if (is_array($val)) {
+            if (is_array($val) && !empty($val)) {
                 if (is_string($val[0])) {
                     $val = implode(', ', $val);
                 } else {

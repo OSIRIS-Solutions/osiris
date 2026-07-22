@@ -115,8 +115,17 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     data: 'if',
                     defaultContent: '-',
                     render: function(data, type, full, meta) {
-                        if (!data) return '';
+
+                        if (!data) {
+                            return type === 'sort' ? 0 : '-';
+                        }
                         var impact = data.impact ?? 0;
+
+                        // Used for sorting, but not displayed
+                        if (type === 'sort' || type === 'type') {
+                            return impact;
+                        }
+
                         if (data.year) {
                             return `<span data-toggle="tooltip" data-title="${data.year}">${impact}</span>`;
                         }
