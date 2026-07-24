@@ -1,13 +1,18 @@
-<time datetime="2026-07-22">22.07.2026</time>
-<a class="anchor" href="#version-2.0.3" id="version-2.0.3"></a>
+<time datetime="2026-07-24">24.07.2026</time>
+<a class="anchor" href="#version-2.1.0" id="version-2.1.0"></a>
 
-## Version 2.0.3
+## Version 2.1.0
+
+### ORCID Integration
+
+TODO
+
 
 ### Form Builder
 
 Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Felde einer Aktivität im Formularbaukasten gesteuert werden kann. Es kann ggf. eine Rolle ausgewählt werden. Für andere Rollen ist das Feld dann nicht sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um rollenspezifische Formulare zu bauen.
 
-### Datum in Templates
+### Datumsangaben in Templates
 
 - Datumsangaben in Aktivitäts-Templates können jetzt flexibel formatiert werden, zum Beispiel mit `{date:Y-m-d}` oder `{start:Y, F j}`. Dabei kann sowohl auf `date`, `start` als auch `end` zugegriffen werden.
 - Mit `{end-compact:…}` lassen sich Datumsbereiche kompakt darstellen: Mit dem Start übereinstimmende Jahre und Monate werden nicht wiederholt. Damit sind unter anderem APA-7-konforme Konferenzdaten wie `(2026, July 24–26)` möglich.
