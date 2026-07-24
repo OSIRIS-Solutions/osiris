@@ -176,11 +176,14 @@ function validateValues($values, $DB)
                     if (!isset($values['month']) && isset($values[$key]['month'])) {
                         $values['month'] = $values[$key]['month'];
                     }
+                    if (!isset($values['day']) && isset($values[$key]['day'])) {
+                        $values['day'] = $values[$key]['day'];
+                    }
                 }
             } else {
                 $values[$key] = null;
             }
-        } else if ($key == 'month' || $key == 'year') {
+        } else if ($key == 'month' || $key == 'year' || $key == 'day') {
             $values[$key] = intval($value);
         } else if ($key == 'room') {
             // do not connvert room numbers to integers

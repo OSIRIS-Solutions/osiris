@@ -1581,6 +1581,25 @@ class Modules
         return $orgs;
     }
 
+    function dateVal(string $type)
+    {
+        if ($type == 'start') {
+            $date = $this->val('start_date', '');
+        } elseif ($type == 'end') {
+            // check if end is null first
+            if ($this->val('end', null) === null) {
+                return '';
+            }
+            $date = $this->val('end_date', '');
+        } else {
+            return '';
+        }
+        if (!empty($date)) {
+            return $date;
+        }
+        return valueFromDateArray($this->val($type, ''));
+    }
+
     function print_module($module, $req = false, $props = [])
     {
         if (!array_key_exists($module, $this->all_modules)) {
@@ -2758,8 +2777,8 @@ class Modules
                         <!-- <button class="btn small" id="daterange-toggle-btn" type="button" onclick="rebuild_datepicker(this);"><?= lang('Multiple days', 'Mehrtägig') ?></button> -->
                     </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= valueFromDateArray($this->val('start')) ?>">
-                        <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($this->val('end')) ?>">
+                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= $this->dateVal('start') ?>">
+                        <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= $this->dateVal('end') ?>">
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>
@@ -2793,8 +2812,8 @@ class Modules
                         <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty ongoing activity', 'Ende leer lassen, falls es eine zurzeit laufende Aktivität ist') ?>"><i class="ph ph-question"></i></span>
                     </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= valueFromDateArray($this->val('start')) ?>">
-                        <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($this->val('end')) ?>">
+                        <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= $this->dateVal('start') ?>">
+                        <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= $this->dateVal('end') ?>">
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>

@@ -7,10 +7,18 @@
 
 Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Felde einer Aktivität im Formularbaukasten gesteuert werden kann. Es kann ggf. eine Rolle ausgewählt werden. Für andere Rollen ist das Feld dann nicht sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um rollenspezifische Formulare zu bauen.
 
-### Bug Fixes
+### Datum in Templates
+
+- Datumsangaben in Aktivitäts-Templates können jetzt flexibel formatiert werden, zum Beispiel mit `{date:Y-m-d}` oder `{start:Y, F j}`. Dabei kann sowohl auf `date`, `start` als auch `end` zugegriffen werden.
+- Mit `{end-compact:…}` lassen sich Datumsbereiche kompakt darstellen: Mit dem Start übereinstimmende Jahre und Monate werden nicht wiederholt. Damit sind unter anderem APA-7-konforme Konferenzdaten wie `(2026, July 24–26)` möglich.
+
+
+### Bug Fixes und Verbesserungen
 - Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam
 - Es war nicht möglich, über den Suchbaukasten in der erweiterten Suche nach Einheiten zu filtern.
-- Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen.
+- Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen. [#560](https://github.com/OSIRIS-Solutions/osiris/issues/560)
+- Der Excel-Export von Events wurde verbessert und zeigt nun die korrekten Spaltenüberschriften an sowie das richtige Datum an. Titel und Kurztitel wurden hinzugefügt. [#563](https://github.com/OSIRIS-Solutions/osiris/issues/563)
+- Der Export von Datumsfeldern wurde verbessert, wodurch sie in Excel nun korrekt als Datum erkannt werden.
 
 
 
