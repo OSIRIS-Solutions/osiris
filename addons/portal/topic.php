@@ -26,7 +26,7 @@ $baseUnit = false;
 $preselect = $open ?? $_GET['open'] ?? null;
 
 ?>
-<div class="container">
+<div class="">
 
     <?php if ($Portfolio->isPreview()) { ?>
         <link rel="stylesheet" href="<?= ROOTPATH ?>/css/portal.css?v=<?= OSIRIS_BUILD ?>">

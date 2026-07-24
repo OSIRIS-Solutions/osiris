@@ -208,3 +208,311 @@ function updateScienceUnit(user, unit){
         }
     });
 }
+
+// Validator functions
+
+function validateEmail(element) {
+    var email = $(element).val();
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email === '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        return [true, ''];
+    } else if (!regex.test(email)) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        return [false, lang('Please enter a valid email address.', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.')];
+    } else {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+        return [true, ''];
+    }
+}
+
+function validateTelephone(element) {
+    var telephone = $(element).val();
+    var regex = /^\+?[0-9\s\-()]+$/;
+    if (telephone === '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        return [true, ''];
+    } else if (!regex.test(telephone)) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        return [false, lang('Please enter a valid telephone number.', 'Bitte geben Sie eine gültige Telefonnummer ein.')];
+    } else {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+        return [true, ''];
+    }
+}
+
+function validatePassword(element){
+    var password = $(element).val();
+    let valid = true;
+
+    if (password === '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password-wrong-length').removeClass('text-danger');
+        $('#password-wrong-length').removeClass('text-success');
+        $('#password-wrong-uppercase').removeClass('text-danger');
+        $('#password-wrong-uppercase').removeClass('text-success');
+        $('#password-wrong-lowercase').removeClass('text-danger');
+        $('#password-wrong-lowercase').removeClass('text-success');
+        return [true, ''];
+    }
+
+    if (password.length < 8) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password-wrong-length').addClass('text-danger');
+        $('#password-wrong-length').removeClass('text-success');
+        valid = false
+    }
+    else{
+        $('#password-wrong-length').removeClass('text-danger');
+        $('#password-wrong-length').addClass('text-success');
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password-wrong-uppercase').addClass('text-danger');
+        $('#password-wrong-uppercase').removeClass('text-success');
+        valid = false;
+    }
+    else{
+        $('#password-wrong-uppercase').removeClass('text-danger');
+        $('#password-wrong-uppercase').addClass('text-success');
+    }
+
+    if (!/[a-z]/.test(password)) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password-wrong-lowercase').addClass('text-danger');
+        $('#password-wrong-lowercase').removeClass('text-success');
+        valid = false;
+    }
+    else{
+        $('#password-wrong-lowercase').removeClass('text-danger');
+        $('#password-wrong-lowercase').addClass('text-success');
+    }
+
+    if (valid) {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+    } else {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+    }
+    return [valid, lang('Password does not meet the requirements.', 'Das Passwort erfüllt nicht die Anforderungen.')];
+}
+
+function validatePassword2(element){
+    var password = $('#password').val();
+    var password2 = $(element).val();
+    if (password2 === '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password2-wrong').hide();
+        if (password === '') {
+            return [true, ''];
+        }
+        else {
+            return [false, lang('Please repeat the password.', 'Bitte wiederholen Sie das Passwort.')];
+        }
+    } else if (password !== password2) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#password2-wrong').show();
+        return [false, lang('Passwords do not match.', 'Die Passwörter stimmen nicht überein.')];
+    } else {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+        $('#password2-wrong').hide();
+        return [true, ''];
+    }
+}
+
+function validateGoogleScholar(element){
+    var id = $(element).val();
+    // regex for google scholar id
+    var regex = /^[a-zA-Z0-9_-]{12}$/;
+    if (id === '') {
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#google-scholar-wrong').hide();
+        return [true, ''];
+    } else if (!regex.test(id)) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+        $('#google-scholar-wrong').show();
+        return [false, lang('Google Scholar ID must be 12 characters long and can only contain letters and numbers.', 'Die Google Scholar ID muss 12 Zeichen lang sein und darf nur Buchstaben und Zahlen enthalten.')];
+    } else {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+        $('#google-scholar-wrong').hide();
+        return [true, ''];
+    }
+}
+
+function validateORCID(input) {
+    var orcid = $(input).val();
+    // regex for orcid
+    var regex = /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]{1}$/;
+    if (orcid === '') {
+        $(input).removeClass('is-invalid');
+        $(input).removeClass('is-valid');
+        $('#orcid-wrong').hide();
+        return [true, ''];
+    } else if (!regex.test(orcid)) {
+        $(input).addClass('is-invalid');
+        $(input).removeClass('is-valid');
+        $('#orcid-wrong').show();
+        return [false, lang('ORCID must be in the format 0000-0000-0000-0000', 'Die ORCID muss im Format 0000-0000-0000-0000 angegeben werden')];
+    } else {
+        $(input).removeClass('is-invalid');
+        $(input).addClass('is-valid');
+        $('#orcid-wrong').hide();
+        return [true, ''];
+    }
+}
+
+// allowed social media domains
+const socialHostRules = {
+    github: ['github.com', 'www.github.com'],
+    linkedin: ['linkedin.com', 'www.linkedin.com', 'de.linkedin.com'],
+    researchgate: ['researchgate.net', 'www.researchgate.net'],
+    youtube: ['youtube.com', 'www.youtube.com', 'youtu.be'],
+    mastodon: [], // hard to pin to one domain; allow any valid URL
+    bluesky: ['bsky.app', 'www.bsky.app'],
+    instagram: ['instagram.com', 'www.instagram.com'],
+    facebook: ['facebook.com', 'www.facebook.com', 'fb.com', 'www.fb.com'],
+    x: ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'],
+    matrix: ['matrix.to', 'www.matrix.to'],
+    website: [] // personal website: allow any valid URL
+};
+
+function validateSocial(element){
+    let msg = '';
+    const name = $(element).attr('name') || '';
+    const match = name.match(/\[socials\]\[([^\]]+)\]/i);
+    if (!match) return [true, msg];
+
+    const type = match[1].toLowerCase();
+    const url = String($(element).val() || '').trim();
+
+    if (url === '') {
+        $(element).toggleClass('is-invalid', false);
+        return [true, msg];
+    }
+
+    
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(url);
+    } catch (e) {
+        msg = lang(`Socials: ${type} - please enter a valid URL.`, `Soziale Medien: ${type} - bitte geben Sie eine gültige URL ein.`);
+        $(element).toggleClass('is-invalid', true);
+        return [false, msg];
+    }
+
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        msg = lang(`Socials: ${type} - URL must start with http:// or https://`, `Soziale Medien: ${type} - URL muss mit http:// oder https:// beginnen`);
+        $(element).toggleClass('is-invalid', true);
+        return [false, msg];
+    }
+
+    if (socialHostRules[type] && socialHostRules[type].length > 0) {
+        const hostname = parsedUrl.hostname;
+        if (!socialHostRules[type].includes(hostname)) {
+            msg = lang(`Socials: ${type} - URL must point to ${socialHostRules[type].join(', ')}`, `Soziale Medien: ${type} - URL muss auf ${socialHostRules[type].join(', ')} zeigen`);
+            $(element).toggleClass('is-invalid', true);
+            return [false, msg];
+        };
+    }
+
+    $(element).toggleClass('is-invalid', false);
+    return [true, msg];
+}
+
+function cleanEmptySocials() {
+    $('#socials input').each(function() {
+        const url = String($(this).val() || '').trim();
+        if (url === '') {
+            $(this).closest('.input-group').remove();
+        }
+    });
+}
+
+function checkNewPassword() {
+    const password = $('#password').val();
+    const password2 = $('#password2').val();
+
+    const oldPassword = $('#old_password');
+    
+    if (password === '' && password2 === '') {
+        return true;
+    }
+    else if (oldPassword.val() === '') {
+        toastError(lang('Please enter your old password to change your password.', 'Bitte geben Sie Ihr altes Passwort ein, um Ihr Passwort zu ändern.'));
+        oldPassword.focus();
+        oldPassword.addClass('is-invalid');
+        return false;
+    }
+    return true;
+}
+    
+
+const validators = {
+    social: validateSocial,
+    googleScholar: validateGoogleScholar,
+    orcid: validateORCID,
+    password: validatePassword,
+    password2: validatePassword2,
+    email: validateEmail,
+    telephone: validateTelephone
+}
+
+
+function validateUserForm(event) {
+    let valid = true;
+    let firstInvalidElement = null;
+    
+    $('.need-validation').each(function() {
+        const validatorName = $(this).data('validator');
+        const validator = validators[validatorName];
+        if (validator) {
+            const [isValid, msg] = validator(this);
+            if (!isValid){
+                valid = false;
+                toastError(msg);
+                $(this).toggleClass('is-invalid', true);
+                if (!firstInvalidElement) {
+                    firstInvalidElement = this;
+                }
+            }
+            else {
+                $(this).toggleClass('is-invalid', false);
+            }
+        }
+    });
+   
+    cleanEmptySocials();
+
+    if (!checkNewPassword()) {
+        valid = false;
+    }
+
+    if (!valid) {
+        event.preventDefault();
+        if (firstInvalidElement) {
+            const tabName = $(firstInvalidElement).closest('section').attr('id');
+            if (tabName) {
+                navigate(tabName);
+            }
+            firstInvalidElement.focus();
+        }
+    }
+}

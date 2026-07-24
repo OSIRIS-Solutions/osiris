@@ -97,7 +97,7 @@ $name = $data['name'];
                                                 <?= $person['displayname'] ?>
                                             </a>
                                         </h5>
-                                        <?= $person['role'] ?? '' ?>
+                                        <?= $person['role'][lang('en', 'de')] ?? '' ?>
                                         <?php
                                         if (!empty($person['depts'])) {
                                             foreach ($person['depts'] as $d => $dept) {

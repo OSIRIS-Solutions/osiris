@@ -1100,7 +1100,7 @@ class DB
             if ($val instanceof BSONArray || $val instanceof BSONDocument) {
                 $val = DB::doc2Arr($val);
             }
-            if (is_array($val)) {
+            if (is_array($val) && !empty($val)) {
                 if (is_string($val[0])) {
                     $val = implode(', ', $val);
                 } else {
@@ -1207,4 +1207,32 @@ class DB
     {
         echo self::getLogo($item, $class, $alt);
     }
+
+    
+    public static function build_person_search_text(array $p): string
+    {
+        $parts = [];
+        if (!empty($p['last'])) $parts[] = $p['last'];
+        if (!empty($p['first'])) $parts[] = $p['first'];
+
+        // Alternative names / aliases (can be array or string)
+        if (!empty($p['names'] ?? [])) {
+            foreach ($p['names'] as $n) {
+                if (!empty($n) && is_string($n)) $parts[] = $n;
+            }
+        }
+
+        // Optional: add extra fields if they exist in your schema
+        if ($p['username']) $parts[] = $p['username'];
+        if (isset($p['orcid'])) $parts[] = $p['orcid'];
+        if (isset($p['mail'])) $parts[] = $p['mail'];
+
+        // Join, normalize whitespace, lowercase
+        $text = implode(' ', $parts);
+        $text = preg_replace('/\s+/', ' ', $text);
+        $text = trim(mb_strtolower($text));
+
+        return $text;
+    }
+
 }

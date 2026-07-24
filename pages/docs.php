@@ -34,27 +34,27 @@
 
 <div class="link-list" style="max-width:50rem">
 
-    <a href="https://wiki.osiris-app.de/users/content/create_content/" target="_blank">
+    <a href="https://wiki.osiris-app.de/latest/users/content/create_content/" target="_blank">
         <i class="ph mr-10 text-secondary ph-book-open"></i>
         <?= lang('Add activities', 'Aktivitäten hinzufügen') ?>
     </a>
 
-    <a href="https://wiki.osiris-app.de/users/profile/scientist_view/" target="_blank">
+    <a href="https://wiki.osiris-app.de/latest/users/profile/scientist_view/" target="_blank">
         <i class="ph mr-10 text-secondary ph-calendar"></i>
         <?= lang('My year', 'Mein Jahr') ?>
     </a>
 
-    <a href="https://wiki.osiris-app.de/users/activities/advanced-search/" target="_blank">
+    <a href="https://wiki.osiris-app.de/latest/users/advanced-search/" target="_blank">
         <i class="ph mr-10 text-secondary ph-magnifying-glass-plus"></i>
         <?= lang('Advanced search', 'Erweiterte Suche') ?>
     </a>
 
-    <a href="https://wiki.osiris-app.de/users/issues/" target="_blank">
+    <a href="https://wiki.osiris-app.de/latest/users/issues/" target="_blank">
         <i class="ph mr-10 text-secondary ph-warning"></i>
         <?= lang('Warnings', 'Warnungen') ?>
     </a>
 
-    <a href="https://wiki.osiris-app.de/users/profile/start/" target="_blank">
+    <a href="https://wiki.osiris-app.de/latest/users/profile/start/" target="_blank">
         <i class="ph mr-10 text-secondary ph-user-list"></i>
         <?= lang('Profile editing', 'Profilbearbeitung') ?>
     </a>

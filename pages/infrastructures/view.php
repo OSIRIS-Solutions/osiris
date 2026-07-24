@@ -450,6 +450,7 @@ if ($edit_perm) { ?>
                 {
                     targets: 4,
                     data: 'start',
+                    render: datatableDate,
                     searchable: true,
                     visible: false,
                 },

@@ -12,4 +12,4 @@ Welcome to OSIRIS, the open, smart and intuitive research information system.
 
 For more information, please visit [the project web page](https://osiris-app.de/) or have a look at the [documentation](https://wiki.osiris-app.de).
 
-All installation instructions can be found in our wiki: [Installation Guide](https://wiki.osiris-app.de/technical/install/linux/).
+All installation instructions can be found in our wiki: [Installation Guide](https://wiki.osiris-app.de/latest/technical/install/linux/).

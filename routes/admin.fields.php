@@ -154,6 +154,12 @@ Route::post('/crud/fields/delete/(.*)', function ($id) {
     $updateResult = $osiris->adminFields->deleteOne(
         ['_id' => $mongo_id]
     );
+    if ($updateResult->getDeletedCount() === 0) {
+        $_SESSION['msg'] = lang("Custom field not found.", "Benutzerdefiniertes Feld nicht gefunden.");
+        $_SESSION['msg_type'] = "error";
+        header("Location: " . ROOTPATH . "/admin/fields");
+        die();
+    }
 
     $_SESSION['msg'] = lang("Custom field deleted successfully.", "Benutzerdefiniertes Feld erfolgreich gelöscht.");
     $_SESSION['msg_type'] = "success";

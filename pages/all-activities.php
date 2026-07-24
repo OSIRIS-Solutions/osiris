@@ -490,7 +490,8 @@ $cart = readCart();
                 {
                     extend: 'excelHtml5',
                     exportOptions: {
-                        columns: [0, 4, 5, 6, 9, 10, 11, 12, 13]
+                        columns: [0, 4, 5, 6, 9, 10, 11, 12, 13],
+                        orthogonal: 'export'
                     },
                     className: 'btn small',
                     title: function() {
@@ -508,7 +509,8 @@ $cart = readCart();
                     extend: 'csvHtml5',
                     exportOptions: {
                         // columns: ':visible'
-                        columns: [0, 5, 6, 9, 10, 11, 12, 13]
+                        columns: [0, 5, 6, 9, 10, 11, 12, 13],
+                        orthogonal: 'export'
                     },
                     className: 'btn small',
                     title: function() {
@@ -625,6 +627,7 @@ $cart = readCart();
                     data: 'start',
                     searchable: true,
                     visible: false,
+                    render: datatableDate,
                     searchPanes: {
                         show: true,
                         name: 'start',
@@ -636,6 +639,7 @@ $cart = readCart();
                     data: 'end',
                     searchable: true,
                     visible: false,
+                    render: datatableDate,
                     searchPanes: {
                         show: true,
                         name: 'end',

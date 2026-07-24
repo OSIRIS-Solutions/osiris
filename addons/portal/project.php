@@ -63,7 +63,7 @@
 <?php } ?>
 
 
-<section class="container-lg mt-20">
+<section class="container-lg ">
     <h1>
         <?php if (isset($data['acronym'])) { ?>
             <?= $data['acronym'] ?> – 
@@ -76,7 +76,7 @@
     </h2>
 
     <!-- abstract -->
-    <div class="row row-eq-spacing">
+    <div class="row row-eq-spacing mt-0">
         <div class="col-sm-8 order-sm-first order-last" id="about">
             <?php if (!empty($data['abstract'])) { ?>
                 <h2 class="title">
@@ -98,11 +98,11 @@
             <?php } ?>
 
 
-            <h2 class="title" id="team">
+            <h2 class="title mb-0" id="team">
                 <?= lang('Team', 'Team') ?>
             </h2>
             <?php if (!empty($data['persons'] ?? array())) { ?>
-                <div class="row row-eq-spacing">
+                <div class="row row-eq-spacing mt-0">
                     <?php
                     $persons = DB::doc2Arr($data['persons']);
                     foreach ($persons as $person) {
@@ -140,11 +140,11 @@
             <?php
             if ($data['activities'] > 0) { ?>
 
-                <h3 class="title mt-40" id="research-output">
+                <h3 class="title mt-20" id="research-output">
                     <?= lang('Research Output', 'Forschungsergebnisse') ?>
                 </h3>
 
-                <div class="mt-20 w-full">
+                <div class=" w-full">
                     <table class="table datatable responsive" id="activities-table"
                         data-table="activities"
                         data-source="./all-activities.json"
@@ -166,7 +166,7 @@
                         $(document).ready(function() {
                             $('#activities-table').DataTable({
                                 "ajax": {
-                                    "url": ROOTPATH + '/portfolio/project/' + PROJECT + '/activities',
+                                    "url": ROOTPATH + '/portfolio/project/' + PROJECT + '/all-activities',
                                     dataSrc: 'data'
                                 },
                                 "sort": false,

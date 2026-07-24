@@ -705,8 +705,7 @@ Route::post('/crud/activities/create', function () {
         }
         $values['projects'] = $projects;
     }
-
-    if (isset($values['authors'])) {
+    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
         $values = renderAuthorUnits($values);
     }
 

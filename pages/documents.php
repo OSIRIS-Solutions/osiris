@@ -157,7 +157,7 @@
         </table>
     </div>
 
-    <div class="col-lg-3 d-none d-lg-block">
+    <div class="col-md-3 d-none d-md-block">
         <div class="filters content" id="filters">
             <div class="title">Filter</div>
 
@@ -291,19 +291,23 @@
         );
         // create table rows for each unique value
         var filterTable = $(filter);
-        $.each(uniqueValues, function(value, count) {
+        for (const key in uniqueValues) {
+            if (Object.hasOwnProperty.call(uniqueValues, key)) {
+                const count = uniqueValues[key];
+                
             var row = $('<tr></tr>');
             var cell = $('<td></td>');
             var link = $('<a href="#" class="filter-link"></a>');
-            link.html(value + ` <span class="index">${count}</span>`);
+            link.html(key + ` <span class="index">${count}</span>`);
             link.on('click', function(e) {
                 e.preventDefault();
-                filterDataTable(this, value, columnIndex);
+                filterDataTable(this, key, columnIndex);
             });
             cell.append(link);
             row.append(cell);
             filterTable.append(row);
-        });
+            }
+        }
 
     }
 

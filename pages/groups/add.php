@@ -42,7 +42,7 @@ $title = lang('New group', 'Neue Gruppe');
                 <label for="id" class="required">
                     <?= lang('Acronym', 'Abkürzung') ?>
                 </label>
-                <input type="text" class="form-control" name="values[id]" id="id" required maxlength="8">
+                <input type="text" class="form-control" name="values[id]" id="id" required maxlength="9">
             </div>
 
 

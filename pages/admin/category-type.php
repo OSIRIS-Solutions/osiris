@@ -94,7 +94,13 @@ if (!empty($form) && isset($form['_id'])) {
     </div>
 </div>
 
+<!-- download -->
+ <!-- <form action="<?= ROOTPATH ?>/commons/download" method="post" id="download-form">
+    <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
+    <input type="hidden" class="hidden" name="id" value="<?= $id ?>">
+    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('Download', 'Herunterladen') ?></button>
+ </form> -->
 
 <form action="<?= $formaction ?>" method="post" id="group-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
@@ -352,7 +358,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <?= lang('Template builder', 'Template-Baukasten') ?>
             </a>
 
-            <a href="https://wiki.osiris-app.de/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
+            <a href="https://wiki.osiris-app.de/latest/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
                 <?= lang('Documentation', 'Dokumentation') ?>
             </a>
             <style>

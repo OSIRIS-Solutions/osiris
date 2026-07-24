@@ -1,3 +1,76 @@
+<time datetime="2026-07-22">22.07.2026</time>
+<a class="anchor" href="#version-2.0.3" id="version-2.0.3"></a>
+
+## Version 2.0.3
+
+### Form Builder
+
+Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Felde einer Aktivität im Formularbaukasten gesteuert werden kann. Es kann ggf. eine Rolle ausgewählt werden. Für andere Rollen ist das Feld dann nicht sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um rollenspezifische Formulare zu bauen.
+
+### Datum in Templates
+
+- Datumsangaben in Aktivitäts-Templates können jetzt flexibel formatiert werden, zum Beispiel mit `{date:Y-m-d}` oder `{start:Y, F j}`. Dabei kann sowohl auf `date`, `start` als auch `end` zugegriffen werden.
+- Mit `{end-compact:…}` lassen sich Datumsbereiche kompakt darstellen: Mit dem Start übereinstimmende Jahre und Monate werden nicht wiederholt. Damit sind unter anderem APA-7-konforme Konferenzdaten wie `(2026, July 24–26)` möglich.
+
+
+### Bug Fixes und Verbesserungen
+- Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam
+- Es war nicht möglich, über den Suchbaukasten in der erweiterten Suche nach Einheiten zu filtern.
+- Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen. [#560](https://github.com/OSIRIS-Solutions/osiris/issues/560)
+- Der Excel-Export von Events wurde verbessert und zeigt nun die korrekten Spaltenüberschriften an sowie das richtige Datum an. Titel und Kurztitel wurden hinzugefügt. [#563](https://github.com/OSIRIS-Solutions/osiris/issues/563)
+- Der Export von Datumsfeldern wurde verbessert, wodurch sie in Excel nun korrekt als Datum erkannt werden.
+
+
+
+<time datetime="2026-07-17">17.07.2026</time>
+<a class="anchor" href="#version-2.0.2" id="version-2.0.2"></a>
+
+## Version 2.0.2
+
+Datenvalidierung im User-Editor und Bugfixes
+
+### User-Editor:
+  - Auf Basis des feature request [#256](https://github.com/OSIRIS-Solutions/osiris/issues/256) gibt es nun Eingabevalidierungen
+  im Editor der Nutzerprofile für nahezu alle Felder im Bereich `Kontakt` mit visuellem Feedback
+  - Wenn Nutzer sich selbst ein neues Passwort vergeben gibt es nun Basisregeln zur Passwortsicherheit und sofortiges Feedback
+  - Ein Bug wurde behoben bei dem die Fehlernachricht bei einem falschen alten Passwort nicht zu sehen war
+
+### Sonstiges
+  - Die Sortierung nach Impact-Faktor wurde in der Journals-Übersicht gefixt [#535](https://github.com/OSIRIS-Solutions/osiris/issues/535)
+  - User Feedback für die Felder `DOI` und `Link` wurde im Activity-Editor hinzugefügt [#533](https://github.com/OSIRIS-Solutions/osiris/issues/533)
+  - Ein fehlerhafter Link von der Startseite zur Eventübersicht wurde gefixt
+  - Es wurde ein Konflikt mit Podman in den Dockerfiles gefixt
+  - Bugs an der Portfolio API wurden behoben - Issues [#544](https://github.com/OSIRIS-Solutions/osiris/issues/544) und [#545](https://github.com/OSIRIS-Solutions/osiris/issues/545)
+  - Abkürzungen von Einheiten können nun 9 Zeichen enthalten (war zuvor limitiert auf 8 Zeichen) [#537](https://github.com/OSIRIS-Solutions/osiris/issues/537)
+  - Style-Verbesserungen
+  - Die Semesterliste in den Statistiken der Lehrveranstaltungen wird nun aus den vorhandenen Daten generiert
+
+Vielen Dank an alle Issue Reporter!
+
+----
+
+<time datetime="2026-06-29">29.06.2026</time>
+<a class="anchor" href="#patch-2.0.1" id="patch-2.0.1"></a>
+
+## Version 2.0.1
+
+Bugfixes und technische Updates
+
+### CVs:
+  - Wenn User neue Einträge in ihren CVs anlegen, wird nun in den Feldern `Von`/`Bis` anstelle von `month` nun das korrekte Format `YYYY-MM` bzw. `JJJJ-MM` angezeigt ([#516](https://github.com/OSIRIS-Solutions/osiris/issues/408))
+  - Es wurde auch ein Bug behoben, bei dem die Eingaben in den Datumsfeldern nicht immer korrekt validiert wurden ([#518](https://github.com/OSIRIS-Solutions/osiris/issues/408))
+
+### OSIRIS Wiki
+
+Das OSIRIS Wiki wird ab sofort versioniert veröffentlicht. Das führt dazu, dass die Links die aus OSIRIS in das Wiki führen, teilweise in 404 enden. Mit diesem Patch werden die Links geupdatet.
+
+### Technisch
+  - Die Build-Dependencies wurden geupdatet
+  - Die Container für Development und Production Umgebungen können nun parallel laufen
+  - Es wird bei neuen Patches das Migrations-Tool nicht mehr aktiviert
+
+----
+
 <time datetime="2026-06-01">01.06.2026</time>
 <a class="anchor" href="#version-2.0.0" id="version-2.0.0"></a>
 
@@ -541,7 +614,7 @@ Hier die Highlights:
 - **Geteilte Notizen:** Für Kommunikation zwischen Projektteam und ABS-Compliance-Team.
 - **Dashboard für ABS-Teams:** Überblick über offene Bewertungen, fehlende Scopes, offene Permits und eingereichte Unterlagen.
 
-Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/topics/nagoya/).
+Mehr Infos zum Nagoya-Modul findet ihr in unserem [Wiki](https://wiki.osiris-app.de/latest/topics/nagoya/).
 
 ### Erweiterte Suche für fast alles
 

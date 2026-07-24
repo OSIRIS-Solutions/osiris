@@ -53,8 +53,9 @@ function validateValues($values, $DB)
                 $value = explode('10.', $value, 2);
                 $value = "10." . $value[1];
             }
-            // save as lowercase
-            $values[$key] = strtolower($value);
+            if ($value !== null) $values[$key] = strtolower($value);
+            else $values[$key] = null;
+           
         } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;
@@ -175,11 +176,14 @@ function validateValues($values, $DB)
                     if (!isset($values['month']) && isset($values[$key]['month'])) {
                         $values['month'] = $values[$key]['month'];
                     }
+                    if (!isset($values['day']) && isset($values[$key]['day'])) {
+                        $values['day'] = $values[$key]['day'];
+                    }
                 }
             } else {
                 $values[$key] = null;
             }
-        } else if ($key == 'month' || $key == 'year') {
+        } else if ($key == 'month' || $key == 'year' || $key == 'day') {
             $values[$key] = intval($value);
         } else if ($key == 'room') {
             // do not connvert room numbers to integers
@@ -969,6 +973,8 @@ function socialLogo($type)
             return 'ph-facebook-logo';
         case 'X':
             return 'ph-x-logo';
+        case 'matrix':
+            return 'ph-matrix-logo';
         case 'website':
             return 'ph-browser';
         case 'twitter':

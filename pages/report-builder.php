@@ -288,7 +288,7 @@ if ($Settings->featureEnabled('projects')) {
 <?php if (!empty($report) && isset($report_id)) { ?>
     <div class="btn-toolbox  float-right">
         <!-- Help -->
-        <a href="https://wiki.osiris-app.de/users/reporting/" class="btn tour" target="_blank">
+        <a href="https://wiki.osiris-app.de/latest/users/reporting/" class="btn tour" target="_blank">
             <i class="ph ph-question"></i>
             <?= lang('Help', 'Hilfe') ?>
         </a>

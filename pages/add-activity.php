@@ -293,7 +293,7 @@ console.log(TYPES);
                 </p>
             <?php } ?>
 
-            <a href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
+            <a href="https://wiki.osiris-app.de/latest/users/content/create_content/" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
 
         </div>
     </div>
@@ -452,7 +452,7 @@ console.log(TYPES);
 <?php } ?>
 
 
-<a target="_blank" href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour float-right ml-5" id="docs-btn">
+<a target="_blank" href="https://wiki.osiris-app.de/latest/users/content/create_content/" class="btn tour float-right ml-5" id="docs-btn">
     <i class="ph ph-question mr-5"></i>
     <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
 </a>
