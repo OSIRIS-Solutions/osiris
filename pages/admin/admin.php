@@ -193,7 +193,13 @@
                     <p><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></p>
                 </a>
             <?php } ?>
+            <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
+                <i class="ph-duotone ph-student" aria-hidden="true"></i>
+                <b><?= lang('ORCID', 'ORCID') ?></b>
+                <p><?= lang('Settings for managing ORCID integration', 'Einstellungen zur Verwaltung der ORCID-Integration') ?></p>
+            </a>
         </div><?php endif; ?>
+    
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="custom-data-settings">
             <h2><i class="ph-duotone ph-database"></i> <?= lang('Custom data', 'Benutzerdefinierte Daten') ?></h2>
