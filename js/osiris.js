@@ -2349,3 +2349,25 @@ function deadlineTimeline(options) {
         .attr('opacity', 0.25);
 
 }
+
+function datatableDate(data, type) {
+    if (!data) {
+        return '';
+    }
+
+    const date = new Date(data);
+
+    if (Number.isNaN(date.getTime())) {
+        return data;
+    }
+
+    if (type === 'sort' || type === 'type') {
+        return date.getTime();
+    }
+
+    if (type === 'export') {
+        return date.toISOString().slice(0, 10);
+    }
+
+    return date.toLocaleDateString('de-DE');
+}

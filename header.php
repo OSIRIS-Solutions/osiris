@@ -95,7 +95,7 @@ $pageactive = function ($p) use ($page) {
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>
     <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= OSIRIS_BUILD ?>"></script>
 
-    <script src="<?= ROOTPATH ?>/js/script.js?<?= filemtime(BASEPATH . '/js/script.js') ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/script.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <script>
         $.extend($.fn.DataTable.ext.classes, {
@@ -133,7 +133,8 @@ $pageactive = function ($p) use ($page) {
             buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: ':visible',
+                    orthogonal: 'export'
                 },
                 className: 'btn small',
                 text: `<i class="ph ph-file-xls"></i> Excel`,
@@ -146,11 +147,8 @@ $pageactive = function ($p) use ($page) {
                 )
             }
         });
-        // // Global DataTables defaults
-        // $.extend(true, $.fn.dataTable.defaults, {
-        // });
     </script>
-    <script src="<?= ROOTPATH ?>/js/osiris.js?<?= filemtime(BASEPATH . '/js/osiris.js') ?>"></script>
+    <script src="<?= ROOTPATH ?>/js/osiris.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <?php if (isset($additionalHead)) {
         echo $additionalHead;
