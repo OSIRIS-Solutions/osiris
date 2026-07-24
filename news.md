@@ -10,6 +10,7 @@ Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Feld
 ### Bug Fixes
 - Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam
 - Es war nicht möglich, über den Suchbaukasten in der erweiterten Suche nach Einheiten zu filtern.
+- Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen.
 
 
 
