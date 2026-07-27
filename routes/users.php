@@ -649,6 +649,11 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         }
     }
 
+    // set orcid_validated to false if orcid is changed while orcid validaiton is disabled
+    if (isset($values['orcid']) && $values['orcid'] != ($old['orcid'] ?? null) && (!isset($Settings->orcid_settings['client_id']) || !isset($Settings->orcid_settings['client_secret']))) {
+        $person['orcid_validated'] = false;
+    }
+
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],
         ['$set' => $person]
