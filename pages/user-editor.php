@@ -529,7 +529,9 @@ $active = function ($field) use ($data_fields) {
             <div class="col-sm-6">
                 <label for="orcid">ORCID</label>
                 <?php
-                if (!isset($data['orcid_validated']) || !$data['orcid_validated']) {?>
+                include_once BASEPATH . '/php/Orcid.php';
+                $orcid_settings = new Orcid_Settings();
+                if (!isset($data['orcid_validated']) || !$data['orcid_validated'] || !$orcid_settings->client_id || !$orcid_settings->client_secret) {?>
                     <input type="text" name="values[orcid]" id="orcid" class="form-control need-validation" data-validator="orcid" value="<?= $data['orcid'] ?? '' ?>" oninput="validateORCID(this);">
                     <small class="text-danger" id="orcid-wrong" style="display: none;">
                         <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
@@ -543,9 +545,7 @@ $active = function ($field) use ($data_fields) {
                 <?php } ?>
 
                 <?php
-                    include_once BASEPATH . '/php/Orcid.php';
-                    $orcid_settings = new Orcid_Settings();
-                    if ($data['username'] == $_SESSION['username'] && !empty($orcid_settings->client_id) && !empty($orcid_settings->client_secret)) { 
+                    if ($data['username'] == $_SESSION['username'] && $orcid_settings->client_id && $orcid_settings->client_secret) {
                         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                         ?>             
                         <small class="text-muted">
