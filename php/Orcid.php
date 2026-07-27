@@ -29,8 +29,8 @@ class Orcid_Settings extends Settings
         // Initialize parent
         parent::__construct();
         $this->orcid_settings = $this->get('orcid');
-        $this->client_id = $this->orcid_settings['client_id'];
-        $this->client_secret = $this->orcid_settings['client_secret'];
+        $this->client_id = $this->orcid_settings['client_id'] ?? null;
+        $this->client_secret = $this->orcid_settings['client_secret'] ?? null;
         if (isset($this->orcid_settings['api'])) {
             switch ($this->orcid_settings['api']) {
                 case 'member':
