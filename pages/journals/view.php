@@ -284,7 +284,8 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="activity-table">
     <thead>
-        <th><?= lang('Activity', 'Aktivität') ?></th
+        <th><?= lang('Activity', 'Aktivität') ?></th
+
     </thead>
     <tbody>
     </tbody>
@@ -318,7 +319,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 {
                     "targets": 2,
                     "data": "name",
-                    "render": function(data, type, full, meta) {
+                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
                         return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></a>`;
                     }
                 },
