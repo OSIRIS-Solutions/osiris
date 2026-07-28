@@ -319,7 +319,8 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 {
                     "targets": 2,
                     "data": "name",
-                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
+                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
+
                         return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></a>`;
                     }
                 },
@@ -428,7 +429,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 data.data = {
                     labels: <?= json_encode($years) ?>,
                     datasets: [{
-                        label: '<?= $if_label ?>',
+                        label: '<?= e($if_label) ?>',
                         data: raw_data,
                         parsing: {
                             yAxisKey: 'impact',
