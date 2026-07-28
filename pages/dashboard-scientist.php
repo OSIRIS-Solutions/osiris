@@ -82,7 +82,7 @@
                             stacked: true,
                             title: {
                                 display: true,
-                                text: '<?= $Settings->impactLabel() ?>'
+                                text: '<?= json_encode($Settings->impactLabel()) ?>'
                             },
                         },
                         y: {
