@@ -90,6 +90,7 @@ $pageactive = function ($p) use ($page) {
         const ROOTPATH = "<?= ROOTPATH ?>";
         const AFFILIATION = "<?= $Settings->get('affiliation') ?>";
         const AFFILIATION_REGEX = new RegExp('<?= $Settings->getRegex(); ?>', 'i'); // Fallback to a simple regex if parsing fails
+        const LABELS = <?= json_encode($Settings->getLabels()) ?>;
     </script>
 
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>

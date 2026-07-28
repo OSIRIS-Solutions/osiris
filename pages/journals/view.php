@@ -15,7 +15,9 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+$data = DB::doc2Arr($data);
 $label = $Settings->journalLabel();
+$if_label = $Settings->impactLabel();
 ?>
 
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
@@ -52,7 +54,7 @@ $label = $Settings->journalLabel();
                         <h5 class="title"><?= lang('Update metrics', 'Metriken aktualisieren') ?></h5>
                         <p>
                             <i class="ph ph-warning text-signal"></i>
-                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to impact factors, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an Impact-Faktoren, Kategorien und Quartilen überschrieben.") ?>
+                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to $if_label, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an $if_label, Kategorien und Quartilen überschrieben.") ?>
                         </p>
 
                         <form action="<?= ROOTPATH ?>/crud/journal/update-metrics/<?= $id ?>" method="post">
@@ -69,12 +71,8 @@ $label = $Settings->journalLabel();
 
 <table class="table" id="result-table">
     <tr>
-        <td>ID</td>
-        <td><?= $data['_id'] ?></td>
-    </tr>
-    <tr>
-        <td><?= $label ?></td>
-        <td><?= $data['journal'] ?></td>
+        <td><?= lang('Name') ?></td>
+        <td class="font-weight-bold"><?= $data['journal'] ?></td>
     </tr>
     <tr>
         <td><?= lang('Abbreviated', 'Abgekürzt') ?></td>
@@ -107,14 +105,14 @@ $label = $Settings->journalLabel();
             <td>Web of Science Links</td>
             <td>
                 <?php foreach ($data['wos']['links'] as $link) { ?>
-                    <a href="<?= $link['url'] ?>" target="_blank" rel="noopener noreferrer" class="badge secondary"><?= $link['type'] ?></a>
+                    <a href="<?= $link['url'] ?>" target="_blank" rel="noopener noreferrer"><?= $link['type'] ?></a>
                 <?php } ?>
             </td>
         </tr>
     <?php } ?>
     <tr>
         <td>
-            <?= lang('Catergories', 'Kategorien') ?>
+            <?= lang('Categories', 'Kategorien') ?>
             <?php if ($Settings->hasPermission('journals.edit')) { ?>
 
                 <a aria-haspopup="true" aria-expanded="false" href="#cat-modal" data-toggle="modal">
@@ -129,18 +127,36 @@ $label = $Settings->journalLabel();
             if (empty($categories)) {
                 echo lang('No categories available.', 'Keine Kategorien verfügbar.');
             } else {
-                echo '<ul class="list">';
+                echo '<div class="badges">';
                 foreach ($categories as $cat) { ?>
-                    <li>
+                    <span class="badge">
                         <?= $cat['name'] ?? $cat ?>
-                    </li>
+                    </span>
             <?php
                 }
-                echo '</ul>';
+                echo '</div>';
             }
             ?>
         </td>
     </tr>
+    <?php
+    $fields = $Settings->get('journal-data');
+    $fields = DB::doc2Arr($fields);
+    if (!empty($fields)):
+        require_once BASEPATH . "/php/CustomFields.php";
+        $CustomFields = new CustomFields($data);
+    ?>
+        <?php foreach ($fields as $f) { ?>
+            <tr>
+                <td>
+                    <?= $CustomFields->name($f) ?>
+                </td>
+                <td>
+                    <?= $CustomFields->value($f, '-') ?>
+                </td>
+            </tr>
+        <?php } ?>
+    <?php endif; ?>
 </table>
 
 <?php
@@ -216,7 +232,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
     </tbody>
 </table>
 <script>
-    var dataTable;
 
     $(document).ready(function() {
         $('#publication-table').DataTable({
@@ -231,7 +246,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 }
             },
             language: {
-                "zeroRecords": "No matching records found",
                 "emptyTable": lang("No publications available for this <?= $label ?>.", "Für dieses <?= $label ?> sind noch keine Publikationen verfügbar."),
             },
             "pageLength": 5,
@@ -263,27 +277,89 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 </script>
 
 
-<h3><?= lang('Impact factors', 'Impact-Faktoren') ?></h3>
+
+<h3>
+    <?= lang("Other activities", "Weitere Aktivitäten") ?>
+</h3>
+
+<table class="table" id="activity-table">
+    <thead>
+        <th><?= lang('Activity', 'Aktivität') ?></th
+
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script>
+
+    $(document).ready(function() {
+        $('#activity-table').DataTable({
+            ajax: {
+                "url": ROOTPATH + '/api/activities',
+                "data": {
+                    "filter": {
+                        journal_id: '<?= $id ?>',
+                        type: {'$ne': 'publication'}
+                    },
+                    formatted: true
+                }
+            },
+            language: {
+                "emptyTable": lang("No other activities available for this <?= $label ?>.", "Für dieses <?= $label ?> sind keine weiteren Aktivitäten verfügbar."),
+            },
+            "pageLength": 5,
+            columnDefs: [{
+                    targets: 0,
+                    data: 'year'
+                },
+                {
+                    targets: 1,
+                    data: 'activity'
+                },
+                {
+                    "targets": 2,
+                    "data": "name",
+                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
+
+                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></a>`;
+                    }
+                },
+            ],
+            "order": [
+                [0, 'desc'],
+            ],
+            <?php if (isset($_GET['q'])) { ?> "oSearch": {
+                    "sSearch": "<?= $_GET['q'] ?>"
+                }
+            <?php } ?>
+        });
+    });
+</script>
+
+
+<h3><?= $if_label ?></h3>
 <?php
 $impacts = DB::doc2Arr($data['impact'] ?? array());
 ?>
 
 <div class="box">
     <div class="content">
-<style>
-    .form-row {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-    }
-    .form-row label {
-        margin-bottom: 0;
-        width: 5rem;
-    }
-    .form-row .form-control {
-        flex: 1;
-    }
-</style>
+        <style>
+            .form-row {
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+            }
+
+            .form-row label {
+                margin-bottom: 0;
+                width: 5rem;
+            }
+
+            .form-row .form-control {
+                flex: 1;
+            }
+        </style>
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
@@ -298,11 +374,11 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
-                                <label for="if"><?= lang('Impact') ?></label>
+                                <label for="if"><?= $if_label ?></label>
                                 <input type="number" min="0" max="300" step="0.001" class="form-control" name="values[if]" id="if">
                             </div>
                             <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
-                            
+
                             <small class="text-muted">
                                 <?= lang('Existing years will be overwritten. Enter 0 to remove.', 'Bestehende Jahre werden überschrieben. Gib eine 0 ein, um zu entfernen.') ?>
                             </small>
@@ -353,7 +429,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 data.data = {
                     labels: <?= json_encode($years) ?>,
                     datasets: [{
-                        label: 'Impact factor',
+                        label: '<?= e($if_label) ?>',
                         data: raw_data,
                         parsing: {
                             yAxisKey: 'impact',
@@ -370,7 +446,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No impact factors available.', 'Keine Impact Faktoren verfügbar.') ?></p>
+            <p><?= lang('No '.$if_label.' factors available.', 'Keine '.$if_label.' Faktoren verfügbar.') ?></p>
         <?php } ?>
 
 
@@ -389,11 +465,9 @@ foreach ($metrics as $metric) {
         $quartiles[] = [
             'year' => $metric['year'],
             'quartile' => $metric['quartile'],
-            // 'quartile' => str_replace('Q', '', $metric['quartile'])
         ];
     }
 }
-// $quartiles = array_column($metrics, 'quartile', 'year');
 ?>
 
 <div class="box">
@@ -424,7 +498,7 @@ foreach ($metrics as $metric) {
                             </div>
                             <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
 
-                                <small class="text-muted">
+                            <small class="text-muted">
                                 <?= lang('Existing years will be overwritten. Select "Not available" to remove.', 'Bestehende Jahre werden überschrieben. Wähle "Nicht verfügbar", um zu entfernen.') ?>
                             </small>
                         </form>
@@ -559,25 +633,25 @@ foreach ($metrics as $metric) {
     <?php } ?>
 <?php } ?>
 
-<?php if ($Settings->hasPermission('journals.delete')) { 
+<?php if ($Settings->hasPermission('journals.delete')) {
     $N_activities = $osiris->activities->count(['journal_id' => strval($id)]);
     if ($N_activities > 0) { ?>
         <div class="alert signal mt-20">
             <h4 class="title"><?= lang('Cannot delete journal', 'Journal kann nicht gelöscht werden') ?></h4>
-                <?= lang("This journal cannot be deleted because there are $N_activities activities associated with it. Please reassign or delete these activities first.", "Dieses Journal kann nicht gelöscht werden, da $N_activities Aktivitäten damit verknüpft sind. Bitte weisen Sie diese Aktivitäten zuerst neu zu oder löschen Sie sie.") ?>
+            <?= lang("This journal cannot be deleted because there are $N_activities activities associated with it. Please reassign or delete these activities first.", "Dieses Journal kann nicht gelöscht werden, da $N_activities Aktivitäten damit verknüpft sind. Bitte weisen Sie diese Aktivitäten zuerst neu zu oder löschen Sie sie.") ?>
         </div>
     <?php } else { ?>
-   <div class="alert danger mt-20">
-    <h4 class="title"><?= lang('Delete this journal', 'Dieses Journal löschen') ?></h4>
-    <p>
-        <i class="ph ph-warning text-signal"></i>
-        <?= lang("This will delete this journal permanently. This action cannot be undone.", "Dadurch wird dieses Journal dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.") ?>
-    </p>
-    <form action="<?= ROOTPATH ?>/crud/journal/delete/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this journal?', 'Sind Sie sicher, dass Sie dieses Journal löschen möchten?') ?>');">
-        <button class="btn danger"><i class="ph ph-trash"></i> <?=  lang('Delete journal', 'Journal löschen') ?></button>
-    </form>
-   </div>
-   <?php } ?>
+        <div class="alert danger mt-20">
+            <h4 class="title"><?= lang('Delete this journal', 'Dieses Journal löschen') ?></h4>
+            <p>
+                <i class="ph ph-warning text-signal"></i>
+                <?= lang("This will delete this journal permanently. This action cannot be undone.", "Dadurch wird dieses Journal dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.") ?>
+            </p>
+            <form action="<?= ROOTPATH ?>/crud/journal/delete/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this journal?', 'Sind Sie sicher, dass Sie dieses Journal löschen möchten?') ?>');">
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete journal', 'Journal löschen') ?></button>
+            </form>
+        </div>
+    <?php } ?>
 <?php } ?>
 
 

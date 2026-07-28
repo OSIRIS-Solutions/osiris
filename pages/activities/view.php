@@ -794,7 +794,7 @@
 
                                                 <?php if ($doc['impact'] ?? false) { ?>
                                                     <div>
-                                                        <span class="key"><?= lang('Impact', 'Impact') ?>: </span>
+                                                        <span class="key"><?= $Settings->impactLabel() ?>: </span>
                                                         <span class="badge"><?= $doc['impact'] ?></span>
                                                     </div>
                                                 <?php } ?>

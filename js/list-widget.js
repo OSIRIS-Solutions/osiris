@@ -1,11 +1,10 @@
-function initListWidget($root, initialValues) {
+function initListWidget($root, initialValues, validateFn=null) {
     const nameAttr = $root.data("name") || "items[]";
     const $input = $root.find(".list-widget-input");
 
     function normalize(s) {
-        return $.trim(String(s || "")).replace(/\s+/g, " ");
+        return String(s || "").trim();
     }
-
     function keyOf(s) {
         return normalize(s).toLowerCase();
     }
@@ -23,9 +22,16 @@ function initListWidget($root, initialValues) {
     }
 
     function addItem(raw) {
-        const value = normalize(raw);
+        var value = normalize(raw);
         if (!value) return;
         if (exists(value)) return;
+
+        if (validateFn) {
+            const normalized = validateFn(value);
+            if (!normalized) {
+                return;
+            }
+        }
 
         const id = "lw_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
 
