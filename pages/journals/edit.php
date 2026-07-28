@@ -98,9 +98,7 @@ $oa = $data['oa'] ?? false;
         <div class="form-group floating-form">
                 <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                    <?php
-                    $c = $form['country'] ?? '';
-                    foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                    $c = $data['country'] ?? '';
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                     <?php } ?>
                 </select>
