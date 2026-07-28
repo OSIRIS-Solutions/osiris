@@ -411,7 +411,7 @@ if (!empty($user_units)) {
 
         <?php if ($doc['impact'] ?? false) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Impact', 'Impact') ?>: </small>
+                <small><?= $Settings->impactLabel() ?>: </small>
                 <br />
                 <span class="badge danger"><?= $doc['impact'] ?></span>
             </div>
@@ -854,7 +854,7 @@ if (!empty($user_units)) {
                                         <span class="text-muted-">
                                             ISSN: <?= print_list($journal['issn']) ?>
                                             <br>
-                                            Impact:
+                                            <?= $Settings->impactLabel() ?>:
                                             <?= $doc['impact'] ?? 'unknown' ?>
                                         </span>
                                     </a>

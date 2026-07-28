@@ -852,12 +852,16 @@ foreach ($oa_distribution as $name => $counts) {
             </div>
 
             <div class="col-lg-6">
-                <h3><?= lang('2-year citedness', '2-Jahres-Zitationsrate') ?></h3>
+                <?php
+                    $if_label = $Settings->impactLabel();
+                ?>
+                
+                <h3><?= $if_label ?></h3>
                 <?php if ($impact_summary === null) { ?>
                     <p class="alert secondary">
                         <?= lang(
-                            "No citedness values are available for $metric_year.",
-                            "Für $metric_year sind keine Zitationswerte verfügbar."
+                            "No $if_label values are available for $metric_year.",
+                            "Für $metric_year sind keine $if_label verfügbar."
                         ) ?>
                         <!-- TODO: change name of metric here later -->
                     </p>

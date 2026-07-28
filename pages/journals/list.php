@@ -54,7 +54,7 @@ $fields = $Settings->get('journal-data');
         <th>Publisher</th>
         <th>ISSN</th>
         <th>OA</th>
-        <th><span data-toggle="tooltip" data-title="Latest impact factor if available">IF</span></th>
+        <th><span data-toggle="tooltip" data-title="Latest <?= $Settings->impactLabel() ?> if available"><?= $Settings->impactLabel() ?></span></th>
         <th><span data-toggle="tooltip" data-title="Publications, Reviews and Editorials"><?= lang('Activities', 'Aktivitäten') ?></span></th>
         <?php foreach ($fields as $f) {
             echo "<th>$f</th>";

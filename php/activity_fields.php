@@ -637,7 +637,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Impact factor'),
+                'label' => $Settings->impactLabel(),
                 'type' => 'double'
             ],
             [

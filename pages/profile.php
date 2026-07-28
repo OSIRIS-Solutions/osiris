@@ -1103,7 +1103,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <div class="box h-full">
                     <div class="chart content">
                         <h4 class="title mb-0">
-                            <?= lang('Impact factor histogram', 'Impact Factor Histogramm') ?>
+                            <?= $Settings->impactLabel() ?>
+                            <?= lang('histogram', 'Histogramm') ?>
                         </h4>
                         <p class="text-muted mt-0"><?= lang('since', 'seit') . " " . $Settings->get('startyear') ?></p>
                         <canvas id="chart-impact-canvas" style="max-height: 30rem;"></canvas>

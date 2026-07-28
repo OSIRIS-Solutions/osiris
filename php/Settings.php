@@ -740,6 +740,13 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
         return lang($settings['en'], $settings['de'] ?? null);
     }
+    
+    function impactLabel()
+    {
+        $settings = $this->get('impact_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Cite factor', 'Cite Factor');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
 
     function tripLabel()
     {
@@ -748,6 +755,29 @@ class Settings
         if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
         return lang($arr['name'], $arr['name_de'] ?? null);
     }
+
+    
+    function getLabels(){
+        // defaultLabels
+        $raw = [
+            'infrastructures_label' => ['en' => 'Infrastructures', 'de' => 'Infrastrukturen'],
+            'topics_label' => ['en' => 'Research Topics', 'de' => 'Forschungsbereiche'],
+            'tags_label' => ['en' => 'Tags', 'de' => 'Schlagwörter'],
+            'journals_label' => ['en' => 'Journals', 'de' => 'Journale'],
+            'impact_label' => ['en' => 'Cite factor', 'de' => 'Cite Factor'],
+        ];
+        // find all adminGeneral with key ending with "_label"
+        $labels = $this->osiris->adminGeneral->find(['key' => ['$in' => array_keys($raw)]])->toArray();
+        foreach ($labels as $label) {
+            $raw[$label['key']] = $label['value'];
+        }
+        $result = [];
+        foreach ($raw as $key => $value) {
+            $result[str_replace('_label', '', $key)] = lang($value['en'], $value['de'] ?? null);
+        }
+        return $result;
+    }
+
 
     function topicChooser($selected = [])
     {

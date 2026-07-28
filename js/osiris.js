@@ -1192,7 +1192,7 @@ function impactfactors(containerID, canvasID, data = {}) {
                             stacked: true,
                             title: {
                                 display: true,
-                                text: lang('Impact factor', 'Impact factor')
+                                text: LABELS['impact'] ?? lang('Cite Factor', 'Cite Factor')
                             },
                         },
                         y: {

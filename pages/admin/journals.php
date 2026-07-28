@@ -60,6 +60,25 @@
                 <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
             </p>
 
+            <h3 class="font-size-14">
+                <?=lang('Name of the main metrics field', 'Name des Hauptmetriken-Feldes') ?>
+            </h3>
+
+            
+        <?php
+        $impact_label = $Settings->get('impact_label');
+        ?>
+            <div class="row row-eq-spacing">
+                <div class="col-md-6">
+                    <label for="impact_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <input name="general[impact_label][en]" id="impact_label" type="text" class="form-control" value="<?= e($impact_label['en'] ?? 'Cite factor') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="impact_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <input name="general[impact_label][de]" id="impact_label_de" type="text" class="form-control" value="<?= e($impact_label['de'] ?? 'Cite Factor') ?>">
+                </div>
+            </div>
+
 
         </div>
 

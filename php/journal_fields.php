@@ -10,6 +10,8 @@ class JournalFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
 
+        $if_label = $Settings->impactLabel();
+
         $FIELDS = [
             [
                 'id' => 'id',
@@ -64,7 +66,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.impact",
                 "module_of" => ['general'],
-                "label" => lang("Impact Factor", "Impact Factor"),
+                "label" => $if_label . lang(" Value", "-Wert"),
                 'type' => 'double',
                 'usage' => [
                     'aggregate',
@@ -75,7 +77,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.year",
                 "module_of" => ['general'],
-                "label" => lang("Impact Factor Year", "Impact Factor Jahr"),
+                "label" => $if_label . lang(" Year", "-Jahr"),
                 'type' => 'integer',
                 'usage' => [
                     'aggregate',

@@ -17,6 +17,7 @@
  */
 $data = DB::doc2Arr($data);
 $label = $Settings->journalLabel();
+$if_label = $Settings->impactLabel();
 ?>
 
 <script src="<?= ROOTPATH ?>/js/chart.min.js"></script>
@@ -53,7 +54,7 @@ $label = $Settings->journalLabel();
                         <h5 class="title"><?= lang('Update metrics', 'Metriken aktualisieren') ?></h5>
                         <p>
                             <i class="ph ph-warning text-signal"></i>
-                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to impact factors, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an Impact-Faktoren, Kategorien und Quartilen überschrieben.") ?>
+                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to $if_label, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an $if_label, Kategorien und Quartilen überschrieben.") ?>
                         </p>
 
                         <form action="<?= ROOTPATH ?>/crud/journal/update-metrics/<?= $id ?>" method="post">
@@ -336,7 +337,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 </script>
 
 
-<h3><?= lang('Impact factors', 'Impact-Faktoren') ?></h3>
+<h3><?= $if_label ?></h3>
 <?php
 $impacts = DB::doc2Arr($data['impact'] ?? array());
 ?>
@@ -373,7 +374,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
-                                <label for="if"><?= lang('Impact') ?></label>
+                                <label for="if"><?= $if_label ?></label>
                                 <input type="number" min="0" max="300" step="0.001" class="form-control" name="values[if]" id="if">
                             </div>
                             <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
@@ -428,7 +429,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 data.data = {
                     labels: <?= json_encode($years) ?>,
                     datasets: [{
-                        label: 'Impact factor',
+                        label: '<?= $if_label ?>',
                         data: raw_data,
                         parsing: {
                             yAxisKey: 'impact',
@@ -445,7 +446,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No impact factors available.', 'Keine Impact Faktoren verfügbar.') ?></p>
+            <p><?= lang('No '.$if_label.' factors available.', 'Keine '.$if_label.' Faktoren verfügbar.') ?></p>
         <?php } ?>
 
 
@@ -464,11 +465,9 @@ foreach ($metrics as $metric) {
         $quartiles[] = [
             'year' => $metric['year'],
             'quartile' => $metric['quartile'],
-            // 'quartile' => str_replace('Q', '', $metric['quartile'])
         ];
     }
 }
-// $quartiles = array_column($metrics, 'quartile', 'year');
 ?>
 
 <div class="box">
