@@ -1350,7 +1350,6 @@ Route::get('/api/journal', function () {
     $result = $osiris->journals->find($filter,)->toArray();
     echo return_rest($result, count($result));
 });
-
 Route::get('/api/journals', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
@@ -1359,77 +1358,117 @@ Route::get('/api/journals', function () {
         echo return_permission_denied();
         die;
     }
-    $custom_fields = $Settings->get('journal-data');
-    header("Content-Type: application/json");
-    header("Pragma: no-cache");
-    header("Expires: 0");
-    $pipeline = [
+
+    $fields = DB::doc2Arr($Settings->get('journal-data') ?? []);
+    $fields = array_values(array_filter($fields, function ($field) {
+        return is_string($field)
+            && preg_match('/^[a-zA-Z0-9_-]+$/', $field);
+    }));
+
+    // Count related activities once instead of loading them through a lookup.
+    $activity_counts = [];
+
+    $counts = $osiris->activities->aggregate([
         [
-            '$unwind' => [
-                'path' => '$impact',
-                'preserveNullAndEmptyArrays' => true
-            ]
-        ],
-        [
-            '$sort' => ['impact.year' => -1]
+            '$match' => [
+                'journal_id' => [
+                    '$type' => 'string',
+                    '$ne' => '',
+                ],
+            ],
         ],
         [
             '$group' => [
-                '_id' => '$_id',
-                'journal' => ['$first' => '$journal'],
-                'abbr' => ['$first' => '$abbr'],
-                'publisher' => ['$first' => '$publisher'],
-                'open_access' => ['$first' => '$oa'],
-                'issn' => ['$first' => '$issn'],
-                'country' => ['$first' => '$country'],
-                'latest_impact' => ['$first' => '$impact'],
+                '_id' => '$journal_id',
+                'count' => ['$sum' => 1],
+            ],
+        ],
+    ]);
 
-            ]
-        ],
-        [
-            '$project' => [
-                'id' => ['$toString' => '$_id'],
-                'name' => '$journal',
-                'abbr' => '$abbr',
-                'publisher' => 1,
-                'open_access' => '$open_access',
-                'issn' => '$issn',
-                'country' => '$country',
-                'if' => '$latest_impact'
-            ]
-        ],
-        [
-            '$lookup' => [
-                'from' => 'activities',
-                'localField' => 'id',
-                'foreignField' => 'journal_id',
-                'as' => 'related_activities'
-            ]
-        ],
-        [
-            '$addFields' => [
-                'count' => ['$size' => '$related_activities'],
-            ]
-        ],
-        [
-            '$sort' => ['count' => -1]
-        ],
-        [
-            '$project' => [
-                'id' => 1,
-                'name' => 1,
-                'abbr' => 1,
-                'publisher' => 1,
-                'open_access' => 1,
-                'issn' => 1,
-                'country' => 1,
-                'if' => 1,
-                'count' => 1
-            ]
-        ]
+    foreach ($counts as $count) {
+        $activity_counts[strval($count['_id'])] =
+            intval($count['count'] ?? 0);
+    }
+
+    // Only retrieve fields required by the journal table.
+    $projection = [
+        '_id' => 1,
+        'journal' => 1,
+        'abbr' => 1,
+        'publisher' => 1,
+        'oa' => 1,
+        'issn' => 1,
+        'country' => 1,
+        'impact' => 1,
     ];
 
-    $journals = $osiris->journals->aggregate($pipeline)->toArray();
+    foreach ($fields as $field) {
+        $projection[$field] = 1;
+    }
+
+    $journals = [];
+
+    $cursor = $osiris->journals->find(
+        [],
+        ['projection' => $projection]
+    );
+
+    foreach ($cursor as $document) {
+        $document = DB::doc2Arr($document);
+        $id = strval($document['_id']);
+
+        // Find the latest impact value without unwinding the complete array.
+        $latest_impact = null;
+        $latest_impact_year = null;
+
+        foreach (DB::doc2Arr($document['impact'] ?? []) as $impact) {
+            $impact = DB::doc2Arr($impact);
+            $year = intval($impact['year'] ?? 0);
+
+            if (
+                $latest_impact === null
+                || $year > $latest_impact_year
+            ) {
+                $latest_impact = $impact;
+                $latest_impact_year = $year;
+            }
+        }
+
+        $journal = [
+            'id' => $id,
+            'name' => $document['journal'] ?? '',
+            'abbr' => $document['abbr'] ?? '',
+            'publisher' => $document['publisher'] ?? '',
+            'open_access' => $document['oa'] ?? null,
+            'issn' => DB::doc2Arr($document['issn'] ?? []),
+            'country' => $document['country'] ?? '',
+            'if' => $latest_impact,
+            'count' => $activity_counts[$id] ?? 0,
+        ];
+
+        // Add all custom fields configured for journals.
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $document)) {
+                $journal[$field] = DB::doc2Arr($document[$field]);
+            }
+        }
+
+        $journals[] = $journal;
+    }
+
+    usort($journals, function ($a, $b) {
+        $count_order =
+            ($b['count'] ?? 0) <=> ($a['count'] ?? 0);
+
+        if ($count_order !== 0) {
+            return $count_order;
+        }
+
+        return strnatcasecmp(
+            $a['name'] ?? '',
+            $b['name'] ?? ''
+        );
+    });
 
     echo return_rest($journals, count($journals));
 });
