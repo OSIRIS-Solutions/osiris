@@ -85,7 +85,12 @@ class CustomFields
             $val = DB::doc2Arr($val);
         }
         if (is_array($val)) {
-            return implode(", ", $val);
+            return implode(", ", array_map(function ($item) {
+                return e(strval($item));
+            }, $val));
+        }
+        if (is_string($val) && $format !== 'text-format') {
+            return e($val);
         }
         return $val;
     }
