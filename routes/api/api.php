@@ -590,7 +590,7 @@ Route::get('/api/users', function () {
                 'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
                 'mail' => $user['mail'] ?? '',
             ];
-            foreach ($columns as $col){
+            foreach ($columns as $col) {
                 $entry[$col] = $user[$col] ?? null;
             }
             $table[] = $entry;
@@ -1069,34 +1069,133 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
 
     $unwinds = ['authors', 'editors', 'supervisors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
-    if (isset($_GET['aggregate'])) {
-        // aggregate by one column
+    if (!empty($_GET['aggregate'])) {
         $group = $_GET['aggregate'];
-        $aggregate = [
-            ['$match' => $filter],
-        ];
-        $group_parts = explode('.', $group);
-        $first_part = $group_parts[0];
-        if (in_array($first_part, $unwinds)) {
-            // preserve null and empty arrays
+        $function = $_GET['aggregate_function'] ?? 'count';
+        $value_field = $_GET['aggregate_value'] ?? null;
+        $allowed_functions = ['count', 'sum', 'mean', 'median'];
+        $valid_field_path = '/^[A-Za-z_][A-Za-z0-9_-]*(\.[A-Za-z_][A-Za-z0-9_-]*)*$/';
+
+        if (!in_array($function, $allowed_functions, true)) {
+            echo return_rest('Unsupported aggregation function.', 0, 400);
+            die;
+        }
+        if (!preg_match($valid_field_path, $group)) {
+            echo return_rest('Invalid aggregation field.', 0, 400);
+            die;
+        }
+        if ($function !== 'count' && (empty($value_field) || !preg_match($valid_field_path, $value_field))) {
+            echo return_rest('A valid numeric value field is required for this aggregation.', 0, 400);
+            die;
+        }
+
+        if (empty($filter)) {
+            $aggregate = [];
+        } else {
+            $aggregate = [['$match' => $filter]];
+        }
+        $aggregate_fields = [$group];
+        if ($function !== 'count') {
+            $aggregate_fields[] = $value_field;
+        }
+
+        $unwind_fields = [];
+        foreach ($aggregate_fields as $field) {
+            $first_part = explode('.', $field)[0];
+            if (in_array($first_part, $unwinds, true)) {
+                $unwind_fields[$first_part] = true;
+            }
+        }
+        foreach (array_keys($unwind_fields) as $unwind_field) {
             $aggregate[] = ['$unwind' => [
-                'path' => '$' . $first_part,
+                'path' => '$' . $unwind_field,
                 'preserveNullAndEmptyArrays' => true
             ]];
         }
-        $aggregate[] =
-            ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
 
-        $aggregate[] = ['$sort' => ['count' => -1]];
-        $aggregate[] = ['$project' => ['_id' => 0, 'value' => '$_id', 'count' => 1]];
-        // $aggregate[] = ['$limit' => 10];
-        $aggregate[] = ['$sort' => ['count' => -1]];
-        $aggregate[] = ['$project' => ['_id' => 0, 'value' => 1, 'count' => 1]];
-        // $aggregate = array_merge($filter);
+        if ($function === 'count') {
+            $aggregate[] = ['$group' => [
+                '_id' => '$' . $group,
+                'count' => ['$sum' => 1]
+            ]];
+            $aggregate[] = ['$sort' => ['count' => -1]];
+            $aggregate[] = ['$project' => [
+                '_id' => 0,
+                'value' => '$_id',
+                'count' => 1
+            ]];
+        } else {
+            $numeric_types = ['int', 'long', 'double', 'decimal'];
+            $aggregate[] = ['$match' => [
+                '$expr' => [
+                    '$in' => [
+                        ['$type' => '$' . $value_field],
+                        $numeric_types
+                    ]
+                ]
+            ]];
 
-        $result = $collection->aggregate(
-            $aggregate
-        )->toArray();
+            if ($function === 'median') {
+                $aggregate[] = ['$group' => [
+                    '_id' => '$' . $group,
+                    'values' => ['$push' => '$' . $value_field]
+                ]];
+                $aggregate[] = ['$set' => [
+                    'values' => [
+                        '$sortArray' => [
+                            'input' => '$values',
+                            'sortBy' => 1
+                        ]
+                    ]
+                ]];
+                $aggregate[] = ['$set' => [
+                    'result' => [
+                        '$let' => [
+                            'vars' => [
+                                'value_count' => ['$size' => '$values'],
+                                'middle' => [
+                                    '$toInt' => [
+                                        '$floor' => [
+                                            '$divide' => [
+                                                ['$size' => '$values'],
+                                                2
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'in' => [
+                                '$cond' => [
+                                    ['$eq' => [['$mod' => ['$$value_count', 2]], 1]],
+                                    ['$arrayElemAt' => ['$values', '$$middle']],
+                                    [
+                                        '$avg' => [
+                                            ['$arrayElemAt' => ['$values', ['$subtract' => ['$$middle', 1]]]],
+                                            ['$arrayElemAt' => ['$values', '$$middle']]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]];
+            } else {
+                $operator = $function === 'sum' ? '$sum' : '$avg';
+                $aggregate[] = ['$group' => [
+                    '_id' => '$' . $group,
+                    'result' => [$operator => '$' . $value_field]
+                ]];
+            }
+
+            $aggregate[] = ['$sort' => ['result' => -1]];
+            $aggregate[] = ['$project' => [
+                '_id' => 0,
+                'value' => '$_id',
+                'result' => 1
+            ]];
+        }
+
+        $result = $collection->aggregate($aggregate)->toArray();
         echo return_rest($result, count($result));
         die;
     }
@@ -1284,7 +1383,7 @@ Route::get('/api/journals', function () {
                 'issn' => ['$first' => '$issn'],
                 'country' => ['$first' => '$country'],
                 'latest_impact' => ['$first' => '$impact'],
-                
+
             ]
         ],
         [

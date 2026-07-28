@@ -60,6 +60,12 @@ if ($collection == 'projects' || $collection == 'proposals') {
 }
 
 $field_by_id = array_column($FIELDS->fields, null, 'id');
+$aggregation_function_labels = [
+    'count' => lang('Count', 'Anzahl'),
+    'sum' => lang('Sum', 'Summe'),
+    'mean' => lang('Mean', 'Mittelwert'),
+    'median' => lang('Median', 'Median')
+];
 
 $filters = array_filter($FIELDS->fields, function ($f) {
     return in_array('filter', $f['usage'] ?? []);
@@ -284,7 +290,7 @@ function printRules($rules)
                                         }
                                     </script>
                                 <?php } ?>
-                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?? '' ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>', '<?= $query['aggregate_function'] ?? 'count' ?>', '<?= $query['aggregate_value'] ?? '' ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
 
                                 <table class="table simple my-10">
 
@@ -315,6 +321,13 @@ function printRules($rules)
                                         <td>
                                             <?php if (isset($query['aggregate']) && !empty($query['aggregate'])) { ?>
                                                 <?= $field_by_id[$query['aggregate']]['label'] ?? $query['aggregate'] ?>
+                                                <?php
+                                                $aggregation_function = $query['aggregate_function'] ?? 'count';
+                                                echo ' – ' . ($aggregation_function_labels[$aggregation_function] ?? $aggregation_function);
+                                                if ($aggregation_function !== 'count' && !empty($query['aggregate_value'])) {
+                                                    echo ': ' . ($field_by_id[$query['aggregate_value']]['label'] ?? $query['aggregate_value']);
+                                                }
+                                                ?>
                                             <?php } else {
                                                 echo lang('No aggregation', 'Keine Aggregation angewendet');
                                             } ?>
@@ -553,7 +566,7 @@ function printRules($rules)
                     </a>
 
                     <div class="input-group" style="display:none;" id="aggregate-form">
-                        <select name="aggregate" id="aggregate" class="form-control w-auto">
+                        <select name="aggregate" id="aggregate" class="form-control w-auto" aria-label="<?= lang('Group by', 'Gruppieren nach') ?>" onchange="updateAggregationControls()">
                             <option value=""><?= lang('Without aggregation (show all)', 'Ohne Aggregation (zeige alles)') ?></option>
                             <?php
                             $aggregate_filter = array_filter($FIELDS->fields, function ($f) {
@@ -566,9 +579,27 @@ function printRules($rules)
 
                         </select>
 
+                        <select name="aggregate_function" id="aggregate-function" class="form-control w-auto" aria-label="<?= lang('Calculation', 'Berechnung') ?>" onchange="updateAggregationControls()">
+                            <?php foreach ($aggregation_function_labels as $function => $label) { ?>
+                                <option value="<?= $function ?>"><?= $label ?></option>
+                            <?php } ?>
+                        </select>
+
+                        <select name="aggregate_value" id="aggregate-value" class="form-control w-auto" aria-label="<?= lang('Value field', 'Wertefeld') ?>" style="display:none;">
+                            <option value=""><?= lang('Select numeric value', 'Numerischen Wert auswählen') ?></option>
+                            <?php
+                            $numeric_aggregate_fields = array_filter($FIELDS->fields, function ($f) {
+                                return in_array($f['type'] ?? '', ['integer', 'double', 'number'], true)
+                                    && !empty($f['usage'] ?? []);
+                            });
+                            foreach ($numeric_aggregate_fields as $f) { ?>
+                                <option value="<?= $f['id'] ?>"><?= $f['label'] ?></option>
+                            <?php } ?>
+                        </select>
+
                         <!-- remove aggregation -->
                         <div class="input-group-append">
-                            <button class="btn text-danger" onclick="$('#aggregate').val(''); getResult()"><i class="ph ph-x"></i></button>
+                            <button class="btn text-danger" onclick="clearAggregation()"><i class="ph ph-x"></i></button>
                         </div>
                     </div>
                 </div>
@@ -691,6 +722,38 @@ function printRules($rules)
 
         var dataTable;
 
+        function updateAggregationControls() {
+            const hasAggregation = $('#aggregate').val() !== '';
+            const needsValue = hasAggregation && $('#aggregate-function').val() !== 'count';
+
+            $('#aggregate-function').prop('disabled', !hasAggregation);
+            $('#aggregate-value').prop('disabled', !needsValue).toggle(needsValue);
+        }
+
+        function clearAggregation() {
+            $('#aggregate').val('');
+            $('#aggregate-function').val('count');
+            $('#aggregate-value').val('');
+            updateAggregationControls();
+            getResult();
+        }
+
+        function aggregationResultLabel() {
+            const functionLabels = {
+                count: lang('Count', 'Anzahl'),
+                sum: lang('Sum', 'Summe'),
+                mean: lang('Mean', 'Mittelwert'),
+                median: lang('Median', 'Median')
+            };
+            const aggregationFunction = $('#aggregate-function').val() || 'count';
+            const valueLabel = $('#aggregate-value option:selected').text();
+
+            if (aggregationFunction === 'count') {
+                return functionLabels.count;
+            }
+            return functionLabels[aggregationFunction] + ': ' + valueLabel;
+        }
+
         function initializeTable(data) {
             // destroy existing table
             if ($.fn.DataTable.isDataTable('#activity-table')) {
@@ -712,17 +775,18 @@ function printRules($rules)
             var columns = [];
 
             if (aggregate !== "") {
+                const aggregationFunction = $('#aggregate-function').val() || 'count';
                 data = data.map(row => ({
                     value: row.value ?? '<em>' + lang('empty', 'leer') + '</em>',
-                    count: row.count || 0
+                    result: aggregationFunction === 'count' ? (row.count ?? 0) : (row.result ?? 0)
                 }));
 
                 // add aggregate column
                 var th = document.createElement('th');
-                th.textContent = lang('Activity', 'Aktivität');
+                th.textContent = $('#aggregate option:selected').text();
                 headerRow.appendChild(th);
                 th = document.createElement('th');
-                th.textContent = lang('Count', 'Anzahl');
+                th.textContent = aggregationResultLabel();
                 headerRow.appendChild(th);
                 thead.appendChild(headerRow);
 
@@ -731,8 +795,8 @@ function printRules($rules)
                         title: lang('Value', 'Wert')
                     },
                     {
-                        data: 'count',
-                        title: lang('Count', 'Anzahl')
+                        data: 'result',
+                        title: aggregationResultLabel()
                     }
                 ]
 
@@ -802,15 +866,7 @@ function printRules($rules)
                 data: data, // Daten direkt übergeben
                 columns: columns, // Dynamisch generierte Spalten
                 dom: 'fBrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: ':visible,:hidden' // Include hidden columns
-                    },
-                    className: 'btn small',
-                    title: "OSIRIS Search",
-                    text: '<i class="ph ph-file-xls"></i> Excel'
-                }],
+                buttons: downloadTableButtons('<?= $colName ?? $collection ?> Search', ':visible,:hidden', true),
                 initComplete: function() {
                     var tableWidth = $('#activity-table').width();
                     var containerWidth = $('#activity-table').parent().width();
@@ -850,6 +906,14 @@ function printRules($rules)
             var aggregate = $('#aggregate').val()
             if (aggregate !== "") {
                 data.aggregate = aggregate
+                data.aggregate_function = $('#aggregate-function').val() || 'count'
+                if (data.aggregate_function !== 'count') {
+                    data.aggregate_value = $('#aggregate-value').val()
+                    if (!data.aggregate_value) {
+                        toastWarning(lang('Please select a numeric value for the aggregation.', 'Bitte wähle einen numerischen Wert für die Aggregation aus.'))
+                        return
+                    }
+                }
             }
 
             // columns
@@ -884,9 +948,11 @@ function printRules($rules)
 
         $(document).ready(function() {
             <?php if ($preset_query) : ?>
-                applyFilter('<?= $preset_query['_id'] ?>', '<?= $preset_query['aggregate'] ?>', '<?= implode(';', DB::doc2Arr($preset_query['columns'] ?? [])) ?>')
+                applyFilter('<?= $preset_query['_id'] ?>', '<?= $preset_query['aggregate'] ?? '' ?>', '<?= implode(';', DB::doc2Arr($preset_query['columns'] ?? [])) ?>', '<?= $preset_query['aggregate_function'] ?? 'count' ?>', '<?= $preset_query['aggregate_value'] ?? '' ?>')
                 return;
             <?php endif; ?>
+
+            updateAggregationControls()
 
             var hash = window.location.hash.substr(1);
             if (hash !== undefined && hash != "") {
@@ -929,6 +995,8 @@ function printRules($rules)
                 user: '<?= $_SESSION['username'] ?>',
                 created: new Date(),
                 aggregate: $('#aggregate').val(),
+                aggregate_function: $('#aggregate-function').val() || 'count',
+                aggregate_value: $('#aggregate-value').val(),
                 columns: columns,
                 expert: EXPERT,
                 type: '<?= $collection ?>'
@@ -938,17 +1006,17 @@ function printRules($rules)
                 // reload
                 queries[data.id] = JSON.stringify(rules)
 
-                $('#saved-queries').append(`<a class="d-block" onclick="applyFilter(${data.id}, '${$('#aggregate').val()}')">${name}</a>`)
+                $('#saved-queries').append(`<a class="d-block" onclick="applyFilter('${data.id}', '${$('#aggregate').val()}', '${columns.join(';')}', '${$('#aggregate-function').val() || 'count'}', '${$('#aggregate-value').val()}')">${name}</a>`)
                 $('#query-name').val('')
                 toastSuccess(lang('Query saved successfully. Please reload the page to see it completely.', 'Abfrage erfolgreich gespeichert. Lade die Seite neu, um sie vollständig anzuzeigen.'))
                 $('#save-query-button').prop('disabled', false);
             })
         }
 
-        function applyFilter(id, aggregate, columns) {
+        function applyFilter(id, aggregate, columns, aggregateFunction = 'count', aggregateValue = '') {
             console.log(columns);
             if (EXPERT) {
-                applyFilterExpert(id, aggregate, columns)
+                applyFilterExpert(id, aggregate, aggregateFunction, aggregateValue)
                 return
             }
             var filter = queries[id];
@@ -957,6 +1025,9 @@ function printRules($rules)
                 return
             }
             $('#aggregate').val(aggregate)
+            $('#aggregate-function').val(aggregateFunction || 'count')
+            $('#aggregate-value').val(aggregateValue || '')
+            updateAggregationControls()
             var parsedFilter = JSON.parse(filter, (key, value) => {
                 if (typeof value === 'string' && /^\d+$/.test(value)) {
                     return parseInt(value);
@@ -981,13 +1052,16 @@ function printRules($rules)
             getResult()
         }
 
-        function applyFilterExpert(id, aggregate) {
+        function applyFilterExpert(id, aggregate, aggregateFunction = 'count', aggregateValue = '') {
             var filter = queries[id];
             if (!filter) {
                 toastError('Query not found.')
                 return
             }
             $('#aggregate').val(aggregate)
+            $('#aggregate-function').val(aggregateFunction || 'count')
+            $('#aggregate-value').val(aggregateValue || '')
+            updateAggregationControls()
             $('#expert').val(filter)
 
             getResult()
