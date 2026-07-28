@@ -284,9 +284,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="activity-table">
     <thead>
-        <th><?= lang('Year', 'Jahr') ?></th>
-        <th><?= lang('Activity', 'Aktvität') ?></th>
-        <th>Link</th>
+        <th><?= lang('Activity', 'Aktivität') ?></th
     </thead>
     <tbody>
     </tbody>
