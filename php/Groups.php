@@ -66,7 +66,13 @@ class Groups
             'name_de' => 'Einheit',
             'head' => 'Head of Unit',
             'head_de' => 'Leitung der Organisationseinheit',
-        ]
+        ],
+        'staff unit' => [
+            'name' => 'Staff Unit',
+            'name_de' => 'Stabsstelle',
+            'head' => 'Head of Staff Unit',
+            'head_de' => 'Leitung der Stabsstelle',
+        ],
     ];
 
     function __construct()
