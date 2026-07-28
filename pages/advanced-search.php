@@ -45,7 +45,7 @@ if ($collection == 'projects' || $collection == 'proposals') {
     include_once BASEPATH . "/php/journal_fields.php";
     $FIELDS = new JournalFields();
     $defaultColumns = ['id', 'journal', 'issn', 'publisher'];
-    $defaultFilter = 'journal';
+    $defaultFilter = 'oa';
     $expertQuery = '{}';
 } elseif ($collection == 'persons') {
     include_once BASEPATH . "/php/person_fields.php";
@@ -761,10 +761,16 @@ function printRules($rules)
                     }
                     if (field == 'id') {
                         r.render = function(data, type, row, meta) {
+                            if (type === 'export') {
+                                return data;
+                            }
                             return `<a href="<?= ROOTPATH ?>/<?= $collection ?>/view/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`
                         }
                     } else if (field == 'username') {
                         r.render = function(data, type, row, meta) {
+                            if (type === 'export') {
+                                return data;
+                            }
                             return data ? `<a href="<?= ROOTPATH ?>/profile/${data}">${data}</a>` : '-';
                         }
                     } else if (array_columns[field]) {

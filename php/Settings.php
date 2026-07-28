@@ -147,7 +147,6 @@ class Settings
                 $req = $this->osiris->adminGeneral->findOne(['key' => $key]);
                 if (!empty($req)) return $req['value'];
                 return $default;
-                break;
         }
     }
     function set($key, $value)

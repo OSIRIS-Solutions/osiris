@@ -976,8 +976,9 @@ function initActivities(selector, data = {}, highlights = []) {
     });
 }
 
-function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible') {
-    return [
+function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible', colVis = false) {
+    
+    const buttons = [
         {
             extend: 'excelHtml5',
             exportOptions: {
@@ -985,7 +986,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            text: `<i class="ph ph-file-xls" title="${lang('Excel', 'Excel')}"></i>`,
         },
         {
             extend: 'pdfHtml5',
@@ -994,7 +995,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
+            text: `<i class="ph ph-file-pdf" title="${lang('PDF', 'PDF')}"></i>`,
         },
         {
             extend: 'print',
@@ -1005,9 +1006,17 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             title: title,
             className: 'btn small',
-            text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+            text: `<i class="ph ph-printer" title="${lang('Print', 'Drucken')}"></i>`,
         }
     ];
+    if (colVis) {
+        buttons.unshift({
+            extend: 'colvis',
+            className: 'btn small',
+            text: `<i class="ph ph-columns" title="${lang('Columns', 'Spalten')}"></i>`,
+        });
+    }
+    return buttons;
 }
 
 function initDownloadTable(selector, title = 'OSIRIS_data_export', columns = ':visible') {

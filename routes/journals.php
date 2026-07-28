@@ -21,7 +21,18 @@ Route::get('/journals?', function () {
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/journals/table.php";
+    include BASEPATH . "/pages/journals/list.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+Route::get('/journals?/statistics', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => $Settings->journalLabel(), 'path' => "/journals"],
+        ['name' => lang('Statistics', 'Statistiken')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/journals/statistics.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -73,7 +84,7 @@ Route::get('/journal/add', function () {
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/journals/editor.php";
+    include BASEPATH . "/pages/journals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 
@@ -94,7 +105,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     ];
 
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/journals/editor.php";
+    include BASEPATH . "/pages/journals/edit.php";
     include BASEPATH . "/footer.php";
 }, 'login');
 

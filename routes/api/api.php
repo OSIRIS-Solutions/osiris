@@ -1260,7 +1260,7 @@ Route::get('/api/journals', function () {
         echo return_permission_denied();
         die;
     }
-
+    $custom_fields = $Settings->get('journal-data');
     header("Content-Type: application/json");
     header("Pragma: no-cache");
     header("Expires: 0");
@@ -1283,7 +1283,8 @@ Route::get('/api/journals', function () {
                 'open_access' => ['$first' => '$oa'],
                 'issn' => ['$first' => '$issn'],
                 'country' => ['$first' => '$country'],
-                'latest_impact' => ['$first' => '$impact']
+                'latest_impact' => ['$first' => '$impact'],
+                
             ]
         ],
         [
@@ -1295,7 +1296,7 @@ Route::get('/api/journals', function () {
                 'open_access' => '$open_access',
                 'issn' => '$issn',
                 'country' => '$country',
-                'if' => '$latest_impact',
+                'if' => '$latest_impact'
             ]
         ],
         [
