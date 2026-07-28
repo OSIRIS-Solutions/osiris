@@ -26,8 +26,7 @@
                     <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
                 </div>
-                <div class="col-md-6">
-                    <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
                 </div>
             </div>
