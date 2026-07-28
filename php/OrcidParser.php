@@ -258,7 +258,10 @@ class OrcidParser
 
         $parsed_work['created_by'] = $this->username;
 
-        $parsed_work['raw_input'] = $work;
+        # $parsed_work['raw_input'] = $work;
+        $parsed_work['orcid_put_code'] = $work['put-code'] ?? null;
+        $parsed_work['orcid_path'] = $work['path'] ?? null;
+
         return $parsed_work;
     }
 
@@ -280,6 +283,15 @@ class OrcidParser
     function importWork($work) {
         // TODO implement function to import the work into Osiris
         // This would involve checking if the work already exists (e.g. by DOI), and if not, inserting it into the database
+        if (isset($work['doi'])) {
+            $existing_work = $this->osiris->activities->findOne(['doi' => $work['doi']]);
+        } else if (isset($work['orcid_put_code'])) {
+            $existing_work = $this->osiris->activities->findOne(['orcid_put_code' => $work['orcid_put_code']]);
+        }
+        if ($existing_work) {
+            return $existing_work['_id'];
+        }
+
         $add = $this->osiris->activities->insertOne($work);
         $id = $add->getInsertedId();
         return $id;
