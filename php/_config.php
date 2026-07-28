@@ -48,13 +48,14 @@ function validateValues($values, $DB)
             // do not validate id, it is set by the database
             continue;
         } else if ($key == 'doi') {
-            if (!str_contains($value, '10.')) $value = null;
-            elseif (!str_starts_with($value, '10.')) {
-                $value = explode('10.', $value, 2);
-                $value = "10." . $value[1];
+            if (empty($value) || !str_contains($value, '10.')) {
+                $values[$key] = null;
+            } elseif (!str_starts_with($value, '10.')) {
+                $parts = explode('10.', $value, 2);
+                $values[$key] = strtolower("10." . ($parts[1] ?? ''));
+            } else {
+                $values[$key] = strtolower($value);
             }
-            if ($value !== null) $values[$key] = strtolower($value);
-            else $values[$key] = null;
            
         } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();

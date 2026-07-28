@@ -1,0 +1,23 @@
+name: Question
+description: Ask a question.
+title: "[Question]: "
+# labels: ["question"]
+type: Question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feel free to ask any questions or seek clarification regarding the project, its features, or any other related topics.
+
+        *Have you had a look at the [OSIRIS Wiki](https://wiki.osiris-app.de/latest/) ?*
+    
+        Please describe your question in detail.
+        Include any relevant context, examples, or references to help us understand your query and provide a helpful response.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      placeholder: "Describe your question here..."
+    validations:
+      required: true

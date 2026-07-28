@@ -1,0 +1,45 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+# labels: ["bug"]
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        Please describe the bug in detail and give as much context as possible.
+        Feel free to add screenshots, API data and any other relevant information that may also help us.
+
+        If this is a security issue, please do not report it here. Instead, please contact us directly at [OSIRIS-Solutions](mailto:support@osiris-solutions.de).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the bug
+      description: |
+        What happened? What did you expect to happen instead? What are the steps to reproduce the bug?
+
+        *Screenshots can be pasted from the clipboard directly into the issue description.*
+      placeholder: Describe the bug here...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: In what version(s) of OSIRIS did you find this bug?
+      description: |
+        You can find the version in the footer of your OSIRIS
+      placeholder: "e.g. v2.0.2, v2.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: browsers
+    attributes:
+      label: What Browser(s) are you seeing this bug on?
+      placeholder: "e.g. Firefox, Chrome, Safari, Microsoft Edge"
+    validations:
+      required: false

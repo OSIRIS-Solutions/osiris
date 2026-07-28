@@ -1,0 +1,36 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[Feature]: "
+# labels: ["feature"]
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to suggest a new feature or improvement!
+
+        Please be aware that feature requests will not be implemented immediately.
+        We will review your request and consider it for future releases.
+
+        If your organization would like to sponsor the development of this feature, please contact [OSIRIS-Solutions](mailto:contact@osiris-solutions.de) to discuss the details.
+  
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: What - Feature Description
+      description: |
+        Please describe the feature or improvement you are suggesting in detail. Include relevant links, screenshots or examples to help us understand your proposal.
+      placeholder: "Describe the feature or improvement here..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why - Motivation and Context
+      description: |
+        Please explain the motivation behind this feature or improvement. 
+        Why is it important? How will it benefit users? Or what problem does it solve?
+      placeholder: "Explain the motivation, benefit or problem solved by this feature..."
+    validations:
+      required: true
