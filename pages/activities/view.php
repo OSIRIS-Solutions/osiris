@@ -693,7 +693,7 @@
                                             <div class="connection">
                                                 <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
                                                 <h5>
-                                                    <a href="<?= ROOTPATH ?>/project/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
+                                                    <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
                                                 </h5>
                                                 <ul class="horizontal">
                                                     <li><?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?></li>
