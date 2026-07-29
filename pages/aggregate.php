@@ -40,6 +40,263 @@ $defaultColumns = ['id', 'name', 'title'];
 ?>
 
 
+<div class="modal" id="saved-queries-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h2 class="title">
+                <?php if ($expert) { ?>
+                    <?= lang('Expert queries', 'Experten-Abfragen') ?>
+                <?php } else { ?>
+                    <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
+                <?php } ?>
+            </h2>
+
+
+            <div class="mb-20">
+                <button class="btn" aria-expanded="true" onclick="$(this).next().slideToggle();">
+                    <i class="ph ph-floppy-disk"></i> <?= lang('Save current query', 'Aktuelle Abfrage speichern') ?>
+                </button>
+
+                <div style="display:none;" class="box padded mt-10">
+                    <input type="text" class="form-control" id="query-name" placeholder="<?= lang('Name of query', 'Name der Abfrage') ?>">
+                    <button class="btn primary mt-10" onclick="saveQuery()"><?= lang('Save query', 'Abfrage speichern') ?></button>
+                </div>
+            </div>
+
+            <?php
+            $filter = [
+                '$or' => [
+                    ['user' => $_SESSION['username']],
+                    ['global' => true],
+                    ['role' => ['$in' => $Settings->roles]]
+                ],
+                'type' => $collection
+            ];
+            if (!$expert) {
+                $filter['expert'] = ['$ne' => true];
+            } else {
+                $filter['expert'] = true;
+            }
+            $queries = $osiris->queries->find($filter)->toArray();
+            if (empty($queries)) {
+                echo '<p>' . lang('You have not saved any queries yet.', 'Du hast noch keine Abfragen gespeichert.') . '</p>';
+            } else {
+                // sort by created by current user first, then by created date
+                usort($queries, function ($a, $b) {
+                    if ($a['user'] == $_SESSION['username'] && $b['user'] != $_SESSION['username']) {
+                        return -1;
+                    } elseif ($a['user'] != $_SESSION['username'] && $b['user'] == $_SESSION['username']) {
+                        return 1;
+                    } else {
+                        return strtotime($b['created']) <=> strtotime($a['created']);
+                    }
+                });
+            ?>
+
+                <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('Search saved queries...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
+                    var summary = $(this).find('summary').text().toLowerCase();
+                    var filter = $('#query-search').val().toLowerCase();
+                    if (summary.indexOf(filter) > -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });">
+                <div class="collapse-group" id="saved-queries">
+                    <?php foreach ($queries as $query) {
+                        $rules = json_decode($query['rules'], true);
+                        if (!$expert && empty($rules['rules'])) {
+                            $rules = ['rules' => [['id' => 'No rules']]];
+                        }
+                        $query_id = strval($query['_id']);
+                    ?>
+                        <details id="query-<?= $query_id ?>" class="mb-10">
+                            <summary class="collapse-header font-weight-bold d-flex justify-content-between align-items-center">
+                                <?= $query['name'] ?>
+                                <?php if ($query['global'] ?? false) { ?>
+                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= lang('Global', 'Global') ?></span>
+                                <?php } elseif (isset($query['role'])) { ?>
+                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= lang('Role:', 'Rolle:') ?> <?= ucfirst($query['role']) ?></span>
+                                <?php } ?>
+                            </summary>
+                            <div class="collapse-content">
+                                <?php if ($Settings->hasPermission('queries.global') && !($query['global'] ?? false)) {
+                                    $sharelink = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+                                    $sharelink .= ROOTPATH . '/' . $collection . '/search?query=' . $query_id;
+                                ?>
+                                    <div class="dropdown float-right">
+                                        <button class="btn" data-toggle="dropdown" type="button" id="dropdown-<?= $query_id ?>" aria-haspopup="true" aria-expanded="false">
+                                            <i class="ph ph-share-network"></i> <?= lang('Share', 'Teilen') ?>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-<?= $query_id ?>">
+                                            <!-- share globally -->
+                                            <div class="content">
+                                                <!-- copy Link with ID to clipboard -->
+                                                 <?=lang('Sharable link:', 'Teilbarer Link:')?>
+                                                <a class="" href="<?= $sharelink ?>" target="_blank">
+                                                    <?= $sharelink ?>
+                                                </a>
+                                                <!-- <button class="btn link" onclick="copyQuery()" data-toggle="tooltip" data-title="<?= lang('Copy sharable linkto clipboard', 'Link zum Teilen in die Zwischenablage kopieren') ?>">
+                                                    <i class="ph ph-copy"></i>
+                                                </button> -->
+                                                <hr>
+                                                <button class="btn block mb-5" onclick="shareQuery('<?= $query['_id'] ?>', 'global')">
+                                                    <i class="ph ph-globe"></i> <?= lang('Share globally', 'Global teilen') ?>
+                                                </button>
+                                                <hr>
+                                                <select class="form-control mb-5" id="role-select-<?= $query_id ?>">
+                                                    <?php foreach ($Settings->getRoles() as $role) { ?>
+                                                        <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <button class="btn block" onclick="shareQuery('<?= $query_id ?>', 'role')">
+                                                    <i class="ph ph-shield-checkered"></i> <?= lang('Share with role', 'Mit Rolle teilen') ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        function copyQuery() {
+                                            var url = '<?= $currentURL ?>?query=<?= $query_id ?>';
+                                            navigator.clipboard.writeText(url);
+                                            toastSuccess('<?= lang('Sharable link copied to clipboard.', 'Link zum Teilen in die Zwischenablage kopiert.') ?>');
+                                        }
+
+                                        function shareQuery(id, type) {
+                                            var data = {
+                                                id: id,
+                                                action: 'SHARE'
+                                            };
+                                            if (type == 'global') {
+                                                data.global = true;
+                                            } else if (type == 'role') {
+                                                var role = $('#role-select-' + id).val();
+                                                data.role = role;
+                                            }
+                                            $.post(ROOTPATH + '/crud/queries', data, function(response) {
+                                                toastSuccess('<?= lang('Query shared successfully.', 'Abfrage erfolgreich geteilt.') ?>');
+                                            });
+                                        }
+                                    </script>
+                                <?php } ?>
+                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+
+                                <table class="table simple my-10">
+
+                                    <?php if ($query['user'] != $_SESSION['username']) { ?>
+                                        <tr>
+                                            <th><?= lang('Shared by', 'Geteilt von') ?>:</th>
+                                            <td><?= $DB->getNameFromId($query['user']) ?></td>
+                                        </tr>
+                                    <?php } ?>
+
+                                    <tr>
+                                        <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
+                                        <?php if ($expert) { ?>
+                                            <td>
+                                                <?= dump($rules) ?>
+                                            </td>
+                                        <?php } else { ?>
+                                            <td>
+                                                <ul>
+                                                    <?php printRules($rules); ?>
+                                                </ul>
+                                            </td>
+                                        <?php } ?>
+                                    </tr>
+
+                                    <tr>
+                                        <th><?= lang('Aggregate', 'Aggregieren') ?>:</th>
+                                        <td>
+                                            <?php if (isset($query['aggregate']) && !empty($query['aggregate'])) { ?>
+                                                <?= $field_by_id[$query['aggregate']]['label'] ?? $query['aggregate'] ?>
+                                            <?php } else {
+                                                echo lang('No aggregation', 'Keine Aggregation angewendet');
+                                            } ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><?= lang('Columns', 'Spalten') ?>:</th>
+                                        <td>
+                                            <?php if (isset($query['columns']) && !empty($query['columns'])) {
+                                                $cols = DB::doc2Arr($query['columns']);
+                                                // get labels from fields
+                                                $colLabels = array_map(function ($c) use ($field_by_id) {
+                                                    return $field_by_id[$c]['label'] ?? $c;
+                                                }, $cols);
+                                            ?>
+                                                <?= implode(', ', $colLabels) ?>
+                                            <?php } else {
+                                                echo lang('Default columns', 'Standard-Spalten');
+                                            } ?>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th><?= lang('Created', 'Erstellt') ?>:</th>
+                                        <td><?= date('d.m.Y H:i', strtotime($query['created'])) ?></td>
+                                    </tr>
+                                </table>
+
+                                <?php if ($query['user'] != $_SESSION['username']) { ?>
+                                    <small class="text-muted"><?= lang('Only the creator of the query can delete or modify it.', 'Nur der Ersteller der Abfrage kann sie löschen oder bearbeiten.') ?></small>
+                                <?php } else { ?>
+                                    <a class="btn danger small text-right" onclick="deleteQuery('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('Delete Query', 'Abfrage löschen') ?></a>
+                                <?php } ?>
+                            </div>
+                        </details>
+                    <?php } ?>
+                </div>
+            <?php  } ?>
+
+            <script>
+                var queries = {};
+                <?php foreach ($queries as $query) { ?>
+                    queries['<?= $query['_id'] ?>'] = '<?= $query['rules'] ?>';
+                <?php } ?>
+            </script>
+
+            <div class="text-right mt-20">
+                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="filter-examples-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h5 class="title"><?= lang('Filter code', 'Filter-Code') ?></h5>
+
+            <p>
+                <?= lang('This filter is needed for example for generating report templates.', 'Dieser Filter wird zum Beispiel für die Erstellung von Berichtsvorlagen benötigt.') ?>
+            </p>
+            <!-- copy to clipboard -->
+            <script>
+                function copyToClipboard() {
+                    var text = $('#result').text()
+                    navigator.clipboard.writeText(text)
+                    toastSuccess('Query copied to clipboard.')
+                }
+            </script>
+
+            <div class="position-relative">
+                <button class="btn secondary small position-absolute top-0 right-0 m-10" onclick="copyToClipboard()"><i class="ph ph-clipboard" aria-label="Copy to clipboard"></i></button>
+
+                <pre id="result" class="code p-20"></pre>
+            </div>
+            <div class="text-right mt-20">
+                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal" id="column-select-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -161,18 +418,22 @@ $defaultColumns = ['id', 'name', 'title'];
         <div class="content mb-0">
 
             <h3 class="title"><?= lang('Choose collection', 'Sammlung auswählen') ?></h3>
-            <!-- TODO choose collection -->
              <select id="collection" class="form-control w-auto">
                 <option value="activities"><?= lang('Activities', 'Aktivitäten') ?></option>
-                <option value="persons"><?= lang('Persons', 'Personen') ?></option>
+                <option value="conferences"><?= lang('Conferences', 'Konferenzen') ?></option>
+                <option value="countries"><?= lang('Countries', 'Länder') ?></option>
                 <option value="events"><?= lang('Events', 'Veranstaltungen') ?></option>
+                <option value="groups"><?= lang('Groups', 'Gruppen') ?></option>
+                <option value="infrastructures"><?= lang('Infrastructures', 'Infrastrukturen') ?></option>
                 <option value="journals"><?= lang('Journals', 'Zeitschriften') ?></option>
+                <option value="organizations"><?= lang('Organizations', 'Organisationen') ?></option>          
+                <option value="persons"><?= lang('Persons', 'Personen') ?></option>
+                <option value="projects"><?= lang('Projects', 'Projekte') ?></option>
+                <option value="proposals"><?= lang('Proposals', 'Vorschläge') ?></option>
             </select>
             <br>
             <h3 class="title"><?= lang('Pipeline', 'Pipeline') ?></h3>
             <textarea name="expert" id="expert" cols="30" rows="5" class="form-control"><?= $expertQuery ?></textarea>
-
-            
         </div>
 
         <div class="row position-relative">
@@ -182,40 +443,6 @@ $defaultColumns = ['id', 'name', 'title'];
                         <i class="ph ph-columns-plus-right"></i>
                         <?= lang('Select Columns', 'Spalten auswählen') ?>
                     </a>
-                    <!-- 
-                    <div id="selected-columns">
-                        <span class="badge">Webdarstellung</span>
-                    </div> -->
-                </div>
-            </div>
-            <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
-            <div class="col">
-                <!-- Aggregations -->
-                <div class="content">
-                    <a onclick="$('#aggregate-form').slideToggle()">
-                        <i class="ph ph-squares-four"></i>
-                        <?= lang('Aggregate', 'Aggregieren') ?>
-                    </a>
-
-                    <div class="input-group" style="display:none;" id="aggregate-form">
-                        <select name="aggregate" id="aggregate" class="form-control w-auto">
-                            <option value=""><?= lang('Without aggregation (show all)', 'Ohne Aggregation (zeige alles)') ?></option>
-                            <?php
-                            $aggregate_filter = array_filter($FIELDS->fields, function ($f) {
-                                return in_array('aggregate', $f['usage'] ?? []);
-                            });
-                            foreach ($aggregate_filter as $f) { ?>
-                                <option value="<?= $f['id'] ?>"><?= $f['label'] ?></option>
-                            <?php } ?>
-
-
-                        </select>
-
-                        <!-- remove aggregation -->
-                        <div class="input-group-append">
-                            <button class="btn text-danger" onclick="$('#aggregate').val(''); getResult()"><i class="ph ph-x"></i></button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -231,7 +458,7 @@ $defaultColumns = ['id', 'name', 'title'];
                     <i class="ph ph-floppy-disk"></i> <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
                 </a>
 
-                <a href="#filter-code" class="btn" role="button">
+                <a href="#filter-examples-modal" class="btn" role="button">
                     <i class="ph ph-code"></i> <?= lang('Show examples', 'Zeige Beispiele') ?>
                 </a>
 
