@@ -36,6 +36,17 @@ $activities = $osiris->activities->find([
 $count_spectrum = 0;
 $spectrum_filter = null;
 $projects = [];
+if ($Settings->featureEnabled('projects')) {
+    $projects = $osiris->projects->find([
+        '$or' => [
+            ['collaborators.organization' => $mongo_id],
+            ['funding_organization' => $mongo_id],
+            ['university' => $mongo_id],
+        ]
+    ])->toArray();
+}
+
+
 if ($Settings->featureEnabled('spectrum')) {
     $spectrum_filter =  [
         'openalex.topics.id' => ['$exists' => true],
@@ -43,13 +54,6 @@ if ($Settings->featureEnabled('spectrum')) {
         '$or' => [['organization' => $str_id], ['organizations' => $str_id]]
     ];
     if ($Settings->featureEnabled('projects')) {
-        $projects = $osiris->projects->find([
-            '$or' => [
-                ['collaborators.organization' => $mongo_id],
-                ['funding_organization' => $mongo_id],
-                ['university' => $mongo_id],
-            ]
-        ])->toArray();
         $project_ids = array_map(function ($project) {
             return ($project['_id']);
         }, $projects);
