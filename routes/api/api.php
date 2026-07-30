@@ -1600,6 +1600,11 @@ Route::post('/api/aggregate', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
+    $body = json_decode(file_get_contents('php://input'), true);
+
+    $collectionName = $body['collection'] ?? '';
+    $pipeline = $body['pipeline'] ?? [];
+
     if (!apikey_check($_GET['apikey'] ?? null)) {
         echo return_permission_denied();
         die;
@@ -1624,16 +1629,10 @@ Route::post('/api/aggregate', function () {
             'projects',
             'proposals'
         ];
-
-        $collectionName = $_POST['collection'] ?? '';
-
+    
         if (!in_array($collectionName, $allowedCollections, true)) {
             throw new Exception('Invalid collection: ' . htmlspecialchars($collectionName));
         }
-
-        $pipelineText = trim($_POST['pipeline'] ?? '');
-
-        $pipeline = json_decode($pipelineText, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception(json_last_error_msg());
@@ -1691,6 +1690,6 @@ Route::post('/api/aggregate', function () {
         'ok' => $error === null,
         'error' => $error,
         'results' => $results,
-        'pipeline' => $pipelineText,
+        'pipeline' => $pipeline,
     ]);
 });
