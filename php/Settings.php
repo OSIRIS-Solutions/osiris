@@ -963,6 +963,7 @@ class Settings
             'workflow-reject' => lang('Workflow step rejected by ', 'Workflow-Schritt abgelehnt von '),
             'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von '),
             'modified-spectrum' => lang('Spectrum modified by ', 'Spektrum bearbeitet von '),
+            'restored-spectrum' => lang('Spectrum restored by ', 'Spektrum wiederhergestellt von '),
         ];
         return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
     }

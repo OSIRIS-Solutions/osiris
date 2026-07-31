@@ -27,7 +27,10 @@ Auch die **Journal-API** wurde erweitert: Konfigurierte benutzerdefinierte Felde
 
 ### Forschungs-Spektrum
 
-Die Popups des Forschungs-Spektrum wurden um einen Link erweitert, mit dem sich die genaue Liste der Publikationen anzeigen lässt  Die Links führen auf entsprechende Filter in der erweiterten Suche, sodass die Publikationen direkt weiter analysiert werden können.
+Das automatisch zugewiesene Forschungsspektrum lässt sich jetzt nachträglich bearbeiten. Dazu gibt es ein Bearbeiten-Symbol neben dem Forschungsspektrum einer Publikation. Damit können die automatisch zugewiesenen Themen entfernt oder neue hinzugefügt werden. Manuell können maximal 5 Themen zugewiesen werden.
+Die Änderungen werden in der Datenbank gespeichert und sind für alle Nutzer:innen sichtbar. Es ist jederzeit möglich, die Änderungen wieder rückgängig zu machen und die automatisch zugewiesenen Themen wiederherzustellen. 
+
+Die Popups des Forschungs-Spektrum wurden um einen Link erweitert, mit dem sich die genaue Liste der Publikationen anzeigen lässt  Die Links führen auf entsprechende Filter in der erweiterten Suche, sodass die Publikationen direkt weiter analysiert werden können. Das soll dabei helfen bei falsch zugewiesenen Spektren die Publikationen zu schneller zu identifizieren, die zu einem bestimmten Spektrum gehören.
 
 ### Erweiterte Suche
 

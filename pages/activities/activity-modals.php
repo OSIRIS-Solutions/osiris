@@ -185,9 +185,9 @@
       <div class="modal-content">
         <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mb-20">
           <div class="modal-header">
-            <h5 class="modal-title">
+            <h3 class="modal-title">
               <?= lang('Edit research spectrum', 'Forschungsspektrum bearbeiten') ?>
-            </h5>
+            </h3>
           </div>
 
           <div class="modal-body">
@@ -195,15 +195,26 @@
               <?= lang(
                 'The selected topics affect the research profiles of the associated researchers.',
                 'Die ausgewählten Themen beeinflussen das Forschungsspektrum der zugehörigen Personen.'
+              ) ?><br>
+              <?= lang(
+                'You can add up to <b>5 topics</b>.',
+                'Du kannst bis zu <b>5 Themen</b> hinzufügen.'
               ) ?>
             </p>
 
-            <label for="spectrum-topics">
-              <?= lang('Current Spectrum topics', 'Aktuelle Themen des Forschungsspektrums') ?>
-            </label>
+            <style>
+              #spectrum-editor-list:empty::before {
+                content: "<?= lang('No topics selected yet.', 'Noch keine Themen ausgewählt.') ?>";
+                color: var(--muted-color);
+                font-style: italic;
+              }
+            </style>
+
+            <h4>
+              <?= lang('Currently selected topics', 'Zurzeit ausgewählte Themen') ?>
+            </h4>
             <input type="hidden" name="topics" value="">
-            <div id="spectrum-editor-list">
-              <?php foreach (($openalex['topics'] ?? []) as $topic) : ?>
+            <div id="spectrum-editor-list"><?php foreach (($openalex['topics'] ?? []) as $topic) : ?>
                 <div class="spectrum-topic box">
                   <input type="hidden" name="topics[]" value="<?= $topic['id'] ?>">
                   <div>
@@ -238,14 +249,11 @@
 
 
           <div class="modal-footer">
-            <button type="button" class="btn" data-dismiss="modal">
-              <?= lang('Cancel', 'Abbrechen') ?>
-            </button>
-
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
               <?= lang('Save', 'Speichern') ?>
             </button>
+            <a href="#close-modal" class="btn" role="button"><?= lang('Cancel', 'Abbrechen') ?></a>
           </div>
         </form>
 
@@ -259,7 +267,7 @@
             </button>
           </form>
         <?php } ?>
-        
+
       </div>
     </div>
   </div>
@@ -303,6 +311,13 @@
     });
 
     $('#add-new-spectrum .suggestions').on('mousedown', 'a', function() {
+      // first: check number of topics already added
+      var currentTopics = $('#spectrum-editor-list .spectrum-topic').length;
+      // maximum of 5 topics allowed
+      if (currentTopics >= 5) {
+        toastError('<?= lang("You can only add up to 5 topics.", "Du kannst maximal 5 Themen hinzufügen.") ?>');
+        return;
+      }
       var topicId = $(this).data('id');
       var topicName = $(this).find('b').text();
       var topicPath = $(this).find('small').text();
