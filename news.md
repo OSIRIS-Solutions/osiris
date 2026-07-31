@@ -1,4 +1,4 @@
-<time datetime="2026-07-24">24.07.2026</time>
+<time datetime="2026-07-31">31.07.2026</time>
 <a class="anchor" href="#version-2.1.0" id="version-2.1.0"></a>
 
 ## Version 2.1.0
@@ -58,12 +58,13 @@ Die Sichtbarkeit kann im Formularbaukasten gesteuert werden kann. Wenn dort eine
 - Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen. [#560](https://github.com/OSIRIS-Solutions/osiris/issues/560)
 - Der Excel-Export von Events wurde verbessert und zeigt nun die korrekten Spaltenüberschriften an sowie das richtige Datum an. Titel und Kurztitel wurden hinzugefügt. [#563](https://github.com/OSIRIS-Solutions/osiris/issues/563)
 - Der Export von Datumsfeldern wurde verbessert, wodurch sie in Excel nun korrekt als Datum erkannt werden.
-
+- Mit Organisationen verknüpfte Projekte wurden nicht immer auf der Detailansicht der Organisationen angezeigt. [#571](https://github.com/OSIRIS-Solutions/osiris/issues/571)
+- Rücknahme der OSIRIS-Wiki Versionierung aufgrund mehrerer Probleme
 
 
 <time datetime="2026-07-17">17.07.2026</time>
 <a class="anchor" href="#version-2.0.2" id="version-2.0.2"></a>
-
+    
 ## Version 2.0.2
 
 Datenvalidierung im User-Editor und Bugfixes
