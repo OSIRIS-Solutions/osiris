@@ -32,5 +32,18 @@
         include BASEPATH . "/pages/orcid/import.php";
     });
 
-
+    Route::post('/crud/orcid/disconnect', function () {
+        include_once BASEPATH . "/php/init.php";
+        $username = $_SESSION['username'];
+        $osiris->persons->updateOne(
+            ['username' => $username],
+            [
+                '$set' => [
+                    'orcid' => null,
+                    'orcid_validated' => false,
+                ]
+            ]
+        );
+        echo json_encode(['success' => true, 'message' => lang('Your ORCID has been disconnected.', 'Deine ORCID wurde getrennt.')]);
+    });
 ?>

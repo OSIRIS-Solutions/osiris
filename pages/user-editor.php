@@ -89,6 +89,12 @@ $active = function ($field) use ($data_fields) {
         <i class="ph ph-user" aria-hidden="true"></i>
         <?= lang('Personal', 'Persönlich') ?>
     </a>
+
+    <a onclick="navigate('contact')" id="btn-contact" class="btn">
+        <i class="ph ph-identification-card" aria-hidden="true"></i>
+        <?= lang('Contact &amp; Profile', 'Kontakt &amp; Profil') ?>
+    </a>
+
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
         <?= lang('Organisation', 'Organisation') ?>
@@ -110,10 +116,6 @@ $active = function ($field) use ($data_fields) {
             <?= lang('Portfolio', 'Portfolio') ?>
         </a>
     <?php } ?>
-    <a onclick="navigate('contact')" id="btn-contact" class="btn">
-        <i class="ph ph-envelope" aria-hidden="true"></i>
-        <?= lang('Contact', 'Kontakt') ?>
-    </a>
     <a onclick="navigate('account')" id="btn-account" class="btn">
         <i class="ph ph-key" aria-hidden="true"></i>
         <?= lang('Account', 'Account') ?>
@@ -466,7 +468,7 @@ $active = function ($field) use ($data_fields) {
 
 
     <section id="contact" style="display:none;">
-        <h2 class="title"><?= lang('Contact', 'Kontakt') ?></h2>
+        <h4 class="title"><?= lang('Contact', 'Kontakt') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
             <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) ? 'disabled' : '' ?> onblur="validateEmail(this)">
@@ -524,6 +526,7 @@ $active = function ($field) use ($data_fields) {
 
         </div>
 
+        <h4 class="title"><?= lang('Researcher IDs', 'Forschenden-IDs') ?></h4>
 
         <div class="form-row row-eq-spacing">
             <div class="col-sm-6">
@@ -531,31 +534,64 @@ $active = function ($field) use ($data_fields) {
                 <?php
                 include_once BASEPATH . '/php/Orcid.php';
                 $orcid_settings = new Orcid_Settings();
-                if (!isset($data['orcid_validated']) || !$data['orcid_validated'] || !$orcid_settings->client_id || !$orcid_settings->client_secret) {?>
+                if (!isset($data['orcid_validated']) || !$data['orcid_validated'] || !$orcid_settings->client_id || !$orcid_settings->client_secret) { ?>
                     <input type="text" name="values[orcid]" id="orcid" class="form-control need-validation" data-validator="orcid" value="<?= $data['orcid'] ?? '' ?>" oninput="validateORCID(this);">
                     <small class="text-danger" id="orcid-wrong" style="display: none;">
                         <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
                     </small>
                 <?php } else { ?>
-                    <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" readonly>
+                    <div class="input-group">
+                        <input type="text" name="values[orcid]" id="orcid" class="form-control" value="<?= $data['orcid'] ?? '' ?>" disabled>
+                        <div class="input-group-append">
+                            <a class="btn text-danger" onclick="disconnectORCID()">×</a>
+                        </div>
+                    </div>
                     <small class="text-muted">
                         <?= lang('ORCID is already connected', 'Die ORCID ist bereits verknüpft') ?>
                     </small>
                     <br>
+                    <script>
+                        function disconnectORCID() {
+                            if (confirm('<?= lang('Are you sure you want to disconnect your ORCID?', 'Bist du sicher, dass du deine ORCID trennen möchtest?') ?>')) {
+                                // /crud/orcid/disconnect
+                                fetch('<?= ROOTPATH ?>/crud/orcid/disconnect', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        username: '<?= $data['username'] ?>'
+                                    })
+                                }).then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            alert('<?= lang('ORCID disconnected successfully.', 'ORCID erfolgreich getrennt.') ?>');
+                                            location.reload();
+                                        } else {
+                                            alert('<?= lang('Error disconnecting ORCID.', 'Fehler beim Trennen der ORCID.') ?>');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('<?= lang('Error disconnecting ORCID.', 'Fehler beim Trennen der ORCID.') ?>');
+                                    });
+                            }
+                        }
+                    </script>
                 <?php } ?>
 
                 <?php
-                    if ($data['username'] == $_SESSION['username'] && $orcid_settings->client_id && $orcid_settings->client_secret) {
-                        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-                        ?>             
-                        <small class="text-muted">
-                            <?= lang('or', 'oder') ?>
-                        </small>
-                        <br>
-                        <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
-                            <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-                            <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
-                        </a>
+                if ($data['username'] == $_SESSION['username'] && $orcid_settings->client_id && $orcid_settings->client_secret) {
+                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+                ?>
+                    <small class="text-muted">
+                        <?= lang('or', 'oder') ?>
+                    </small>
+                    <br>
+                    <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
+                        <i class="ph ph-user-circle-check" aria-hidden="true"></i>
+                        <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
+                    </a>
                 <?php } ?>
             </div>
 
@@ -657,7 +693,6 @@ $active = function ($field) use ($data_fields) {
                 $(document).on('blur', '#socials input', function() {
                     validateSocial(this);
                 });
-
             </script>
         <?php } ?>
     </section>
@@ -698,7 +733,7 @@ $active = function ($field) use ($data_fields) {
                     <label for="password"><?= lang('New password', 'Neues Passwort') ?></label>
                     <input type="password" name="password" id="password" class="form-control need-validation" data-validator="password" oninput="validatePassword(this);">
                     <small id="password-wrong-length">
-                    <?= lang('The password should be at least 8 characters long.', 'Das Passwort sollte mindestens 8 Zeichen lang sein.') ?>
+                        <?= lang('The password should be at least 8 characters long.', 'Das Passwort sollte mindestens 8 Zeichen lang sein.') ?>
                     </small>
                     <br>
                     <small id="password-wrong-uppercase">
@@ -709,7 +744,7 @@ $active = function ($field) use ($data_fields) {
                         <?= lang('The password must contain at least one lowercase letter.', 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.') ?>
                     </small>
                 </div>
-                
+
                 <div class="col-sm-6">
                     <label for="password2"><?= lang('Repeat password', 'Passwort wiederholen') ?></label>
                     <input type="password" name="password2" id="password2" class="form-control need-validation" data-validator="password2" oninput="validatePassword2(this)">
@@ -762,16 +797,17 @@ $active = function ($field) use ($data_fields) {
                     color: var(--muted-color);
                     font-style: italic;
                 }
+
                 #maintenance-list:not(:empty)::before {
                     content: "<?= lang('This profile was shared with:', 'Dieses Profil wurde geteilt mit:') ?>";
                 }
             </style>
             <div class="author-widget">
                 <div class="author-list p-10" id="maintenance-list"><?php
-                        $module_lst = [];
-                        foreach ($maintenance as $u) { 
-                            $mP = $DB->getPerson($u);
-                            ?><div class='author'>
+                                                                    $module_lst = [];
+                                                                    foreach ($maintenance as $u) {
+                                                                        $mP = $DB->getPerson($u);
+                                                                    ?><div class='author'>
                             <?= e($mP['displayname']) ?>
                             <input type='hidden' name='values[maintenance][]' value='<?= e($u) ?>'>
                             <a onclick='$(this).parent().remove()'>&times;</a>
