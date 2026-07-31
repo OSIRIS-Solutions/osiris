@@ -1434,10 +1434,10 @@ class Document extends Settings
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $status = 'Open Access (' . $status . ')';
-                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-open-access" title="' . $status . '"></i>';
                 } else {
                     $status = 'Closed Access';
-                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-closed-access" title="' . $status . '"></i>';
                 }
                 if ($this->usecase == 'list') return $status;
                 return $oa;
@@ -1451,10 +1451,10 @@ class Document extends Settings
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $status = 'Open Access (' . $status . ')';
-                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-open-access" title="' . $status . '"></i>';
                 } else {
                     $status = 'Closed Access';
-                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-closed-access" title="' . $status . '"></i>';
                 }
                 if ($this->usecase == 'list') return $oa . ' ' . $status;
                 return $status;

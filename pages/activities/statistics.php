@@ -398,30 +398,30 @@ $all = $osiris->activities->count(['affiliated' => true]);
                             <?php
                             switch ($oa['status']) {
                                 case 'closed':
-                                    echo '<i class="icon-closed-access text-danger"></i> <span class="badge danger"> Closed Access</span>';
+                                    echo '<i class="icon-closed-access"></i> <span class="badge danger"> Closed Access</span>';
                                     break;
                                 case 'green':
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge success">Green Open Access</span>';
                                     break;
                                 case 'gold':
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge signal">Gold Open Access</span>';
                                     break;
                                 case 'hybrid':
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge">Hybrid Open Access</span>';
                                     break;
                                 case 'bronze':
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge secondary">Bronze Open Access</span>';
                                     break;
                                 case 'diamond':
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge primary">Diamond Open Access</span>';
                                     break;
                                 default:
-                                    echo '<i class="icon-open-access text-success"></i> 
+                                    echo '<i class="icon-open-access"></i> 
                                         <span class="badge muted">Open Access (Unknown Status)</span>';
                                     break;
                             }

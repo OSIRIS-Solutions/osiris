@@ -3232,11 +3232,11 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="openaccess">
                     <div class="custom-radio d-inline-block" id="open_access-div">
                         <input type="radio" id="open_access-0" value="false" name="values[open_access]" <?= $this->val('open_access', false) ? '' : 'checked' ?>>
-                        <label for="open_access-0"><i class="icon-closed-access text-danger"></i> Closed access</label>
+                        <label for="open_access-0"><i class="icon-closed-access"></i> Closed access</label>
                     </div>
                     <div class="custom-radio d-inline-block ml-20" id="open_access-div">
                         <input type="radio" id="open_access" value="true" name="values[open_access]" <?= $this->val('open_access', false) ? 'checked' : '' ?>>
-                        <label for="open_access"><i class="icon-open-access text-success"></i> Open access</label>
+                        <label for="open_access"><i class="icon-open-access"></i> Open access</label>
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>

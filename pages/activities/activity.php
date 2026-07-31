@@ -243,7 +243,6 @@ if (!empty($user_units)) {
 
         <ul class="breadcrumb category" style="--highlight-color:<?= $Format->typeArr['color'] ?? '' ?>">
             <li><?= $Format->activity_type() ?></li>
-            <!-- <span class='mr-10'><?= $Format->activity_icon(false) ?></span> -->
             <li><?= $Format->activity_subtype() ?></li>
         </ul>
 
