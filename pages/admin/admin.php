@@ -174,11 +174,6 @@
                 <p><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></p>
             </a>
 
-            <a class="card" href="<?= ROOTPATH ?>/admin/doi-mappings">
-                <i class="ph-duotone ph-link"></i>
-                <b><?= lang('DOI Mappings', 'DOI Zuordnungen') ?></b>
-                <p><?= lang('Manage type mappings for imported activities', 'Verwalte Typ-Zuordnungen für importierte Aktivitäten') ?></p>
-            </a>
             <?php if ($Settings->featureEnabled('projects')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/projects">
                     <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
@@ -198,11 +193,6 @@
                 <i class="ph-duotone ph-stack" aria-hidden="true"></i>
                 <b><?= lang('Journals', 'Zeitschriften') ?></b>
                 <p><?= lang('Manage data fields of journals', 'Verwalte Datenfelder von Zeitschriften') ?></p>
-            </a>
-            <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
-                <i class="ph-duotone ph-student" aria-hidden="true"></i>
-                <b><?= lang('ORCID', 'ORCID') ?></b>
-                <p><?= lang('Settings for managing ORCID integration', 'Einstellungen zur Verwaltung der ORCID-Integration') ?></p>
             </a>
         </div><?php endif; ?>
 
@@ -231,6 +221,7 @@
                 <b><?= lang('Country Settings', 'Ländereinstellungen') ?></b>
                 <p><?= lang('Update the list of countries', 'Aktualisiere die Liste der Länder') ?></p>
             </a>
+
         </div>
     <?php endif; ?>
     <?php if ($adminPerm || $reportPerm) : ?>
@@ -266,6 +257,23 @@
         </div>
     <?php endif; ?>
 
+    <?php if ($adminPerm) : ?>
+        <div class="col-md-6 col-lg-4" id="integrations-settings">
+            <h2><i class="ph-duotone ph-link"></i> <?= lang('Integrations', 'Integrationen') ?></h2>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
+                <i class="ph-duotone ph-student" aria-hidden="true"></i>
+                <b><?= lang('ORCID', 'ORCID') ?></b>
+                <p><?= lang('Settings for managing ORCID integration', 'Einstellungen zur Verwaltung der ORCID-Integration') ?></p>
+            </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/doi-mappings">
+                <i class="ph-duotone ph-link"></i>
+                <b><?= lang('DOI Mappings', 'DOI Zuordnungen') ?></b>
+                <p><?= lang('Manage type mappings for imported activities', 'Verwalte Typ-Zuordnungen für importierte Aktivitäten') ?></p>
+            </a>
+
+        </div>
+    <?php endif; ?>
 </div>
 
 <style>

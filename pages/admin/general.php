@@ -119,35 +119,6 @@
         </p>
 
 
-
-        <hr>
-        <h5 class="mb-0">
-            <?= lang('ORCID Settings', 'ORCID Einstellungen') ?>
-        </h5>
-
-        <div class="form-group row row-eq-spacing">
-            <?php
-            $orcid = $Settings->get('orcid');
-            ?>
-            <div class="col-sm">
-                <label for="client_id">Client ID</label>
-                <input type="float" class="form-control" name="general[orcid][client_id]" value="<?= $orcid['client_id'] ?? '' ?>">
-            </div>
-            <div class="col-sm">
-                <label for="client_secret">Client Secret</label>
-                <input type="float" class="form-control" name="general[orcid][client_secret]" value="<?= $orcid['client_secret'] ?? '' ?>">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <label for="orcid_api"><?= lang('Choose ORCID API', 'Wähle ORCID API') ?></label>
-            <select class="form-control" name="general[orcid][api]" id="orcid_api">
-                <option value="public" <?= ($orcid['api'] ?? 'public') == 'public' ? 'selected' : '' ?>><?= lang('Public API', 'Öffentliche API') ?></option>
-                <option value="member" <?= ($orcid['api'] ?? 'public') == 'member' ? 'selected' : '' ?>><?= lang('Member API', 'Mitglieder API') ?></option>
-                <option value="sandbox" <?= ($orcid['api'] ?? 'public') == 'sandbox' ? 'selected' : '' ?>><?= lang('Sandbox API', 'Sandbox API') ?></option>
-            </select>
-        </div>
-
-        <hr>
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
             <?= lang('Save', 'Speichern') ?>
