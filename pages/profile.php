@@ -457,7 +457,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         $googlescholar = $Settings->featureEnabled('googlescholar', true) ?? !empty($USER['google_scholar'] ?? null);
         // $openalex = $Settings->featureEnabled('openalex', true);
         $openalex = false; // currently not suppoted here
-        $orcid = !empty($Settings->get('orcid')) && $scientist['orcid_validated'] ?? false;
+        $orcid = $Settings->featureEnabled('orcid')  && $scientist['orcid_validated'] ?? false;
         if ($googlescholar || $openalex || $orcid) { ?>
             <div class="btn-group btn-group-lg">
                 <?php if ($orcid) { ?>
@@ -914,10 +914,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <span class="key">ORCID</span>
 
                                     <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
-                                        <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
-                                        <?= $scientist['orcid'] ?>
-                                    </a><?= lang('(unauthenticated)', '(nicht authentifiziert)') ?>
-
+                                    <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
+                                    <?= $scientist['orcid'] ?>
+                                    <?php if ($Settings->featureEnabled('orcid')) { ?>
+                                        </a><?= lang('(unauthenticated)', '(nicht authentifiziert)') ?>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>

@@ -650,7 +650,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     // set orcid_validated to false if orcid is changed while orcid validaiton is disabled
-    if (isset($values['orcid']) && $values['orcid'] != ($old['orcid'] ?? null) && (!isset($Settings->orcid_settings['client_id']) || !isset($Settings->orcid_settings['client_secret']))) {
+    if (isset($values['orcid']) && $values['orcid'] != ($old['orcid'] ?? null) && !$Settings->featureEnabled('orcid')) {
         $person['orcid_validated'] = false;
     }
 

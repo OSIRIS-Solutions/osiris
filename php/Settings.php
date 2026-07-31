@@ -260,6 +260,9 @@ class Settings
         if ($feature == 'proposals') {
             return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
         }
+        if ($feature == 'orcid') {
+            return !empty($this->get('orcid')) && !empty($this->get('orcid')['client_id']) && !empty($this->get('orcid')['client_secret']);
+        }
         return $this->features[$feature] ?? $default;
     }
 
