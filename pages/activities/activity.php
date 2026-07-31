@@ -1982,6 +1982,10 @@ if (!empty($user_units)) {
                         </h5>
 
                         <?php
+                        if (isset($h['source']) && !empty($h['source'])) {
+                            echo '<div><b>' . lang('Source:', 'Quelle:') . '</b>';
+                            echo ' <code>' . $h['source'] . '</code></div>';
+                        }
                         if (isset($h['comment']) && !empty($h['comment'])) { ?>
                             <code><?= $h['comment'] ?></code>
                         <?php

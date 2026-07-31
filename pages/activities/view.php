@@ -59,8 +59,8 @@
             } else {
                 $affiliation = $module['affiliation'] ?? null;
             }
-            $field['value'] = '<a class="font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>: '. $module['title'] ?? '';
-            $field['value'] .= '<br><small>'.$affiliation . '</small>';
+            $field['value'] = '<a class="font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>: ' . $module['title'] ?? '';
+            $field['value'] .= '<br><small>' . $affiliation . '</small>';
         elseif ($field_id == 'journal' && isset($doc['journal_id'])) :
             $journal = $DB->getConnected('journal', $doc['journal_id']);
             $field['value'] = '<a class="link font-weight-bold" href="' . ROOTPATH . '/journal/view/' . ($journal['_id'] ?? '#') . '">' . ($journal['journal'] ?? '-') . '</a>';
@@ -1571,6 +1571,10 @@ btn-show-all-->
                                 </h5>
 
                                 <?php
+                                if (isset($h['source']) && !empty($h['source'])) {
+                                    echo '<div><b>' . lang('Source:', 'Quelle:') . '</b>';
+                                    echo ' <code>' . $h['source'] . '</code></div>';
+                                }
                                 if (isset($h['comment']) && !empty($h['comment'])) { ?>
                                     <code><?= $h['comment'] ?></code>
                                 <?php
