@@ -79,7 +79,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
 <div class="container">
   <h1><?= lang('ORCID Authentication', 'ORCID Authentifizierung') ?></h1>
 
-  <?php if (isset($user['orcid']) && isset($user['orcid_validated'])) { ?>
+  <?php if ((isset($user['orcid']) && isset($user['orcid_validated'])) || isset($_GET['code'])) { ?>
     <div class="alert success">
       <h5 class="title">
         <?= lang('Successfully authenticated', 'Erfolgreich authentifiziert!') ?>
