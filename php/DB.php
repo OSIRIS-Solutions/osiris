@@ -1147,6 +1147,8 @@ class DB
         if (!empty($diff)) {
             $changes = [];
             foreach ($diff as $key => $val) {
+                // check again if both are empty
+                if (empty($val) && empty($old_[$key] ?? null)) continue;
                 $changes[$key] = ['before' => $old_[$key] ?? null, 'after' => $val];
             }
             $hist['changes'] = $changes;

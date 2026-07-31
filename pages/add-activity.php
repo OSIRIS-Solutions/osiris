@@ -586,6 +586,12 @@ function val($index, $default = '')
     </div>
 
 
+    <?php if (isset($form['doi']) && !empty($form['doi'])) { ?>
+        <div class="float-right mt-10">
+            <button class="btn small blue" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i> <?= lang('Retreive updated information via DOI', 'Aktualisierte Informationen via DOI abrufen') ?></button>
+        </div>
+    <?php } ?>
+
 <?php } ?>
 
 
