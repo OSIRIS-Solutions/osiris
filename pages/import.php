@@ -20,7 +20,7 @@
 
 $googlescholar = $Settings->featureEnabled('googlescholar', true);
 $openalex = $Settings->featureEnabled('openalex', true);
-$orcid = !empty($Settings->get('orcid'));
+$orcid = $Settings->featureEnabled('orcid', false);
 
 require_once BASEPATH . '/php/Orcid.php';
 
@@ -32,7 +32,7 @@ require_once BASEPATH . '/php/Orcid.php';
     Import
 </h1>
 
-<?php if (!$googlescholar && !$openalex && (!$orcid->client_id || !$orcid->client_secret)) { ?>
+<?php if (!$googlescholar && !$openalex && !$orcid) { ?>
     <div class="alert danger">
         <h2 class="title">
             <?= lang('Import not available', 'Import nicht verfügbar') ?>
