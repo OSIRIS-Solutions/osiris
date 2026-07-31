@@ -146,6 +146,7 @@ $activities = $osiris->activities->find(['openalex' => ['$exists' => true]], ['p
 $N = 0;
 foreach ($activities as $activity) {
     $openalex = $activity['openalex'];
+    if (empty($openalex) || !is_string($openalex)) continue;
     $osiris->activities->updateOne(
         ['_id' => $activity['_id']],
         ['$set' => ['openalex_id' => $openalex], '$unset' => ['openalex' => '']]

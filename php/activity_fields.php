@@ -1042,6 +1042,36 @@ class ActivityFields extends Fields
                 ],
                 'label' => lang('Reports: exclude', 'Berichte: ausschließen'),
                 'type' => 'boolean',
+            ],
+            [
+                'id' => 'rendered.users',
+                'module_of' => [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('User names', 'Nutzernamen'),
+                'type' => 'list'
+            ],
+            [
+                'id' => 'openalex.topics.id',
+                'module_of' => 'publication',
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Research spectrum (ID)', 'Forschungs-Spektrum (ID)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'projects',
+                'module_of' => ['general'],
+                'usage' => [
+                    'filter',
+                ],
+                'label' => lang('Project-ID', 'Projekt-ID'),
+                'type' => 'string'
             ]
         ];
 

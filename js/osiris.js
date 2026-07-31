@@ -977,7 +977,7 @@ function initActivities(selector, data = {}, highlights = []) {
 }
 
 function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible', colVis = false) {
-    
+
     const buttons = [
         {
             extend: 'excelHtml5',
@@ -1671,7 +1671,8 @@ function spectrumTooltip() {
             name: el.attr('data-name'),
             count: el.attr('data-count') || 0,
             id: el.attr('data-id'),
-            domain: el.attr('data-domain') || 'unknown'
+            domain: el.attr('data-domain') || 'unknown',
+            filter: el.attr('data-filter') || null
         }
         data.score = parseFloat(data.score);
         data.score = isNaN(data.score) ? lang('No score', 'Kein Score') : data.score.toFixed(2);
@@ -1685,7 +1686,16 @@ function spectrumTooltip() {
             html: true,
             content: function () {
                 var label = ''
-                if (data.count > 0) label = `In ${data.count} ${data.count > 1 ? lang('Activities', 'Aktivitäten') : lang('Activity', 'Aktivität')}`
+                var a = data.count == 1 ? lang('Activity', 'Aktivität') : lang('Activities', 'Aktivitäten')
+                if (data.count > 0) {
+                    label += 'In '
+                    if (data.filter) {
+                        const filter = encodeURI(`{"$and":[{"openalex.topics.id":"${data.id}"},${data.filter}]}`);
+                        label += `<a href="${ROOTPATH}/activities/search#${filter}" target="_blank" rel="noopener noreferrer">${data.count} ${a}</a>`
+                    } else {
+                        label += `${data.count} ${a}`
+                    }
+                }
                 return `<b>${data.name}</b><br>
                     Score: ${data.score} %</br>
                     ${label}
@@ -2251,17 +2261,17 @@ function deadlineTimeline(options) {
         .map(d => ({ ...d, _date: new Date(d.date) }))
         .sort((a, b) => a._date - b._date);
 
-        if (items.length === 0) {
-            // No deadlines - show a placeholder text
-            g.append('text')
-                .attr('x', innerW / 2)
-                .attr('y', y-5)
-                .attr('text-anchor', 'middle')
-                .attr('font-size', 12)
-                .attr('opacity', 0.5)
-                .text('No upcoming deadlines');
-            return;
-        }
+    if (items.length === 0) {
+        // No deadlines - show a placeholder text
+        g.append('text')
+            .attr('x', innerW / 2)
+            .attr('y', y - 5)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 12)
+            .attr('opacity', 0.5)
+            .text('No upcoming deadlines');
+        return;
+    }
 
     // Optional: small "collision" offset when multiple points are very close.
     // This keeps "all on the line", but alternates a tiny vertical offset.

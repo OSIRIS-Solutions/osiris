@@ -25,9 +25,15 @@ Zusätzlich steht eine neue **Statistikseite für Journale** zur Verfügung. Die
 
 Auch die **Journal-API** wurde erweitert: Konfigurierte benutzerdefinierte Felder werden nun über `/api/journals` ausgegeben. Gleichzeitig wurde die Abfrage optimiert, sodass der Endpunkt insbesondere bei vielen verknüpften Publikationen deutlich schneller reagiert.
 
-### Aggregationen in der erweiterten Suche
+### Forschungs-Spektrum
 
-Neben den bisher verfügbaren Aggregationen in der erweiterten Suche, die ausschließlich Zählungen von Treffern zurückgeben, können nun auch **Summen und Mittelwerte** für numerische Felder berechnet werden. Damit lassen sich beispielsweise die durschschnittlichen Cite-Faktoren, aufsummierte SWS oder die Summe von benutzerdefinierten Feldern wie APC-Kosten berechnen.
+Die Popups des Forschungs-Spektrum wurden um einen Link erweitert, mit dem sich die genaue Liste der Publikationen anzeigen lässt  Die Links führen auf entsprechende Filter in der erweiterten Suche, sodass die Publikationen direkt weiter analysiert werden können.
+
+### Erweiterte Suche
+
+Neben den bisher verfügbaren **Aggregationen** in der erweiterten Suche, die ausschließlich Zählungen von Treffern zurückgeben, können nun auch **Summen und Mittelwerte** für numerische Felder berechnet werden. Damit lassen sich beispielsweise die durschschnittlichen Cite-Faktoren, aufsummierte SWS oder die Summe von benutzerdefinierten Feldern wie APC-Kosten berechnen.
+
+Außerdem wurden der Aktivitätssuche weitere Filter hinzugeügt, um auch nach Nutzernamen, Forschungsspektrum-IDs und Projekt-IDs zu filtern.
 
 ### Admin-Einstellungen
 

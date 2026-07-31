@@ -1607,7 +1607,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php } ?>
         <?php
             include_once BASEPATH . "/php/Spectrum.php";
-            Spectrum::render($spectrum, $count_spectrum);
+            Spectrum::render($spectrum, $count_spectrum, '', '{"rendered.users":"'.$user.'"}');
         else : ?>
             <p>
                 <?= lang('We do not have enough data to display a research spectrum for this scientist yet. This could be because there are not enough publications in OSIRIS, or because the publications are not well covered by OpenAlex data.', 'Wir haben noch nicht genügend Daten, um ein Forschungsspektrum für diese Person anzuzeigen. Das könnte daran liegen, dass es noch nicht genügend Publikationen in OSIRIS gibt oder dass die Publikationen nicht gut von OpenAlex abgedeckt sind.') ?>

@@ -1045,7 +1045,15 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
             unset($filter['$and']);
         }
     }
-    if (isset($filter['public'])) $filter['public'] = boolval($filter['public']);
+
+    // recursively go through all filter fields
+    array_walk_recursive($filter, function (&$value, $key) {
+        if ($key == 'public') $value = boolval($value);
+
+        if ($key == 'projects') {
+            $value = DB::to_ObjectID($value);
+        }
+    });
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');

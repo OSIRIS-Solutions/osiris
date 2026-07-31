@@ -42,7 +42,7 @@ class Spectrum
         return $spectrum_by_field;
     }
 
-    public static function single($id, $name, $score, $title = '', $domain = '', $count = 0)
+    public static function single($id, $name, $score, $title = '', $domain = '', $count = 0, $filter = null)
     {
         return '<span class="spectrum spectrum-' . $domain . '"
         data-id="' . e($id) . '"
@@ -50,13 +50,14 @@ class Spectrum
         data-name="' . e($name) . '"
         data-domain="' . e($domain) . '"
         data-count="' . ($count) . '"
+        data-filter="' . e($filter) . '"
         title="' . e($title) . '">
         <div role="progressbar" aria-valuenow="' . $score . '" aria-valuemin="0" aria-valuemax="100" style="--value: ' . $score . '"></div>
         ' . e($name) . '
     </span>';
     }
 
-    public static function render($spectrum, $count = null, $class = '')
+    public static function render($spectrum, $count = null, $class = '', $filter = null)
     {
         $spectrum_by_field = self::aggregate($spectrum);
 ?>
@@ -74,7 +75,8 @@ class Spectrum
                             $aggr['score'],
                             $spectrum['path'] ?? $spectrum['name'] ?? 'spectrum',
                             $spectrum['domain_id'] ?? 'unknown',
-                            $aggr['count']
+                            $aggr['count'],
+                            $filter
                         );
                     } ?>
                 <?php } ?>
@@ -92,7 +94,7 @@ class Spectrum
             <script src="<?= ROOTPATH ?>/js/popover.js"></script>
             <script>
                 $(document).ready(function() {
-                    spectrumTooltip()
+                    spectrumTooltip();
                 });
             </script>
         </div>
@@ -109,8 +111,8 @@ class Spectrum
         );
         if ($count <= 10) {
             echo lang(
-                'Since there are only a few publications in OSIRIS with an assigned spectrum, the results may be incomplete or biased.',
-                'Da es nur wenige Publikationen in OSIRIS mit zugewiesenen Schwerpunkten gibt, können die Ergebnisse unvollständig sein oder verzerrt wirken.'
+                ' Since there are only a few publications in OSIRIS with an assigned spectrum, the results may be incomplete or biased.',
+                ' Da es nur wenige Publikationen in OSIRIS mit zugewiesenen Schwerpunkten gibt, können die Ergebnisse unvollständig sein oder verzerrt wirken.'
             );
         }
         echo '</small>';

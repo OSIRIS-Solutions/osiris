@@ -536,7 +536,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                     <?php
                     if (!empty($spectrum)) :
                         include_once BASEPATH . "/php/Spectrum.php";
-                        Spectrum::render($spectrum, $count_spectrum);
+                        Spectrum::render($spectrum, $count_spectrum, '', '{"units":"'.$id.'"}');
                     else : ?>
                         <p>
                             <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>
