@@ -961,7 +961,8 @@ class Settings
             'workflow-reset' => lang('Workflow reset by ', 'Workflow zurückgesetzt von '),
             'workflow-approve' => lang('Workflow step approved by ', 'Workflow-Schritt genehmigt von '),
             'workflow-reject' => lang('Workflow step rejected by ', 'Workflow-Schritt abgelehnt von '),
-            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von ')
+            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von '),
+            'modified-spectrum' => lang('Spectrum modified by ', 'Spektrum bearbeitet von '),
         ];
         return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
     }

@@ -27,17 +27,17 @@ class Spectrum
             }
         } else {
 
-        $max_weight = max(array_column($spectrum, 'weight'));
-        foreach ($spectrum as $aggr) {
-            $field = $aggr['topic']['field'] ?? 'unknown';
-            $score =  round($aggr['weight'] * 100 / $max_weight);
-            if ($score < 4) continue; // skip very weak topics
-            $aggr['score'] = $score; // overwrite weight with normalized score for visualization
-            if (!isset($spectrum_by_field[$field])) {
-                $spectrum_by_field[$field] = [];
+            $max_weight = max(array_column($spectrum, 'weight'));
+            foreach ($spectrum as $aggr) {
+                $field = $aggr['topic']['field'] ?? 'unknown';
+                $score =  round($aggr['weight'] * 100 / $max_weight);
+                if ($score < 4) continue; // skip very weak topics
+                $aggr['score'] = $score; // overwrite weight with normalized score for visualization
+                if (!isset($spectrum_by_field[$field])) {
+                    $spectrum_by_field[$field] = [];
+                }
+                $spectrum_by_field[$field][] = $aggr;
             }
-            $spectrum_by_field[$field][] = $aggr;
-        }
         }
         return $spectrum_by_field;
     }
@@ -81,14 +81,16 @@ class Spectrum
                     } ?>
                 <?php } ?>
             </div>
-                <div class="footer d-flex justify-content-between align-items-center">
-            <?php if ($count !== null) { ?>
+            <div class="footer d-flex justify-content-between align-items-center">
+                <?php if ($count !== null) { ?>
                     <?php self::hint($count); ?>
-            <?php } else { ?>
+                <?php } elseif (isset($spectrum['manual'])) { ?>
+                    <small><?= lang('These topics were manually adjusted.', 'Diese Themen wurden manuell angepasst.') ?></small>
+                <?php } else { ?>
                     <small><?= lang('These topics are automatically assigned by OpenAlex.', 'Diese Themen werden automatisch von OpenAlex vergeben.') ?></small>
                     <a href="<?= ROOTPATH ?>/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> <?= lang('Learn more', 'Erfahre mehr') ?></a>
-                </div>
-            <?php } ?>
+                <?php } ?>
+            </div>
 
 
             <script src="<?= ROOTPATH ?>/js/popover.js"></script>

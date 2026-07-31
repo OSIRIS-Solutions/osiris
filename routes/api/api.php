@@ -1740,3 +1740,63 @@ Route::post('/api/openalex/enrich', function () {
     }
     echo json_encode(['ok' => true, 'updated_activities' => count($activityIds), 'ids' => $activityIds, 'openalex_data' => $openalex]);
 });
+
+
+// api/openalex/topics
+Route::get('/api/openalex/topics', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+    if (!file_exists(BASEPATH . '/data/openalex-topics.json')) {
+        echo return_rest('OpenAlex topics data not found', 0, 404);
+        die;
+    }
+    $data = json_decode(
+        file_get_contents(BASEPATH . '/data/openalex-topics.json'),
+        true
+    );
+
+    $query = mb_strtolower(trim($_GET['q'] ?? ''));
+
+    if (mb_strlen($query) < 2) {
+        echo return_rest('Query too short', 0, 400);
+        exit;
+    }
+
+    $results = [];
+
+    foreach ($data['topics'] as $topic) {
+        $name = mb_strtolower($topic['name']);
+        $position = mb_stripos($topic['search'], $query);
+
+        if ($position === false) {
+            continue;
+        }
+
+        $topic['_relevance'] = match (true) {
+            $name === $query => 0,
+            str_starts_with($name, $query) => 1,
+            str_contains($name, $query) => 2,
+            default => 3
+        };
+
+        $results[] = $topic;
+    }
+
+    usort($results, function ($a, $b) {
+        return $a['_relevance'] <=> $b['_relevance']
+            ?: strcasecmp($a['name'], $b['name']);
+    });
+
+    $results = array_slice($results, 0, 20);
+
+    foreach ($results as &$topic) {
+        unset($topic['_relevance']);
+    }
+
+    echo return_rest($results, count($results));
+});

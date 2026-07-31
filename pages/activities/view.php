@@ -1058,6 +1058,11 @@
                         <?php if ($Settings->featureEnabled('spectrum') && isset($doc['doi']) && $doc['type'] == 'publication') : ?>
                             <h4 class="table-title">
                                 <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                                <?php if ($edit_perm) { ?>
+                                    <a href="#spectrum-editor" class="ml-10" title="<?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>">
+                                        <i class="ph ph-edit"></i>
+                                    </a>
+                                <?php } ?>
                             </h4>
                             <?php
                             if (empty($openalex)) : ?>
@@ -1072,12 +1077,18 @@
                                 include_once BASEPATH . "/php/Spectrum.php";
                                 Spectrum::render($spectrum, $count = null, $class = 'mt-0');
                             else :
+                                $manually = $openalex['manual_at'] ?? null;
                                 $fetched = $openalex['fetched_at'] ?? null;
                             ?>
                                 <p>
                                     <?= lang('No topics are assigned to this activity.', 'Zu dieser Aktivität sind keine Themen zugewiesen.') ?>
                                 </p>
-                                <?php if ($fetched) : ?>
+                                <?php if ($manually) : ?>
+                                    <small class="d-block mt-5 text-muted">
+                                        <?= lang('Topic data was last updated manually on', 'Die Themen wurden zuletzt manuell aktualisiert am') ?> <?= date('d.m.Y', strtotime($manually)) ?>
+                                    </small>
+                                <?php
+                                elseif ($fetched) : ?>
                                     <small class="d-block mt-5 text-muted">
                                         <?= lang('Topic data was last updated on', 'Die Themen wurden zuletzt aktualisiert am') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
                                     </small>
@@ -1362,8 +1373,6 @@
 
                             <?php } ?>
 
-                            <!-- btn-only-affiliated
-btn-show-all-->
                             <script>
                                 $(document).ready(function() {
                                     $('.btn-only-affiliated').click(function() {

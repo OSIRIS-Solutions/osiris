@@ -23,6 +23,10 @@ $user_units = DB::doc2Arr($USER['units'] ?? []);
 if (!empty($user_units)) {
     $user_units = array_column($user_units, 'unit');
 }
+
+if ($edit_perm) {
+    include_once BASEPATH . '/pages/activities/activity-modals.php';
+}
 ?>
 
 <style>
@@ -637,17 +641,15 @@ if (!empty($user_units)) {
             </a>
         <?php endif; ?>
 
-        <?php if ($Settings->featureEnabled('spectrum')) { ?>
+        <?php if ($Settings->featureEnabled('spectrum') && isset($doc['openalex'])) { ?>
             <?php
             $count_spectrum = count($spectrum);
-            if ($count_spectrum) :
             ?>
-                <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
-                    <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                    <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
-                    <span class="index"><?= $count_spectrum ?></span>
-                </a>
-            <?php endif; ?>
+            <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
+                <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                <span class="index"><?= $count_spectrum ?></span>
+            </a>
         <?php } ?>
 
 
@@ -1911,15 +1913,42 @@ if (!empty($user_units)) {
 
     <?php if ($Settings->featureEnabled('spectrum')) { ?>
         <section id="spectrum" style="display:none">
+            <?php if ($edit_perm) { ?>
+                <a href="#spectrum-editor" class="btn mt-20">
+                    <i class="ph ph-edit"></i>
+                    <?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>
+                </a>
+            <?php } ?>
             <?php
             if (!empty($spectrum)) :
                 include_once BASEPATH . "/php/Spectrum.php";
                 Spectrum::render($spectrum);
-            else : ?>
+            else :
+                $manually = $openalex['manual_at'] ?? null;
+                $fetched = $openalex['fetched_at'] ?? null;
+            ?>
                 <p>
-                    <?= lang('No topics are assigned to this activity.', 'OpenAlex hat zu dieser Aktivität keine Themen zugewiesen.') ?>
+                    <?= lang('No topics are assigned to this activity.', 'Zu dieser Aktivität sind keine Themen zugewiesen.') ?>
                 </p>
+                <?php if ($manually) : ?>
+                    <small class="d-block mt-5 text-muted">
+                        <?= lang('Topic data was last updated manually on', 'Die Themen wurden zuletzt manuell aktualisiert am') ?> <?= date('d.m.Y', strtotime($manually)) ?>
+                    </small>
+                <?php
+                elseif ($fetched) : ?>
+                    <small class="d-block mt-5 text-muted">
+                        <?= lang('Topic data was last updated on', 'Die Themen wurden zuletzt aktualisiert am') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
+                    </small>
+                <?php endif; ?>
+                <!-- if fetched is longer ago, show a button to fetch new data -->
+                <?php if (!$fetched || strtotime($fetched) < strtotime('-30 days')) : ?>
+                    <button class="btn primary small mt-5" id="openalex-refresh-button" onclick="fetchOpenAlex('<?= $doc['doi'] ?>')">
+                        <i class="ph ph-arrows-clockwise"></i>
+                        <?= lang('Fetch latest topics', 'Neueste Themen abrufen') ?>
+                    </button>
+                <?php endif; ?>
             <?php endif; ?>
+
         </section>
     <?php } ?>
 

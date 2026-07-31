@@ -169,3 +169,161 @@
     </div>
   </div>
 </div>
+
+
+<?php if (
+  $Settings->featureEnabled('spectrum')
+  && $doc['type'] === 'publication'
+  && isset($doc['doi'])
+  && array_key_exists('openalex', $doc)
+) :
+  include_once BASEPATH . '/php/Spectrum.php';
+  $Spectrum = new Spectrum();
+?>
+  <div class="modal" id="spectrum-editor" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mb-20">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <?= lang('Edit research spectrum', 'Forschungsspektrum bearbeiten') ?>
+            </h5>
+          </div>
+
+          <div class="modal-body">
+            <p class="text-muted">
+              <?= lang(
+                'The selected topics affect the research profiles of the associated researchers.',
+                'Die ausgewählten Themen beeinflussen das Forschungsspektrum der zugehörigen Personen.'
+              ) ?>
+            </p>
+
+            <label for="spectrum-topics">
+              <?= lang('Current Spectrum topics', 'Aktuelle Themen des Forschungsspektrums') ?>
+            </label>
+            <input type="hidden" name="topics" value="">
+            <div id="spectrum-editor-list">
+              <?php foreach (($openalex['topics'] ?? []) as $topic) : ?>
+                <div class="spectrum-topic box">
+                  <input type="hidden" name="topics[]" value="<?= $topic['id'] ?>">
+                  <div>
+                    <div class="popover-title spectrum-<?= $topic['domain_id'] ?> font-size-12"><?= $topic['path'] ?></div>
+                    <div class="popover-content">
+                      <h5 class="mt-0"><?= $topic['name'] ?></h5>
+                      <ul class="horizontal">
+                        <li>Score: <?= round(floatval($topic['score'] ?? 1) * 100, 2) ?> %</li>
+                        <li><a href="/spectrum/topic/<?= $topic['id'] ?>" target="_blank" rel="noopener noreferrer">Zum Spektrum</a></li>
+                        <li>
+                          <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
+                            <i class="ph ph-trash"></i>
+                            <?= lang('Remove', 'Entfernen') ?>
+                          </button>
+                        </li>
+                      </ul>
+
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+
+          <h4>
+            <?= lang('Add new topics', 'Neue Themen hinzufügen') ?>
+          </h4>
+          <div id="add-new-spectrum" class="nav-search mb-20">
+            <input type="text" id="spectrum-topics" placeholder="<?= lang('Search for topics', 'Suche nach Themen') ?>" class="form-control large" />
+            <div class="suggestions on-focus"></div>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal">
+              <?= lang('Cancel', 'Abbrechen') ?>
+            </button>
+
+            <button type="submit" class="btn success">
+              <i class="ph ph-floppy-disk"></i>
+              <?= lang('Save', 'Speichern') ?>
+            </button>
+          </div>
+        </form>
+
+        <?php if (isset($openalex['manual']) && !empty($openalex['automatic_topics'] ?? null)) { ?>
+          <hr>
+          <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mt-20">
+            <input type="hidden" name="restore" value="1">
+            <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('Are you sure you want to restore the automatic topics? This will remove all manually added topics.', 'Bist du sicher, dass du die automatischen Themen wiederherstellen möchtest? Dadurch werden alle manuell hinzugefügten Themen entfernt.') ?>')">
+              <i class="ph ph-arrow-counter-clockwise"></i>
+              <?= lang('Restore automatic topics', 'Automatische Themen wiederherstellen') ?>
+            </button>
+          </form>
+        <?php } ?>
+        
+      </div>
+    </div>
+  </div>
+  <style>
+    .suggestions b {
+      color: var(--primary-color)
+    }
+
+    .suggestions .no-results {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 10px;
+    }
+  </style>
+  <script>
+    $('#spectrum-topics').on('input', function() {
+      var query = $(this).val();
+      if (query.length < 3) {
+        $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang("Please enter at least 3 characters to search for topics.", "Bitte gib mindestens 3 Zeichen ein, um nach Themen zu suchen.") ?></div>');
+        return;
+      }
+
+      $.ajax({
+        url: '<?= ROOTPATH ?>/api/openalex/topics',
+        method: 'GET',
+        data: {
+          q: query
+        },
+        success: function(response) {
+          if (response.count === 0) {
+            $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang("No topics found.", "Keine Themen gefunden.") ?></div>');
+            return;
+          }
+
+          var suggestions = response.data.map(function(topic) {
+            return `<a data-id="${topic.id}" data-domain="${topic.domain_id}"><b>${topic.name}</b><br><small>${topic.path}</small></a>`
+          }).join('');
+          $('#add-new-spectrum .suggestions').html(suggestions);
+        }
+      });
+    });
+
+    $('#add-new-spectrum .suggestions').on('mousedown', 'a', function() {
+      var topicId = $(this).data('id');
+      var topicName = $(this).find('b').text();
+      var topicPath = $(this).find('small').text();
+      var domainId = $(this).data('domain');
+      var newTopic = `
+        <div class="spectrum-topic box">
+          <input type="hidden" name="topics[]" value="${topicId}">
+          <div>
+            <div class="popover-title spectrum-${domainId} font-size-12">${topicPath}</div>
+            <div class="popover-content">
+              <h5 class="mt-0">${topicName}</h5>
+              <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
+                <i class="ph ph-trash"></i>
+                <?= lang('Remove', 'Entfernen') ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      $('#spectrum-editor-list').append(newTopic);
+    })
+  </script>
+
+<?php endif; ?>
