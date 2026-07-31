@@ -3282,7 +3282,7 @@ Buttons
   position: sticky;
   bottom: 2rem;
   right: 2rem;
-  z-index: 90;
+  z-index: 43;
   background-color: white;
   padding: 0.5rem;
   border-radius: calc(var(--border-radius) + 0.5rem);

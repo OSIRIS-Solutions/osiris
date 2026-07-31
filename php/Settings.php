@@ -470,27 +470,6 @@ class Settings
                         break;
                 }
             }
-            // $font = $design['font_preset'] ?? 'rubik';
-            // switch ($font) {
-            //     case 'rubik':
-            //         $root .= "--font-family:'Rubik', Helvetica, sans-serif;";
-            //         break;
-            //     case 'tiktok':
-            //         $root .= "--font-family:'TikTok Sans', Helvetica, sans-serif;";
-            //         break;
-            //     case 'system':
-            //         $root .= "--font-family:-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;";
-            //         break;
-            //     case 'custom':
-            //         if (!empty($design['font_family'])) {
-            //             $root .= '--font-family: "' . $design['font_family'] . '", Rubik, Helvetica, sans-serif;';
-            //             if (($design['font_headers'] ?? 'no') == 'yes') {
-            //                 $root .= "--header-font: " . $design['font_family'] . ", Rubik, Helvetica, sans-serif;";
-            //             }
-            //         }
-            //         break;
-            // }
-
 
             if (!empty($design['border_width'])) {
                 switch ($design['border_width']) {
@@ -626,6 +605,12 @@ class Settings
             $style = ":root { $root } " . $style;
         }
 
+        // design_custom_css
+        $customCss = $design['custom_css'] ?? '';
+        if (!empty($customCss)) {
+            $style .= "\n/* Custom CSS from settings */\n" . $customCss;
+        }
+
         return $style;
     }
 
@@ -740,7 +725,7 @@ class Settings
         if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
         return lang($settings['en'], $settings['de'] ?? null);
     }
-    
+
     function impactLabel()
     {
         $settings = $this->get('impact_label');
@@ -756,8 +741,9 @@ class Settings
         return lang($arr['name'], $arr['name_de'] ?? null);
     }
 
-    
-    function getLabels(){
+
+    function getLabels()
+    {
         // defaultLabels
         $raw = [
             'infrastructures_label' => ['en' => 'Infrastructures', 'de' => 'Infrastrukturen'],
