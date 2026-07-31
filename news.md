@@ -5,14 +5,42 @@
 
 ### ORCID Integration
 
-TODO
+OSIRIS unterstützt nun die direkte Verknüpfung mit ORCID. Personen können in ihrem Profil eine verifizierte ORCID iD hinterlegen und so sicherstellen, dass das verknüpfte ORCID-Profil tatsächlich zu ihnen gehört.
 
+Nach erfolgreicher Verknüpfung können Publikationen und andere Aktivitäten automatisch aus ORCID in OSIRIS importiert werden. Wie bereits bei Crossref und DataCite lässt sich in den Admin-Einstellungen festlegen, welchen Aktivitätstypen in OSIRIS die verschiedenen ORCID-Typen zugeordnet werden sollen.
 
-### Form Builder
+Zur Aktivierung der Integration müssen zunächst die ORCID-Zugangsdaten – Client-ID und API-Key – in den Admin-Einstellungen unter „Integrationen“ hinterlegt werden.
 
-Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Felde einer Aktivität im Formularbaukasten gesteuert werden kann. Es kann ggf. eine Rolle ausgewählt werden. Für andere Rollen ist das Feld dann nicht sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um rollenspezifische Formulare zu bauen.
+### Erweiterung der Journale
 
-### Datumsangaben in Templates
+Die Journalverwaltung wurde grundlegend erweitert und übersichtlicher gestaltet. Im Admin-Dashboard gibt es nun einen eigenen Bereich für Journal-Einstellungen. Dort können die Bezeichnung von Journalen, der Abruf von Metriken und zusätzliche Datenfelder zentral konfiguriert werden.
+
+- Alle Journal-bezogenen Einstellungen sind nun an einem Ort gebündelt und können zentral verwaltet werden, inkl. der Konfiguration von Journal-Metriken, benutzerdefinierten Feldern und der Änderung des Anzeigenamens von Journalen.
+- Der bisherige „Impact Factor“ wurde in „Cite Factor“ umbenannt. Die Bezeichnung lässt sich für Deutsch und Englisch individuell anpassen.
+- **Benutzerdefinierte Felder** können für Journale aktiviert werden, beispielsweise für APC-Kosten, Währungen, Transformationsverträge oder interne Klassifikationen. Die Werte lassen sich im Journal-Editor pflegen und werden in der Detailansicht angezeigt.
+- In der Journalübersicht können benutzerdefinierte Felder als zusätzliche Spalten eingeblendet, durchsucht und exportiert werden.
+- Die Journal-Detailseite wurde überarbeitet und zeigt neben Publikationen jetzt auch weitere Aktivitäten, die mit dem Journal verknüpft sind.
+
+Zusätzlich steht eine neue **Statistikseite für Journale** zur Verfügung. Die Auswertungen können auf ein Berichtsjahr oder einen frei wählbaren Zeitraum eingeschränkt werden und basieren auf den mit den Journalen verknüpften Publikationen. Neben den meistgenutzten Journalen werden unter anderem Verlage, Länder, Open-Access-Status, Kategorien, Quartile und Journal-Metriken ausgewertet. Numerische benutzerdefinierte Felder können ebenfalls statistisch zusammengefasst und grafisch dargestellt werden.
+
+Auch die **Journal-API** wurde erweitert: Konfigurierte benutzerdefinierte Felder werden nun über `/api/journals` ausgegeben. Gleichzeitig wurde die Abfrage optimiert, sodass der Endpunkt insbesondere bei vielen verknüpften Publikationen deutlich schneller reagiert.
+
+### Aggregationen in der erweiterten Suche
+
+Neben den bisher verfügbaren Aggregationen in der erweiterten Suche, die ausschließlich Zählungen von Treffern zurückgeben, können nun auch **Summen und Mittelwerte** für numerische Felder berechnet werden. Damit lassen sich beispielsweise die durschschnittlichen Cite-Faktoren, aufsummierte SWS oder die Summe von benutzerdefinierten Feldern wie APC-Kosten berechnen.
+
+### Admin-Einstellungen
+
+Die Admin-Einstellungen wurden überarbeitet und inhaltlich erweitert. Es gibt nun eine neue **Kategorie "Integrationen"**, in der alle Einstellungen zu externen Diensten wie ORCID, OpenAlex, Crossref, etc. gebündelt sind.
+
+Es wurde eine neue Möglichkeit hinzugefügt, **eigenes CSS** zu hinterlegen, um OSIRIS noch weiter optisch an die eigenen Bedürfnisse anzupassen. Das CSS kann in den Admin-Einstellungen unter "Design" hinterlegt werden.
+
+#### Form Builder
+
+Es ist nun möglich, einzelne Felder in Aktivitätenformularen nur für bestimmte Rollen sichtbar zu machen.
+Die Sichtbarkeit kann im Formularbaukasten gesteuert werden kann. Wenn dort eine Rolle ausgewählt wird, ist das Feld für andere Rollen nicht mehr sichtbar. Standardmäßig sind alle Felder für jeden sichtbar. Es ist auch möglich, die Sichtbarkeit für Textbausteine des Formulars zu verändern, um bessere rollenspezifische Formulare zu bauen.
+
+#### Datumsangaben in Templates
 
 - Datumsangaben in Aktivitäts-Templates können jetzt flexibel formatiert werden, zum Beispiel mit `{date:Y-m-d}` oder `{start:Y, F j}`. Dabei kann sowohl auf `date`, `start` als auch `end` zugegriffen werden.
 - Mit `{end-compact:…}` lassen sich Datumsbereiche kompakt darstellen: Mit dem Start übereinstimmende Jahre und Monate werden nicht wiederholt. Damit sind unter anderem APA-7-konforme Konferenzdaten wie `(2026, July 24–26)` möglich.
@@ -20,7 +48,7 @@ Es wurde ein Feature hinzugefügt, mit dem jetzt die Sichtbarkeit einzelner Feld
 
 ### Bug Fixes und Verbesserungen
 - Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam
-- Es war nicht möglich, über den Suchbaukasten in der erweiterten Suche nach Einheiten zu filtern.
+- Es war nicht möglich, über den Baukasten in der erweiterten Suche nach Einheiten zu filtern.
 - Es war nicht möglich, Benutzerdefinierte Felder (custom fields) zu löschen. [#560](https://github.com/OSIRIS-Solutions/osiris/issues/560)
 - Der Excel-Export von Events wurde verbessert und zeigt nun die korrekten Spaltenüberschriften an sowie das richtige Datum an. Titel und Kurztitel wurden hinzugefügt. [#563](https://github.com/OSIRIS-Solutions/osiris/issues/563)
 - Der Export von Datumsfeldern wurde verbessert, wodurch sie in Excel nun korrekt als Datum erkannt werden.
