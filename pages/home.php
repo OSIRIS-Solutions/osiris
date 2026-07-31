@@ -396,6 +396,47 @@ $lastquarter = $Y . "Q" . $Q;
     </div>
     <!-- End Welcome Section -->
 
+    <div class="btn-toolbar">
+
+        <div class="btn-group btn-group-lg">
+            <a href="<?= ROOTPATH ?>/add-activity" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('Add activity', 'Aktivität hinzuf.') ?>">
+                <i class="ph-duotone ph-plus-circle ph-fw"></i>
+            </a>
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
+                <i class="ph-duotone ph-folder-user ph-fw"></i>
+            </a>
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
+                <i class="ph-duotone ph-calendar ph-fw"></i>
+            </a>
+        </div>
+        <?php
+            // Import buttons for ORCID, Google Scholar and OpenAlex
+            $googlescholar = $Settings->featureEnabled('googlescholar', true) ?? !empty($USER['google_scholar'] ?? null);
+            // $openalex = $Settings->featureEnabled('openalex', true);
+            $openalex = false; // currently not suppoted here
+            $orcid = !empty($Settings->get('orcid')) && $USER['orcid_validated'] ?? false;
+            if ($googlescholar || $openalex || $orcid) { ?>
+                <div class="btn-group btn-group-lg">
+                    <?php if ($orcid) { ?>
+                        <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('Import from ORCID', 'Importiere aus ORCID') ?>">
+                            <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
+                        </a>
+                    <?php } ?>
+                    <?php if ($openalex) { ?>
+                        <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Import from OpenAlex', 'Importiere aus OpenAlex') ?>">
+                            <i class="ph-duotone ph-globe-hemisphere-west ph-fw"></i>
+                        </a>
+                    <?php } ?>
+                    <?php if ($googlescholar) { ?>
+                        <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $USER['google_scholar'] ?>" method="get">
+                            <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('Import from Google Scholar', 'Importiere von Google Scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
+                                <img src="<?= ROOTPATH ?>/img/google-scholar.svg" alt="Google Scholar" width="24" height="24">
+                            </button>
+                        </form>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+    </div>
 
     <div class="row row-eq-spacing">
         <div class="col">
@@ -907,7 +948,7 @@ $lastquarter = $Y . "Q" . $Q;
                         </div>
                         <div class="notification-list">
                             <!-- Add Activities, projects and favorites here -->
-                            <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
+                            <a href="<?= ROOTPATH ?>/add-activity">
                                 <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
                                 <?= lang('Add activity', 'Aktivität hinzuf.') ?>
                             </a>

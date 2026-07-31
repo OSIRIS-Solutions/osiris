@@ -421,7 +421,6 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
-
         </div>
         <div class="btn-group btn-group-lg">
             <?php if ($show_achievements) { ?>
@@ -448,10 +447,38 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <input type="hidden" name="format" value="word">
             <input type="hidden" name="type" value="cv">
 
-            <button class="btn primary outline large" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
+            <button class="btn primary outline large mr-10" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
+
+        <?php
+        // Import buttons for ORCID, Google Scholar and OpenAlex
+        $googlescholar = $Settings->featureEnabled('googlescholar', true) ?? !empty($USER['google_scholar'] ?? null);
+        // $openalex = $Settings->featureEnabled('openalex', true);
+        $openalex = false; // currently not suppoted here
+        $orcid = !empty($Settings->get('orcid')) && $scientist['orcid_validated'] ?? false;
+        if ($googlescholar || $openalex || $orcid) { ?>
+            <div class="btn-group btn-group-lg">
+                <?php if ($orcid) { ?>
+                    <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('Import from ORCID', 'Importiere aus ORCID') ?>">
+                        <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
+                    </a>
+                <?php } ?>
+                <?php if ($openalex) { ?>
+                    <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Import from OpenAlex', 'Importiere aus OpenAlex') ?>">
+                        <i class="ph-duotone ph-globe-hemisphere-west ph-fw"></i>
+                    </a>
+                <?php } ?>
+                <?php if ($googlescholar) { ?>
+                    <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $scientist['google_scholar'] ?>" method="get">
+                        <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('Import from Google Scholar', 'Importiere von Google Scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
+                            <img src="<?= ROOTPATH ?>/img/google-scholar.svg" alt="Google Scholar" width="24" height="24">
+                        </button>
+                    </form>
+                <?php } ?>
+            </div>
+        <?php } ?>
 
     </div>
 
@@ -876,20 +903,19 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <span class="key">ORCID</span>
 
                                     <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
-                                        <img src="/img/orcid.svg" alt="ORCID iD" width="16" height="16"/>
+                                        <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="16" height="16" />
                                         <?= $scientist['orcid'] ?>
                                     </a>
-
                                 </td>
                             </tr>
-                        <?php } elseif  (!empty($scientist['orcid'] ?? null)) { ?>
+                        <?php } elseif (!empty($scientist['orcid'] ?? null)) { ?>
                             <tr>
                                 <td>
                                     <span class="key">ORCID</span>
 
                                     <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
                                         <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
-                                        <?= $scientist['orcid'] ?> 
+                                        <?= $scientist['orcid'] ?>
                                     </a><?= lang('(unauthenticated)', '(nicht authentifiziert)') ?>
 
                                 </td>

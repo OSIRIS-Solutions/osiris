@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orcid Parser
  * 
@@ -28,13 +29,14 @@ class OrcidParser
     private $token;
     private $NameParser;
 
-    function __construct($username) {
+    function __construct($username)
+    {
         $this->NameParser = new FullNameParser();
         $this->DB = new DB();
         $this->osiris = $this->DB->db;
 
         $this->username = $username;
-        
+
         $user = $this->osiris->persons->findOne(['username' => $username]);
         $this->orcid = $user['orcid'] ?? null;
         $this->orcid_settings = new Orcid_Settings();
@@ -50,11 +52,11 @@ class OrcidParser
         if (empty($this->types)) {
             throw new Exception('No ORCID types found in DOI mappings. Please ask your admin to set the ORCID settings.');
         }
-
     }
 
 
-    function getWorks() {
+    function getWorks()
+    {
         // get list of works from orcid
         $curl = curl_init();
 
@@ -81,11 +83,12 @@ class OrcidParser
             print_r($response);
             throw new Exception('No works found for ORCID: ' . $this->orcid . '. Response: ' . $response);
         }
-        
+
         return $works;
     }
 
-    function getWork($put_code) {
+    function getWork($put_code)
+    {
         // TODO set function private after development
 
         // get single work from orcid
@@ -112,7 +115,8 @@ class OrcidParser
         return json_decode($response, true);
     }
 
-    private function filterWorksNotInOsiris($works) {
+    private function filterWorksNotInOsiris($works)
+    {
         // Checking which works are not yet in Osiris
         // Comparing works based on DOI
 
@@ -139,8 +143,8 @@ class OrcidParser
             }
             // If there is no DOI, we could use other identifiers or metadata to check for duplicates
             // For now, we will just add it to the list of works not in Osiris
-                
-            
+
+
         }
 
         return $not_in_osiris;
@@ -165,7 +169,8 @@ class OrcidParser
         return null;
     }
 
-    function parseWork($work) {
+    function parseWork($work)
+    {
         // TODO set function private after development
 
         // TODO parse the work details to get the relevant information for Osiris
@@ -173,13 +178,12 @@ class OrcidParser
 
         $parsed_work = [];
 
-        
+
         $key = 'orcid.' . $work['type'];
         if (isset($this->types[$key]) && !empty($this->types[$key])) {
             $parsed_work['subtype'] = $this->types[$key];
             $parsed_work['type'] = $this->osiris->adminTypes->findOne(['id' => $parsed_work['subtype']])['parent'];
-        }
-        else {
+        } else {
             return null; // skip works that are not in the ORCID types defined in the settings
         }
 
@@ -206,9 +210,9 @@ class OrcidParser
         $parsed_work['day'] = (int)($work['publication-date']['day']['value'] ?? null);
         $parsed_work['start_date'] = $parsed_work['year'] . '-' . ($parsed_work['month'] ?? '01') . '-' . ($parsed_work['day'] ?? '01');
         $parsed_work['start'] = [
-                'year' => (int)$parsed_work['year'] ?? null,
-                'month' => (int)$parsed_work['month'] ?? null,
-                'day' => (int)$parsed_work['day'] ?? null,
+            'year' => (int)$parsed_work['year'] ?? null,
+            'month' => (int)$parsed_work['month'] ?? null,
+            'day' => (int)$parsed_work['day'] ?? null,
         ];
 
         $parsed_work['authors'] = [];
@@ -216,10 +220,12 @@ class OrcidParser
         foreach ($work['contributors']['contributor'] as $contributor) {
             # skip duplicate contributors (sometimes the same contributor is listed multiple times with different roles, e.g. as author and as editor)
 
-            if (isset($last_contributor['credit-name']['value']) 
-                && isset($contributor['credit-name']['value']) 
-                && $contributor['credit-name']['value'] === $last_contributor['credit-name']['value']) {
-                continue; 
+            if (
+                isset($last_contributor['credit-name']['value'])
+                && isset($contributor['credit-name']['value'])
+                && $contributor['credit-name']['value'] === $last_contributor['credit-name']['value']
+            ) {
+                continue;
             }
             $last_contributor = $contributor;
 
@@ -232,11 +238,11 @@ class OrcidParser
                 'first' => $name['fname'] ?? null,
                 'user' => $username,
                 'aoi' => (is_string($username) && strlen($username) > 0) ? true : false,
-                'position' => ($contributor === reset($work['contributors']['contributor'])) 
-                            ? 'first' 
-                            : (($contributor === end($work['contributors']['contributor'])) 
-                                ? 'last' 
-                                : 'middle'),
+                'position' => ($contributor === reset($work['contributors']['contributor']))
+                    ? 'first'
+                    : (($contributor === end($work['contributors']['contributor']))
+                        ? 'last'
+                        : 'middle'),
                 'orcid' => $orcid,
                 'approved' => $username == $this->username ? true : false, // if the contributor is the same as the user importing, we can approve it directly
             ];
@@ -265,10 +271,43 @@ class OrcidParser
         return $parsed_work;
     }
 
-    function getWorksForImport() {
+    private function filterParsedWorksNotInOsiris($parsed_works)
+    {
+        $not_in_osiris = [];
+        foreach ($parsed_works as $work) {
+            if (isset($work['doi'])) {
+                $existing_work = $this->osiris->activities->findOne(['doi' => $work['doi']]);
+            } else if (isset($work['orcid_put_code'])) {
+                $existing_work = $this->osiris->activities->findOne(['orcid_put_code' => $work['orcid_put_code']]);
+            }
+            if (!$existing_work) {
+                $not_in_osiris[] = $work;
+            }
+        }
+        return $not_in_osiris;
+    }
+
+    function getWorksForImport()
+    {
+        $cache_key = 'orcid_works_' . $this->username;
+        $cached_works = $this->osiris->cache->findOne(['key' => $cache_key]);
+
+        // Check if cache exists and is still valid (within 2 hours)
+        if ($cached_works && (time() - $cached_works['timestamp'] < 7200)) {
+            echo "<p class='text-muted font-size-12'>" . lang('Using cached ORCID works. Cache is valid for 2 hours.', 'Verwende zwischengespeicherte ORCID-Werke. Der Cache ist 2 Stunden gültig.') . "</p>";
+            $works = $cached_works['data'];
+            // we still need to filter the works that are not in Osiris, 
+            // because the cache might contain works that have been imported since the last cache
+            $not_in_osiris = $this->filterParsedWorksNotInOsiris($works);
+            return $not_in_osiris;
+        } else if ($cached_works) {
+            // Remove old cache if it exists
+            $this->osiris->cache->deleteOne(['key' => $cache_key]);
+        }
+
         $works = $this->getWorks();
         $not_in_osiris = $this->filterWorksNotInOsiris($works);
-        
+
         $parsed_works = [];
         foreach ($not_in_osiris as $work) {
             $put_code = $work['work-summary'][0]['put-code'];
@@ -277,10 +316,19 @@ class OrcidParser
                 $parsed_works[] = $parsed_work;
             }
         }
+
+        // Cache the results
+        $this->osiris->cache->insertOne([
+            'key' => $cache_key,
+            'data' => $parsed_works,
+            'timestamp' => time()
+        ]);
+
         return $parsed_works;
     }
 
-    function importWork($work) {
+    function importWork($work)
+    {
         // TODO implement function to import the work into Osiris
         // This would involve checking if the work already exists (e.g. by DOI), and if not, inserting it into the database
         if (isset($work['doi'])) {
@@ -296,5 +344,4 @@ class OrcidParser
         $id = $add->getInsertedId();
         return $id;
     }
-
 }

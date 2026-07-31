@@ -50,6 +50,11 @@ $cart = readCart();
             <i class="ph ph-book-open"></i>
             <?= lang('Show all activities', "Zeige alle Aktivitäten") ?>
         </a>
+    <?php } else if ($Settings->hasPermission('scientist')) { ?>
+        <a href="<?= ROOTPATH ?>/my-activities" class="btn" id="user-btn">
+            <i class="ph ph-folder-user"></i>
+            <?= lang('Show my activities', "Zeige meine Aktivitäten") ?>
+        </a>
     <?php } ?>
     <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>

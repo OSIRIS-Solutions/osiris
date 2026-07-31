@@ -51,11 +51,14 @@ $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id']) && !$copy) {
     $formaction .= "/crud/activities/update/" . $form['_id'];
     $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
-    $url = ROOTPATH . "/activities/view/" . $form['_id'];
+    $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
     $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
-    $url = ROOTPATH . "/activities/view/*";
+    $redirect = ROOTPATH . "/activities/view/*";
+}
+if (isset($_GET['redirect']) && !empty($_GET['redirect']) && str_starts_with($_GET['redirect'], ROOTPATH)) {
+    $redirect = $_GET['redirect'];
 }
 
 function val($index, $default = '')
@@ -152,8 +155,8 @@ function val($index, $default = '')
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <script>
-const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
-console.log(TYPES);
+    const TYPES = JSON.parse('<?= json_encode($Settings->getDOImappings()) ?>');
+    console.log(TYPES);
 </script>
 <script src="<?= ROOTPATH ?>/js/add-activity.js?v=<?= OSIRIS_BUILD ?>"></script>
 
@@ -465,13 +468,15 @@ console.log(TYPES);
     </h1>
 
     <a href="<?= ROOTPATH ?>/activities/online-search" class="link mb-10 d-inline-block"><?= lang('Search in Pubmed', 'Suche in Pubmed') ?></a>
-    
-    <?php 
-        $orcid = $Settings->get('orcid');
-        $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
-        if (!empty($orcid['client_id']) 
-              && !empty($orcid['client_secret'])
-              && $user['orcid_validated']) { ?>
+
+    <?php
+    $orcid = $Settings->get('orcid');
+    $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
+    if (
+        !empty($orcid['client_id'])
+        && !empty($orcid['client_secret'])
+        && $user['orcid_validated']
+    ) { ?>
         <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('Import from ORCID', 'Von ORCID importieren') ?></a>
     <?php } ?>
 
@@ -646,7 +651,7 @@ console.log(TYPES);
         ?>
 
         <form action="<?= $formaction ?>" method="post" id="activity-form">
-            <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
+            <input type="hidden" class="hidden" name="redirect" value="<?= $redirect ?>">
             <input type="hidden" class="form-control disabled" name="values[type]" id="type" readonly>
             <input type="hidden" class="form-control disabled" name="values[subtype]" id="subtype" readonly>
 
@@ -746,7 +751,7 @@ console.log(TYPES);
 </datalist>
 
 <?php
-    $user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1, 'username' => 1], 'sort' => ['last' => 1]])->toArray();
+$user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => ['last' => 1, 'first' => 1, 'username' => 1], 'sort' => ['last' => 1]])->toArray();
 ?>
 
 <datalist id="scientist-list">

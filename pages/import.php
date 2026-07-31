@@ -20,6 +20,7 @@
 
 $googlescholar = $Settings->featureEnabled('googlescholar', true);
 $openalex = $Settings->featureEnabled('openalex', true);
+$orcid = !empty($Settings->get('orcid'));
 
 require_once BASEPATH . '/php/Orcid.php';
 
@@ -157,7 +158,7 @@ if ($googlescholar) {
 ?>
 
 <?php
-if(!empty($Settings->get('orcid'))){
+if($orcid) {
     $orcid = new Orcid_Settings();
     if ($orcid->client_id && $orcid->client_secret) {
         if ($USER['orcid_validated'] ?? null) { ?>
