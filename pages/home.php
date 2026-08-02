@@ -411,7 +411,7 @@ $lastquarter = $Y . "Q" . $Q;
         </div>
         <?php
             // Import buttons for ORCID, Google Scholar and OpenAlex
-            $googlescholar = $Settings->featureEnabled('googlescholar', true) ?? !empty($USER['google_scholar'] ?? null);
+            $googlescholar = $Settings->featureEnabled('googlescholar', true) && !empty($USER['google_scholar'] ?? null);
             // $openalex = $Settings->featureEnabled('openalex', true);
             $openalex = false; // currently not suppoted here
             $orcid = !empty($Settings->get('orcid')) && $USER['orcid_validated'] ?? false;
