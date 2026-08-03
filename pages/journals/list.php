@@ -20,6 +20,11 @@ $label = $Settings->journalLabel();
 
 
 $fields = $Settings->get('journal-data');
+if (empty($fields)) {
+    $fields = [];
+} else {
+    $fields = DB::doc2Arr($fields);
+}
 ?>
 
 
