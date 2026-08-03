@@ -232,7 +232,6 @@ if ($Settings->hasPermission('journals.edit')) { ?>
     </tbody>
 </table>
 <script>
-
     $(document).ready(function() {
         $('#publication-table').DataTable({
             ajax: {
@@ -285,13 +284,11 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 <table class="table" id="activity-table">
     <thead>
         <th><?= lang('Activity', 'Aktivität') ?></th
-
-    </thead>
+            </thead>
     <tbody>
     </tbody>
 </table>
 <script>
-
     $(document).ready(function() {
         $('#activity-table').DataTable({
             ajax: {
@@ -299,7 +296,9 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 "data": {
                     "filter": {
                         journal_id: '<?= $id ?>',
-                        type: {'$ne': 'publication'}
+                        type: {
+                            '$ne': 'publication'
+                        }
                     },
                     formatted: true
                 }
@@ -319,10 +318,9 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 {
                     "targets": 2,
                     "data": "name",
+                    "render": function(data, type, full, meta) {
                         return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
-
-                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></a>`;
-                    }
+                    },
                 },
             ],
             "order": [
@@ -446,7 +444,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No '.$if_label.' factors available.', 'Keine '.$if_label.' Faktoren verfügbar.') ?></p>
+            <p><?= lang('No ' . $if_label . ' factors available.', 'Keine ' . $if_label . ' Faktoren verfügbar.') ?></p>
         <?php } ?>
 
 
