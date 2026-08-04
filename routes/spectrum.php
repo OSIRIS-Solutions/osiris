@@ -126,7 +126,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
 
 
 // crud/activities/update-spectrum
-Route::post('/crud/activities/update-spectrum/(.*)', function ($id) {
+Route::post('/crud/activities/update-spectrum/([a-zA-Z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $mongo_id = DB::to_ObjectID($id);
@@ -269,4 +269,4 @@ Route::post('/crud/activities/update-spectrum/(.*)', function ($id) {
     $osiris->activities->updateOne(['_id' => $mongo_id], ['$set' => ['openalex' => $openalex, 'history' => $history]]);
 
     header('Location: ' . ROOTPATH . '/activities/view/' . $id);
-}, 'admin');
+}, 'login');
