@@ -134,6 +134,28 @@
             </span>
         </div>
 
+       <?php if ($Settings->featureEnabled('spectrum')) { ?>
+         <h5>
+            <?= lang('Research Spectrum in Portfolio', 'Forschungsspektrum im Portfolio') ?>
+        </h5>
+        <div class="form-group">
+            <div class="custom-radio">
+                <input type="radio" id="portfolio-spectrum-visibility-enabled" value="enabled" name="features[portfolio-spectrum]" <?= $Settings->featureEnabled('portfolio-spectrum') ? 'checked' : '' ?>>
+                <label for="portfolio-spectrum-visibility-enabled">
+                    <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
+                </label>
+            </div>
+
+            <div class="custom-radio">
+                <input type="radio" id="portfolio-spectrum-visibility-disabled" value="disabled" name="features[portfolio-spectrum]" <?= !$Settings->featureEnabled('portfolio-spectrum') ? 'checked' : '' ?>>
+                <label for="portfolio-spectrum-visibility-disabled">
+                    <?= lang('Do not show research spectrum in portfolio', 'Forschungsspektrum im Portfolio nicht anzeigen') ?>
+                </label>
+            </div>
+        </div>
+       <?php } ?>
+       
+
         <h5>
             <?= lang('Generally visible activity types', 'Allgemein sichtbare Aktivitätstypen') ?>
         </h5>

@@ -6,6 +6,67 @@
 
 class Spectrum
 {
+
+    public static function retrieve($osiris, $entity, $id)
+    {
+        $spectrum_filter = [
+            'type' => 'publication',
+            'openalex.topics' => ['$exists' => true, '$ne' => []]
+        ];
+        switch ($entity) {
+            case 'groups':
+            case 'group':
+            case 'units':
+            case 'unit':
+                $spectrum_filter['units'] = $id;
+                break;
+            case 'persons':
+            case 'person':
+                $spectrum_filter['rendered.users'] = $id;
+                break;
+            case 'topics':
+            case 'topic':
+                $spectrum_filter['topics'] = $id;
+                break;
+            default:
+                return [];
+        }
+
+        $count_spectrum = $osiris->activities->count($spectrum_filter);
+        if ($count_spectrum === 0) {
+            return [];
+        }
+        $spectrum = $osiris->activities->aggregate([
+            ['$match' => $spectrum_filter],
+            // total number of matched activities
+            ['$unwind' => '$openalex.topics'],
+            // group by topic id
+            ['$group' => [
+                '_id' => '$openalex.topics.id',
+                'count' => ['$sum' => 1],
+                'sumScore' => ['$sum' => '$openalex.topics.score'],
+                'topic' => ['$first' => '$openalex.topics'],
+                'total' => ['$first' => $count_spectrum]
+            ]],
+            // compute averages + share
+            ['$addFields' => [
+                'avg_score' => ['$divide' => ['$sumScore', '$count']],
+                'share' => ['$divide' => ['$count', $count_spectrum]],
+                // optional combined weight (tweakable)
+                'weight' => ['$multiply' => [
+                    ['$divide' => ['$count', $count_spectrum]],
+                    ['$divide' => ['$sumScore', $count_spectrum]]
+                ]]
+            ]],
+            // filter noise
+            ['$match' => ['share' => ['$gte' => 0.05]]],
+            ['$sort' => ['weight' => -1]],
+            ['$limit' => 25]
+        ])->toArray();
+
+        return $spectrum;
+    }
+
     public static function aggregate($spectrum)
     {
         if (empty($spectrum)) return [];

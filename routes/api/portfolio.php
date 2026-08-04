@@ -22,6 +22,9 @@ function portfolio_apikey_check($key)
     $apikey = $Settings->get('portfolio_apikey', null);
     if (empty($apikey)) return true;
     if ($key === $apikey) return true;
+    if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $apikey) {
+        return true;
+    }
     return false;
 }
 
@@ -113,6 +116,8 @@ Route::get('/portfolio/settings', function () {
             'projects' => $Settings->featureEnabled('projects'),
             'infrastructures' => $Settings->featureEnabled('infrastructures'),
             'topics' => $Settings->featureEnabled('topics'),
+            'news' => $Settings->featureEnabled('news', true),
+            'spectrum' => $Settings->featureEnabled('spectrum') && $Settings->featureEnabled('portfolio-spectrum')
         ]
     ];
 
@@ -219,6 +224,12 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             ['$count' => 'count']
         ])->toArray();
         $result['numbers']['collaborators'] = $collabs[0]['count'] ?? 0;
+    }
+
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $result['spectrum'] = Spectrum::retrieve($osiris, 'topic', $id);
     }
 
     // general information for navigation:
@@ -457,6 +468,12 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         ]);
     }
     $group['numbers'] = $numbers;
+
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $group['spectrum'] = Spectrum::retrieve($osiris, 'groups', $id);
+    }
 
     echo rest($group);
 });
@@ -1262,7 +1279,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         ];
     }
 
-    foreach ($doc['editors'] as $e){
+    foreach ($doc['editors'] as $e) {
         if ($e['aoi']) $result['affiliated'] =  true;
     }
 
@@ -1620,9 +1637,9 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     include(BASEPATH . '/php/Project.php');
     $Project = new Project;
 
-    $id = DB::to_ObjectID($id);
+    $mongo_id = DB::to_ObjectID($id);
     $person = $osiris->persons->findOne(
-        ['_id' => $id]
+        ['_id' => $mongo_id]
     );
     if (empty($person)) {
         echo rest('Person not found', 0, 404);
@@ -1736,8 +1753,8 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     }
     if (isset($person['highlighted']) && !empty($person['highlighted'])) {
         $docs = [];
-        foreach ($person['highlighted'] as $id) {
-            $doc = $DB->getActivity($id);
+        foreach ($person['highlighted'] as $h_id) {
+            $doc = $DB->getActivity($h_id);
             if (!empty($doc) && !($doc['hide'] ?? false)) {
                 if ($visibility == 'only-approved' && ($doc['workflow']['status'] ?? '') != 'verified') {
                     continue;
@@ -1898,6 +1915,11 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]]
         )->toArray();
         $result['topics'] = $topics;
+    }
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $result['spectrum'] = Spectrum::retrieve($osiris, 'person', $person['username']);
     }
 
     echo rest($result);
@@ -2579,6 +2601,50 @@ Route::get('/portfolio/person-images', function () {
 });
 
 
+// Spectrum
+Route::get('/portfolio/person/([^/]*)/spectrum', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+
+    $person = $osiris->persons->findOne(['_id' => $DB->to_ObjectID($id), 'hide' => ['$ne' => true]]);
+    if (empty($person)) {
+        echo rest('Person not found', 0, 404);
+        die;
+    }
+    include_once(BASEPATH . '/php/Spectrum.php');
+    $spectrum = Spectrum::retrieve($osiris, 'persons', $person['username']);
+
+    echo rest($spectrum);
+});
+
+
+Route::get('/portfolio/(unit|topic)/([^/]*)/spectrum', function ($type, $id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+    if ($type == 'unit') $type = 'groups';
+    if ($type == 'topic') $type = 'topics';
+
+    include_once(BASEPATH . '/php/Spectrum.php');
+    $spectrum = Spectrum::retrieve($osiris, $type, $id);
+
+    echo rest($spectrum);
+});
 
 
 // get all news
@@ -2595,12 +2661,47 @@ Route::get('/portfolio/news', function () {
     }
     $filter = [
         'visibility' => 'public',
+        'date' => ['$lte' => date('Y-m-d')]
     ];
     $news = $osiris->news->find(
         $filter,
         [
             'sort' => ['date' => -1],
             'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'title' => 1,
+                'title_de' => 1,
+                'teaser' => 1,
+                'teaser_de' => 1,
+                'date' => 1,
+            ]
+        ]
+    )->toArray();
+
+    echo rest($news);
+});
+
+Route::get('/portfolio/news/([^/]*)', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('news', true)) {
+        echo rest([], 0);
+        die;
+    }
+    $filter = [
+        '_id' => $DB->to_ObjectID($id),
+        'visibility' => 'public',
+    ];
+    $news = $osiris->news->findOne(
+        $filter,
+        [
+            'projection' => [
+                '_id' => 0,
                 'id' => ['$toString' => '$_id'],
                 'title' => 1,
                 'title_de' => 1,
@@ -2613,7 +2714,215 @@ Route::get('/portfolio/news', function () {
                 'activities' => 1
             ]
         ]
-    )->toArray();
+    );
+
+    if (empty($news)) {
+        echo rest('News not found', 0, 404);
+        die;
+    }
+    if (!empty($news['activities'])) {
+        $activities = [];
+        foreach ($news['activities'] as $a) {
+            $doc = $DB->getActivity($a);
+            if (empty($doc)) continue;
+            $activities[] = [
+                'id' => strval($doc['_id']),
+                'icon' => $doc['rendered']['icon'],
+                'html' => $doc['rendered']['print']
+            ];
+        }
+        $news['activities'] = $activities;
+    }
 
     echo rest($news);
+});
+
+
+Route::get('/portfolio/search-index', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $buildSearchText = function (...$values) {
+        $values = array_filter($values, function ($value) {
+            return is_string($value) && trim($value) !== '';
+        });
+        $text = html_entity_decode(strip_tags(implode(' ', $values)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return trim(mb_strtolower(preg_replace('/\s+/u', ' ', $text)));
+    };
+
+    $activityFilter = ['hide' => ['$ne' => true], 'type' => 'publication'];
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility === 'only-approved') {
+            $activityFilter['workflow.status'] = 'verified';
+        } elseif ($visibility === 'approved-or-empty') {
+            $activityFilter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
+    $activities = $osiris->activities->find(
+        $activityFilter,
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'search' => '$rendered.plain',
+                'type' => 1,
+                'subtype' => 1,
+                'year' => 1,
+                'month' => 1,
+                'day' => 1,
+            ]
+        ]
+    )->toArray();
+
+    $projects = [];
+    if ($Settings->featureEnabled('projects')) {
+        $data = $osiris->projects->find(
+            ['public' => true],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'acronym' => 1,
+                    'name' => 1,
+                    'name_de' => 1,
+                    'title' => 1,
+                    'title_de' => 1
+                ]
+            ]
+        );
+        foreach ($data as $project) {
+            $project = DB::doc2Arr($project);
+            $project['search'] = $buildSearchText(
+                $project['acronym'] ?? null,
+                $project['name'] ?? null,
+                $project['name_de'] ?? null,
+                $project['title'] ?? null,
+                $project['title_de'] ?? null
+            );
+            $projects[] = $project;
+        }
+    }
+
+    $persons = [];
+    $data = $osiris->persons->find(
+        ['hide' => ['$ne' => true]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'displayname' => 1,
+                'academic_title' => 1,
+                'position' => 1,
+                'position_de' => 1
+            ]
+        ]
+    );
+    foreach ($data as $person) {
+        $person = DB::doc2Arr($person);
+        $person['search'] = $buildSearchText(
+            $person['displayname'] ?? null,
+            $person['academic_title'] ?? null,
+            $person['position'] ?? null,
+            $person['position_de'] ?? null
+        );
+        $persons[] = $person;
+    }
+
+    $units = [];
+    $data = $osiris->groups->find(
+        ['hide' => ['$ne' => true]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => 1,
+                'name' => 1,
+                'name_de' => 1,
+                'unit' => 1,
+                'level' => 1
+            ]
+        ]
+    );
+    foreach ($data as $unit) {
+        $unit = DB::doc2Arr($unit);
+        $unit['search'] = $buildSearchText(
+            $unit['id'] ?? null,
+            $unit['name'] ?? null,
+            $unit['name_de'] ?? null
+        );
+        $units[] = $unit;
+    }
+
+    $infrastructures = [];
+    if ($Settings->featureEnabled('infrastructures')) {
+        $data = $osiris->infrastructures->find(
+            ['public' => true],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => 1,
+                    'name' => 1,
+                    'name_de' => 1,
+                    'subtitle' => 1,
+                    'subtitle_de' => 1
+                ]
+            ]
+        );
+        foreach ($data as $infrastructure) {
+            $infrastructure = DB::doc2Arr($infrastructure);
+            $infrastructure['search'] = $buildSearchText(
+                $infrastructure['name'] ?? null,
+                $infrastructure['name_de'] ?? null,
+                $infrastructure['subtitle'] ?? null,
+                $infrastructure['subtitle_de'] ?? null
+            );
+            $infrastructures[] = $infrastructure;
+        }
+    }
+
+    // $news = [];
+    // if ($Settings->featureEnabled('news', true)) {
+    //     $data = $osiris->news->find(
+    //         ['visibility' => 'public'],
+    //         [
+    //             'projection' => [
+    //                 '_id' => 0,
+    //                 'id' => ['$toString' => '$_id'],
+    //                 'title' => 1,
+    //                 'title_de' => 1,
+    //                 'teaser' => 1,
+    //                 'teaser_de' => 1,
+    //                 'date' => 1
+    //             ]
+    //         ]
+    //     );
+    //     foreach ($data as $item) {
+    //         $item = DB::doc2Arr($item);
+    //         $item['search'] = $buildSearchText(
+    //             $item['title'] ?? null,
+    //             $item['title_de'] ?? null,
+    //             $item['teaser'] ?? null,
+    //             $item['teaser_de'] ?? null
+    //         );
+    //         $news[] = $item;
+    //     }
+    // }
+
+    echo rest([
+        'publications' => $activities,
+        'projects' => $projects,
+        'persons' => $persons,
+        'units' => $units,
+        'infrastructures' => $infrastructures,
+        // 'news' => $news
+    ]);
 });
