@@ -581,3 +581,9 @@ if ($Settings->featureEnabled('spectrum')) {
         navigate('<?= $active_page ?>');
     });
 </script>
+
+<?php 
+if (isset($_GET['verbose'])){
+    dump($topic);
+}
+?>

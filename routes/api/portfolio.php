@@ -179,7 +179,7 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
     }
     $result = $osiris->topics->findOne(
         ['inactive' => ['$ne' => true], 'id' => $id],
-        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'subtitle' => 1, 'subtitle_de' => 1, 'description' => 1, 'description_de' => 1, 'color' => 1]]
+        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'subtitle' => 1, 'subtitle_de' => 1, 'description' => 1, 'description_de' => 1, 'color' => 1, 'image' => 1]]
     );
     $result = DB::doc2Arr($result);
     $result['numbers'] = [
@@ -1425,23 +1425,28 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $result['connected_activities'] = [];
     foreach ($connected_activities as $conn) {
         $reverse = ($conn['target_id'] == $id);
-        $doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
+        $con_doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
             'rendered' => 1,
             'subtype' => 1,
             'hide' => 1
         ]]);
         $conLabel = $Format->getRelationshipLabel($conn['relationship'], $reverse);
-        if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
+        if (empty($con_doc) || ($con_doc['hide'] ?? false) || !in_array($con_doc['subtype'], $portfolio_types)) {
             continue;
         }
         $result['connected_activities'][] = [
-            'id' => strval($doc['_id']),
-            'icon' => $doc['rendered']['icon'],
-            'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio']),
-            'print' => $doc['rendered']['print'] ?? null,
+            'id' => strval($con_doc['_id']),
+            'icon' => $con_doc['rendered']['icon'],
+            'html' => str_replace('**PORTAL**', '', $con_doc['rendered']['portfolio']),
+            'print' => $con_doc['rendered']['print'] ?? null,
             'relationship' => $conLabel
         ];
     }
+
+    if (isset($doc['openalex']) && $Settings->featureEnabled('portfolio-spectrum')) {
+        $result['spectrum'] = $doc['openalex']['topics'] ?? [];
+    }
+
     echo rest($result);
 });
 
@@ -2754,6 +2759,31 @@ Route::get('/portfolio/search-index', function () {
         return trim(mb_strtolower(preg_replace('/\s+/u', ' ', $text)));
     };
 
+    $topics = [];
+    $data = $osiris->topics->find(
+        ['hide' => ['$ne' => true]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => 1,
+                'name_de' => 1,
+                'subtitle' => 1,
+                'subtitle_de' => 1
+            ]
+        ]
+    );
+    foreach ($data as $topic) {
+        $topic = DB::doc2Arr($topic);
+        $topic['search'] = $buildSearchText(
+            $topic['name'] ?? null,
+            $topic['name_de'] ?? null,
+            $topic['subtitle'] ?? null,
+            $topic['subtitle_de'] ?? null
+        );
+        $topics[] = $topic;
+    }
+
     $activityFilter = ['hide' => ['$ne' => true], 'type' => 'publication'];
     if ($Settings->featureEnabled('quality-workflow')) {
         $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
@@ -2889,40 +2919,13 @@ Route::get('/portfolio/search-index', function () {
         }
     }
 
-    // $news = [];
-    // if ($Settings->featureEnabled('news', true)) {
-    //     $data = $osiris->news->find(
-    //         ['visibility' => 'public'],
-    //         [
-    //             'projection' => [
-    //                 '_id' => 0,
-    //                 'id' => ['$toString' => '$_id'],
-    //                 'title' => 1,
-    //                 'title_de' => 1,
-    //                 'teaser' => 1,
-    //                 'teaser_de' => 1,
-    //                 'date' => 1
-    //             ]
-    //         ]
-    //     );
-    //     foreach ($data as $item) {
-    //         $item = DB::doc2Arr($item);
-    //         $item['search'] = $buildSearchText(
-    //             $item['title'] ?? null,
-    //             $item['title_de'] ?? null,
-    //             $item['teaser'] ?? null,
-    //             $item['teaser_de'] ?? null
-    //         );
-    //         $news[] = $item;
-    //     }
-    // }
-
     echo rest([
         'publications' => $activities,
         'projects' => $projects,
         'persons' => $persons,
         'units' => $units,
         'infrastructures' => $infrastructures,
+        'topics' => $topics
         // 'news' => $news
     ]);
 });

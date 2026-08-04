@@ -6,7 +6,6 @@
 
 class Spectrum
 {
-
     public static function retrieve($osiris, $entity, $id)
     {
         $spectrum_filter = [
