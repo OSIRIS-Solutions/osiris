@@ -2645,8 +2645,13 @@ Route::get('/portfolio/(unit|topic)/([^/]*)/spectrum', function ($type, $id) {
         echo rest([], 0);
         die;
     }
+    if ($type == 'unit' && $id == '0') {
+        // base unit
+        $id = $osiris->groups->findOne(['level' => 0], ['projection' => ['id' => 1]])['id'] ?? null;
+    }
     if ($type == 'unit') $type = 'groups';
     if ($type == 'topic') $type = 'topics';
+
 
     include_once(BASEPATH . '/php/Spectrum.php');
     $spectrum = Spectrum::retrieve($osiris, $type, $id);
