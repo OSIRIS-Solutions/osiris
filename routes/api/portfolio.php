@@ -2927,17 +2927,53 @@ Route::get('/portfolio/search-index', function () {
         }
     }
 
+
+    $spectrum = [];
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        // spectrum 
+        $baseMatch = [
+            'openalex.topics' => ['$exists' => true, '$ne' => []],
+            'affiliated' => true
+        ];
+        $data = $osiris->activities->aggregate([
+            ['$match' => $baseMatch],
+            ['$project' => ['openalex.topics' => 1]],
+            ['$unwind' => '$openalex.topics'],
+            ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+            ['$group' => [
+                '_id' => '$openalex.topics.id',
+                'count' => ['$sum' => 1],
+                'name' => ['$first' => '$openalex.topics.name'],
+                'path' => ['$first' => '$openalex.topics.path']
+            ]],
+            ['$sort' => ['count' => -1, '_id' => 1]],
+            ['$project' => [
+                '_id' => 0,
+                'id' => '$_id',
+                'count' => 1,
+                'name' => 1,
+                'path' => 1
+            ]]
+        ])->toArray();
+
+        foreach ($data as $row) {
+            $row = DB::doc2Arr($row);
+            $row['search'] = $buildSearchText($row['path'] ?? null, $row['name'] ?? null);
+            $spectrum[] = $row;
+        }
+    }
+
     echo rest([
         'publications' => $activities,
         'projects' => $projects,
         'persons' => $persons,
         'units' => $units,
         'infrastructures' => $infrastructures,
-        'topics' => $topics
+        'topics' => $topics,
+        'spectrum' => $spectrum
         // 'news' => $news
     ]);
 });
-
 
 
 Route::get('/portfolio/spectrum', function () {
