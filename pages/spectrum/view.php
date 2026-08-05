@@ -21,6 +21,9 @@ $path = [];
 $child = 'field';
 $childIdField = 'field_id';
 $childNameField = 'field';
+
+$description = '';
+$keywords = [];
 if ($level == 'field' || $level == 'subfield' || $level == 'topic') {
     $path[] = '<a href="' . ROOTPATH . '/spectrum/domain/' . $spectrum['domain_id'] . '">' . $spectrum['domain'] . '</a>';
     $child = 'subfield';
@@ -38,6 +41,26 @@ if ($level == 'topic') {
     $child = null;
     $childIdField = null;
     $childNameField = null;
+
+
+    if (!file_exists(BASEPATH . '/data/openalex-topics.json')) {
+        echo return_rest('OpenAlex topics data not found', 0, 404);
+        die;
+    }
+    $data = json_decode(
+        file_get_contents(BASEPATH . '/data/openalex-topics.json'),
+        true
+    );
+    $data = $data['topics'] ?? [];
+
+    // get topic data from OpenAlex topics data
+    foreach ($data as $t) {
+        if ($t['id'] == $id) {
+            $description = $t['description'] ?? '';
+            $keywords = $t['keywords'] ?? [];
+            break;
+        }
+    }
 }
 ?>
 
@@ -89,11 +112,45 @@ if ($level == 'topic') {
         <?= e($name) ?>
     </h1>
 
-    <div class="spectrum-meta">
+    <?php if ($description) { ?>
+        <p class="lead"><?= e($description) ?></p>
+    <?php } ?>
+    <?php if ($keywords) { ?>
+        <p><strong><?= lang('Keywords', 'Schlagworte') ?>:</strong>
+            <?php foreach ($keywords as $k) { ?>
+                <span class="badge primary mb-5"><?= $k ?></span>
+            <?php } ?>
 
+        </p>
+    <?php } ?>
+
+    <style>
+        .spectrum-meta {
+            margin-top: 2rem;
+        }
+
+        .spectrum-meta .stats {
+            display: flex;
+            justify-content: flex-start;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .spectrum-meta .stats div {
+            font-size: 1.4rem;
+        }
+
+        .spectrum-meta .stats div strong {
+            font-size: 2.4rem;
+            display: block;
+            color: var(--primary-color);
+        }
+    </style>
+
+    <div class="spectrum-meta">
         <div class="stats">
             <div><strong><?= $totalPublications ?></strong> <?= lang('Publications', 'Publikationen') ?></div>
-            <div><?= round($share * 100, 1) ?> % <?= lang('of institutional output', 'des Gesamtoutputs') ?></div>
+            <div><strong><?= round($share * 100, 1) ?> %</strong> <?= lang('of institutional output', 'des Gesamtoutputs') ?></div>
         </div>
     </div>
 

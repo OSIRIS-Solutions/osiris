@@ -2282,7 +2282,8 @@ Route::get('/portfolio/infrastructures', function () {
             'description_de' => 1,
             'start_date' => 1,
             'end_date' => 1,
-            'image' => 1
+            'image' => 1,
+            'type_id' => '$type' 
         ]
     ];
 
@@ -2385,6 +2386,8 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
         }
     }
     $infrastructure['persons'] = $persons;
+
+    $infrastructure['type_id'] = $infrastructure['type'] ?? null;
 
     $infrastructure['category'] = $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-');
     $infrastructure['type'] = $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-');
