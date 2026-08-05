@@ -224,7 +224,14 @@ if ($level == 'topic') {
             $currentYear = (int)date('Y');
             $firstYear = $timelineData ? $timelineData[0]['year'] : $currentYear;
             for ($y = $firstYear; $y <= $currentYear; $y++) {
-                if (!isset($timelineDataByYear[$y])) {
+                $found = false;
+                foreach ($timelineData as $row) {
+                    if ($row['year'] === $y) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
                     $timelineData[] = [
                         'year' => $y,
                         'count' => 0

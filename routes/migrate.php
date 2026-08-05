@@ -604,7 +604,7 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/v2.1.0.php";
         flush();
         ob_flush();
-        $rerender = true;
+        $rerender = false;
     }
 
     if ($rerender) {

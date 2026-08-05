@@ -2283,7 +2283,7 @@ Route::get('/portfolio/infrastructures', function () {
             'start_date' => 1,
             'end_date' => 1,
             'image' => 1,
-            'type_id' => '$type' 
+            'type_id' => '$type'
         ]
     ];
 
@@ -2931,4 +2931,228 @@ Route::get('/portfolio/search-index', function () {
         'topics' => $topics
         // 'news' => $news
     ]);
+});
+
+
+
+Route::get('/portfolio/spectrum', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+
+    $catalogPath = BASEPATH . '/data/openalex-topics.json';
+    if (!file_exists($catalogPath)) {
+        echo return_rest('OpenAlex topics data not found', 0, 404);
+        die;
+    }
+
+    $catalog = json_decode(file_get_contents($catalogPath), true);
+    $catalogById = array_column($catalog['topics'] ?? [], null, 'id');
+    $relatedLimit = 10;
+    $baseMatch = [
+        'openalex.topics' => ['$exists' => true, '$ne' => []],
+        'affiliated' => true
+    ];
+
+    // Aggregate the topic summaries that determine which static pages exist.
+    $summaryRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch],
+        ['$project' => ['openalex.topics' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => '$openalex.topics.id',
+            'count' => ['$sum' => 1],
+            'name' => ['$first' => '$openalex.topics.name'],
+            'path' => ['$first' => '$openalex.topics.path'],
+            'domain_id' => ['$first' => '$openalex.topics.domain_id'],
+            'domain' => ['$first' => '$openalex.topics.domain'],
+            'field_id' => ['$first' => '$openalex.topics.field_id'],
+            'field' => ['$first' => '$openalex.topics.field'],
+            'subfield_id' => ['$first' => '$openalex.topics.subfield_id'],
+            'subfield' => ['$first' => '$openalex.topics.subfield']
+        ]],
+        ['$sort' => ['count' => -1, '_id' => 1]]
+    ])->toArray();
+
+    $instituteTotal = $osiris->activities->count($baseMatch);
+    $topicsById = [];
+    foreach ($summaryRows as $row) {
+        $row = DB::doc2Arr($row);
+        $id = $row['_id'] ?? null;
+        if (!$id) continue;
+
+        $topicsById[$id] = [
+            'id' => $id,
+            'openalex_url' => 'https://openalex.org/' . $id,
+            'name' => $row['name'] ?? ($catalogById[$id]['display_name'] ?? null),
+            'description' => $catalogById[$id]['description'] ?? null,
+            'keywords' => array_values($catalogById[$id]['keywords'] ?? []),
+            'path' => $row['path'] ?? null,
+            'domain_id' => $row['domain_id'] ?? null,
+            'domain' => $row['domain'] ?? null,
+            'field_id' => $row['field_id'] ?? null,
+            'field' => $row['field'] ?? null,
+            'subfield_id' => $row['subfield_id'] ?? null,
+            'subfield' => $row['subfield'] ?? null,
+            'count' => intval($row['count'] ?? 0),
+            'share' => $instituteTotal > 0
+                ? round(intval($row['count'] ?? 0) / $instituteTotal, 6)
+                : 0,
+            'timeline' => [],
+            'units' => [],
+            'researchers' => []
+        ];
+    }
+
+    if (empty($topicsById)) {
+        echo rest([]);
+        die;
+    }
+
+    // Add compact yearly publication/activity counts for each topic.
+    $timelineRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['year' => ['$ne' => null]]],
+        ['$project' => ['openalex.topics.id' => 1, 'year' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'year' => '$year'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, '_id.year' => 1]]
+    ])->toArray();
+    foreach ($timelineRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $year = intval($row['_id']['year'] ?? 0);
+        if (!$topicId || !$year || !isset($topicsById[$topicId])) continue;
+        $topicsById[$topicId]['timeline'][] = [
+            'year' => $year,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // Resolve only units that can be linked from Portfolio.
+    $unitMeta = [];
+    $baseUnit = $osiris->groups->findOne(
+        ['level' => 0],
+        ['projection' => ['_id' => 0, 'id' => 1]]
+    );
+    $baseUnitId = $baseUnit['id'] ?? null;
+    $units = $osiris->groups->find(
+        ['hide' => ['$ne' => true]],
+        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1]]
+    );
+    foreach ($units as $unit) {
+        $unit = DB::doc2Arr($unit);
+        if (empty($unit['id']) || $unit['id'] === $baseUnitId) continue;
+        $unitMeta[$unit['id']] = $unit;
+    }
+
+    $unitRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['units' => ['$exists' => true, '$ne' => []]]],
+        ['$project' => ['openalex.topics.id' => 1, 'units' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$unwind' => '$units'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'unit' => '$units'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'count' => -1, '_id.unit' => 1]]
+    ])->toArray();
+    foreach ($unitRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $unitId = $row['_id']['unit'] ?? null;
+        if (
+            !$topicId || !$unitId ||
+            !isset($topicsById[$topicId], $unitMeta[$unitId]) ||
+            count($topicsById[$topicId]['units']) >= $relatedLimit
+        ) continue;
+
+        $topicsById[$topicId]['units'][] = [
+            'id' => $unitId,
+            'name' => $unitMeta[$unitId]['name'] ?? $unitId,
+            'name_de' => $unitMeta[$unitId]['name_de'] ?? null,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // Resolve active, visible researchers while retaining hidden activities in counts.
+    $personMeta = [];
+    $persons = $osiris->persons->find(
+        [
+            'is_active' => ['$ne' => false],
+            'hide' => ['$ne' => true]
+        ],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'username' => 1,
+                'displayname' => 1,
+                'academic_title' => 1,
+                'position' => 1,
+                'position_de' => 1
+            ]
+        ]
+    );
+    foreach ($persons as $person) {
+        $person = DB::doc2Arr($person);
+        if (empty($person['username'])) continue;
+        $personMeta[$person['username']] = $person;
+    }
+
+    $researcherRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['rendered.users' => ['$exists' => true, '$ne' => []]]],
+        ['$project' => ['openalex.topics.id' => 1, 'rendered.users' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$unwind' => '$rendered.users'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'username' => '$rendered.users'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'count' => -1, '_id.username' => 1]]
+    ])->toArray();
+    foreach ($researcherRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $username = $row['_id']['username'] ?? null;
+        if (
+            !$topicId || !$username ||
+            !isset($topicsById[$topicId], $personMeta[$username]) ||
+            count($topicsById[$topicId]['researchers']) >= $relatedLimit
+        ) continue;
+
+        $person = $personMeta[$username];
+        $topicsById[$topicId]['researchers'][] = [
+            'id' => $person['id'] ?? null,
+            'displayname' => $person['displayname'] ?? $username,
+            'academic_title' => $person['academic_title'] ?? null,
+            'position' => $person['position'] ?? null,
+            'position_de' => $person['position_de'] ?? null,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    echo rest(array_values($topicsById));
 });
