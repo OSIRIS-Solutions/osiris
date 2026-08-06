@@ -84,7 +84,8 @@ $Format = new Document(true);
                 <div class="collapse-group" id="saved-queries">
                     <?php foreach ($queries as $query) {
                         $rules = json_decode($query['rules'], true);
-                        if (empty($rules['rules'])) {
+                        $collection = $query['collection'];
+                        if (empty($rules)) {
                             $rules = ['rules' => [['id' => 'No rules']]];
                         }
                         $query_id = strval($query['_id']);
@@ -151,9 +152,15 @@ $Format = new Document(true);
                                     <?php } ?>
 
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
                                         <td>
-                                            <?= dump($rules) ?>
+                                            <?= var_export($collection) ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="vertical-align: baseline;"><?= lang('Pipeline', 'Pipeline') ?>:</th>
+                                        <td>
+                                            <?= var_export($rules) ?>
                                         </td>
                                     </tr>
 
@@ -177,7 +184,85 @@ $Format = new Document(true);
             <script>
                 var queries = {};
                 <?php foreach ($queries as $query) { ?>
-                    queries['<?= $query['_id'] ?>'] = '<?= $query['rules'] ?>';
+                    queries['<?= $query['_id'] ?>'] = {'rules': <?=$query['rules'] ?>, 'collection': '<?= $query['collection'] ?>'};
+                <?php } ?>
+            </script>
+
+            <div class="text-right mt-20">
+                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="example-pipelines-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#/" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h2 class="title">
+                <?= lang('Example pipelines', 'Beispiel Pipelines') ?>
+            </h2>
+                <?php
+                $exampleQueries = json_decode(file_get_contents(BASEPATH . '/data/aggregation-pipelines.json'), true);
+                if (empty($exampleQueries)) {
+                    echo '<p>' . lang('No example pipelines available.', 'Keine Beispiel Pipelines verfügbar.') . '</p>';
+                } else {
+                    // sort by name
+                    usort($exampleQueries, function ($a, $b) {
+                        return strcmp($a['name'], $b['name']);
+                    });
+                ?>
+                <input type="search" class="form-control mb-10" id="example-pipeline-search" placeholder="<?= lang('Search example pipelines...', 'Beispiel Pipeline suchen...') ?>" oninput="$('#example-pipelines-modal details').each(function() {
+                    var summary = $(this).find('summary').text().toLowerCase();
+                    var filter = $('#example-pipeline-search').val().toLowerCase();
+                    if (summary.indexOf(filter) > -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });">
+                <div class="collapse-group" id="example-pipelines-list">
+                    <?php foreach ($exampleQueries as $query) {
+                        $rules = $query['rules'];
+                        $collection = $query['collection'];
+                        if (empty($rules)) {
+                            $rules = ['rules' => [['id' => 'No rules']]];
+                        };
+                    ?>
+                        <details id="pipeline-<?= $query['name'] ?>" class="mb-10">
+                            <summary class="collapse-header font-weight-bold d-flex justify-content-between align-items-center">
+                                <?= $query['name'] ?>
+                            </summary>
+                            <div class="collapse-content">
+
+                                <a class="btn primary" onclick="applyExamplePipeline('<?= $query['name'] ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+
+                                <table class="table simple my-10">
+                                    <tr>
+                                        <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
+                                        <td>
+                                            <?= var_export(json_encode($collection)) ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="vertical-align: baseline;"><?= lang('Pipeline', 'Pipeline') ?>:</th>
+                                        <td>
+                                            <?= var_export(json_encode($rules)) ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </details>
+                    <?php } ?>
+                </div>
+            <?php  } ?>
+
+            <script>
+                var exampleQueries = {}
+                <?php foreach ($exampleQueries as $query) { ?>
+                    exampleQueries['<?= $query['name'] ?>'] = {'rules': <?= json_encode($query['rules'])?>, 'collection': '<?= $query['collection'] ?>'};
                 <?php } ?>
             </script>
 
@@ -223,10 +308,14 @@ $Format = new Document(true);
         <div class="footer">
             <div class="btn-toolbar">
                 <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('Apply', 'Anwenden') ?></button>
+                <a href="#saved-queries-modal" class="btn" role="button">
+                    <i class="ph ph-floppy-disk"></i> <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
+                </a>
+                <a href="#example-pipelines-modal" class="btn" role="button">
+                    <i class="ph ph-code"></i> <?= lang('Show examples', 'Zeige Beispiele') ?>
+                </a>
             </div>
-            <a href="#saved-queries-modal" class="btn" role="button">
-                <i class="ph ph-floppy-disk"></i> <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
-            </a>
+            
         </div>
     </div>
 
@@ -314,7 +403,7 @@ $Format = new Document(true);
 
         function downloadData() {
             var dataRaw = document.getElementById('data-raw');
-            if (dataRaw.innerHTML.trim() === '') {
+            if (dataRaw.innerHTML.trim() === '-') {
                 toastError(lang('No data to download', 'Keine Daten zum Herunterladen'));
                 return;
             }
@@ -364,12 +453,25 @@ $Format = new Document(true);
         }
 
         function applyFilter(id) {
-            var rules = queries[id]
+            var rules = queries[id].rules
+            var collection = queries[id].collection
+            if (typeof rules === 'string' && rules.length >= 2 && rules.startsWith('"') && rules.endsWith('"')) {
+                rules = rules.slice(1, -1)
+            }
+            $('#collection').val(collection)
+            $('#pipeline').val(rules)
+            toastSuccess(lang('Pipeline applied successfully.', 'Abfrage erfolgreich angewendet.'))
+        }
+
+        function applyExamplePipeline(name) {
+            var rules = JSON.stringify(exampleQueries[name]['rules'])
+            var collection = exampleQueries[name]['collection']
+            $('#collection').val(collection)
             if (typeof rules === 'string' && rules.length >= 2 && rules.startsWith('"') && rules.endsWith('"')) {
                 rules = rules.slice(1, -1)
             }
             $('#pipeline').val(rules)
-            toastSuccess(lang('Pipeline applied successfully.', 'Abfrage erfolgreich angewendet.'))
+            toastSuccess(lang('Example pipeline applied successfully.', 'Beispiel Pipeline erfolgreich angewendet.'))
         }
 
         function deletePipeline(id) { 

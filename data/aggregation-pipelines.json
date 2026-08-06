@@ -1,0 +1,22 @@
+[
+    {
+        "name": "example_posters",
+        "collection" : "activities",
+        "rules" : [{ "$match": { "type" : "poster" } } ]
+    },
+    {
+        "name": "example_countries",
+        "collection" : "countries",
+        "rules" : [{ "$match": { "name" : { "$in" : ["Germany", "Italy"] } } }]
+    },
+    {
+        "name": "example_first_author_male",
+        "collection" : "activities",
+        "rules" : [ { "$unwind": "$authors" }, { "$match": { "authors.position": "first" } }, { "$lookup": { "from": "persons", "let": { "authors": "$authors" }, "pipeline": [ { "$match": { "$expr": { "$and": [ { "$eq": [ "$username", "$$authors.user"] }, { "$eq": ["$gender", "m"] } ] } } } ], "as": "genderPersons" } }, { "$match": { "genderPersons.0": { "$exists": true } } } ]
+    },
+    {
+        "name": "example_first_author_female",
+        "collection" : "activities",
+        "rules" : [ { "$unwind": "$authors" }, { "$match": { "authors.position": "first" } }, { "$lookup": { "from": "persons", "localField": "authors.user", "foreignField": "username", "as": "person" } }, { "$unwind": "$person" }, { "$match": { "person.gender": "f" } }, { "$group": { "_id": "$_id", "doc": { "$first": "$$ROOT" } } }, { "$replaceRoot": { "newRoot": "$doc" } } ]
+    }
+]
