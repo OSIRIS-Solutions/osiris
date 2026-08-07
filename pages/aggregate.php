@@ -21,6 +21,20 @@
 
 $Format = new Document(true);
 
+$collections = [
+    "activities" => lang('Activities', 'Aktivitäten'),
+    "conferences" => lang('Conferences', 'Konferenzen'),
+    "countries" => lang('Countries', 'Länder'),
+    "events" => lang('Events', 'Veranstaltungen'),
+    "groups" => lang('Groups', 'Gruppen'),
+    "infrastructures" =>  lang('Infrastructures', 'Infrastrukturen'),
+    "journals" => lang('Journals', 'Zeitschriften'),
+    "organizations" => lang('Organizations', 'Organisationen'),
+    "persons" => lang('Persons', 'Personen'),
+    "projects" => lang('Projects', 'Projekte'),
+    "proposals" => lang('Proposals', 'Vorschläge')
+];
+
 ?>
 
 <!-- MODALS -->
@@ -140,7 +154,7 @@ $Format = new Document(true);
                                         });
                                     }
                                 </script>
-                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>')"><?= lang('Apply pipeline', 'Pipeline anwenden') ?></a>
 
                                 <table class="table simple my-10">
 
@@ -154,7 +168,7 @@ $Format = new Document(true);
                                     <tr>
                                         <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
                                         <td>
-                                            <?= var_export($collection) ?>
+                                            <?= $collections[$collection] ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -237,13 +251,13 @@ $Format = new Document(true);
                             </summary>
                             <div class="collapse-content">
 
-                                <a class="btn primary" onclick="applyExamplePipeline('<?= $query['name'] ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+                                <a class="btn primary" onclick="applyExamplePipeline('<?= $query['name'] ?>')"><?= lang('Apply pipeline', 'Pipeline anwenden') ?></a>
 
                                 <table class="table simple my-10">
                                     <tr>
                                         <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
                                         <td>
-                                            <?= var_export(json_encode($collection)) ?>
+                                            <?= $collections[$collection] ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -283,20 +297,20 @@ $Format = new Document(true);
 
     <div class="box">
         <div class="content mb-0">
-
+            
             <h3 class="title"><?= lang('Choose collection', 'Sammlung auswählen') ?></h3>
              <select id="collection" class="form-control w-auto">
-                <option value="activities"><?= lang('Activities', 'Aktivitäten') ?></option>
-                <option value="conferences"><?= lang('Conferences', 'Konferenzen') ?></option>
-                <option value="countries"><?= lang('Countries', 'Länder') ?></option>
-                <option value="events"><?= lang('Events', 'Veranstaltungen') ?></option>
-                <option value="groups"><?= lang('Groups', 'Gruppen') ?></option>
-                <option value="infrastructures"><?= lang('Infrastructures', 'Infrastrukturen') ?></option>
-                <option value="journals"><?= lang('Journals', 'Zeitschriften') ?></option>
-                <option value="organizations"><?= lang('Organizations', 'Organisationen') ?></option>          
-                <option value="persons"><?= lang('Persons', 'Personen') ?></option>
-                <option value="projects"><?= lang('Projects', 'Projekte') ?></option>
-                <option value="proposals"><?= lang('Proposals', 'Vorschläge') ?></option>
+                <option value="activities"><?= $collections["activities"] ?></option>
+                <option value="conferences"><?= $collections["conferences"] ?></option>
+                <option value="countries"><?= $collections["countries"] ?></option>
+                <option value="events"><?= $collections["events"] ?></option>
+                <option value="groups"><?= $collections["groups"] ?></option>
+                <option value="infrastructures"><?= $collections["infrastructures"] ?></option>
+                <option value="journals"><?= $collections["journals"] ?></option>
+                <option value="organizations"><?= $collections["organizations"] ?></option>          
+                <option value="persons"><?= $collections["persons"] ?></option>
+                <option value="projects"><?= $collections["projects"] ?></option>
+                <option value="proposals"><?= $collections["proposals"] ?></option>
             </select>
             <br>
             <h3 class="title"><?= lang('Pipeline', 'Pipeline') ?></h3>
@@ -326,8 +340,8 @@ $Format = new Document(true);
         </div>
         <div class="footer">
             <div class="btn-toolbar">
-                <button class="btn secondary" onclick="$('#data-raw').toggle()"><i class="ph ph-eye"></i> <?= lang('Show raw data', 'Rohdaten anzeigen') ?></button>
-                <button class="btn secondary" onclick="downloadData()"><i class="ph ph-download"></i> <?= lang('Download data', 'Herunterladen') ?></button>
+                <button class="btn" onclick="$('#data-raw').toggle()"><i class="ph ph-eye"></i> <?= lang('Show raw data', 'Rohdaten anzeigen') ?></button>
+                <button class="btn" onclick="downloadData()"><i class="ph ph-download"></i> <?= lang('Download data', 'Herunterladen') ?></button>
             </div>
         </div>
         <div class="content" id="data-raw" style="display: none;">
@@ -431,7 +445,6 @@ $Format = new Document(true);
                 return
             }
 
-
             var pipeline = {
                 name: name,
                 rules: rules,
@@ -460,6 +473,7 @@ $Format = new Document(true);
             }
             $('#collection').val(collection)
             $('#pipeline').val(rules)
+            window.location.href = "#close-modal"
             toastSuccess(lang('Pipeline applied successfully.', 'Abfrage erfolgreich angewendet.'))
         }
 
@@ -471,6 +485,7 @@ $Format = new Document(true);
                 rules = rules.slice(1, -1)
             }
             $('#pipeline').val(rules)
+            window.location.href = "#close-modal"
             toastSuccess(lang('Example pipeline applied successfully.', 'Beispiel Pipeline erfolgreich angewendet.'))
         }
 
