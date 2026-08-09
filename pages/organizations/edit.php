@@ -200,6 +200,40 @@ if (empty($form) || !isset($form['_id'])) {
         </small>
         <br><br>
 
+
+        <h5>
+            <?= lang('Collaboration Information', 'Kooperationsinformationen') ?>
+        </h5>
+
+        <!-- is this organisation a collaborator of the institution that should appear as such in maps and on portfoli -->
+        <div class="form-group">
+            <label for="is_collaborator">
+                <?= lang('Is this organisation a collaborator of the institution?', 'Ist diese Organisation ein Kooperationspartner der Institution?') ?>
+            </label>
+            <select name="values[is_collaborator]" id="is_collaborator" class="form-control" onchange="$('#collaborator-details').toggle(this.value === 'true')">
+                <option value="" disabled <?= sel('is_collaborator', '') ?>><?= lang('Select option', 'Option auswählen') ?></option>
+                <option value="true" <?= sel('is_collaborator', true) ?>><?= lang('Yes', 'Ja') ?></option>
+                <option value="false" <?= sel('is_collaborator', false) ?>><?= lang('No', 'Nein') ?></option>
+            </select>
+        </div>
+
+        <!-- if yes, possible start and end dates for the collaboration -->
+        <div class="row row-eq-spacing" id="collaborator-details" style="display: <?= sel('is_collaborator', true) ? 'flex' : 'none' ?>;">
+            <div class="col-sm">
+                <label for="collaboration_start_date">
+                    <?= lang('Collaboration start date', 'Kooperationsbeginn') ?>
+                </label>
+                <input type="date" class="form-control" name="values[collaboration_start_date]" id="collaboration_start_date" value="<?= $form['collaboration_start_date'] ?? '' ?>">
+            </div>
+            <div class="col-sm">
+                <label for="collaboration_end_date">
+                    <?= lang('Collaboration end date', 'Kooperationsende') ?>
+                </label>
+                <input type="date" class="form-control" name="values[collaboration_end_date]" id="collaboration_end_date" value="<?= $form['collaboration_end_date'] ?? '' ?>">
+            </div>
+        </div>
+
+
         <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
         <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
         <script>

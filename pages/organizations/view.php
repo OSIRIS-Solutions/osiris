@@ -268,6 +268,17 @@ if ($edit_perm) { ?>
                             <?php } ?>
                         </td>
                     </tr>
+                    <tr>
+                        <!-- is_collaborator -->
+                        <td>
+                            <span class="key"><?= lang('Collaborator', 'Kooperationspartner') ?></span>
+                            <?= isset($organization['is_collaborator']) && $organization['is_collaborator'] ? lang('Yes', 'Ja') : lang('No', 'Nein') ?>
+                        </td>
+                        <td>
+                            <span class="key"><?= lang('Collaboration timeframe', 'Kooperationszeitraum') ?></span>
+                            <?= fromToYear($organization['collaboration_start_date'] ?? null, $organization['collaboration_end_date'] ?? null, true) ?>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

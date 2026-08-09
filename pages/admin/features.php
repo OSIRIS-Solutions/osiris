@@ -117,8 +117,8 @@
     <div class="row row-eq-spacing mt-0" id="features-settings-page">
         <div class="col-md-9">
 
-        <!-- search -->
-         <input type="search" class="form-control" id="feature-search" placeholder="<?= lang('Search features...', 'Funktionen durchsuchen...') ?>" onkeyup="searchFeatures()">
+            <!-- search -->
+            <input type="search" class="form-control" id="feature-search" placeholder="<?= lang('Search features...', 'Funktionen durchsuchen...') ?>" onkeyup="searchFeatures()">
             <script>
                 function searchFeatures() {
                     const input = document.getElementById('feature-search');
@@ -174,6 +174,19 @@
                         renderCheckbox('portal-public');
                         ?>
                     </div>
+
+                        <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
+                            </label>
+                            <?php
+                            renderCheckbox('portfolio-spectrum');
+                            ?>
+                            <small class="text-muted">
+                                <?= lang('This feature requires the research spectrum to be enabled.', 'Diese Funktion erfordert, dass das Forschungsspektrum aktiviert ist.') ?>
+                            </small>
+                        </div>
+
                 </div>
 
                 <div class="box padded">
@@ -440,7 +453,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="box padded">
                     <h4 class="title" id="drafts">
                         <?= lang('Drafts', 'Entwürfe') ?>
@@ -595,7 +608,7 @@
                             <?= lang('Language of news', 'Sprache der Neuigkeiten') ?>
                         </label>
                         <select name="general[news-language]" id="news-language" class="form-control small">
-                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?=lang('Only one language', 'Nur einsprachig')?></option>
+                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('Only one language', 'Nur einsprachig') ?></option>
                             <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option>
                         </select>
                     </div>

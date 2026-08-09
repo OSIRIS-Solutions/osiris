@@ -768,7 +768,7 @@ class Settings
     }
 
 
-    function topicChooser($selected = [])
+    function topicChooser($selected = [], $key = 'values[topics]')
     {
         if (!$this->featureEnabled('topics')) return '';
 
@@ -780,7 +780,7 @@ class Settings
         <div class="form-group" id="topic-widget">
             <h5><?= $this->topicLabel() ?></h5>
             <!-- make suire that an empty value is submitted in case no checkbox is ticked -->
-            <input type="hidden" name="values[topics]" value="">
+            <input type="hidden" name="<?= $key ?>" value="">
             <div>
                 <?php
                 foreach ($topics as $topic) {
@@ -791,7 +791,7 @@ class Settings
                     }
                 ?>
                     <div class="pill-checkbox <?= ($topic['inactive'] ?? false) ? 'inactive' : '' ?>" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
-                        <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
+                        <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="<?= $key ?>[]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
                         </label>

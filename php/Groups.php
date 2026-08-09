@@ -92,6 +92,10 @@ class Groups
         }
 
         $g = array_values($this->groups);
+        if (empty($g)) {
+            $this->tree = [];
+            return;
+        }
         $this->tree = $this->tree($g)[0];
     }
 

@@ -32,7 +32,7 @@ class Spectrum
         }
 
         $count_spectrum = $osiris->activities->count($spectrum_filter);
-        if ($count_spectrum === 0) {
+        if ($count_spectrum === 0 || ($entity === 'person' && $count_spectrum < 4)) {
             return [];
         }
         $spectrum = $osiris->activities->aggregate([

@@ -97,7 +97,18 @@ class DB
         if (DB::is_ObjectID($id)) {
             return new ObjectId($id);
         }
-        return intval($id);
+        return null;
+    }
+
+    public static function to_ObjectIDs($ids)
+    {
+        if (empty($ids)) return [];
+        $objectIds = [];
+        foreach ($ids as $id) {
+            if (empty($id)) continue;
+            $objectIds[] = DB::to_ObjectID($id);
+        }
+        return $objectIds;
     }
 
     /**
@@ -109,6 +120,9 @@ class DB
     public static function is_ObjectID($id)
     {
         if (empty($id)) return false;
+        if (!is_string($id)) {
+            return false;
+        }
         if (preg_match("/^[0-9a-fA-F]{24}$/", $id)) {
             return true;
         }

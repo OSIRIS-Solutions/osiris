@@ -112,7 +112,11 @@ Route::post('/crud/news/create', function () {
         'content_de' => $data['content_de'] ?? null,
         'date' => $data['date'],
         'visibility' => $data['visibility'] ?? 'internal',
+        'persons' => array_filter($data['persons'] ?? []),  
         'activities' => $data['activities'] ?? [],
+        'projects' => $data['projects'] ?? [],
+        'infrastructures' => $data['infrastructures'] ?? [],
+        'topics' => $data['topics'] ?? [],
         'created_by' => $_SESSION['username'],
         'created' => date('Y-m-d')
     ];
@@ -162,7 +166,11 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
         'content_de' => $data['content_de'] ?? null,
         'date' => $data['date'],
         'visibility' => $data['visibility'] ?? 'internal',
-        'activities' => $data['activities'] ?? [],
+        'persons' => ($data['persons'] ?? []),  
+        'activities' => ($data['activities'] ?? []),
+        'projects' => ($data['projects'] ?? []),
+        'infrastructures' => ($data['infrastructures'] ?? []),
+        'topics' => ($data['topics'] ?? []),
         'updated_by' => $_SESSION['username'],
         'updated' => date('Y-m-d')
     ];

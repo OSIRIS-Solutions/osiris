@@ -232,6 +232,30 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
         $result['spectrum'] = Spectrum::retrieve($osiris, 'topic', $id);
     }
 
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'topics' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
+    }
+
     // general information for navigation:
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio();
@@ -1221,10 +1245,10 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     header('Content-Type: application/json');
     include(BASEPATH . '/php/Modules.php');
     $portfolio_types = $Settings->getActivitiesPortfolio(true);
-    $id = DB::to_ObjectID($id);
+    $mongo_id = DB::to_ObjectID($id);
     $result = [];
     $doc = $osiris->activities->findOne(
-        ['_id' => $id]
+        ['_id' => $mongo_id]
     );
     if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
         echo rest('Activity not found', 0, 404);
@@ -1420,11 +1444,11 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
 
     // add connected activities
     $connected_activities = $osiris->activitiesConnections->find(
-        ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+        ['$or' => [['source_id' => $mongo_id], ['target_id' => $mongo_id]]]
     )->toArray();
     $result['connected_activities'] = [];
     foreach ($connected_activities as $conn) {
-        $reverse = ($conn['target_id'] == $id);
+        $reverse = ($conn['target_id'] == $mongo_id);
         $con_doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
             'rendered' => 1,
             'subtype' => 1,
@@ -1445,6 +1469,30 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
 
     if (isset($doc['openalex']) && $Settings->featureEnabled('portfolio-spectrum')) {
         $result['spectrum'] = $doc['openalex']['topics'] ?? [];
+    }
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'activities' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
     }
 
     echo rest($result);
@@ -1623,6 +1671,31 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
             ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]]
         )->toArray();
         $project['topics'] = $topics;
+    }
+
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'projects' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $project['news'] = $news;
     }
 
     echo rest($project);
@@ -1927,6 +2000,30 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $result['spectrum'] = Spectrum::retrieve($osiris, 'person', $person['username']);
     }
 
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'persons' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
+    }
+
     echo rest($result);
 });
 
@@ -2119,6 +2216,105 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
     echo rest($result, count($result));
 });
 
+
+
+Route::get('/portfolio/collaborators-map', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $result = [];
+    $filter = ['collaborators' => ['$exists' => 1]];
+    $result = $osiris->projects->aggregate([
+        ['$match' => $filter],
+        ['$project' => ['collaborators' => 1, 'public' => 1]],
+        ['$unwind' => '$collaborators'],
+        [
+            '$group' => [
+                '_id' => '$collaborators.organization',
+                'count' => ['$sum' => 1],
+                'public_count' => [
+                    '$sum' => [
+                        '$cond' => [
+                            'if' => ['$eq' => ['$public', true]],
+                            'then' => 1,
+                            'else' => 0
+                        ]
+                    ]
+                ],
+                'data' => [
+                    '$first' => '$collaborators'
+                ]
+            ]
+        ],
+        ['$lookup' => [
+            'from' => 'organizations',
+            'localField' => '_id',
+            'foreignField' => '_id',
+            'as' => 'org'
+        ]],
+        ['$unwind' => '$org'],
+        ['$project' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'count' => 1,
+            'public_count' => 1,
+            'data.name' => '$org.name',
+            'data.type' => '$org.type',
+            'data.location' => '$org.location',
+            'data.country' => '$org.country',
+            'data.ror' => '$org.ror',
+            'data.lat' => '$org.lat',
+            'data.lng' => '$org.lng',
+            // 'data.role' => 'partner'
+        ]],
+        ['$sort' => ['count' => -1]]
+
+    ])->toArray();
+
+    // add all organizations with is_collaborator = true that are not already in the list
+    $collaborators = $osiris->organizations->find(
+        ['is_collaborator' => true],
+        ['projection' => ['_id' => 0, 'id' => ['$toString' => '$_id'], 'name' => 1, 'type' => 1, 'location' => 1, 'country' => 1, 'ror' => 1, 'lat' => 1, 'lng' => 1]]
+    )->toArray();
+    $existing_ids = array_column($result, 'id');
+    foreach ($collaborators as $c) {
+        if (!in_array($c['id'], $existing_ids)) {
+            $result[] = [
+                'id' => $c['id'],
+                'count' => 0,
+                'data' => [
+                    'name' => $c['name'],
+                    'type' => $c['type'] ?? null,
+                    'location' => $c['location'] ?? null,
+                    'country' => $c['country'] ?? null,
+                    'ror' => $c['ror'] ?? null,
+                    'lat' => $c['lat'] ?? null,
+                    'lng' => $c['lng'] ?? null,
+                    'role' => 'partner'
+                ]
+            ];
+        }
+    }
+
+
+    $institute = $Settings->get('affiliation_details');
+    $institute['role'] = $project['role'] ?? 'coordinator';
+    $institute['current'] = true;
+    if (isset($institute['lat']) && isset($institute['lng'])) {
+        $result[] = [
+            '_id' => $institute['ror'] ?? '',
+            'count' => 1,
+            'data' => $institute,
+            'self' => true,
+            // 'color' => 'secondary'
+        ];
+    }
+    echo rest($result, count($result));
+});
 
 
 Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
@@ -2443,6 +2639,33 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
         'infrastructures' => $infrastructure['id'],
         'hide' => ['$ne' => true]
     ]);
+
+    
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'infrastructures' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $infrastructure['news'] = $news;
+    }
+
+
     echo rest($infrastructure);
 });
 
@@ -2550,12 +2773,14 @@ Route::get('/portfolio/persons', function () {
         [
             'sort' => ['last' => 1],
             'projection' => [
+                '_id' => 0,
                 'id' => ['$toString' => '$_id'],
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
                 'position_de' => 1,
-                'depts' => 1
+                'depts' => 1,
+                'is_active' => 1,
             ]
         ]
     )->toArray();
@@ -2724,7 +2949,11 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
                 'content_de' => 1,
                 'date' => 1,
                 'image' => 1,
-                'activities' => 1
+                'activities' => 1,
+                'persons' => 1,
+                'projects' => 1,
+                'infrastructures' => 1,
+                'topics' => 1
             ]
         ]
     );

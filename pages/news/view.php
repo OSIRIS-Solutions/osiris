@@ -117,11 +117,11 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
 
 <div class="container w-800 mw-full">
-    <div class="btn-toolbar">
+    <div class="btn-toolbar pb-20">
         <span class="badge type <?= $news['type'] ?? 'other' ?> mr-10"><?= $Vocabulary->getValue('news-category', $news['type'] ?? 'other') ?></span>
 
         <?php if ($Settings->hasPermission('news.edit')) { ?>
-            <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn primary">
+            <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
                 <?= lang('Edit', 'Bearbeiten') ?>
             </a>
@@ -131,9 +131,9 @@ if ($Settings->hasPermission('news.edit')) { ?>
             </a>
         <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
-            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this news item?', 'Sind Sie sicher, dass Sie diese Nachricht löschen möchten?') ?>');" class="d-inline">
+            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this news item?', 'Sind Sie sicher, dass Sie diese Nachricht löschen möchten?') ?>');" class="d-inline ml-auto">
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
-                <button type="submit" class="btn danger">
+                <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
                     <?= lang('Delete', 'Löschen') ?>
                 </button>
@@ -141,11 +141,9 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php } ?>
     </div>
 
-    <div class="image-wrapper" style="position: relative; margin-top: 1rem;">
-        <?php
-        DB::printLogo($news, 'news-image');
-        ?>
-    </div>
+    <?php if ($Settings->featureEnabled('topics') && is_countable($news['topics'] ?? null) && count($news['topics']) > 0) {
+        echo $Settings->printTopics($news['topics'] ?? [], 'mt-20');
+    } ?>
 
     <h1>
         <i class="ph-duotone ph-megaphone"></i>
@@ -159,9 +157,30 @@ if ($Settings->hasPermission('news.edit')) { ?>
     <?php } ?>
 
 
+    <div class="image-wrapper" style="position: relative; margin-top: 1rem;">
+        <?php
+        DB::printLogo($news, 'news-image');
+        ?>
+    </div>
+
+
     <div class="news-content">
         <?= lang($news['content'] ?? '', $news['content_de'] ?? null) ?>
     </div>
+
+    <?php if (is_countable($news['persons'] ?? null) && count($news['persons']) > 0) { ?>
+        <hr>
+        <div class="persons">
+            <h4><?= lang('Selected Persons', 'Ausgewählte Personen') ?></h4>
+            <?php foreach ($news['persons'] as $i => $p) {
+                $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($p)]);
+                echo $person['displayname'] ?? '';
+                if ($i < count($news['persons']) - 1) {
+                    echo '<br>';
+                }
+            } ?>
+        </div>
+    <?php } ?>
 
     <?php if (is_countable($news['activities'] ?? null) && count($news['activities']) > 0) { ?>
         <hr>
@@ -173,6 +192,39 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 if ($i < count($news['activities']) - 1) {
                     echo '<br>';
                 }
+            } ?>
+        </div>
+    <?php } ?>
+
+    <?php if (is_countable($news['projects'] ?? null) && count($news['projects']) > 0) { ?>
+        <hr>
+        <div class="projects">
+            <h4><?= lang('Selected Projects', 'Ausgewählte Projekte') ?></h4>
+            <?php
+
+            $mongo_ids = DB::to_ObjectIDs($news['projects'] ?? []);
+            $projects = $osiris->projects->find(['_id' => ['$in' => $mongo_ids]], [
+                'projection' => ['_id' => 1, 'name' => 1, 'acronym' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
+                'sort' => ['name' => 1]
+            ])->toArray();
+            foreach ($projects as $i => $p) {
+                echo $p['name'];
+            } ?>
+        </div>
+    <?php } ?>
+
+    <?php if (is_countable($news['infrastructures'] ?? null) && count($news['infrastructures']) > 0) { ?>
+        <hr>
+        <div class="infrastructures">
+            <h4><?= lang('Selected Infrastructures', 'Ausgewählte Infrastrukturen') ?></h4>
+            <?php
+
+            $infrastructures = $osiris->infrastructures->find(['id' => ['$in' => $news['infrastructures'] ?? []]], [
+                'projection' => ['_id' => 1, 'id' => 1, 'name' => 1, 'subtitle' => 1],
+                'sort' => ['end_date' => -1, 'start_date' => 1]
+            ])->toArray();
+            foreach ($infrastructures as $i => $p) {
+                echo $p['name'];
             } ?>
         </div>
     <?php } ?>
