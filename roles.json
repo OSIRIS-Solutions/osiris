@@ -132,6 +132,11 @@
                 "id": "queries.global",
                 "de": "Globale Abfragen speichern",
                 "en": "Save global queries"
+            },
+            {
+                "id": "aggregate.see",
+                "de": "Zugriff auf das Aggregations-Tool",
+                "en": "Access to the aggregation tool"
             }
         ]
     },
