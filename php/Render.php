@@ -38,6 +38,7 @@ function renderActivities($filter = [], $return_updated = false)
             'type' => $Format->activity_type(),
             'subtype' => $Format->activity_subtype(),
             'title' => $Format->getTitle(),
+            'subtitle' => $Format->getSubtitle(),
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
             'supervisors' => $Format->getAuthors('supervisors'),

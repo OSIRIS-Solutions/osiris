@@ -44,8 +44,8 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
         echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.<br>");
-        echo "Portfolio API error: " . ($_SESSION['portfolio_error'] ?? 'Unknown error');
+        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo "<br>" . ($_SESSION['portfolio_error'] ?? 'Unknown error');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";

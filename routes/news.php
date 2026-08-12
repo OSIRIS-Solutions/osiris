@@ -1,4 +1,61 @@
 <?php
+
+/**
+ * Normalize entity connections submitted by the news editor.
+ */
+function normalize_news_connections(array $data): array
+{
+    $connections = [];
+    foreach (['persons', 'activities', 'projects', 'events', 'infrastructures'] as $field) {
+        $values = $data[$field] ?? [];
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+        $values = array_map(static fn($value) => trim((string) $value), $values);
+        $connections[$field] = array_values(array_unique(array_filter($values)));
+    }
+    return $connections;
+}
+
+/**
+ * Only accept a featured entity that is part of the submitted connections.
+ */
+function normalize_news_featured(array $data, array $connections): ?array
+{
+    $featured = $data['featured'] ?? [];
+    if (!is_array($featured)) {
+        return null;
+    }
+
+    $connectionFields = [
+        'person' => 'persons',
+        'activity' => 'activities',
+        'project' => 'projects',
+        'event' => 'events',
+        'infrastructure' => 'infrastructures'
+    ];
+    $type = trim((string) ($featured['type'] ?? ''));
+    $entityId = trim((string) ($featured['id'] ?? ''));
+
+    if (!isset($connectionFields[$type]) ||
+        !in_array($entityId, $connections[$connectionFields[$type]] ?? [], true)) {
+        return null;
+    }
+
+    $limitText = static function ($value): ?string {
+        $value = trim((string) $value);
+        if ($value === '') return null;
+        return function_exists('mb_substr') ? mb_substr($value, 0, 240) : substr($value, 0, 240);
+    };
+
+    return [
+        'type' => $type,
+        'id' => $entityId,
+        'text' => $limitText($featured['text'] ?? ''),
+        'text_de' => $limitText($featured['text_de'] ?? '')
+    ];
+}
+
 Route::get('/news', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -96,6 +153,7 @@ Route::post('/crud/news/create', function () {
     }
 
     $data = $_POST['news'] ?? [];
+    $connections = normalize_news_connections($data);
 
     // basic validation
     if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
@@ -112,10 +170,12 @@ Route::post('/crud/news/create', function () {
         'content_de' => $data['content_de'] ?? null,
         'date' => $data['date'],
         'visibility' => $data['visibility'] ?? 'internal',
-        'persons' => array_filter($data['persons'] ?? []),  
-        'activities' => $data['activities'] ?? [],
-        'projects' => $data['projects'] ?? [],
-        'infrastructures' => $data['infrastructures'] ?? [],
+        'persons' => $connections['persons'],
+        'activities' => $connections['activities'],
+        'projects' => $connections['projects'],
+        'events' => $connections['events'],
+        'infrastructures' => $connections['infrastructures'],
+        'featured' => normalize_news_featured($data, $connections),
         'topics' => $data['topics'] ?? [],
         'created_by' => $_SESSION['username'],
         'created' => date('Y-m-d')
@@ -150,6 +210,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
     }
 
     $data = $_POST['news'] ?? [];
+    $connections = normalize_news_connections($data);
 
     // basic validation
     if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
@@ -166,10 +227,12 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
         'content_de' => $data['content_de'] ?? null,
         'date' => $data['date'],
         'visibility' => $data['visibility'] ?? 'internal',
-        'persons' => ($data['persons'] ?? []),  
-        'activities' => ($data['activities'] ?? []),
-        'projects' => ($data['projects'] ?? []),
-        'infrastructures' => ($data['infrastructures'] ?? []),
+        'persons' => $connections['persons'],
+        'activities' => $connections['activities'],
+        'projects' => $connections['projects'],
+        'events' => $connections['events'],
+        'infrastructures' => $connections['infrastructures'],
+        'featured' => normalize_news_featured($data, $connections),
         'topics' => ($data['topics'] ?? []),
         'updated_by' => $_SESSION['username'],
         'updated' => date('Y-m-d')

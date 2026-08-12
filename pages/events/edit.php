@@ -109,6 +109,25 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         } ?>
 
 
+        <?php if ($Settings->featureEnabled('portal')) { ?>
+            <div class="form-group">
+            <b>
+                <?= lang('Portal Settings', 'Portal Einstellungen') ?>
+            </b>
+                <?php
+                $public = $form['public'] ?? true;
+                ?>
+                <input type="hidden" name="values[public]" value="false">
+                <div class="custom-checkbox">
+                    <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
+                    <label for="public">
+                        <?= lang('Show this event in the public Portfolio', 'Dieses Event im öffentlichen Portfolio anzeigen') ?>
+                    </label>
+                </div>
+            </div>
+        <?php } ?>
+
+
         <button class="btn mb-10" type="submit"><?= $btn ?></button>
     </form>
 </div>

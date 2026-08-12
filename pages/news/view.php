@@ -18,6 +18,87 @@
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $news = DB::doc2Arr($news);
+
+$featuredCard = null;
+$featured = DB::doc2Arr($news['featured'] ?? []);
+if (!empty($featured['type']) && !empty($featured['id'])) {
+    $featuredId = (string) $featured['id'];
+    $featuredCard = [
+        'type' => $featured['type'],
+        'type_label' => '',
+        'icon' => 'ph-star',
+        'title' => '',
+        'subtitle' => '',
+        'url' => '',
+        'text' => lang($featured['text'] ?? null, $featured['text_de'] ?? null)
+    ];
+
+    switch ($featured['type']) {
+        case 'person':
+            $entity = DB::is_ObjectID($featuredId)
+                ? $osiris->persons->findOne(['_id' => DB::to_ObjectID($featuredId)])
+                : null;
+            if ($entity) {
+                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['icon'] = 'ph-user';
+                $featuredCard['title'] = $entity['displayname'] ?? '';
+                if (!empty($entity['username'])) {
+                    $featuredCard['url'] = ROOTPATH . '/profile/' . $entity['username'];
+                }
+            }
+            break;
+        case 'activity':
+            $entity = $DB->getActivity($featuredId);
+            if ($entity) {
+                $featuredCard['type_label'] = lang('Research activity', 'Forschungsaktivität');
+                $featuredCard['icon'] = 'ph-article';
+                $featuredCard['title'] = strip_tags($entity['rendered']['plain'] ?? $entity['title'] ?? '');
+                $featuredCard['url'] = ROOTPATH . '/activities/view/' . $featuredId;
+            }
+            break;
+        case 'project':
+            $entity = DB::is_ObjectID($featuredId)
+                ? $osiris->projects->findOne(['_id' => DB::to_ObjectID($featuredId)])
+                : null;
+            if ($entity) {
+                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['icon'] = 'ph-briefcase';
+                $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . ($entity['name'] ?? '');
+                $featuredCard['subtitle'] = lang($entity['title'] ?? null, $entity['title_de'] ?? null);
+                $featuredCard['url'] = ROOTPATH . '/projects/view/' . $featuredId;
+            }
+            break;
+        case 'event':
+            $entity = DB::is_ObjectID($featuredId)
+                ? $osiris->conferences->findOne(['_id' => DB::to_ObjectID($featuredId)])
+                : null;
+            if ($entity) {
+                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['icon'] = 'ph-calendar-blank';
+                $featuredCard['title'] = $entity['title'] ?? '';
+                $eventDetails = [];
+                if (!empty($entity['start'])) $eventDetails[] = date('d.m.Y', strtotime($entity['start']));
+                if (!empty($entity['location'])) $eventDetails[] = $entity['location'];
+                $featuredCard['subtitle'] = implode(' · ', $eventDetails);
+                $featuredCard['url'] = ROOTPATH . '/conferences/view/' . $featuredId;
+            }
+            break;
+        case 'infrastructure':
+            $entity = $osiris->infrastructures->findOne(['id' => $featuredId]);
+            if ($entity) {
+                $featuredCard['type_label'] = $Settings->infrastructureLabel();
+                $featuredCard['icon'] = 'ph-microscope';
+                $featuredCard['title'] = $entity['name'] ?? '';
+                $featuredCard['subtitle'] = $entity['subtitle'] ?? '';
+                $featuredCard['url'] = ROOTPATH . '/infrastructures/view/' . ($entity['_id'] ?? $featuredId);
+            }
+            break;
+    }
+
+    if (empty($featuredCard['title'])) {
+        $featuredCard = null;
+    }
+}
 ?>
 
 <style>
@@ -48,6 +129,75 @@ $news = DB::doc2Arr($news);
         object-fit: cover;
         border-radius: 8px;
         background-color: white;
+    }
+
+    .featured-entity {
+        --featured-color: var(--primary-color);
+        float: right;
+        width: min(32rem, 42%);
+        margin: 0 0 1.5rem 2rem;
+        padding: 1.5rem;
+        border: var(--border-width) solid var(--featured-color);
+        border-top-width: .5rem;
+        border-radius: var(--border-radius);
+        background: white;
+        box-shadow: 0 .4rem 1.5rem rgba(0, 0, 0, .08);
+    }
+
+    .featured-entity.person { --featured-color: #3c78a8; }
+    .featured-entity.activity { --featured-color: #9f4371; }
+    .featured-entity.project { --featured-color: #1c7d72; }
+    .featured-entity.event { --featured-color: #7459a6; }
+    .featured-entity.infrastructure { --featured-color: #d48646; }
+
+    .featured-entity-label {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        margin-bottom: .75rem;
+        color: var(--featured-color);
+        font-size: 1.2rem;
+        font-weight: bold;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .featured-entity-title {
+        display: block;
+        color: inherit;
+        font-size: 1.8rem;
+        font-weight: bold;
+        line-height: 1.25;
+        text-decoration: none;
+    }
+
+    .featured-entity-subtitle,
+    .featured-entity-text {
+        margin-top: .75rem;
+    }
+
+    .featured-entity-subtitle {
+        color: var(--muted-color);
+        font-size: 1.3rem;
+    }
+
+    .featured-entity-text {
+        padding-top: .75rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .news-content::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    @media (max-width: 600px) {
+        .featured-entity {
+            float: none;
+            width: 100%;
+            margin: 0 0 1.5rem;
+        }
     }
 
     <?php foreach ($Vocabulary->getValues('news-category') as $key => $val) {
@@ -163,6 +313,31 @@ if ($Settings->hasPermission('news.edit')) { ?>
         ?>
     </div>
 
+    <?php if ($featuredCard) { ?>
+        <aside class="featured-entity <?= e($featuredCard['type']) ?>">
+            <div class="featured-entity-label">
+                <i class="ph-duotone <?= e($featuredCard['icon']) ?>"></i>
+                <?= e($featuredCard['type_label']) ?>
+            </div>
+
+            <?php if (!empty($featuredCard['url'])) { ?>
+                <a class="featured-entity-title" href="<?= e($featuredCard['url']) ?>">
+                    <?= e($featuredCard['title']) ?>
+                </a>
+            <?php } else { ?>
+                <div class="featured-entity-title"><?= e($featuredCard['title']) ?></div>
+            <?php } ?>
+
+            <?php if (!empty($featuredCard['subtitle'])) { ?>
+                <div class="featured-entity-subtitle"><?= e($featuredCard['subtitle']) ?></div>
+            <?php } ?>
+
+            <?php if (!empty($featuredCard['text'])) { ?>
+                <div class="featured-entity-text"><?= nl2br(e($featuredCard['text'])) ?></div>
+            <?php } ?>
+        </aside>
+    <?php } ?>
+
 
     <div class="news-content">
         <?= lang($news['content'] ?? '', $news['content_de'] ?? null) ?>
@@ -210,6 +385,28 @@ if ($Settings->hasPermission('news.edit')) { ?>
             foreach ($projects as $i => $p) {
                 echo $p['name'];
             } ?>
+        </div>
+    <?php } ?>
+
+    <?php if (is_countable($news['events'] ?? null) && count($news['events']) > 0) { ?>
+        <hr>
+        <div class="events">
+            <h4><?= lang('Selected Events', 'Ausgewählte Veranstaltungen') ?></h4>
+            <?php
+            $eventIds = DB::to_ObjectIDs($news['events']);
+            $events = $osiris->conferences->find(['_id' => ['$in' => $eventIds]], [
+                'projection' => ['title' => 1, 'start' => 1],
+                'sort' => ['start' => -1]
+            ])->toArray();
+            foreach ($events as $event) { ?>
+                <a href="<?= ROOTPATH ?>/conferences/view/<?= e($event['_id']) ?>">
+                    <?= e($event['title'] ?? '') ?>
+                </a>
+                <?php if (!empty($event['start'])) { ?>
+                    <span class="text-muted">(<?= date('d.m.Y', strtotime($event['start'])) ?>)</span>
+                <?php } ?>
+                <br>
+            <?php } ?>
         </div>
     <?php } ?>
 

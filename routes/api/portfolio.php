@@ -218,7 +218,7 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             ['$unwind' => '$collaborators'],
             [
                 '$group' => [
-                    '_id' => '$collaborators.name',
+                    '_id' => '$collaborators.organization',
                 ]
             ],
             ['$count' => 'count']
@@ -450,7 +450,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         ['$unwind' => '$collaborators'],
         [
             '$group' => [
-                '_id' => '$collaborators.name',
+                '_id' => '$collaborators.organization',
             ]
         ],
         ['$count' => 'count']
@@ -1461,8 +1461,10 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         $result['connected_activities'][] = [
             'id' => strval($con_doc['_id']),
             'icon' => $con_doc['rendered']['icon'],
-            'html' => str_replace('**PORTAL**', '', $con_doc['rendered']['portfolio']),
+            'html' => $con_doc['rendered']['portfolio'] ?? null,
             'print' => $con_doc['rendered']['print'] ?? null,
+            'title' => $con_doc['rendered']['title'] ?? null,
+            'subtitle' => $con_doc['rendered']['subtitle'] ?? null,
             'relationship' => $conLabel
         ];
     }
@@ -1761,13 +1763,13 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         [
             'mail_alternative',
             'mail_alternative_comment',
-            'twitter',
-            'linkedin',
             'orcid',
-            'researchgate',
             'google_scholar',
-            'matrix',
-            'webpage'
+            // 'twitter',
+            // 'linkedin',
+            // 'researchgate',
+            // 'matrix',
+            // 'webpage'
         ] as $key
     ) {
         if (isset($person[$key]) && !empty($person[$key])) {
@@ -2640,7 +2642,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
         'hide' => ['$ne' => true]
     ]);
 
-    
+
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
             'visibility' => 'public',
@@ -2667,6 +2669,82 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
 
 
     echo rest($infrastructure);
+});
+
+
+Route::get('/portfolio/(events|conferences)', function ($type) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('events')) {
+        echo rest(['message' => 'Feature not enabled'], 0, 404);
+        die;
+    }
+    $filter = [
+        'public' => true,
+    ];
+    $options = [
+        'sort' => ['name' => 1],
+        'projection' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'title' => 1,
+            'title_full' => 1,
+            'description' => 1,
+            'start' => 1,
+            'end' => 1,
+            'location' => 1,
+            'country' => 1,
+            'url' => 1,
+            'type' => 1,
+            'topics' => 1,
+        ]
+    ];
+    $data = $osiris->conferences->find(
+        $filter,
+        $options
+    );
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+
+    $result = [];
+    foreach ($data as $doc) {
+        $doc['type'] = $Vocabulary->getValue('event-type', $doc['type'], '-');
+        if (isset($doc['topics']) && !empty($doc['topics'])) {
+            $topics = $osiris->topics->find(
+                ['id' => ['$in' => $doc['topics']], 'inactive' => ['$ne' => true]],
+                ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]]
+            )->toArray();
+            $doc['topics'] = $topics;
+        }
+        if (isset($doc['country'])) {
+            $country = $DB->getCountry($doc['country']);
+            $doc['country'] = lang($country['name'], $country['name_de']);
+        }
+        $doc['activities'] = $osiris->activities->find(
+            ['conference_id' => $doc['id'], 'hide' => ['$ne' => true]],
+            [
+                'sort' => ['year' => -1, 'month' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'icon' => '$rendered.icon',
+                    'type' => '$rendered.type',
+                    'subtype' => '$rendered.subtype',
+                    'html' => '$rendered.portfolio',
+                    'title' => '$rendered.title',
+                    'subtitle' => '$rendered.subtitle',
+                    'print' => '$rendered.print',
+                ]
+            ]
+        )->toArray();
+        $result[] = $doc;
+    }
+
+    echo rest($result);
 });
 
 
@@ -2953,7 +3031,9 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
                 'persons' => 1,
                 'projects' => 1,
                 'infrastructures' => 1,
-                'topics' => 1
+                'topics' => 1,
+                'events' => 1,
+                'featured' => 1
             ]
         ]
     );
@@ -2962,18 +3042,164 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
         echo rest('News not found', 0, 404);
         die;
     }
+
+    $featured = DB::doc2Arr($news['featured'] ?? []);
+    $featuredId = $featured['id'] ?? null;
+    $featuredType = $featured['type'] ?? null;
+    $featuredCard = null;
+    if (!empty($featured['type']) && !empty($featured['id'])) {
+        $featuredCard = [
+            'id' => $featured['id'],
+            'type' => $featured['type'],
+            'type_label' => '',
+            'icon' => 'ph-star',
+            'title' => '',
+            'subtitle' => '',
+            'text' => lang($featured['text'] ?? null, $featured['text_de'] ?? null)
+        ];
+    } else {
+        $featured = null;
+    }
+
     if (!empty($news['activities'])) {
         $activities = [];
         foreach ($news['activities'] as $a) {
-            $doc = $DB->getActivity($a);
+            $doc = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($a), 'hide' => ['$ne' => true]], [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'icon' => '$rendered.icon',
+                    'type' => '$rendered.type',
+                    'subtype' => '$rendered.subtype',
+                    'html' => '$rendered.portfolio',
+                    'title' => '$rendered.title',
+                    'subtitle' => '$rendered.subtitle',
+                    'print' => '$rendered.print',
+                ]
+            ]);
             if (empty($doc)) continue;
-            $activities[] = [
-                'id' => strval($doc['_id']),
-                'icon' => $doc['rendered']['icon'],
-                'html' => $doc['rendered']['print']
-            ];
+            if ($featured && $featuredType == 'activity' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Research activity', 'Forschungsaktivität');
+                $featuredCard['icon'] = 'ph-article';
+                $featuredCard['title'] = ($doc['title'] ?? '');
+                $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
+            } else {
+                $activities[] = DB::doc2Arr($doc);
+            }
         }
         $news['activities'] = $activities;
+    }
+
+    if (!empty($news['persons'])) {
+        $persons = [];
+        foreach ($news['persons'] as $p) {
+            $doc = $osiris->persons->findOne(['_id' => $DB->to_ObjectID($p), 'hide' => ['$ne' => true]], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'displayname' => 1,
+                    'academic_title' => 1,
+                    'position' => 1,
+                    'position_de' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'person' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['icon'] = 'ph-user';
+                $featuredCard['title'] = ($doc['displayname'] ?? '');
+                $featuredCard['subtitle'] = ($doc['position'] ?? '');
+            } else {
+                $persons[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['persons'] = $persons;
+    }
+
+    if (!empty($news['projects'])) {
+        $projects = [];
+        foreach ($news['projects'] as $p) {
+            $doc = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($p), 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'name' => 1,
+                    'title' => 1,
+                    'acronym' => 1,
+                    'start_date' => 1,
+                    'end_date' => 1,
+                    'type' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'project' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['icon'] = 'ph-briefcase';
+                $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . ($doc['name'] ?? '');
+                $featuredCard['subtitle'] = ($doc['title'] ?? '');
+            } else {
+                $projects[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['projects'] = $projects;
+    }
+
+    if (!empty($news['infrastructures'])) {
+        $infrastructures = [];
+        foreach ($news['infrastructures'] as $i) {
+            $doc = $osiris->infrastructures->findOne(['id' => $i, 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'name' => 1,
+                    'subtitle' => 1,
+                    'type' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'infrastructure' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = $Settings->infrastructureLabel();
+                $featuredCard['icon'] = 'ph-microscope';
+                $featuredCard['title'] = ($doc['name'] ?? '');
+                $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
+            } else {
+                $infrastructures[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['infrastructures'] = $infrastructures;
+    }
+
+    if (!empty($news['events'])) {
+        $events = [];
+        foreach ($news['events'] as $e) {
+            $doc = $osiris->conferences->findOne(['_id' => $DB->to_ObjectID($e), 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_full' => 1,
+                    'start' => 1,
+                    'end' => 1,
+                    'location' => 1,
+                    'country' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'event' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['icon'] = 'ph-calendar-blank';
+                $featuredCard['title'] = ($doc['title'] ?? '');
+                $eventDetails = [];
+                if (!empty($doc['start'])) $eventDetails[] = date('d.m.Y', strtotime($doc['start']));
+                if (!empty($doc['location'])) $eventDetails[] = $doc['location'];
+                $featuredCard['subtitle'] = implode(' · ', $eventDetails);
+            } else {
+                $events[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['events'] = $events;
+    }
+
+    if (!empty($featuredCard['title'])) {
+        $news['featured'] = $featuredCard;
+    } else {
+        $news['featured'] = null;
     }
 
     echo rest($news);

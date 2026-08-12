@@ -242,6 +242,8 @@ Route::post('/crud/conferences/add', function () {
         exit;
     }
 
+    if (isset($values['public'])) $values['public'] = boolval($values['public'] === 'true');
+
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
 
@@ -295,6 +297,7 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
     $values['month'] = intval(date('n', $start));
     $values['quarter'] = ceil($values['month'] / 3);
     $values['day'] = intval(date('j', $start));
+    if (isset($values['public'])) $values['public'] = boolval($values['public'] === 'true');
 
     $updated = $osiris->conferences->updateOne(
         ['_id' => $DB::to_ObjectID($id)],
