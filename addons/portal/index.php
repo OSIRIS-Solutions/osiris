@@ -17,6 +17,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
             abortwith(500, lang('Public portal is disabled.', 'Öffentliches Portal ist deaktiviert.'), "/");
         }
         $base = ROOTPATH . '/portal';
+        $base = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $base;
         $Portfolio->setBasePath($base);
     } else {
         $base = $Portfolio->getBasePath();
