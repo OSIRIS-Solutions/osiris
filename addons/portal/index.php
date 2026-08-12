@@ -30,11 +30,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
     // Call Portfolio API to get entity details
     $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
-    // if ($type == 'unit') {
-    //     // fetch additional numbers data
-    //     $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', lang('en', 'de'));
-    //     $data['numbers'] = $numbers;
-    // }
+
     // display correct breadcrumb
     $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
 
@@ -48,7 +44,8 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
         echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.<br>");
+        echo "Portfolio API error: " . ($_SESSION['portfolio_error'] ?? 'Unknown error');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";
