@@ -30,7 +30,8 @@ $Vocabulary = new Vocabulary();
 
 $documents = $osiris->uploads->find(['type' => ['$in' => ['proposals', 'nagoya-permit']], 'id' => $id])->toArray();
 
-$connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($id)]);
+$project_id = $project['project_id'] ?? $id;
+$connected_project = $osiris->projects->findOne(['_id' => DB::to_ObjectID($project_id)]);
 
 $nagoyaRelevant = ($Settings->featureEnabled('nagoya') && $Project->isNagoyaRelevant());
 
