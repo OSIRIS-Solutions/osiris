@@ -20,7 +20,7 @@
         }
     }
     $abstract_fields = [];
-    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title'];
+    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'event-select'];
     $empty_fields = [];
     $sections = [];
     $Format->usecase = 'list';

@@ -31,6 +31,7 @@ foreach ($Modules->all_modules as $key => $value) {
         'width' => $value['width'] ?? '12',
         'fields' => array_keys($value['fields'] ?? []),
         'type' => 'field',
+        'portfolio' => $value['portfolio'] ?? false,
         'tags' => implode(',', $value['tags'] ?? []),
     ];
     foreach ($value['tags'] ?? [] as $tag) {
@@ -345,7 +346,13 @@ $tagLabels = [
             display: block;
         }
     }
+
+
+    .custom-checkbox label:before {
+        border-radius: 50%;
+    }
 </style>
+
 
 <div class="modal" id="preview" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -354,6 +361,41 @@ $tagLabels = [
                 <span aria-hidden="true">&times;</span>
             </button>
             <div id="field-preview"></div>
+            <div class="text-right mt-20">
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="field-props-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-white">
+            <button type="button" data-dismiss="modal" class="close" role="button" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h2 class="title">
+                <?= lang('Field properties', 'Feldeigenschaften') ?>
+            </h2>
+
+            <!-- required: cannot be saved without a value -->
+            <!-- recommended: influences the quality score of the entry -->
+            <p>
+                <?= lang('<b>Required fields</b> must be filled in by the user, otherwise the form cannot be saved.', '<b>Pflichtfelder</b> müssen vom Nutzer ausgefüllt werden, ansonsten kann das Formular nicht gespeichert werden. ') ?>
+            </p>
+
+            <p>
+                <?= lang('<b>Recommended fields</b> are highlighted, but not mandatory. They will in the future influence the quality score of the entry.', '<b>Empfohlene Felder</b> werden hervorgehoben, sind aber nicht verpflichtend. Sie werden in Zukunft den Qualitätsscore der Einträge beeinflussen.') ?>
+            </p>
+
+            <div class="alert signal my-20">
+                <?=lang('Recommended fields have currently no impact, but are here in preparation for a future release.', 'Empfohlene Felder haben aktuell noch keine Auswirkung, sind aber hier in Vorbereitung auf eine zukünftige Version.')?>
+            </div>
+
+            <p>
+                <?= lang('Please be aware that the Portfolio setting only affects the visibility in the "fields" section (Metadata table in Portfolio). Fields that are for example part of the citation or general information like authors and affiliations will still be shown in Portfolio.', 'Bitte beachte, dass die Portfolio-Einstellung nur die Sichtbarkeit in der Metadaten-Tabelle in Portfolio beeinflusst. Felder, die z.B. Teil der Zitation sind oder allgemeine Informationen wie Autor:innen und Affiliationen, werden weiterhin im Portfolio angezeigt.') ?>
+            </p>
+
             <div class="text-right mt-20">
                 <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
             </div>
@@ -594,14 +636,28 @@ $tagLabels = [
                         </div>
 
                         <div class="form-group">
-                            <div class="custom-switch">
+                            <b>
+                                <?= lang('Field properties', 'Feldeigenschaften') ?>
+                                <a href="#field-props-modal">
+                                    <i class="ph ph-info"></i> 
+                                </a>
+                            </b>
+                            <div class="custom-checkbox radio mt-10">
                                 <input type="checkbox" id="prop-required" value="">
                                 <label for="prop-required"><?= lang('Required Field', 'Pflichtfeld') ?></label>
                             </div>
-                            <!-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prop-portfolio">
-                                <label class="form-check-label" for="prop-portfolio">Im Portfolio ausliefern</label>
-                            </div> -->
+
+                            <div class="custom-checkbox radio mt-10">
+                                <input type="checkbox" id="prop-recommended" value="">
+                                <label for="prop-recommended"><?= lang('Recommended Field', 'Empfohlenes Feld') ?></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-switch">
+                                <input type="checkbox" id="prop-portfolio" value="">
+                                <label for="prop-portfolio"><?= lang('Deliver in portfolio', 'Im Portfolio ausliefern') ?></label>
+                            </div>
                         </div>
 
                         <!-- role visibility -->
@@ -758,6 +814,9 @@ $tagLabels = [
                                                 <?php if (!empty($props['required'])): ?>
                                                     <span class="badge danger"><i class="ph ph-asterisk m-0"></i></span>
                                                 <?php endif; ?>
+                                                <?php if (!empty($props['recommended'])): ?>
+                                                    <span class="badge warning"><i class="ph ph-thumbs-up m-0"></i></span>
+                                                <?php endif; ?>
                                                 <?php if (!empty($props['label'])): ?>
                                                     <span class="badge primary"><i class="ph ph-tag m-0"></i></span>
                                                 <?php endif; ?>
@@ -809,7 +868,7 @@ $tagLabels = [
                                                 <?php if (!empty($it['props']['roles'])): ?>
                                                     <span class="badge primary"><i class="ph ph-eye m-0"></i></span>
                                                 <?php endif; ?>
-                                        </div>
+                                            </div>
                                         </div>
                                     </li>
                                 <?php elseif ($field_type === 'hr'): ?>
@@ -1014,8 +1073,18 @@ $tagLabels = [
                 $('#prop-roles').val(props.roles || '');
                 $('#prop-width').val(props.width || '');
                 $('#prop-required').prop('checked', props.required || false);
+                $('#prop-recommended').prop('checked', props.recommended || false);
                 $('#prop-label-en').val(props.label || '');
                 $('#prop-label-de').val(props.label_de || '');
+
+                let portfolio = props.portfolio ?? defaults.portfolio ?? false;
+                if (defaults.portfolio === "impossible") {
+                    $('#prop-portfolio').prop('checked', false);
+                    $('#prop-portfolio').prop('disabled', true);
+                } else {
+                    $('#prop-portfolio').prop('checked', portfolio);
+                    $('#prop-portfolio').prop('disabled', false);
+                }
                 // Weitere Logik für Felder…
             } else if (type === 'layout-heading') {
                 $('#props-heading').show();
@@ -1035,7 +1104,7 @@ $tagLabels = [
         });
 
         // on change of properties: update the selected item
-        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-roles, #prop-width, #prop-required, #prop-portfolio, #prop-paragraph, #prop-paragraph-de, #prop-paragraph-roles, #prop-heading, #prop-heading-de, #prop-heading-roles', function() {
+        $('#activity-form').on('change', '#prop-label-en, #prop-label-de, #prop-help, #prop-help-de, #prop-roles, #prop-width, #prop-required, #prop-recommended, #prop-portfolio, #prop-paragraph, #prop-paragraph-de, #prop-paragraph-roles, #prop-heading, #prop-heading-de, #prop-heading-roles', function() {
             var $selected = $('#canvas-list .canvas-item.is-selected');
             if ($selected.length === 0) return; // Nichts ausgewählt
 
@@ -1048,11 +1117,26 @@ $tagLabels = [
 
                 let defaults = ALL[$selected.data('id')] || {};
                 let props = {}
+
+                // required/recommended must be mutually exclusive, but both can be false
+                if ($(this).attr('id') === 'prop-required' && $('#prop-required').is(':checked')) {
+                    $('#prop-recommended').prop('checked', false);
+                }
+                if ($(this).attr('id') === 'prop-recommended' && $('#prop-recommended').is(':checked')) {
+                    $('#prop-required').prop('checked', false);
+                }
+
                 if ($('#prop-required').is(':checked')) {
                     props.required = true;
                     $subtitle.append(' <span class="badge danger"><i class="ph ph-asterisk m-0"></i></span>');
                 } else {
                     props.required = false;
+                }
+                if ($('#prop-recommended').is(':checked')) {
+                    props.recommended = true;
+                    $subtitle.append(' <span class="badge warning"><i class="ph ph-thumbs-up m-0"></i></span>');
+                } else {
+                    props.recommended = false;
                 }
                 if ($('#prop-label-en').val()) {
                     props.label = $('#prop-label-en').val();
@@ -1405,5 +1489,10 @@ $tagLabels = [
 
         // init count (falls serverseitig Items vorhanden)
         updateFieldCount();
+    });
+
+    $('#properties-panel').on('click', '.disabled', function(e) {
+        e.preventDefault();
+        toastError(lang('This option is not available for this field.', 'Diese Option ist für dieses Feld nicht verfügbar.'));
     });
 </script>

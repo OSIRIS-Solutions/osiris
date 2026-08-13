@@ -1346,13 +1346,14 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $Modules = new Modules($doc);
 
     $Format->usecase = "list";
+    $portfolio_fields = $Modules->getPortfolioFields();
 
-    // TODO: configurable
-    $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
+    
+    // $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
     $fields = [];
     foreach ($selected as $module) {
         if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-        if (in_array($module, $hidden_modules)) continue;
+        if (!in_array($module, $portfolio_fields)) continue;
         if ($module == 'teaching-course' && isset($doc['module_id'])) :
             $teaching = $DB->getConnected('teaching', $doc['module_id']);
             $value = $teaching['module'];
