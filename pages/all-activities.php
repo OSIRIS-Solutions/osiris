@@ -760,33 +760,35 @@ $cart = readCart();
 
         });
 
-        // Custom range filtering function
         function parseLocalYMD(ymd) {
-            // ymd: "2025-01-01"
-            const [y, m, d] = ymd.split('-').map(Number);
-            return new Date(y, m - 1, d); // local midnight
+            const [year, month, day] = ymd.split('-').map(Number);
+            return new Date(year, month - 1, day);
         }
 
         $.fn.dataTable.ext.search.push(function(settings, data) {
-            let min = null,
-                max = null;
+            let minFilter = minEl.value ?
+                parseLocalYMD(minEl.value) :
+                null;
 
-            if (minEl.value) min = parseLocalYMD(minEl.value);
-            if (maxEl.value) {
-                max = parseLocalYMD(maxEl.value);
-                max.setHours(23, 59, 59, 999); // inclusive end of day
+            let maxFilter = maxEl.value ?
+                parseLocalYMD(maxEl.value) :
+                null;
+
+            if (maxFilter) {
+                maxFilter.setHours(23, 59, 59, 999);
             }
 
             const minDate = parseLocalYMD(data[5]);
-            const maxDate = parseLocalYMD(data[6]);
 
-            const ok =
-                (!min && !max) ||
-                (!min && minDate <= max) ||
-                (min <= maxDate && !max) ||
-                (min <= maxDate && minDate <= max);
+            // An empty end date means that the activity only occurred on its start date.
+            const maxDate = data[6] && data[6] !== '' ?
+                parseLocalYMD(data[6]) :
+                minDate;
 
-            return ok;
+            return (
+                (!minFilter || maxDate >= minFilter) &&
+                (!maxFilter || minDate <= maxFilter)
+            );
         });
 
         <?php if (isset($_GET['type'])) { ?>
