@@ -854,94 +854,94 @@ class Document extends Settings
     }
 
     public function formatDate(string $field, string $format = 'd.m.Y'): string
-{
-    switch ($field) {
-        case 'date':
-            $date = [
-                'year' => $this->getVal('year', null),
-                'month' => $this->getVal('month', null),
-                'day' => $this->getVal('day', null),
-            ];
-            break;
+    {
+        switch ($field) {
+            case 'date':
+                $date = [
+                    'year' => $this->getVal('year', null),
+                    'month' => $this->getVal('month', null),
+                    'day' => $this->getVal('day', null),
+                ];
+                break;
 
-        case 'start':
-            $date = $this->getVal('start_date', null);
-            break;
+            case 'start':
+                $date = $this->getVal('start_date', null);
+                break;
 
-        case 'end':
-        case 'end-compact':
-            $date = $this->getVal('end_date', null);
-            break;
+            case 'end':
+            case 'end-compact':
+                $date = $this->getVal('end_date', null);
+                break;
 
-        default:
-            return '';
-    }
-
-    if (empty($date)) return '';
-
-    $parts = DB::doc2Arr($date);
-
-    // Only the general activity date can have reduced precision.
-    if ($field === 'date') {
-        if (empty($parts['year'])) return '';
-
-        if (empty($parts['day'])) {
-            $format = preg_replace(
-                '/(?<!\\\\)[dDjlNSwzW]/',
-                '',
-                $format
-            );
-        }
-
-        if (empty($parts['month'])) {
-            $format = preg_replace(
-                '/(?<!\\\\)[FmMnt]/',
-                '',
-                $format
-            );
-        }
-    }
-
-    $d = Document::getDateTime($date);
-    if (empty($d)) return '';
-
-    if ($field === 'end-compact') {
-        $startDate = $this->getVal('start_date', null);
-        $start = Document::getDateTime($startDate);
-
-        if (!empty($start)) {
-            if ($start->format('Y-m-d') === $d->format('Y-m-d')) {
+            default:
                 return '';
-            }
+        }
 
-            if ($start->format('Y') === $d->format('Y')) {
-                // Do not repeat the year.
+        if (empty($date)) return '';
+
+        $parts = DB::doc2Arr($date);
+
+        // Only the general activity date can have reduced precision.
+        if ($field === 'date') {
+            if (empty($parts['year'])) return '';
+
+            if (empty($parts['day'])) {
                 $format = preg_replace(
-                    '/(?<!\\\\)[Yy]/',
+                    '/(?<!\\\\)[dDjlNSwzW]/',
                     '',
                     $format
                 );
+            }
 
-                if ($start->format('m') === $d->format('m')) {
-                    // Do not repeat the month.
+            if (empty($parts['month'])) {
+                $format = preg_replace(
+                    '/(?<!\\\\)[FmMnt]/',
+                    '',
+                    $format
+                );
+            }
+        }
+
+        $d = Document::getDateTime($date);
+        if (empty($d)) return '';
+
+        if ($field === 'end-compact') {
+            $startDate = $this->getVal('start_date', null);
+            $start = Document::getDateTime($startDate);
+
+            if (!empty($start)) {
+                if ($start->format('Y-m-d') === $d->format('Y-m-d')) {
+                    return '';
+                }
+
+                if ($start->format('Y') === $d->format('Y')) {
+                    // Do not repeat the year.
                     $format = preg_replace(
-                        '/(?<!\\\\)[FmMnt]/',
+                        '/(?<!\\\\)[Yy]/',
                         '',
                         $format
                     );
+
+                    if ($start->format('m') === $d->format('m')) {
+                        // Do not repeat the month.
+                        $format = preg_replace(
+                            '/(?<!\\\\)[FmMnt]/',
+                            '',
+                            $format
+                        );
+                    }
                 }
             }
         }
+
+        $result = date_format($d, $format);
+
+        // Clean separators left behind by omitted components.
+        $result = preg_replace('/\s+([,.;:])/', '$1', $result);
+        $result = preg_replace('/([,.;:]){2,}/', '$1', $result);
+
+        return trim($result, " \t\n\r\0\x0B,.;:/–—-");
     }
-
-    $result = date_format($d, $format);
-
-    // Clean separators left behind by omitted components.
-    $result = preg_replace('/\s+([,.;:])/', '$1', $result);
-    $result = preg_replace('/([,.;:]){2,}/', '$1', $result);
-
-    return trim($result, " \t\n\r\0\x0B,.;:/–—-");
-}
 
     public static function getPosition($position)
     {
@@ -1051,9 +1051,33 @@ class Document extends Settings
     public static function format_date($date)
     {
         if (empty($date)) return '';
-        $d = Document::getDateTime($date);
-        if (empty($d)) return '';
-        return date_format($d, "d.m.Y");
+
+        // Preserve the precision of date arrays.
+        if (isset($date['year'])) {
+            $year = (int) $date['year'];
+            $month = $date['month'] ?? null;
+            $day = $date['day'] ?? null;
+
+            if (empty($month)) {
+                return sprintf('%04d', $year);
+            }
+
+            if (empty($day)) {
+                return sprintf('%02d.%04d', $month, $year);
+            }
+
+            if (!checkdate((int) $month, (int) $day, $year)) {
+                return '';
+            }
+
+            return sprintf('%02d.%02d.%04d', $day, $month, $year);
+        }
+
+        $dateTime = self::getDateTime($date);
+
+        if (empty($dateTime)) return '';
+
+        return $dateTime->format('d.m.Y');
     }
 
     private static function fromToDate($from, $to)
@@ -1285,8 +1309,8 @@ class Document extends Settings
             case "end-compact": // ["year", "month", "day"],
                 return $this->formatDate('end-compact', 'd.m.Y');
             case "date": // ["year", "month", "day"],
+                return Document::format_date($this->doc);
             case "date-range": // ["start", "end"],
-                // return $this->fromToDate($this->getVal('start'), $this->getVal('end') ?? null);
                 return $this->fromToDate($this->getVal('start', $this->doc), $this->getVal('end', null));
             case "date-range-ongoing":
                 if (!empty($this->doc['start'])) {
