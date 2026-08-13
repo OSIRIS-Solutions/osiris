@@ -214,15 +214,16 @@ function renderAuthorUnits($doc, $old_doc = [])
             if ($role !== 'persons' && !($author['aoi'] ?? false)) {
                 continue;
             }
-            if (empty($author['user'])) continue;
 
-            $user = $author['user'];
-
+            $user = $author['user'] ?? null;
             // Respect manual units:
             // - if current says manually => keep
             // - OR if old had manually => keep (prevents accidental overwrite)
             $manualNow = ($author['manually'] ?? false) ? true : false;
-            $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
+            $manualOld = null;
+            if (isset($oldIdx[$user])) {
+                $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
+            }
             if ($manualNow || $manualOld) {
                 $kept = DB::doc2Arr($author['units'] ?? []);
                 $current[$i]['units'] = $kept;
