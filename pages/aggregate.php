@@ -333,45 +333,266 @@ $collections = [
         </div>
     </div>
 
+    <table class="table" id="data-table" style="display: none;">
+        <thead>
+            <th>Results</th>
+        </thead>
+        <tbody></tbody>
+    </table>
 
     <div class="box">
-        <div class="content" id="data-statistics">
-            -
-        </div>
         <div class="footer">
             <div class="btn-toolbar">
-                <button class="btn" onclick="$('#data-raw').toggle()"><i class="ph ph-eye"></i> <?= lang('Show raw data', 'Rohdaten anzeigen') ?></button>
-                <button class="btn" onclick="downloadData()"><i class="ph ph-download"></i> <?= lang('Download data', 'Herunterladen') ?></button>
+                <button class="btn" onclick="downloadData()"><i class="ph ph-download"></i> <?= lang('Download raw data', 'Rohdaten herunterladen') ?></button>
             </div>
-        </div>
-        <div class="content" id="data-raw" style="display: none;">
-            -
         </div>
     </div>
 
     <script>
+        var latestAggregateResults = [];
+
+        function escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function buildRowsTable(rows) {
+            if (!rows.length) {
+                return '<p class="mb-0">-</p>';
+            }
+
+            var html = '<table class="table simple mb-0"><tbody>';
+            rows.forEach(function(row) {
+                html += '<tr>' +
+                    '<th style="width: 35%; vertical-align: top;">' + escapeHtml(row.key) + '</th>' +
+                    '<td style="vertical-align: top; white-space: pre-wrap;">' + (row.isHtml ? row.value : escapeHtml(row.value)) + '</td>' +
+                    '</tr>';
+            });
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function buildNestedDetails(title, tableHtml) {
+            return '<details class="nested-table-details">' +
+                '<summary>' + escapeHtml(title) + '</summary>' +
+                '<div class="mt-5">' + tableHtml + '</div>' +
+                '</details>';
+        }
+
+        function formatSimpleValue(value) {
+            return value === null || value === undefined ? '-' : String(value);
+        }
+
+        function isObjectValue(value) {
+            return value !== null && typeof value === 'object';
+        }
+
+        function isEmptyObject(value) {
+            return isObjectValue(value) && !Array.isArray(value) && Object.keys(value).length === 0;
+        }
+
+        function buildValueRow(key, value) {
+            if (isObjectValue(value)) {
+                return {
+                    key: key,
+                    value: buildNestedDetails(lang('Show nested table', 'Untertabelle anzeigen'), buildNestedTable(value)),
+                    isHtml: true
+                };
+            }
+
+            return {
+                key: key,
+                value: formatSimpleValue(value)
+            };
+        }
+
+        function wrapTopLevelView(content, index) {
+            var label = lang('Result', 'Ergebnis') + ' #' + (index + 1);
+            return '<div style="border: 1px solid #d8dee8; border-radius: 8px; background: #f8fafc; padding: 12px; margin: 6px 0;">' +
+                '<div style="font-size: 1.2rem; font-weight: 600; color: #334155; margin-bottom: 8px;">' + escapeHtml(label) + '</div>' +
+                content +
+                '</div>';
+        }
+
+        function toggleExpandedRows(containerId, trigger) {
+            var container = document.getElementById(containerId);
+            if (!container) {
+                return false;
+            }
+
+            var isHidden = container.style.display === 'none' || container.style.display === '';
+            if (isHidden) {
+                container.style.display = 'block';
+                trigger.textContent = trigger.getAttribute('data-less-label') || lang('Show less', 'Weniger anzeigen');
+            } else {
+                container.style.display = 'none';
+                trigger.textContent = trigger.getAttribute('data-more-label') || lang('Show more', 'Mehr anzeigen');
+            }
+
+            return false;
+        }
+
+        function buildNestedTable(value) {
+            if (!isObjectValue(value)) {
+                return formatSimpleValue(value);
+            }
+
+            if (Array.isArray(value)) {
+                if (value.length === 0) {
+                    return '-';
+                }
+
+                var arrayRows = value.map(function(item, index) {
+                    return buildValueRow('[' + index + ']', item);
+                });
+
+                return buildRowsTable(arrayRows);
+            }
+
+            var keys = Object.keys(value);
+            if (keys.length === 0) {
+                return '-';
+            }
+
+            var objectRows = keys.map(function(key) {
+                return buildValueRow(key, value[key]);
+            });
+
+            return buildRowsTable(objectRows);
+        }
+
+        function getTopLevelRows(value) {
+            if (value === null || value === undefined) {
+                return [{ key: '-', value: '-' }];
+            }
+
+            if (!isObjectValue(value)) {
+                return [{ key: '-', value: String(value) }];
+            }
+
+            var keys = Object.keys(value);
+            if (keys.length === 0) {
+                return [{ key: '-', value: '-' }];
+            }
+
+            return keys.map(function(key) {
+                var current = value[key];
+                if (!isObjectValue(current)) {
+                    return {
+                        key: key,
+                        value: formatSimpleValue(current)
+                    };
+                }
+
+                if (isEmptyObject(current)) {
+                    return {
+                        key: key,
+                        value: '-'
+                    };
+                }
+
+                var childTable = buildNestedTable(current);
+                return {
+                    key: key,
+                    value: buildNestedDetails(lang('Show nested table', 'Untertabelle anzeigen') + ': ' + Object.keys(current).length, childTable),
+                    isHtml: true
+                };
+            });
+        }
+
+        function buildDataViews(item, index) {
+            var allRows = getTopLevelRows(item);
+            var previewRows = allRows.slice(0, 3);
+            var remainingRows = allRows.slice(3);
+            var isExpandable = allRows.length > 3;
+            var previewHtml = buildRowsTable(previewRows);
+
+            if (!isExpandable) {
+                return wrapTopLevelView(previewHtml, index);
+            }
+
+            var detailsId = 'json-remaining-' + index;
+            var summaryText = lang('Show more', 'Mehr anzeigen') + ' (' + remainingRows.length + ')';
+            var lessText = lang('Show less', 'Weniger anzeigen');
+            var content = '<div>' +
+                '<a href="#/" class="d-inline-block mb-5" data-more-label="' + escapeHtml(summaryText) + '" data-less-label="' + escapeHtml(lessText) + '" onclick="return toggleExpandedRows(\'' + detailsId + '\', this);">' + escapeHtml(summaryText) + '</a>' +
+                '<div>' + previewHtml + '</div>' +
+                '<div class="mt-5" id="' + detailsId + '" style="display: none;">' + buildRowsTable(remainingRows) + '</div>' +
+                '</div>';
+
+            return wrapTopLevelView(content, index);
+        }
+
         // Funktion zum Darstellen der Ergebnisse in der data-box
         function initializeData(data) {
-            const dataStatistics = document.getElementById('data-statistics');
-            dataStatistics.innerHTML = '<p><?= lang('Results', 'Ergebnisse') ?>: ' + data.length + '</p>';
-
-            const dataRaw = document.getElementById('data-raw');
-            dataRaw.innerHTML = '';
-            if (data.length === 0) {
-                dataRaw.innerHTML = '<p><?= lang('No results found', 'Keine Ergebnisse gefunden') ?></p>';
-                return;
+            if ($.fn.DataTable.isDataTable('#data-table')) {
+                $('#data-table').DataTable().clear().destroy();
+                $('#data-table thead').empty();
+                $('#data-table tbody').empty();
             }
-            cleanData = data.map(item => {
+
+            const cleanData = data.map(item => {
                 const cleanedItem = {};
                 for (const key in item) {
-                    if (key !== 'rendered' && key !== 'history') { // Exclude the _id, rendered, and history fields
+                    // remove rendered and history keys from the item
+                    if (key !== 'rendered' && key !== 'history') {
                         cleanedItem[key] = item[key];
                     }
                 }
                 return cleanedItem;
             });
-            dataRaw.innerHTML = '<pre>' + JSON.stringify(cleanData, null, 2) + '</pre>';
 
+            latestAggregateResults = cleanData;
+            
+            // just one column with the results
+            const columns = [{
+                        data: 'results',
+                        title: lang('Results', 'Ergebnisse')
+                    }
+                ];
+            
+            // prepare data for DataTable
+            data = cleanData.map((item, index) => {
+                return {
+                    results: buildDataViews(item, index)
+                };
+            });
+
+            $('#data-table').DataTable({
+                destroy: true,
+                data: data,
+                columns: columns,
+                dom: 'fBrtip',
+                columnDefs: [{
+                    targets: 0,
+                    orderable: false
+                }],
+                buttons: [{
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible,:hidden'
+                    },
+                    className: 'btn small',
+                    title: "OSIRIS Search",
+                    text: '<i class="ph ph-file-xls"></i> Excel'
+                }],
+                createdRow: function(row) {
+                    $('td', row).css('vertical-align', 'top');
+                },
+                initComplete: function() {
+                    var tableWidth = $('#data-table').width();
+                    var containerWidth = $('#data-table').parent().width();
+                    if (tableWidth > containerWidth && !$('#data-table').parent().hasClass('table-responsive')) {
+                        $('#data-table').wrap('<div class="table-responsive"></div>');
+                    }
+                }
+            });
+
+            $('#data-table').show();
         }
 
         // AJAX-Call zum Abrufen der Daten
@@ -416,12 +637,12 @@ $collections = [
         }
 
         function downloadData() {
-            var dataRaw = document.getElementById('data-raw');
-            if (dataRaw.innerHTML.trim() === '-') {
+            if (!Array.isArray(latestAggregateResults) || latestAggregateResults.length === 0) {
                 toastError(lang('No data to download', 'Keine Daten zum Herunterladen'));
                 return;
             }
-            var blob = new Blob([dataRaw.innerText], { type: 'application/json' });
+            var exportData = JSON.stringify(latestAggregateResults, null, 2);
+            var blob = new Blob([exportData], { type: 'application/json' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
