@@ -706,7 +706,7 @@ if ($topicsEnabled) {
                 <div class="content">
                     <form action="<?= ROOTPATH ?>/download" method="post">
 
-                        <input type="hidden" name="filter[project]" value="<?= $project['name'] ?>">
+                        <input type="hidden" name="filter[project]" value="<?= $id ?>">
 
                         <div class="form-group">
 

@@ -896,7 +896,7 @@ function initActivities(selector, data = {}, highlights = []) {
                     // do not strip HTML tags in the links column
                     stripHtml: false
                 },
-                title: null,
+                title: TITLE + ' - ' + lang('Activities', 'Aktivitäten'),
                 className: 'btn small',
                 text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
                 customize: function (win) {
