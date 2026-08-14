@@ -180,6 +180,7 @@ class Document extends Settings
 
     public function setDocument($doc)
     {
+        $this->appendix = '';
         if (!is_array($doc)) {
             $doc = DB::doc2Arr($doc);
         }
@@ -669,7 +670,6 @@ class Document extends Settings
 
     private function formatAuthorsNew($module)
     {
-        $this->appendix = '';
         $isEditors = str_starts_with($module, 'editors-');
         $isSupervisors = str_starts_with($module, 'supervisors-');
         $authorKey = $isEditors ? 'editors' : ($isSupervisors ? 'supervisors' : 'authors');
@@ -1799,6 +1799,7 @@ class Document extends Settings
     public function format($lang = null)
     {
         $this->full = true;
+        $this->appendix = '';
         if (empty($this->usecase)) {
             $this->usecase = 'print';
         }
@@ -1820,6 +1821,7 @@ class Document extends Settings
     public function formatShort($link = true, $lang = null)
     {
         $this->full = false;
+        $this->appendix = '';
         if (empty($this->usecase)) {
             $this->usecase = 'web';
         }
@@ -1857,6 +1859,7 @@ class Document extends Settings
     public function formatPortfolio($lang = null)
     {
         $this->full = false;
+        $this->appendix = '';
         $this->usecase = 'portal';
         if ($lang !== null) {
             $this->lang = $lang;
@@ -2037,6 +2040,7 @@ class Document extends Settings
     public function formatPortal()
     {
         $this->full = true;
+        $this->appendix = '';
         $this->subtitle = "";
         $template = $this->subtypeArr['template']['title'] ?? '{title}';
         $this->title = $this->template($template);
