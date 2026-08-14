@@ -34,6 +34,8 @@ foreach ($typeModules as $m) {
     if ($m == 'supervisor') $sws = true;
     if ($m == 'supervisor-thesis') $supervisorThesis = true;
 }
+
+$authors = DB::doc2Arr($form[$role] ?? []);
 ?>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -69,11 +71,11 @@ foreach ($typeModules as $m) {
         <?php } ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/activities/update-<?= $role ?>/<?= $id ?>" method="post">
-
         <table class="table">
             <thead>
                 <tr>
                     <th></th>
+                    <th>Username</th>
                     <th><?= lang('Last name', 'Nachname') ?> <span class="text-danger">*</span></th>
                     <th><?= lang('First name', 'Vorname') ?></th>
                     <?php if ($sws) : ?>
@@ -85,12 +87,11 @@ foreach ($typeModules as $m) {
                     <?php endif; ?>
                     <th><?= $Settings->get('affiliation') ?></th>
                     <th><?= lang('Units', 'Einheiten') ?> *</th>
-                    <th>Username</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody id="authors">
-                <?php foreach ($form[$role] as $i => $author) {
+                <?php foreach ($authors as $i => $author) {
                     $thesisRole = $author['role'] ?? 'supervisor';
                 ?>
                     <tr data-attr="<?= $i ?>">
@@ -98,10 +99,14 @@ foreach ($typeModules as $m) {
                             <i class="ph ph-dots-six-vertical text-muted handle"></i>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="updateUser(this)">
+                            <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                            <input name="authors[<?= $i ?>][last]" type="text" class="form-control lastname" value="<?= $author['last'] ?>" required>
+                        </td>
+                        <td>
+                            <input name="authors[<?= $i ?>][first]" type="text" class="form-control firstname" value="<?= $author['first'] ?>">
                         </td>
                         <?php if ($sws) : ?>
                             <td>
@@ -120,19 +125,21 @@ foreach ($typeModules as $m) {
                                     <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
                                 </select>
                             </td>
-                        <?php elseif ($role == 'authors') : ?>
+                        <?php elseif ($role == 'authors') :
+                            $pos = $author['position'] ?? 'middle';
+                        ?>
                             <td>
                                 <select name="authors[<?= $i ?>][position]" class="form-control">
-                                    <option value="first" <?= ($author['position'] == 'first' ? 'selected' : '') ?>>first</option>
-                                    <option value="middle" <?= ($author['position'] == 'middle' ? 'selected' : '') ?>>middle</option>
-                                    <option value="corresponding" <?= ($author['position'] == 'corresponding' ? 'selected' : '') ?>>corresponding</option>
-                                    <option value="last" <?= ($author['position'] == 'last' ? 'selected' : '') ?>>last</option>
+                                    <option value="first" <?= ($pos == 'first' ? 'selected' : '') ?>>first</option>
+                                    <option value="middle" <?= ($pos == 'middle' ? 'selected' : '') ?>>middle</option>
+                                    <option value="corresponding" <?= ($pos == 'corresponding' ? 'selected' : '') ?>>corresponding</option>
+                                    <option value="last" <?= ($pos == 'last' ? 'selected' : '') ?>>last</option>
                                 </select>
                             </td>
                         <?php endif; ?>
                         <td>
                             <div class="custom-checkbox">
-                                <input type="checkbox" id="checkbox-<?= $i ?>" name="authors[<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                <input type="checkbox" id="checkbox-<?= $i ?>" name="authors[<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?> class="aoi-checkbox">
                                 <label for="checkbox-<?= $i ?>" class="blank"></label>
                             </div>
                         </td>
@@ -192,10 +199,6 @@ foreach ($typeModules as $m) {
                             </div>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="updateUnits(this)">
-                            <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
-                        </td>
-                        <td>
                             <button class="btn text-danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
                         </td>
                     </tr>
@@ -246,8 +249,9 @@ foreach ($typeModules as $m) {
         var tr = $('<tr>')
         tr.attr('data-attr', counter);
         tr.append('<td><i class="ph ph-dots-six-vertical text-muted handle"></i></td>')
-        tr.append('<td><input name="authors[' + counter + '][last]" type="text" class="form-control" required></td>')
-        tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control"></td>')
+        tr.append('<td> <input name="authors[' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="updateUser(this)"></td>')
+        tr.append('<td><input name="authors[' + counter + '][last]" type="text" class="form-control lastname" required></td>')
+        tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control firstname"></td>')
 
         <?php if ($sws) : ?>
             tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
@@ -256,9 +260,8 @@ foreach ($typeModules as $m) {
         <?php elseif ($role == 'authors') : ?>
             tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         <?php endif; ?>
-        tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+        tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1" class="aoi-checkbox"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
         tr.append('<td class="units"><small>' + <?= json_encode(lang('Not applicable', 'Nicht zutreffend')) ?> + '</small></td>')
-        tr.append('<td> <input name="authors[' + counter + '][user]" type="text" class="form-control" list="user-list" onchange="updateUnits(this)"></td>')
         var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
             $(this).closest('tr').remove();
         });
@@ -266,6 +269,26 @@ foreach ($typeModules as $m) {
         $('#authors').append(tr)
     }
 
+    function updateUser(el) {
+        const firstname = $(el).closest('tr').find('.firstname');
+        const lastname = $(el).closest('tr').find('.lastname');
+        if (!firstname.val() && !lastname.val()) {
+            // get from option list if available
+            const username = el.value.trim();
+            const option = $(`#user-list option[value="${username}"]`);
+            if (option.length) {
+                const text = option.text();
+                const match = text.match(/^(.*), (.*) \(/);
+                if (match) {
+                    lastname.val(match[1]);
+                    firstname.val(match[2]);
+                }
+                $(el).closest('tr').find('.aoi-checkbox').prop('checked', true); // mark as affiliated
+            }
+        }
+
+        updateUnits(el);
+    }
 
     function updateUnits(el) {
         let username = el.value.trim();
@@ -292,7 +315,7 @@ foreach ($typeModules as $m) {
 
             td.html(`${units.map(unit => `
       <div class="custom-checkbox mb-5 ${unit.in_past ? 'text-muted' : ''}">
-        <input type="checkbox" name="authors[${counter}][units][]" id="unit-${counter}-${unit.unit}" value="${unit.unit}">
+        <input type="checkbox" name="authors[${counter}][units][]" id="unit-${counter}-${unit.unit}" value="${unit.unit}" ${(!unit.in_past && unit.scientific) ? 'checked' : ''}>
         <label for="unit-${counter}-${unit.unit}">
           <span data-toggle="tooltip" data-title="${unit.name}" class="underline-dashed">
             ${unit.unit}

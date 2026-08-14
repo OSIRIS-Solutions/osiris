@@ -1200,9 +1200,9 @@
                                     <div class="d-flex align-items-center gap-10 mb-10">
                                         <h3 class="mt-0 mb-0"><?= $Modules->get_name($field_id) ?></h3>
                                         <?php if ($canEdit): ?>
-                                            <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="">
+                                            <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn primary small">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                                <?= lang("Edit", "Bearbeiten") ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>
