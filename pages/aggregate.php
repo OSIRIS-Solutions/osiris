@@ -333,20 +333,12 @@ $collections = [
         </div>
     </div>
 
-    <table class="table" id="data-table" style="display: none;">
+    <table class="table cards" id="data-table" style="display: none;">
         <thead>
             <th>Results</th>
         </thead>
         <tbody></tbody>
     </table>
-
-    <div class="box">
-        <div class="footer">
-            <div class="btn-toolbar">
-                <button class="btn" onclick="downloadData()"><i class="ph ph-download"></i> <?= lang('Download raw data', 'Rohdaten herunterladen') ?></button>
-            </div>
-        </div>
-    </div>
 
     <script>
         var latestAggregateResults = [];
@@ -362,10 +354,10 @@ $collections = [
 
         function buildRowsTable(rows) {
             if (!rows.length) {
-                return '<p class="mb-0">-</p>';
+                return '<p>-</p>';
             }
 
-            var html = '<table class="table simple mb-0"><tbody>';
+            var html = '<table class="table simple"><tbody>';
             rows.forEach(function(row) {
                 html += '<tr>' +
                     '<th style="width: 35%; vertical-align: top;">' + escapeHtml(row.key) + '</th>' +
@@ -379,7 +371,7 @@ $collections = [
         function buildNestedDetails(title, tableHtml) {
             return '<details class="nested-table-details">' +
                 '<summary>' + escapeHtml(title) + '</summary>' +
-                '<div class="mt-5">' + tableHtml + '</div>' +
+                '<div>' + tableHtml + '</div>' +
                 '</details>';
         }
 
@@ -412,8 +404,8 @@ $collections = [
 
         function wrapTopLevelView(content, index) {
             var label = lang('Result', 'Ergebnis') + ' #' + (index + 1);
-            return '<div style="border: 1px solid #d8dee8; border-radius: 8px; background: #f8fafc; padding: 12px; margin: 6px 0;">' +
-                '<div style="font-size: 1.2rem; font-weight: 600; color: #334155; margin-bottom: 8px;">' + escapeHtml(label) + '</div>' +
+            return '<div class="card">' +
+                '<span class="text-muted">' + escapeHtml(label) + '</span>' +
                 content +
                 '</div>';
         }
@@ -505,10 +497,13 @@ $collections = [
         }
 
         function buildDataViews(item, index) {
+            // Format data for display, including nested tables
             var allRows = getTopLevelRows(item);
-            var previewRows = allRows.slice(0, 3);
-            var remainingRows = allRows.slice(3);
-            var isExpandable = allRows.length > 3;
+            // Slicing for preview and expandable content
+            var numberOfPreviewRows = 4;
+            var previewRows = allRows.slice(0, numberOfPreviewRows);
+            var remainingRows = allRows.slice(numberOfPreviewRows);
+            var isExpandable = allRows.length > numberOfPreviewRows;
             var previewHtml = buildRowsTable(previewRows);
 
             if (!isExpandable) {
@@ -518,11 +513,10 @@ $collections = [
             var detailsId = 'json-remaining-' + index;
             var summaryText = lang('Show more', 'Mehr anzeigen') + ' (' + remainingRows.length + ')';
             var lessText = lang('Show less', 'Weniger anzeigen');
-            var content = '<div>' +
-                '<a href="#/" class="d-inline-block mb-5" data-more-label="' + escapeHtml(summaryText) + '" data-less-label="' + escapeHtml(lessText) + '" onclick="return toggleExpandedRows(\'' + detailsId + '\', this);">' + escapeHtml(summaryText) + '</a>' +
+            var content = 
+                '<a href="#/" class="btn small text-primary float-md-right" data-more-label="' + escapeHtml(summaryText) + '" data-less-label="' + escapeHtml(lessText) + '" onclick="return toggleExpandedRows(\'' + detailsId + '\', this);">' + escapeHtml(summaryText) + '</a>' +
                 '<div>' + previewHtml + '</div>' +
-                '<div class="mt-5" id="' + detailsId + '" style="display: none;">' + buildRowsTable(remainingRows) + '</div>' +
-                '</div>';
+                '<div id="' + detailsId + '" style="display: none;">' + buildRowsTable(remainingRows) + '</div>';
 
             return wrapTopLevelView(content, index);
         }
@@ -535,6 +529,7 @@ $collections = [
                 $('#data-table tbody').empty();
             }
 
+            // remove unnecessary keys from the data
             const cleanData = data.map(item => {
                 const cleanedItem = {};
                 for (const key in item) {
@@ -579,11 +574,20 @@ $collections = [
                     className: 'btn small',
                     title: "OSIRIS Search",
                     text: '<i class="ph ph-file-xls"></i> Excel'
-                }],
+                },
+                {
+                    text: '<i class="ph ph-brackets-curly"></i> <?= lang('Download Raw Data', 'Rohdaten herunterladen') ?>',
+                    className: 'btn small',
+                    action: function(e, dt, node, config) {
+                        downloadData();
+                    }
+                }
+                ],
                 createdRow: function(row) {
                     $('td', row).css('vertical-align', 'top');
                 },
                 initComplete: function() {
+                    $('#data-table thead').hide();
                     var tableWidth = $('#data-table').width();
                     var containerWidth = $('#data-table').parent().width();
                     if (tableWidth > containerWidth && !$('#data-table').parent().hasClass('table-responsive')) {
@@ -696,6 +700,7 @@ $collections = [
             $('#pipeline').val(rules)
             window.location.href = "#close-modal"
             toastSuccess(lang('Pipeline applied successfully.', 'Abfrage erfolgreich angewendet.'))
+            getResult()
         }
 
         function applyExamplePipeline(name) {
@@ -708,6 +713,7 @@ $collections = [
             $('#pipeline').val(rules)
             window.location.href = "#close-modal"
             toastSuccess(lang('Example pipeline applied successfully.', 'Beispiel Pipeline erfolgreich angewendet.'))
+            getResult()
         }
 
         function deletePipeline(id) { 
