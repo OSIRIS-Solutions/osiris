@@ -97,7 +97,18 @@ class DB
         if (DB::is_ObjectID($id)) {
             return new ObjectId($id);
         }
-        return intval($id);
+        return null;
+    }
+
+    public static function to_ObjectIDs($ids)
+    {
+        if (empty($ids)) return [];
+        $objectIds = [];
+        foreach ($ids as $id) {
+            if (empty($id)) continue;
+            $objectIds[] = DB::to_ObjectID($id);
+        }
+        return $objectIds;
     }
 
     /**
@@ -109,6 +120,9 @@ class DB
     public static function is_ObjectID($id)
     {
         if (empty($id)) return false;
+        if (!is_string($id)) {
+            return false;
+        }
         if (preg_match("/^[0-9a-fA-F]{24}$/", $id)) {
             return true;
         }
@@ -1147,6 +1161,8 @@ class DB
         if (!empty($diff)) {
             $changes = [];
             foreach ($diff as $key => $val) {
+                // check again if both are empty
+                if (empty($val) && empty($old_[$key] ?? null)) continue;
                 $changes[$key] = ['before' => $old_[$key] ?? null, 'after' => $val];
             }
             $hist['changes'] = $changes;
@@ -1207,4 +1223,32 @@ class DB
     {
         echo self::getLogo($item, $class, $alt);
     }
+
+    
+    public static function build_person_search_text(array $p): string
+    {
+        $parts = [];
+        if (!empty($p['last'])) $parts[] = $p['last'];
+        if (!empty($p['first'])) $parts[] = $p['first'];
+
+        // Alternative names / aliases (can be array or string)
+        if (!empty($p['names'] ?? [])) {
+            foreach ($p['names'] as $n) {
+                if (!empty($n) && is_string($n)) $parts[] = $n;
+            }
+        }
+
+        // Optional: add extra fields if they exist in your schema
+        if ($p['username']) $parts[] = $p['username'];
+        if (isset($p['orcid'])) $parts[] = $p['orcid'];
+        if (isset($p['mail'])) $parts[] = $p['mail'];
+
+        // Join, normalize whitespace, lowercase
+        $text = implode(' ', $parts);
+        $text = preg_replace('/\s+/', ' ', $text);
+        $text = trim(mb_strtolower($text));
+
+        return $text;
+    }
+
 }

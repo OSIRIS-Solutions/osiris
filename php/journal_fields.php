@@ -10,6 +10,8 @@ class JournalFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
 
+        $if_label = $Settings->impactLabel();
+
         $FIELDS = [
             [
                 'id' => 'id',
@@ -24,7 +26,7 @@ class JournalFields extends Fields
             [
                 "id" => "journal",
                 "module_of" => ['general'],
-                "label" => lang("Journal", "Zeitschrift"),
+                "label" => lang("Name", "Name"),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -64,7 +66,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.impact",
                 "module_of" => ['general'],
-                "label" => lang("Impact Factor", "Impact Factor"),
+                "label" => $if_label . lang(" Value", "-Wert"),
                 'type' => 'double',
                 'usage' => [
                     'aggregate',
@@ -75,7 +77,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.year",
                 "module_of" => ['general'],
-                "label" => lang("Impact Factor Year", "Impact Factor Jahr"),
+                "label" => $if_label . lang(" Year", "-Jahr"),
                 'type' => 'integer',
                 'usage' => [
                     'aggregate',
@@ -107,6 +109,11 @@ class JournalFields extends Fields
             ],
         ];
 
+        // Add custom fields from the database
+        $data_fields = $Settings->get('journal-data');
+        $data_fields = DB::doc2Arr($data_fields);
+        $FIELDS = parent::addCustomFields($FIELDS, $osiris, $data_fields, true);
+
         $this->fields = array_values($FIELDS);
         // Sort fields by name
         usort($this->fields, function ($a, $b) {
@@ -115,5 +122,6 @@ class JournalFields extends Fields
             if (!isset($a['label']) && !isset($b['label'])) return 0;
             return strnatcmp($a['label'], $b['label']);
         });
+
     }
 }

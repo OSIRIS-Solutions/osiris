@@ -575,7 +575,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         }
         require_once BASEPATH . "/php/Render.php";
         $complete_person = array_merge($old, $person);
-        $person['search_text'] = build_person_search_text($complete_person);
+        $person['search_text'] = DB::build_person_search_text($complete_person);
     }
 
     $person['updated'] = date('Y-m-d');
@@ -647,6 +647,11 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         if (empty($person['position_de'])) {
             $person['position_de'] = null;
         }
+    }
+
+    // set orcid_validated to false if orcid is changed while orcid validaiton is disabled
+    if (isset($values['orcid']) && $values['orcid'] != ($old['orcid'] ?? null) && !$Settings->featureEnabled('orcid')) {
+        $person['orcid_validated'] = false;
     }
 
     $updateResult = $osiris->persons->updateOne(
@@ -1096,6 +1101,8 @@ Route::post('/crud/queries', function () {
         'user' => $_SESSION['username'],
         'created' => date('Y-m-d'),
         'aggregate' => $_POST['aggregate'] ?? null,
+        'aggregate_function' => $_POST['aggregate_function'] ?? 'count',
+        'aggregate_value' => $_POST['aggregate_value'] ?? null,
         'columns' => $_POST['columns'] ?? null,
         'type' => $_POST['type'] ?? 'activity',
         'expert' => (($_POST['expert'] ?? 'false') == 'true')

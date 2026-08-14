@@ -228,7 +228,7 @@ class Achievement
 
                     case 'approved':
                         $approved = [];
-                        if (!isset($this->userdata['approved'])) {
+                        if (!isset($this->userdata['approved']) || empty($this->userdata['approved'])) {
                             break;
                         }
                         foreach ($this->userdata['approved'] ?? array() as $a) {
@@ -237,7 +237,8 @@ class Achievement
                             if (!isset($approved[$y])) $approved[$y] = 0;
                             $approved[$y] += 1;
                         }
-                        $value = max($approved);
+                        if (!empty($approved))
+                            $value = max($approved);
                         break;
                     default:
                         $value = 0;

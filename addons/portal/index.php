@@ -17,6 +17,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
             abortwith(500, lang('Public portal is disabled.', 'Öffentliches Portal ist deaktiviert.'), "/");
         }
         $base = ROOTPATH . '/portal';
+        $base = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $base;
         $Portfolio->setBasePath($base);
     } else {
         $base = $Portfolio->getBasePath();
@@ -30,11 +31,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 
     // Call Portfolio API to get entity details
     $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
-    // if ($type == 'unit') {
-    //     // fetch additional numbers data
-    //     $numbers = $Portfolio->fetch_entity('unit', $id, 'numbers', lang('en', 'de'));
-    //     $data['numbers'] = $numbers;
-    // }
+
     // display correct breadcrumb
     $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
 
@@ -49,6 +46,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
         echo "<div class='alert danger'>";
         echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
         echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo "<br>" . ($_SESSION['portfolio_error'] ?? 'Unknown error');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";

@@ -113,32 +113,87 @@ Route::get('/migrate/files', function () {
     include BASEPATH . "/footer.php";
 });
 
-Route::get('/migrate/(.*)', function ($v) {
+
+Route::get('/migrate/index', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Country.php";
-    include_once BASEPATH . "/php/Render.php";
-    if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403);
-    }
+
     set_time_limit(6000);
     include BASEPATH . "/header.php";
 
-    echo '<div class="migration-report">';
+    function ensureIndex($collection, array $keys, array $options = [])
+    {
+        try {
+            if (empty($options['name'])) {
+                $parts = [];
+                foreach ($keys as $k => $v) $parts[] = $k . '_' . $v;
+                $options['name'] = 'cp_' . implode('__', $parts);
+            }
 
-    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
-    flush();
-    ob_flush();
+            $name = $collection->createIndex($keys, $options);
 
-    // check if version file exists
-    if (!file_exists(BASEPATH . "/routes/migration/v$v.php")) {
-        echo "<p>Migration file for version $v not found. Please check if the file <code>v$v.php</code> exists in the <code>routes/migration</code> folder.</p>";
-    } else {
-        include_once BASEPATH . "/routes/migration/v$v.php";
+            echo '<li class="migration-ok">✓ ';
+            echo e($collection->getCollectionName()) . ' → <code>' . e($name) . '</code>';
+            echo '</li>';
+
+            return true;
+        } catch (Throwable $e) {
+            echo '<li class="migration-error">✗ ';
+            echo e($collection->getCollectionName()) . ' → ' . e($e->getMessage());
+            echo '</li>';
+
+            return false;
+        }
     }
+
+    echo '<div class="migration-card">';
+    echo '<h3>' . lang('Creating or confirming indexes for fast journal table', 'Erstellen oder Bestätigen von Indizes für eine schnellere Journal-Tabelle') . '</h3>';
+    echo '<p class="migration-muted">' . lang(
+        'OSIRIS is creating or confirming the indexes required for fast journal table.',
+        'OSIRIS erstellt oder bestätigt die Indizes, die für eine schnellere Journal-Tabelle erforderlich sind.'
+    ) . '</p>';
+    echo '<ul class="migration-index-list">';
+    ensureIndex($osiris->activities, ['rendered.plain' => 'text']);
+    ensureIndex($osiris->activities, ['journal_id' => 1]);
+
+    /* persons */
+    ensureIndex($osiris->persons, ['search_text' => 1]);
+    ensureIndex($osiris->persons, ['username' => 1]); // optional but usually helpful
+
+    /* projects */
+    ensureIndex($osiris->projects, ['acronym' => 1]);
+    ensureIndex($osiris->projects, ['name' => 1]);
+
+    /* infrastructures */
+    ensureIndex($osiris->infrastructures, ['name' => 1]);
+    ensureIndex($osiris->infrastructures, ['name_de' => 1]);
+
+    /* events */
+    ensureIndex($osiris->events, ['title' => 1]);
+    ensureIndex($osiris->events, ['title_full' => 1]);
+
+    /* activities */
+    ensureIndex($osiris->activities, ['journal_id' => 1]);
+
+    /* journals */
+    ensureIndex($osiris->journals, ['journal' => 1]);
+    ensureIndex($osiris->journals, ['abbr' => 1]);
+    ensureIndex($osiris->journals, ['issn' => 1]); // for exact match boost
+
+    /* groups (units) */
+    ensureIndex($osiris->groups, ['id' => 1]);
+    ensureIndex($osiris->groups, ['name' => 1]);
+    ensureIndex($osiris->groups, ['name_de' => 1]);
+
+    /* organizations */
+    ensureIndex($osiris->organizations, ['name' => 1]);
+    ensureIndex($osiris->organizations, ['synonyms' => 1]); // multikey index (array)
+
+    echo '</ul>';
     echo '</div>';
+
     include BASEPATH . "/footer.php";
 });
-
 
 Route::get('/migrate/cv', function () {
     // error_reporting(E_ERROR | E_PARSE);
@@ -180,6 +235,31 @@ Route::get('/migrate/cv', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/migrate/(.*)', function ($v) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Country.php";
+    include_once BASEPATH . "/php/Render.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403);
+    }
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+
+    echo '<div class="migration-report">';
+
+    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
+    flush();
+    ob_flush();
+
+    // check if version file exists
+    if (!file_exists(BASEPATH . "/routes/migration/v$v.php")) {
+        echo "<p>Migration file for version $v not found. Please check if the file <code>v$v.php</code> exists in the <code>routes/migration</code> folder.</p>";
+    } else {
+        include_once BASEPATH . "/routes/migration/v$v.php";
+    }
+    echo '</div>';
+    include BASEPATH . "/footer.php";
+});
 
 Route::get('/install', function () {
     // include_once BASEPATH . "/php/init.php";
@@ -516,6 +596,12 @@ Route::get('/migrate', function () {
     }
     if (version_compare($DBversion, '2.0.0', '<')) {
         include BASEPATH . "/routes/migration/v2.0.0.php";
+        flush();
+        ob_flush();
+        $rerender = true;
+    }
+    if (version_compare($DBversion, '2.1.0', '<')) {
+        include BASEPATH . "/routes/migration/v2.1.0.php";
         flush();
         ob_flush();
         $rerender = true;

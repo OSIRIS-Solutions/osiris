@@ -117,8 +117,8 @@
     <div class="row row-eq-spacing mt-0" id="features-settings-page">
         <div class="col-md-9">
 
-        <!-- search -->
-         <input type="search" class="form-control" id="feature-search" placeholder="<?= lang('Search features...', 'Funktionen durchsuchen...') ?>" onkeyup="searchFeatures()">
+            <!-- search -->
+            <input type="search" class="form-control" id="feature-search" placeholder="<?= lang('Search features...', 'Funktionen durchsuchen...') ?>" onkeyup="searchFeatures()">
             <script>
                 function searchFeatures() {
                     const input = document.getElementById('feature-search');
@@ -174,6 +174,19 @@
                         renderCheckbox('portal-public');
                         ?>
                     </div>
+
+                        <div class="form-group">
+                            <label for="" class="label">
+                                <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
+                            </label>
+                            <?php
+                            renderCheckbox('portfolio-spectrum');
+                            ?>
+                            <small class="text-muted">
+                                <?= lang('This feature requires the research spectrum to be enabled.', 'Diese Funktion erfordert, dass das Forschungsspektrum aktiviert ist.') ?>
+                            </small>
+                        </div>
+
                 </div>
 
                 <div class="box padded">
@@ -440,50 +453,6 @@
                     </div>
                 </div>
 
-                <div class="box padded">
-                    <h4 class="title" id="journal-metrics">
-                        <?= lang('Journals', 'Journale') ?>
-                    </h4>
-                    <div class="form-group">
-                        <?php
-                        $label = $Settings->get('journals_label');
-                        ?>
-
-                        <div class="row row-eq-spacing my-0">
-                            <div class="col-md-6">
-                                <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="label">
-                            <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>
-                        </label>
-                        <?php
-                        renderCheckbox('no-journal-metrics', false);
-                        ?>
-                        <p class="description">
-                            <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
-                        </p>
-                    </div>
-                    <!-- <div class="form-group">
-                            <label for="" class="label">
-                                <?= lang('Enable impact factors', 'Aktiviere Impact Faktoren') ?>
-                                <?= badgeBeta() ?>
-                            </label>
-                            <?php
-                            renderCheckbox('journal-impact-factors', true);
-                            ?>
-                            <p class="description">
-                                <?= lang('Impact factors will be displayed in the journal information and in corresponding activities.', 'Impact Faktoren werden in den Journal-Informationen angezeigt. Wenn du diese Option deaktivierst, werden nur Quartile angezeigt.') ?>
-                            </p>
-                        </div> -->
-                </div>
 
                 <div class="box padded">
                     <h4 class="title" id="drafts">
@@ -639,7 +608,7 @@
                             <?= lang('Language of news', 'Sprache der Neuigkeiten') ?>
                         </label>
                         <select name="general[news-language]" id="news-language" class="form-control small">
-                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?=lang('Only one language', 'Nur einsprachig')?></option>
+                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('Only one language', 'Nur einsprachig') ?></option>
                             <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option>
                         </select>
                     </div>

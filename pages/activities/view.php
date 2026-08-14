@@ -20,7 +20,7 @@
         }
     }
     $abstract_fields = [];
-    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title'];
+    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'event-select'];
     $empty_fields = [];
     $sections = [];
     $Format->usecase = 'list';
@@ -59,8 +59,8 @@
             } else {
                 $affiliation = $module['affiliation'] ?? null;
             }
-            $field['value'] = '<a class="font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>: '. $module['title'] ?? '';
-            $field['value'] .= '<br><small>'.$affiliation . '</small>';
+            $field['value'] = '<a class="font-weight-bold" href="' . ROOTPATH . '/teaching/view/' . ($module['_id'] ?? '#') . '">' . ($module['module'] ?? '-') . '</a>: ' . $module['title'] ?? '';
+            $field['value'] .= '<br><small>' . $affiliation . '</small>';
         elseif ($field_id == 'journal' && isset($doc['journal_id'])) :
             $journal = $DB->getConnected('journal', $doc['journal_id']);
             $field['value'] = '<a class="link font-weight-bold" href="' . ROOTPATH . '/journal/view/' . ($journal['_id'] ?? '#') . '">' . ($journal['journal'] ?? '-') . '</a>';
@@ -693,7 +693,7 @@
                                             <div class="connection">
                                                 <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
                                                 <h5>
-                                                    <a href="<?= ROOTPATH ?>/project/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
+                                                    <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
                                                 </h5>
                                                 <ul class="horizontal">
                                                     <li><?= $project['funding_organization'] ?? $project['funder'] ?? $project['scholarship'] ?? "" ?></li>
@@ -794,7 +794,7 @@
 
                                                 <?php if ($doc['impact'] ?? false) { ?>
                                                     <div>
-                                                        <span class="key"><?= lang('Impact', 'Impact') ?>: </span>
+                                                        <span class="key"><?= $Settings->impactLabel() ?>: </span>
                                                         <span class="badge"><?= $doc['impact'] ?></span>
                                                     </div>
                                                 <?php } ?>
@@ -1058,6 +1058,11 @@
                         <?php if ($Settings->featureEnabled('spectrum') && isset($doc['doi']) && $doc['type'] == 'publication') : ?>
                             <h4 class="table-title">
                                 <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                                <?php if ($edit_perm) { ?>
+                                    <a href="#spectrum-editor" class="ml-10" title="<?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>">
+                                        <i class="ph ph-edit"></i>
+                                    </a>
+                                <?php } ?>
                             </h4>
                             <?php
                             if (empty($openalex)) : ?>
@@ -1072,12 +1077,18 @@
                                 include_once BASEPATH . "/php/Spectrum.php";
                                 Spectrum::render($spectrum, $count = null, $class = 'mt-0');
                             else :
+                                $manually = $openalex['manual_at'] ?? null;
                                 $fetched = $openalex['fetched_at'] ?? null;
                             ?>
                                 <p>
                                     <?= lang('No topics are assigned to this activity.', 'Zu dieser Aktivität sind keine Themen zugewiesen.') ?>
                                 </p>
-                                <?php if ($fetched) : ?>
+                                <?php if ($manually) : ?>
+                                    <small class="d-block mt-5 text-muted">
+                                        <?= lang('Topic data was last updated manually on', 'Die Themen wurden zuletzt manuell aktualisiert am') ?> <?= date('d.m.Y', strtotime($manually)) ?>
+                                    </small>
+                                <?php
+                                elseif ($fetched) : ?>
                                     <small class="d-block mt-5 text-muted">
                                         <?= lang('Topic data was last updated on', 'Die Themen wurden zuletzt aktualisiert am') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
                                     </small>
@@ -1189,9 +1200,9 @@
                                     <div class="d-flex align-items-center gap-10 mb-10">
                                         <h3 class="mt-0 mb-0"><?= $Modules->get_name($field_id) ?></h3>
                                         <?php if ($canEdit): ?>
-                                            <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="">
+                                            <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn primary small">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                                <?= lang("Edit", "Bearbeiten") ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -1362,8 +1373,6 @@
 
                             <?php } ?>
 
-                            <!-- btn-only-affiliated
-btn-show-all-->
                             <script>
                                 $(document).ready(function() {
                                     $('.btn-only-affiliated').click(function() {
@@ -1571,6 +1580,10 @@ btn-show-all-->
                                 </h5>
 
                                 <?php
+                                if (isset($h['source']) && !empty($h['source'])) {
+                                    echo '<div><b>' . lang('Source:', 'Quelle:') . '</b>';
+                                    echo ' <code>' . $h['source'] . '</code></div>';
+                                }
                                 if (isset($h['comment']) && !empty($h['comment'])) { ?>
                                     <code><?= $h['comment'] ?></code>
                                 <?php

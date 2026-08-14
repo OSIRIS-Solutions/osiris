@@ -20,6 +20,10 @@
 
 $googlescholar = $Settings->featureEnabled('googlescholar', true);
 $openalex = $Settings->featureEnabled('openalex', true);
+$orcid = $Settings->featureEnabled('orcid', false);
+
+require_once BASEPATH . '/php/Orcid.php';
+
 
 ?>
 
@@ -28,7 +32,7 @@ $openalex = $Settings->featureEnabled('openalex', true);
     Import
 </h1>
 
-<?php if (!$googlescholar && !$openalex) { ?>
+<?php if (!$googlescholar && !$openalex && !$orcid) { ?>
     <div class="alert danger">
         <h2 class="title">
             <?= lang('Import not available', 'Import nicht verfügbar') ?>
@@ -153,6 +157,51 @@ if ($googlescholar) {
 }
 ?>
 
+<?php
+if($orcid) {
+    $orcid = new Orcid_Settings();
+    if ($orcid->client_id && $orcid->client_secret) {
+        if ($USER['orcid_validated'] ?? null) { ?>
+
+            <div class="box">
+                <div class="content">
+                    <h2 class="title">ORCID Import</h2>
+                    <p>
+                        <?= lang(
+                            'You can import data from your ORCID account',
+                            'Du kannst Publikationen von deinem ORCID-Account importieren'
+                        ) ?>:
+                    </p>
+                    <p class="mt-0">
+                        Account-ID: <a href="<?= $orcid->api_base_url . $USER['orcid'] ?>"><?= $USER['orcid'] ?></a>
+                    </p>
+
+                    <form action="<?= ROOTPATH ?>/orcid/import" method="get">
+                        <button type="submit" class="btn">Import</button>
+                    </form>
+                </div>
+            </div>
+
+        <?php } else { ?><!-- if empty(USER[orcid]) -->
+            <div class="box">
+                <div class="content">
+                    <h2 class="title">ORCID Import</h2>
+                    <p>
+                        <?= lang(
+                            'You must connect an ORCID account to your profile to use this feature.',
+                            'Du musst einen ORCID-Account in deinem Profil verifizieren, um dieses Feature zu nutzen.'
+                        ) ?>
+                    </p>
+
+                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('Update Profile', 'Profil bearbeiten') ?></a>
+
+                </div>
+            </div>
+
+    <?php }
+    }
+}
+?>
 
 
 

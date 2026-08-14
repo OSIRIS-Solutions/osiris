@@ -590,7 +590,7 @@ Route::get('/api/users', function () {
                 'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
                 'mail' => $user['mail'] ?? '',
             ];
-            foreach ($columns as $col){
+            foreach ($columns as $col) {
                 $entry[$col] = $user[$col] ?? null;
             }
             $table[] = $entry;
@@ -1045,7 +1045,15 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
             unset($filter['$and']);
         }
     }
-    if (isset($filter['public'])) $filter['public'] = boolval($filter['public']);
+
+    // recursively go through all filter fields
+    array_walk_recursive($filter, function (&$value, $key) {
+        if ($key == 'public') $value = boolval($value);
+
+        if ($key == 'projects') {
+            $value = DB::to_ObjectID($value);
+        }
+    });
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
@@ -1069,34 +1077,133 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
 
     $unwinds = ['authors', 'editors', 'supervisors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
-    if (isset($_GET['aggregate'])) {
-        // aggregate by one column
+    if (!empty($_GET['aggregate'])) {
         $group = $_GET['aggregate'];
-        $aggregate = [
-            ['$match' => $filter],
-        ];
-        $group_parts = explode('.', $group);
-        $first_part = $group_parts[0];
-        if (in_array($first_part, $unwinds)) {
-            // preserve null and empty arrays
+        $function = $_GET['aggregate_function'] ?? 'count';
+        $value_field = $_GET['aggregate_value'] ?? null;
+        $allowed_functions = ['count', 'sum', 'mean', 'median'];
+        $valid_field_path = '/^[A-Za-z_][A-Za-z0-9_-]*(\.[A-Za-z_][A-Za-z0-9_-]*)*$/';
+
+        if (!in_array($function, $allowed_functions, true)) {
+            echo return_rest('Unsupported aggregation function.', 0, 400);
+            die;
+        }
+        if (!preg_match($valid_field_path, $group)) {
+            echo return_rest('Invalid aggregation field.', 0, 400);
+            die;
+        }
+        if ($function !== 'count' && (empty($value_field) || !preg_match($valid_field_path, $value_field))) {
+            echo return_rest('A valid numeric value field is required for this aggregation.', 0, 400);
+            die;
+        }
+
+        if (empty($filter)) {
+            $aggregate = [];
+        } else {
+            $aggregate = [['$match' => $filter]];
+        }
+        $aggregate_fields = [$group];
+        if ($function !== 'count') {
+            $aggregate_fields[] = $value_field;
+        }
+
+        $unwind_fields = [];
+        foreach ($aggregate_fields as $field) {
+            $first_part = explode('.', $field)[0];
+            if (in_array($first_part, $unwinds, true)) {
+                $unwind_fields[$first_part] = true;
+            }
+        }
+        foreach (array_keys($unwind_fields) as $unwind_field) {
             $aggregate[] = ['$unwind' => [
-                'path' => '$' . $first_part,
+                'path' => '$' . $unwind_field,
                 'preserveNullAndEmptyArrays' => true
             ]];
         }
-        $aggregate[] =
-            ['$group' => ['_id' => '$' . $group, 'count' => ['$sum' => 1]]];
 
-        $aggregate[] = ['$sort' => ['count' => -1]];
-        $aggregate[] = ['$project' => ['_id' => 0, 'value' => '$_id', 'count' => 1]];
-        // $aggregate[] = ['$limit' => 10];
-        $aggregate[] = ['$sort' => ['count' => -1]];
-        $aggregate[] = ['$project' => ['_id' => 0, 'value' => 1, 'count' => 1]];
-        // $aggregate = array_merge($filter);
+        if ($function === 'count') {
+            $aggregate[] = ['$group' => [
+                '_id' => '$' . $group,
+                'count' => ['$sum' => 1]
+            ]];
+            $aggregate[] = ['$sort' => ['count' => -1]];
+            $aggregate[] = ['$project' => [
+                '_id' => 0,
+                'value' => '$_id',
+                'count' => 1
+            ]];
+        } else {
+            $numeric_types = ['int', 'long', 'double', 'decimal'];
+            $aggregate[] = ['$match' => [
+                '$expr' => [
+                    '$in' => [
+                        ['$type' => '$' . $value_field],
+                        $numeric_types
+                    ]
+                ]
+            ]];
 
-        $result = $collection->aggregate(
-            $aggregate
-        )->toArray();
+            if ($function === 'median') {
+                $aggregate[] = ['$group' => [
+                    '_id' => '$' . $group,
+                    'values' => ['$push' => '$' . $value_field]
+                ]];
+                $aggregate[] = ['$set' => [
+                    'values' => [
+                        '$sortArray' => [
+                            'input' => '$values',
+                            'sortBy' => 1
+                        ]
+                    ]
+                ]];
+                $aggregate[] = ['$set' => [
+                    'result' => [
+                        '$let' => [
+                            'vars' => [
+                                'value_count' => ['$size' => '$values'],
+                                'middle' => [
+                                    '$toInt' => [
+                                        '$floor' => [
+                                            '$divide' => [
+                                                ['$size' => '$values'],
+                                                2
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'in' => [
+                                '$cond' => [
+                                    ['$eq' => [['$mod' => ['$$value_count', 2]], 1]],
+                                    ['$arrayElemAt' => ['$values', '$$middle']],
+                                    [
+                                        '$avg' => [
+                                            ['$arrayElemAt' => ['$values', ['$subtract' => ['$$middle', 1]]]],
+                                            ['$arrayElemAt' => ['$values', '$$middle']]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]];
+            } else {
+                $operator = $function === 'sum' ? '$sum' : '$avg';
+                $aggregate[] = ['$group' => [
+                    '_id' => '$' . $group,
+                    'result' => [$operator => '$' . $value_field]
+                ]];
+            }
+
+            $aggregate[] = ['$sort' => ['result' => -1]];
+            $aggregate[] = ['$project' => [
+                '_id' => 0,
+                'value' => '$_id',
+                'result' => 1
+            ]];
+        }
+
+        $result = $collection->aggregate($aggregate)->toArray();
         echo return_rest($result, count($result));
         die;
     }
@@ -1251,7 +1358,6 @@ Route::get('/api/journal', function () {
     $result = $osiris->journals->find($filter,)->toArray();
     echo return_rest($result, count($result));
 });
-
 Route::get('/api/journals', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
@@ -1261,75 +1367,116 @@ Route::get('/api/journals', function () {
         die;
     }
 
-    header("Content-Type: application/json");
-    header("Pragma: no-cache");
-    header("Expires: 0");
-    $pipeline = [
+    $fields = DB::doc2Arr($Settings->get('journal-data') ?? []);
+    $fields = array_values(array_filter($fields, function ($field) {
+        return is_string($field)
+            && preg_match('/^[a-zA-Z0-9_-]+$/', $field);
+    }));
+
+    // Count related activities once instead of loading them through a lookup.
+    $activity_counts = [];
+
+    $counts = $osiris->activities->aggregate([
         [
-            '$unwind' => [
-                'path' => '$impact',
-                'preserveNullAndEmptyArrays' => true
-            ]
-        ],
-        [
-            '$sort' => ['impact.year' => -1]
+            '$match' => [
+                'journal_id' => [
+                    '$type' => 'string',
+                    '$ne' => '',
+                ],
+            ],
         ],
         [
             '$group' => [
-                '_id' => '$_id',
-                'journal' => ['$first' => '$journal'],
-                'abbr' => ['$first' => '$abbr'],
-                'publisher' => ['$first' => '$publisher'],
-                'open_access' => ['$first' => '$oa'],
-                'issn' => ['$first' => '$issn'],
-                'country' => ['$first' => '$country'],
-                'latest_impact' => ['$first' => '$impact']
-            ]
+                '_id' => '$journal_id',
+                'count' => ['$sum' => 1],
+            ],
         ],
-        [
-            '$project' => [
-                'id' => ['$toString' => '$_id'],
-                'name' => '$journal',
-                'abbr' => '$abbr',
-                'publisher' => 1,
-                'open_access' => '$open_access',
-                'issn' => '$issn',
-                'country' => '$country',
-                'if' => '$latest_impact',
-            ]
-        ],
-        [
-            '$lookup' => [
-                'from' => 'activities',
-                'localField' => 'id',
-                'foreignField' => 'journal_id',
-                'as' => 'related_activities'
-            ]
-        ],
-        [
-            '$addFields' => [
-                'count' => ['$size' => '$related_activities'],
-            ]
-        ],
-        [
-            '$sort' => ['count' => -1]
-        ],
-        [
-            '$project' => [
-                'id' => 1,
-                'name' => 1,
-                'abbr' => 1,
-                'publisher' => 1,
-                'open_access' => 1,
-                'issn' => 1,
-                'country' => 1,
-                'if' => 1,
-                'count' => 1
-            ]
-        ]
+    ]);
+
+    foreach ($counts as $count) {
+        $activity_counts[strval($count['_id'])] =
+            intval($count['count'] ?? 0);
+    }
+
+    // Only retrieve fields required by the journal table.
+    $projection = [
+        '_id' => 1,
+        'journal' => 1,
+        'abbr' => 1,
+        'publisher' => 1,
+        'oa' => 1,
+        'issn' => 1,
+        'country' => 1,
+        'impact' => 1,
     ];
 
-    $journals = $osiris->journals->aggregate($pipeline)->toArray();
+    foreach ($fields as $field) {
+        $projection[$field] = 1;
+    }
+
+    $journals = [];
+
+    $cursor = $osiris->journals->find(
+        [],
+        ['projection' => $projection]
+    );
+
+    foreach ($cursor as $document) {
+        $document = DB::doc2Arr($document);
+        $id = strval($document['_id']);
+
+        // Find the latest impact value without unwinding the complete array.
+        $latest_impact = null;
+        $latest_impact_year = null;
+
+        foreach (DB::doc2Arr($document['impact'] ?? []) as $impact) {
+            $impact = DB::doc2Arr($impact);
+            $year = intval($impact['year'] ?? 0);
+
+            if (
+                $latest_impact === null
+                || $year > $latest_impact_year
+            ) {
+                $latest_impact = $impact;
+                $latest_impact_year = $year;
+            }
+        }
+
+        $journal = [
+            'id' => $id,
+            'name' => $document['journal'] ?? '',
+            'abbr' => $document['abbr'] ?? '',
+            'publisher' => $document['publisher'] ?? '',
+            'open_access' => $document['oa'] ?? null,
+            'issn' => DB::doc2Arr($document['issn'] ?? []),
+            'country' => $document['country'] ?? '',
+            'if' => $latest_impact,
+            'count' => $activity_counts[$id] ?? 0,
+        ];
+
+        // Add all custom fields configured for journals.
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $document)) {
+                $journal[$field] = DB::doc2Arr($document[$field]);
+            }
+        }
+
+        $journals[] = $journal;
+    }
+
+    usort($journals, function ($a, $b) {
+        $count_order =
+            ($b['count'] ?? 0) <=> ($a['count'] ?? 0);
+
+        if ($count_order !== 0) {
+            return $count_order;
+        }
+
+        return strnatcasecmp(
+            $a['name'] ?? '',
+            $b['name'] ?? ''
+        );
+    });
 
     echo return_rest($journals, count($journals));
 });
@@ -1592,4 +1739,64 @@ Route::post('/api/openalex/enrich', function () {
         );
     }
     echo json_encode(['ok' => true, 'updated_activities' => count($activityIds), 'ids' => $activityIds, 'openalex_data' => $openalex]);
+});
+
+
+// api/openalex/topics
+Route::get('/api/openalex/topics', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+
+    // if (!apikey_check($_GET['apikey'] ?? null)) {
+    //     echo return_permission_denied();
+    //     die;
+    // }
+    if (!file_exists(BASEPATH . '/data/openalex-topics.json')) {
+        echo return_rest('OpenAlex topics data not found', 0, 404);
+        die;
+    }
+    $data = json_decode(
+        file_get_contents(BASEPATH . '/data/openalex-topics.json'),
+        true
+    );
+
+    $query = mb_strtolower(trim($_GET['q'] ?? ''));
+
+    if (mb_strlen($query) < 2) {
+        echo return_rest('Query too short', 0, 400);
+        exit;
+    }
+
+    $results = [];
+
+    foreach ($data['topics'] as $topic) {
+        $name = mb_strtolower($topic['name']);
+        $position = mb_stripos($topic['search'], $query);
+
+        if ($position === false) {
+            continue;
+        }
+
+        $topic['_relevance'] = match (true) {
+            $name === $query => 0,
+            str_starts_with($name, $query) => 1,
+            str_contains($name, $query) => 2,
+            default => 3
+        };
+
+        $results[] = $topic;
+    }
+
+    usort($results, function ($a, $b) {
+        return $a['_relevance'] <=> $b['_relevance']
+            ?: strcasecmp($a['name'], $b['name']);
+    });
+
+    $results = array_slice($results, 0, 20);
+
+    foreach ($results as &$topic) {
+        unset($topic['_relevance']);
+    }
+
+    echo return_rest($results, count($results));
 });

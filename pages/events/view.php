@@ -1,4 +1,7 @@
 <?php
+include_once BASEPATH . "/php/Vocabulary.php";
+$Vocabulary = new Vocabulary();
+
 $today = date('Y-m-d');
 $start = $conference['start'];
 $end = $conference['end'];
@@ -106,7 +109,7 @@ if ($topicsEnabled) {
                 <tr>
                     <td colspan="2">
                         <span class="key"><?= lang('Type', 'Typ') ?></span>
-                        <?= $conference['type'] ?>
+                        <?= $Vocabulary->getValue('event-type', $conference['type']) ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -146,6 +149,24 @@ if ($topicsEnabled) {
                     <?php } ?>
                 </td>
             </tr>
+                <?php if ($Settings->featureEnabled('portal')) {
+                    $public = $conference['public'] ?? false;
+                ?>
+                    <tr>
+                        <td colspan="2">
+                            <span class="key"><?= lang('Portfolio Visibility', 'Sichtbarkeit in Portfolio') ?>: </span>
+                            <?php if ($public) { ?>
+                                <span class="badge success">
+                                    <i class="ph ph-globe m-0"></i> <?= lang('Shown', 'Gezeigt') ?>
+                                </span>
+                            <?php } else { ?>
+                                <span class="badge signal">
+                                    <i class="ph ph-globe-x m-0"></i> <?= lang('Not shown', 'Nicht gezeigt') ?>
+                                </span>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
             <?php if ($Settings->featureEnabled('tags')) { ?>
                 <tr>
                     <td colspan="2">

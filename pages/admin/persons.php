@@ -228,9 +228,12 @@ $persons = $osiris->adminPersons->find();
                                         </div>
                                     </td>
                                     <td>
-                                        <b><?= e($field['name']) ?></b>
+                                        <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
+                                        <code class="code mx-10"><?= e($field['format']) ?></code>
+                                        <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
+                                            <i class="ph ph-pencil" title="<?= lang('edit', 'bearbeiten') ?>"></i>
+                                        </a>
                                     </td>
-
                                 </tr>
                             <?php } ?>
 
@@ -351,7 +354,7 @@ $persons = $osiris->adminPersons->find();
                 </h2>
 
                 <p>
-                    <?= lang('Define keywords that the staff members can use. Whether this field is displayed in the user profile or not can be defined in the <q>Data fields</q> tab.', 'Definiere Schlagworte, die für die Mitarbeitenden verwendet werden. Ob dieses Feld im Nutzerprofil angezeigt wird oder nicht, kann im Tab <q>Datenfelder</q> definiert werden.') ?>
+                    <?= lang('Define keywords that the staff members can use. Whether this field is displayed in the user profile or not can be defined in the <q>Data fields</q> section.', 'Definiere Schlagworte, die für die Mitarbeitenden verwendet werden. Ob dieses Feld im Nutzerprofil angezeigt wird oder nicht, kann im Abschnitt <q>Datenfelder</q> definiert werden.') ?>
                 </p>
 
                 <!-- input for name of this keyword -->

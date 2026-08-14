@@ -54,7 +54,7 @@ class Document extends Settings
         "authors-last-first" => ["authors"],
         "authors" => ["authors"],
         "book-series" => ["book-series"],
-        "book-series" => ["series"],
+        "series" => ["book-series"],
         "book-title" => ["book"],
         "category" => ["category"],
         "city" => ["city"],
@@ -63,12 +63,10 @@ class Document extends Settings
         "countries" => ["countries"],
         "country" => ["country"],
         "date-range-ongoing" => ["start", "end"],
-        "date-range" => ["date-range"],
         "date-range" => ["start", "end"],
         "date" => ["start", "end"],
         "details" => ["details"],
         "doctype" => ["doc_type"],
-        "doctype" => ["doctype"],
         "doi-link" => ["doi"],
         "doi-prefix" => ["doi"],
         "doi-text" => ["doi"],
@@ -77,10 +75,11 @@ class Document extends Settings
         "edition" => ["edition"],
         "editor" => ["editors"],
         "editorial" => ["editor_type"],
-        "editorial" => ["editorial"],
+        "editor_type" => ["editorial"],
         "editors-f.-last-semicolon-Eds" => ["authors"],
         "editors-first-last-amp-ed"  => ["editors"],
-        "end" => ["year", "month", "day"],
+        "end" => ["end"],
+        'end-compact' => ['start_date', 'end_date'],
         "event-select" => ["event-select"],
         "file-icons" => ["file-icons"],
         "funding_type" => ["funding_type"],
@@ -130,7 +129,7 @@ class Document extends Settings
         "software-link" => ["link"],
         "software-type" => ["software_type"],
         "software-venue" => ["software_venue"],
-        "start" => ["year", "month", "day"],
+        "start" => ["start"],
         "status" => ["status"],
         "student-category" => ["category"],
         "subtitle" => ["subtitle"],
@@ -143,7 +142,6 @@ class Document extends Settings
         "teaching-course" => ["title", "module", "module_id"],
         "topics" => ["topics"],
         "thesis" => ["category"],
-        "thesis" => ["thesis"],
         "title" => ["title"],
         "university" => ["publisher"],
         "venue" => ["venue"],
@@ -182,6 +180,7 @@ class Document extends Settings
 
     public function setDocument($doc)
     {
+        $this->appendix = '';
         if (!is_array($doc)) {
             $doc = DB::doc2Arr($doc);
         }
@@ -581,97 +580,96 @@ class Document extends Settings
         return $fn . $space . $last;
     }
 
-    function formatAuthors($raw_authors, $format = 'last, f.', $separator = 'and')
-    {
-        $this->appendix = '';
-        if (empty($raw_authors)) return '';
-        $n = 0;
-        $authors = array();
+    // function formatAuthors($raw_authors, $format = 'last, f.', $separator = 'and')
+    // {
+    //     $this->appendix = '';
+    //     if (empty($raw_authors)) return '';
+    //     $n = 0;
+    //     $authors = array();
 
-        $first = 1;
-        $last = 1;
-        $corresponding = false;
+    //     $first = 1;
+    //     $last = 1;
+    //     $corresponding = false;
 
-        $raw_authors = DB::doc2Arr($raw_authors);
-        if (!empty($raw_authors) && is_array($raw_authors)) {
-            $pos = array_count_values(array_column($raw_authors, 'position'));
-            $first = $pos['first'] ?? 1;
-            $last = $pos['last'] ?? 1;
-            $corresponding = array_key_exists('corresponding', $pos);
-        }
-        foreach ($raw_authors as $n => $a) {
-            if (!$this->full) {
-                if ($n > 9) break;
-                $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
-                if ($this->highlight === true) {
-                    //if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
-                } else if ($this->highlight && $a['user'] == $this->highlight) {
-                    $author = "<u>$author</u>";
-                }
-                if (isset($a['user']) && !empty($a['user'])) {
-                    if ($this->usecase == 'portal') {
-                        $person = $this->DB->getPerson($a['user']);
-                        if ($person && ($person['hide'] ?? false) === false && ($person['is_active'] ?? true) !== false)
-                            $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
-                    } else if (!$this->full)
-                        $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
-                }
-                $authors[] = $author;
-            } else {
-                $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
-                if ($this->usecase == 'portal') {
-                    if (isset($a['user']) && !empty($a['user'])) {
-                        $person = $this->DB->getPerson($a['user']);
-                        if ($person)
-                            $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
-                    }
-                } else if (!$this->full) {
-                    if (isset($a['user']) && !empty($a['user']))
-                        $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
-                } else if ($this->highlight === true) {
-                    if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
-                } else if ($this->highlight && $a['user'] == $this->highlight) {
-                    $author = "<b>$author</b>";
-                }
-                if ($first > 1 && $a['position'] == 'first') {
-                    $author .= "<sup>#</sup>";
-                }
-                if ($last > 1 && $a['position'] == 'last') {
-                    $author .= "<sup>*</sup>";
-                }
-                if (isset($a['position']) && $a['position'] == 'corresponding') {
-                    $author .= "<sup>§</sup>";
-                    $corresponding = true;
-                }
+    //     $raw_authors = DB::doc2Arr($raw_authors);
+    //     if (!empty($raw_authors) && is_array($raw_authors)) {
+    //         $pos = array_count_values(array_column($raw_authors, 'position'));
+    //         $first = $pos['first'] ?? 1;
+    //         $last = $pos['last'] ?? 1;
+    //         $corresponding = array_key_exists('corresponding', $pos);
+    //     }
+    //     foreach ($raw_authors as $n => $a) {
+    //         if (!$this->full) {
+    //             if ($n > 9) break;
+    //             $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
+    //             if ($this->highlight === true) {
+    //                 //if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
+    //             } else if ($this->highlight && $a['user'] == $this->highlight) {
+    //                 $author = "<u>$author</u>";
+    //             }
+    //             if (isset($a['user']) && !empty($a['user'])) {
+    //                 if ($this->usecase == 'portal') {
+    //                     $person = $this->DB->getPerson($a['user']);
+    //                     if ($person && ($person['hide'] ?? false) === false && ($person['is_active'] ?? true) !== false)
+    //                         $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
+    //                 } else if (!$this->full)
+    //                     $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
+    //             }
+    //             $authors[] = $author;
+    //         } else {
+    //             $author = Document::abbreviateAuthorFormat($a['last'], $a['first'], $format);
+    //             if ($this->usecase == 'portal') {
+    //                 if (isset($a['user']) && !empty($a['user'])) {
+    //                     $person = $this->DB->getPerson($a['user']);
+    //                     if ($person)
+    //                         $author = "<a href='/person/" . strval($person['_id']) . "'>$author</a>";
+    //                 }
+    //             } else if (!$this->full) {
+    //                 if (isset($a['user']) && !empty($a['user']))
+    //                     $author = "<a href='" . ROOTPATH . "/profile/" . $a['user'] . "'>$author</a>";
+    //             } else if ($this->highlight === true) {
+    //                 if (($a['aoi'] ?? 0) == 1) $author = "<b>$author</b>";
+    //             } else if ($this->highlight && $a['user'] == $this->highlight) {
+    //                 $author = "<b>$author</b>";
+    //             }
+    //             if ($first > 1 && $a['position'] == 'first') {
+    //                 $author .= "<sup>#</sup>";
+    //             }
+    //             if ($last > 1 && $a['position'] == 'last') {
+    //                 $author .= "<sup>*</sup>";
+    //             }
+    //             if (isset($a['position']) && $a['position'] == 'corresponding') {
+    //                 $author .= "<sup>§</sup>";
+    //                 $corresponding = true;
+    //             }
 
-                $authors[] = $author;
-            }
-        }
+    //             $authors[] = $author;
+    //         }
+    //     }
 
-        if ($first > 1) {
-            if ($this->typeArr['id'] == 'poster' || $this->typeArr['id'] == 'lecture')
-                $this->appendix .= " <sup>#</sup> Presenting authors";
-            else
-                $this->appendix .= " <sup>#</sup> Shared first authors";
-        }
-        if ($last > 1) {
-            $this->appendix .= " <sup>*</sup> Shared last authors";
-        }
-        if ($corresponding) {
-            $this->appendix .= " <sup>§</sup> Corresponding author";
-        }
-        $append = "";
-        if (!$this->full && $n > 9) {
-            $append = " et al.";
-            $separator = ", ";
-        }
-        return Document::commalist($authors, $separator) . $append;
-    }
+    //     if ($first > 1) {
+    //         if ($this->typeArr['id'] == 'poster' || $this->typeArr['id'] == 'lecture')
+    //             $this->appendix .= " <sup>#</sup> Presenting authors";
+    //         else
+    //             $this->appendix .= " <sup>#</sup> Shared first authors";
+    //     }
+    //     if ($last > 1) {
+    //         $this->appendix .= " <sup>*</sup> Shared last authors";
+    //     }
+    //     if ($corresponding) {
+    //         $this->appendix .= " <sup>§</sup> Corresponding author";
+    //     }
+    //     $append = "";
+    //     if (!$this->full && $n > 9) {
+    //         $append = " et al.";
+    //         $separator = ", ";
+    //     }
+    //     return Document::commalist($authors, $separator) . $append;
+    // }
 
 
     private function formatAuthorsNew($module)
     {
-        $this->appendix = '';
         $isEditors = str_starts_with($module, 'editors-');
         $isSupervisors = str_starts_with($module, 'supervisors-');
         $authorKey = $isEditors ? 'editors' : ($isSupervisors ? 'supervisors' : 'authors');
@@ -855,6 +853,95 @@ class Document extends Settings
         return $result . $suffix;
     }
 
+    public function formatDate(string $field, string $format = 'd.m.Y'): string
+    {
+        switch ($field) {
+            case 'date':
+                $date = [
+                    'year' => $this->getVal('year', null),
+                    'month' => $this->getVal('month', null),
+                    'day' => $this->getVal('day', null),
+                ];
+                break;
+
+            case 'start':
+                $date = $this->getVal('start_date', null);
+                break;
+
+            case 'end':
+            case 'end-compact':
+                $date = $this->getVal('end_date', null);
+                break;
+
+            default:
+                return '';
+        }
+
+        if (empty($date)) return '';
+
+        $parts = DB::doc2Arr($date);
+
+        // Only the general activity date can have reduced precision.
+        if ($field === 'date') {
+            if (empty($parts['year'])) return '';
+
+            if (empty($parts['day'])) {
+                $format = preg_replace(
+                    '/(?<!\\\\)[dDjlNSwzW]/',
+                    '',
+                    $format
+                );
+            }
+
+            if (empty($parts['month'])) {
+                $format = preg_replace(
+                    '/(?<!\\\\)[FmMnt]/',
+                    '',
+                    $format
+                );
+            }
+        }
+
+        $d = Document::getDateTime($date);
+        if (empty($d)) return '';
+
+        if ($field === 'end-compact') {
+            $startDate = $this->getVal('start_date', null);
+            $start = Document::getDateTime($startDate);
+
+            if (!empty($start)) {
+                if ($start->format('Y-m-d') === $d->format('Y-m-d')) {
+                    return '';
+                }
+
+                if ($start->format('Y') === $d->format('Y')) {
+                    // Do not repeat the year.
+                    $format = preg_replace(
+                        '/(?<!\\\\)[Yy]/',
+                        '',
+                        $format
+                    );
+
+                    if ($start->format('m') === $d->format('m')) {
+                        // Do not repeat the month.
+                        $format = preg_replace(
+                            '/(?<!\\\\)[FmMnt]/',
+                            '',
+                            $format
+                        );
+                    }
+                }
+            }
+        }
+
+        $result = date_format($d, $format);
+
+        // Clean separators left behind by omitted components.
+        $result = preg_replace('/\s+([,.;:])/', '$1', $result);
+        $result = preg_replace('/([,.;:]){2,}/', '$1', $result);
+
+        return trim($result, " \t\n\r\0\x0B,.;:/–—-");
+    }
 
     public static function getPosition($position)
     {
@@ -936,7 +1023,7 @@ class Document extends Settings
         if (empty($this->doc[$key])) return '';
         $full = $this->full;
         $this->full = true;
-        return $this->formatAuthors($this->doc[$key]);
+        return $this->formatAuthorsNew($key);
         $this->full = $full;
     }
 
@@ -964,9 +1051,33 @@ class Document extends Settings
     public static function format_date($date)
     {
         if (empty($date)) return '';
-        $d = Document::getDateTime($date);
-        if (empty($d)) return '';
-        return date_format($d, "d.m.Y");
+
+        // Preserve the precision of date arrays.
+        if (isset($date['year'])) {
+            $year = (int) $date['year'];
+            $month = $date['month'] ?? null;
+            $day = $date['day'] ?? null;
+
+            if (empty($month)) {
+                return sprintf('%04d', $year);
+            }
+
+            if (empty($day)) {
+                return sprintf('%02d.%04d', $month, $year);
+            }
+
+            if (!checkdate((int) $month, (int) $day, $year)) {
+                return '';
+            }
+
+            return sprintf('%02d.%02d.%04d', $day, $month, $year);
+        }
+
+        $dateTime = self::getDateTime($date);
+
+        if (empty($dateTime)) return '';
+
+        return $dateTime->format('d.m.Y');
     }
 
     private static function fromToDate($from, $to)
@@ -1154,6 +1265,15 @@ class Document extends Settings
         if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }
+        if (
+            str_starts_with($module, 'date:') ||
+            str_starts_with($module, 'start:') ||
+            str_starts_with($module, 'end:') ||
+            str_starts_with($module, 'end-compact:')
+        ) {
+            [$field, $format] = array_pad(explode(':', $module, 2), 2, 'd.m.Y');
+            return $this->formatDate($field, $format);
+        }
         $Vocabulary = new Vocabulary();
         switch ($module) {
             case "affiliation": // ["book"],
@@ -1186,9 +1306,11 @@ class Document extends Settings
             case "start": // ["year", "month", "day"],
             case "end": // ["year", "month", "day"],
                 return Document::format_date($this->getVal($module, null));
+            case "end-compact": // ["year", "month", "day"],
+                return $this->formatDate('end-compact', 'd.m.Y');
             case "date": // ["year", "month", "day"],
+                return Document::format_date($this->doc);
             case "date-range": // ["start", "end"],
-                // return $this->fromToDate($this->getVal('start'), $this->getVal('end') ?? null);
                 return $this->fromToDate($this->getVal('start', $this->doc), $this->getVal('end', null));
             case "date-range-ongoing":
                 if (!empty($this->doc['start'])) {
@@ -1291,7 +1413,7 @@ class Document extends Settings
                 if ($val != $default) {
                     $j = $this->DB->getConnected('journal', $this->getVal('journal_id'));
                     if (isset($j['abbr']) && !empty($j['abbr'])) return $j['abbr'];
-                    return $j['journal'];
+                    return $j['journal'] ?? $default;
                 }
                 return $this->getVal('journal');
             case "lecture-invited": // ["invited_lecture"],
@@ -1336,10 +1458,10 @@ class Document extends Settings
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $status = 'Open Access (' . $status . ')';
-                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-open-access" title="' . $status . '"></i>';
                 } else {
                     $status = 'Closed Access';
-                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-closed-access" title="' . $status . '"></i>';
                 }
                 if ($this->usecase == 'list') return $status;
                 return $oa;
@@ -1353,10 +1475,10 @@ class Document extends Settings
                 $status = $this->getVal('oa_status', 'Unknown Status');
                 if (!empty($this->getVal('open_access', false))) {
                     $status = 'Open Access (' . $status . ')';
-                    $oa = '<i class="icon-open-access text-success" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-open-access" title="' . $status . '"></i>';
                 } else {
                     $status = 'Closed Access';
-                    $oa = '<i class="icon-closed-access text-danger" title="' . $status . '"></i>';
+                    $oa = '<i class="icon-closed-access" title="' . $status . '"></i>';
                 }
                 if ($this->usecase == 'list') return $oa . ' ' . $status;
                 return $status;
@@ -1677,6 +1799,7 @@ class Document extends Settings
     public function format($lang = null)
     {
         $this->full = true;
+        $this->appendix = '';
         if (empty($this->usecase)) {
             $this->usecase = 'print';
         }
@@ -1698,6 +1821,7 @@ class Document extends Settings
     public function formatShort($link = true, $lang = null)
     {
         $this->full = false;
+        $this->appendix = '';
         if (empty($this->usecase)) {
             $this->usecase = 'web';
         }
@@ -1735,6 +1859,7 @@ class Document extends Settings
     public function formatPortfolio($lang = null)
     {
         $this->full = false;
+        $this->appendix = '';
         $this->usecase = 'portal';
         if ($lang !== null) {
             $this->lang = $lang;
@@ -1915,6 +2040,7 @@ class Document extends Settings
     public function formatPortal()
     {
         $this->full = true;
+        $this->appendix = '';
         $this->subtitle = "";
         $template = $this->subtypeArr['template']['title'] ?? '{title}';
         $this->title = $this->template($template);
@@ -2002,7 +2128,7 @@ class Document extends Settings
             $vars['%' . $match . '%'] = $text;
         }
         $line = strtr($template, $vars);
-        
+
         $pattern = "/{([^}]*)}/";
         preg_match_all($pattern, $line, $matches);
 

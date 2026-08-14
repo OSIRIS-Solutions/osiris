@@ -25,7 +25,7 @@
 
         <div class="box h-full">
             <div class="chart content">
-                <h5 class="title text-center"><?= lang('Impact factors', 'Impact Factors') ?></h5>
+                <h5 class="title text-center"><?= $Settings->impactLabel() ?></h5>
                 <canvas id="chart-impact" style="max-height: 30rem;"></canvas>
             </div>
         </div>
@@ -82,7 +82,7 @@
                             stacked: true,
                             title: {
                                 display: true,
-                                text: lang('Impact factor', 'Impact factor')
+                                text: '<?= json_encode($Settings->impactLabel()) ?>'
                             },
                         },
                         y: {

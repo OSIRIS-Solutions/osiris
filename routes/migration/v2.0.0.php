@@ -24,7 +24,7 @@ $cursor = $coll->find(
 foreach ($cursor as $doc) {
     $arr = (array)$doc;
 
-    $new = build_person_search_text($arr);
+    $new = DB::build_person_search_text($arr);
 
     // Skip empty strings
     if ($new === '') continue;
@@ -146,6 +146,7 @@ $activities = $osiris->activities->find(['openalex' => ['$exists' => true]], ['p
 $N = 0;
 foreach ($activities as $activity) {
     $openalex = $activity['openalex'];
+    if (empty($openalex) || !is_string($openalex)) continue;
     $osiris->activities->updateOne(
         ['_id' => $activity['_id']],
         ['$set' => ['openalex_id' => $openalex], '$unset' => ['openalex' => '']]
@@ -211,6 +212,9 @@ ensureIndex($osiris->infrastructures, ['name_de' => 1]);
 /* events */
 ensureIndex($osiris->events, ['title' => 1]);
 ensureIndex($osiris->events, ['title_full' => 1]);
+
+/* activities */
+ensureIndex($osiris->activities, ['journal_id' => 1]);
 
 /* journals */
 ensureIndex($osiris->journals, ['journal' => 1]);

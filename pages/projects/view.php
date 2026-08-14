@@ -706,7 +706,7 @@ if ($topicsEnabled) {
                 <div class="content">
                     <form action="<?= ROOTPATH ?>/download" method="post">
 
-                        <input type="hidden" name="filter[project]" value="<?= $project['name'] ?>">
+                        <input type="hidden" name="filter[project]" value="<?= $id ?>">
 
                         <div class="form-group">
 
@@ -838,7 +838,7 @@ if ($topicsEnabled) {
                 <?php
                 if (!empty($spectrum)) :
                     include_once BASEPATH . "/php/Spectrum.php";
-                    Spectrum::render($spectrum, $count_spectrum);
+                    Spectrum::render($spectrum, $count_spectrum, '', '{"projects":"'.$id.'"}');
                 else : ?>
                     <p>
                         <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>

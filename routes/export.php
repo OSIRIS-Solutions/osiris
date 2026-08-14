@@ -194,12 +194,7 @@ Route::post('/download', function () {
     // select data
     $collection = $osiris->activities;
     $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
-    // date_desc
-    // date_asc
-    // type_asc
-    // type_desc
-    // title_asc
-    // title_desc
+
     if (isset($_POST['sortby']) && !empty($_POST['sortby'])) {
         $sortfield = 'year';
         $sortorder = 1;
@@ -246,7 +241,10 @@ Route::post('/download', function () {
     }
 
     if (isset($params['project']) && !empty($params['project'])) {
-        $filter['$and'][] = array('projects' => trim($params['project']));
+        if (!DB::is_ObjectID($params['project'])) {
+            return abortwith(400, lang("Invalid project ID:", "Ungültige Projekt-ID") . ' <q>' . $params['project'] . '</q>');
+        }
+        $filter['$and'][] = array('projects' => DB::to_ObjectID($params['project']));
         $filename .= "_" . trim($params['project']);
     }
 
@@ -338,16 +336,6 @@ Route::post('/download', function () {
         $exportStyle = $ReportTemplate->getStyle();
         $ReportTemplate->applyReportStyle($phpWord, $_POST['type'] ?? '');
 
-
-        // $phpWord->setDefaultFontName('Calibri');
-        // $phpWord->setDefaultFontSize(11);
-
-        // $phpWord->addTitleStyle(1, ["bold" => true, "size" => 16], ["spaceBefore" => 12]);
-        // $phpWord->addTitleStyle(2, ["bold" => true, "size" => 14], ["spaceBefore" => 8]);
-        // $phpWord->addTitleStyle(3, ["bold" => false, "size" => 11], ["spaceBefore" => 0]);
-        // $phpWord->setOutputEscapingEnabled(true);
-        /* Note: any element you append to a document must reside inside of a Section. */
-        // $phpWord->addTableStyle('CVTable', ['borderSize' => 0, 'borderColor' => '#ffffff', 'cellMargin' => 60, 'unit' => \PhpOffice\PhpWord\SimpleType\TblWidth::PERCENT, 'width' => 100 * 50]);
 
         // Table style for CV export
         $table_style = new \PhpOffice\PhpWord\Style\Table;
@@ -622,7 +610,7 @@ function clean_comment_export($subject, $front_addition_text = '')
     $subject = preg_replace('!\s+!', ' ', $subject);
 
     // Strip all tags, except <b><i><strike><u><sub><sup>
-    $subject = strip_tags($subject, '<b><i><u><strike><a><sub><sup><br>');
+    $subject = strip_tags($subject, '<b><i><u><strike><small><a><sub><sup><br>');
 
     // Remove any ### at the start
     $subject = rtrim(ltrim($subject, "#"), "#");

@@ -896,7 +896,7 @@ function initActivities(selector, data = {}, highlights = []) {
                     // do not strip HTML tags in the links column
                     stripHtml: false
                 },
-                title: null,
+                title: TITLE + ' - ' + lang('Activities', 'Aktivitäten'),
                 className: 'btn small',
                 text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
                 customize: function (win) {
@@ -976,8 +976,9 @@ function initActivities(selector, data = {}, highlights = []) {
     });
 }
 
-function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible') {
-    return [
+function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible', colVis = false) {
+
+    const buttons = [
         {
             extend: 'excelHtml5',
             exportOptions: {
@@ -985,7 +986,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+            text: `<i class="ph ph-file-xls" title="${lang('Excel', 'Excel')}"></i>`,
         },
         {
             extend: 'pdfHtml5',
@@ -994,7 +995,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-pdf"></i> ${lang('PDF', 'PDF')}`,
+            text: `<i class="ph ph-file-pdf" title="${lang('PDF', 'PDF')}"></i>`,
         },
         {
             extend: 'print',
@@ -1005,9 +1006,17 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             title: title,
             className: 'btn small',
-            text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+            text: `<i class="ph ph-printer" title="${lang('Print', 'Drucken')}"></i>`,
         }
     ];
+    if (colVis) {
+        buttons.unshift({
+            extend: 'colvis',
+            className: 'btn small',
+            text: `<i class="ph ph-columns" title="${lang('Columns', 'Spalten')}"></i>`,
+        });
+    }
+    return buttons;
 }
 
 function initDownloadTable(selector, title = 'OSIRIS_data_export', columns = ':visible') {
@@ -1183,7 +1192,7 @@ function impactfactors(containerID, canvasID, data = {}) {
                             stacked: true,
                             title: {
                                 display: true,
-                                text: lang('Impact factor', 'Impact factor')
+                                text: LABELS['impact'] ?? lang('Cite Factor', 'Cite Factor')
                             },
                         },
                         y: {
@@ -1662,7 +1671,8 @@ function spectrumTooltip() {
             name: el.attr('data-name'),
             count: el.attr('data-count') || 0,
             id: el.attr('data-id'),
-            domain: el.attr('data-domain') || 'unknown'
+            domain: el.attr('data-domain') || 'unknown',
+            filter: el.attr('data-filter') || null
         }
         data.score = parseFloat(data.score);
         data.score = isNaN(data.score) ? lang('No score', 'Kein Score') : data.score.toFixed(2);
@@ -1676,7 +1686,16 @@ function spectrumTooltip() {
             html: true,
             content: function () {
                 var label = ''
-                if (data.count > 0) label = `In ${data.count} ${data.count > 1 ? lang('Activities', 'Aktivitäten') : lang('Activity', 'Aktivität')}`
+                var a = data.count == 1 ? lang('Activity', 'Aktivität') : lang('Activities', 'Aktivitäten')
+                if (data.count > 0) {
+                    label += 'In '
+                    if (data.filter) {
+                        const filter = encodeURI(`{"$and":[{"openalex.topics.id":"${data.id}"},${data.filter}]}`);
+                        label += `<a href="${ROOTPATH}/activities/search#${filter}" target="_blank" rel="noopener noreferrer">${data.count} ${a}</a>`
+                    } else {
+                        label += `${data.count} ${a}`
+                    }
+                }
                 return `<b>${data.name}</b><br>
                     Score: ${data.score} %</br>
                     ${label}
@@ -2242,17 +2261,17 @@ function deadlineTimeline(options) {
         .map(d => ({ ...d, _date: new Date(d.date) }))
         .sort((a, b) => a._date - b._date);
 
-        if (items.length === 0) {
-            // No deadlines - show a placeholder text
-            g.append('text')
-                .attr('x', innerW / 2)
-                .attr('y', y-5)
-                .attr('text-anchor', 'middle')
-                .attr('font-size', 12)
-                .attr('opacity', 0.5)
-                .text('No upcoming deadlines');
-            return;
-        }
+    if (items.length === 0) {
+        // No deadlines - show a placeholder text
+        g.append('text')
+            .attr('x', innerW / 2)
+            .attr('y', y - 5)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 12)
+            .attr('opacity', 0.5)
+            .text('No upcoming deadlines');
+        return;
+    }
 
     // Optional: small "collision" offset when multiple points are very close.
     // This keeps "all on the line", but alternates a tiny vertical offset.
@@ -2348,4 +2367,25 @@ function deadlineTimeline(options) {
         .attr('stroke-width', 2)
         .attr('opacity', 0.25);
 
+}
+
+function datatableDate(data, type) {
+    if (!data) {
+        return '';
+    }
+    const date = new Date(data);
+    if (Number.isNaN(date.getTime())) {
+        return data;
+    }
+    if (type === 'filter'){
+        return date.toISOString().slice(0, 10);
+    }
+    if (type === 'sort' || type === 'type') {
+        return date.getTime();
+    }
+    if (type === 'export') {
+        return date.toISOString().slice(0, 10);
+    }
+    console.log(type);
+    return date.toLocaleDateString('de-DE');
 }

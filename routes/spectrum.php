@@ -123,3 +123,150 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
     include BASEPATH . "/pages/spectrum/view.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
+
+// crud/activities/update-spectrum
+Route::post('/crud/activities/update-spectrum/([a-zA-Z0-9]*)', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $mongo_id = DB::to_ObjectID($id);
+    $doc = $osiris->activities->findOne(['_id' => $mongo_id]);
+    if (!$doc) {
+        abortwith(404, lang("Activity not found", "Aktivität nicht gefunden"), "/activities", lang("Back to activities", "Zurück zu Aktivitäten"));
+    }
+
+    // check if user has permission to update spectrum
+    $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
+    $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
+    if (!$edit_perm) {
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+    }
+
+    $openalex = DB::doc2Arr($doc['openalex'] ?? []);
+
+    // Load the local topic catalog for metadata enrichment
+    $catalogData = json_decode(
+        file_get_contents(BASEPATH . '/data/openalex-topics.json'),
+        true
+    );
+
+    $catalogTopics = $catalogData['topics'] ?? $catalogData;
+    $catalogById = array_column($catalogTopics, null, 'id');
+
+    if (isset($_POST['restore']) && !empty($openalex['automatic_topics'] ?? false)) {
+        $openalex['topics'] = [];
+        foreach ($openalex['automatic_topics'] as $r) {
+            $topic = $catalogById[$r['id']] ?? $r;
+            unset($topic['search']);
+            $topic['score'] = $r['score'] ?? 1;
+            $topic['manual'] = false;
+            $openalex['topics'][] = $topic;
+        }
+
+        unset(
+            $openalex['automatic_topics'],
+            $openalex['manual'],
+            $openalex['manual_at']
+        );
+
+        $history = $doc['history'] ?? [];
+        $hist = [
+            'date' => date('Y-m-d'),
+            'user' => $_SESSION['username'] ?? 'system',
+            'type' => 'restored-spectrum'
+        ];
+        $history[] = $hist;
+
+        $osiris->activities->updateOne(['_id' => $mongo_id], ['$set' => ['openalex' => $openalex, 'history' => $history]]);
+        header('Location: ' . ROOTPATH . '/activities/view/' . $id);
+        return;
+    }
+
+    $openalex['manual_at'] = date('Y-m-d');
+    
+    if (empty($_POST['topics'] ?? [])) {
+        $openalex['topics'] = [];
+        $openalex['manual'] = true;
+
+        $history = $doc['history'] ?? [];
+        $hist = [
+            'date' => date('Y-m-d'),
+            'user' => $_SESSION['username'] ?? 'system',
+            'type' => 'modified-spectrum'
+        ];
+        $history[] = $hist;
+
+        $osiris->activities->updateOne(['_id' => $mongo_id], ['$set' => ['openalex' => $openalex, 'history' => $history]]);
+        header('Location: ' . ROOTPATH . '/activities/view/' . $id);
+        return;
+    }
+
+
+    // check if automatic spectrum is saved
+    $selectedIds = array_values(array_unique(
+        array_filter(
+            $_POST['topics'] ?? [],
+            fn($id) => preg_match('/^T\d+$/', $id)
+        )
+    ));
+
+
+    // Preserve the last automatic assignment before the first manual edit.
+    if (!array_key_exists('automatic_topics', $openalex)) {
+        // backup id and score of automatic topics
+        $backup = array_map(
+            fn($topic) => [
+                'id' => $topic['id'],
+                'score' => $topic['score']
+            ],
+            DB::doc2Arr($openalex['topics'] ?? [])
+        );
+        $openalex['automatic_topics'] = $backup;
+    }
+
+    $automaticById = array_column(
+        DB::doc2Arr($openalex['automatic_topics']),
+        null,
+        'id'
+    );
+
+    $topics = [];
+
+    foreach ($selectedIds as $topicId) {
+        $topic = $catalogById[$topicId];
+        if (isset($automaticById[$topicId])) {
+            // Preserve the original OpenAlex score.
+            $topic['score'] = $automaticById[$topicId]['score'] ?? 1;
+            $topic['manual'] = false;
+        } elseif (isset($catalogById[$topicId])) {
+            // Add metadata from the local topic catalog.
+
+            unset($topic['search']);
+
+            $topic['score'] = 1;
+            $topic['manual'] = true;
+        } else {
+            throw new RuntimeException(
+                "Unknown OpenAlex topic: $topicId"
+            );
+        }
+
+        $topics[] = $topic;
+    }
+
+    $openalex['topics'] = $topics;
+    $openalex['manual'] = true;
+
+    // Add a history entry for the manual modification of the spectrum.
+    $history = $doc['history'] ?? [];
+    $hist = [
+        'date' => date('Y-m-d'),
+        'user' => $_SESSION['username'] ?? 'system',
+        'type' => 'modified-spectrum'
+    ];
+    $history[] = $hist;
+
+    $osiris->activities->updateOne(['_id' => $mongo_id], ['$set' => ['openalex' => $openalex, 'history' => $history]]);
+
+    header('Location: ' . ROOTPATH . '/activities/view/' . $id);
+}, 'login');

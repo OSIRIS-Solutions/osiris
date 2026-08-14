@@ -147,7 +147,6 @@ class Settings
                 $req = $this->osiris->adminGeneral->findOne(['key' => $key]);
                 if (!empty($req)) return $req['value'];
                 return $default;
-                break;
         }
     }
     function set($key, $value)
@@ -260,6 +259,9 @@ class Settings
     {
         if ($feature == 'proposals') {
             return ($this->features['projects'] ?? $default) && $this->canProposalsBeCreated();
+        }
+        if ($feature == 'orcid') {
+            return !empty($this->get('orcid')) && !empty($this->get('orcid')['client_id']) && !empty($this->get('orcid')['client_secret']);
         }
         return $this->features[$feature] ?? $default;
     }
@@ -471,27 +473,6 @@ class Settings
                         break;
                 }
             }
-            // $font = $design['font_preset'] ?? 'rubik';
-            // switch ($font) {
-            //     case 'rubik':
-            //         $root .= "--font-family:'Rubik', Helvetica, sans-serif;";
-            //         break;
-            //     case 'tiktok':
-            //         $root .= "--font-family:'TikTok Sans', Helvetica, sans-serif;";
-            //         break;
-            //     case 'system':
-            //         $root .= "--font-family:-apple-system, system-ui, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;";
-            //         break;
-            //     case 'custom':
-            //         if (!empty($design['font_family'])) {
-            //             $root .= '--font-family: "' . $design['font_family'] . '", Rubik, Helvetica, sans-serif;';
-            //             if (($design['font_headers'] ?? 'no') == 'yes') {
-            //                 $root .= "--header-font: " . $design['font_family'] . ", Rubik, Helvetica, sans-serif;";
-            //             }
-            //         }
-            //         break;
-            // }
-
 
             if (!empty($design['border_width'])) {
                 switch ($design['border_width']) {
@@ -627,6 +608,12 @@ class Settings
             $style = ":root { $root } " . $style;
         }
 
+        // design_custom_css
+        $customCss = $design['custom_css'] ?? '';
+        if (!empty($customCss)) {
+            $style .= "\n/* Custom CSS from settings */\n" . $customCss;
+        }
+
         return $style;
     }
 
@@ -742,6 +729,13 @@ class Settings
         return lang($settings['en'], $settings['de'] ?? null);
     }
 
+    function impactLabel()
+    {
+        $settings = $this->get('impact_label');
+        if (empty($settings) || !isset($settings['en'])) return lang('Cite factor', 'Cite Factor');
+        return lang($settings['en'], $settings['de'] ?? null);
+    }
+
     function tripLabel()
     {
         if (!$this->featureEnabled('trips')) return '';
@@ -750,7 +744,31 @@ class Settings
         return lang($arr['name'], $arr['name_de'] ?? null);
     }
 
-    function topicChooser($selected = [])
+
+    function getLabels()
+    {
+        // defaultLabels
+        $raw = [
+            'infrastructures_label' => ['en' => 'Infrastructures', 'de' => 'Infrastrukturen'],
+            'topics_label' => ['en' => 'Research Topics', 'de' => 'Forschungsbereiche'],
+            'tags_label' => ['en' => 'Tags', 'de' => 'Schlagwörter'],
+            'journals_label' => ['en' => 'Journals', 'de' => 'Journale'],
+            'impact_label' => ['en' => 'Cite factor', 'de' => 'Cite Factor'],
+        ];
+        // find all adminGeneral with key ending with "_label"
+        $labels = $this->osiris->adminGeneral->find(['key' => ['$in' => array_keys($raw)]])->toArray();
+        foreach ($labels as $label) {
+            $raw[$label['key']] = $label['value'];
+        }
+        $result = [];
+        foreach ($raw as $key => $value) {
+            $result[str_replace('_label', '', $key)] = lang($value['en'], $value['de'] ?? null);
+        }
+        return $result;
+    }
+
+
+    function topicChooser($selected = [], $key = 'values[topics]')
     {
         if (!$this->featureEnabled('topics')) return '';
 
@@ -762,7 +780,7 @@ class Settings
         <div class="form-group" id="topic-widget">
             <h5><?= $this->topicLabel() ?></h5>
             <!-- make suire that an empty value is submitted in case no checkbox is ticked -->
-            <input type="hidden" name="values[topics]" value="">
+            <input type="hidden" name="<?= $key ?>" value="">
             <div>
                 <?php
                 foreach ($topics as $topic) {
@@ -773,7 +791,7 @@ class Settings
                     }
                 ?>
                     <div class="pill-checkbox <?= ($topic['inactive'] ?? false) ? 'inactive' : '' ?>" style="--primary-color:<?= $topic['color'] ?? 'var(--primary-color)' ?>" <?= $subtitle ?>>
-                        <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="values[topics][]" <?= $checked ? 'checked' : '' ?>>
+                        <input type="checkbox" id="topic-<?= $topic['id'] ?>" value="<?= $topic['id'] ?>" name="<?= $key ?>[]" <?= $checked ? 'checked' : '' ?>>
                         <label for="topic-<?= $topic['id'] ?>">
                             <?= lang($topic['name'], $topic['name_de'] ?? null) ?>
                         </label>
@@ -943,7 +961,9 @@ class Settings
             'workflow-reset' => lang('Workflow reset by ', 'Workflow zurückgesetzt von '),
             'workflow-approve' => lang('Workflow step approved by ', 'Workflow-Schritt genehmigt von '),
             'workflow-reject' => lang('Workflow step rejected by ', 'Workflow-Schritt abgelehnt von '),
-            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von ')
+            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von '),
+            'modified-spectrum' => lang('Spectrum modified by ', 'Spektrum bearbeitet von '),
+            'restored-spectrum' => lang('Spectrum restored by ', 'Spektrum wiederhergestellt von '),
         ];
         return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
     }
@@ -999,7 +1019,16 @@ class Settings
                 'datacite.workflow' => 'misc',
                 'datacite.other' => 'misc',
                 'datacite.presentation' => 'lecture',
-                'datacite.poster' => 'poster'
+                'datacite.poster' => 'poster',
+                'orcid.book' => 'book',
+                'orcid.book-chapter' => 'chapter',
+                'orcid.journal-article' => 'article',
+                'orcid.conference-paper' => 'article',
+                'orcid.preprint' => 'preprint',
+                'orcid.data-set' => 'dataset',
+                'orcid.software' => 'software',
+                'orcid.conference-poster' => 'poster',
+                'orcid.other' => 'others',
             ];
         }
         return DB::doc2Arr($mappings);
