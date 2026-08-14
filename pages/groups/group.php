@@ -35,7 +35,7 @@ if (isset($group['head'])) {
 $users = array_column($persons, 'username');
 $synonyms = DB::doc2Arr($group['synonyms'] ?? []);
 
-$show_general = (isset($group['description']) || isset($group['description_de']) || (isset($group['research']) && !empty($group['research'])));
+$show_general = (isset($group['description']) || isset($group['description_de']) || !empty($group['images'] ?? []) || (isset($group['research']) && !empty($group['research'])));
 
 $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($id));
 
@@ -432,6 +432,8 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <?= lang($group['description'] ?? '-', $group['description_de'] ?? null) ?>
                     </div>
                 <?php } ?>
+
+                <?php include BASEPATH . '/pages/groups/images.php'; ?>
             </div>
         </div>
 

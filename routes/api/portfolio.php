@@ -305,6 +305,42 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     $unit = $Groups->getUnit($group['unit'] ?? null);
     $group['unit'] = $unit;
 
+    $uploadsUrl = rtrim(
+        $Settings->getRequestScheme() . '://' . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH,
+        '/'
+    ) . '/uploads/';
+    $images = DB::doc2Arr($group['images'] ?? []);
+    usort($images, function ($a, $b) {
+        $order = ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
+        if ($order !== 0) return $order;
+        return strcmp($b['uploaded_at'] ?? '', $a['uploaded_at'] ?? '');
+    });
+
+    $group['images'] = [];
+    foreach ($images as $image) {
+        if (empty($image['public']) || empty($image['file']) || empty($image['id'])) continue;
+
+        $group['images'][] = [
+            'id' => $image['id'],
+            'filename' => basename($image['file']),
+            'url' => $uploadsUrl . ltrim($image['file'], '/'),
+            'thumbnail_url' => !empty($image['thumbnail'])
+                ? $uploadsUrl . ltrim($image['thumbnail'], '/')
+                : null,
+            'mime' => $image['mime'] ?? null,
+            'size' => $image['size'] ?? null,
+            'width' => $image['width'] ?? null,
+            'height' => $image['height'] ?? null,
+            'caption' => $image['caption'] ?? '',
+            'caption_de' => $image['caption_de'] ?? '',
+            'taken_at' => $image['taken_at'] ?? null,
+            'credits' => $image['credits'] ?? '',
+            'public' => true,
+            'uploaded_at' => $image['uploaded_at'] ?? null,
+            'order' => $image['order'] ?? 0,
+        ];
+    }
+
     // general information for navigation:
     $group['nav_topics'] = $Portfolio->getTopics();
     $group["nav_units"] = $Portfolio->build_unit_hierarchy($id);
@@ -381,7 +417,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     $numbers = [];
     $child_ids = $Groups->getChildren($id);
 
-    if (isset($group['description']) || isset($group['description_de'])) {
+    if (isset($group['description']) || isset($group['description_de']) || !empty($group['images'])) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
@@ -575,7 +611,11 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     }
     $child_ids = $Groups->getChildren($id);
 
-    if (isset($group['description']) || isset($group['description_de'])) {
+    $publicImages = array_filter(
+        DB::doc2Arr($group['images'] ?? []),
+        fn($image) => !empty($image['public'])
+    );
+    if (isset($group['description']) || isset($group['description_de']) || !empty($publicImages)) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {

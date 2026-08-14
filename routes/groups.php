@@ -14,6 +14,57 @@
  * @license     MIT
  */
 
+function createGroupImageThumbnail(string $source, string $target, string $mime, int $maxSize = 800): bool
+{
+    if (!extension_loaded('gd') || !function_exists('imagewebp')) return false;
+
+    $sourceImage = match ($mime) {
+        'image/jpeg' => @imagecreatefromjpeg($source),
+        'image/png' => @imagecreatefrompng($source),
+        'image/webp' => @imagecreatefromwebp($source),
+        default => false,
+    };
+    if ($sourceImage === false) return false;
+
+    $sourceWidth = imagesx($sourceImage);
+    $sourceHeight = imagesy($sourceImage);
+    $scale = min($maxSize / $sourceWidth, $maxSize / $sourceHeight, 1);
+    $targetWidth = max(1, (int) round($sourceWidth * $scale));
+    $targetHeight = max(1, (int) round($sourceHeight * $scale));
+    $thumbnail = imagecreatetruecolor($targetWidth, $targetHeight);
+
+    imagealphablending($thumbnail, false);
+    imagesavealpha($thumbnail, true);
+    $transparent = imagecolorallocatealpha($thumbnail, 0, 0, 0, 127);
+    imagefilledrectangle($thumbnail, 0, 0, $targetWidth, $targetHeight, $transparent);
+
+    $resampled = imagecopyresampled(
+        $thumbnail,
+        $sourceImage,
+        0,
+        0,
+        0,
+        0,
+        $targetWidth,
+        $targetHeight,
+        $sourceWidth,
+        $sourceHeight
+    );
+    $saved = $resampled && imagewebp($thumbnail, $target, 82);
+
+    imagedestroy($sourceImage);
+    imagedestroy($thumbnail);
+    return $saved;
+}
+
+function redirectFromGroupImage(string $groupId, string $message, string $type): void
+{
+    $_SESSION['msg'] = $message;
+    $_SESSION['msg_type'] = $type;
+    header("Location: " . ROOTPATH . "/groups/view/$groupId#images");
+    die;
+}
+
 Route::get('/groups', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
@@ -303,6 +354,275 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
         'id' => $id,
     ]);
 });
+
+Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+
+    $groupId = $DB->to_ObjectID($id);
+    $group = $osiris->groups->findOne(['_id' => $groupId]);
+    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+
+    $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
+    if (!$editPerm) {
+        abortwith(403, lang(
+            'You are not allowed to edit this unit.',
+            'Du darfst diese Einheit nicht bearbeiten.'
+        ));
+    }
+
+    if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
+        redirectFromGroupImage($group['id'], lang(
+            'No image was uploaded.',
+            'Es wurde kein Bild hochgeladen.'
+        ), 'info');
+    }
+
+    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        $errorMessage = match ($_FILES['file']['error']) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang(
+                'The image is too large. A maximum of 16 MB is allowed.',
+                'Das Bild ist zu groß. Maximal 16 MB sind erlaubt.'
+            ),
+            UPLOAD_ERR_PARTIAL => lang(
+                'The image was only partially uploaded.',
+                'Das Bild wurde nur teilweise hochgeladen.'
+            ),
+            UPLOAD_ERR_NO_TMP_DIR => lang(
+                'The temporary upload directory is missing.',
+                'Der temporäre Upload-Ordner fehlt.'
+            ),
+            UPLOAD_ERR_CANT_WRITE => lang(
+                'The image could not be written to disk.',
+                'Das Bild konnte nicht auf die Festplatte geschrieben werden.'
+            ),
+            UPLOAD_ERR_EXTENSION => lang(
+                'A PHP extension stopped the upload.',
+                'Eine PHP-Erweiterung hat den Upload gestoppt.'
+            ),
+            default => lang('The image could not be uploaded.', 'Das Bild konnte nicht hochgeladen werden.'),
+        };
+        redirectFromGroupImage($group['id'], $errorMessage, 'error');
+    }
+
+    $file = $_FILES['file'];
+    if ($file['size'] > 16000000) {
+        redirectFromGroupImage($group['id'], lang(
+            'The image is too large. A maximum of 16 MB is allowed.',
+            'Das Bild ist zu groß. Maximal 16 MB sind erlaubt.'
+        ), 'error');
+    }
+
+    $allowedMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    $dimensions = @getimagesize($file['tmp_name']);
+    if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
+        redirectFromGroupImage($group['id'], lang(
+            'Only JPEG, PNG and WebP images are allowed.',
+            'Es sind nur JPEG-, PNG- und WebP-Bilder erlaubt.'
+        ), 'error');
+    }
+
+    [$width, $height] = $dimensions;
+    if ($width * $height > 25000000) {
+        redirectFromGroupImage($group['id'], lang(
+            'The image resolution is too large. A maximum of 25 megapixels is allowed.',
+            'Die Bildauflösung ist zu groß. Maximal 25 Megapixel sind erlaubt.'
+        ), 'error');
+    }
+
+    if (!extension_loaded('gd') || !function_exists('imagewebp')) {
+        redirectFromGroupImage($group['id'], lang(
+            'Image processing is not available on this server. Please contact an administrator.',
+            'Die Bildverarbeitung ist auf diesem Server nicht verfügbar. Bitte kontaktiere die Administration.'
+        ), 'error');
+    }
+
+    $takenAt = trim($_POST['taken_at'] ?? '');
+    if ($takenAt !== '') {
+        $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
+        if ($date === false || $date->format('Y-m-d') !== $takenAt) {
+            redirectFromGroupImage($group['id'], lang(
+                'The date is invalid.',
+                'Das Datum ist ungültig.'
+            ), 'error');
+        }
+    } else {
+        $takenAt = null;
+    }
+
+    $imageId = bin2hex(random_bytes(12));
+    $targetDirectory = BASEPATH . "/uploads/groups/$id";
+    if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
+        redirectFromGroupImage($group['id'], lang(
+            'The upload directory could not be created.',
+            'Der Upload-Ordner konnte nicht erstellt werden.'
+        ), 'error');
+    }
+
+    $extension = $allowedMimeTypes[$mime];
+    $originalPath = "$targetDirectory/$imageId.$extension";
+    $thumbnailPath = "$targetDirectory/$imageId-thumb.webp";
+    if (!move_uploaded_file($file['tmp_name'], $originalPath)) {
+        redirectFromGroupImage($group['id'], lang(
+            'The image could not be saved.',
+            'Das Bild konnte nicht gespeichert werden.'
+        ), 'error');
+    }
+
+    if (!createGroupImageThumbnail($originalPath, $thumbnailPath, $mime)) {
+        @unlink($originalPath);
+        redirectFromGroupImage($group['id'], lang(
+            'The image preview could not be created.',
+            'Die Bildvorschau konnte nicht erstellt werden.'
+        ), 'error');
+    }
+
+    $images = DB::doc2Arr($group['images'] ?? []);
+    $image = [
+        'id' => $imageId,
+        'file' => "groups/$id/$imageId.$extension",
+        'thumbnail' => "groups/$id/$imageId-thumb.webp",
+        'mime' => $mime,
+        'size' => (int) $file['size'],
+        'width' => (int) $width,
+        'height' => (int) $height,
+        'caption' => substr(trim($_POST['caption'] ?? ''), 0, 1000),
+        'caption_de' => substr(trim($_POST['caption_de'] ?? ''), 0, 1000),
+        'taken_at' => $takenAt,
+        'credits' => substr(trim($_POST['credits'] ?? ''), 0, 255),
+        'public' => boolval($_POST['public'] ?? false),
+        'uploaded_at' => date('c'),
+        'uploaded_by' => $_SESSION['username'],
+        'order' => count($images),
+    ];
+
+    try {
+        $osiris->groups->updateOne(
+            ['_id' => $groupId],
+            ['$push' => ['images' => $image]]
+        );
+    } catch (Throwable $exception) {
+        @unlink($originalPath);
+        @unlink($thumbnailPath);
+        redirectFromGroupImage($group['id'], lang(
+            'The image metadata could not be saved.',
+            'Die Bildinformationen konnten nicht gespeichert werden.'
+        ), 'error');
+    }
+
+    redirectFromGroupImage($group['id'], lang(
+        'The image has been uploaded.',
+        'Das Bild wurde hochgeladen.'
+    ), 'success');
+}, 'login');
+
+Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', function ($id, $imageId) {
+    include_once BASEPATH . "/php/init.php";
+
+    $groupId = $DB->to_ObjectID($id);
+    $group = $osiris->groups->findOne(['_id' => $groupId]);
+    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+
+    $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
+    if (!$editPerm) {
+        abortwith(403, lang(
+            'You are not allowed to edit this unit.',
+            'Du darfst diese Einheit nicht bearbeiten.'
+        ));
+    }
+
+    $imageExists = false;
+    foreach (DB::doc2Arr($group['images'] ?? []) as $image) {
+        if (($image['id'] ?? '') === $imageId) {
+            $imageExists = true;
+            break;
+        }
+    }
+    if (!$imageExists) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+
+    $takenAt = trim($_POST['taken_at'] ?? '');
+    if ($takenAt !== '') {
+        $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
+        if ($date === false || $date->format('Y-m-d') !== $takenAt) {
+            redirectFromGroupImage($group['id'], lang(
+                'The date is invalid.',
+                'Das Datum ist ungültig.'
+            ), 'error');
+        }
+    } else {
+        $takenAt = null;
+    }
+
+    $osiris->groups->updateOne(
+        ['_id' => $groupId, 'images.id' => $imageId],
+        ['$set' => [
+            'images.$.caption' => substr(trim($_POST['caption'] ?? ''), 0, 1000),
+            'images.$.caption_de' => substr(trim($_POST['caption_de'] ?? ''), 0, 1000),
+            'images.$.taken_at' => $takenAt,
+            'images.$.credits' => substr(trim($_POST['credits'] ?? ''), 0, 255),
+            'images.$.public' => boolval($_POST['public'] ?? false),
+        ]]
+    );
+
+    redirectFromGroupImage($group['id'], lang(
+        'The image information has been updated.',
+        'Die Bildinformationen wurden aktualisiert.'
+    ), 'success');
+}, 'login');
+
+Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', function ($id, $imageId) {
+    include_once BASEPATH . "/php/init.php";
+
+    $groupId = $DB->to_ObjectID($id);
+    $group = $osiris->groups->findOne(['_id' => $groupId]);
+    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+
+    $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
+    if (!$editPerm) {
+        abortwith(403, lang(
+            'You are not allowed to edit this unit.',
+            'Du darfst diese Einheit nicht bearbeiten.'
+        ));
+    }
+
+    $selectedImage = null;
+    foreach (DB::doc2Arr($group['images'] ?? []) as $image) {
+        if (($image['id'] ?? '') === $imageId) {
+            $selectedImage = $image;
+            break;
+        }
+    }
+    if ($selectedImage === null) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+
+    $allowedMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+    $extension = $allowedMimeTypes[$selectedImage['mime'] ?? ''] ?? null;
+
+    $osiris->groups->updateOne(
+        ['_id' => $groupId],
+        ['$pull' => ['images' => ['id' => $imageId]]]
+    );
+
+    if ($extension !== null) {
+        $targetDirectory = BASEPATH . "/uploads/groups/$id";
+        $originalPath = "$targetDirectory/$imageId.$extension";
+        $thumbnailPath = "$targetDirectory/$imageId-thumb.webp";
+        if (is_file($originalPath)) @unlink($originalPath);
+        if (is_file($thumbnailPath)) @unlink($thumbnailPath);
+    }
+
+    redirectFromGroupImage($group['id'], lang(
+        'The image has been deleted.',
+        'Das Bild wurde gelöscht.'
+    ), 'success');
+}, 'login');
 
 Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";

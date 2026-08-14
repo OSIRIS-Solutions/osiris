@@ -28,8 +28,12 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libzip-dev \
     libssl-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
     && docker-php-ext-configure ldap \
-    && docker-php-ext-install ldap zip \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install ldap zip gd \
     && pecl install mongodb-1.21.0 \
     && docker-php-ext-enable mongodb \
     && pecl install xdebug \
@@ -46,6 +50,8 @@ RUN apt-get update && apt-get install -y \
         build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN printf "upload_max_filesize=16M\npost_max_size=18M\nmemory_limit=256M\n" > /usr/local/etc/php/conf.d/osiris-uploads.ini
 
 # Set workdir
 WORKDIR /var/www/html

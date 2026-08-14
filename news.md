@@ -43,6 +43,12 @@ Zusätzlich gibt die Portfolio-API auch bei allen verknüpften Entitäten an, da
 
 Organisationen können nun als **Kooperationspartner** gekennzeichnet werden, auch wenn sie keinem Projekt zugeordnet werden. Optional lassen sich Beginn und Ende der Kooperation hinterlegen; die Angaben werden in der Organisationsansicht angezeigt und auch für die Kooperationskarte in Portfolio ausgeliefert.
 
+### Einheiten
+
+Bei Organisationseinheiten können nun mehrere Bilder hochgeladen und mit deutsch- und englischsprachigen Bildunterschriften, Aufnahmedatum und Bildnachweis versehen werden. Die Bilder werden als Galerie unterhalb der Beschreibung angezeigt und lassen sich in einer Vollbildansicht öffnen. Für eine schnelle Darstellung erzeugt OSIRIS beim Upload automatisch verkleinerte Vorschaubilder.
+
+Einzelne Bilder können explizit als **öffentlich** freigegeben werden. Nur freigegebene Bilder werden über die Portfolio-API ausgeliefert; dort stehen sowohl das Original als auch das Vorschaubild über vollständige Weblinks zur Verfügung.
+
 ### Erweiterung der Journale
 
 Die Journalverwaltung wurde grundlegend erweitert und übersichtlicher gestaltet. Im Admin-Dashboard gibt es nun einen eigenen Bereich für Journal-Einstellungen. Dort können die Bezeichnung von Journalen, der Abruf von Metriken und zusätzliche Datenfelder zentral konfiguriert werden.
