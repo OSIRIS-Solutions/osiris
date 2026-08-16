@@ -3349,7 +3349,7 @@ Route::get('/portfolio/search-index', function () {
 
     $persons = [];
     $data = $osiris->persons->find(
-        ['hide' => ['$ne' => true]],
+        ['hide' => ['$ne' => true], 'is_active' => ['$ne' => false]],
         [
             'projection' => [
                 '_id' => 0,
