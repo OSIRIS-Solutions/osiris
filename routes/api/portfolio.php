@@ -25,6 +25,9 @@ function portfolio_apikey_check($key)
     if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $apikey) {
         return true;
     }
+    if (isset($_GET['apikey']) && $_GET['apikey'] === $apikey) {
+        return true;
+    }
     return false;
 }
 
