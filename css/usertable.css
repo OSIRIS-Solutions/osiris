@@ -1,34 +1,42 @@
- .table.cards {
+.table.cards,
+.table.full-cards {
      border: none;
      background: transparent;
      box-shadow: none;
      display: block;
  }
 
- .table.cards thead {
+ .table.cards > thead,
+ .table.full-cards > thead {
      display: none;
  }
 
- .table.cards tbody {
+ .table.cards > tbody,
+ .table.full-cards > tbody {
      display: flex;
      flex-grow: column;
      flex-direction: row;
      flex-wrap: wrap;
-
  }
 
- .table.cards tbody tr {
+ .table.cards > tbody > tr,
+ .table.full-cards > tbody > tr {
      width: 100%;
      margin: 0.5rem;
      border: var(--border-width) solid var(--border-color);
      border-radius: var(--border-radius);
      box-shadow: var(--box-shadow);
-     background: white;
+     background: white !important;
      display: flex;
      align-items: center;
  }
 
- .table.cards tbody tr td {
+ .table.full-cards > tbody > tr {
+     align-items: stretch;
+ }
+
+ .table.cards > tbody > tr > td,
+ .table.full-cards > tbody > tr > td {
      border: 0;
      box-shadow: none;
      /* width: 100%; */
@@ -37,9 +45,16 @@
      position: relative;
  }
 
- .table.cards tbody tr td small {
+ .table.full-cards > tbody > tr > td {
+     width: 100%;
+     flex: 1 1 100%;
+ }
+
+ .table.cards > tbody > tr > td small,
+ .table.full-cards > tbody > tr > td small {
      display: -webkit-box;
      -webkit-line-clamp: 2;
+     line-clamp: 2;
      /* max. 2 Zeilen */
      -webkit-box-orient: vertical;
      overflow: hidden;
@@ -48,19 +63,21 @@
  }
 
  .table.cards tbody tr img,
+ .table.full-cards tbody tr img,
  .table#persons img {
      width: 4rem;
      height: 6rem;
      object-fit: cover;
  }
 
- .table.cards tbody tr td {
+.table.cards > tbody > tr > td {
      display: flex;
      align-items: center;
      border: 0;
  }
 
- .table.cards tbody tr td.dt-empty {
+ .table.cards > tbody > tr > td.dt-empty,
+ .table.full-cards > tbody > tr > td.dt-empty {
      display: block;
      width: 100%;
      text-align: center;
@@ -68,14 +85,20 @@
  }
 
  @media (min-width: 768px) {
-     .table.cards tbody tr {
+     .table.cards > tbody >  tr {
          width: 48%;
+     }
+     .table.full-cards > tbody > tr {
+         width: 100%;
      }
  }
 
  @media (min-width: 1200px) {
      .table.cards tbody tr {
          width: calc(33.3% - 1rem);
+     }
+     .table.full-cards tbody tr {
+         width: 100%;
      }
  }
 
