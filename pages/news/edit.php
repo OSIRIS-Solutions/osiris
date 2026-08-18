@@ -75,6 +75,19 @@ if (isset($news) && isset($news['_id'])) {
         --primary-color-20: #9f437133;
         --primary-color-30: #9f43713d;
     }
+    .collapse-panel.event-panel {
+        --primary-color: #4a90e2;
+        --primary-color-dark: #3a6fb5;
+        --primary-color-20: #4a90e233;
+        --primary-color-30: #4a90e23d;
+    }
+
+    .collapse-panel.person-panel {
+        --primary-color: #8e81d0;
+        --primary-color-dark: #6b5eb3;
+        --primary-color-20: #8e81d033;
+        --primary-color-30: #8e81d03d;
+    }
 
     .featured-editor {
         border: var(--border-width) solid var(--primary-color);

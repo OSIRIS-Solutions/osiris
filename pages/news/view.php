@@ -101,6 +101,8 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
 }
 ?>
 
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/activity.css">
+
 <style>
     .news-content {
         margin-bottom: 1.5rem;
@@ -144,11 +146,25 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
         box-shadow: 0 .4rem 1.5rem rgba(0, 0, 0, .08);
     }
 
-    .featured-entity.person { --featured-color: #3c78a8; }
-    .featured-entity.activity { --featured-color: #9f4371; }
-    .featured-entity.project { --featured-color: #1c7d72; }
-    .featured-entity.event { --featured-color: #7459a6; }
-    .featured-entity.infrastructure { --featured-color: #d48646; }
+    .featured-entity.person {
+        --featured-color: #3c78a8;
+    }
+
+    .featured-entity.activity {
+        --featured-color: #9f4371;
+    }
+
+    .featured-entity.project {
+        --featured-color: #1c7d72;
+    }
+
+    .featured-entity.event {
+        --featured-color: #7459a6;
+    }
+
+    .featured-entity.infrastructure {
+        --featured-color: #d48646;
+    }
 
     .featured-entity-label {
         display: flex;
@@ -206,7 +222,10 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
         color: ' . DB::$colors[$key] . ';
     }
     ';
-    } ?>
+    }
+    ?>.connection {
+        background-color: white;
+    }
 </style>
 
 <?php
@@ -343,88 +362,121 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?= lang($news['content'] ?? '', $news['content_de'] ?? null) ?>
     </div>
 
-    <?php if (is_countable($news['persons'] ?? null) && count($news['persons']) > 0) { ?>
-        <hr>
-        <div class="persons">
-            <h4><?= lang('Selected Persons', 'Ausgewählte Personen') ?></h4>
-            <?php foreach ($news['persons'] as $i => $p) {
-                $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($p)]);
-                echo $person['displayname'] ?? '';
-                if ($i < count($news['persons']) - 1) {
-                    echo '<br>';
-                }
-            } ?>
-        </div>
-    <?php } ?>
 
-    <?php if (is_countable($news['activities'] ?? null) && count($news['activities']) > 0) { ?>
-        <hr>
-        <div class="activities">
-            <h4><?= lang('Selected Research Activities', 'Ausgewählte Forschungsaktivitäten') ?></h4>
-            <?php foreach ($news['activities'] as $i => $a) {
-                $doc = $DB->getActivity($a);
-                echo $doc['rendered']['web'] ?? '';
-                if ($i < count($news['activities']) - 1) {
-                    echo '<br>';
-                }
-            } ?>
-        </div>
-    <?php } ?>
-
-    <?php if (is_countable($news['projects'] ?? null) && count($news['projects']) > 0) { ?>
-        <hr>
-        <div class="projects">
-            <h4><?= lang('Selected Projects', 'Ausgewählte Projekte') ?></h4>
-            <?php
-
-            $mongo_ids = DB::to_ObjectIDs($news['projects'] ?? []);
-            $projects = $osiris->projects->find(['_id' => ['$in' => $mongo_ids]], [
-                'projection' => ['_id' => 1, 'name' => 1, 'acronym' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
+    <h4>
+        <i class="ph-duotone ph-link-simple"></i>
+        <?= lang('Connected Information', 'Verknüpfte Informationen') ?>
+    </h4>
+    <div class="connections">
+        <?php
+        $persons = []; //DB::doc2Arr($news['persons'] ?? []);
+        if (!empty($news['persons'] ?? null)) {
+            $personIds = DB::to_ObjectIDs($news['persons']);
+            $persons = $osiris->persons->find(['_id' => ['$in' => $personIds]], [
+                'projection' => ['_id' => 1, 'displayname' => 1, 'username' => 1, 'position' => 1, 'position_de' => 1],
+                'sort' => ['displayname' => 1]
+            ])->toArray();
+        }
+        $projects = []; //DB::doc2Arr($news['projects'] ?? []);
+        if (!empty($news['projects'] ?? null)) {
+            $projectIds = DB::to_ObjectIDs($news['projects']);
+            $projects = $osiris->projects->find(['_id' => ['$in' => $projectIds]], [
+                'projection' => ['_id' => 1, 'name' => 1, 'acronym' => 1, 'start' => 1, 'end' => 1, 'funding_organization' => 1, 'funder' => 1, 'scholarship' => 1],
                 'sort' => ['name' => 1]
             ])->toArray();
-            foreach ($projects as $i => $p) {
-                echo $p['name'];
-            } ?>
-        </div>
-    <?php } ?>
+        }
 
-    <?php if (is_countable($news['events'] ?? null) && count($news['events']) > 0) { ?>
-        <hr>
-        <div class="events">
-            <h4><?= lang('Selected Events', 'Ausgewählte Veranstaltungen') ?></h4>
-            <?php
-            $eventIds = DB::to_ObjectIDs($news['events']);
-            $events = $osiris->conferences->find(['_id' => ['$in' => $eventIds]], [
-                'projection' => ['title' => 1, 'start' => 1],
-                'sort' => ['start' => -1]
-            ])->toArray();
-            foreach ($events as $event) { ?>
-                <a href="<?= ROOTPATH ?>/conferences/view/<?= e($event['_id']) ?>">
-                    <?= e($event['title'] ?? '') ?>
-                </a>
-                <?php if (!empty($event['start'])) { ?>
-                    <span class="text-muted">(<?= date('d.m.Y', strtotime($event['start'])) ?>)</span>
-                <?php } ?>
-                <br>
-            <?php } ?>
-        </div>
-    <?php } ?>
-
-    <?php if (is_countable($news['infrastructures'] ?? null) && count($news['infrastructures']) > 0) { ?>
-        <hr>
-        <div class="infrastructures">
-            <h4><?= lang('Selected Infrastructures', 'Ausgewählte Infrastrukturen') ?></h4>
-            <?php
-
+        $infrastructures = []; //DB::doc2Arr($news['infrastructures'] ?? []);
+        if (!empty($news['infrastructures'] ?? null)) {
             $infrastructures = $osiris->infrastructures->find(['id' => ['$in' => $news['infrastructures'] ?? []]], [
                 'projection' => ['_id' => 1, 'id' => 1, 'name' => 1, 'subtitle' => 1],
                 'sort' => ['end_date' => -1, 'start_date' => 1]
             ])->toArray();
-            foreach ($infrastructures as $i => $p) {
-                echo $p['name'];
-            } ?>
-        </div>
-    <?php } ?>
+        }
+
+        $activities = []; //DB::doc2Arr($news['activities'] ?? []);
+        if (!empty($news['activities'] ?? null)) {
+            $activityIds = DB::to_ObjectIDs($news['activities']);
+            $activities = $osiris->activities->find(['_id' => ['$in' => $activityIds]], [
+                'projection' => ['_id' => 1, 'rendered.web' => 1, 'rendered.icon' => 1, 'label.en' => 1, 'label.de' => 1],
+                'sort' => ['label.en' => 1]
+            ])->toArray();
+        }
+        $events = []; //DB::doc2Arr($news['events'] ?? []);
+        if (!empty($news['events'] ?? null)) {
+            $eventIds = DB::to_ObjectIDs($news['events']);
+            $events = $osiris->conferences->find(['_id' => ['$in' => $eventIds]], [
+                'projection' => ['_id' => 1, 'title' => 1, 'start' => 1],
+                'sort' => ['start' => -1]
+            ])->toArray();
+        }
+
+        if (empty($persons) && empty($projects) && empty($infrastructures) && empty($activities) && empty($events)) {
+            echo "<p>" . lang("No connected information found.", "Keine verknüpften Informationen gefunden.") . "</p>";
+        }
+        ?>
+
+        <?php if (!empty($persons)) : ?>
+            <?php foreach ($persons as $person) { ?>
+                <div class="connection">
+                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang("People", "Personen") ?></span>
+                    <h5>
+                        <a href="<?= ROOTPATH ?>/profile/<?= $person['_id']; ?>"> <?= $person['displayname']; ?> </a>
+                    </h5>
+                    <p><?= lang($person['position'] ?? '', $person['position_de'] ?? null) ?></p>
+                </div>
+            <?php } ?>
+        <?php endif; ?>
+
+        <?php if (!empty($projects)): ?>
+            <?php foreach ($projects as $project): ?>
+                <div class="connection">
+                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
+                    <h5>
+                        <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
+                    </h5>
+                    <ul class="horizontal">
+                        <li><?= $project['funder'] ?? $project['scholarship'] ?? "" ?></li>
+                        <li><?= fromToDate($project['start'], $project['end']) ?></li>
+                    </ul>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+
+        <?php if (!empty($infrastructures)): ?>
+            <?php foreach ($infrastructures as $infrastructure): ?>
+                <div class="connection">
+                    <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang("Infrastructure", "Infrastruktur") ?></span>
+                    <h5>
+                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                    </h5>
+                    <p><?= $infrastructure['subtitle'] ?? '' ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if (!empty($activities)) : ?>
+            <?php foreach ($activities as $con) { ?>
+                <div class="connection">
+                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
+                    <p><?= $con['rendered']['web'] ?? '' ?></p>
+                </div>
+            <?php } ?>
+        <?php endif; ?>
+
+        <?php if (!empty($events)) : ?>
+            <?php foreach ($events as $event) { ?>
+                <div class="connection">
+                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang("Event", "Veranstaltung") ?></span>
+                    <h5>
+                        <a href="<?= ROOTPATH ?>/conferences/view/<?= $event['_id']; ?>"> <?= $event['title']; ?> </a>
+                    </h5>
+                    <p><?= !empty($event['start']) ? date('d.m.Y', strtotime($event['start'])) : '' ?></p>
+                </div>
+            <?php } ?>
+        <?php endif; ?>
+    </div>
 
 
     <div class="metadata">
