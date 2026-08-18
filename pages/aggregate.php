@@ -37,6 +37,8 @@ $collections = [
 
 ?>
 
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
+
 <!-- MODALS -->
 
 <div class="modal" id="saved-queries-modal" tabindex="-1" role="dialog">
@@ -333,7 +335,7 @@ $collections = [
         </div>
     </div>
 
-    <table class="table cards" id="data-table" style="display: none;">
+    <table class="table full-cards" id="data-table" style="display: none;">
         <thead>
             <th>Results</th>
         </thead>
@@ -404,7 +406,7 @@ $collections = [
 
         function wrapTopLevelView(content, index) {
             var label = lang('Result', 'Ergebnis') + ' #' + (index + 1);
-            return '<div class="card">' +
+            return '<div class="w-full" style="width: 100%;">' +
                 '<span class="text-muted">' + escapeHtml(label) + '</span>' +
                 content +
                 '</div>';
@@ -415,13 +417,17 @@ $collections = [
             if (!container) {
                 return false;
             }
+            previewId = 'preview-' + containerId;
+            var previewContainer = document.getElementById(previewId);
 
             var isHidden = container.style.display === 'none' || container.style.display === '';
             if (isHidden) {
                 container.style.display = 'block';
+                previewContainer.style.display = 'none';
                 trigger.textContent = trigger.getAttribute('data-less-label') || lang('Show less', 'Weniger anzeigen');
             } else {
                 container.style.display = 'none';
+                previewContainer.style.display = 'block';
                 trigger.textContent = trigger.getAttribute('data-more-label') || lang('Show more', 'Mehr anzeigen');
             }
 
@@ -502,7 +508,6 @@ $collections = [
             // Slicing for preview and expandable content
             var numberOfPreviewRows = 4;
             var previewRows = allRows.slice(0, numberOfPreviewRows);
-            var remainingRows = allRows.slice(numberOfPreviewRows);
             var isExpandable = allRows.length > numberOfPreviewRows;
             var previewHtml = buildRowsTable(previewRows);
 
@@ -511,12 +516,12 @@ $collections = [
             }
 
             var detailsId = 'json-remaining-' + index;
-            var summaryText = lang('Show more', 'Mehr anzeigen') + ' (' + remainingRows.length + ')';
+            var summaryText = lang('Show more', 'Mehr anzeigen') + ' (' + (allRows.length  - numberOfPreviewRows) + ')';
             var lessText = lang('Show less', 'Weniger anzeigen');
             var content = 
                 '<a href="#/" class="btn small text-primary float-md-right" data-more-label="' + escapeHtml(summaryText) + '" data-less-label="' + escapeHtml(lessText) + '" onclick="return toggleExpandedRows(\'' + detailsId + '\', this);">' + escapeHtml(summaryText) + '</a>' +
-                '<div>' + previewHtml + '</div>' +
-                '<div id="' + detailsId + '" style="display: none;">' + buildRowsTable(remainingRows) + '</div>';
+                '<div id="preview-' + detailsId + '">' + previewHtml + '</div>' +
+                '<div id="' + detailsId + '" style="display: none;">' + buildRowsTable(allRows) + '</div>';
 
             return wrapTopLevelView(content, index);
         }
@@ -566,6 +571,7 @@ $collections = [
                     targets: 0,
                     orderable: false
                 }],
+                stripeClasses: [],
                 buttons: [{
                     extend: 'excelHtml5',
                     exportOptions: {
