@@ -695,6 +695,54 @@ $active = function ($field) use ($data_fields) {
                 });
             </script>
         <?php } ?>
+
+        <!-- Contact Button -->
+        <?php if ($Settings->featureEnabled('contact-button')) { ?>
+            <h4>
+                <?= lang('Contact Button', 'Kontakt Button') ?>
+            </h4>
+            <?php $contact_button = $data['contact-button'] ?? false; ?>
+            <?php $contact_button_type = $data['contact-button-type'] ?? 'mail'; ?>
+            <div class="form-group">
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
+                    <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                </div>
+
+                <div class="custom-radio d-inline-block ml-10">
+                    <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
+                    <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                </div>
+                <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
+                    <div class="col-sm">
+                        <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
+                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control">
+                            <?php foreach (['mail', 'slack', 'teams', 'matrix', 'other'] as $type) { ?>
+                                <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-sm">
+                        <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
+                        <input type="text" name="values[contact]" id="contact" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" onblur="validateContact(this)">
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        function toggleContactButtonSettings() {
+                            if ($('#contact-button-true').is(':checked')) {
+                                $('#contact-button-settings').show();
+                            } else {
+                                $('#contact-button-settings').hide();
+                            }
+                        }
+                        toggleContactButtonSettings();
+                        $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
+                    });
+                </script>
+            </div>
+        <?php } ?>
+
     </section>
 
 

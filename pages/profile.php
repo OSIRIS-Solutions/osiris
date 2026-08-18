@@ -479,10 +479,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php } ?>
             </div>
         <?php } ?>
-
     </div>
-
-
 
 
     <?php
@@ -574,7 +571,21 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
         <?php } ?>
 
-
+                <!--- Contact Button --->
+        <?php
+        if ($Settings->featureEnabled('contact-button') && ($scientist['contact_button'] ?? true)) {
+            $contact = $scientist['contact'] ?? null;
+            if (!isset($contact) && isset($scientist['mail'])){
+                $contact = "mailto:" . $scientist['mail'];
+            }
+            if($contact) { ?>
+                <div class="btn-group btn-group-lg" >
+                    <a class="btn secondary outline" href="<?= $contact ?>" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] ?>">
+                        <?= lang('Contact', 'Kontakt')?>
+                    </a>
+                </div>
+            <?php } ?>
+        <?php } ?>
     </div>
 
 <?php } ?>

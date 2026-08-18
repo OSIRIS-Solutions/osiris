@@ -136,6 +136,28 @@ $persons = $osiris->adminPersons->find();
                     </small>
                 </div>
 
+                <div class="form-group">
+                    <label for="" class="font-weight-bold">
+                        <?= lang('Contact button in user profiles', 'Kontakt-Button in Benutzerprofilen') ?>
+                    </label>
+                    <?php
+                    $achievements = $Settings->featureEnabled('contact-button');
+                    ?>
+
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-true" value="1" name="features[contact-button]" <?= $achievements ? 'checked' : '' ?>>
+                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                    </div>
+
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-false" value="0" name="features[contact-button]" <?= $achievements ? '' : 'checked' ?>>
+                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                    </div>
+
+                </div>
+
+                
+
 
                 <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
                     <div class="form-group">

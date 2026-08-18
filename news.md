@@ -1,3 +1,16 @@
+<time datetime="2026-08-18">18.08.2026</time>
+<a class="anchor" href="#version-2.1.1" id="version-2.1.1"></a>
+
+## Version 2.1.1
+
+Im letzten Release hat unser Git leider zwei kleine Fehler eingebaut, die wir mit diesem Patch behoben haben:
+
+1. Die neue News-Seite zeigte verknüpfte Informationen sehr rudimentär an (Hier ist uns ein ganzer Commit abhanden gekommen).
+2. Auf der Journal-Bearbeiten-Seite fehlte nach dem Merge einfach eine Zeile, wodurch die ganze Seite nicht mehr geladen wurde.
+
+Beide Probleme sind nun behoben. Für die Unannehmlichkeiten möchten wir uns entschuldigen und danken allen, die uns auf die Probleme hingewiesen haben.
+
+
 <time datetime="2026-08-14">14.08.2026</time>
 <a class="anchor" href="#version-2.1.0" id="version-2.1.0"></a>
 
