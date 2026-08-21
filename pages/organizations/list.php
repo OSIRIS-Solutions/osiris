@@ -56,14 +56,14 @@ $organizations  = $osiris->organizations->find(
             <tr data-row="">
                 <td>
                     <div class="d-flex align-items-center">
-                        <span data-toggle="tooltip" data-title="<?= $org['type'] ?>" class="badge mr-10">
-                            <?= Organization::getIcon($org['type'], 'ph-fw ph-2x m-0') ?>
+                        <span data-toggle="tooltip" data-title="<?= $org['type'] ?? '' ?>" class="badge mr-10">
+                            <?= Organization::getIcon($org['type'] ?? 'other', 'ph-fw ph-2x m-0') ?>
                         </span>
                         <div class="">
                             <a href="<?= ROOTPATH ?>/organizations/view/<?= $org['_id'] ?>" class="link font-weight-bold colorless">
-                                <?= $org['name'] ?>
+                                <?= $org['name'] ?? '' ?>
                             </a><br>
-                            <?= $org['location'] ?>
+                            <?= $org['location'] ?? '' ?>
                             <?php if (isset($org['ror'])) { ?>
                                 <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
                             <?php } ?>
@@ -71,9 +71,9 @@ $organizations  = $osiris->organizations->find(
                         </div>
                     </div>
                 </td>
-                <td><?= $org['name'] ?></td>
-                <td><?= $org['type'] ?></td>
-                <td><?= $org['location'] ?></td>
+                <td><?= $org['name'] ?? '' ?></td>
+                <td><?= $org['type'] ?? '' ?></td>
+                <td><?= $org['location'] ?? '' ?></td>
                 <td><?= $org['ror'] ?? '' ?></td>
                 <td><?= implode(', ', DB::doc2Arr($org['synonyms'] ?? [])) ?></td>
             </tr>

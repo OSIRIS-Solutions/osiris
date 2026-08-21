@@ -56,7 +56,6 @@ function validateValues($values, $DB)
             } else {
                 $values[$key] = strtolower($value);
             }
-           
         } else if ($key == 'authors' || $key == "editors" || $key == 'supervisors') {
             $values[$key] = array();
             $i = 0;
@@ -177,11 +176,14 @@ function validateValues($values, $DB)
                     if (!isset($values['month']) && isset($values[$key]['month'])) {
                         $values['month'] = $values[$key]['month'];
                     }
+                    if (!isset($values['day']) && isset($values[$key]['day'])) {
+                        $values['day'] = $values[$key]['day'];
+                    }
                 }
             } else {
                 $values[$key] = null;
             }
-        } else if ($key == 'month' || $key == 'year') {
+        } else if ($key == 'month' || $key == 'year' || $key == 'day') {
             $values[$key] = intval($value);
         } else if ($key == 'room') {
             // do not connvert room numbers to integers
@@ -598,22 +600,22 @@ function rawdump($element)
         var_export($element);
     }
 }
-function dump($element, $as_json = true)
+function dump($element, $escaped = true)
 {
-    echo '<pre class="code">';
     if ($element instanceof MongoDB\Model\BSONArray) {
         $element = $element->bsonSerialize();
     }
-    if ($as_json) {
+    if ($escaped) {
+        echo '<pre class="code">';
         echo e(json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-        if (!empty(json_last_error())) {
-            var_dump(json_last_error_msg()) . PHP_EOL;
-            var_export($element);
-        }
+        echo "</pre>";
     } else {
-        var_dump($element);
+        echo json_encode($element, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
     }
-    echo "</pre>";
+    if (!empty(json_last_error())) {
+        var_dump(json_last_error_msg()) . PHP_EOL;
+        var_export($element);
+    }
 }
 
 function bool_icon($bool)
@@ -782,7 +784,7 @@ function adjustBrightness($hex, $steps)
  * @param string $hex
  * @return string
  */
-function lightBackgroundColor(string $hex, $brightness=0.95): string
+function lightBackgroundColor(string $hex, $brightness = 0.95): string
 {
     $hex = ltrim($hex, '#');
 
@@ -843,15 +845,15 @@ function lightBackgroundColor(string $hex, $brightness=0.95): string
         $hue2rgb = function ($p, $q, $t) {
             if ($t < 0) $t += 1;
             if ($t > 1) $t -= 1;
-            if ($t < 1/6) return $p + ($q - $p) * 6 * $t;
-            if ($t < 1/2) return $q;
-            if ($t < 2/3) return $p + ($q - $p) * (2/3 - $t) * 6;
+            if ($t < 1 / 6) return $p + ($q - $p) * 6 * $t;
+            if ($t < 1 / 2) return $q;
+            if ($t < 2 / 3) return $p + ($q - $p) * (2 / 3 - $t) * 6;
             return $p;
         };
 
-        $r = $hue2rgb($p, $q, $h + 1/3);
+        $r = $hue2rgb($p, $q, $h + 1 / 3);
         $g = $hue2rgb($p, $q, $h);
-        $b = $hue2rgb($p, $q, $h - 1/3);
+        $b = $hue2rgb($p, $q, $h - 1 / 3);
     }
 
     return sprintf(

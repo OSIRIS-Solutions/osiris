@@ -105,6 +105,8 @@ $conferences = $osiris->conferences->find(
                     <th><?= lang('Type', 'Typ') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= $Settings->tagLabel() ?></th>
+                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('Full title', 'Voller Titel') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -295,12 +297,8 @@ $conferences = $osiris->conferences->find(
             buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6],
-                    format: {
-                        header: function(html, index, node) {
-                            return headers[index].title ?? '';
-                        }
-                    }
+                    columns: [7, 8, 1, 2, 3, 4, 5, 6],
+                    orthogonal: 'export'
                 },
                 className: 'btn small',
                 title: function() {
@@ -336,28 +334,13 @@ $conferences = $osiris->conferences->find(
                     targets: 2,
                     data: 'start',
                     searchable: true,
-                    render: function(data, type, row) {
-                        // formatted date
-                        var date = new Date(data);
-
-                        return `
-                        <span class="d-none">${date.getTime()}</span>
-                        ${date.toLocaleDateString('de-DE')}
-                        `;
-                    }
+                    render: datatableDate
                 },
                 {
                     targets: 3,
                     data: 'end',
                     searchable: true,
-                    render: function(data, type, row) {
-                        // formatted date
-                        var date = new Date(data);
-                        return `
-                        <span class="d-none">${date.getTime()}</span>
-                        ${date.toLocaleDateString('de-DE')}
-                        `;
-                    }
+                    render: datatableDate
                 },
                 {
                     targets: 4,
@@ -388,6 +371,22 @@ $conferences = $osiris->conferences->find(
                         if (data === undefined || data.length === 0) return '';
                         return data.join(' ');
                     }
+                },
+                {
+                    target: 7,
+                    data: 'title',
+                    searchable: false,
+                    visible: false,
+                    defaultContent: '',
+                    header: '<?= lang('Title', 'Titel') ?>',
+                },
+                {
+                    target: 8,
+                    data: 'title_full',
+                    searchable: false,
+                    visible: false,
+                    defaultContent: '',
+                    header: '<?= lang('Full title', 'Voller Titel') ?>',
                 }
             ],
             "order": [
@@ -454,7 +453,7 @@ $conferences = $osiris->conferences->find(
         dataTable.on('draw', function(e, settings) {
             if (initializing) return;
             var info = dataTable.page.info();
-            
+
             writeHash({
                 page: info.page + 1,
                 search: dataTable.search(),

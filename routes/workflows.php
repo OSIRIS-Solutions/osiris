@@ -497,7 +497,7 @@ Route::post('/crud/activities/workflow/reject-reply/(.*)', function ($id) {
     $hist = [
         'date' => date('Y-m-d'),
         'user' => $_SESSION['username'] ?? 'system',
-        'type' => 'workflow-reject',
+        'type' => 'workflow-reply',
         'comment' => $comment
     ];
     $history[] = $hist;

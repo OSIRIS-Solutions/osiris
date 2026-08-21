@@ -324,7 +324,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 <?php if (!empty($form) && isset($form['id'])) { ?>
     <div class="alert danger mt-20">
-        <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $field['_id'] ?>" method="post">
+        <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $form['_id'] ?>" method="post">
             <h5 class="title">
                 <?= lang('Delete this field', 'Dieses Feld löschen') ?>
             </h5>

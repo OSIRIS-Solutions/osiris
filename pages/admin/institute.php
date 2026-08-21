@@ -36,9 +36,9 @@
                 <input type="text" class="form-control" name="general[affiliation][link]" required value="<?= $affiliation['link'] ?? '' ?>">
             </div>
         </div>
-        <h5>
+        <h2 class="font-size-18">
             <?= lang('Affiliation matching', 'Zugehörigkeitsabgleich') ?>
-        </h5>
+        </h2>
         <div class="form-group">
             <label for="regex">
                 <?= lang('Regular Expression (Regex) for affiliation', 'Regulärer Ausdruck (Regex) für Zugehörigkeit') ?>
@@ -49,9 +49,9 @@
                 <?= lang('As a reference, see', 'Als Referenz, siehe') ?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?= lang('with flavour JavaScript', 'mit Flavour JavaScript') ?>.
             </small>
         </div>
-        <h5>
+        <h2 class="font-size-18">
             <?= lang('External IDs', 'Externe IDs') ?>
-        </h5>
+        </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
                 <label for="openalex">
@@ -70,9 +70,9 @@
                 </a>
             </div>
         </div>
-        <h5>
+        <h2 class="font-size-18">
             <?= lang('Location', 'Standort') ?>
-        </h5>
+        </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
                 <label for="location"><?= lang('Location', 'Ort') ?></label>
@@ -84,9 +84,9 @@
             </div>
         </div>
 
-        <h5>
+        <h2 class="font-size-18">
             <?= lang('Coordinates (for map display)', 'Koordinaten (für Kartenanzeige)') ?>
-        </h5>
+        </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
                 <label for="lat"><?= lang('Latitude', 'Breitengrad') ?></label>

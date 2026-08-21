@@ -1227,6 +1227,8 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
     }
     $id = $DB->to_ObjectID($id);
 
+    $old_doc = $osiris->activities->findOne(['_id' => $id]);
+
     $authors = [];
     $units = [];
     foreach ($_POST['authors'] as $i => $a) {
@@ -1268,15 +1270,17 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
     // update History
     $values = $DB->updateHistory($values, $id);
 
+    include_once BASEPATH . "/php/Render.php";
+    $values = renderAuthorUnits($values, $old_doc);
+
     $update = $osiris->activities->updateOne(
         ['_id' => $id],
         ['$set' => $values]
     );
 
     // update units array
-    include_once BASEPATH . "/php/Render.php";
     renderActivities(['_id' =>  $id]);
-    renderAuthorUnitsMany(['_id' => $id]);
+    // renderAuthorUnitsMany(['_id' => $id]);
 
     if ($update->getModifiedCount() > 0) {
         $_SESSION['msg'] = lang(ucfirst($type) . " updated.", ucfirst($type) . " aktualisiert.");

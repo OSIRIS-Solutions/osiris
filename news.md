@@ -1,6 +1,137 @@
+<time datetime="2026-08-18">18.08.2026</time>
+<a class="anchor" href="#version-2.1.1" id="version-2.1.1"></a>
+
+## Version 2.1.1
+
+Im letzten Release hat unser Git leider zwei kleine Fehler eingebaut, die wir mit diesem Patch behoben haben:
+
+1. Die neue News-Seite zeigte verknüpfte Informationen sehr rudimentär an (Hier ist uns ein ganzer Commit abhanden gekommen).
+2. Auf der Journal-Bearbeiten-Seite fehlte nach dem Merge einfach eine Zeile, wodurch die ganze Seite nicht mehr geladen wurde.
+
+Beide Probleme sind nun behoben. Für die Unannehmlichkeiten möchten wir uns entschuldigen und danken allen, die uns auf die Probleme hingewiesen haben.
+
+
+<time datetime="2026-08-14">14.08.2026</time>
+<a class="anchor" href="#version-2.1.0" id="version-2.1.0"></a>
+
+## Version 2.1.0
+
+> In diesem Update liegt der Fokus vermehrt auf der neuen Schnittstelle zu ORCID und dem neuen OSIRIS Portfolio.
+> Mehr Informationen zu Portfolio findet ihr [auf der offiziellen Seite](https://osiris-portfolio.de).
+
+### ORCID Integration
+
+OSIRIS unterstützt nun die direkte Verknüpfung mit ORCID. Personen können in ihrem Profil eine verifizierte ORCID iD hinterlegen und so sicherstellen, dass das verknüpfte ORCID-Profil tatsächlich zu ihnen gehört.
+
+Nach erfolgreicher Verknüpfung können Publikationen und andere Aktivitäten automatisch aus ORCID in OSIRIS importiert werden. Wie bereits bei Crossref und DataCite lässt sich in den Admin-Einstellungen festlegen, welchen Aktivitätstypen in OSIRIS die verschiedenen ORCID-Typen zugeordnet werden sollen.
+
+Der Import ist direkt über die Startseite und das eigene Profil erreichbar. Bereits importierte ORCID-Einträge werden erkannt, um Duplikate zu vermeiden; durch Zwischenspeicherung lädt die Importübersicht zudem schneller.
+
+Zur Aktivierung der Integration müssen zunächst die ORCID-Zugangsdaten – Client-ID und API-Key – in den Admin-Einstellungen unter „Integrationen“ hinterlegt werden.
+
+
+### Portfolio-API
+
+Die Portfolio-API wurden um zusätzliche Inhalte und Konfigurationsmöglichkeiten erweitert:
+
+- Es gibt einen neuen **Such-Index**, der die Suche nach Personen, Projekten, Infrastrukturen, Veranstaltungen und Themen ermöglicht. Der Suchindex wird für die allgemeine Suche im neuen Portfolio verwendet. 
+- Das **Forschungs-Spektrum** kann nun in Portfolios eingebunden werden. Dafür gibt es eine neue Einstellung im Portfolio-Bereich. Neben einer Übersicht stehen Beschreibungen und Schlagwörter der Themen zur Verfügung; die Themen werden außerdem im Portfolio-Suchindex berücksichtigt.
+- **Veranstaltungen** können jetzt über die Portfolio-API ausgegeben und in Portfolio dargestellt werden. Einzelne Veranstaltungen lassen sich beim Anlegen und Bearbeiten freigeben.
+
+### Neuigkeiten
+
+Die Verwaltung von Neuigkeiten wurde übersichtlicher gestaltet und um Verknüpfungen zu weiteren OSIRIS-Inhalten erweitert. Auf diese Weise lässt sich die Forschungskommunikation gezielt mit den relevanten Inhalten verknüpfen. Neuigkeiten können nun mit folgenden Entitäten verknüpft werden:
+- Personen
+- Aktivitäten
+- Projekte
+- Infrastrukturen
+- Veranstaltungen
+- Forschungsbereiche
+
+Je nach Bedarf kann eine der Verknüpfungen auf der Seite auch besonders hervorgehoben werden. All diese Verknüpfungen werden in der Portfolio-API ausgegeben und können in Portfolio dargestellt werden.
+
+Zusätzlich gibt die Portfolio-API auch bei allen verknüpften Entitäten an, dass es eine Neuigkeit gibt, die mit der Entität verknüpft ist. So können beispielsweise in Portfolio bei einer Person alle Neuigkeiten angezeigt werden, die mit dieser Person verknüpft sind. Dies ermöglicht eine gezielte Kommunikation von Forschungsergebnissen und Aktivitäten.
+
+### Organisationen
+
+Organisationen können nun als **Kooperationspartner** gekennzeichnet werden, auch wenn sie keinem Projekt zugeordnet werden. Optional lassen sich Beginn und Ende der Kooperation hinterlegen; die Angaben werden in der Organisationsansicht angezeigt und auch für die Kooperationskarte in Portfolio ausgeliefert.
+
+### Einheiten
+
+Bei Organisationseinheiten können nun mehrere Bilder hochgeladen und mit deutsch- und englischsprachigen Bildunterschriften, Aufnahmedatum und Bildnachweis versehen werden. Die Bilder werden als Galerie unterhalb der Beschreibung angezeigt und lassen sich in einer Vollbildansicht öffnen. Für eine schnelle Darstellung erzeugt OSIRIS beim Upload automatisch verkleinerte Vorschaubilder.
+
+Einzelne Bilder können explizit als **öffentlich** freigegeben werden. Nur freigegebene Bilder werden über die Portfolio-API ausgeliefert; dort stehen sowohl das Original als auch das Vorschaubild über vollständige Weblinks zur Verfügung.
+
+### Erweiterung der Journale
+
+Die Journalverwaltung wurde grundlegend erweitert und übersichtlicher gestaltet. Im Admin-Dashboard gibt es nun einen eigenen Bereich für Journal-Einstellungen. Dort können die Bezeichnung von Journalen, der Abruf von Metriken und zusätzliche Datenfelder zentral konfiguriert werden.
+
+- Alle Journal-bezogenen Einstellungen sind nun an einem Ort gebündelt und können zentral verwaltet werden, inkl. der Konfiguration von Journal-Metriken, benutzerdefinierten Feldern und der Änderung des Anzeigenamens von Journalen.
+- Der bisherige „Impact Factor“ wurde in „Cite Factor“ umbenannt. Die Bezeichnung lässt sich für Deutsch und Englisch individuell anpassen.
+- **Benutzerdefinierte Felder** können für Journale aktiviert werden, beispielsweise für APC-Kosten, Währungen, Transformationsverträge oder interne Klassifikationen. Die Werte lassen sich im Journal-Editor pflegen und werden in der Detailansicht angezeigt.
+- In der Journalübersicht können benutzerdefinierte Felder als zusätzliche Spalten eingeblendet, durchsucht und exportiert werden.
+- Die Journal-Detailseite wurde überarbeitet und zeigt neben Publikationen jetzt auch weitere Aktivitäten, die mit dem Journal verknüpft sind.
+
+Zusätzlich steht eine neue **Statistikseite für Journale** zur Verfügung. Die Auswertungen können auf ein Berichtsjahr oder einen frei wählbaren Zeitraum eingeschränkt werden und basieren auf den mit den Journalen verknüpften Publikationen. Neben den meistgenutzten Journalen werden unter anderem Verlage, Länder, Open-Access-Status, Kategorien, Quartile und Journal-Metriken ausgewertet. Numerische benutzerdefinierte Felder können ebenfalls statistisch zusammengefasst und grafisch dargestellt werden.
+
+Auch die **Journal-API** wurde erweitert: Konfigurierte benutzerdefinierte Felder werden nun über `/api/journals` ausgegeben. Gleichzeitig wurde die Abfrage optimiert, sodass der Endpunkt insbesondere bei vielen verknüpften Publikationen deutlich schneller reagiert.
+
+### Forschungs-Spektrum
+
+Das automatisch zugewiesene Forschungsspektrum lässt sich jetzt nachträglich bearbeiten. Dazu gibt es ein Bearbeiten-Symbol neben dem Forschungsspektrum einer Publikation. Damit können die automatisch zugewiesenen Themen entfernt oder neue hinzugefügt werden. Manuell können maximal 5 Themen zugewiesen werden.
+Die Änderungen werden in der Datenbank gespeichert und sind für alle Nutzer:innen sichtbar. Es ist jederzeit möglich, die Änderungen wieder rückgängig zu machen und die automatisch zugewiesenen Themen wiederherzustellen. 
+
+Die Popups des Forschungs-Spektrums wurden um einen Link erweitert, mit dem sich die zugehörigen Publikationen anzeigen lassen. Die Links führen auf entsprechende Filter in der erweiterten Suche, sodass die Publikationen direkt weiter analysiert werden können. Das erleichtert es insbesondere, falsch zugewiesene Themen zu erkennen und zu korrigieren.
+
+### Erweiterte Suche
+
+Neben den bisher verfügbaren **Aggregationen** in der erweiterten Suche, die ausschließlich Zählungen von Treffern zurückgeben, können nun auch **Summen und Mittelwerte** für numerische Felder berechnet werden. Damit lassen sich beispielsweise die durchschnittlichen Cite-Faktoren, aufsummierte SWS oder die Summe von benutzerdefinierten Feldern wie APC-Kosten berechnen.
+
+Außerdem wurden der Aktivitätssuche weitere Filter hinzugefügt, um auch nach Nutzernamen, Forschungsspektrum-IDs und Projekt-IDs zu filtern.
+
+### Admin-Einstellungen
+
+Die Admin-Einstellungen wurden überarbeitet und inhaltlich erweitert. Es gibt nun eine neue **Kategorie "Integrationen"**, in der alle Einstellungen zu externen Diensten wie ORCID, OpenAlex, Crossref, etc. gebündelt sind.
+
+Es wurde eine neue Möglichkeit hinzugefügt, **eigenes CSS** zu hinterlegen, um OSIRIS noch weiter optisch an die eigenen Bedürfnisse anzupassen. Das CSS kann in den Admin-Einstellungen unter "Design" hinterlegt werden.
+
+#### Form Builder
+
+- Einzelne Felder in Aktivitätenformularen können nun nur für bestimmte Rollen sichtbar gemacht werden. Standardmäßig bleiben alle Felder für jeden sichtbar. Die Rollensteuerung steht auch für Überschriften und Textbausteine zur Verfügung, sodass sich Formulare gezielter an unterschiedliche Nutzergruppen anpassen lassen.
+- Felder können als **empfohlen** gekennzeichnet werden. Sie sollen später im Formular hervorgehoben werden, bleiben aber freiwillig. Diese Einstellung bereitet eine spätere Berücksichtigung im Qualitätsscore vor.
+- Für geeignete Felder lässt sich festlegen, ob sie in der Metadaten-Tabelle in Portfolio ausgegeben werden.
+
+#### Datumsangaben in Templates
+
+- Datumsangaben in Aktivitäts-Templates können jetzt flexibel formatiert werden, zum Beispiel mit `{date:Y-m-d}` oder `{start:Y, F j}`. Dabei kann sowohl auf `date`, `start` als auch `end` zugegriffen werden.
+- Mit `{end-compact:…}` lassen sich Datumsbereiche kompakt darstellen: Mit dem Start übereinstimmende Jahre und Monate werden nicht wiederholt. Damit sind unter anderem APA-7-konforme Konferenzdaten wie `(2026, July 24–26)` möglich.
+
+
+### Bug Fixes und Verbesserungen
+- Die Bearbeitung von Autor:innen und anderen Mitwirkenden wurde übersichtlicher gestaltet. Bei der Auswahl eines OSIRIS-Nutzers werden Name und Einheiten automatisch übernommen.
+- Geteilte Autorenschaften werden nun zuverlässig als solche gekennzeichnet. [#514](https://github.com/OSIRIS-Solutions/osiris/issues/514)
+- Der Button zum Abruf von Publikationsdaten über eine DOI ist beim Anlegen von Aktivitäten nun leichter zu finden.
+- Bei E-Mail-Adressen, ORCID iDs und Google-Scholar-IDs werden versehentlich eingegebene Leerzeichen automatisch entfernt.
+- Ein Problem wurde behoben, durch das es beim Synchronisieren von Nutzer-Attributen über die Kommandozeile zu Fehlermeldungen kam.
+- Es war nicht möglich, über den Baukasten in der erweiterten Suche nach Einheiten zu filtern.
+- Es war nicht möglich, benutzerdefinierte Felder (Custom Fields) zu löschen. [#560](https://github.com/OSIRIS-Solutions/osiris/issues/560)
+- Die manuell hinzugefügten Einheiten werden jetzt auch für die Berechnung der Gesamteinheiten einer Aktivität berücksichtigt. [#568](https://github.com/OSIRIS-Solutions/osiris/issues/568)
+- Der Excel-Export von Events wurde verbessert und zeigt nun die korrekten Spaltenüberschriften an sowie das richtige Datum an. Titel und Kurztitel wurden hinzugefügt. [#563](https://github.com/OSIRIS-Solutions/osiris/issues/563)
+- Der Export von Datumsfeldern wurde verbessert, wodurch sie in Excel nun korrekt als Datum erkannt werden.
+- Wird der Tag beim Anlegen einer Aktivität nicht angegeben, wird nun nicht mehr automatisch der erste Tag des Monats ausgegeben. Für die Sortierung und Filterung wird weiterhin der 1. des Monats angenommen. [#584](https://github.com/OSIRIS-Solutions/osiris/issues/584)
+- Mit Organisationen verknüpfte Projekte wurden nicht immer auf der Detailansicht der Organisationen angezeigt. [#571](https://github.com/OSIRIS-Solutions/osiris/issues/571)
+- Projektverknüpfungen in der neuen Aktivitätsansicht führen nun wieder auf die korrekte Projektseite. [#574](https://github.com/OSIRIS-Solutions/osiris/issues/574)
+- Verknüpfungen zwischen Projekten und Anträgen funktionieren nun auch dann korrekt, wenn beide unterschiedliche IDs besitzen.
+- Die Aktivitätsliste eines Projekts lässt sich nun wieder als Word herunterladen. [#579](https://github.com/OSIRIS-Solutions/osiris/issues/579)
+- Antworten in Workflows werden nun mit der korrekten Workflow-Stufe in der Historie angezeigt.
+- Die Detailansicht von Infrastrukturen wurde übersichtlicher gestaltet.
+- Der Google-Scholar-Import wird nur noch angezeigt, wenn ein entsprechendes Konto verknüpft ist.
+- Die Versionierung des OSIRIS-Wikis wurde aufgrund mehrerer Probleme zurückgenommen.
+
+
 <time datetime="2026-07-17">17.07.2026</time>
 <a class="anchor" href="#version-2.0.2" id="version-2.0.2"></a>
-
+    
 ## Version 2.0.2
 
 Datenvalidierung im User-Editor und Bugfixes

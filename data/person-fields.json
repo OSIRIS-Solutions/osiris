@@ -222,8 +222,8 @@
         "en": "Keywords",
         "de": "Schlagworte",
         "description": {
-            "en": "This enables a defined list of keywords, which users can select from. The list of keywords and how they should be named can be configured in the tab <q>Vocabulary</q>.",
-            "de": "Dies aktiviert eine definierte Liste von Schlagwörtern, aus der die Benutzer auswählen können. Die Liste der Schlagwörter und wie sie genannt werden sollen kann im Tab <q>Vokabular</q> konfiguriert werden."
+            "en": "This enables a defined list of keywords, which users can select from. They can be configured in the section <q>Keywords</q>.",
+            "de": "Dies aktiviert eine definierte Liste von Schlagwörtern, aus der die Benutzenden auswählen können. Diese können im Bereich <q>Schlagwörter</q> konfiguriert werden."
         }
     }
 ]

@@ -138,6 +138,8 @@ class Portfolio extends Settings
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $response = curl_exec($ch);
         if (!$ch || curl_errno($ch)) {
+            $_SESSION['portfolio_error'] = 'Portfolio API request failed: ' . curl_error($ch);
+            curl_close($ch);
             return null;
         }
 

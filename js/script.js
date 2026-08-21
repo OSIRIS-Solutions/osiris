@@ -540,3 +540,7 @@ function orderByAttr(a, b) {
     if (b === undefined) return 1
     return a.localeCompare(b)
 }
+
+function dump(el){
+    console.log(el);
+}

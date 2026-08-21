@@ -221,16 +221,18 @@ if ($edit_perm) { ?>
         </div>
     </div>
 
+    <div class="btn-toolbar">
+        <?php if ($edit_perm) { ?>
+            <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
+                <i class="ph ph-edit"></i>
+                <span><?= lang('Edit', 'Bearbeiten') ?></span>
+            </a>
+        <?php } ?>
+    </div>
     <div class="row row-eq-spacing">
 
         <div class="col-md-6">
-            <?php if ($edit_perm) { ?>
-                <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
-                    <i class="ph ph-edit"></i>
-                    <span><?= lang('Edit', 'Bearbeiten') ?></span>
-                </a>
-            <?php } ?>
-            <table class="table mt-10 small">
+            <table class="table small mt-0" id="infrastructure-details">
                 <tr>
                     <td>
                         <span class="key">ID: </span>
@@ -301,6 +303,26 @@ if ($edit_perm) { ?>
                         </td>
                     </tr>
                 <?php endif; ?>
+                <!-- visibility -->
+                <?php if ($Settings->featureEnabled('portal')) {
+                    $public = $infrastructure['public'] ?? false;
+                ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= lang('Portfolio Visibility', 'Sichtbarkeit in Portfolio') ?>: </span>
+                            <?php if ($public) { ?>
+                                <span class="badge success">
+                                    <i class="ph ph-globe m-0"></i> <?= lang('Shown', 'Gezeigt') ?>
+                                </span>
+                            <?php } else { ?>
+                                <span class="badge signal">
+                                    <i class="ph ph-globe-x m-0"></i> <?= lang('Not shown', 'Nicht gezeigt') ?>
+                                </span>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+
                 <?php
                 // check if user has custom fields
                 $custom_fields = $osiris->adminFields->find()->toArray();
@@ -319,14 +341,28 @@ if ($edit_perm) { ?>
             </table>
         </div>
         <div class="col-md-6">
-            <h3>
-                <?=lang('About', 'Über')?>
-            </h3>
-            <p class="font-size-12">
-                <?= $infrastructure['description'] ?? '-' ?>
-            </p>
+            <div class="box padded mt-0" id="description" style="height: 100%;max-height: 400px;overflow-y: auto;">
+                <h3 class="title">
+                    <?= lang('About', 'Über') ?>
+                </h3>
+                <?= ($infrastructure['description'] ?? '-') ?>
+            </div>
         </div>
     </div>
+
+    <script>
+        // adjust height of description box to match the height of the left column
+        function adjustDescriptionHeight() {
+            var leftCol = document.getElementById('infrastructure-details');
+            var rightCol = document.getElementById('description');
+            if (leftCol && rightCol) {
+                var leftHeight = leftCol.offsetHeight;
+                rightCol.style.maxHeight = leftHeight + 'px';
+            }
+        }
+        window.addEventListener('resize', adjustDescriptionHeight);
+        window.addEventListener('load', adjustDescriptionHeight);
+    </script>
 
 
     <h2>
@@ -450,6 +486,7 @@ if ($edit_perm) { ?>
                 {
                     targets: 4,
                     data: 'start',
+                    render: datatableDate,
                     searchable: true,
                     visible: false,
                 },

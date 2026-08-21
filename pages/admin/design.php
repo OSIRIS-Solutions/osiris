@@ -556,6 +556,18 @@ $design = $Settings->get('design');
 
         </table>
 
+        <!-- custom CSS -->
+        <div class="mt-20">
+            <label for="design_custom_css"><?= lang('Custom CSS', 'Benutzerdefiniertes CSS') ?></label>
+            <textarea class="form-control text-monospace" name="general[design][custom_css]" id="design_custom_css" rows="10"><?= e($design['custom_css'] ?? '') ?></textarea>
+            <small class="text-muted d-block mt-5">
+                <?= lang(
+                    'This CSS will be added to the page header and can be used to customize the design of the website.',
+                    'Dieses CSS wird in den Header der Seite eingebunden und kann verwendet werden, um das Design der Website anzupassen.'
+                ) ?>
+            </small>
+        </div>
+
         <div class="bottom-buttons mt-10">
             <button class="btn primary">
                 <i class="ph ph-floppy-disk"></i>

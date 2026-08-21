@@ -22,6 +22,12 @@ function portfolio_apikey_check($key)
     $apikey = $Settings->get('portfolio_apikey', null);
     if (empty($apikey)) return true;
     if ($key === $apikey) return true;
+    if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $apikey) {
+        return true;
+    }
+    if (isset($_GET['apikey']) && $_GET['apikey'] === $apikey) {
+        return true;
+    }
     return false;
 }
 
@@ -113,6 +119,8 @@ Route::get('/portfolio/settings', function () {
             'projects' => $Settings->featureEnabled('projects'),
             'infrastructures' => $Settings->featureEnabled('infrastructures'),
             'topics' => $Settings->featureEnabled('topics'),
+            'news' => $Settings->featureEnabled('news', true),
+            'spectrum' => $Settings->featureEnabled('spectrum') && $Settings->featureEnabled('portfolio-spectrum')
         ]
     ];
 
@@ -174,7 +182,7 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
     }
     $result = $osiris->topics->findOne(
         ['inactive' => ['$ne' => true], 'id' => $id],
-        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'subtitle' => 1, 'subtitle_de' => 1, 'description' => 1, 'description_de' => 1, 'color' => 1]]
+        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'subtitle' => 1, 'subtitle_de' => 1, 'description' => 1, 'description_de' => 1, 'color' => 1, 'image' => 1]]
     );
     $result = DB::doc2Arr($result);
     $result['numbers'] = [
@@ -213,12 +221,42 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             ['$unwind' => '$collaborators'],
             [
                 '$group' => [
-                    '_id' => '$collaborators.name',
+                    '_id' => '$collaborators.organization',
                 ]
             ],
             ['$count' => 'count']
         ])->toArray();
         $result['numbers']['collaborators'] = $collabs[0]['count'] ?? 0;
+    }
+
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $result['spectrum'] = Spectrum::retrieve($osiris, 'topic', $id);
+    }
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'topics' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
     }
 
     // general information for navigation:
@@ -269,6 +307,42 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
 
     $unit = $Groups->getUnit($group['unit'] ?? null);
     $group['unit'] = $unit;
+
+    $uploadsUrl = rtrim(
+        $Settings->getRequestScheme() . '://' . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH,
+        '/'
+    ) . '/uploads/';
+    $images = DB::doc2Arr($group['images'] ?? []);
+    usort($images, function ($a, $b) {
+        $order = ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
+        if ($order !== 0) return $order;
+        return strcmp($b['uploaded_at'] ?? '', $a['uploaded_at'] ?? '');
+    });
+
+    $group['images'] = [];
+    foreach ($images as $image) {
+        if (empty($image['public']) || empty($image['file']) || empty($image['id'])) continue;
+
+        $group['images'][] = [
+            'id' => $image['id'],
+            'filename' => basename($image['file']),
+            'url' => $uploadsUrl . ltrim($image['file'], '/'),
+            'thumbnail_url' => !empty($image['thumbnail'])
+                ? $uploadsUrl . ltrim($image['thumbnail'], '/')
+                : null,
+            'mime' => $image['mime'] ?? null,
+            'size' => $image['size'] ?? null,
+            'width' => $image['width'] ?? null,
+            'height' => $image['height'] ?? null,
+            'caption' => $image['caption'] ?? '',
+            'caption_de' => $image['caption_de'] ?? '',
+            'taken_at' => $image['taken_at'] ?? null,
+            'credits' => $image['credits'] ?? '',
+            'public' => true,
+            'uploaded_at' => $image['uploaded_at'] ?? null,
+            'order' => $image['order'] ?? 0,
+        ];
+    }
 
     // general information for navigation:
     $group['nav_topics'] = $Portfolio->getTopics();
@@ -346,7 +420,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     $numbers = [];
     $child_ids = $Groups->getChildren($id);
 
-    if (isset($group['description']) || isset($group['description_de'])) {
+    if (isset($group['description']) || isset($group['description_de']) || !empty($group['images'])) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
@@ -415,7 +489,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         ['$unwind' => '$collaborators'],
         [
             '$group' => [
-                '_id' => '$collaborators.name',
+                '_id' => '$collaborators.organization',
             ]
         ],
         ['$count' => 'count']
@@ -458,6 +532,12 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     }
     $group['numbers'] = $numbers;
 
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $group['spectrum'] = Spectrum::retrieve($osiris, 'groups', $id);
+    }
+
     echo rest($group);
 });
 
@@ -498,7 +578,7 @@ Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
                 $res['activities'][] = [
                     'id' => strval($doc['_id']),
                     'icon' => $doc['rendered']['icon'],
-                    'html' => $doc['rendered']['print']
+                    'html' => $doc['rendered']['portfolio']
                 ];
             }
         }
@@ -534,7 +614,11 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
     }
     $child_ids = $Groups->getChildren($id);
 
-    if (isset($group['description']) || isset($group['description_de'])) {
+    $publicImages = array_filter(
+        DB::doc2Arr($group['images'] ?? []),
+        fn($image) => !empty($image['public'])
+    );
+    if (isset($group['description']) || isset($group['description_de']) || !empty($publicImages)) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
@@ -665,6 +749,10 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
                 ['workflow.status' => ['$exists' => false]]
             ];
         }
+    }
+
+    if (isset($_GET['affiliated']) && $_GET['affiliated'] == 'true') {
+        $filter['affiliated'] = true;
     }
 
     $options = [
@@ -1204,10 +1292,10 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     header('Content-Type: application/json');
     include(BASEPATH . '/php/Modules.php');
     $portfolio_types = $Settings->getActivitiesPortfolio(true);
-    $id = DB::to_ObjectID($id);
+    $mongo_id = DB::to_ObjectID($id);
     $result = [];
     $doc = $osiris->activities->findOne(
-        ['_id' => $id]
+        ['_id' => $mongo_id]
     );
     if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
         echo rest('Activity not found', 0, 404);
@@ -1262,7 +1350,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         ];
     }
 
-    foreach ($doc['editors'] as $e){
+    foreach ($doc['editors'] as $e) {
         if ($e['aoi']) $result['affiliated'] =  true;
     }
 
@@ -1305,13 +1393,14 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $Modules = new Modules($doc);
 
     $Format->usecase = "list";
+    $portfolio_fields = $Modules->getPortfolioFields();
 
-    // TODO: configurable
-    $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
+    
+    // $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
     $fields = [];
     foreach ($selected as $module) {
         if (str_ends_with($module, '*')) $module = str_replace('*', '', $module);
-        if (in_array($module, $hidden_modules)) continue;
+        if (!in_array($module, $portfolio_fields)) continue;
         if ($module == 'teaching-course' && isset($doc['module_id'])) :
             $teaching = $DB->getConnected('teaching', $doc['module_id']);
             $value = $teaching['module'];
@@ -1403,28 +1492,59 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
 
     // add connected activities
     $connected_activities = $osiris->activitiesConnections->find(
-        ['$or' => [['source_id' => $id], ['target_id' => $id]]]
+        ['$or' => [['source_id' => $mongo_id], ['target_id' => $mongo_id]]]
     )->toArray();
     $result['connected_activities'] = [];
     foreach ($connected_activities as $conn) {
-        $reverse = ($conn['target_id'] == $id);
-        $doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
+        $reverse = ($conn['target_id'] == $mongo_id);
+        $con_doc = $osiris->activities->findOne(['_id' => $reverse ? $conn['source_id'] : $conn['target_id']], ['projection' => [
             'rendered' => 1,
             'subtype' => 1,
             'hide' => 1
         ]]);
         $conLabel = $Format->getRelationshipLabel($conn['relationship'], $reverse);
-        if (empty($doc) || ($doc['hide'] ?? false) || !in_array($doc['subtype'], $portfolio_types)) {
+        if (empty($con_doc) || ($con_doc['hide'] ?? false) || !in_array($con_doc['subtype'], $portfolio_types)) {
             continue;
         }
         $result['connected_activities'][] = [
-            'id' => strval($doc['_id']),
-            'icon' => $doc['rendered']['icon'],
-            'html' => str_replace('**PORTAL**', '', $doc['rendered']['portfolio']),
-            'print' => $doc['rendered']['print'] ?? null,
+            'id' => strval($con_doc['_id']),
+            'icon' => $con_doc['rendered']['icon'],
+            'html' => $con_doc['rendered']['portfolio'] ?? null,
+            'print' => $con_doc['rendered']['print'] ?? null,
+            'title' => $con_doc['rendered']['title'] ?? null,
+            'subtitle' => $con_doc['rendered']['subtitle'] ?? null,
             'relationship' => $conLabel
         ];
     }
+
+    if (isset($doc['openalex']) && $Settings->featureEnabled('portfolio-spectrum')) {
+        $result['spectrum'] = $doc['openalex']['topics'] ?? [];
+    }
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'activities' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
+    }
+
     echo rest($result);
 });
 
@@ -1603,6 +1723,31 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         $project['topics'] = $topics;
     }
 
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'projects' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $project['news'] = $news;
+    }
+
     echo rest($project);
 });
 
@@ -1620,9 +1765,9 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     include(BASEPATH . '/php/Project.php');
     $Project = new Project;
 
-    $id = DB::to_ObjectID($id);
+    $mongo_id = DB::to_ObjectID($id);
     $person = $osiris->persons->findOne(
-        ['_id' => $id]
+        ['_id' => $mongo_id]
     );
     if (empty($person)) {
         echo rest('Person not found', 0, 404);
@@ -1666,13 +1811,13 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         [
             'mail_alternative',
             'mail_alternative_comment',
-            'twitter',
-            'linkedin',
             'orcid',
-            'researchgate',
             'google_scholar',
-            'matrix',
-            'webpage'
+            // 'twitter',
+            // 'linkedin',
+            // 'researchgate',
+            // 'matrix',
+            // 'webpage'
         ] as $key
     ) {
         if (isset($person[$key]) && !empty($person[$key])) {
@@ -1736,8 +1881,8 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     }
     if (isset($person['highlighted']) && !empty($person['highlighted'])) {
         $docs = [];
-        foreach ($person['highlighted'] as $id) {
-            $doc = $DB->getActivity($id);
+        foreach ($person['highlighted'] as $h_id) {
+            $doc = $DB->getActivity($h_id);
             if (!empty($doc) && !($doc['hide'] ?? false)) {
                 if ($visibility == 'only-approved' && ($doc['workflow']['status'] ?? '') != 'verified') {
                     continue;
@@ -1898,6 +2043,35 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]]
         )->toArray();
         $result['topics'] = $topics;
+    }
+
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        include_once(BASEPATH . '/php/Spectrum.php');
+        $result['spectrum'] = Spectrum::retrieve($osiris, 'person', $person['username']);
+    }
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'persons' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $result['news'] = $news;
     }
 
     echo rest($result);
@@ -2094,6 +2268,105 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
 
 
 
+Route::get('/portfolio/collaborators-map', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $result = [];
+    $filter = ['collaborators' => ['$exists' => 1]];
+    $result = $osiris->projects->aggregate([
+        ['$match' => $filter],
+        ['$project' => ['collaborators' => 1, 'public' => 1]],
+        ['$unwind' => '$collaborators'],
+        [
+            '$group' => [
+                '_id' => '$collaborators.organization',
+                'count' => ['$sum' => 1],
+                'public_count' => [
+                    '$sum' => [
+                        '$cond' => [
+                            'if' => ['$eq' => ['$public', true]],
+                            'then' => 1,
+                            'else' => 0
+                        ]
+                    ]
+                ],
+                'data' => [
+                    '$first' => '$collaborators'
+                ]
+            ]
+        ],
+        ['$lookup' => [
+            'from' => 'organizations',
+            'localField' => '_id',
+            'foreignField' => '_id',
+            'as' => 'org'
+        ]],
+        ['$unwind' => '$org'],
+        ['$project' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'count' => 1,
+            'public_count' => 1,
+            'data.name' => '$org.name',
+            'data.type' => '$org.type',
+            'data.location' => '$org.location',
+            'data.country' => '$org.country',
+            'data.ror' => '$org.ror',
+            'data.lat' => '$org.lat',
+            'data.lng' => '$org.lng',
+            // 'data.role' => 'partner'
+        ]],
+        ['$sort' => ['count' => -1]]
+
+    ])->toArray();
+
+    // add all organizations with is_collaborator = true that are not already in the list
+    $collaborators = $osiris->organizations->find(
+        ['is_collaborator' => true],
+        ['projection' => ['_id' => 0, 'id' => ['$toString' => '$_id'], 'name' => 1, 'type' => 1, 'location' => 1, 'country' => 1, 'ror' => 1, 'lat' => 1, 'lng' => 1]]
+    )->toArray();
+    $existing_ids = array_column($result, 'id');
+    foreach ($collaborators as $c) {
+        if (!in_array($c['id'], $existing_ids)) {
+            $result[] = [
+                'id' => $c['id'],
+                'count' => 0,
+                'data' => [
+                    'name' => $c['name'],
+                    'type' => $c['type'] ?? null,
+                    'location' => $c['location'] ?? null,
+                    'country' => $c['country'] ?? null,
+                    'ror' => $c['ror'] ?? null,
+                    'lat' => $c['lat'] ?? null,
+                    'lng' => $c['lng'] ?? null,
+                    'role' => 'partner'
+                ]
+            ];
+        }
+    }
+
+
+    $institute = $Settings->get('affiliation_details');
+    $institute['role'] = $project['role'] ?? 'coordinator';
+    $institute['current'] = true;
+    if (isset($institute['lat']) && isset($institute['lng'])) {
+        $result[] = [
+            '_id' => $institute['ror'] ?? '',
+            'count' => 1,
+            'data' => $institute,
+            'self' => true,
+            // 'color' => 'secondary'
+        ];
+    }
+    echo rest($result, count($result));
+});
+
+
 Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
     // error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
@@ -2255,7 +2528,8 @@ Route::get('/portfolio/infrastructures', function () {
             'description_de' => 1,
             'start_date' => 1,
             'end_date' => 1,
-            'image' => 1
+            'image' => 1,
+            'type_id' => '$type'
         ]
     ];
 
@@ -2359,6 +2633,8 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
     }
     $infrastructure['persons'] = $persons;
 
+    $infrastructure['type_id'] = $infrastructure['type'] ?? null;
+
     $infrastructure['category'] = $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-');
     $infrastructure['type'] = $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-');
     $infrastructure['access'] = $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-');
@@ -2413,7 +2689,110 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
         'infrastructures' => $infrastructure['id'],
         'hide' => ['$ne' => true]
     ]);
+
+
+    if ($Settings->featureEnabled('news', true)) {
+        $filter = [
+            'visibility' => 'public',
+            'date' => ['$lte' => date('Y-m-d')],
+            'infrastructures' => $id
+        ];
+        $news = $osiris->news->find(
+            $filter,
+            [
+                'sort' => ['date' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_de' => 1,
+                    'teaser' => 1,
+                    'teaser_de' => 1,
+                    'date' => 1
+                ]
+            ]
+        )->toArray();
+        $infrastructure['news'] = $news;
+    }
+
+
     echo rest($infrastructure);
+});
+
+
+Route::get('/portfolio/(events|conferences)', function ($type) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('events')) {
+        echo rest(['message' => 'Feature not enabled'], 0, 404);
+        die;
+    }
+    $filter = [
+        'public' => true,
+    ];
+    $options = [
+        'sort' => ['name' => 1],
+        'projection' => [
+            '_id' => 0,
+            'id' => ['$toString' => '$_id'],
+            'title' => 1,
+            'title_full' => 1,
+            'description' => 1,
+            'start' => 1,
+            'end' => 1,
+            'location' => 1,
+            'country' => 1,
+            'url' => 1,
+            'type' => 1,
+            'topics' => 1,
+        ]
+    ];
+    $data = $osiris->conferences->find(
+        $filter,
+        $options
+    );
+    include_once BASEPATH . "/php/Vocabulary.php";
+    $Vocabulary = new Vocabulary();
+
+    $result = [];
+    foreach ($data as $doc) {
+        $doc['type'] = $Vocabulary->getValue('event-type', $doc['type'], '-');
+        if (isset($doc['topics']) && !empty($doc['topics'])) {
+            $topics = $osiris->topics->find(
+                ['id' => ['$in' => $doc['topics']], 'inactive' => ['$ne' => true]],
+                ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'color' => 1]]
+            )->toArray();
+            $doc['topics'] = $topics;
+        }
+        if (isset($doc['country'])) {
+            $country = $DB->getCountry($doc['country']);
+            $doc['country'] = lang($country['name'], $country['name_de']);
+        }
+        $doc['activities'] = $osiris->activities->find(
+            ['conference_id' => $doc['id'], 'hide' => ['$ne' => true]],
+            [
+                'sort' => ['year' => -1, 'month' => -1],
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'icon' => '$rendered.icon',
+                    'type' => '$rendered.type',
+                    'subtype' => '$rendered.subtype',
+                    'html' => '$rendered.portfolio',
+                    'title' => '$rendered.title',
+                    'subtitle' => '$rendered.subtitle',
+                    'print' => '$rendered.print',
+                ]
+            ]
+        )->toArray();
+        $result[] = $doc;
+    }
+
+    echo rest($result);
 });
 
 
@@ -2520,12 +2899,14 @@ Route::get('/portfolio/persons', function () {
         [
             'sort' => ['last' => 1],
             'projection' => [
+                '_id' => 0,
                 'id' => ['$toString' => '$_id'],
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
                 'position_de' => 1,
-                'depts' => 1
+                'depts' => 1,
+                'is_active' => 1,
             ]
         ]
     )->toArray();
@@ -2579,6 +2960,55 @@ Route::get('/portfolio/person-images', function () {
 });
 
 
+// Spectrum
+Route::get('/portfolio/person/([^/]*)/spectrum', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+
+    $person = $osiris->persons->findOne(['_id' => $DB->to_ObjectID($id), 'hide' => ['$ne' => true]]);
+    if (empty($person)) {
+        echo rest('Person not found', 0, 404);
+        die;
+    }
+    include_once(BASEPATH . '/php/Spectrum.php');
+    $spectrum = Spectrum::retrieve($osiris, 'persons', $person['username']);
+
+    echo rest($spectrum);
+});
+
+
+Route::get('/portfolio/(unit|topic)/([^/]*)/spectrum', function ($type, $id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+    if ($type == 'unit' && $id == '0') {
+        // base unit
+        $id = $osiris->groups->findOne(['level' => 0], ['projection' => ['id' => 1]])['id'] ?? null;
+    }
+    if ($type == 'unit') $type = 'groups';
+    if ($type == 'topic') $type = 'topics';
+
+
+    include_once(BASEPATH . '/php/Spectrum.php');
+    $spectrum = Spectrum::retrieve($osiris, $type, $id);
+
+    echo rest($spectrum);
+});
 
 
 // get all news
@@ -2595,12 +3025,47 @@ Route::get('/portfolio/news', function () {
     }
     $filter = [
         'visibility' => 'public',
+        'date' => ['$lte' => date('Y-m-d')]
     ];
     $news = $osiris->news->find(
         $filter,
         [
             'sort' => ['date' => -1],
             'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'title' => 1,
+                'title_de' => 1,
+                'teaser' => 1,
+                'teaser_de' => 1,
+                'date' => 1,
+            ]
+        ]
+    )->toArray();
+
+    echo rest($news);
+});
+
+Route::get('/portfolio/news/([^/]*)', function ($id) {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('news', true)) {
+        echo rest([], 0);
+        die;
+    }
+    $filter = [
+        '_id' => $DB->to_ObjectID($id),
+        'visibility' => 'public',
+    ];
+    $news = $osiris->news->findOne(
+        $filter,
+        [
+            'projection' => [
+                '_id' => 0,
                 'id' => ['$toString' => '$_id'],
                 'title' => 1,
                 'title_de' => 1,
@@ -2610,10 +3075,673 @@ Route::get('/portfolio/news', function () {
                 'content_de' => 1,
                 'date' => 1,
                 'image' => 1,
-                'activities' => 1
+                'activities' => 1,
+                'persons' => 1,
+                'projects' => 1,
+                'infrastructures' => 1,
+                'topics' => 1,
+                'events' => 1,
+                'featured' => 1
+            ]
+        ]
+    );
+
+    if (empty($news)) {
+        echo rest('News not found', 0, 404);
+        die;
+    }
+
+    $featured = DB::doc2Arr($news['featured'] ?? []);
+    $featuredId = $featured['id'] ?? null;
+    $featuredType = $featured['type'] ?? null;
+    $featuredCard = null;
+    if (!empty($featured['type']) && !empty($featured['id'])) {
+        $featuredCard = [
+            'id' => $featured['id'],
+            'type' => $featured['type'],
+            'type_label' => '',
+            'icon' => 'ph-star',
+            'title' => '',
+            'subtitle' => '',
+            'text' => lang($featured['text'] ?? null, $featured['text_de'] ?? null)
+        ];
+    } else {
+        $featured = null;
+    }
+
+    if (!empty($news['activities'])) {
+        $activities = [];
+        foreach ($news['activities'] as $a) {
+            $doc = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($a), 'hide' => ['$ne' => true]], [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'icon' => '$rendered.icon',
+                    'type' => '$rendered.type',
+                    'subtype' => '$rendered.subtype',
+                    'html' => '$rendered.portfolio',
+                    'title' => '$rendered.title',
+                    'subtitle' => '$rendered.subtitle',
+                    'print' => '$rendered.print',
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'activity' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Research activity', 'Forschungsaktivität');
+                $featuredCard['icon'] = 'ph-article';
+                $featuredCard['title'] = ($doc['title'] ?? '');
+                $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
+            } else {
+                $activities[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['activities'] = $activities;
+    }
+
+    if (!empty($news['persons'])) {
+        $persons = [];
+        foreach ($news['persons'] as $p) {
+            $doc = $osiris->persons->findOne(['_id' => $DB->to_ObjectID($p), 'hide' => ['$ne' => true]], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'displayname' => 1,
+                    'academic_title' => 1,
+                    'position' => 1,
+                    'position_de' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'person' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['icon'] = 'ph-user';
+                $featuredCard['title'] = ($doc['displayname'] ?? '');
+                $featuredCard['subtitle'] = ($doc['position'] ?? '');
+            } else {
+                $persons[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['persons'] = $persons;
+    }
+
+    if (!empty($news['projects'])) {
+        $projects = [];
+        foreach ($news['projects'] as $p) {
+            $doc = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($p), 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'name' => 1,
+                    'title' => 1,
+                    'acronym' => 1,
+                    'start_date' => 1,
+                    'end_date' => 1,
+                    'type' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'project' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['icon'] = 'ph-briefcase';
+                $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . ($doc['name'] ?? '');
+                $featuredCard['subtitle'] = ($doc['title'] ?? '');
+            } else {
+                $projects[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['projects'] = $projects;
+    }
+
+    if (!empty($news['infrastructures'])) {
+        $infrastructures = [];
+        foreach ($news['infrastructures'] as $i) {
+            $doc = $osiris->infrastructures->findOne(['id' => $i, 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'name' => 1,
+                    'subtitle' => 1,
+                    'type' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'infrastructure' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = $Settings->infrastructureLabel();
+                $featuredCard['icon'] = 'ph-microscope';
+                $featuredCard['title'] = ($doc['name'] ?? '');
+                $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
+            } else {
+                $infrastructures[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['infrastructures'] = $infrastructures;
+    }
+
+    if (!empty($news['events'])) {
+        $events = [];
+        foreach ($news['events'] as $e) {
+            $doc = $osiris->conferences->findOne(['_id' => $DB->to_ObjectID($e), 'public' => true], [
+                'projection' => [
+                    'id' => ['$toString' => '$_id'],
+                    'title' => 1,
+                    'title_full' => 1,
+                    'start' => 1,
+                    'end' => 1,
+                    'location' => 1,
+                    'country' => 1,
+                ]
+            ]);
+            if (empty($doc)) continue;
+            if ($featured && $featuredType == 'event' && $doc['id'] == $featuredId) {
+                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['icon'] = 'ph-calendar-blank';
+                $featuredCard['title'] = ($doc['title'] ?? '');
+                $eventDetails = [];
+                if (!empty($doc['start'])) $eventDetails[] = date('d.m.Y', strtotime($doc['start']));
+                if (!empty($doc['location'])) $eventDetails[] = $doc['location'];
+                $featuredCard['subtitle'] = implode(' · ', $eventDetails);
+            } else {
+                $events[] = DB::doc2Arr($doc);
+            }
+        }
+        $news['events'] = $events;
+    }
+
+    if (!empty($featuredCard['title'])) {
+        $news['featured'] = $featuredCard;
+    } else {
+        $news['featured'] = null;
+    }
+
+    echo rest($news);
+});
+
+
+Route::get('/portfolio/search-index', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+
+    $buildSearchText = function (...$values) {
+        $values = array_filter($values, function ($value) {
+            return is_string($value) && trim($value) !== '';
+        });
+        $text = html_entity_decode(strip_tags(implode(' ', $values)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return trim(mb_strtolower(preg_replace('/\s+/u', ' ', $text)));
+    };
+
+    $topics = [];
+    $data = $osiris->topics->find(
+        ['hide' => ['$ne' => true]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'name' => 1,
+                'name_de' => 1,
+                'subtitle' => 1,
+                'subtitle_de' => 1
+            ]
+        ]
+    );
+    foreach ($data as $topic) {
+        $topic = DB::doc2Arr($topic);
+        $topic['search'] = $buildSearchText(
+            $topic['name'] ?? null,
+            $topic['name_de'] ?? null,
+            $topic['subtitle'] ?? null,
+            $topic['subtitle_de'] ?? null
+        );
+        $topics[] = $topic;
+    }
+
+    $activityFilter = ['hide' => ['$ne' => true], 'type' => 'publication', 'affiliated' => true];
+    if ($Settings->featureEnabled('quality-workflow')) {
+        $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+        if ($visibility === 'only-approved') {
+            $activityFilter['workflow.status'] = 'verified';
+        } elseif ($visibility === 'approved-or-empty') {
+            $activityFilter['$or'] = [
+                ['workflow' => ['$exists' => false]],
+                ['workflow.status' => 'verified'],
+                ['workflow.status' => ['$exists' => false]]
+            ];
+        }
+    }
+
+    $activities = $osiris->activities->find(
+        $activityFilter,
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'search' => '$rendered.plain',
+                'type' => 1,
+                'subtype' => 1,
+                'year' => 1,
+                'month' => 1,
+                'day' => 1,
             ]
         ]
     )->toArray();
 
-    echo rest($news);
+    $projects = [];
+    if ($Settings->featureEnabled('projects')) {
+        $data = $osiris->projects->find(
+            ['public' => true],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => ['$toString' => '$_id'],
+                    'acronym' => 1,
+                    'name' => 1,
+                    'name_de' => 1,
+                    'title' => 1,
+                    'title_de' => 1
+                ]
+            ]
+        );
+        foreach ($data as $project) {
+            $project = DB::doc2Arr($project);
+            $project['search'] = $buildSearchText(
+                $project['acronym'] ?? null,
+                $project['name'] ?? null,
+                $project['name_de'] ?? null,
+                $project['title'] ?? null,
+                $project['title_de'] ?? null
+            );
+            $projects[] = $project;
+        }
+    }
+
+    $persons = [];
+    $data = $osiris->persons->find(
+        ['hide' => ['$ne' => true], 'is_active' => ['$ne' => false]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'displayname' => 1,
+                'academic_title' => 1,
+                'position' => 1,
+                'position_de' => 1
+            ]
+        ]
+    );
+    foreach ($data as $person) {
+        $person = DB::doc2Arr($person);
+        $person['search'] = $buildSearchText(
+            $person['displayname'] ?? null,
+            $person['academic_title'] ?? null,
+            $person['position'] ?? null,
+            $person['position_de'] ?? null
+        );
+        $persons[] = $person;
+    }
+
+    $units = [];
+    $data = $osiris->groups->find(
+        ['hide' => ['$ne' => true]],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => 1,
+                'name' => 1,
+                'name_de' => 1,
+                'unit' => 1,
+                'level' => 1
+            ]
+        ]
+    );
+    foreach ($data as $unit) {
+        $unit = DB::doc2Arr($unit);
+        $unit['search'] = $buildSearchText(
+            $unit['id'] ?? null,
+            $unit['name'] ?? null,
+            $unit['name_de'] ?? null
+        );
+        $units[] = $unit;
+    }
+
+    $infrastructures = [];
+    if ($Settings->featureEnabled('infrastructures')) {
+        $data = $osiris->infrastructures->find(
+            ['public' => true],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'id' => 1,
+                    'name' => 1,
+                    'name_de' => 1,
+                    'subtitle' => 1,
+                    'subtitle_de' => 1
+                ]
+            ]
+        );
+        foreach ($data as $infrastructure) {
+            $infrastructure = DB::doc2Arr($infrastructure);
+            $infrastructure['search'] = $buildSearchText(
+                $infrastructure['name'] ?? null,
+                $infrastructure['name_de'] ?? null,
+                $infrastructure['subtitle'] ?? null,
+                $infrastructure['subtitle_de'] ?? null
+            );
+            $infrastructures[] = $infrastructure;
+        }
+    }
+
+
+    $spectrum = [];
+    if ($Settings->featureEnabled('portfolio-spectrum')) {
+        // spectrum 
+        $baseMatch = [
+            'openalex.topics' => ['$exists' => true, '$ne' => []],
+            'affiliated' => true
+        ];
+        $data = $osiris->activities->aggregate([
+            ['$match' => $baseMatch],
+            ['$project' => ['openalex.topics' => 1]],
+            ['$unwind' => '$openalex.topics'],
+            ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+            ['$group' => [
+                '_id' => '$openalex.topics.id',
+                'count' => ['$sum' => 1],
+                'name' => ['$first' => '$openalex.topics.name'],
+                'path' => ['$first' => '$openalex.topics.path']
+            ]],
+            ['$sort' => ['count' => -1, '_id' => 1]],
+            ['$project' => [
+                '_id' => 0,
+                'id' => '$_id',
+                'count' => 1,
+                'name' => 1,
+                'path' => 1
+            ]]
+        ])->toArray();
+
+        foreach ($data as $row) {
+            $row = DB::doc2Arr($row);
+            $row['search'] = $buildSearchText($row['path'] ?? null, $row['name'] ?? null);
+            $spectrum[] = $row;
+        }
+    }
+
+    echo rest([
+        'publications' => $activities,
+        'projects' => $projects,
+        'persons' => $persons,
+        'units' => $units,
+        'infrastructures' => $infrastructures,
+        'topics' => $topics,
+        'spectrum' => $spectrum
+        // 'news' => $news
+    ]);
+});
+
+
+Route::get('/portfolio/spectrum', function () {
+    error_reporting(E_ERROR | E_PARSE);
+    include(BASEPATH . '/php/init.php');
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo return_permission_denied();
+        die;
+    }
+    if (!$Settings->featureEnabled('portfolio-spectrum')) {
+        echo rest([], 0);
+        die;
+    }
+
+    $catalogPath = BASEPATH . '/data/openalex-topics.json';
+    if (!file_exists($catalogPath)) {
+        echo return_rest('OpenAlex topics data not found', 0, 404);
+        die;
+    }
+
+    $catalog = json_decode(file_get_contents($catalogPath), true);
+    $catalogById = array_column($catalog['topics'] ?? [], null, 'id');
+    $relatedLimit = 10;
+    $baseMatch = [
+        'openalex.topics' => ['$exists' => true, '$ne' => []],
+        'affiliated' => true
+    ];
+
+    // Aggregate the topic summaries that determine which static pages exist.
+    $summaryRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch],
+        ['$project' => ['openalex.topics' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => '$openalex.topics.id',
+            'count' => ['$sum' => 1],
+            'name' => ['$first' => '$openalex.topics.name'],
+            'path' => ['$first' => '$openalex.topics.path'],
+            'domain_id' => ['$first' => '$openalex.topics.domain_id'],
+            'domain' => ['$first' => '$openalex.topics.domain'],
+            'field_id' => ['$first' => '$openalex.topics.field_id'],
+            'field' => ['$first' => '$openalex.topics.field'],
+            'subfield_id' => ['$first' => '$openalex.topics.subfield_id'],
+            'subfield' => ['$first' => '$openalex.topics.subfield']
+        ]],
+        ['$sort' => ['count' => -1, '_id' => 1]]
+    ])->toArray();
+
+    $instituteTotal = $osiris->activities->count($baseMatch);
+    $topicsById = [];
+    foreach ($summaryRows as $row) {
+        $row = DB::doc2Arr($row);
+        $id = $row['_id'] ?? null;
+        if (!$id) continue;
+
+        $topicsById[$id] = [
+            'id' => $id,
+            'openalex_url' => 'https://openalex.org/' . $id,
+            'name' => $row['name'] ?? ($catalogById[$id]['display_name'] ?? null),
+            'description' => $catalogById[$id]['description'] ?? null,
+            'keywords' => array_values($catalogById[$id]['keywords'] ?? []),
+            'path' => $row['path'] ?? null,
+            'domain_id' => $row['domain_id'] ?? null,
+            'domain' => $row['domain'] ?? null,
+            'field_id' => $row['field_id'] ?? null,
+            'field' => $row['field'] ?? null,
+            'subfield_id' => $row['subfield_id'] ?? null,
+            'subfield' => $row['subfield'] ?? null,
+            'count' => intval($row['count'] ?? 0),
+            'share' => $instituteTotal > 0
+                ? round(intval($row['count'] ?? 0) / $instituteTotal, 6)
+                : 0,
+            'timeline' => [],
+            'units' => [],
+            'researchers' => []
+        ];
+    }
+
+    if (empty($topicsById)) {
+        echo rest([]);
+        die;
+    }
+
+    // Add compact yearly publication/activity counts for each topic.
+    $timelineRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['year' => ['$ne' => null]]],
+        ['$project' => ['openalex.topics.id' => 1, 'year' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'year' => '$year'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, '_id.year' => 1]]
+    ])->toArray();
+    foreach ($timelineRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $year = intval($row['_id']['year'] ?? 0);
+        if (!$topicId || !$year || !isset($topicsById[$topicId])) continue;
+        $topicsById[$topicId]['timeline'][] = [
+            'year' => $year,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // Resolve only units that can be linked from Portfolio.
+    $unitMeta = [];
+    $baseUnit = $osiris->groups->findOne(
+        ['level' => 0],
+        ['projection' => ['_id' => 0, 'id' => 1]]
+    );
+    $baseUnitId = $baseUnit['id'] ?? null;
+    $units = $osiris->groups->find(
+        ['hide' => ['$ne' => true]],
+        ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1]]
+    );
+    foreach ($units as $unit) {
+        $unit = DB::doc2Arr($unit);
+        if (empty($unit['id']) || $unit['id'] === $baseUnitId) continue;
+        $unitMeta[$unit['id']] = $unit;
+    }
+
+    $unitRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['units' => ['$exists' => true, '$ne' => []]]],
+        ['$project' => ['openalex.topics.id' => 1, 'units' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$unwind' => '$units'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'unit' => '$units'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'count' => -1, '_id.unit' => 1]]
+    ])->toArray();
+    foreach ($unitRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $unitId = $row['_id']['unit'] ?? null;
+        if (
+            !$topicId || !$unitId ||
+            !isset($topicsById[$topicId], $unitMeta[$unitId]) ||
+            count($topicsById[$topicId]['units']) >= $relatedLimit
+        ) continue;
+
+        $topicsById[$topicId]['units'][] = [
+            'id' => $unitId,
+            'name' => $unitMeta[$unitId]['name'] ?? $unitId,
+            'name_de' => $unitMeta[$unitId]['name_de'] ?? null,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // Resolve active, visible researchers while retaining hidden activities in counts.
+    $personMeta = [];
+    $persons = $osiris->persons->find(
+        [
+            'is_active' => ['$ne' => false],
+            'hide' => ['$ne' => true]
+        ],
+        [
+            'projection' => [
+                '_id' => 0,
+                'id' => ['$toString' => '$_id'],
+                'username' => 1,
+                'displayname' => 1,
+                'academic_title' => 1,
+                'position' => 1,
+                'position_de' => 1
+            ]
+        ]
+    );
+    foreach ($persons as $person) {
+        $person = DB::doc2Arr($person);
+        if (empty($person['username'])) continue;
+        $personMeta[$person['username']] = $person;
+    }
+
+    $researcherRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['rendered.users' => ['$exists' => true, '$ne' => []]]],
+        ['$project' => ['openalex.topics.id' => 1, 'rendered.users' => 1]],
+        ['$unwind' => '$openalex.topics'],
+        ['$unwind' => '$rendered.users'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'username' => '$rendered.users'
+            ],
+            'count' => ['$sum' => 1]
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'count' => -1, '_id.username' => 1]]
+    ])->toArray();
+    foreach ($researcherRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $username = $row['_id']['username'] ?? null;
+        if (
+            !$topicId || !$username ||
+            !isset($topicsById[$topicId], $personMeta[$username]) ||
+            count($topicsById[$topicId]['researchers']) >= $relatedLimit
+        ) continue;
+
+        $person = $personMeta[$username];
+        $topicsById[$topicId]['researchers'][] = [
+            'id' => $person['id'] ?? null,
+            'displayname' => $person['displayname'] ?? $username,
+            'academic_title' => $person['academic_title'] ?? null,
+            'position' => $person['position'] ?? null,
+            'position_de' => $person['position_de'] ?? null,
+            'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // add all publications with a score more than 0.8 from the last 5 years to the topics
+    $recentYear = intval(date('Y')) - 5;
+    $activityRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['year' => ['$gte' => $recentYear]]],
+        ['$project' => ['openalex.topics' => 1, 'year' => 1, 'score' => 1, 'id' => ['$toString' => '$_id'], 'html'=> '$rendered.portfolio', 'icon' => '$rendered.icon', 'type' => '$rendered.type', 'subtype' => '$rendered.subtype']],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null], 'openalex.topics.score' => ['$gte' => 0.8]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'activity' => '$id'
+            ],
+            'year' => ['$first' => '$year'],
+            'score' => ['$first' => '$openalex.topics.score'],
+            'icon' => ['$first' => '$icon'],
+            'type' => ['$first' => '$type'],
+            'subtype' => ['$first' => '$subtype'],
+            'html' => ['$first' => '$html']
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'year' => -1, '_id.activity' => 1]]
+    ])->toArray();
+    foreach ($activityRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $activityId = $row['_id']['activity'] ?? null;
+        if (
+            !$topicId || !$activityId ||
+            !isset($topicsById[$topicId]) ||
+            count($topicsById[$topicId]['activities'] ?? []) >= $relatedLimit
+        ) continue;
+
+        if (!isset($topicsById[$topicId]['activities'])) {
+            $topicsById[$topicId]['activities'] = [];
+        }
+        $topicsById[$topicId]['activities'][] = [
+            'id' => $activityId,
+            'year' => $row['year'] ?? null,
+            'score' => $row['score'] ?? null,
+            'html' => $row['html'] ?? null,
+            'icon' => $row['icon'] ?? null,
+            'type' => $row['type'] ?? null,
+            'subtype' => $row['subtype'] ?? null
+        ];
+    }
+
+    echo rest(array_values($topicsById));
 });

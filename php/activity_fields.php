@@ -637,7 +637,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Impact factor'),
+                'label' => $Settings->impactLabel(),
                 'type' => 'double'
             ],
             [
@@ -1042,10 +1042,40 @@ class ActivityFields extends Fields
                 ],
                 'label' => lang('Reports: exclude', 'Berichte: ausschließen'),
                 'type' => 'boolean',
+            ],
+            [
+                'id' => 'rendered.users',
+                'module_of' => [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('User names', 'Nutzernamen'),
+                'type' => 'list'
+            ],
+            [
+                'id' => 'openalex.topics.id',
+                'module_of' => 'publication',
+                'usage' => [
+                    'aggregate',
+                    'filter'
+                ],
+                'label' => lang('Research spectrum (ID)', 'Forschungs-Spektrum (ID)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'projects',
+                'module_of' => ['general'],
+                'usage' => [
+                    'filter',
+                ],
+                'label' => lang('Project-ID', 'Projekt-ID'),
+                'type' => 'string'
             ]
         ];
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1], 'projection' => ['_id' => 1, 'name' => 1, 'name_de' => 1]])->toArray();
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1], 'projection' => ['_id' => 1, 'id'=> 1, 'name' => 1, 'name_de' => 1]])->toArray();
         $units = array_column(DB::doc2Arr($units), lang('name', 'name_de'), 'id');
         $FIELDS[] = [
             'id' => 'units',

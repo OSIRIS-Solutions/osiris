@@ -350,7 +350,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <?php
             if (!empty($spectrum)) :
                 include_once BASEPATH . "/php/Spectrum.php";
-                Spectrum::render($spectrum, $count_spectrum);
+                Spectrum::render($spectrum, $count_spectrum, '', '{"topics":"' . $topic['id'] . '"}');
             else : ?>
                 <p>
                     <?= lang('No Research Spectrum is assigned to this ' . $topicLabel . '.', 'Zu diesem ' . $topicLabel . ' ist kein Forschungs-Spektrum zugewiesen.') ?>
@@ -581,3 +581,9 @@ if ($Settings->featureEnabled('spectrum')) {
         navigate('<?= $active_page ?>');
     });
 </script>
+
+<?php 
+if (isset($_GET['verbose'])){
+    dump($topic);
+}
+?>

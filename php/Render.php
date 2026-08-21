@@ -38,6 +38,7 @@ function renderActivities($filter = [], $return_updated = false)
             'type' => $Format->activity_type(),
             'subtype' => $Format->activity_subtype(),
             'title' => $Format->getTitle(),
+            'subtitle' => $Format->getSubtitle(),
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
             'supervisors' => $Format->getAuthors('supervisors'),
@@ -213,15 +214,16 @@ function renderAuthorUnits($doc, $old_doc = [])
             if ($role !== 'persons' && !($author['aoi'] ?? false)) {
                 continue;
             }
-            if (empty($author['user'])) continue;
 
-            $user = $author['user'];
-
+            $user = $author['user'] ?? null;
             // Respect manual units:
             // - if current says manually => keep
             // - OR if old had manually => keep (prevents accidental overwrite)
             $manualNow = ($author['manually'] ?? false) ? true : false;
-            $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
+            $manualOld = null;
+            if (isset($oldIdx[$user])) {
+                $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
+            }
             if ($manualNow || $manualOld) {
                 $kept = DB::doc2Arr($author['units'] ?? []);
                 $current[$i]['units'] = $kept;
@@ -270,6 +272,14 @@ function renderAuthorUnitsProjects($filter = [])
     foreach ($cursor as $doc) {
         $doc = renderAuthorUnits($doc, [], 'persons');
         $DB->db->projects->updateOne(
+            ['_id' => $doc['_id']],
+            ['$set' => ['units' => $doc['units'] ?? []]]
+        );
+    }
+    $cursor = $DB->db->proposals->find($filter, ['projection' => ['persons' => 1, 'units' => 1, 'start_date' => 1]]);
+    foreach ($cursor as $doc) {
+        $doc = renderAuthorUnits($doc, [], 'persons');
+        $DB->db->proposals->updateOne(
             ['_id' => $doc['_id']],
             ['$set' => ['units' => $doc['units'] ?? []]]
         );
@@ -338,30 +348,4 @@ function renderProject($doc, $col = 'projects', $id = null)
         // $doc = renderAuthorUnits($doc, [], 'persons');
     }
     return $doc;
-}
-
-function build_person_search_text(array $p): string
-{
-    $parts = [];
-    if (!empty($p['last'])) $parts[] = $p['last'];
-    if (!empty($p['first'])) $parts[] = $p['first'];
-
-    // Alternative names / aliases (can be array or string)
-    if (!empty($p['names'] ?? [])) {
-        foreach ($p['names'] as $n) {
-            if (!empty($n) && is_string($n)) $parts[] = $n;
-        }
-    }
-
-    // Optional: add extra fields if they exist in your schema
-    if ($p['username']) $parts[] = $p['username'];
-    if (isset($p['orcid'])) $parts[] = $p['orcid'];
-    if (isset($p['mail'])) $parts[] = $p['mail'];
-
-    // Join, normalize whitespace, lowercase
-    $text = implode(' ', $parts);
-    $text = preg_replace('/\s+/', ' ', $text);
-    $text = trim(mb_strtolower($text));
-
-    return $text;
 }

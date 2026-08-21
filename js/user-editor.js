@@ -212,7 +212,8 @@ function updateScienceUnit(user, unit){
 // Validator functions
 
 function validateEmail(element) {
-    var email = $(element).val();
+    var email = String($(element).val() || '').replace(/\s+/g, '');
+    $(element).val(email);
     var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email === '') {
         $(element).removeClass('is-invalid');
@@ -336,7 +337,8 @@ function validatePassword2(element){
 }
 
 function validateGoogleScholar(element){
-    var id = $(element).val();
+    var id = String($(element).val() || '').replace(/\s+/g, '');
+    $(element).val(id);
     // regex for google scholar id
     var regex = /^[a-zA-Z0-9_-]{12}$/;
     if (id === '') {
@@ -357,23 +359,26 @@ function validateGoogleScholar(element){
     }
 }
 
-function validateORCID(input) {
-    var orcid = $(input).val();
+function validateORCID(element) {
+    var orcid = String($(element).val() || '').replace(/\s+/g, '');
+    $(element).val(orcid);
+    
     // regex for orcid
     var regex = /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]{1}$/;
+    
     if (orcid === '') {
-        $(input).removeClass('is-invalid');
-        $(input).removeClass('is-valid');
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('is-valid');
         $('#orcid-wrong').hide();
         return [true, ''];
     } else if (!regex.test(orcid)) {
-        $(input).addClass('is-invalid');
-        $(input).removeClass('is-valid');
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
         $('#orcid-wrong').show();
         return [false, lang('ORCID must be in the format 0000-0000-0000-0000', 'Die ORCID muss im Format 0000-0000-0000-0000 angegeben werden')];
     } else {
-        $(input).removeClass('is-invalid');
-        $(input).addClass('is-valid');
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
         $('#orcid-wrong').hide();
         return [true, ''];
     }

@@ -168,7 +168,7 @@ include_once BASEPATH . "/php/Modules.php";
                         <span class="text-muted-">
                             ISSN: <?= print_list($journal['issn']) ?>
                             <br>
-                            Impact:
+                            <?= $Settings->impactLabel() ?>
                             <?= $draft['impact'] ?? 'unknown' ?>
                         </span>
                     </a>
