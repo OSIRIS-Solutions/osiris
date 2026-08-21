@@ -22,10 +22,11 @@
                 <?= lang('Label for journals', 'Bezeichnung für Journale') ?>
             </h2>
             <div class="row row-eq-spacing">
-                <div class="col-md-6">
+                <div class="col-md-6 mt-10 mt-md-0">
                     <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
                 </div>
+                <div class="col-md-6 mt-10 mt-md-0">
                     <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
                 </div>
@@ -68,11 +69,11 @@
         $impact_label = $Settings->get('impact_label');
         ?>
             <div class="row row-eq-spacing">
-                <div class="col-md-6">
+                <div class="col-md-6 mt-10 mt-md-0">
                     <label for="impact_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[impact_label][en]" id="impact_label" type="text" class="form-control" value="<?= e($impact_label['en'] ?? 'Cite factor') ?>">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-10 mt-md-0">
                     <label for="impact_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[impact_label][de]" id="impact_label_de" type="text" class="form-control" value="<?= e($impact_label['de'] ?? 'Cite Factor') ?>">
                 </div>

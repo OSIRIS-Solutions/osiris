@@ -361,7 +361,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
-                    <?= lang('Add IF', 'Füge IF hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
+                    <?= lang('Add value', 'Füge Wert hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="dropdown-2">
                     <div class="content">
