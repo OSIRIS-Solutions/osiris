@@ -716,7 +716,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
                     <div class="col-sm">
                         <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
-                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control">
+                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
                             <?php foreach (['mail', 'slack', 'teams', 'matrix', 'other'] as $type) { ?>
                                 <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
                             <?php } ?>
@@ -724,7 +724,7 @@ $active = function ($field) use ($data_fields) {
                     </div>
                     <div class="col-sm">
                         <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
-                        <input type="text" name="values[contact]" id="contact" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" onblur="validateContact(this)">
+                        <input type="text" name="values[contact]" id="contact-button-extra" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
                     </div>
                 </div>
                 <script>
@@ -732,6 +732,7 @@ $active = function ($field) use ($data_fields) {
                         function toggleContactButtonSettings() {
                             if ($('#contact-button-true').is(':checked')) {
                                 $('#contact-button-settings').show();
+                                toggleContact($('#contact-button-type'));
                             } else {
                                 $('#contact-button-settings').hide();
                             }
@@ -739,6 +740,49 @@ $active = function ($field) use ($data_fields) {
                         toggleContactButtonSettings();
                         $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
                     });
+
+                    function toggleContact(select) {
+                        var type = $(select).val();
+                        var contactInput = $('#contact-button-extra');
+                        if (type === 'mail' || type === 'teams') {
+                            contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
+                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['mail'] ?? false ?>') {
+                                contactInput.val('<?= $data['mail'] ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'slack') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'matrix') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrixId = matrix.includes('/#/') ? matrix.split('/#/')[1] : matrix;
+                                contactInput.val(matrixId);
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'other') {
+                            contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        }
+                        validateContact(contactInput);
+                    }
+
                 </script>
             </div>
         <?php } ?>

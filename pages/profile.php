@@ -571,16 +571,29 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
         <?php } ?>
 
-                <!--- Contact Button --->
+        <!--- Contact Button --->
         <?php
-        if ($Settings->featureEnabled('contact-button') && ($scientist['contact_button'] ?? true)) {
+        if ($Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? false)) {
             $contact = $scientist['contact'] ?? null;
+            $contactType = $scientist['contact-button-type'] ?? 'mail';
+            $contactURL = null;
             if (!isset($contact) && isset($scientist['mail'])){
-                $contact = "mailto:" . $scientist['mail'];
+                $contactURL = "mailto:" . $scientist['mail'];
             }
-            if($contact) { ?>
+            if($contact) { 
+                if ($contactType == 'mail') {
+                    $contactURL = "mailto:" . $contact;
+                } elseif ($contactType == 'teams') {
+                    $contactURL = "https://teams.microsoft.com/l/chat/0/0?users=" . $contact;
+                } elseif ($contactType == 'slack') {
+                    $contactURL = "https://slack.com/app_redirect?channel=" . $contact;
+                } elseif ($contactType == 'matrix') {
+                    $contactURL = "https://matrix.to/#/" . $contact;
+                } elseif ($contactType == 'other') {
+                    $contactURL = $contact;
+                }?>
                 <div class="btn-group btn-group-lg" >
-                    <a class="btn secondary outline" href="<?= $contact ?>" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] ?>">
+                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] ?>">
                         <?= lang('Contact', 'Kontakt')?>
                     </a>
                 </div>

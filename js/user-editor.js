@@ -448,6 +448,7 @@ function validateContact(element) {
 
     if (contactValue === '') {
         $(element).toggleClass('is-invalid', true);
+        $(element).toggleClass('is-valid', false);
         return [true, ''];
     }
     
@@ -455,23 +456,34 @@ function validateContact(element) {
     if (contactType === 'mail' || contactType === 'teams') {
         if (!emailPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
+            $(element).toggleClass('is-valid', false);
             return [false, lang('Please enter a valid email address.', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.')];
         }
     } else if (contactType === 'slack') {
         const slackPattern = /^[a-zA-Z0-9._-]+$/;
         if (!slackPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
+            $(element).toggleClass('is-valid', false);
             return [false, lang('Please enter a valid Slack username.', 'Bitte geben Sie einen gültigen Slack-Benutzernamen ein.')];
         }
     } else if (contactType === 'matrix') {
         const matrixPattern = /^@.+:.+$/;
         if (!matrixPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
+            $(element).toggleClass('is-valid', false);
             return [false, lang('Please enter a valid Matrix ID.', 'Bitte geben Sie eine gültige Matrix-ID ein.')];
         }
-    } 
+    } else if (contactType === 'other') {
+        const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
+        if (!urlPattern.test(contactValue)) {
+            $(element).toggleClass('is-invalid', true);
+            $(element).toggleClass('is-valid', false);
+            return [false, lang('Please enter a valid URL.', 'Bitte geben Sie eine gültige URL ein.')];
+        }
+    }
 
     $(element).toggleClass('is-invalid', false);
+    $(element).toggleClass('is-valid', true);
     return [true, ''];
 }
 
