@@ -13,7 +13,7 @@ function sendMail(
     $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
     $mail = DB::doc2Arr($mail['value'] ?? []);
 
-    $msg = lang('Mail sent successfully.', 'Mail erfolgreich gesendet.');
+    $return = null; // Default to null, indicating no error
 
     $Mailer = new PHPMailer\PHPMailer\PHPMailer(true);
     $Mailer->CharSet = 'UTF-8';
@@ -65,12 +65,11 @@ function sendMail(
     try {
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
-        $msg = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
+        $return = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
         // Log the error for debugging
-        error_log("Mail sending failed: " . $msg);
-        return null; // Indicate failure
+        error_log("Mail sending failed: " . $return);
     }
-    return $msg;
+    return $return;
 }
 
 

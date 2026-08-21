@@ -74,7 +74,7 @@
                     <input name="general[impact_label][en]" id="impact_label" type="text" class="form-control" value="<?= e($impact_label['en'] ?? 'Cite factor') ?>">
                 </div>
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="impact_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <label for="impact_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[impact_label][de]" id="impact_label_de" type="text" class="form-control" value="<?= e($impact_label['de'] ?? 'Cite Factor') ?>">
                 </div>
             </div>
