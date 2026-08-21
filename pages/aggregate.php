@@ -39,6 +39,7 @@ $collections = [
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
+<style> .table tbody tr:last-child td,.table tbody tr:last-child th{border-bottom:1px solid var(--border-color) !important}</style>
 <!-- MODALS -->
 
 <div class="modal" id="saved-queries-modal" tabindex="-1" role="dialog">
