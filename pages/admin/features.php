@@ -682,7 +682,6 @@
                     <a href="#reporting-quality-features"><?= lang('Reporting & Quality', 'Reporting & Qualität') ?></a>
                     <a href="#quarterly-reporting" class="submenu"><?= lang('Quarterly reporting', 'Quartalsweise Berichterstattung') ?></a>
                     <a href="#quality-workflow" class="submenu"><?= lang('Quality workflows', 'Qualitäts-Workflows') ?></a>
-                    <a href="#journal-metrics" class="submenu"><?= lang('Journals', 'Journale') ?></a>
                     <a href="#drafts" class="submenu"><?= lang('Drafts', 'Entwürfe') ?></a>
                     <a href="#ida" class="submenu"><?= lang('IDA Integration', 'IDA-Integration') ?></a>
 
