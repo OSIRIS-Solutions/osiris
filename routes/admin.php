@@ -1085,7 +1085,9 @@ Route::post('/crud/admin/mail-test', function () {
     $to = $_POST['email'];
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
-
+    if ($msg === null){
+        $msg = lang('Test mail sent successfully.', 'Testmail erfolgreich versendet.');
+    }
     $_SESSION['msg'] = $msg;
     header("Location: " . ROOTPATH . "/admin/mail");
 }, 'login');
