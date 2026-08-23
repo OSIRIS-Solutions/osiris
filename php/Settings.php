@@ -138,17 +138,25 @@ class Settings
      * @param string $size The default size to return if no limit is set.
      * @return array An array containing the maximum file size in bytes and a human-readable string.
      */
-    static function getMaxFileSize($size = '16M'){
-        $iniSize = ini_get('upload_max_filesize');
-        $iniSizeBytes = Settings::convertToBytes($iniSize);
-        $sizeBytes = Settings::convertToBytes($size);
-        if ($iniSizeBytes < $sizeBytes) {
-            $size = $iniSize . 'B (PHP ini limit)';
-            $sizeBytes = $iniSizeBytes;
+    static function getMaxFileSize($size = '16M')
+    {
+        $limits = [
+            Settings::convertToBytes($size),
+            Settings::convertToBytes(ini_get('upload_max_filesize')),
+            Settings::convertToBytes(ini_get('post_max_size')),
+        ];
+        $limits = array_filter($limits, static fn($bytes) => $bytes > 0);
+        $sizeBytes = empty($limits) ? 0 : min($limits);
+
+        if ($sizeBytes >= 1024 * 1024) {
+            $human = round($sizeBytes / (1024 * 1024), 1) . ' MB';
+        } elseif ($sizeBytes >= 1024) {
+            $human = round($sizeBytes / 1024, 1) . ' KB';
         } else {
-            $size = $size . 'B';
+            $human = $sizeBytes . ' B';
         }
-        return ['bytes' => $sizeBytes, 'human' => $size];
+
+        return ['bytes' => $sizeBytes, 'human' => $human];
     }
 
 

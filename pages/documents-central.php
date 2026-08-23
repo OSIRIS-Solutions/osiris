@@ -172,7 +172,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                                     <span class="central-document-extension"><?= e(strtoupper($extension ?: 'FILE')) ?></span>
                                 </div>
                                 <?php if ($isPdf) { ?>
-                                    <div class="central-document-pdf-preview" data-pdf-url="<?= e($fileUrl) ?>" aria-hidden="true"></div>
+                                    <!-- <div class="central-document-pdf-preview" data-pdf-url="<?= e($fileUrl) ?>" aria-hidden="true"></div> -->
                                 <?php } ?>
                             <?php } ?>
                             <a href="<?= e($fileUrl) ?>" target="_blank" rel="noopener" class="central-document-preview-link" aria-label="<?= e(lang('Open document', 'Dokument öffnen') . ': ' . $title) ?>"></a>
@@ -359,29 +359,29 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             document.getElementById('central-document-reset').addEventListener('click', resetFilters);
             document.getElementById('central-document-reset-empty').addEventListener('click', resetFilters);
 
-            const pdfPreviews = document.querySelectorAll('.central-document-pdf-preview');
-            function loadPdfPreview(preview) {
-                if (preview.dataset.loaded) return;
-                const frame = document.createElement('iframe');
-                frame.src = preview.dataset.pdfUrl + '#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0';
-                frame.title = '<?= e(lang('PDF preview', 'PDF-Vorschau')) ?>';
-                frame.tabIndex = -1;
-                preview.append(frame);
-                preview.dataset.loaded = 'true';
-            }
+            // const pdfPreviews = document.querySelectorAll('.central-document-pdf-preview');
+            // function loadPdfPreview(preview) {
+            //     if (preview.dataset.loaded) return;
+            //     const frame = document.createElement('iframe');
+            //     frame.src = preview.dataset.pdfUrl + '#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0';
+            //     frame.title = '<?= e(lang('PDF preview', 'PDF-Vorschau')) ?>';
+            //     frame.tabIndex = -1;
+            //     preview.append(frame);
+            //     preview.dataset.loaded = 'true';
+            // }
 
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        if (!entry.isIntersecting) return;
-                        loadPdfPreview(entry.target);
-                        observer.unobserve(entry.target);
-                    });
-                }, { rootMargin: '250px' });
-                pdfPreviews.forEach(function(preview) { observer.observe(preview); });
-            } else {
-                pdfPreviews.forEach(loadPdfPreview);
-            }
+            // if ('IntersectionObserver' in window) {
+            //     const observer = new IntersectionObserver(function(entries) {
+            //         entries.forEach(function(entry) {
+            //             if (!entry.isIntersecting) return;
+            //             loadPdfPreview(entry.target);
+            //             observer.unobserve(entry.target);
+            //         });
+            //     }, { rootMargin: '250px' });
+            //     pdfPreviews.forEach(function(preview) { observer.observe(preview); });
+            // } else {
+            //     pdfPreviews.forEach(loadPdfPreview);
+            // }
 
             sortCards();
             filterCards();

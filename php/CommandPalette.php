@@ -280,7 +280,7 @@ class CommandPalette
                 "type" => "Navigation",
                 "icon" => "files",
                 "label" => lang("Documents", "Dokumente"),
-                "permission" => "documents",
+                "permission" => "documents|documents.central|documents.manage",
                 "keywords" => ["documents", "dokumente"],
                 "priority" => 30
             ],
@@ -564,11 +564,15 @@ class CommandPalette
             return false;
         }
 
-        if (
-            !empty($item['permission'])
-            && !$this->settings->hasPermission($item['permission'])
-        ) {
-            return false;
+        if (!empty($item['permission'])) {
+            $hasPermission = false;
+            foreach (explode('|', $item['permission']) as $permission) {
+                if ($this->settings->hasPermission($permission)) {
+                    $hasPermission = true;
+                    break;
+                }
+            }
+            if (!$hasPermission) return false;
         }
 
         return true;

@@ -379,6 +379,16 @@ function centralDocumentMetadata(array $values): array
 
 function centralDocumentUpload(): array
 {
+    $fileSizeLimit = Settings::getMaxFileSize('25M');
+    $postSizeLimit = Settings::convertToBytes(ini_get('post_max_size'));
+    $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+    if ($postSizeLimit > 0 && $contentLength > $postSizeLimit) {
+        redirectFromCentralDocuments(lang(
+            'Files may be up to ' . $fileSizeLimit['human'] . ' in size.',
+            'Dateien dürfen maximal ' . $fileSizeLimit['human'] . ' groß sein.'
+        ));
+    }
+
     if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
         redirectFromCentralDocuments(lang('Please select a file.', 'Bitte wähle eine Datei aus.'));
     }
@@ -396,8 +406,11 @@ function centralDocumentUpload(): array
         redirectFromCentralDocuments($message);
     }
 
-    if ((int) $file['size'] <= 0 || (int) $file['size'] > 25 * 1024 * 1024) {
-        redirectFromCentralDocuments(lang('Files may be up to 25 MB in size.', 'Dateien dürfen maximal 25 MB groß sein.'));
+    if ((int) $file['size'] <= 0 || ($fileSizeLimit['bytes'] > 0 && (int) $file['size'] > $fileSizeLimit['bytes'])) {
+        redirectFromCentralDocuments(lang(
+            'Files may be up to ' . $fileSizeLimit['human'] . ' in size.',
+            'Dateien dürfen maximal ' . $fileSizeLimit['human'] . ' groß sein.'
+        ));
     }
 
     $filename = trim(basename((string) $file['name']));
@@ -432,6 +445,17 @@ function centralDocumentUpload(): array
     $blockedMimes = ['text/html', 'application/x-httpd-php', 'application/x-php', 'application/x-executable'];
     if (in_array($mime, $blockedMimes, true)) {
         redirectFromCentralDocuments(lang('This file type is not supported.', 'Dieser Dateityp wird nicht unterstützt.'));
+    }
+
+    if (in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+        $expectedMime = $extension === 'png' ? 'image/png' : 'image/jpeg';
+        $image = @getimagesize($file['tmp_name']);
+        if ($image === false || $mime !== $expectedMime || ($image['mime'] ?? null) !== $expectedMime) {
+            redirectFromCentralDocuments(lang(
+                'The selected image is invalid or does not match its file extension.',
+                'Das ausgewählte Bild ist ungültig oder entspricht nicht seiner Dateiendung.'
+            ));
+        }
     }
 
     return [$file, $filename, $extension, $mime];
@@ -493,9 +517,9 @@ Route::post('/crud/documents/central/upload', function () {
     include_once BASEPATH . "/php/init.php";
     requireCentralDocumentManagement($Settings);
 
+    [$file, $filename, $extension, $mime] = centralDocumentUpload();
     $values = $_POST['values'] ?? [];
     $metadata = centralDocumentMetadata(is_array($values) ? $values : []);
-    [$file, $filename, $extension, $mime] = centralDocumentUpload();
     $now = date('Y-m-d H:i:s');
     $document = array_merge($metadata, [
         'filename' => $filename,

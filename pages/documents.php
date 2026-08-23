@@ -94,10 +94,6 @@
                                 $icon = '<i class="ph ph-tree-structure"></i>';
                                 $con = $osiris->proposals->findOne(['_id' => $id], ['projection' => ['name' => 1, 'type' => 1]]);
                                 break;
-                            case 'central':
-                                $icon = '<i class="ph ph-file-text"></i>';
-                                $con = ['name' => lang('Central document', 'Zentrales Dokument'), 'type' => 'central'];
-                                break;
                             default:
                                 continue 2;
                         }
@@ -361,8 +357,6 @@
                 regex = true;
                 smart = false;
             }
-            console.log(searchValue);
-
             dataTable.column(column).search(searchValue, regex, smart).draw();
 
             const filterBtn = $('<span class="badge" id="filter-' + column + '">')
