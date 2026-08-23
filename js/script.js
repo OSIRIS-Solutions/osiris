@@ -541,6 +541,28 @@ function orderByAttr(a, b) {
     return a.localeCompare(b)
 }
 
-function dump(el){
+function dump(el) {
     console.log(el);
+}
+
+
+function copyTextToClipboard(text) {
+    // check if navigator.clipboard is available
+    if (!navigator.clipboard) {
+        toastError(lang('This browser does not support copying to clipboard.', 'Dieser Browser unterstützt das Kopieren in die Zwischenablage nicht.'));
+        return;
+    }
+    navigator.clipboard.writeText(text)
+    toastSuccess(lang('Query copied to clipboard.', 'Abfrage in die Zwischenablage kopiert.'))
+}
+
+function copyToClipboard(selector) {
+    // check if navigator.clipboard is available
+    if (!navigator.clipboard) {
+        toastError(lang('This browser does not support copying to clipboard.', 'Dieser Browser unterstützt das Kopieren in die Zwischenablage nicht.'));
+        return;
+    }
+    var text = $(selector).text()
+    navigator.clipboard.writeText(text)
+    toastSuccess(lang('Query copied to clipboard.', 'Abfrage in die Zwischenablage kopiert.'))
 }

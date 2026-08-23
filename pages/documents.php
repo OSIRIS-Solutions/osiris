@@ -31,187 +31,209 @@
         gap: .25rem;
     }
 </style>
-<h1>
-    <i class="ph-duotone ph-files"></i>
-    <?= lang("Documents", "Dokumente") ?>
-</h1>
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-10">
+    <h1>
+        <i class="ph-duotone ph-files"></i>
+        <?= lang("Documents", "Dokumente") ?>
+    </h1>
+    <?php if ($managePerm ?? false) { ?>
+        <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary">
+            <i class="ph ph-file-plus"></i>
+            <?= lang('Manage central documents', 'Zentrale Dokumente verwalten') ?>
+        </a>
+    <?php } ?>
+</div>
 
-<div class="row row-eq-spacing">
-    <div class="col">
-        <table id="uploadsTable" class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th><?= lang('File', 'Datei') ?></th>
-                    <th><?= lang('Linked to', 'Verknüpft mit') ?></th>
-                    <th class="text-end"><?= lang('Actions', 'Aktionen') ?></th>
-                    <th><?= lang('Document type', 'Dokumententyp') ?></th>
-                    <th><?= lang('File type', 'Dateityp') ?></th>
-                    <th><?= lang('Linked entity', 'Verknüpfte Entität') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($documents as $doc):
-                    $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+<!-- only if there is a switch -->
+<?php if ((($centralPerm ?? false) || ($managePerm ?? false)) && ($connectPerm ?? false)) { ?>
+<div class="pills mb-10">
+    <a href="<?= ROOTPATH ?>/documents/central" class="btn">
+        <?= lang('Central documents', 'Zentrale Dokumente') ?>
+    </a>
+    <a href="<?= ROOTPATH ?>/documents/connected" class="btn active">
+        <?= lang('Connected documents', 'Verknüpfte Dokumente') ?>
+    </a>
+</div>
+<?php } ?>
 
-                    $id = DB::to_ObjectID($doc['id']);
-                    $icon = null;
-                    $con = null;
-
-                    $vocabs = [
-                        'activities' => 'activity-document-types',
-                        'nagoya-permit' => 'nagoya-document-types',
-                        'proposals' => 'proposal-document-types',
-                    ];
-                    if (!isset($vocabs[$doc['type']])) continue;
-
-                    switch ($doc['type']) {
-                        case 'activities':
-                            $con = $osiris->activities->findOne(['_id' => $id], ['projection' => ['name' => '$rendered.title', 'type' => 1, 'icon' => '$rendered.icon']]);
-                            $icon = $con['icon'] ?? '';
-                            break;
-                        case 'proposals':
-                        case 'nagoya-permit':
-                            $icon = '<i class="ph ph-tree-structure"></i>';
-                            $con = $osiris->proposals->findOne(['_id' => $id], ['projection' => ['name' => 1, 'type' => 1]]);
-                            break;
-                        default:
-                            continue 2;
-                    }
-                    if (!$con) {
-                        continue;
-                    }
-
-                    $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('Other', 'Sonstiges'));
-
-                    $uploader = $DB->getNameFromId($doc['uploaded_by']);
-                    $date = !empty($doc['uploaded']) ? date('d.m.Y', strtotime($doc['uploaded'])) : '';
-                    $size = number_format((int)($doc['size'] ?? 0), 0, ',', '.');
-                    $filename = $doc['filename'] ?? '';
-                    $desc = trim($doc['description'] ?? '');
-                    $entityType = ucfirst($con['type'] ?? $doc['type']);
-                    $entityName = $con['name'] ?? lang('Unknown', 'Unbekannt');
-                ?>
+    <div class="row row-eq-spacing">
+        <div class="col">
+            <table id="uploadsTable" class="table table-hover align-middle">
+                <thead>
                     <tr>
-                        <!-- FILE -->
-                        <td>
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="pt-5 font-size-18">
-                                    <i class="ph ph-<?= getFileIcon($doc['extension'] ?? '') ?> text-muted"></i>
-                                </div>
-                                <div>
-                                    <div class="d-flex align-items-center gap-10">
-                                        <a href="<?= $file_url ?>" class="badge primary" target="_blank" rel="noopener">
-                                            <?= $label ?>
-                                            <i class="ph ph-download ml-5 font-size-16"></i>
-                                        </a>
+                        <th><?= lang('File', 'Datei') ?></th>
+                        <th><?= lang('Linked to', 'Verknüpft mit') ?></th>
+                        <th class="text-end"><?= lang('Actions', 'Aktionen') ?></th>
+                        <th><?= lang('Document type', 'Dokumententyp') ?></th>
+                        <th><?= lang('File type', 'Dateityp') ?></th>
+                        <th><?= lang('Linked entity', 'Verknüpfte Entität') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($documents as $doc):
+                        $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
+
+                        $id = DB::to_ObjectID($doc['id'] ?? null);
+                        $icon = null;
+                        $con = null;
+
+                        $vocabs = [
+                            'activities' => 'activity-document-types',
+                            'nagoya-permit' => 'nagoya-document-types',
+                            'proposals' => 'proposal-document-types',
+                        ];
+                        if (!isset($vocabs[$doc['type']])) continue;
+
+                        switch ($doc['type']) {
+                            case 'activities':
+                                $con = $osiris->activities->findOne(['_id' => $id], ['projection' => ['name' => '$rendered.title', 'type' => 1, 'icon' => '$rendered.icon']]);
+                                $icon = $con['icon'] ?? '';
+                                break;
+                            case 'proposals':
+                            case 'nagoya-permit':
+                                $icon = '<i class="ph ph-tree-structure"></i>';
+                                $con = $osiris->proposals->findOne(['_id' => $id], ['projection' => ['name' => 1, 'type' => 1]]);
+                                break;
+                            case 'central':
+                                $icon = '<i class="ph ph-file-text"></i>';
+                                $con = ['name' => lang('Central document', 'Zentrales Dokument'), 'type' => 'central'];
+                                break;
+                            default:
+                                continue 2;
+                        }
+                        if (!$con) {
+                            continue;
+                        }
+
+                        $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('Other', 'Sonstiges'));
+
+                        $uploader = $DB->getNameFromId($doc['uploaded_by']);
+                        $date = !empty($doc['uploaded']) ? date('d.m.Y', strtotime($doc['uploaded'])) : '';
+                        $size = number_format((int)($doc['size'] ?? 0), 0, ',', '.');
+                        $filename = $doc['filename'] ?? '';
+                        $desc = trim($doc['description'] ?? '');
+                        $entityType = ucfirst($con['type'] ?? $doc['type']);
+                        $entityName = $con['name'] ?? lang('Unknown', 'Unbekannt');
+                    ?>
+                        <tr>
+                            <!-- FILE -->
+                            <td>
+                                <div class="d-flex align-items-center gap-10">
+                                    <div class="pt-5 font-size-18">
+                                        <i class="ph ph-<?= getFileIcon($doc['extension'] ?? '') ?> text-muted"></i>
                                     </div>
+                                    <div>
+                                        <div class="d-flex align-items-center gap-10">
+                                            <a href="<?= $file_url ?>" class="badge primary" target="_blank" rel="noopener">
+                                                <?= $label ?>
+                                                <i class="ph ph-download ml-5 font-size-16"></i>
+                                            </a>
+                                        </div>
 
-                                    <?php if ($desc !== ''): ?>
-                                        <div class="text-muted font-size-12"><?= nl2br(e($desc)) ?></div>
-                                    <?php endif; ?>
+                                        <?php if ($desc !== ''): ?>
+                                            <div class="text-muted font-size-12"><?= nl2br(e($desc)) ?></div>
+                                        <?php endif; ?>
 
-                                    <div class="text-muted font-size-12 mt-5">
-                                        <?= lang('File name', 'Dateiname') ?>: <?= e($filename) ?> <br>
-                                        <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= e($uploader) ?>
-                                        <?= lang('on', 'am') ?> <?= e($date) ?>
-                                        · <?= e($size) ?> <?= lang('Bytes', 'Bytes') ?>
+                                        <div class="text-muted font-size-12 mt-5">
+                                            <?= lang('File name', 'Dateiname') ?>: <?= e($filename) ?> <br>
+                                            <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= e($uploader) ?>
+                                            <?= lang('on', 'am') ?> <?= e($date) ?>
+                                            · <?= e($size) ?> <?= lang('Bytes', 'Bytes') ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- LINKED ENTITY -->
-                        <td>
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="pt-5 font-size-18">
-                                    <?= $icon ?>
-                                </div>
-                                <div>
-                                    <div class="text-muted font-size-12"><?= ($entityType) ?></div>
-                                    <div class="">
-                                        <a href="<?= ROOTPATH ?>/activities/view/<?= $con['_id'] ?? '' ?>">
-                                            <?= get_preview($entityName, 100) ?>
-                                        </a>
+                            <!-- LINKED ENTITY -->
+                            <td>
+                                <div class="d-flex align-items-center gap-10">
+                                    <div class="pt-5 font-size-18">
+                                        <?= $icon ?>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted font-size-12"><?= ($entityType) ?></div>
+                                        <div class="">
+                                            <a href="<?= ROOTPATH ?>/activities/view/<?= $con['_id'] ?? '' ?>">
+                                                <?= get_preview($entityName, 100) ?>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- ACTIONS -->
-                        <td class="text-end">
-                            <div class="btn-group">
-                                <a class="btn small" href="<?= $file_url ?>" target="_blank" rel="noopener">
-                                    <i class="ph ph-arrow-square-out"></i>
+                            <!-- ACTIONS -->
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a class="btn small" href="<?= $file_url ?>" target="_blank" rel="noopener">
+                                        <i class="ph ph-arrow-square-out"></i>
+                                    </a>
+                                    <a class="btn small" href="<?= $file_url ?>" download>
+                                        <i class="ph ph-download"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td><?= $label ?></td>
+                            <td><?= strtoupper($doc['extension'] ?? '') ?></td>
+                            <td><?= $doc['type'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-3 d-none d-md-block">
+            <div class="filters content" id="filters">
+                <div class="title">Filter</div>
+
+                <div id="active-filters"></div>
+
+                <h6>
+                    <?= lang('By linked entity', 'Nach verknüpfter Entität') ?>
+                </h6>
+                <div class="filter">
+                    <table id="filter-entity" class="table small simple">
+                        <tr>
+                            <td>
+                                <a onclick="filterDataTable(this, 'activities', 5)">
+                                    <?= lang('Activities', 'Aktivitäten') ?>
                                 </a>
-                                <a class="btn small" href="<?= $file_url ?>" download>
-                                    <i class="ph ph-download"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a onclick="filterDataTable(this, 'proposals', 5)">
+                                    <?= lang('Proposals', 'Anträge') ?>
                                 </a>
-                            </div>
-                        </td>
-                        <td><?= $label ?></td>
-                        <td><?= strtoupper($doc['extension'] ?? '') ?></td>
-                        <td><?= $doc['type'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a onclick="filterDataTable(this, 'nagoya-permit', 5)">
+                                    <?= lang('Nagoya Permits', 'Nagoya Genehmigungen') ?>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
-    <div class="col-md-3 d-none d-md-block">
-        <div class="filters content" id="filters">
-            <div class="title">Filter</div>
+                <h6>
+                    <?= lang('By document type', 'Nach Dokumententyp') ?>
+                    <a class="float-right" onclick="filterDataTable('#filter-category .active', null, 3)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter">
+                    <table id="filter-category" class="table small simple"></table>
+                </div>
 
-            <div id="active-filters"></div>
-
-            <h6>
-                <?= lang('By linked entity', 'Nach verknüpfter Entität') ?>
-            </h6>
-            <div class="filter">
-                <table id="filter-entity" class="table small simple">
-                    <tr>
-                        <td>
-                            <a onclick="filterDataTable(this, 'activities', 5)">
-                                <?= lang('Activities', 'Aktivitäten') ?>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a onclick="filterDataTable(this, 'proposals', 5)">
-                                <?= lang('Proposals', 'Anträge') ?>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a onclick="filterDataTable(this, 'nagoya-permit', 5)">
-                                <?= lang('Nagoya Permits', 'Nagoya Genehmigungen') ?>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <h6>
-                <?= lang('By document type', 'Nach Dokumententyp') ?>
-                <a class="float-right" onclick="filterDataTable('#filter-category .active', null, 3)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-category" class="table small simple">
-                </table>
-            </div>
-
-            <h6>
-                <?= lang('By file type', 'Nach Dateityp') ?>
-                <a class="float-right" onclick="filterDataTable('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
-            </h6>
-            <div class="filter">
-                <table id="filter-type" class="table small simple">
-                </table>
+                <h6>
+                    <?= lang('By file type', 'Nach Dateityp') ?>
+                    <a class="float-right" onclick="filterDataTable('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
+                </h6>
+                <div class="filter">
+                    <table id="filter-type" class="table small simple"></table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 <script>
@@ -294,18 +316,18 @@
         for (const key in uniqueValues) {
             if (Object.hasOwnProperty.call(uniqueValues, key)) {
                 const count = uniqueValues[key];
-                
-            var row = $('<tr></tr>');
-            var cell = $('<td></td>');
-            var link = $('<a href="#" class="filter-link"></a>');
-            link.html(key + ` <span class="index">${count}</span>`);
-            link.on('click', function(e) {
-                e.preventDefault();
-                filterDataTable(this, key, columnIndex);
-            });
-            cell.append(link);
-            row.append(cell);
-            filterTable.append(row);
+
+                var row = $('<tr></tr>');
+                var cell = $('<td></td>');
+                var link = $('<a href="#" class="filter-link"></a>');
+                link.html(key + ` <span class="index">${count}</span>`);
+                link.on('click', function(e) {
+                    e.preventDefault();
+                    filterDataTable(this, key, columnIndex);
+                });
+                cell.append(link);
+                row.append(cell);
+                filterTable.append(row);
             }
         }
 

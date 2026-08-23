@@ -117,6 +117,41 @@ class Settings
         ];
     }
 
+    
+    static function convertToBytes($size)
+    {
+        $unit = strtolower(substr($size, -1));
+        $bytes = (int)$size;
+        switch ($unit) {
+            case 'g':
+                $bytes *= 1024;
+            case 'm':
+                $bytes *= 1024;
+            case 'k':
+                $bytes *= 1024;
+        }
+        return $bytes;
+    }
+
+    /** 
+     * Get the maximum file size allowed for uploads, including php ini limits.
+     * @param string $size The default size to return if no limit is set.
+     * @return array An array containing the maximum file size in bytes and a human-readable string.
+     */
+    static function getMaxFileSize($size = '16M'){
+        $iniSize = ini_get('upload_max_filesize');
+        $iniSizeBytes = Settings::convertToBytes($iniSize);
+        $sizeBytes = Settings::convertToBytes($size);
+        if ($iniSizeBytes < $sizeBytes) {
+            $size = $iniSize . 'B (PHP ini limit)';
+            $sizeBytes = $iniSizeBytes;
+        } else {
+            $size = $size . 'B';
+        }
+        return ['bytes' => $sizeBytes, 'human' => $size];
+    }
+
+
     function getQueueCount()
     {
         return $this->osiris->queue->count(['declined' => ['$ne' => true]]);

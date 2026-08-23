@@ -285,6 +285,15 @@ class CommandPalette
                 "priority" => 30
             ],
             [
+                "url" => "/documents/manage",
+                "type" => lang("Action", "Aktion"),
+                "icon" => "file-plus",
+                "label" => lang("Manage central documents", "Zentrale Dokumente verwalten"),
+                "permission" => "documents.manage",
+                "keywords" => ["upload documents", "manage documents", "dokumente hochladen", "dokumente verwalten"],
+                "priority" => 50
+            ],
+            [
                 "url" => "/spectrum",
                 "type" => "Navigation",
                 "icon" => "lightbulb",

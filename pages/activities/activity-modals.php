@@ -1,4 +1,8 @@
-<?php include_once BASEPATH . '/header-editor.php'; ?>
+<?php 
+
+include_once BASEPATH . '/header-editor.php'; 
+$filesize = Settings::getMaxFileSize('16M');
+?>
 
 <div class="modal" id="edit-files" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -91,9 +95,9 @@
         </h5>
         <div class="form-group">
           <div class="custom-file">
-            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
+            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="<?= $filesize['bytes'] ?>" required>
             <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
-            <br><small class="text-danger">Max. 16 MB.</small>
+            <br><small class="text-danger"><?= lang('Maximum file size: ' . $filesize['human'] . '.', 'Maximale Dateigröße: ' . $filesize['human'] . '.') ?></small>
           </div>
         </div>
         <input type="hidden" name="values[type]" value="activities">

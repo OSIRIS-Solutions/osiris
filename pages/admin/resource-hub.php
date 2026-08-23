@@ -26,6 +26,8 @@ $backgroundImage = DB::doc2Arr($imageMap['image'] ?? []);
 $backgroundFile = (string) ($backgroundImage['file'] ?? '');
 $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#', $backgroundFile)
     && is_file(BASEPATH . '/uploads/' . $backgroundFile);
+
+$filesize = Settings::getMaxFileSize('10M');
 ?>
 
 <style>
@@ -336,14 +338,14 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
             </blockquote>
 
             <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?= $filesize['bytes'] ?>">
                 <div class="custom-file">
                     <input
                         type="file"
                         id="resource-hub-background-file"
                         name="image"
                         accept="image/jpeg,image/png,image/webp"
-                        maxsize="10485760"
+                        maxsize="<?= $filesize['bytes'] ?>"
                         onchange="previewResourceHubImage(this)"
                         required>
                     <label for="resource-hub-background-file"><?= lang('Select image', 'Bild auswählen') ?></label>

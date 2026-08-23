@@ -186,7 +186,7 @@ class SidebarNav
                         'active' => ['^/documents($|/)'],
                         'feature' => null,
                         'default' => false,
-                        'permission' => 'documents',
+                        'permission' => 'documents|documents.central',
                         'favoritable' => true,
                         'hasSearch' => false
                     ]

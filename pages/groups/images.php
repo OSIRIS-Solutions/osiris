@@ -163,7 +163,10 @@ foreach ($groupImages as $image) {
     <?php } ?>
 <?php } ?>
 
-<?php if ($edit_perm) { ?>
+<?php if ($edit_perm) { 
+    
+$filesize = Settings::getMaxFileSize('8M');
+?>
     <div class="modal" id="manage-group-images" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="manage-group-images-title">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -176,11 +179,11 @@ foreach ($groupImages as $image) {
                     <h5 class="mt-0"><?= lang('Upload image', 'Bild hochladen') ?></h5>
                     <form action="<?= ROOTPATH ?>/crud/groups/images/<?= $group['_id'] ?>" method="post" enctype="multipart/form-data">
                         <div class="custom-file">
-                            <input type="file" id="group-image-file" name="file" accept="image/jpeg,image/png,image/webp" maxsize="16000000" required>
+                            <input type="file" id="group-image-file" name="file" accept="image/jpeg,image/png,image/webp" maxsize="<?= $filesize['bytes'] ?>" required>
                             <label for="group-image-file"><?= lang('Select image', 'Bild auswählen') ?></label>
                         </div>
                         <small class="text-muted">
-                            <?= lang('JPEG, PNG or WebP; maximum 16 MB.', 'JPEG, PNG oder WebP; maximal 16 MB.') ?>
+                            <?= lang('JPEG, PNG or WebP; maximum ' . $filesize['human'] . '.', 'JPEG, PNG oder WebP; maximal ' . $filesize['human'] . '.') ?>
                         </small>
 
                         <div class="row row-eq-spacing">

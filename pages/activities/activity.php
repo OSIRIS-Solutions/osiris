@@ -734,18 +734,11 @@ if ($edit_perm) {
 
                 <h2 class="mt-0">Details</h2>
 
-                <script>
-                    function copyToClipboard() {
-                        var text = $('#formatted').text()
-                        navigator.clipboard.writeText(text)
-                        toastSuccess('Query copied to clipboard.')
-                    }
-                </script>
                 <table class="table" id="detail-table">
 
                     <tr>
                         <td>
-                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                            <button class="btn small float-right" onclick="copyToClipboard('#formatted')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
                                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                             </button>
 
@@ -1826,16 +1819,18 @@ if ($edit_perm) {
                 </tbody>
             </table>
 
-            <?php if ($edit_perm) { ?>
+            <?php if ($edit_perm) { 
+                $filesize = Settings::getMaxFileSize('16M');
+                ?>
                 <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
                     <h5 class="title font-size-16">
                         <?= lang('Upload document', 'Dokument hochladen') ?>
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
-                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="<?= $filesize['bytes'] ?>" required>
                             <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
-                            <br><small class="text-danger">Max. 16 MB.</small>
+                            <br><small class="text-danger"><?= lang('Maximum file size: ' . $filesize['human'] . '.', 'Maximale Dateigröße: ' . $filesize['human'] . '.') ?></small>
                         </div>
                     </div>
                     <input type="hidden" name="values[type]" value="activities">
