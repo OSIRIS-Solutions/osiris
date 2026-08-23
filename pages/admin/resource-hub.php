@@ -80,7 +80,7 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
         </div>
 
         <div id="card-configuration" class="box padded">
-            <div class="d-flex align-items-center justify-content-between gap-10 mb-20">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-10 mb-20">
                 <div>
                     <h2 class="title mt-0 mb-5"><?= lang('Cards', 'Karten') ?></h2>
                     <p class="text-muted m-0">
@@ -222,20 +222,28 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
         </datalist>
 
         <div id="image-map-configuration" class="box padded">
-            <div class="d-flex align-items-center justify-content-between gap-10 mb-20">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-10 mb-20">
                 <div>
                     <h2 class="title mt-0 mb-5"><?= lang('Image map background', 'Hintergrund der Image-Map') ?></h2>
                     <p class="text-muted m-0">
                         <?= lang(
-                            'Upload the background image independently from the card configuration. Card positions will be configured in a later step.',
-                            'Lade das Hintergrundbild unabhängig von der Kartenkonfiguration hoch. Die Positionen der Karten werden in einem späteren Schritt konfiguriert.'
+                            'Upload the background image independently from the card configuration. Then arrange the cards on the image map.',
+                            'Lade das Hintergrundbild unabhängig von der Kartenkonfiguration hoch. Anschließend kannst du die Karten auf der Image-Map anordnen.'
                         ) ?>
                     </p>
                 </div>
-                <a href="#resource-hub-image-upload" class="btn primary flex-shrink-0">
-                    <i class="ph ph-<?= $hasBackgroundImage ? 'arrows-clockwise' : 'upload-simple' ?>"></i>
-                    <?= $hasBackgroundImage ? lang('Replace image', 'Bild ersetzen') : lang('Upload image', 'Bild hochladen') ?>
-                </a>
+                <div class="d-flex gap-10 flex-shrink-0">
+                    <?php if ($hasBackgroundImage && $cardCount > 0) { ?>
+                        <a href="<?= ROOTPATH ?>/admin/resource-hub-image-map" class="btn">
+                            <i class="ph ph-map-pin"></i>
+                            <?= lang('Arrange cards', 'Karten anordnen') ?>
+                        </a>
+                    <?php } ?>
+                    <a href="#resource-hub-image-upload" class="btn primary">
+                        <i class="ph ph-<?= $hasBackgroundImage ? 'arrows-clockwise' : 'upload-simple' ?>"></i>
+                        <?= $hasBackgroundImage ? lang('Replace image', 'Bild ersetzen') : lang('Upload image', 'Bild hochladen') ?>
+                    </a>
+                </div>
             </div>
 
             <?php if ($hasBackgroundImage) { ?>

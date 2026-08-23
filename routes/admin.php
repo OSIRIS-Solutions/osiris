@@ -543,6 +543,23 @@ Route::get('/admin/projects/new', function () {
 
 
 
+Route::get('/admin/resource-hub-image-map', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $breadcrumb = [
+        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('Resource Hub', 'Ressourcen-Hub'), 'path' => '/admin/resource-hub'],
+        ['name' => lang('Arrange image map', 'Image-Map anordnen')],
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/resource-hub-image-map.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -699,6 +716,64 @@ Route::post('/crud/admin/resource-hub/image/delete', function () {
     redirectFromResourceHubImage(lang('The background image was removed.', 'Das Hintergrundbild wurde entfernt.'), 'success');
 }, 'login');
 
+Route::post('/crud/admin/resource-hub/image-map', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+    $settingsValue = DB::doc2Arr($settingsDocument['value'] ?? []);
+    $cards = DB::doc2Arr($settingsValue['cards'] ?? []);
+    $imageMap = DB::doc2Arr($settingsValue['image-map'] ?? []);
+    $image = DB::doc2Arr($imageMap['image'] ?? []);
+
+    if (empty($cards) || empty($image['file'])) {
+        $_SESSION['msg'] = lang('Upload a background image and create at least one card first.', 'Lade zuerst ein Hintergrundbild hoch und erstelle mindestens eine Karte.');
+        $_SESSION['msg_type'] = 'warning';
+        header('Location: ' . ROOTPATH . '/admin/resource-hub#image-map-configuration');
+        die;
+    }
+
+    $validCardIds = [];
+    foreach ($cards as $card) {
+        $card = DB::doc2Arr($card);
+        $cardId = (string) ($card['id'] ?? '');
+        if ($cardId !== '') $validCardIds[$cardId] = true;
+    }
+
+    $placements = [];
+    foreach (DB::doc2Arr($_POST['placements'] ?? []) as $cardId => $placement) {
+        if (!isset($validCardIds[$cardId])) continue;
+        $placement = DB::doc2Arr($placement);
+        if (!isset($placement['x'], $placement['y']) || !is_numeric($placement['x']) || !is_numeric($placement['y'])) continue;
+
+        $x = round((float) $placement['x'], 2);
+        $y = round((float) $placement['y'], 2);
+        if ($x < 0 || $x > 100 || $y < 0 || $y > 100) continue;
+
+        $placements[$cardId] = ['x' => $x, 'y' => $y];
+    }
+
+    try {
+        $osiris->adminGeneral->updateOne(
+            ['key' => 'resource-hub'],
+            ['$set' => ['value.image-map.placements' => $placements]],
+            ['upsert' => true]
+        );
+    } catch (Throwable $exception) {
+        $_SESSION['msg'] = lang('The card positions could not be saved.', 'Die Kartenpositionen konnten nicht gespeichert werden.');
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
+        die;
+    }
+
+    $_SESSION['msg'] = lang('The card positions were saved.', 'Die Kartenpositionen wurden gespeichert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
+    die;
+}, 'login');
+
 Route::post('/crud/admin/general', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -717,7 +792,18 @@ Route::post('/crud/admin/general', function () {
                 $current = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
                 $currentValue = DB::doc2Arr($current['value'] ?? []);
                 if (isset($currentValue['image-map'])) {
-                    $value['image-map'] = $currentValue['image-map'];
+                    $imageMap = DB::doc2Arr($currentValue['image-map']);
+                    $validCardIds = [];
+                    foreach (DB::doc2Arr($value['cards'] ?? []) as $card) {
+                        $card = DB::doc2Arr($card);
+                        if (!empty($card['id'])) $validCardIds[(string) $card['id']] = true;
+                    }
+                    $imageMap['placements'] = array_filter(
+                        DB::doc2Arr($imageMap['placements'] ?? []),
+                        fn ($cardId) => isset($validCardIds[$cardId]),
+                        ARRAY_FILTER_USE_KEY
+                    );
+                    $value['image-map'] = $imageMap;
                 }
             }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
