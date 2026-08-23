@@ -175,17 +175,17 @@
                         ?>
                     </div>
 
-                        <div class="form-group">
-                            <label for="" class="label">
-                                <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
-                            </label>
-                            <?php
-                            renderCheckbox('portfolio-spectrum');
-                            ?>
-                            <small class="text-muted">
-                                <?= lang('This feature requires the research spectrum to be enabled.', 'Diese Funktion erfordert, dass das Forschungsspektrum aktiviert ist.') ?>
-                            </small>
-                        </div>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('portfolio-spectrum');
+                        ?>
+                        <small class="text-muted">
+                            <?= lang('This feature requires the research spectrum to be enabled.', 'Diese Funktion erfordert, dass das Forschungsspektrum aktiviert ist.') ?>
+                        </small>
+                    </div>
 
                 </div>
 
@@ -651,6 +651,32 @@
 
                     </div>
 
+                </div>
+            </section>
+
+            <!-- resource hub -->
+            <section id="others-hub">
+                <h3 class="header">
+                    <?= lang('Other Features', 'Weitere Funktionen') ?>
+                </h3>
+
+                <div class="box padded">
+                    <h4 class="title" id="resource-hub">
+                        <?= lang('Resource Hub', 'Ressourcen-Hub') ?>
+                    </h4>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Enable Resource Hub', 'Aktiviere Ressourcen-Hub') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('resource-hub');
+                        ?>
+                    </div>
+
+                    <p class="description">
+                        <?= lang('More configuration options for the Resource Hub can be found after enabling in the "Resource Hub" section of the admin panel.', 'Weitere Konfigurationsmöglichkeiten für den Ressourcen-Hub finden sich nach dem Aktivieren im Bereich "Ressourcen-Hub" des Admin-Panels.') ?>
+                    </p>
                 </div>
             </section>
 

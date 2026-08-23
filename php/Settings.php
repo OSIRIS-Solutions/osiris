@@ -744,6 +744,14 @@ class Settings
         return lang($arr['name'], $arr['name_de'] ?? null);
     }
 
+    function resourceHubLabel(){
+        if (!$this->featureEnabled('resource-hub')) return '';
+        $rh = $this->get('resource-hub');
+        $label = $rh['label'] ?? [];
+        if (empty($label) || !isset($label['en'])) return lang('Resource Hub', 'Ressourcen-Hub');
+        return lang($label['en'], $label['de'] ?? null);
+    }
+
 
     function getLabels()
     {

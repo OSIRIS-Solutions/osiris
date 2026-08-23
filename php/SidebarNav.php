@@ -24,6 +24,36 @@ class SidebarNav
         // -----------------------------
         $this->definition = [
             [
+                'id' => 'sidebar-home',
+                'label' => lang('Home', 'Home'),
+                'items' => [
+                    [
+                        'id' => 'home',
+                        'label' => lang('Home', 'Startseite'),
+                        'icon' => 'house',
+                        'url' => '/home',
+                        'active' => ['^/home($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'hub',
+                        'label' => $this->settings->resourceHubLabel(),
+                        'icon' => 'link',
+                        'url' => '/hub',
+                        'active' => ['^/hub($|/)'],
+                        'feature' => 'resource-hub',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ]
+                ]
+            ],
+            [
                 'id' => 'sidebar-activities',
                 'label' => lang('Content', 'Inhalte'),
                 'items' => [

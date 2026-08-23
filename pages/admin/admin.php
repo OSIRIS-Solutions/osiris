@@ -78,6 +78,12 @@
                     <p><?= lang('Settings for the public portfolio', 'Einstellungen für das öffentliche Portfolio') ?></p>
                 </a>
             <?php } ?>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
+                <i class="ph-duotone ph-link"></i>
+                <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
+                <p><?= lang('Settings for the Resource Hub', 'Einstellungen für den Ressourcen-Hub') ?></p>
+            </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
