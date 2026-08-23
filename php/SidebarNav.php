@@ -189,18 +189,6 @@ class SidebarNav
                         'permission' => 'documents',
                         'favoritable' => true,
                         'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'spectrum',
-                        'label' => lang('Spectrum', 'Spektrum'),
-                        'icon' => 'lightbulb',
-                        'url' => '/spectrum',
-                        'active' => ['^/spectrum($|/)'],
-                        'feature' => 'spectrum',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
                     ]
                 ]
             ],
@@ -257,6 +245,18 @@ class SidebarNav
                         'url' => '/dashboard',
                         'active' => ['^/dashboard($|/)'],
                         'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'spectrum',
+                        'label' => lang('Spectrum', 'Spektrum'),
+                        'icon' => 'lightbulb',
+                        'url' => '/spectrum',
+                        'active' => ['^/spectrum($|/)'],
+                        'feature' => 'spectrum',
                         'default' => false,
                         'permission' => null,
                         'favoritable' => true,
