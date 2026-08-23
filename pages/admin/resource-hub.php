@@ -20,6 +20,11 @@
 $rh = DB::doc2Arr($Settings->get('resource-hub') ?? []);
 $cards = DB::doc2Arr($rh['cards'] ?? []);
 $cardCount = count($cards);
+$imageMap = DB::doc2Arr($rh['image-map'] ?? []);
+$backgroundImage = DB::doc2Arr($imageMap['image'] ?? []);
+$backgroundFile = (string) ($backgroundImage['file'] ?? '');
+$hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#', $backgroundFile)
+    && is_file(BASEPATH . '/uploads/' . $backgroundFile);
 ?>
 
 <style>
@@ -30,6 +35,8 @@ $cardCount = count($cards);
     .resource-hub-link { padding: 1.5rem; margin-bottom: 1rem; border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); background: var(--box-bg-color); }
     .resource-hub-link .link-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .resource-hub-editor .ql-editor { min-height: 12rem; }
+    .resource-hub-image-preview { display: block; width: 100%; max-height: 40rem; object-fit: contain; background: var(--muted-color-very-light); border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); }
+    .resource-hub-image-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
     @media (max-width: 575px) { #resource-hub-cards .card-summary-meta { display: none; } }
 </style>
 
@@ -214,11 +221,50 @@ $cardCount = count($cards);
             <?php } ?>
         </datalist>
 
-        <!-- 
-        TODO: add an image map feature for the resource hub, where users can upload an image and define the position of the 
-        defined cards on the image.
-        -->
         <div id="image-map-configuration" class="box padded">
+            <div class="d-flex align-items-center justify-content-between gap-10 mb-20">
+                <div>
+                    <h2 class="title mt-0 mb-5"><?= lang('Image map background', 'Hintergrund der Image-Map') ?></h2>
+                    <p class="text-muted m-0">
+                        <?= lang(
+                            'Upload the background image independently from the card configuration. Card positions will be configured in a later step.',
+                            'Lade das Hintergrundbild unabhängig von der Kartenkonfiguration hoch. Die Positionen der Karten werden in einem späteren Schritt konfiguriert.'
+                        ) ?>
+                    </p>
+                </div>
+                <a href="#resource-hub-image-upload" class="btn primary flex-shrink-0">
+                    <i class="ph ph-<?= $hasBackgroundImage ? 'arrows-clockwise' : 'upload-simple' ?>"></i>
+                    <?= $hasBackgroundImage ? lang('Replace image', 'Bild ersetzen') : lang('Upload image', 'Bild hochladen') ?>
+                </a>
+            </div>
+
+            <?php if ($hasBackgroundImage) { ?>
+                <img
+                    src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>"
+                    alt="<?= lang('Current image map background', 'Aktueller Hintergrund der Image-Map') ?>"
+                    class="resource-hub-image-preview">
+                <div class="resource-hub-image-meta">
+                    <span class="badge">
+                        <i class="ph ph-arrows-out"></i>
+                        <?= (int) ($backgroundImage['width'] ?? 0) ?> × <?= (int) ($backgroundImage['height'] ?? 0) ?> px
+                    </span>
+                    <span class="badge">
+                        <i class="ph ph-hard-drives"></i>
+                        <?= formatBytes((int) ($backgroundImage['size'] ?? 0)) ?>
+                    </span>
+                    <span class="badge">
+                        <?= e(strtoupper(pathinfo($backgroundFile, PATHINFO_EXTENSION))) ?>
+                    </span>
+                </div>
+            <?php } else { ?>
+                <div class="alert signal mb-0">
+                    <div class="title"><?= lang('No background image uploaded', 'Kein Hintergrundbild hochgeladen') ?></div>
+                    <?= lang(
+                        'The cards view can already be used. An image is only required for the optional image-map view.',
+                        'Die Kartenansicht kann bereits verwendet werden. Ein Bild wird nur für die optionale Image-Map benötigt.'
+                    ) ?>
+                </div>
+            <?php } ?>
         </div>
 
 
@@ -229,7 +275,96 @@ $cardCount = count($cards);
     </form>
 </div>
 
+<div class="modal" id="resource-hub-image-upload" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="resource-hub-image-upload-title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <a href="#close-modal" class="close" role="button" aria-label="<?= lang('Close', 'Schließen') ?>">
+                <span aria-hidden="true">&times;</span>
+            </a>
+            <h2 id="resource-hub-image-upload-title" class="title">
+                <?= $hasBackgroundImage ? lang('Replace background image', 'Hintergrundbild ersetzen') : lang('Upload background image', 'Hintergrundbild hochladen') ?>
+            </h2>
+
+            <p class="text-muted">
+                <?= lang(
+                    'A wide landscape image works best. We recommend an aspect ratio close to 16:9.',
+                    'Am besten eignet sich ein breites Bild im Querformat. Wir empfehlen ein Seitenverhältnis nahe 16:9.'
+                ) ?>
+            </p>
+
+            <blockquote>
+                <b><?= lang('Image requirements', 'Anforderungen an das Bild') ?></b>
+                <ul class="mb-0">
+                    <li><?= lang('JPEG, PNG or WebP', 'JPEG, PNG oder WebP') ?></li>
+                    <li><?= lang('Landscape format', 'Querformat') ?></li>
+                    <li><?= lang('Between 1200 × 600 and 5000 × 3000 pixels', 'Zwischen 1200 × 600 und 5000 × 3000 Pixel') ?></li>
+                    <li><?= lang('Maximum 15 megapixels and 10 MB', 'Maximal 15 Megapixel und 10 MB') ?></li>
+                </ul>
+            </blockquote>
+
+            <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        id="resource-hub-background-file"
+                        name="image"
+                        accept="image/jpeg,image/png,image/webp"
+                        maxsize="10485760"
+                        onchange="previewResourceHubImage(this)"
+                        required>
+                    <label for="resource-hub-background-file"><?= lang('Select image', 'Bild auswählen') ?></label>
+                </div>
+
+                <div id="resource-hub-upload-preview" class="mt-20 d-none">
+                    <img src="" alt="<?= lang('Preview of the selected image', 'Vorschau des ausgewählten Bildes') ?>" class="resource-hub-image-preview">
+                    <p class="text-muted mb-0 mt-5" id="resource-hub-upload-preview-meta"></p>
+                </div>
+
+                <button type="submit" class="btn primary mt-20">
+                    <i class="ph ph-upload-simple"></i>
+                    <?= $hasBackgroundImage ? lang('Replace image', 'Bild ersetzen') : lang('Upload image', 'Bild hochladen') ?>
+                </button>
+            </form>
+
+            <?php if ($hasBackgroundImage) { ?>
+                <hr>
+                <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image/delete" method="post" onsubmit="return confirm('<?= e(lang('Remove the current background image?', 'Das aktuelle Hintergrundbild entfernen?')) ?>')">
+                    <button type="submit" class="btn link danger">
+                        <i class="ph ph-trash"></i>
+                        <?= lang('Remove current image', 'Aktuelles Bild entfernen') ?>
+                    </button>
+                </form>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
 <script>
+    function previewResourceHubImage(input) {
+        const file = input.files && input.files[0];
+        const container = document.getElementById('resource-hub-upload-preview');
+        if (!file) {
+            container.classList.add('d-none');
+            return;
+        }
+
+        const preview = container.querySelector('img');
+        const objectUrl = URL.createObjectURL(file);
+        preview.onload = function() {
+            document.getElementById('resource-hub-upload-preview-meta').textContent =
+                preview.naturalWidth + ' × ' + preview.naturalHeight + ' px · ' + formatFileSize(file.size);
+            URL.revokeObjectURL(objectUrl);
+        };
+        preview.src = objectUrl;
+        container.classList.remove('d-none');
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
     (function() {
         let nextCardIndex = <?= max($cardCount, 1) ?>;
         const labels = <?= json_encode([
