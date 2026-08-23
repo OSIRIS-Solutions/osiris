@@ -13869,6 +13869,19 @@ a.spectrum:hover {
   margin-left: 0.5rem;
 }
 
+.filter table:empty:after {
+  content: "No filters available";
+  display: block;
+  text-align: center;
+  color: var(--muted-color);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.lang-de .filter table:empty:after {
+  content: "Keine Filter verfügbar";
+}
+
 #type-examples {
   display: none;
 }

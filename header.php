@@ -172,6 +172,7 @@ $pageactive = function ($p) use ($page) {
         <?= $_COOKIE['D3-accessibility-contrast'] ?? '' ?>
         <?= $_COOKIE['D3-accessibility-transitions'] ?? '' ?>
         <?= $_COOKIE['D3-accessibility-dyslexia'] ?? '' ?>
+        lang-<?= lang('en', 'de') ?>
     ">
         <div class="sticky-alerts"></div>
 
