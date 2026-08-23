@@ -34,6 +34,10 @@ $localizedValue = static function ($value): string {
     return $localized !== '' ? $localized : trim((string) ($value[$fallback] ?? ''));
 };
 
+$description = trim(strip_tags($localizedValue($rh['description'] ?? [])));
+$description = preg_replace('/\s+/u', ' ', $description) ?? $description;
+$description = function_exists('mb_substr') ? mb_substr($description, 0, 200) : substr($description, 0, 200);
+
 $resourceHubUrl = static function ($url): ?string {
     $url = trim((string) $url);
     if ($url === '') return null;
@@ -89,11 +93,16 @@ foreach ($cards as $index => $rawCard) {
 
 $preferredView = (string) ($USER['resource_hub_view'] ?? 'cards');
 $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'cards';
+$hubIcon = $Settings->resourceHubIcon();
 ?>
 
 <style>
-    .resource-hub-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
-    .resource-hub-heading h1 { margin: 0; }
+    /* hide top navbar here */
+    .page-wrapper > .navbar-top { display: none; }
+    .resource-hub-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+    .resource-hub-card-heading h1 { margin: 0; }
+    .resource-hub-heading-copy { min-width: 0; }
+    .resource-hub-card-description { max-width: 60rem; margin: .4rem 0 0; color: var(--muted-color); line-height: 1.4; }
     #resource-hub-card-view > [class^="col"] { display: flex; }
     .resource-hub-card { display: flex; flex-direction: column; width: 100%; padding: 2rem; margin-bottom: 2rem; }
     .resource-hub-card-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
@@ -105,9 +114,15 @@ $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'c
     .resource-hub-card-links, .resource-hub-popover-links { display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; padding-top: 1.5rem; margin-top: 1.5rem; border-top: var(--border-width) solid var(--border-color); }
     .resource-hub-card-links .btn, .resource-hub-popover-links .btn { width: 100%; white-space: normal; text-align: left; height: auto; line-height: 20px; padding: .25rem 1rem; }
     .resource-hub-card-links .btn i, .resource-hub-popover-links .btn i { margin-right: .5rem; color: var(--primary-color); }
-    .resource-hub-image-map-shell { padding: 1rem; overflow: auto; background: var(--muted-color-very-light); border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); }
-    .resource-hub-image-map { position: relative; width: 100%; min-width: 40rem; line-height: 0; }
-    .resource-hub-image-map > img { display: block; width: 100%; height: auto; border-radius: calc(var(--border-radius) / 2); }
+    .resource-hub-image-map-shell { width: 100%; overflow: auto; border-radius: var(--border-radius); }
+    .resource-hub-image-map { position: relative; width: 100%; min-width: 40rem; overflow: hidden; line-height: 0; border-radius: var(--border-radius); }
+    .resource-hub-image-map::after { content: ''; position: absolute; z-index: 1; inset: 0 0 auto; height: 11rem; pointer-events: none; background: linear-gradient(to bottom, rgba(0, 0, 0, .62), rgba(0, 0, 0, 0)); }
+    .resource-hub-image-map > img { display: block; width: 100%; height: auto; }
+    .resource-hub-image-heading { position: absolute; z-index: 4; top: 0; right: 0; left: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem; pointer-events: none; }
+    .resource-hub-image-heading h1 { margin: 0; color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, .65); line-height: 1.2; }
+    .resource-hub-image-description { max-width: 52rem; margin: .5rem 0 0; color: rgba(255, 255, 255, .94); font-size: 1.3rem; line-height: 1.4; text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
+    .resource-hub-image-heading .btn { flex-shrink: 0; pointer-events: auto; color: #222; background: rgba(255, 255, 255, .9); border-color: rgba(255, 255, 255, .7); box-shadow: 0 .15rem .6rem rgba(0, 0, 0, .22); backdrop-filter: blur(6px); }
+    .resource-hub-image-heading .btn:hover, .resource-hub-image-heading .btn:focus { background: #fff; }
     .resource-hub-hotspot { position: absolute; z-index: 2; width: 3.25rem; height: 3.25rem; padding: 0; display: grid; place-items: center; transform: translate(-50%, -50%); color: var(--primary-color); background: var(--box-bg-color); border: 2px solid var(--primary-color); border-radius: 50%; box-shadow: 0 .2rem .9rem rgba(0, 0, 0, .3); font-size: 1.55rem; line-height: 1; cursor: pointer; transition: transform .15s ease, color .15s ease, background .15s ease; }
     .resource-hub-hotspot-label { position: absolute; top: 50%; width: max-content; max-width: 18rem; padding: .7rem 1rem; overflow: hidden; color: var(--text-color); background: #ffffffa0; border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); box-shadow: 0 .15rem .6rem rgba(0, 0, 0, .2); font-size: 1.2rem; font-weight: 600; line-height: 1.2; text-align: left; text-overflow: ellipsis; white-space: nowrap; transform: translateY(-50%); transition: border-color .15s ease, box-shadow .15s ease; }
     .resource-hub-hotspot.label-right .resource-hub-hotspot-label { left: calc(100% + .5rem); }
@@ -120,24 +135,25 @@ $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'c
     .resource-hub-popover-title i { color: var(--primary-color); font-size: 1.8rem !important; }
     .resource-hub-popover-content { line-height: 1.45; font-size: 1.2rem;}
     @media (max-width: 767px) {
-        .resource-hub-heading { align-items: flex-start; }
-        .resource-hub-view-switch { width: 100%; display: flex; }
-        .resource-hub-view-switch .btn { flex: 1; }
+        .resource-hub-card-heading { align-items: flex-start; }
+        .resource-hub-image-heading { padding: 1rem; }
+        .resource-hub-image-heading h1 { font-size: 2rem; }
+        .resource-hub-image-description { max-width: 28rem; font-size: 1.2rem; }
     }
 </style>
 
-<div class="resource-hub-heading">
-    <h1><i class="ph-duotone ph-link"></i> <?= $Settings->resourceHubLabel() ?></h1>
+<div id="resource-hub-card-heading" class="resource-hub-card-heading <?= $currentView === 'cards' ? '' : 'd-none' ?>">
+    <div class="resource-hub-heading-copy">
+        <h1><i class="ph-duotone ph-<?= e($hubIcon) ?>"></i> <?= $Settings->resourceHubLabel() ?></h1>
+        <?php if ($description !== '') { ?>
+            <p class="resource-hub-card-description"><?= e($description) ?></p>
+        <?php } ?>
+    </div>
 
     <?php if ($hasImageMap && !empty($displayCards)) { ?>
-        <div class="btn-group resource-hub-view-switch" role="group" aria-label="<?= lang('Resource Hub view', 'Ansicht des Ressourcen-Hubs') ?>">
-            <button type="button" class="btn <?= $currentView === 'cards' ? 'active' : '' ?>" data-resource-hub-view="cards" aria-pressed="<?= $currentView === 'cards' ? 'true' : 'false' ?>">
-                <i class="ph ph-squares-four" aria-hidden="true"></i> <?= lang('Cards', 'Karten') ?>
-            </button>
-            <button type="button" class="btn <?= $currentView === 'image-map' ? 'active' : '' ?>" data-resource-hub-view="image-map" aria-pressed="<?= $currentView === 'image-map' ? 'true' : 'false' ?>">
-                <i class="ph ph-image" aria-hidden="true"></i> <?= lang('Image map', 'Image-Map') ?>
-            </button>
-        </div>
+        <button type="button" class="btn small" data-resource-hub-view="image-map">
+            <i class="ph ph-image" aria-hidden="true"></i> <?= lang('Image map', 'Image-Map') ?>
+        </button>
     <?php } ?>
 </div>
 
@@ -196,6 +212,18 @@ $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'c
                 <div class="resource-hub-image-map" id="resource-hub-image-map">
                     <img src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>" alt="<?= lang('Resource Hub image map', 'Image-Map des Ressourcen-Hubs') ?>">
 
+                    <div class="resource-hub-image-heading">
+                        <div class="resource-hub-heading-copy">
+                            <h1><i class="ph-duotone ph-<?= e($hubIcon) ?>"></i> <?= $Settings->resourceHubLabel() ?></h1>
+                            <?php if ($description !== '') { ?>
+                                <p class="resource-hub-image-description"><?= e($description) ?></p>
+                            <?php } ?>
+                        </div>
+                        <button type="button" class="btn small" data-resource-hub-view="cards">
+                            <i class="ph ph-squares-four" aria-hidden="true"></i> <?= lang('Cards', 'Karten') ?>
+                        </button>
+                    </div>
+
                     <?php foreach ($displayCards as $index => $card) {
                         if ($card['x'] === null || $card['y'] === null) continue;
                         $markerIcon = $card['icon'] !== '' ? $card['icon'] : 'map-pin';
@@ -245,6 +273,7 @@ $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'c
     <script>
         (function() {
             const viewButtons = document.querySelectorAll('[data-resource-hub-view]');
+            const cardHeading = document.getElementById('resource-hub-card-heading');
             const cardView = document.getElementById('resource-hub-card-view');
             const imageView = document.getElementById('resource-hub-image-view');
             const hotspots = $('.resource-hub-hotspot');
@@ -291,13 +320,9 @@ $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'c
 
             function setResourceHubView(view) {
                 if (view !== 'cards' && view !== 'image-map') return;
+                cardHeading.classList.toggle('d-none', view !== 'cards');
                 cardView.classList.toggle('d-none', view !== 'cards');
                 imageView.classList.toggle('d-none', view !== 'image-map');
-                viewButtons.forEach(function(button) {
-                    const active = button.dataset.resourceHubView === view;
-                    button.classList.toggle('active', active);
-                    button.setAttribute('aria-pressed', active ? 'true' : 'false');
-                });
                 hotspots.popover('hide').removeClass('active');
                 if (view !== currentView) {
                     currentView = view;

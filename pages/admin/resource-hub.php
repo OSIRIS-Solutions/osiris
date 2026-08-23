@@ -18,6 +18,7 @@
  */
 
 $rh = DB::doc2Arr($Settings->get('resource-hub') ?? []);
+$hubIcon = $Settings->resourceHubIcon();
 $cards = DB::doc2Arr($rh['cards'] ?? []);
 $cardCount = count($cards);
 $imageMap = DB::doc2Arr($rh['image-map'] ?? []);
@@ -37,13 +38,14 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
     .resource-hub-editor .ql-editor { min-height: 12rem; }
     .resource-hub-image-preview { display: block; width: 100%; max-height: 40rem; object-fit: contain; background: var(--muted-color-very-light); border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); }
     .resource-hub-image-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+    .resource-hub-character-count { display: block; text-align: right; color: var(--muted-color); }
     @media (max-width: 575px) { #resource-hub-cards .card-summary-meta { display: none; } }
 </style>
 
 <div class="container w-800 mw-full">
 
     <h1>
-        <i class="ph-duotone ph-link"></i>
+        <i class="ph-duotone ph-<?= e($hubIcon) ?>"></i>
         <?= lang('Resource Hub Settings', 'Ressourcen-Hub Einstellungen') ?>
     </h1>
 
@@ -61,22 +63,45 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/resource-hub">
 
         <?php
-        $label = $rh['label'] ?? [];
+        $label = DB::doc2Arr($rh['label'] ?? []);
+        $description = DB::doc2Arr($rh['description'] ?? []);
         ?>
         <div class="box padded">
             <h2 class="title">
-                <?= lang('Label for Resource Hub', 'Bezeichnung für den Ressourcen-Hub') ?>
+                <?= lang('Title and description', 'Titel und Beschreibung') ?>
             </h2>
+            <div class="form-group">
+                <label for="resource_hub_icon"><?= lang('Resource Hub icon', 'Icon des Ressourcen-Hubs') ?></label>
+                <div class="input-group" style="max-width: 40rem;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ph ph-<?= e($hubIcon) ?> resource-hub-icon-preview"></i></span>
+                    </div>
+                    <input name="general[resource-hub][icon]" id="resource_hub_icon" type="text" class="form-control resource-hub-icon-input" value="<?= e($hubIcon) ?>" pattern="[a-z0-9-]+" list="resource-hub-icons" placeholder="link">
+                </div>
+                <small class="text-muted">
+                    <?= lang('Enter the Phosphor icon name without the “ph-” prefix.', 'Gib den Namen des Phosphor-Icons ohne das Präfix „ph-“ ein.') ?>
+                    <a href="https://phosphoricons.com/" target="_blank" rel="noopener noreferrer"><?= lang('Browse icons', 'Icons durchsuchen') ?></a>
+                </small>
+            </div>
             <div class="row row-eq-spacing">
                 <div class="col-md-6 mt-10 mt-md-0">
                     <label for="resource_hub_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[resource-hub][label][en]" id="resource_hub_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Resource Hub') ?>">
+                    <label for="resource_hub_description" class="mt-15"><?= lang('Short description', 'Kurzbeschreibung') ?></label>
+                    <textarea name="general[resource-hub][description][en]" id="resource_hub_description" class="form-control resource-hub-description" rows="3" maxlength="200" placeholder="Briefly describe the purpose of the Resource Hub."><?= e($description['en'] ?? '') ?></textarea>
+                    <small class="resource-hub-character-count"><span>0</span>/200</small>
                 </div>
                 <div class="col-md-6 mt-10 mt-md-0">
                     <label for="resource_hub_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[resource-hub][label][de]" id="resource_hub_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Ressourcen-Hub') ?>">
+                    <label for="resource_hub_description_de" class="mt-15"><?= lang('Short description', 'Kurzbeschreibung') ?></label>
+                    <textarea name="general[resource-hub][description][de]" id="resource_hub_description_de" class="form-control resource-hub-description" rows="3" maxlength="200" placeholder="Beschreibe kurz den Zweck des Ressourcen-Hubs."><?= e($description['de'] ?? '') ?></textarea>
+                    <small class="resource-hub-character-count"><span>0</span>/200</small>
                 </div>
             </div>
+            <small class="text-muted">
+                <?= lang('Plain text only, maximum 200 characters per language.', 'Nur unformatierter Text, maximal 200 Zeichen pro Sprache.') ?>
+            </small>
         </div>
 
         <div id="card-configuration" class="box padded">
@@ -556,6 +581,15 @@ $hasBackgroundImage = preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#'
         $('#resource-hub-cards').on('input', '.link-icon-input', function() {
             const icon = safeIcon(this.value, 'arrow-square-out');
             this.closest('.resource-hub-link').querySelector('.link-icon-preview').className = 'ph ph-' + icon + ' link-icon-preview';
+        });
+
+        $('.resource-hub-description').on('input', function() {
+            $(this).siblings('.resource-hub-character-count').find('span').text(this.value.length);
+        }).trigger('input');
+
+        $('.resource-hub-icon-input').on('input', function() {
+            const icon = safeIcon(this.value, 'link');
+            document.querySelector('.resource-hub-icon-preview').className = 'ph ph-' + icon + ' resource-hub-icon-preview';
         });
 
         $('#resource-hub-form').on('submit', function(event) {

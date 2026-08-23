@@ -42,7 +42,7 @@ class SidebarNav
                     [
                         'id' => 'hub',
                         'label' => $this->settings->resourceHubLabel(),
-                        'icon' => 'link',
+                        'icon' => $this->settings->resourceHubIcon(),
                         'url' => '/hub',
                         'active' => ['^/hub($|/)'],
                         'feature' => 'resource-hub',

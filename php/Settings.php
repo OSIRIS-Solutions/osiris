@@ -752,6 +752,13 @@ class Settings
         return lang($label['en'], $label['de'] ?? null);
     }
 
+    function resourceHubIcon(): string
+    {
+        $rh = $this->get('resource-hub');
+        $icon = trim((string) ($rh['icon'] ?? 'link'));
+        return preg_match('/^[a-z0-9-]+$/', $icon) ? $icon : 'link';
+    }
+
 
     function getLabels()
     {

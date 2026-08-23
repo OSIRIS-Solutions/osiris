@@ -15,14 +15,6 @@ class CommandPalette
         $topicLabel = $this->settings->topicLabel();
 
         $elements = [
-            // [
-            //     "url" => "/profile/" . $_SESSION['username'],
-            //     "type" => "Navigation",
-            //     "label" => lang(lang('Profile  of ', 'Profil von ') . ($_SESSION['name'] ?? $_SESSION['username']), null),
-            //     "icon" => "student",
-            //     "keywords" => ["profile", "user", "person", "me", "my profile", "my account", "mein profil", "mein konto"],
-            //     "priority" => 100
-            // ],
             [
                 "url" => "/my-year",
                 "type" => "Navigation",
@@ -274,6 +266,14 @@ class CommandPalette
                 "feature" => "infrastructures",
                 "keywords" => ["infrastructures", "infrastrukturen", "research infrastructures", "forschungsinfrastrukturen", "services", "dienstleistungen"],
                 "priority" => 70
+            ],
+            [
+                "url" => "/hub",
+                "type" => "Navigation",
+                "icon" => $this->settings->resourceHubIcon(),
+                "label" => $this->settings->resourceHubLabel(),
+                "feature" => "resource-hub",
+                "keywords" => ["resource hub", "ressourcen-hub", "resources", "ressourcen", "hub"],
             ],
             [
                 "url" => "/documents",

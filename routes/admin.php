@@ -788,6 +788,20 @@ Route::post('/crud/admin/general', function () {
                 $value = array_map('trim', explode(PHP_EOL, $value));
                 $value = array_filter($value);
             }
+            if ($key === 'resource-hub' && is_array($value)) {
+                $icon = trim((string) ($value['icon'] ?? 'link'));
+                $value['icon'] = preg_match('/^[a-z0-9-]+$/', $icon) ? $icon : 'link';
+
+                $description = [];
+                foreach (['en', 'de'] as $language) {
+                    $text = trim(strip_tags((string) ($value['description'][$language] ?? '')));
+                    $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+                    $description[$language] = function_exists('mb_substr')
+                        ? mb_substr($text, 0, 200)
+                        : substr($text, 0, 200);
+                }
+                $value['description'] = $description;
+            }
             if ($key === 'resource-hub' && is_array($value) && !array_key_exists('image-map', $value)) {
                 $current = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
                 $currentValue = DB::doc2Arr($current['value'] ?? []);

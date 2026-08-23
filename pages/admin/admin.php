@@ -80,7 +80,7 @@
             <?php } ?>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
-                <i class="ph-duotone ph-link"></i>
+                <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
                 <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
                 <p><?= lang('Settings for the Resource Hub', 'Einstellungen für den Ressourcen-Hub') ?></p>
             </a>
