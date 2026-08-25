@@ -474,7 +474,7 @@ function validateContact(element) {
             return [false, lang('Please enter a valid Matrix ID.', 'Bitte geben Sie eine gültige Matrix-ID ein.')];
         }
     } else if (contactType === 'other') {
-        const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
+        const urlPattern = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
         if (!urlPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
             $(element).toggleClass('is-valid', false);

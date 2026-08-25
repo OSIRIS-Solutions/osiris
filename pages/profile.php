@@ -591,9 +591,18 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     $contactURL = "https://matrix.to/#/" . $contact;
                 } elseif ($contactType == 'other') {
                     $contactURL = $contact;
-                }?>
+                }
+                $contactLogo = socialLogo($contactType);
+                if ($contactType == 'other') {
+                    $contactInfo = lang('prefered contact link', 'bevorzugtem Kontakt-Link');
+                }
+                else {
+                    $contactInfo = ucfirst($contactType);
+                }
+                ?>
                 <div class="btn-group btn-group-lg" >
-                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] ?>">
+                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] . lang(' via ', ' per ') . $contactInfo ?>">
+                        <i class="ph <?= $contactLogo ?>"></i>
                         <?= lang('Contact', 'Kontakt')?>
                     </a>
                 </div>
