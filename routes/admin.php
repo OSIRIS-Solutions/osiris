@@ -560,6 +560,35 @@ Route::get('/admin/resource-hub-image-map', function () {
 }, 'login');
 
 
+Route::get('/admin/phpinfo', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    function getPhpinfo()
+    {
+        ob_start();
+        phpinfo();
+        $data = ob_get_contents();
+        ob_end_clean();
+        // remove the style and script tags from the output
+        $data = preg_replace('#<style[^>]*>.*?</style>#is', '', $data);
+        // add "table" class to all tables
+        $data = preg_replace('#<table#', '<table class="table"', $data);
+        return $data;
+    }
+
+    $breadcrumb = [
+        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('PHP Info', 'PHP Info')]
+    ];
+    $phpinfo = getPhpinfo();
+    include BASEPATH . "/header.php";
+    echo "<link rel='stylesheet' href='" . ROOTPATH . "/css/phpinfo.css'>";
+    echo "<div class='phpinfo-container'>$phpinfo</div>";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -814,7 +843,7 @@ Route::post('/crud/admin/general', function () {
                     }
                     $imageMap['placements'] = array_filter(
                         DB::doc2Arr($imageMap['placements'] ?? []),
-                        fn ($cardId) => isset($validCardIds[$cardId]),
+                        fn($cardId) => isset($validCardIds[$cardId]),
                         ARRAY_FILTER_USE_KEY
                     );
                     $value['image-map'] = $imageMap;
@@ -1322,7 +1351,7 @@ Route::post('/crud/admin/mail-test', function () {
     $to = $_POST['email'];
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
-    if ($msg === null){
+    if ($msg === null) {
         $msg = lang('Test mail sent successfully.', 'Testmail erfolgreich versendet.');
     }
     $_SESSION['msg'] = $msg;
