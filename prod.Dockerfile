@@ -56,3 +56,8 @@ COPY . .
 RUN mkdir -p /var/www/html/img && \
     chown -R www-data:www-data /var/www/html/img && \
     chmod -R 775 /var/www/html/img
+
+# Set permissions for uploads-Directory
+RUN mkdir -p /var/www/html/uploads && \
+    chown -R www-data:www-data /var/www/html/uploads && \
+    chmod -R 775 /var/www/html/uploads
