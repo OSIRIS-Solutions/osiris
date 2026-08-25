@@ -27,7 +27,7 @@ services:
       - OSIRIS_DB_HOST=mongo
 
   mongo:
-    image: mongo:6.0
+    image: mongo:7.0
     container_name: mongodb
     ports:
       - "27017:27017"
