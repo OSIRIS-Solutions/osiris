@@ -704,15 +704,19 @@ $active = function ($field) use ($data_fields) {
             <?php $contact_button = $data['contact-button'] ?? false; ?>
             <?php $contact_button_type = $data['contact-button-type'] ?? 'mail'; ?>
             <div class="form-group">
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
-                    <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                <div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
+                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                    </div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
+                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                    </div>
                 </div>
-
-                <div class="custom-radio d-inline-block ml-10">
-                    <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
-                    <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
-                </div>
+                <small class="text-muted">
+                    <?= lang('The contact button will be displayed on your OSIRIS profile page. You can choose your preferred contact type to be displayed.', 'Der Kontakt-Button wird auf deiner OSIRIS-Profilseite angezeigt. Du kannst deinen Wunsch-Kontaktweg wählen.') ?>
+                </small>
                 <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
                     <div class="col-sm">
                         <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
@@ -724,7 +728,8 @@ $active = function ($field) use ($data_fields) {
                     </div>
                     <div class="col-sm">
                         <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
-                        <input type="text" name="values[contact]" id="contact-button-extra" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
+                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
+                        <small class="text-muted" id="contact-button-input-help"></small>
                     </div>
                 </div>
                 <script>
@@ -743,9 +748,11 @@ $active = function ($field) use ($data_fields) {
 
                     function toggleContact(select) {
                         var type = $(select).val();
-                        var contactInput = $('#contact-button-extra');
+                        var contactInput = $('#contact-button-input');
+                        var contactHelp = $('#contact-button-input-help');
                         if (type === 'mail' || type === 'teams') {
                             contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add an email address. It will be used for the contact button.', 'Bitte hier eine E-Mail-Adresse eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
                             if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['mail'] ?? false ?>') {
@@ -755,6 +762,7 @@ $active = function ($field) use ($data_fields) {
                             }
                         } else if (type === 'slack') {
                             contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button.', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else {
@@ -762,6 +770,7 @@ $active = function ($field) use ($data_fields) {
                             }
                         } else if (type === 'matrix') {
                             contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Matrix ID. It will be used for the contact button.', 'Bitte hier eine Matrix-ID eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
@@ -774,6 +783,7 @@ $active = function ($field) use ($data_fields) {
                             }
                         } else if (type === 'other') {
                             contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a contact URL. It will be used for the contact button.', 'Bitte hier eine Kontakt-URL eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else {
