@@ -118,7 +118,7 @@ $persons = $osiris->adminPersons->find();
                     <?php
                     $db_pictures = $Settings->featureEnabled('db_pictures');
                     ?>
-                    <div class=" custom-radio d-inline-block ml-10">>
+                    <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="db_pictures-true" value="1" name="features[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
                         <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
                     </div>
@@ -141,19 +141,64 @@ $persons = $osiris->adminPersons->find();
                         <?= lang('Contact button in user profiles', 'Kontakt-Button in Benutzerprofilen') ?>
                     </label>
                     <?php
-                    $achievements = $Settings->featureEnabled('contact-button');
+                    $contactButton = $Settings->featureEnabled('contact-button');
                     ?>
-
                     <div class="custom-radio d-inline-block ml-10">
-                        <input type="radio" id="contact-button-true" value="1" name="features[contact-button]" <?= $achievements ? 'checked' : '' ?>>
+                        <input type="radio" id="contact-button-true" value="1" name="features[contact-button]" <?= $contactButton ? 'checked' : '' ?>>
                         <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
                     </div>
-
                     <div class="custom-radio d-inline-block ml-10">
-                        <input type="radio" id="contact-button-false" value="0" name="features[contact-button]" <?= $achievements ? '' : 'checked' ?>>
+                        <input type="radio" id="contact-button-false" value="0" name="features[contact-button]" <?= $contactButton ? '' : 'checked' ?>>
                         <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
                     </div>
+                    <small class="d-block text-muted">
+                        <?= lang('If this function is activated, a contact button will be displayed in the user profiles. The contact button can be configured individually for each user.', 'Wenn diese Funktion aktiviert ist, wird in den Benutzerprofilen ein Kontakt-Button angezeigt. Der Kontakt-Button kann für jeden Nutzer individuell konfiguriert werden.') ?>
+                    </small>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        if ($('#contact-button-true').is(':checked')) {
+                            $('#contact-button-allowed').show();
+                        } else {
+                            $('#contact-button-allowed').hide();
+                        }
 
+                        $('#contact-button-true').on('change', function() {
+                            $('#contact-button-allowed').show();
+                        });
+                        $('#contact-button-false').on('change', function() {
+                            $('#contact-button-allowed').hide();
+                        });
+                    });
+                </script>
+                <?php
+                $standardContactTypes = ['mail' => "0", 'slack' => "0", 'teams' => "0", 'matrix' => "0", 'other' => "0"];
+                $contactSettings = $Settings->get('contact-button')->getArrayCopy();
+                $contactTypes = array_merge($standardContactTypes, $contactSettings ?? []);
+                ?>
+                <div class="form-group" style="display: none;" id="contact-button-allowed">
+                    <table class="table simple w-full small mb-10">
+                        <thead>
+                            <tr>
+                                <th><?= lang('Active', 'Aktiv') ?></th>
+                                <th><?= lang('Contact type', 'Kontakt-Typ') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach ($contactTypes as $type => $enabled) {
+                            ?>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="general[contact-button][<?= $type ?>]" id="contact-button-<?= $type ?>" value="1" <?= $enabled ? 'checked' : '' ?>>
+                                    </td>
+                                    <td>
+                                        <?= lang(ucfirst($type), ucfirst($type)) ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
 
                 

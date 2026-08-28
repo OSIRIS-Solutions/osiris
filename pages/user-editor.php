@@ -697,12 +697,15 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <!-- Contact Button -->
-        <?php if ($Settings->featureEnabled('contact-button')) { ?>
+        <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
             <h4>
                 <?= lang('Contact Button', 'Kontakt Button') ?>
             </h4>
-            <?php $contact_button = $data['contact-button'] ?? false; ?>
-            <?php $contact_button_type = $data['contact-button-type'] ?? 'mail'; ?>
+            <?php 
+                $contact_button = $data['contact-button'] ?? false;
+                $contact_button_type = $data['contact-button-type'] ?? 'mail';
+            ?>
+
             <div class="form-group">
                 <div>
                     <div class="custom-radio d-inline-block ml-10">
@@ -721,7 +724,8 @@ $active = function ($field) use ($data_fields) {
                     <div class="col-sm">
                         <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
                         <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
-                            <?php foreach (['mail', 'slack', 'teams', 'matrix', 'other'] as $type) { ?>
+                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
+                                if (!$enabled) continue; ?>
                                 <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
                             <?php } ?>
                         </select>
