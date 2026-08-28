@@ -695,6 +695,112 @@ $active = function ($field) use ($data_fields) {
                 });
             </script>
         <?php } ?>
+
+        <!-- Contact Button -->
+        <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
+            <h4>
+                <?= lang('Contact Button', 'Kontakt Button') ?>
+            </h4>
+            <?php 
+                $contact_button = $data['contact-button'] ?? false;
+                $contact_button_type = $data['contact-button-type'] ?? 'mail';
+            ?>
+
+            <div class="form-group">
+                <div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
+                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                    </div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
+                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                    </div>
+                </div>
+                <small class="text-muted">
+                    <?= lang('The contact button will be displayed on your OSIRIS profile page. You can choose your preferred contact type to be displayed.', 'Der Kontakt-Button wird auf deiner OSIRIS-Profilseite angezeigt. Du kannst deinen Wunsch-Kontaktweg wählen.') ?>
+                </small>
+                <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
+                    <div class="col-sm">
+                        <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
+                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
+                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
+                                if (!$enabled) continue; ?>
+                                <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-sm">
+                        <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
+                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
+                        <small class="text-muted" id="contact-button-input-help"></small>
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        function toggleContactButtonSettings() {
+                            if ($('#contact-button-true').is(':checked')) {
+                                $('#contact-button-settings').show();
+                                toggleContact($('#contact-button-type'));
+                            } else {
+                                $('#contact-button-settings').hide();
+                            }
+                        }
+                        toggleContactButtonSettings();
+                        $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
+                    });
+
+                    function toggleContact(select) {
+                        var type = $(select).val();
+                        var contactInput = $('#contact-button-input');
+                        var contactHelp = $('#contact-button-input-help');
+                        if (type === 'mail' || type === 'teams') {
+                            contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add an email address. It will be used for the contact button.', 'Bitte hier eine E-Mail-Adresse eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['mail'] ?? false ?>') {
+                                contactInput.val('<?= $data['mail'] ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'slack') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button. Keep in mind that the contact link will only work if the person clicking it is part of the same Slack Workspace', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet. Bitte beachte, dass der Link nur funktionieren wird, wenn die klickende Person Teil des gleichen Slack-Workspaces ist.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'matrix') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Matrix ID in the format @username:server. It will be used for the contact button.', 'Bitte hier eine Matrix-ID im Format @username:server eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrixId = matrix.includes('/#/') ? matrix.split('/#/')[1] : matrix;
+                                contactInput.val(matrixId);
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'other') {
+                            contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a contact URL. It will be used for the contact button.', 'Bitte hier eine Kontakt-URL eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        }
+                        validateContact(contactInput);
+                    }
+
+                </script>
+            </div>
+        <?php } ?>
+
     </section>
 
 

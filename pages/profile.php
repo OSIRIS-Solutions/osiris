@@ -479,10 +479,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php } ?>
             </div>
         <?php } ?>
-
     </div>
-
-
 
 
     <?php
@@ -574,7 +571,44 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
         <?php } ?>
 
-
+        <!--- Contact Button --->
+        <?php
+        if ($Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? false)) {
+            $contact = $scientist['contact'] ?? null;
+            $contactType = $scientist['contact-button-type'] ?? null;
+            $contactTypeSettings = $Settings->get('contact-button')->getArrayCopy();
+            if (!isset($contactTypeSettings[$contactType]) || !($contactTypeSettings[$contactType] === '1')) {
+                $contactType = null;
+            }
+            $contactURL = null;
+            if($contact && $contactType) { 
+                if ($contactType == 'mail') {
+                    $contactURL = "mailto:" . $contact;
+                } elseif ($contactType == 'teams') {
+                    $contactURL = "https://teams.microsoft.com/l/chat/0/0?users=" . $contact;
+                } elseif ($contactType == 'slack') {
+                    $contactURL = "https://slack.com/app_redirect?channel=" . $contact;
+                } elseif ($contactType == 'matrix') {
+                    $contactURL = "https://matrix.to/#/" . $contact;
+                } elseif ($contactType == 'other') {
+                    $contactURL = $contact;
+                }
+                $contactLogo = socialLogo($contactType);
+                if ($contactType == 'other') {
+                    $contactInfo = lang('prefered contact link', 'bevorzugtem Kontakt-Link');
+                }
+                else {
+                    $contactInfo = ucfirst($contactType);
+                }
+                ?>
+                <div class="btn-group btn-group-lg" >
+                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] . lang(' via ', ' per ') . $contactInfo ?>">
+                        <i class="ph <?= $contactLogo ?>"></i>
+                        <?= lang('Contact', 'Kontakt')?>
+                    </a>
+                </div>
+            <?php } ?>
+        <?php } ?>
     </div>
 
 <?php } ?>
