@@ -766,7 +766,7 @@ $active = function ($field) use ($data_fields) {
                             }
                         } else if (type === 'slack') {
                             contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button.', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button. Keep in mind that the contact link will only work if the person clicking it is part of the same Slack Workspace', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet. Bitte beachte, dass der Link nur funktionieren wird, wenn die klickende Person Teil des gleichen Slack-Workspaces ist.') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else {
@@ -774,7 +774,7 @@ $active = function ($field) use ($data_fields) {
                             }
                         } else if (type === 'matrix') {
                             contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Matrix ID. It will be used for the contact button.', 'Bitte hier eine Matrix-ID eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            contactHelp.text('<?= lang('Please add a Matrix ID in the format @username:server. It will be used for the contact button.', 'Bitte hier eine Matrix-ID im Format @username:server eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['socials']['matrix'] ?? false ?>') {

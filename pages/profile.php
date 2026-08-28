@@ -575,12 +575,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <?php
         if ($Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? false)) {
             $contact = $scientist['contact'] ?? null;
-            $contactType = $scientist['contact-button-type'] ?? 'mail';
-            $contactURL = null;
-            if (!isset($contact) && isset($scientist['mail'])){
-                $contactURL = "mailto:" . $scientist['mail'];
+            $contactType = $scientist['contact-button-type'] ?? null;
+            $contactTypeSettings = $Settings->get('contact-button')->getArrayCopy();
+            if (!isset($contactTypeSettings[$contactType]) || !($contactTypeSettings[$contactType] === '1')) {
+                $contactType = null;
             }
-            if($contact) { 
+            $contactURL = null;
+            if($contact && $contactType) { 
                 if ($contactType == 'mail') {
                     $contactURL = "mailto:" . $contact;
                 } elseif ($contactType == 'teams') {
