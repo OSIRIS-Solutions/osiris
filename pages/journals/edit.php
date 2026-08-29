@@ -69,7 +69,6 @@ $oa = $data['oa'] ?? false;
                     placeholder="ISSN eingeben und Enter drücken" />
             </div>
 
-            <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
            <script>
              $(function() {
                 // Example init for this widget
@@ -98,7 +97,8 @@ $oa = $data['oa'] ?? false;
         <div class="form-group floating-form">
                 <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                    $c = $data['country'] ?? '';
+                    $c = $data['country'] ?? '';
+
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                     <?php } ?>
                 </select>

@@ -9,9 +9,10 @@
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=OSIRIS_BUILD?>"></script>
 <!-- Selectize for enhanced select inputs -->
 <script src="<?= ROOTPATH ?>/js/selectize.min.js?v=<?=OSIRIS_BUILD?>"></script>
+<!-- Initialize List Widget -->
+<script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
 <!-- Custom styles for the header editor -->
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css?v=<?=OSIRIS_BUILD?>">
-
 <style>
     /* Style for the drag handle */
     .handle {

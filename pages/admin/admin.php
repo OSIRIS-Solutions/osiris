@@ -274,6 +274,24 @@
 
         </div>
     <?php endif; ?>
+
+
+    <?php if ($adminPerm) : ?>
+        <div class="col-md-6 col-lg-4" id="info-settings">
+            <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/osiris-info">
+                <i class="ph-duotone ph-info" aria-hidden="true"></i>
+                <b><?= lang('OSIRIS Info', 'OSIRIS Info') ?></b>
+                <p><?= lang('View OSIRIS configuration information', 'Zeige OSIRIS-Konfigurationsinformationen an') ?></p>
+            </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
+                <i class="ph-duotone ph-info" aria-hidden="true"></i>
+                <b><?= lang('PHP Info', 'PHP Info') ?></b>
+                <p><?= lang('View PHP configuration information', 'Zeige PHP-Konfigurationsinformationen an') ?></p>
+            </a>
+        </div>
+    <?php endif; ?>
 </div>
 
 <style>
@@ -317,5 +335,19 @@
         --primary-color: #2F855A;
         --primary-color-light: #2F855A33;
         --primary-color-very-light: #2F855A1A;
+    }
+
+    #integrations-settings,
+    #integrations-settings a.card {
+        --primary-color: #D53F8C;
+        --primary-color-light: #D53F8C33;
+        --primary-color-very-light: #D53F8C1A;
+    }
+
+    #info-settings,
+    #info-settings a.card {
+        --primary-color: #D69E2E;
+        --primary-color-light: #D69E2E33;
+        --primary-color-very-light: #D69E2E1A;
     }
 </style>

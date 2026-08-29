@@ -235,7 +235,6 @@ if (empty($form) || !isset($form['_id'])) {
 
 
         <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
-        <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
         <script>
             $(function() {
                 // Example init for this widget

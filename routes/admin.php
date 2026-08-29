@@ -543,6 +543,51 @@ Route::get('/admin/projects/new', function () {
 
 
 
+Route::get('/admin/phpinfo', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    function getPhpinfo()
+    {
+        ob_start();
+        phpinfo();
+        $data = ob_get_contents();
+        ob_end_clean();
+        // remove the style and script tags from the output
+        $data = preg_replace('#<style[^>]*>.*?</style>#is', '', $data);
+        // add "table" class to all tables
+        $data = preg_replace('#<table#', '<table class="table"', $data);
+        return $data;
+    }
+
+    $breadcrumb = [
+        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('PHP Info', 'PHP Info')]
+    ];
+    $phpinfo = getPhpinfo();
+    include BASEPATH . "/header.php";
+    echo "<link rel='stylesheet' href='" . ROOTPATH . "/css/phpinfo.css'>";
+    echo "<div class='phpinfo-container'>$phpinfo</div>";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/admin/osirisinfo', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $breadcrumb = [
+        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('OSIRIS Info', 'OSIRIS Info')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/osiris-info.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -582,6 +627,38 @@ Route::post('/crud/admin/general', function () {
             if (str_contains($key, 'keywords') || $key == 'tags') {
                 $value = array_map('trim', explode(PHP_EOL, $value));
                 $value = array_filter($value);
+            }
+            if ($key === 'resource-hub' && is_array($value)) {
+                $icon = trim((string) ($value['icon'] ?? 'link'));
+                $value['icon'] = preg_match('/^[a-z0-9-]+$/', $icon) ? $icon : 'link';
+
+                $description = [];
+                foreach (['en', 'de'] as $language) {
+                    $text = trim(strip_tags((string) ($value['description'][$language] ?? '')));
+                    $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+                    $description[$language] = function_exists('mb_substr')
+                        ? mb_substr($text, 0, 200)
+                        : substr($text, 0, 200);
+                }
+                $value['description'] = $description;
+            }
+            if ($key === 'resource-hub' && is_array($value) && !array_key_exists('image-map', $value)) {
+                $current = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+                $currentValue = DB::doc2Arr($current['value'] ?? []);
+                if (isset($currentValue['image-map'])) {
+                    $imageMap = DB::doc2Arr($currentValue['image-map']);
+                    $validCardIds = [];
+                    foreach (DB::doc2Arr($value['cards'] ?? []) as $card) {
+                        $card = DB::doc2Arr($card);
+                        if (!empty($card['id'])) $validCardIds[(string) $card['id']] = true;
+                    }
+                    $imageMap['placements'] = array_filter(
+                        DB::doc2Arr($imageMap['placements'] ?? []),
+                        fn($cardId) => isset($validCardIds[$cardId]),
+                        ARRAY_FILTER_USE_KEY
+                    );
+                    $value['image-map'] = $imageMap;
+                }
             }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
@@ -1085,7 +1162,9 @@ Route::post('/crud/admin/mail-test', function () {
     $to = $_POST['email'];
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
-
+    if ($msg === null) {
+        $msg = lang('Test mail sent successfully.', 'Testmail erfolgreich versendet.');
+    }
     $_SESSION['msg'] = $msg;
     header("Location: " . ROOTPATH . "/admin/mail");
 }, 'login');
