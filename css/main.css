@@ -60,9 +60,9 @@ CSS variables (CSS custom properties)
   --gray-color-light: #f1f1f1;
   --gray-color-very-light: #f7f7f7;
   --body-color: #f1f1f1;
-  --text-color: #464646;
-  --border-color: #afafaf;
-  --divider-color: rgba(175, 175, 175, 0.5);
+  --text-color: #18272b;
+  --border-color: #b8bdc1;
+  --divider-color: rgba(184, 189, 193, 0.5);
   --font-family: Rubik, Roboto, Helvetica, Arial, sans-serif;
   --header-font: TikTok Sans, Rubik, Helvetica, Arial, sans-serif;
   --icon-font: Phosphor;
@@ -71,7 +71,7 @@ CSS variables (CSS custom properties)
   --base-line-height: 1.5;
   --border-width: 1px;
   --border-radius: 0.5rem;
-  --base-text-color-light: rgba(70, 70, 70, 0.8);
+  --base-text-color-light: rgba(24, 39, 43, 0.8);
   --dm-base-text-color: rgba(255, 255, 255, 0.8);
   --muted-text-color: #b3b3b3;
   --box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
@@ -156,7 +156,7 @@ CSS variables (CSS custom properties)
   --navbar-bottom-height: 6rem;
   --navbar-large-height: 14rem;
   --navbar-horizontal-padding: 1rem;
-  --navbar-border-color: #afafaf;
+  --navbar-border-color: #b8bdc1;
   --navbar-box-shadow: none;
   --navbar-fixed-bottom-box-shadow: none;
   --sidebar-width: 25rem;
@@ -175,7 +175,7 @@ CSS variables (CSS custom properties)
   --content-title-font-size: 2rem;
   --content-title-font-weight: bold;
   --button-bg-color: #ffffff;
-  --button-text-color: rgba(70, 70, 70, 0.8);
+  --button-text-color: rgba(24, 39, 43, 0.8);
   --button-border-color: var(--border-color);
   --button-font-weight: normal;
   --button-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
@@ -512,7 +512,7 @@ body {
 hr {
   height: var(--border-width);
   color: var(--text-color);
-  background-color: rgba(175, 175, 175, 0.5);
+  background-color: rgba(184, 189, 193, 0.5);
   border: none;
 }
 
@@ -1286,7 +1286,7 @@ body {
 
 .divider {
   width: 1px;
-  background-color: rgba(175, 175, 175, 0.5);
+  background-color: rgba(184, 189, 193, 0.5);
 }
 
 .hero-box .divider {
@@ -1313,7 +1313,7 @@ body {
   left: 50%;
   content: "";
   z-index: 3;
-  border-left: 1px solid rgba(175, 175, 175, 0.5);
+  border-left: 1px solid rgba(184, 189, 193, 0.5);
   width: 0%;
   height: calc(100% - 1rem);
 }
@@ -4488,9 +4488,9 @@ legend {
 .form-control {
   display: block;
   width: 100%;
-  height: 3.2rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  height: 4.2rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
   color: var(--text-color);
   background-color: white;
   border: 1px solid var(--border-color);
@@ -4504,20 +4504,21 @@ legend {
   appearance: none;
 }
 .form-control.small {
-  height: 2.6rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  height: 2.8rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
   font-size: 1.2rem;
 }
 .form-control.large {
-  height: 4rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  height: 5rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
   font-size: 1.8rem;
 }
 .form-control:hover {
   color: var(--text-color);
   background-color: white;
+  border-color: var(--primary-color-60);
   -moz-box-shadow: var(--box-shadow-long);
   -webkit-box-shadow: var(--box-shadow-long);
   box-shadow: var(--box-shadow-long);
@@ -4525,9 +4526,10 @@ legend {
 .form-control:focus {
   color: var(--text-color);
   background-color: white;
-  -moz-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
+  border-color: var(--primary-color);
+  -moz-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  -webkit-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  box-shadow: 0 0 0 0.35rem var(--primary-color-20);
   outline: none;
 }
 .form-control.disabled, .form-control:disabled, .form-control.disabled:hover, .form-control:disabled:hover {
@@ -4548,16 +4550,16 @@ textarea.form-control {
   max-width: 100%;
   min-height: 7rem;
   height: auto;
-  padding: 0.8rem;
+  padding: 1.2rem;
   line-height: 1.5;
 }
 textarea.form-control.small {
   min-height: 5rem;
-  padding: 0.8rem;
+  padding: 1.2rem;
 }
 textarea.form-control.large {
   min-height: 10rem;
-  padding: 0.8rem;
+  padding: 1.2rem;
 }
 
 ::-webkit-input-placeholder {
@@ -4660,15 +4662,15 @@ select.form-control:not([multiple]) {
 select.form-control[multiple] {
   overflow: auto;
   height: auto;
-  padding: 0.8rem;
+  padding: 1.2rem;
 }
 
 select.form-control.sm[multiple] {
-  padding: 0.8rem;
+  padding: 1.2rem;
 }
 
 select.form-control.lg[multiple] {
-  padding: 0.8rem;
+  padding: 1.2rem;
 }
 
 select.form-control[multiple] > option:not(:checked) {
@@ -4741,9 +4743,9 @@ input[type=number] {
 
 .custom-checkbox input[type=checkbox]:focus ~ label:before {
   border-color: var(--border-color);
-  -moz-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
+  -moz-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  -webkit-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  box-shadow: 0 0 0 0.35rem var(--primary-color-20);
 }
 
 .custom-checkbox input[type=checkbox]:checked ~ label:before {
@@ -4876,9 +4878,9 @@ input[type=number] {
 
 .custom-radio input[type=radio]:focus ~ label:before {
   border-color: var(--border-color);
-  -moz-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
+  -moz-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  -webkit-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  box-shadow: 0 0 0 0.35rem var(--primary-color-20);
 }
 
 .custom-radio input[type=radio]:checked ~ label:before {
@@ -4977,9 +4979,9 @@ input[type=number] {
 
 .custom-switch input[type=checkbox]:focus ~ label:before {
   border-color: var(--border-color);
-  -moz-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
+  -moz-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  -webkit-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  box-shadow: 0 0 0 0.35rem var(--primary-color-20);
 }
 
 .custom-switch input[type=checkbox]:checked ~ label:before {
@@ -5058,7 +5060,7 @@ input[type=number] {
   height: 3.2rem;
   line-height: 3.2rem;
   padding: 0 1.5rem;
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #ffffff;
   border: 1px solid var(--button-border-color);
   border-radius: var(--border-radius);
@@ -5068,7 +5070,7 @@ input[type=number] {
 }
 
 .custom-file label:hover {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #f7f7f7;
   border-color: var(--button-border-color);
   -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
@@ -5077,12 +5079,12 @@ input[type=number] {
 }
 
 .custom-file input[type=file]:focus ~ label {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #ffffff;
   border-color: var(--border-color);
-  -moz-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
-  box-shadow: 0 0 0 0.2rem rgba(0, 128, 131, 0.6);
+  -moz-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  -webkit-box-shadow: 0 0 0 0.35rem var(--primary-color-20);
+  box-shadow: 0 0 0 0.35rem var(--primary-color-20);
 }
 
 .custom-file input[type=file]:focus:hover ~ label {
@@ -5090,7 +5092,7 @@ input[type=number] {
     Only text color and background properties are overridden, while the border 
     color, box shadow, and the outline of the focus selector is kept.
     */
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #f7f7f7;
 }
 
@@ -5098,7 +5100,7 @@ input[type=number] {
 .custom-file:hover input[type=file]:disabled ~ label {
   opacity: 0.6;
   cursor: not-allowed;
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #ffffff;
   border-color: var(--button-border-color);
   -moz-box-shadow: none;
@@ -5114,7 +5116,7 @@ input[type=number] {
 /* Invalid input file */
 .form-group.is-invalid .custom-file label,
 .custom-file input[type=file].is-invalid ~ label {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #ffffff;
   border-color: var(--danger-color);
   -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
@@ -5124,7 +5126,7 @@ input[type=number] {
 
 .form-group.is-invalid .custom-file label:hover,
 .custom-file input[type=file].is-invalid ~ label:hover {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #f7f7f7;
   border-color: var(--danger-color);
   -moz-box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.05);
@@ -5134,7 +5136,7 @@ input[type=number] {
 
 .form-group.is-invalid .custom-file input[type=file]:focus ~ label,
 .custom-file input[type=file].is-invalid:focus ~ label {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #ffffff;
   border-color: var(--danger-color-very-light);
   -moz-box-shadow: 0 0 0 0.2rem rgba(245, 34, 45, 0.6);
@@ -5148,7 +5150,7 @@ input[type=number] {
     Only text color and background properties are overridden, while the border 
     color, box shadow, and the outline of the focus selector is kept.
     */
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: #f7f7f7;
 }
 
@@ -5166,6 +5168,7 @@ input[type=number] {
   flex: 1 1 0%;
   min-width: 0;
   margin-bottom: 0;
+  height: 4.2rem;
 }
 .input-group-prepend, .input-group-append {
   display: flex;
@@ -5173,23 +5176,25 @@ input[type=number] {
 .input-group-prepend > .btn, .input-group-append > .btn {
   position: relative;
   border-color: var(--border-color);
+  height: 4.2rem;
+  line-height: 4.2rem;
 }
 .input-group.small > .form-control {
-  height: 2.6rem;
-  padding: 0 0.8rem;
+  height: 2.8rem;
+  padding: 0 1.2rem;
   font-size: 1.2rem;
 }
 .input-group.small .input-group-text {
-  padding: 0 0.8rem;
+  padding: 0 1.2rem;
   font-size: 1.2rem;
 }
 .input-group.large > .form-control {
-  height: 4rem;
-  padding: 0 0.8rem;
+  height: 5rem;
+  padding: 0 1.2rem;
   font-size: 1.8rem;
 }
 .input-group.large .input-group-text {
-  padding: 0 0.8rem;
+  padding: 0 1.2rem;
   font-size: 1.8rem;
 }
 
@@ -5200,7 +5205,7 @@ input[type=number] {
   align-items: center;
   text-align: center;
   height: 100%;
-  padding: 0 0.8rem;
+  padding: 0 1.2rem;
   color: var(--text-color);
   background-color: var(--body-color);
   border: 1px solid var(--border-color);
@@ -5211,37 +5216,37 @@ input[type=number] {
 /* Input group button */
 .input-group.small > .input-group-prepend > .btn,
 .input-group.small > .input-group-append > .btn {
-  height: 2.6rem;
-  line-height: 2.6rem;
-  padding: 0 0.8rem;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  padding: 0 1.2rem;
   font-size: inherit;
 }
 .input-group.small > .input-group-prepend > .square,
 .input-group.small > .input-group-append > .square {
-  width: 2.6rem;
+  width: 2.8rem;
   padding-left: 0;
   padding-right: 0;
 }
 .input-group.small > .input-group-prepend > .rounded,
 .input-group.small > .input-group-append > .rounded {
-  border-radius: 2.6rem;
+  border-radius: 2.8rem;
 }
 .input-group.large > .input-group-prepend > .btn,
 .input-group.large > .input-group-append > .btn {
-  height: 4rem;
-  line-height: 4rem;
-  padding: 0 0.8rem;
+  height: 5rem;
+  line-height: 5rem;
+  padding: 0 1.2rem;
   font-size: inherit;
 }
 .input-group.large > .input-group-prepend > .square,
 .input-group.large > .input-group-append > .square {
-  width: 4rem;
+  width: 5rem;
   padding-left: 0;
   padding-right: 0;
 }
 .input-group.large > .input-group-prepend > .rounded,
 .input-group.large > .input-group-append > .rounded {
-  border-radius: 4rem;
+  border-radius: 5rem;
 }
 
 /* Input group borders */
@@ -5455,7 +5460,7 @@ input[type=number] {
   top: 0;
   left: 0;
   height: 100%;
-  padding: 1rem 0.8rem;
+  padding: 1rem 1.2rem;
   pointer-events: none;
   border: 1px solid transparent;
   transform-origin: 0 0;
@@ -5471,7 +5476,7 @@ input[type=number] {
   color: var(--danger-color);
 }
 .floating-form > .form-control {
-  padding: 1rem 0.8rem;
+  padding: 1rem 1.2rem;
 }
 .floating-form > .form-control::placeholder {
   color: transparent;
@@ -5545,7 +5550,8 @@ select.form-control[multiple] option:hover {
   padding: 0.5rem;
 }
 
-.list-widget-input:focus, .list-widget-input:focus-visible {
+.list-widget-input:focus,
+.list-widget-input:focus-visible {
   outline: none;
 }
 
@@ -5566,6 +5572,23 @@ select.form-control[multiple] option:hover {
   color: var(--danger-color);
   margin-left: 0.5rem;
   background-color: transparent;
+}
+
+.input-wrap {
+  position: relative;
+}
+.input-wrap > i {
+  position: absolute;
+  top: 50%;
+  left: 1.5rem;
+  color: var(--primary-color);
+  font-size: 2rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.input-wrap > .form-control {
+  padding-left: 4.8rem;
+  padding-right: 3.5rem;
 }
 
 /*
@@ -5608,7 +5631,7 @@ select.form-control[multiple] option:hover {
 }
 .dropdown-menu .divider {
   height: 1px;
-  background-color: rgba(175, 175, 175, 0.5);
+  background-color: rgba(184, 189, 193, 0.5);
   width: 100%;
 }
 .dropdown-menu .item {
@@ -6461,7 +6484,7 @@ Navbar content
 }
 
 .navbar-text {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
 }
 
 .navbar-nav {
@@ -6578,7 +6601,7 @@ Navbar content
   width: auto;
 }
 .navbar-brand:hover {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   text-decoration: none;
 }
 .navbar-brand img {
@@ -6927,7 +6950,7 @@ Sidebar content
   margin: 0;
   min-height: 3rem;
   height: auto;
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   background-color: transparent;
   border: 0 solid transparent;
   border-radius: 0;
@@ -7087,7 +7110,7 @@ Sidebar content
   color: var(--text-color);
 }
 .sidebar-menu .brand:hover {
-  color: rgba(70, 70, 70, 0.8);
+  color: rgba(24, 39, 43, 0.8);
   text-decoration: none;
 }
 .sidebar-menu .brand img {
