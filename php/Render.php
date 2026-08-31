@@ -276,6 +276,14 @@ function renderAuthorUnitsProjects($filter = [])
             ['$set' => ['units' => $doc['units'] ?? []]]
         );
     }
+    $cursor = $DB->db->proposals->find($filter, ['projection' => ['persons' => 1, 'units' => 1, 'start_date' => 1]]);
+    foreach ($cursor as $doc) {
+        $doc = renderAuthorUnits($doc, [], 'persons');
+        $DB->db->proposals->updateOne(
+            ['_id' => $doc['_id']],
+            ['$set' => ['units' => $doc['units'] ?? []]]
+        );
+    }
 }
 
 function renderProject($doc, $col = 'projects', $id = null)

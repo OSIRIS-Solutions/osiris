@@ -709,7 +709,7 @@
                                             <div class="connection">
                                                 <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang("Infrastructure", "Infrastruktur") ?></span>
                                                 <h5>
-                                                    <a href="<?= ROOTPATH ?>/infrastructure/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
                                                 </h5>
                                                 <p><?= $infrastructure['subtitle'] ?? '' ?></p>
                                             </div>

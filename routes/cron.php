@@ -30,6 +30,12 @@ Route::get('/cron/digest', function () {
     $secret = $_GET['key'] ?? '';
     if ($secret !== CRON_SECRET) return JSON::error('Unauthorized', 401);
 
+    $dry_run = $_GET['dry_run'] ?? false;
+    $dry_run = filter_var($dry_run, FILTER_VALIDATE_BOOLEAN);
+    if ($dry_run) {
+        echo "Dry run mode: no emails will be sent. Day will be ignored.\n";
+    }
+
     // --- Time point ---
     $now   = new DateTimeImmutable('now');         // Europe/Berlin
     $today = $now->format('Y-m-d');
@@ -63,7 +69,7 @@ Route::get('/cron/digest', function () {
             ($freq === 'weekly'  && $dow === 1) ||
             ($freq === 'monthly' && $dom === 1)
         );
-        if (!$shouldToday) {
+        if (!$shouldToday && !$dry_run) { // Skip sending if it's not the right day and not a dry run
             $skipped++;
             continue;
         }
@@ -92,12 +98,16 @@ Route::get('/cron/digest', function () {
         // 6) Build + send mail
         [$subject, $html, $text] = build_digest_email($u, $notifications, $freq);
 
+        if ($dry_run){
+            echo "Dry run: would send mail in  to " . $u['mail'] . "\n";
+            continue; // Skip sending mail in dry run mode
+        }
         $sendRes = sendMail($u['mail'], $subject, $html, $text);
-        // if ($sendRes !== null) {
-        //     // Error sending mail
-        //     $errors++;
-        //     continue;
-        // }
+        if ($sendRes !== null) {
+            // Error sending mail
+            $errors++;
+            continue;
+        }
 
         // 7) set last sent
         $osiris->persons->updateOne(['_id' => $doc['_id']], [

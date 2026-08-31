@@ -13,7 +13,7 @@ function sendMail(
     $mail = $osiris->adminGeneral->findOne(['key' => 'mail']);
     $mail = DB::doc2Arr($mail['value'] ?? []);
 
-    $msg = lang('Mail sent successfully.', 'Mail erfolgreich gesendet.');
+    $return = null; // Default to null, indicating no error
 
     $Mailer = new PHPMailer\PHPMailer\PHPMailer(true);
     $Mailer->CharSet = 'UTF-8';
@@ -65,11 +65,11 @@ function sendMail(
     try {
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
-        $msg = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
+        $return = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
         // Log the error for debugging
-        error_log("Mail sending failed: " . $msg);
+        error_log("Mail sending failed: " . $return);
     }
-    return $msg;
+    return $return;
 }
 
 
@@ -102,7 +102,6 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
     $issuesCount  = (int)($n['activity']['count'] ?? 0);
     $issuesList   = $n['activity']['values'] ?? [];
     $queueCount   = (int)($n['queue']['count'] ?? 0);
-    $hasVersion   = !empty($n['version']);
     $messagesCount = !empty($n['messages']) ? count(DB::doc2Arr($n['messages'] ?? [])) : 0;
     $approval = $n['approval'] ?? null;
     $quarter = $approval['key'] ?? null;
@@ -180,17 +179,6 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
                 </table>
             <?php endif; ?>
 
-            <?php if ($hasVersion): ?>
-                <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 14px 0">
-                    <tr>
-                        <td style="padding:12px;background:#87878720;border-radius:.5rem">
-                            <div style="font-weight:bold;margin-bottom:6px;color:#878787;"><?= $lang('OSIRIS has been updated', 'OSIRIS wurde aktualisiert') ?></div>
-                            <a href="<?= $baseUrl ?>/new-stuff#version-<?= OSIRIS_VERSION ?>" style="display:inline-block;padding:8px 12px;background:#878787;color:#fff;text-decoration:none;border-radius:.5rem;"><?= $lang('See what’s new', 'Neuigkeiten ansehen') ?></a>
-                        </td>
-                    </tr>
-                </table>
-            <?php endif; ?>
-
             <p style="font-size:12px;color:#6b7280;margin-top:18px;">
                 <?php
                 $settingsLink = $baseUrl . '/user/edit/' . ($user['username'] ?? '') . '#section-contact';
@@ -214,8 +202,6 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
         $lines[] = ($language === 'de' ? "Aktivitäts-Hinweise: $issuesCount" : "Activity issues: $issuesCount") . " → " . ROOTPATH . "/issues";
     if ($queueCount > 0)
         $lines[] = ($language === 'de' ? "Neue Aktivitäten zur Prüfung: $queueCount" : "New activities to review: $queueCount") . " → " . ROOTPATH . "/queue/user";
-    if ($hasVersion)
-        $lines[] = ($language === 'de' ? "OSIRIS wurde aktualisiert" : "OSIRIS has been updated") . " → " . ROOTPATH . "/new-stuff#version-" . OSIRIS_VERSION;
     if ($messagesCount > 0)
         $lines[] = ($language === 'de' ? "Ungelesene Nachrichten: $messagesCount" : "Unread messages: $messagesCount") . " → " . ROOTPATH . "/messages";
     $text = implode("\n", $lines);

@@ -378,7 +378,9 @@ table.author-table tr.show-more-row td a:hover {
 .badge.project-badge,
 .badge.infrastructure-badge,
 .badge.activity-badge,
-.badge.news-badge {
+.badge.news-badge,
+.badge.event-badge,
+.badge.person-badge {
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -391,7 +393,9 @@ table.author-table tr.show-more-row td a:hover {
 .badge.project-badge b,
 .badge.infrastructure-badge b,
 .badge.activity-badge b,
-.badge.news-badge b {
+.badge.news-badge b,
+.badge.event-badge b,
+.badge.person-badge b {
     background-color: rgba(255, 255, 255, 0.8);
     color: inherit;
     border-radius: 50%;
@@ -423,6 +427,14 @@ table.author-table tr.show-more-row td a:hover {
 .badge.news-badge {
     color: #ff6f61;
     background-color: #ff6f6133;
+}
+.badge.event-badge {
+    color: #4a90e2;
+    background-color: #4a90e233;
+}
+.badge.person-badge {
+    color: #8e81d0;
+    background-color: #8e81d033;
 }
 
 .connection a.colorless {

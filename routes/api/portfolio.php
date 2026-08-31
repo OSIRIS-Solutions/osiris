@@ -25,6 +25,9 @@ function portfolio_apikey_check($key)
     if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $apikey) {
         return true;
     }
+    if (isset($_GET['apikey']) && $_GET['apikey'] === $apikey) {
+        return true;
+    }
     return false;
 }
 
@@ -575,7 +578,7 @@ Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
                 $res['activities'][] = [
                     'id' => strval($doc['_id']),
                     'icon' => $doc['rendered']['icon'],
-                    'html' => $doc['rendered']['print']
+                    'html' => $doc['rendered']['portfolio']
                 ];
             }
         }
@@ -746,6 +749,10 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
                 ['workflow.status' => ['$exists' => false]]
             ];
         }
+    }
+
+    if (isset($_GET['affiliated']) && $_GET['affiliated'] == 'true') {
+        $filter['affiliated'] = true;
     }
 
     $options = [
@@ -3288,7 +3295,7 @@ Route::get('/portfolio/search-index', function () {
         $topics[] = $topic;
     }
 
-    $activityFilter = ['hide' => ['$ne' => true], 'type' => 'publication'];
+    $activityFilter = ['hide' => ['$ne' => true], 'type' => 'publication', 'affiliated' => true];
     if ($Settings->featureEnabled('quality-workflow')) {
         $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
         if ($visibility === 'only-approved') {
@@ -3349,7 +3356,7 @@ Route::get('/portfolio/search-index', function () {
 
     $persons = [];
     $data = $osiris->persons->find(
-        ['hide' => ['$ne' => true]],
+        ['hide' => ['$ne' => true], 'is_active' => ['$ne' => false]],
         [
             'projection' => [
                 '_id' => 0,
@@ -3688,6 +3695,51 @@ Route::get('/portfolio/spectrum', function () {
             'position' => $person['position'] ?? null,
             'position_de' => $person['position_de'] ?? null,
             'count' => intval($row['count'] ?? 0)
+        ];
+    }
+
+    // add all publications with a score more than 0.8 from the last 5 years to the topics
+    $recentYear = intval(date('Y')) - 5;
+    $activityRows = $osiris->activities->aggregate([
+        ['$match' => $baseMatch + ['year' => ['$gte' => $recentYear]]],
+        ['$project' => ['openalex.topics' => 1, 'year' => 1, 'score' => 1, 'id' => ['$toString' => '$_id'], 'html'=> '$rendered.portfolio', 'icon' => '$rendered.icon', 'type' => '$rendered.type', 'subtype' => '$rendered.subtype']],
+        ['$unwind' => '$openalex.topics'],
+        ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null], 'openalex.topics.score' => ['$gte' => 0.8]]],
+        ['$group' => [
+            '_id' => [
+                'topic' => '$openalex.topics.id',
+                'activity' => '$id'
+            ],
+            'year' => ['$first' => '$year'],
+            'score' => ['$first' => '$openalex.topics.score'],
+            'icon' => ['$first' => '$icon'],
+            'type' => ['$first' => '$type'],
+            'subtype' => ['$first' => '$subtype'],
+            'html' => ['$first' => '$html']
+        ]],
+        ['$sort' => ['_id.topic' => 1, 'year' => -1, '_id.activity' => 1]]
+    ])->toArray();
+    foreach ($activityRows as $row) {
+        $row = DB::doc2Arr($row);
+        $topicId = $row['_id']['topic'] ?? null;
+        $activityId = $row['_id']['activity'] ?? null;
+        if (
+            !$topicId || !$activityId ||
+            !isset($topicsById[$topicId]) ||
+            count($topicsById[$topicId]['activities'] ?? []) >= $relatedLimit
+        ) continue;
+
+        if (!isset($topicsById[$topicId]['activities'])) {
+            $topicsById[$topicId]['activities'] = [];
+        }
+        $topicsById[$topicId]['activities'][] = [
+            'id' => $activityId,
+            'year' => $row['year'] ?? null,
+            'score' => $row['score'] ?? null,
+            'html' => $row['html'] ?? null,
+            'icon' => $row['icon'] ?? null,
+            'type' => $row['type'] ?? null,
+            'subtype' => $row['subtype'] ?? null
         ];
     }
 

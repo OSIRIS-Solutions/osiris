@@ -69,24 +69,25 @@ $oa = $data['oa'] ?? false;
                     placeholder="ISSN eingeben und Enter drücken" />
             </div>
 
-           <script>
-             $(function() {
-                // Example init for this widget
-                initListWidget($("#list-widget"), <?= json_encode($data['issn'] ?? []) ?>, function(value) {
-                    if (value === '') {
-                        return false; // Prevent adding empty value
-                    }
-                    // Validate ISSN format (basic validation)
-                    const issnPattern = /^\d{4}-\d{3}[\dX]$/;
-                    if (!issnPattern.test(value)) {
-                        console.log(value);
-                        alert("Please enter a valid ISSN in the format XXXX-XXXX.");
-                        return false; // Prevent adding invalid ISSN
-                    }
-                    return true; // Allow adding valid ISSN
+            <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
+            <script>
+                $(function() {
+                    // Example init for this widget
+                    initListWidget($("#list-widget"), <?= json_encode($data['issn'] ?? []) ?>, function(value) {
+                        if (value === '') {
+                            return false; // Prevent adding empty value
+                        }
+                        // Validate ISSN format (basic validation)
+                        const issnPattern = /^\d{4}-\d{3}[\dX]$/;
+                        if (!issnPattern.test(value)) {
+                            console.log(value);
+                            alert("Please enter a valid ISSN in the format XXXX-XXXX.");
+                            return false; // Prevent adding invalid ISSN
+                        }
+                        return true; // Allow adding valid ISSN
+                    });
                 });
-            });
-           </script>
+            </script>
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[publisher]" id="publisher" class="form-control" value="<?= $data['publisher'] ?? '' ?>" required placeholder="Test">
@@ -95,15 +96,16 @@ $oa = $data['oa'] ?? false;
 
         <!-- country -->
         <div class="form-group floating-form">
-                <select name="values[country]" class="form-control">
-                    <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                    $c = $data['country'] ?? '';
-
-                        <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
-                    <?php } ?>
-                </select>
-                <label for="country"><?= lang('Country', 'Land') ?></label>
-            </div>
+            <select name="values[country]" class="form-control">
+                <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                <?php
+                $c = $form['country'] ?? '';
+                foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                    <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
+                <?php } ?>
+            </select>
+            <label for="country"><?= lang('Country', 'Land') ?></label>
+        </div>
 
         <div class="form-group">
             <label for="oa" class="floating-title">Open Access</label>
