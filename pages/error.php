@@ -11,7 +11,7 @@
                     <?= lang('error.page_not_found_message') ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/" class="btn cta">
-                    <?= lang('error.go_home') ?>
+                    <?= lang('navigation.go_home') ?>
                 </a>
             </div>
         </div>
@@ -26,7 +26,7 @@
                     <?= lang('error.method_not_allowed_message', ['method' => $_SERVER['REQUEST_METHOD']]) ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/" class="btn cta">
-                    <?= lang('error.go_home') ?>
+                    <?= lang('navigation.go_home') ?>
                 </a>
             </div>
         </div>

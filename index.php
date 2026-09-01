@@ -39,6 +39,13 @@ define('CURRENTMONTH', intval($month));
 define('CURRENTYEAR', intval($year));
 
 
+class Html
+{
+    public function __construct(
+        public readonly string $value
+    ) {}
+}
+
 function currentLanguage(): string
 {
     static $language = null;
@@ -84,16 +91,27 @@ function lang(string $en, string $de = null, array $replace = []): string
             : [];
     }
     $result = $translations[$cacheKey][$fieldName] ?? $key;
-    foreach ($replace as $k => $v) {
+    
+        foreach ($replace as $key => $value) {
+        if ($value instanceof Html) {
+            $replacement = $value->value;
+        } else {
+            $replacement = htmlspecialchars(
+                (string) $value,
+                ENT_QUOTES | ENT_SUBSTITUTE,
+                'UTF-8'
+            );
+        }
+
         $result = str_replace(
-            '{{' . $k . '}}',
-            $v,
+            '{{' . $key . '}}',
+            $replacement,
             $result
         );
     }
+
     return $result;
 }
-
 
 include_once BASEPATH . "/php/Route.php";
 
@@ -254,7 +272,7 @@ if (
             $name = $scientist['displayname'];
 
             $breadcrumb = [
-                ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+                ['name' => lang('system.users'), 'path' => "/user/browse"],
                 ['name' => $name]
             ];
 
@@ -262,7 +280,7 @@ if (
             include BASEPATH . "/pages/profile.php";
         } else {
             $breadcrumb = [
-                ['name' => lang('Home', 'Startseite')]
+                ['name' => lang('system.home')]
             ];
             include BASEPATH . "/header.php";
             include BASEPATH . "/pages/home.php";

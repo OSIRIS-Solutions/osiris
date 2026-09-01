@@ -185,9 +185,9 @@ $pageactive = function ($p) use ($page) {
                     <div class="maintenance-msg">
                         <div class="title">
                             <i class="ph ph-barricade"></i>
-                            <?= lang('System maintenance', 'Wartungsarbeiten') ?>.
+                            <?= lang('system.maintenance') ?>.
                         </div>
-                        <?= lang('Please do not add, edit or remove data. Changes might be overwritten.', 'Bitte keine Daten hinzufügen, bearbeiten oder löschen. Änderungen werden evtl. überschrieben.') ?>
+                        <?= lang('system.maintenance_message') ?>
                     </div>
                 <?php } else { ?>
                     <a href="<?= ROOTPATH ?>/portal/info" class="navbar-brand">
@@ -230,17 +230,17 @@ $pageactive = function ($p) use ($page) {
                 <div class="dropdown modal-sm">
                     <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-translate"></i>
-                        <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                        <span class="sr-only"><?= lang('system.change_language') ?></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
-                        <h6 class="header text-primary"><?= lang('Change language', 'Sprache ändern') ?></h6>
+                        <h6 class="header text-primary"><?= lang('system.change_language') ?></h6>
 
                         <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                             <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
                             <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                             <button type="submit" class="btn primary block ">
                                 <i class="ph ph-translate" aria-hidden="true"></i>
-                                <span class="sr-only"><?= lang('Change language', 'Sprache ändern') ?></span>
+                                <span class="sr-only"><?= lang('system.change_language') ?></span>
                                 <?= lang('Deutsch', 'English') ?>
                             </button>
                         </form>
@@ -251,7 +251,7 @@ $pageactive = function ($p) use ($page) {
                 <div class="dropdown modal-sm">
                     <button class="btn primary mr-5" data-toggle="dropdown" type="button" id="accessibility-menu" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-person-arms-spread ph-person-simple-circle"></i>
-                        <span class="sr-only"><?= lang('Accessibility Options', 'Accessibility-Optionen') ?></span>
+                        <span class="sr-only"><?= lang('system.accessibility_options') ?></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-center w-300" aria-labelledby="accessibility-menu">
                         <h6 class="header text-primary">Accessibility</h6>
@@ -262,27 +262,27 @@ $pageactive = function ($p) use ($page) {
                             <div class="form-group">
                                 <div class="custom-checkbox">
                                     <input type="checkbox" id="set-contrast" name="accessibility[contrast]" value="high-contrast" <?= !empty($_COOKIE['D3-accessibility-contrast'] ?? '') ? 'checked' : '' ?>>
-                                    <label for="set-contrast"><?= lang('High contrast', 'Erhöhter Kontrast') ?></label><br>
+                                    <label for="set-contrast"><?= lang('system.high_contrast') ?></label><br>
                                     <small class="text-muted">
-                                        <?= lang('Enhance the contrast of the web page for better readability.', 'Erhöht den Kontrast für bessere Lesbarkeit.') ?>
+                                        <?= lang('system.high_contrast_description') ?>
                                     </small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="custom-checkbox">
                                     <input type="checkbox" id="set-transitions" name="accessibility[transitions]" value="without-transitions" <?= !empty($_COOKIE['D3-accessibility-transitions'] ?? '') ? 'checked' : '' ?>>
-                                    <label for="set-transitions"><?= lang('Reduce motion', 'Verringerte Bewegung') ?></label><br>
+                                    <label for="set-transitions"><?= lang('system.reduce_motion') ?></label><br>
                                     <small class="text-muted">
-                                        <?= lang('Reduce motion and animations on the page.', 'Verringert Animationen und Bewegungen auf der Seite.') ?>
+                                        <?= lang('system.reduce_motion_description') ?>
                                     </small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="custom-checkbox">
                                     <input type="checkbox" id="set-dyslexia" name="accessibility[dyslexia]" value="dyslexia" <?= !empty($_COOKIE['D3-accessibility-dyslexia'] ?? '') ? 'checked' : '' ?>>
-                                    <label for="set-dyslexia"><?= lang('Dyslexia mode', 'Dyslexie-Modus') ?></label><br>
+                                    <label for="set-dyslexia"><?= lang('system.dyslexia_mode') ?></label><br>
                                     <small class="text-muted">
-                                        <?= lang('Use a special font to increase readability for users with dyslexia.', 'OSIRIS nutzt eine spezielle Schriftart, die von manchen Menschen mit Dyslexie besser gelesen werden kann.') ?>
+                                        <?= lang('system.dyslexia_mode_description') ?>
                                     </small>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@ $pageactive = function ($p) use ($page) {
                 <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
                     <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                         <i class="ph ph-sign-in" aria-hidden="true"></i>
-                        <?= lang('Log in', 'Anmelden') ?>
+                        <?= lang('system.login') ?>
                     </a>
                 <?php } ?>
 

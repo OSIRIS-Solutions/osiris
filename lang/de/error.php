@@ -1,6 +1,5 @@
 <?php
 return [
-    'go_home' => 'Zur Startseite',
     'method_not_allowed' => 'Methode nicht erlaubt',
     'method_not_allowed_message' => 'Die Methode "{{method}}" ist für die angeforderte URL nicht erlaubt.',
     'page_not_found' => 'Seite nicht gefunden',
