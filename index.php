@@ -38,13 +38,62 @@ define('CURRENTQUARTER', intval($quarter));
 define('CURRENTMONTH', intval($month));
 define('CURRENTYEAR', intval($year));
 
-function lang($en, $de = null)
+
+function currentLanguage(): string
 {
-    if ($de === null) return $en;
-    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) == 'de' ? 'de' : 'en';
-    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
-    return $lang == 'de' ? $de : $en;
+    static $language = null;
+    if ($language !== null) {
+        return $language;
+    }
+    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) === 'de' ? 'de' : 'en';
+    $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
+
+    $supported = ['en', 'de'];
+    return $language = in_array($language, $supported, true) ? $language : 'en';
 }
+
+function lang(string $en, string $de = null, array $replace = []): string
+{
+    $language = currentLanguage();
+    // Legacy format:
+    // lang('Login', 'Anmelden')
+    if ($de !== null) {
+        return $language === 'de'
+            ? $de
+            : $en;
+    }
+
+     // Plain text without a translation key.
+    // Example: lang('Hello')
+    if (!str_contains($en, '.') || str_contains($en, ' ')) {
+        return $en;
+    }
+
+    // New format:
+    // lang('auth.login')
+    $key = $en; // rename first var
+    [$fileName, $fieldName] = explode('.', $key, 2);
+    static $translations = [];
+    $cacheKey = "$language.$fileName";
+
+    if (!isset($translations[$cacheKey])) {
+        $file = __DIR__ . "/lang/$language/$fileName.php";
+
+        $translations[$cacheKey] = file_exists($file)
+            ? require $file
+            : [];
+    }
+    $result = $translations[$cacheKey][$fieldName] ?? $key;
+    foreach ($replace as $k => $v) {
+        $result = str_replace(
+            '{{' . $k . '}}',
+            $v,
+            $result
+        );
+    }
+    return $result;
+}
+
 
 include_once BASEPATH . "/php/Route.php";
 
