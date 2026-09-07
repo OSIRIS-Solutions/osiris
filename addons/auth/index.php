@@ -11,10 +11,10 @@ Route::get('/auth/new-user', function () {
     if (!empty($authToken) && !empty($token)) {
         // check if token is valid
         if ($token != $authToken) {
-            $_SESSION['msg'] = lang('The provided AUTH token is not valid.', 'Das angegebene AUTH-Token ist nicht gültig.');
+            $_SESSION['msg'] = lang('system.token_invalid');
             $_SESSION['msg_type'] = 'error';
         } else {
-            $_SESSION['msg'] = lang('The provided AUTH token is valid. You can now register.', 'Das angegebene AUTH-Token ist gültig. Du kannst dich jetzt registrieren.');
+            $_SESSION['msg'] = lang('system.token_valid');
             $_SESSION['msg_type'] = 'success';
         }
     }
@@ -36,7 +36,7 @@ Route::get('/auth/forgot-password', function () {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Forgot password', 'Passwort vergessen')]
+        ['name' => lang('system.password_forgot')]
     ];
     include BASEPATH . "/header.php";
 
@@ -55,7 +55,7 @@ Route::post('/auth/forgot-password', function () {
     if (isset($_POST['mail'])) {
         $user = $osiris->persons->findOne(['mail' => $_POST['mail']]);
         if (empty($user)) {
-            $_SESSION['msg'] = lang('If the mail address is correct, you will receive an email with further instructions.', 'Wenn die Mail-Adresse korrekt ist, erhältst du eine E-Mail mit weiteren Anweisungen.');
+            $_SESSION['msg'] = lang('system.password_forgot_if_mail_correct');
             header("Location: " . ROOTPATH . "/user/login");
             die;
         }
@@ -63,7 +63,7 @@ Route::post('/auth/forgot-password', function () {
         // check if user has recently requested a password reset
         $account = $osiris->accounts->findOne(['username' => $user['username']]);
         if (!empty($account) && isset($account['reset']) && $account['reset'] > time() - 10 * 60) {
-            $_SESSION['msg'] = lang('You have recently requested a password reset. Please wait a few minutes.', 'Du hast vor kurzem ein Passwort zurücksetzen angefordert. Bitte warte ein paar Minuten.');
+            $_SESSION['msg'] = lang('system.password_forgot_please_wait');
             header("Location: " . ROOTPATH . "/auth/forgot-password");
             die;
         }
@@ -82,16 +82,13 @@ Route::post('/auth/forgot-password', function () {
         // send mail
         sendMail(
             $user['mail'],
-            lang('Password reset', 'Passwort zurücksetzen'),
-            lang(
-                'You have requested a password reset from OSIRIS. Please click the following link to reset your password:',
-                'Du hast ein in OSIRIS Passwort zurücksetzen angefordert. Bitte klicke auf den folgenden Link, um dein Passwort zurückzusetzen:'
-            ) .
+            lang('system.password_reset'),
+            lang('system.password_reset_click_link') .
                 "<br><a href='" . $link . "'>$link</a><br>" .
-                lang('If you did not request a password reset, please ignore this email.', 'Wenn du kein Passwort zurücksetzen angefordert hast, ignoriere diese E-Mail.')
+                lang('system.password_reset_if_not_requested')
         );
 
-        $_SESSION['msg'] = lang('If the mail address is correct, you will receive an email with further instructions.', 'Wenn die Mail-Adresse korrekt ist, erhältst du eine E-Mail mit weiteren Anweisungen.');
+        $_SESSION['msg'] = lang('system.password_forgot_if_mail_correct');
         header("Location: " . ROOTPATH . "/user/login");
     }
 });
@@ -100,7 +97,7 @@ Route::post('/auth/forgot-password', function () {
 Route::get('/user/password-reset/(.*)', function ($user_id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        abortwith(403, lang('You do not have permission to reset passwords.', 'Du hast keine Berechtigung, Passwörter zurückzusetzen.'), '/profile/' . $user_id);
+        abortwith(403, lang('error.password_reset_no_permission'), '/profile/' . $user_id);
     }
     $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($user_id)]);
     $person = DB::doc2Arr($person);
@@ -109,9 +106,9 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('system.users'), 'path' => "/user/browse"],
         ['name' => $person['displayname'], 'path' => "/profile/$person[_id]"],
-        ['name' => lang('Reset password', 'Passwort zurücksetzen')]
+        ['name' => lang('system.password_reset')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/addons/auth/admin-reset-password.php";
@@ -122,7 +119,7 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
 Route::post('/auth/admin-reset-password', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        abortwith(403, lang('You do not have permission to reset passwords.', 'Du hast keine Berechtigung, Passwörter zurückzusetzen.'), '/profile/' . $user_id);
+        abortwith(403, lang('error.password_reset_no_permission'), '/profile/' . $user_id);
     }
     if (!isset($_POST['id'])) {
         header("Location: " . ROOTPATH . "/user/browse");
@@ -141,16 +138,16 @@ Route::post('/auth/admin-reset-password', function () {
     include BASEPATH . "/header.php";
 ?>
     <div class="msg success">
-        <?= lang('A password reset link has been created. Please share the following link with the user:', 'Ein Link zum Zurücksetzen des Passworts wurde erstellt. Bitte teile den folgenden Link mit dem Nutzer:') ?>
+        <?= lang('system.password_reset_link_share') ?>
         <br>
         <pre class="code box p-20"><?= $link ?></pre>
         <button class="btn primary">
-            <span onclick="navigator.clipboard.writeText('<?= $link ?>')"><?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?></span>
+            <span onclick="navigator.clipboard.writeText('<?= $link ?>')"><?= lang('system.copy_to_clipboard') ?></span>
         </button>
     </div>
 
     <p class="text-muted">
-        <?= lang('Please note that the link does not work when you are already logged-in.', 'Bitte beachte, dass der Link nicht funktioniert, wenn du bereits eingeloggt bist.') ?>
+        <?= lang('system.password_reset_link_reminder') ?>
     </p>
 
 <?php
@@ -170,7 +167,7 @@ Route::get('/auth/reset-password', function () {
     $hash = $_GET['hash'];
     $account = $osiris->accounts->findOne(['hash' => $hash]);
     if (empty($account)) {
-        $_SESSION['msg'] = lang('The link is not valid. Please request a new password reset.', 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.');
+        $_SESSION['msg'] = lang('system.password_reset_link_invalid');
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
@@ -182,24 +179,24 @@ Route::get('/auth/reset-password', function () {
             ['hash' => $hash],
             ['$unset' => ['hash' => '']]
         );
-        $_SESSION['msg'] = lang('The link has expired. Please request a new password reset.', 'Der Link ist abgelaufen. Bitte fordere einen neuen Passwort zurücksetzen an.');
+        $_SESSION['msg'] = lang('system.password_reset_link_expired');
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
 
     $user = $osiris->persons->findOne(['username' => $account['username']]);
     $breadcrumb = [
-        ['name' => lang('Reset password', 'Passwort zurücksetzen')]
+        ['name' => lang('system.password_reset')]
     ];
     include BASEPATH . "/header.php";
 ?>
     <form action="#" method="post">
         <input type="hidden" name="hash" value="<?= $hash ?>">
         <div class="form-group">
-            <label class="required" for="password"><?= lang('New password', 'Neues Password') ?></label>
+            <label class="required" for="password"><?= lang('system.password_new') ?></label>
             <input class="form-control" type="password" id="password" name="password" required>
         </div>
-        <button class="btn"><?= lang('Reset password', 'Passwort zurücksetzen') ?></button>
+        <button class="btn"><?= lang('system.password_reset') ?></button>
     </form>
 <?php
     include BASEPATH . "/footer.php";
@@ -215,7 +212,7 @@ Route::post('/auth/reset-password', function () {
 
     // check if hash and password are set
     if (!isset($_POST['hash']) || !isset($_POST['password'])) {
-        $_SESSION['msg'] = lang('The link is not valid. Please request a new password reset.', 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.');
+        $_SESSION['msg'] = lang('system.password_reset_link_invalid');
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
@@ -224,7 +221,7 @@ Route::post('/auth/reset-password', function () {
     $hash = $_POST['hash'];
     $account = $osiris->accounts->findOne(['hash' => $hash]);
     if (empty($account)) {
-        $_SESSION['msg'] = lang('The link is not valid. Please request a new password reset.', 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.');
+        $_SESSION['msg'] = lang('system.password_reset_link_invalid');
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
@@ -236,7 +233,7 @@ Route::post('/auth/reset-password', function () {
             ['hash' => $hash],
             ['$unset' => ['hash' => '']]
         );
-        $_SESSION['msg'] = lang('The link has expired. Please request a new password reset.', 'Der Link ist abgelaufen. Bitte fordere einen neuen Passwort zurücksetzen an.');
+        $_SESSION['msg'] = lang('system.password_reset_link_expired');
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
@@ -247,7 +244,7 @@ Route::post('/auth/reset-password', function () {
         ['hash' => $hash],
         ['$set' => ['password' => $password], '$unset' => ['hash' => '']]
     );
-    $_SESSION['msg'] = lang('Password reset successfully. Please login with your new password.', 'Passwort erfolgreich zurückgesetzt. Bitte logge dich mit deinem neuen Passwort ein.');
+    $_SESSION['msg'] = lang('system.password_reset_successful');
     header("Location: " . ROOTPATH . "/user/login");
     die;
 });
@@ -261,7 +258,7 @@ Route::post('/auth/new-user', function () {
     }
 
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
-        $msg = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");
+        $msg = lang('error.username_already_taken');
         include BASEPATH . "/header.php";
         printMsg($msg, 'error');
         include BASEPATH . "/addons/auth/add-user.php";
@@ -293,7 +290,7 @@ Route::post('/auth/new-user', function () {
     $person['is_active'] = true;
     $osiris->persons->insertOne($person);
 
-    $_SESSION['msg'] = lang('Account created successfully. Please login with your new account.', 'Konto erfolgreich erstellt. Bitte logge dich mit deinem neuen Konto ein.');
+    $_SESSION['msg'] = lang('system.account_created_success');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/user/login");
 });

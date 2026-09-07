@@ -16,6 +16,20 @@ return [
     'reduce_motion_description' => 'Verringert Animationen und Bewegungen auf der Seite.',
     'dyslexia_mode' => 'Dyslexie-Modus',
     'dyslexia_mode_description' => 'OSIRIS nutzt eine spezielle Schriftart, die von manchen Menschen mit Dyslexie besser gelesen werden kann.',
-
-
+    'token_invalid' => 'Der angegebene AUTH-Token ist nicht gültig.',
+    'token_valid' => 'Der angegebene AUTH-Token ist gültig. Du kannst dich jetzt registrieren.',
+    'password_forgot' => 'Passwort vergessen',
+    'password_forgot_if_mail_correct' => 'Wenn die Mail-Adresse korrekt ist, erhältst du eine E-Mail mit weiteren Anweisungen.',
+    'password_forgot_please_wait' => 'Du hast vor kurzem ein Passwort zurücksetzen angefordert. Bitte warte ein paar Minuten.',
+    'password_reset' => 'Passwort zurücksetzen',
+    'password_reset_click_link' => 'Du hast in OSIRIS ein Passwort zurücksetzen angefordert. Bitte klicke auf den folgenden Link, um dein Passwort zurückzusetzen:',
+    'password_reset_if_not_requested' => 'Wenn du kein Passwort zurücksetzen angefordert hast, ignoriere diese E-Mail.',
+    'password_reset_link_share' => 'Ein Link zum Zurücksetzen des Passworts wurde erstellt. Bitte teile den folgenden Link mit dem Nutzer:',
+    'copy_to_clipboard' => 'In die Zwischenablage kopieren',
+    'password_reset_link_reminder' => 'Bitte beachte, dass der Link nicht funktioniert, wenn du bereits eingeloggt bist.',
+    'password_reset_link_invalid' => 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.',
+    'password_reset_link_expired' => 'Der Link ist abgelaufen. Bitte fordere einen neuen Passwort zurücksetzen an.',
+    'password_new' => 'Neues Passwort',
+    'password_reset_success' => 'Passwort erfolgreich zurückgesetzt. Bitte logge dich mit deinem neuen Passwort ein.',
+    'account_created_success' => 'Konto erfolgreich erstellt. Bitte logge dich mit deinem neuen Konto ein.',
 ];

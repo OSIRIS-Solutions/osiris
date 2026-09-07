@@ -266,7 +266,7 @@ if (
             $Format = new Document($user);
 
             if (empty($scientist)) {
-                $_SESSION['msg'] = lang("User not found.", "Benutzer nicht gefunden.");
+                $_SESSION['msg'] = lang('error.user_not_found');
                 $_SESSION['msg_type'] = "error";
                 header("Location: " . ROOTPATH . "/user/browse");
                 die;
