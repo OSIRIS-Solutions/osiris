@@ -170,7 +170,7 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('type')) { ?>
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="type" class="required">
-                    <?= lang('Category', 'Kategorie') ?>
+                    <?= lang('common.category') ?>
                     <span class="badge kdsf">KDSF-B-13-5</span>
                 </label>
                 <select name="values[type]" id="type" class="form-control" required>

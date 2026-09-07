@@ -58,7 +58,7 @@ $Vocabulary = new Vocabulary();
 
             <tr>
                 <td>
-                    <span class="key"><?= lang('Date', 'Datum') ?></span>
+                    <span class="key"><?= lang('common.date') ?></span>
                     <?= format_date($deadline['date']) ?>
 
                     <?php if (!$in_past) { ?>

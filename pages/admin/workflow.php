@@ -63,7 +63,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                         <th style="width:28px"></th>
                         <th><?= lang('Step title', 'Titel') ?></th>
                         <th style="width:90px"><?= lang('Phase', 'Phase') ?>*</th>
-                        <th style="width:200px"><?= lang('Role', 'Rolle') ?></th>
+                        <th style="width:200px"><?= lang('common.role') ?></th>
                         <th style="width:130px"><?= lang('OU scope', 'OU-Scope') ?></th>
                         <th style="width:100px"><?= lang('Required', 'Erforderlich') ?></th>
                         <th style="width:120px"><?= lang('Lock after', 'Sperren') ?></th>
@@ -129,7 +129,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </p>
 
             <button type="submit" class="btn success" id="submitBtn">
-                <i class="ph ph-check"></i> <?= lang('Update', 'Aktualisieren') ?>
+                <i class="ph ph-check"></i> <?= lang('common.update') ?>
             </button>
         </div>
     </div>
@@ -192,7 +192,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
         <table class="table simple">
             <thead>
                 <tr>
-                    <th><?= lang('Category', 'Kategorie') ?></th>
+                    <th><?= lang('common.category') ?></th>
                     <th><?= lang('Number of Activities', 'Anzahl der Aktivitäten') ?></th>
                     <th><?= lang('thereof with workflow', 'davon mit Workflow') ?></th>
                     <th></th>
@@ -229,7 +229,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <h5 class="title"><?= lang('Migrate existing activities', 'Bestehende Aktivitäten migrieren') ?></h5>
 
             <div class="mb-10">
-                <div><b><?= lang('Category', 'Kategorie') ?>:</b> <span id="mig-cat-name"></span></div>
+                <div><b><?= lang('common.category') ?>:</b> <span id="mig-cat-name"></span></div>
                 <div class="text-sm" id="mig-counts"></div>
             </div>
 

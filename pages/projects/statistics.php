@@ -102,7 +102,7 @@ $all = $osiris->projects->count();
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
                 <h6 class="mb-0 mt-5"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
             </form>
         </div>
 
@@ -113,7 +113,7 @@ $all = $osiris->projects->count();
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
                 <h6 class="mb-0 mt-5"><?= lang('Change Reporting Date', 'Stichtag ändern') ?>:</h6>
                 <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
             </form>
         </div>
     </div>
@@ -262,7 +262,7 @@ $all = $osiris->projects->count();
                 <th><?= lang('common.type') ?></th>
                 <th><?= lang('Submitted', 'Eingereicht') ?></th>
                 <th><?= lang('Approved', 'Genehmigt') ?></th>
-                <th><?= lang('Rejected', 'Abgelehnt') ?></th>
+                <th><?= lang('common.rejected') ?></th>
             </tr>
         </thead>
         <tbody>

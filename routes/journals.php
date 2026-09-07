@@ -80,7 +80,7 @@ Route::get('/journal/add', function () {
     $data = [];
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
-        ['name' => lang("Add", "Hinzufügen")]
+        ['name' => lang('common.add')]
     ];
 
     include BASEPATH . "/header.php";

@@ -50,7 +50,7 @@ $fields = [
         'example' => 'mail', // Beispiel: "john.doe@example.com"
     ],
     'telephone' => [
-        'name' => lang('Telephone', 'Telefon'),
+        'name' => lang('common.telephone'),
         'example' => 'telephonenumber', // Beispiel: "+1 555 123 456"
     ],
     'mobile' => [

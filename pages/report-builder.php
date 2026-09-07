@@ -61,7 +61,7 @@ $report_id = $report['_id'] ?? null;
 
 $collections = [
     'activities' => lang('common.activities'),
-    // 'persons' => lang('Persons', 'Personen')
+    // 'persons' => lang('common.persons')
 ];
 if ($Settings->featureEnabled('events')) {
     $collections['conferences'] = lang('Events', 'Ereignisse');
@@ -396,7 +396,7 @@ if ($Settings->featureEnabled('projects')) {
                             <tr>
                                 <th style="width:18%"><?= lang('Key', 'Key') ?></th>
                                 <th style="width:18%"><?= lang('common.type') ?></th>
-                                <th><?= lang('Label', 'Bezeichnung') ?></th>
+                                <th><?= lang('common.label') ?></th>
                                 <th style="width:22%"><?= lang('Default value', 'Standardwert') ?></th>
                                 <th style="width:10%"></th>
                             </tr>

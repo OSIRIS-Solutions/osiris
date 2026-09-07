@@ -252,7 +252,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_persons > 0) { ?>
         <a onclick="navigate('persons')" id="btn-persons" class="btn  <?= $active_page == 'persons' ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Persons', 'Personen') ?>
+            <?= lang('common.persons') ?>
             <span class="index"><?= $count_persons ?></span>
         </a>
     <?php } ?>

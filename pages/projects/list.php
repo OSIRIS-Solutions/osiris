@@ -380,7 +380,7 @@ $Vocabulary = new Vocabulary();
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                 </div>
                 <input type="date" name="from" id="filter-from" class="form-control">
             </div>
@@ -423,11 +423,11 @@ $Vocabulary = new Vocabulary();
             key: 'start_date'
         },
         {
-            title: lang('End date', 'Enddatum'),
+            title: lang('common.end_date'),
             key: 'end_date'
         },
         {
-            title: lang('Role', 'Rolle'),
+            title: lang('common.role'),
             key: 'role'
         },
         {
@@ -711,7 +711,7 @@ $Vocabulary = new Vocabulary();
                     data: 'end_date',
                     searchable: true,
                     visible: false,
-                    header: lang('End date', 'Enddatum')
+                    header: lang('common.end_date')
                 },
                 {
                     target: 5,
@@ -719,7 +719,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Role', 'Rolle')
+                    header: lang('common.role')
                 },
                 {
                     target: 6,

@@ -553,7 +553,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('common.go_back_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
 
@@ -589,7 +589,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
     }
 
     if (!$canResolve) {
-        abortwith(403, lang("You don't have permission to resolve this rejection.", "Du hast keine Berechtigung, diese Ablehnung als gelöst zu markieren."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang("You don't have permission to resolve this rejection.", "Du hast keine Berechtigung, diese Ablehnung als gelöst zu markieren."), '/activities/view/' . $id, lang('common.go_back_activity'));
     }
     // Reset workflow to before rejection
     unset($wf['rejectedDetails']);
@@ -606,17 +606,17 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     include_once BASEPATH . "/php/Workflows.php";
 
     if (!$Settings->hasPermission('workflows.reset')) {
-        abortwith(403, lang("You don't have permission to reset this workflow.", "Du hast keine Berechtigung, diesen Workflow zurückzusetzen."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang("You don't have permission to reset this workflow.", "Du hast keine Berechtigung, diesen Workflow zurückzusetzen."), '/activities/view/' . $id, lang('common.go_back_activity'));
     }
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('common.go_back_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
     $tpl = $osiris->adminWorkflows->findOne(['id' => $wf['workflow_id']]);
     if (!$tpl) {
-        abortwith(404, lang('Workflow template not found', 'Workflow-Vorlage nicht gefunden'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Workflow template not found', 'Workflow-Vorlage nicht gefunden'), '/activities/view/' . $id, lang('common.go_back_activity'));
     }
     $tpl = DB::doc2Arr($tpl);
 

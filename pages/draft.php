@@ -200,7 +200,7 @@ include_once BASEPATH . "/php/Modules.php";
                                     <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
                                 </li>
                                 <li>
-                                    <b><?= lang('Date', 'Datum') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                 </li>
                                 <li>
                                     <a href="<?= $conference['url'] ?>" target="_blank">

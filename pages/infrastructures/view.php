@@ -247,7 +247,7 @@ if ($edit_perm) { ?>
                 </tr>
                 <tr>
                     <td>
-                        <span class="key"><?= lang('End date', 'Enddatum') ?>: </span>
+                        <span class="key"><?= lang('common.end_date') ?>: </span>
                         <?php if (!empty($infrastructure['end_date'])) {
                             echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
                         } else {
@@ -258,7 +258,7 @@ if ($edit_perm) { ?>
                 <?php if ($active('type')) { ?>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('Category', 'Kategorie') ?>: </span>
+                            <span class="key"><?= lang('common.category') ?>: </span>
                             <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
                         </td>
                     </tr>
@@ -554,7 +554,7 @@ if ($edit_perm) { ?>
                         <?php
                             break;
                         case 'irregularly': ?>
-                            <label for="date" class="w-300 font-weight-bold"><?= lang('Date', 'Datum') ?>:</label>
+                            <label for="date" class="w-300 font-weight-bold"><?= lang('common.date') ?>:</label>
                             <input type="date" name="date" id="add-stat-date" class="form-control w-200" value="<?= date('Y-m-d') ?>" />
                     <?php
                             break;
@@ -622,7 +622,7 @@ if ($edit_perm) { ?>
                                 <?php } elseif ($stat_frequency == 'quarterly') { ?>
                                     <th><?= lang('Quarter', 'Quartal') ?></th>
                                 <?php } elseif ($stat_frequency == 'irregularly') { ?>
-                                    <th><?= lang('Date', 'Datum') ?></th>
+                                    <th><?= lang('common.date') ?></th>
                                 <?php } ?>
                                 <th><?= lang('Field', 'Feld') ?></th>
                                 <th class="text-right"><?= lang('Value', 'Wert') ?></th>

@@ -103,7 +103,7 @@ Route::get('/groups/view/(.*)', function ($id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang("Unit", "Einheit"), '/groups');
+        abortwith(404, lang('common.unit'), '/groups');
     }
     $breadcrumb = [
         ['name' => lang('common.units'), 'path' => "/groups"],
@@ -129,7 +129,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang("Unit", "Einheit"), '/groups');
+        abortwith(404, lang('common.unit'), '/groups');
     }
     $breadcrumb = [
         ['name' => lang('common.units'), 'path' => "/groups"],
@@ -360,7 +360,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
@@ -525,7 +525,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
@@ -579,7 +579,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {

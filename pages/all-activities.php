@@ -106,7 +106,7 @@ $cart = readCart();
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('common.year') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
-                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                    <th><?= lang('common.affiliated') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -208,7 +208,7 @@ $cart = readCart();
                             <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
                                 <span class="text-success">
                                     <span class="mr-5"><i class="ph ph-push-pin"></i></span>
-                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                    <?= lang('common.affiliated') ?>
                                 </span>
                             </a>
                         </td>
@@ -336,7 +336,7 @@ $cart = readCart();
             <div id="filter-time" class="filter border-0 bg-transparent p-0 shadow-none">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                        <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                     </div>
                     <input type="date" name="from" id="filter-from" class="form-control">
                 </div>
@@ -429,7 +429,7 @@ $cart = readCart();
             'key': 'topics'
         },
         {
-            title: lang('Affiliated', 'Affiliiert'),
+            title: lang('common.affiliated'),
             'key': 'affiliated'
         },
         {

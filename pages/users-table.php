@@ -71,7 +71,7 @@ if ($active('keywords')) {
                 <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Academic title', 'Akad. Titel') ?></th>
                 <th><?= lang('Email', 'E-Mail') ?></th>
-                <th><?= lang('Telephone', 'Telefon') ?></th>
+                <th><?= lang('common.telephone') ?></th>
                 <th><?= lang('Position', 'Position') ?></th>
                 <th><?= lang('ORCID', 'ORCID') ?></th>
                 <th><?= lang('Username', 'Kürzel') ?></th>
@@ -232,7 +232,7 @@ if ($active('keywords')) {
             'key': 'mail'
         },
         {
-            title: lang('Telephone', 'Telefon'),
+            title: lang('common.telephone'),
             'key': 'telephone'
         },
         {
@@ -393,7 +393,7 @@ if ($active('keywords')) {
                 {
                     target: 10,
                     data: 'telephone',
-                    title: lang('Telephone', 'Telefon'),
+                    title: lang('common.telephone'),
                     visible: false,
                     defaultContent: ''
                 },

@@ -358,7 +358,7 @@ $active = function ($field) use ($data_fields) {
                 <thead>
                     <tr>
                         <th>
-                            <?= lang('Unit', 'Einheit') ?>
+                            <?= lang('common.unit') ?>
                         </th>
                         <th>
                             <?= lang('Start', 'Start') ?>
@@ -374,7 +374,7 @@ $active = function ($field) use ($data_fields) {
                     ?>
                         <tr data-id="<?= $dept['id'] ?>">
                             <td><?= $d ?></td>
-                            <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('unknown', 'unbekannt') . '</em>' ?></td>
+                            <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('common.unknown') . '</em>' ?></td>
                             <td><?= $dept['end'] ?? '<em class="text-success">' . lang('current', 'laufend') . '</em>' ?></td>
                         </tr>
                     <?php } ?>
@@ -506,7 +506,7 @@ $active = function ($field) use ($data_fields) {
         <div class="form-row row-eq-spacing">
             <?php if ($active('telephone')) { ?>
                 <div class="col-sm-6">
-                    <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+                    <label for="telephone"><?= lang('common.telephone') ?></label>
                     <input type="tel" name="values[telephone]" id="telephone" class="form-control need-validation" data-validator="telephone" value="<?= $data['telephone'] ?? '' ?>" <?= in_array('telephone', $ldap_fields) ? 'disabled' : '' ?> onblur="validateTelephone(this)">
                     <?php if (in_array('telephone', $ldap_fields)) {
                         echo $ldap_msg;
@@ -1300,7 +1300,7 @@ $active = function ($field) use ($data_fields) {
                         <div class="alert mb-10">
                             <div class="input-group my-10">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('From', 'Von') ?>*</span>
+                                    <span class="input-group-text"><?= lang('common.from') ?>*</span>
                                 </div>
                                 <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                                 <div class="input-group-prepend">
@@ -1346,7 +1346,7 @@ $active = function ($field) use ($data_fields) {
             <div class="alert mb-10">
                     <div class="input-group my-10">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">${lang('From', 'Von')}*</span>
+                            <span class="input-group-text">${lang('common.from')}*</span>
                         </div>
                         <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                         <div class="input-group-prepend">

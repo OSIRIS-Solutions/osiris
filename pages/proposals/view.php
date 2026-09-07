@@ -105,7 +105,7 @@ if ($nagoyaRelevant) {
                         </button>
                         <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                             <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('Rejected', 'Abgelehnt') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('common.rejected') ?></a>
                             <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></a>
                         </div>
                     </div>
@@ -117,7 +117,7 @@ if ($nagoyaRelevant) {
                 <?php } else if ($status == 'rejected') { ?>
                     <span class="badge status danger">
                         <i class="ph ph-x-circle" aria-hidden="true"></i>
-                        <?= lang('Rejected', 'Abgelehnt') ?>
+                        <?= lang('common.rejected') ?>
                     </span>
                 <?php } else if ($status == 'withdrawn') { ?>
                     <span class="badge status muted">
@@ -139,7 +139,7 @@ if ($nagoyaRelevant) {
                             echo "<span class='badge status success'>" . lang('Approved', 'Bewilligt') . "</span>";
                             break;
                         case 'rejected':
-                            echo "<span class='badge status danger'>" . lang('Rejected', 'Abgelehnt') . "</span>";
+                            echo "<span class='badge status danger'>" . lang('common.rejected') . "</span>";
                             break;
                         default:
                             break;

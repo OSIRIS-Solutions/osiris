@@ -105,7 +105,7 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
-                <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+                <label for="telephone"><?= lang('common.telephone') ?></label>
             </div>
 
         </div>

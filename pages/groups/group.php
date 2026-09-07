@@ -207,7 +207,7 @@ if ($Settings->featureEnabled('wordcloud')) {
         </a>
         <a onclick="navigate('persons')" id="btn-persons" class="btn <?= !$show_general ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Persons', 'Personen') ?>
+            <?= lang('common.persons') ?>
             <span class="index"><?= count($users) ?></span>
         </a>
 

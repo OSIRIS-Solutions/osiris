@@ -46,7 +46,7 @@ $user_in_project = false;
                         </span>
                     </th>
                     <th>
-                        <?= lang('Role', 'Rolle') ?><br>
+                        <?= lang('common.role') ?><br>
                         <span class="badge kdsf m-0">
                             KDSF-B-2-15-B
                         </span>

@@ -133,13 +133,13 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     switch ($page) {
         case 'collaborators':
-            $name = lang("Collaborators", "Kooperationspartner");
+            $name = lang('common.collaborators');
             break;
         case 'finance':
             $name = lang("Finance", "Finanzen");
             break;
         case 'persons':
-            $name = lang("Persons", "Personen");
+            $name = lang('common.persons');
             break;
         default:
             $name = lang('common.edit');
@@ -1091,18 +1091,18 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
                 1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
+                2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
                 6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_upload_to_large', replace:['max' => '16 MB']);
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
@@ -1134,7 +1134,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
             ['$set' => ["image" => null]]
         );
     } else {
-        $_SESSION['msg'] = lang("No file was uploaded.", "Es wurde keine Datei hochgeladen.");
+        $_SESSION['msg'] = lang('error.no_file_uploaded');
         $_SESSION['msg_type'] = "info";
     }
 

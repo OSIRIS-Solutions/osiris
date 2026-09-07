@@ -4,7 +4,7 @@ Route::get('/guests/?', function () {
     include_once BASEPATH . "/php/init.php";
 
     $breadcrumb = [
-        ['name' => lang('Guests', 'Gäste')],
+        ['name' => lang('common.guests')],
     ];
 
     include BASEPATH . "/header.php";
@@ -17,7 +17,7 @@ Route::get('/guests/overview', function () {
     include_once BASEPATH . "/php/init.php";
 
     $breadcrumb = [
-        ['name' => lang('Guests', 'Gäste'), 'path' => "/guests"],
+        ['name' => lang('common.guests'), 'path' => "/guests"],
         ['name' => lang("Overview", "Überblick")]
     ];
 
@@ -35,7 +35,7 @@ Route::get('/guests/new', function () {
     $form = [];
 
     $breadcrumb = [
-        ['name' => lang('Guests', 'Gäste'), 'path' => "/guests"],
+        ['name' => lang('common.guests'), 'path' => "/guests"],
         ['name' => lang("New", "Erstellen")]
     ];
 
@@ -48,7 +48,7 @@ Route::get('/guests/edit/([a-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $form = $osiris->guests->findOne(['id' => $id]);
     $breadcrumb = [
-        ['name' => lang('Guests', 'Gäste'), 'path' => "/guests"],
+        ['name' => lang('common.guests'), 'path' => "/guests"],
         ['name' => $id]
     ];
 
@@ -61,7 +61,7 @@ Route::get('/guests/view/([a-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $form = $osiris->guests->findOne(['id' => $id]);
     $breadcrumb = [
-        ['name' => lang('Guests', 'Gäste'), 'path' => "/guests"],
+        ['name' => lang('common.guests'), 'path' => "/guests"],
         ['name' => $id]
     ];
 
@@ -346,18 +346,18 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
                 1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
+                2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
                 6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = 'error';
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_upload_to_large', replace:['max' => '16 MB']);
             $_SESSION['msg_type'] = 'error';
         } else if (file_exists($target_dir . $filename)) {
             $_SESSION['msg'] = lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden.");

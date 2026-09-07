@@ -63,7 +63,7 @@ $all = $osiris->activities->count(
 $statuses = [
     'preparation' => lang('In Preparation', 'In Vorbereitung'),
     'in-progress' => lang('In Progress', 'Laufend'),
-    'completed' => lang('Completed', 'Abgeschlossen'),
+    'completed' => lang('common.completed'),
     'aborted' => lang('Cancelled', 'Abgebrochen'),
 ];
 
@@ -237,7 +237,7 @@ foreach ($countries as $iso => $data) {
         <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
             <h6 class="mb-0 mt-5 w-200"><?= lang('Select year', 'Jahr auswählen') ?>:</h6>
             <input type="number" name="year" class="form-control" value="<?= $year ?>" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" required>
-            <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+            <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
         </form>
     </div>
 
@@ -490,11 +490,11 @@ $unique_number = count($uniques);
             case 'in-progress':
                 return lang('In Progress', 'Laufend');
             case 'completed':
-                return lang('Completed', 'Abgeschlossen');
+                return lang('common.completed');
             case 'aborted':
                 return lang('Cancelled', 'Abgebrochen');
             default:
-                return lang('Unknown', 'Unbekannt');
+                return lang('common.unknown');
         }
     }
 
@@ -716,7 +716,7 @@ $unique_number = count($uniques);
                 label = lang('Trips', 'Reisen');
                 break;
             default:
-                label = lang('Unknown', 'Unbekannt');
+                label = lang('common.unknown');
         }
         console.log(mode);
         Plotly.update("map", {

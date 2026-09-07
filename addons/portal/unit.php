@@ -216,7 +216,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['collaborators'] > 0) { ?>
                     <a onclick="navigate('collaborators')" id="btn-collaborators" class="<?= $preselect === 'collaborators' ? 'active' : '' ?>">
                         <i class="ph ph-handshake" aria-hidden="true"></i>
-                        <?= lang('Collaborators', 'Kooperationspartner')  ?>
+                        <?= lang('common.collaborators')  ?>
                     </a>
                 <?php } ?>
 
@@ -508,7 +508,7 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="collaborators" <?= $preselect === 'collaborators' ? '' : 'style="display:none"' ?> data-title="<?= lang('Collaborators', 'Kooperationspartner') ?>">
+            <section id="collaborators" <?= $preselect === 'collaborators' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.collaborators') ?>">
 
                 <?php if ($numbers['collaborators'] > 0) {
                 ?>

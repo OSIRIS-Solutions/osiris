@@ -247,11 +247,11 @@
                         ?>
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="topics_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="topics_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Research topics') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="topics_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="topics_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Forschungsbereiche') ?>">
                             </div>
                         </div>
@@ -285,11 +285,11 @@
 
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="infrastructures_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="infrastructures_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Infrastructures') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="infrastructures_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="infrastructures_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Infrastrukturen') ?>">
                             </div>
                         </div>
@@ -345,11 +345,11 @@
                         ?>
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="tags_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="tags_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Tags') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="tags_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="tags_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Schlagwörter') ?>">
                             </div>
                         </div>

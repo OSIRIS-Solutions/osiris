@@ -1734,7 +1734,7 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
-                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
+                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
                         <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('female', 'weiblich') ?></option>
                         <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('male', 'männlich') ?></option>
                         <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('non-binary', 'divers') ?></option>
@@ -1751,7 +1751,7 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country">
                     <select name="values[country]" id="country" class="form-control" <?= $labelClass ?>>
-                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
+                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
                         <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
                             <option value="<?= $code ?>" <?= $val == $code ? 'selected' : '' ?>><?= $country ?></option>
                         <?php } ?>
@@ -1927,7 +1927,7 @@ class Modules
                                     <th><label for="last" class="required"><?= lang('common.name_last') ?></label></th>
                                     <th><label for="first" class="required"><?= lang('common.name_first') ?></label></th>
                                     <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
-                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliiert') ?></label></th>
+                                    <th><label for="aoi"><?= lang('common.affiliated') ?></label></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2069,7 +2069,7 @@ class Modules
                                     <th>Username</th>
                                     <th><?= lang('common.name_last') ?></th>
                                     <th><?= lang('common.name_first') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                                    <th><?= lang('common.affiliated') ?></th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
@@ -2188,8 +2188,8 @@ class Modules
                                     <th>Username</th>
                                     <th><?= lang('common.name_last') ?></th>
                                     <th><?= lang('common.name_first') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
+                                    <th><?= lang('common.affiliated') ?></th>
+                                    <th><?= lang('common.role') ?> <span class="text-danger">*</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2606,7 +2606,7 @@ class Modules
                             <div id="org-<?= $rand_id ?>-value">
                                 <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?= lang('error.organization_select_missing') ?>
                                     <?php if (!empty($org_id)) { ?>
                                         <br><small class="text-muted"><?= $org_id ?></small>
                                     <?php } ?>
@@ -2617,7 +2617,7 @@ class Modules
                                         <b><?= $collab['name'] ?></b>
                                         <br><small class="text-muted"><?= $collab['location'] ?></small>
                                     <?php } else { ?>
-                                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                        <?= lang('error.organization_select_missing') ?>:
                                         <br><small class="text-muted"><?= $org_id ?></small>
                                 <?php }
                                 } ?>
@@ -2759,7 +2759,7 @@ class Modules
 
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-completed" value="completed" value="1" <?= $status == 'completed' ? 'checked' : '' ?>>
-                            <label for="status-completed"><?= lang('Completed', 'Abgeschlossen') ?></label>
+                            <label for="status-completed"><?= lang('common.completed') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
@@ -3515,7 +3515,7 @@ class Modules
                         <div id="org-<?= $rand_id ?>-value">
                             <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php if (!empty($org_id)) { ?>
                                     <br><small class="text-muted"><?= $org_id ?></small>
                                 <?php } ?>
@@ -3526,7 +3526,7 @@ class Modules
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>

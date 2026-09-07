@@ -72,7 +72,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             </div>
             <div class="col floating-form">
                 <input type="date" name="values[end]" class="form-control" id="conference-end-date" value="<?= $form['end'] ?? '' ?>" placeholder="end">
-                <label for="end" class="required"><?= lang('End date', 'Enddatum') ?></label>
+                <label for="end" class="required"><?= lang('common.end_date') ?></label>
             </div>
         </div>
 

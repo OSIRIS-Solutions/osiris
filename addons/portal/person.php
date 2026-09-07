@@ -369,7 +369,7 @@
                                 <?php if (!empty($data['contact']['phone'])): ?>
                                     <tr>
                                         <td>
-                                            <span class="key"><?= lang("Telephone", "Telefon") ?></span>
+                                            <span class="key"><?= lang('common.telephone') ?></span>
                                             <?= e($data['contact']['phone']) ?>
                                         </td>
                                     </tr>

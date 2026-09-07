@@ -342,7 +342,7 @@ if ($edit_perm) {
     <div class="d-flex">
 
         <div class="mr-10 badge bg-white">
-            <small><?= lang('Date', 'Datum') ?>: </small>
+            <small><?= lang('common.date') ?>: </small>
             <br />
             <span class="badge"><?= $Format->format_date($doc) ?></span>
         </div>
@@ -355,7 +355,7 @@ if ($edit_perm) {
             if ($doc['affiliated'] ?? true) { ?>
                 <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                     <!-- <i class="ph ph-handshake m-0"></i> -->
-                    <?= lang('Affiliated', 'Affiliiert') ?>
+                    <?= lang('common.affiliated') ?>
                 </div>
             <?php } else { ?>
                 <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
@@ -572,7 +572,7 @@ if ($edit_perm) {
         <?php if ($guests_involved) { ?>
             <a onclick="navigate('guests')" id="btn-guests" class="btn">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('Guests', 'Gäste') ?>
+                <?= lang('common.guests') ?>
                 <span class="index"><?= count($guests) ?></span>
             </a>
         <?php } ?>
@@ -887,7 +887,7 @@ if ($edit_perm) {
                                                     <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
                                                 </li>
                                                 <li>
-                                                    <b><?= lang('Date', 'Datum') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                                 </li>
                                                 <li>
                                                     <a href="<?= $conference['url'] ?>" target="_blank">
@@ -1147,7 +1147,7 @@ if ($edit_perm) {
                         ];
                     } elseif ($supervisorThesis) {
                         $thirdCol = [
-                            'label' => lang('Role', 'Rolle'),
+                            'label' => lang('common.role'),
                             'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
                         ];
                     } elseif ($role === 'authors') {
@@ -1222,7 +1222,7 @@ if ($edit_perm) {
                                                     data-toggle="tooltip"
                                                     data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
                                                     <i class="ph ph-handshake"></i>
-                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                    <?= lang('common.affiliated') ?>
                                                 </span>
                                             <?php endif; ?>
 
@@ -1249,7 +1249,7 @@ if ($edit_perm) {
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn small" data-toggle="dropdown" type="button"
                                                             id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                            <?= lang('Claim', 'Beanspruchen') ?>
+                                                            <?= lang('common.claim') ?>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                             <div class="content font-size-12">
@@ -1264,7 +1264,7 @@ if ($edit_perm) {
                                                                     <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                     <button class="btn block small" type="submit">
-                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                        <?= lang('common.claim') ?>
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -2261,7 +2261,7 @@ if ($edit_perm) {
         <section id="guests" style="display:none">
 
             <h2 class="title">
-                <?= lang('Guests', 'Gäste') ?>
+                <?= lang('common.guests') ?>
             </h2>
 
             <?php if ($Settings->featureEnabled('guest-forms')) {
@@ -2311,7 +2311,7 @@ if ($edit_perm) {
                                             $new_guests = true;
                                             break;
                                         default:
-                                            echo '<span class="badge danger">' . lang('Unknown', 'Unbekannt') . '</span>';
+                                            echo '<span class="badge danger">' . lang('common.unknown') . '</span>';
                                             break;
                                     }
                                     ?>

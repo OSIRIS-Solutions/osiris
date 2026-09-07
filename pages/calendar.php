@@ -322,7 +322,7 @@ function updateCalendar(el, unit) {
                         <div class="calendar-tooltip">
                             <h3>${info.event.title}</h3>
                             <p><strong>${lang('common.type')}:</strong> <span class="badge ${type}">${label}</span></p>
-                            <p><strong>${lang('Date', 'Datum')}:</strong> ${date}</p>
+                            <p><strong>${lang('common.date')}:</strong> ${date}</p>
                             <a class="btn small" href="${link}">${lang('More details', 'Mehr Details')}</a>
                             <button class="btn small" onclick="$('.popover').remove()">
                                 Schließen

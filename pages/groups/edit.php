@@ -35,7 +35,7 @@ $form = $form ?? array();
 
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
-$btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+$btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
 $url = ROOTPATH . "/groups/edit/" . $form['_id'];
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
@@ -526,7 +526,7 @@ function sel($index, $value)
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('Position', 'Position') ?></th>
                 <th><?= lang('Since', 'seit') ?></th>
-                <th><?= lang('Actions', 'Aktionen') ?></th>
+                <th><?= lang('common.actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -675,7 +675,7 @@ function sel($index, $value)
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Unit', 'Einheit') ?></th>
+                                <th><?= lang('common.unit') ?></th>
                                 <th><?= lang('Since', 'seit') ?></th>
                             </tr>
                         </thead>
@@ -691,7 +691,7 @@ function sel($index, $value)
                         <div class="custom-radio">
                             <input type="radio" name="change-or-add" id="person-add" value="add" checked="checked">
                             <label for="person-add">
-                                <b><?= lang('Add', 'Hinzufügen') ?>:</b>
+                                <b><?= lang('common.add') ?>:</b>
                                 <?= lang('Add this unit as additional unit and keep other units unchanged.', 'Füge diese Einheit der Person zusätzlich hinzu und behalte die vorhandenen Einheiten ungeändert.') ?>
                             </label>
                         </div>
@@ -712,7 +712,7 @@ function sel($index, $value)
                     </div>
                 </div>
 
-                <button type="submit" class="btn"><?= lang('Add', 'Hinzufügen') ?></button>
+                <button type="submit" class="btn"><?= lang('common.add') ?></button>
             </form>
 
             <script>

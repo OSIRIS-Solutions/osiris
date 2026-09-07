@@ -524,7 +524,7 @@ if (array_sum($a) === 0) { ?>
 
                                     <div class="custom-radio d-inline">
                                         <input type="radio" name="values[status]" id="status-completed-<?= $id ?>" value="completed" <?= $status == 'completed' ? 'checked' : '' ?>>
-                                        <label for="status-completed-<?= $id ?>"><?= lang('Completed', 'Abgeschlossen') ?></label>
+                                        <label for="status-completed-<?= $id ?>"><?= lang('common.completed') ?></label>
                                     </div>
 
                                     <div class="custom-radio mr-10 d-inline">
@@ -654,7 +654,7 @@ if (array_sum($a) === 0) { ?>
                                         <select class="form-control" id="status-<?= $id ?>" name="values[status]" required>
                                             <option value="applied"><?= lang('applied', 'beantragt') ?></option>
                                             <option value="approved" selected><?= lang('approved', 'bewilligt') ?></option>
-                                            <option value="rejected"><?= lang('rejected', 'abgelehnt') ?></option>
+                                            <option value="rejected"><?= lang('common.rejected') ?></option>
                                             <option value="finished"><?= lang('finished', 'abgeschlossen') ?></option>
                                         </select>
                                     </div>

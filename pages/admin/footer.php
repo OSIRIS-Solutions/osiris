@@ -92,7 +92,7 @@
                     <th><?= lang('Title (EN)', 'Titel (EN)') ?></th>
                     <th><?= lang('Title (DE)', 'Titel (DE)') ?></th>
                     <th><?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?></th>
-                    <th><?= lang('Actions', 'Aktionen') ?></th>
+                    <th><?= lang('common.actions') ?></th>
                 </tr>
             </thead>
             <tbody>

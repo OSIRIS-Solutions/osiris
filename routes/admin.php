@@ -87,7 +87,7 @@ Route::get('/admin/guest-account/add', function () {
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
         ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
-        ['name' => lang("Add", "Hinzufügen")]
+        ['name' => lang('common.add')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
@@ -256,7 +256,7 @@ Route::get('/admin/categories/(.*)', function ($id) {
         $category = $osiris->adminCategories->findOne(['id' => intval($id)]);
     }
     if (empty($category)) {
-        abortwith(404, lang("Category", "Kategorie"), "/admin/categories");
+        abortwith(404, lang('common.category'), "/admin/categories");
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
@@ -449,7 +449,7 @@ Route::get('/admin/persons', function () {
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Persons", "Personen")]
+        ['name' => lang('common.persons')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/persons.php";
@@ -669,13 +669,13 @@ Route::post('/crud/admin/general', function () {
         if ($_FILES['logo']['error'] != UPLOAD_ERR_OK) {
             $msg = match ($_FILES['logo']['error']) {
                 1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
+                2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
                 6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
         } else if ($filesize > 2000000) {
             $msg = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");

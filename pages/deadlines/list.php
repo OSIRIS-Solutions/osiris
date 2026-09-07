@@ -80,7 +80,7 @@ $deadlines = $osiris->deadlines->find(
             <thead>
                 <tr>
                     <th><?= lang('common.title') ?></th>
-                    <th><?= lang('Date', 'Datum') ?></th>
+                    <th><?= lang('common.date') ?></th>
                     <th><?= lang('common.type') ?></th>
                     <th><?= lang('Relevance', 'Relevanz') ?></th>
                 </tr>
@@ -189,7 +189,7 @@ $deadlines = $osiris->deadlines->find(
         },
         {
             'key': 'date',
-            'title': lang('Date', 'Datum')
+            'title': lang('common.date')
         },
         {
             'key': 'type',

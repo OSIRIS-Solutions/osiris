@@ -19,7 +19,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
             <th><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></th>
             <th><?= lang('Scope Overview', 'Übersicht Umfang') ?></th>
             <th><?= lang('ABS Classification', 'ABS-Klassifikation') ?></th>
-            <th><?= lang('Actions', 'Aktionen') ?></th>
+            <th><?= lang('common.actions') ?></th>
         </tr>
     </thead>
 

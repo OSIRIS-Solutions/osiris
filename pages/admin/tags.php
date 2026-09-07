@@ -33,7 +33,7 @@
         <!-- input for name of this keyword -->
         <div class="form-group">
             <label for="position">
-                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+                <h5><?= lang('common.label') ?></h5>
             </label>
 
             <?php

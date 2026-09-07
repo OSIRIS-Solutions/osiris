@@ -81,7 +81,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                     <?php if ($sws) : ?>
                         <th>SWS</th>
                     <?php elseif ($supervisorThesis) : ?>
-                        <th><?= lang('Role', 'Rolle') ?></th>
+                        <th><?= lang('common.role') ?></th>
                     <?php elseif ($role == 'authors') : ?>
                         <th>Position</th>
                     <?php endif; ?>

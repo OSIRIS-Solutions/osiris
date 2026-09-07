@@ -1853,7 +1853,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'project:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'project',
                 'label' => $label,
                 'url' => '/projects/view/' . $id,
@@ -1940,7 +1940,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'proposal:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'proposal',
                 'label' => $label,
                 'url' => '/proposals/view/' . $id,
@@ -2005,7 +2005,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'person:' . $id,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'person',
             'label' => (string)($doc->displayname ?? $id),
             'url' => '/profile/' . $id,
@@ -2074,7 +2074,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'infrastructure:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'infrastructure',
                 'label' => $doc->name ?? $id,
                 'url' => '/infrastructures/view/' . $id,
@@ -2137,7 +2137,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'event:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'event',
                 'label' => $doc->title ?? $id,
                 'url' => '/conferences/view/' . $id,
@@ -2197,7 +2197,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'deadline:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'deadline',
                 'label' => $doc->title ?? $id,
                 'url' => '/deadlines/view/' . $id,
@@ -2268,7 +2268,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'unit:' . $mongoId,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'unit',
             'label' => $label,
             'url' => '/groups/view/' . $mongoId,
@@ -2327,7 +2327,7 @@ Route::get('/api/command-palette/search', function () {
         $id = (string)$doc->_id;
         $items[] = [
             'id' => 'org:' . $id,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'organization',
             'label' => (string)($doc->name ?? $id),
             'url' => '/organizations/view/' . $id,
@@ -2394,7 +2394,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'journal:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'journal',
                 'label' => $doc->journal ?? $id,
                 'url' => '/journal/view/' . $id,

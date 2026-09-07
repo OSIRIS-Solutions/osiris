@@ -301,7 +301,7 @@ final class Nagoya
 
     $status = $n['status'] ?? null;
     if (!$status) {
-      return '<i class="ph ph-question text-muted" title="' . e(lang('Unknown', 'Unbekannt')) . '"></i>';
+      return '<i class="ph ph-question text-muted" title="' . e(lang('common.unknown')) . '"></i>';
     }
 
     // Map statuses to icons/colors
@@ -322,7 +322,7 @@ final class Nagoya
 
     $status = $n['status'] ?? null;
     if (!$status) {
-      return self::makeBadge('muted', 'ph-question', lang('Unknown', 'Unbekannt'), $large);
+      return self::makeBadge('muted', 'ph-question', lang('common.unknown'), $large);
     }
 
     // Map statuses to badge color + icon

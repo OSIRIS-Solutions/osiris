@@ -472,7 +472,7 @@ class Project extends Vocabulary
                     return "<span class='badge success'>" . lang('ended', 'beendet') . "</span>";
                 return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
             case 'rejected':
-                return "<span class='badge danger'>" . lang('rejected', 'abgelehnt') . "</span>";
+                return "<span class='badge danger'>" . lang('common.rejected') . "</span>";
             case 'finished':
                 return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
             case 'withdrawn':
@@ -482,7 +482,7 @@ class Project extends Vocabulary
                     return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
                 return "<span class='badge primary'>" . lang('ongoing', 'laufend') . "</span>";
             default:
-                return "<span class='badge'>" . lang('unknown', 'unbekannt') . "</span>";
+                return "<span class='badge'>" . lang('common.unknown') . "</span>";
         }
     }
 
@@ -667,7 +667,7 @@ class Project extends Vocabulary
         }
         if (!isset($this->project['end']) || !isset($this->project['end']['year'])) {
             // no end date set
-            return lang('unknown', 'unbekannt');
+            return lang('common.unknown');
         }
         return sprintf('%02d', $this->project['end']['month']) . "/" . $this->project['end']['year'];
     }

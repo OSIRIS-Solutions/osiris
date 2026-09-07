@@ -175,11 +175,11 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
                     <div id="category-form">
                         <?php if (empty($categories)) { ?>
-                            <input type="text" class="form-control" name="values[categories][]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list">
+                            <input type="text" class="form-control" name="values[categories][]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list">
                         <?php } else { ?>
                             <?php foreach ($categories as $cat) { ?>
                                 <div class="input-group mb-10">
-                                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list" value="<?= $cat['name'] ?? $cat ?>">
+                                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list" value="<?= $cat['name'] ?? $cat ?>">
                                     <div class="input-group-append">
                                         <button type="button" class="btn" onclick="$(this).closest('.input-group').remove()"><i class="ph ph-trash"></i></button>
                                     </div>
@@ -200,7 +200,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 <script>
                     function addCategory() {
                         var input = `<div class="input-group mb-10">
-                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list">
+                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list">
                     <div class="input-group-append">
                         <button type="button" class="btn" onclick="$(this).closest('.input-group').remove()"><i class="ph ph-trash"></i></button>
                     </div>

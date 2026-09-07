@@ -244,7 +244,7 @@ $projectCount = count($projectsForCountry);
                                 $statusLabel = lang('Not applicable', 'Nicht zutreffend');
                                 $statusClass = 'badge tiny muted';
                             } else {
-                                $statusLabel = lang('Unknown', 'Unbekannt');
+                                $statusLabel = lang('common.unknown');
                                 $statusClass = 'badge tiny muted';
                             }
                     ?>

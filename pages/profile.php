@@ -874,7 +874,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('telephone') && isset($scientist['telephone'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Telephone', 'Telefon') ?></span>
+                                    <span class="key"><?= lang('common.telephone') ?></span>
                                     <a href="tel:<?= $scientist['telephone'] ?>"><?= $scientist['telephone'] ?></a>
                                 </td>
                             </tr>
@@ -1425,7 +1425,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <div>
                                     <?= lang('Active as', 'Aktiv als') ?>
                                     <b class="text-primary"><?= $Infra->getRole($person_role['role']) ?></b>
-                                    <?= lang('from', 'von') ?>
+                                    <?= lang('common.from') ?>
                                     <?= fromToYear($person_role['start'], $person_role['end'] ?? null, true) ?>
                                 </div>
                             </td>

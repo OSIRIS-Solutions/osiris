@@ -200,7 +200,7 @@ class ProjectFields extends Fields
                 'values' => [
                     'proposed' => lang('Proposed', 'Beantragt'),
                     'approved' => lang('Approved', 'Bewilligt'),
-                    'rejected' => lang('Rejected', 'Abgelehnt'),
+                    'rejected' => lang('common.rejected'),
                     'withdrawn' => lang('Withdrawn', 'Zurückgezogen'),
                 ],
                 'usage' => [

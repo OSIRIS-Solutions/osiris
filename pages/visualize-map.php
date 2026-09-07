@@ -96,7 +96,7 @@ if (empty($lat) || empty($lng)) {
             <?= $Project->widgetSmall() ?>
 
             <h2>
-                <?= lang('Collaborators', 'Kooperationspartner') ?>
+                <?= lang('common.collaborators') ?>
             </h2>
 
             <table class="table">

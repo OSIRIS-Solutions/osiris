@@ -292,7 +292,7 @@
 
                     <?php if ($guests_involved) { ?>
                         <a onclick="navigate('guests')" id="btn-guests" class="btn">
-                            <?= lang('Guests', 'Gäste') ?>
+                            <?= lang('common.guests') ?>
                             <span class="index"><?= count($guests) ?></span>
                         </a>
                     <?php } ?>
@@ -316,7 +316,7 @@
                     <?php if ($doc['affiliated'] ?? true) { ?>
                         <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                             <i class="ph-duotone ph-push-pin m-0"></i>
-                            <?= lang('Affiliated', 'Affiliiert') ?>
+                            <?= lang('common.affiliated') ?>
                         </div>
                     <?php } else { ?>
                         <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
@@ -770,7 +770,7 @@
 
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang('Date', 'Datum') ?>: </span>
+                                        <span class="key"><?= lang('common.date') ?>: </span>
                                         <?php if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empty($doc['month'])) { ?>
                                             <div class="message danger">
                                                 <h3 class="title">
@@ -1177,7 +1177,7 @@
                                     ];
                                 } elseif ($supervisorThesis) {
                                     $thirdCol = [
-                                        'label' => lang('Role', 'Rolle'),
+                                        'label' => lang('common.role'),
                                         'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
                                     ];
                                 } elseif ($role === 'authors') {
@@ -1275,7 +1275,7 @@
                                                                     data-toggle="tooltip"
                                                                     data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
                                                                     <i class="ph ph-handshake"></i>
-                                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                                    <?= lang('common.affiliated') ?>
                                                                 </span>
                                                             <?php endif; ?>
 
@@ -1337,7 +1337,7 @@
                                                                 <div class="dropdown d-inline-block">
                                                                     <button class="btn small" data-toggle="dropdown" type="button"
                                                                         id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                        <?= lang('common.claim') ?>
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                                         <div class="content font-size-12 text-danger mb-10" style="white-space: normal;">
@@ -1350,7 +1350,7 @@
                                                                                 <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                                 <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                                 <button class="btn block small" type="submit">
-                                                                                    <?= lang('Claim', 'Beanspruchen') ?>
+                                                                                    <?= lang('common.claim') ?>
                                                                                 </button>
                                                                             </form>
                                                                         </div>

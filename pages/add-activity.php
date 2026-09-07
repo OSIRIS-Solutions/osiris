@@ -50,7 +50,7 @@ if ($copy && isset($form['subtype'])) {
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id']) && !$copy) {
     $formaction .= "/crud/activities/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
     $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
@@ -199,7 +199,7 @@ function val($index, $default = '')
                         <input type="date" id="event-start" required class="form-control" onchange="$('#event-end').val(this.value)">
                     </div>
                     <div class="col">
-                        <label for="end" class="required"><?= lang('End date', 'Enddatum') ?></label>
+                        <label for="end" class="required"><?= lang('common.end_date') ?></label>
                         <input type="date" id="event-end" class="form-control">
                     </div>
                 </div>

@@ -23,7 +23,7 @@ $level = 0;
 
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
-$btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+$btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
 $url = ROOTPATH . "/groups/public/" . $form['id'];
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 

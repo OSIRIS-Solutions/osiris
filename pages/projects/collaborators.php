@@ -11,7 +11,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
 <h2>
     <i class="ph-duotone ph-handshake"></i>
-    <?= lang('Collaborators', 'Kooperationspartner') ?>
+    <?= lang('common.collaborators') ?>
 </h2>
 
 
@@ -218,7 +218,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
         <thead>
             <tr>
                 <th><?= lang('common.name') ?></th>
-                <th><label class="required" for="lead"><?= lang('Role', 'Rolle') ?></label></th>
+                <th><label class="required" for="lead"><?= lang('common.role') ?></label></th>
                 <th></th>
             </tr>
         </thead>

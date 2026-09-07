@@ -111,7 +111,7 @@ foreach ($countries as $c) {
                         } elseif ($nagoyaParty === 'no') {
                             echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
+                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
                         }
                         ?>
                     </div>
@@ -124,7 +124,7 @@ foreach ($countries as $c) {
                         } elseif ($ownABSMeasures === 'no') {
                             echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
+                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
                         }
                         ?>
                     </div>

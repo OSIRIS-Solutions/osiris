@@ -226,10 +226,10 @@ Route::post('/data/upload', function () {
                 $msg .= lang('The uploaded file exceeds the maximum allowed size.', 'Die hochgeladene Datei überschreitet die maximal erlaubte Größe.');
                 break;
             case UPLOAD_ERR_PARTIAL:
-                $msg .= lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.');
+                $msg .= lang('error.file_partially_uploaded');
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $msg .= lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.');
+                $msg .= lang('error.no_file_uploaded');
                 break;
             case UPLOAD_ERR_NO_TMP_DIR:
                 $msg .= lang('Missing a temporary folder.', 'Es fehlt ein temporärer Ordner.');
@@ -238,7 +238,7 @@ Route::post('/data/upload', function () {
                 $msg .= lang('Failed to write file to disk.', 'Die Datei konnte nicht auf die Festplatte geschrieben werden.');
                 break;
             case UPLOAD_ERR_EXTENSION:
-                $msg .= lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.');
+                $msg .= lang('error.file_upload_stopped');
                 break;
             default:
                 $msg .= lang('Unknown upload error.', 'Unbekannter Upload-Fehler.');

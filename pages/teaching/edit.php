@@ -97,7 +97,7 @@ include_once BASEPATH . "/header-editor.php";
                 <div id="org-organization-value">
                     <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                        <?= lang('error.organization_select_missing') ?>
                         <?php if (!empty($org_id)) { ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                         <?php } ?>
@@ -108,7 +108,7 @@ include_once BASEPATH . "/header-editor.php";
                             <b><?= $collab['name'] ?></b>
                             <br><small class="text-muted"><?= $collab['location'] ?></small>
                         <?php } else { ?>
-                            <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                            <?= lang('error.organization_select_missing') ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                     <?php }
                     } ?>

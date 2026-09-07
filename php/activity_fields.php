@@ -101,7 +101,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Category', 'Kategorie'),
+                'label' => lang('common.category'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $types
@@ -147,7 +147,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('End date', 'Enddatum'),
+                'label' => lang('common.end_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
@@ -381,7 +381,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Affiliated', 'Affiliiert'),
+                'label' => lang('common.affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -829,7 +829,7 @@ class ActivityFields extends Fields
                 'input' => 'select',
                 'values' => [
                     'in progress' => lang('In Progress', 'In Bearbeitung'),
-                    'completed' => lang('Completed', 'Abgeschlossen'),
+                    'completed' => lang('common.completed'),
                     'aborted' => lang('Aborted', 'Abgebrochen')
                 ]
             ],
@@ -1141,7 +1141,7 @@ class ActivityFields extends Fields
                 'input' => 'select',
                 'values' => [
                     'verified' => lang('Verified', 'Verifiziert'),
-                    'rejected' => lang('Rejected', 'Abgelehnt'),
+                    'rejected' => lang('common.rejected'),
                     'in_progress' => lang('In Process', 'In Bearbeitung'),
                 ]
             ];

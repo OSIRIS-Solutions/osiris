@@ -210,7 +210,7 @@ $canAddNotes = true; // later
                                                             $statusLabel = lang('Not applicable', 'Nicht zutreffend');
                                                             $statusClass = 'badge muted';
                                                         } else {
-                                                            $statusLabel = lang('Unknown', 'Unbekannt');
+                                                            $statusLabel = lang('common.unknown');
                                                         }
                                                         ?>
                                                         <span class="<?= $statusClass ?>"><?= $statusLabel ?></span>

@@ -96,7 +96,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" />
         <h6 class="mb-0 mt-5"><?= lang('Change Year for Statistics', 'Jahr für Statistik ändern') ?>:</h6>
         <input type="number" name="year" value="<?= $year ?>" class="form-control w-100 d-inline-block" />
-        <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+        <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
     </form>
 </div>
 
@@ -115,7 +115,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <thead>
             <tr>
                 <th><?= lang('common.name') ?></th>
-                <th><?= lang('Category', 'Kategorie') ?></th>
+                <th><?= lang('common.category') ?></th>
                 <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
                 <th><?= lang('Type', 'Art') ?></th>
                 <th><?= lang('common.description') ?></th>

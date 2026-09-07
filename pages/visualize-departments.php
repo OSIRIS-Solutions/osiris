@@ -77,7 +77,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <button type="submit" class="btn primary">
-                <?= lang('Update', 'Aktualisieren') ?>
+                <?= lang('common.update') ?>
             </button>
         </form>
 
@@ -107,7 +107,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <button type="submit" class="btn primary">
-                <?= lang('Update', 'Aktualisieren') ?>
+                <?= lang('common.update') ?>
             </button>
         </form>
 

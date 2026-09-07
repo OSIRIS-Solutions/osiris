@@ -19,7 +19,7 @@
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
     $url = ROOTPATH . "/admin/fields/" . $form['id'];
     $title = $name;
 } else {
@@ -124,7 +124,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                         <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('Integer', 'Ganzzahl') ?></option>
                         <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('Float', 'Gleitkommazahl') ?></option>
                         <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)') ?></option>
-                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('Date', 'Datum') ?></option>
+                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('common.date') ?></option>
                         <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)') ?></option>
                         <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('Boolean (as checkbox)', 'Boolean (als Checkbox)') ?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
@@ -292,7 +292,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('Persons', 'Personen') ?>
+                    <?= lang('common.persons') ?>
                 </th>
                 <td>
                     <?php if ($persons) { ?>

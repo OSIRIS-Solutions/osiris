@@ -33,7 +33,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
     <thead>
         <tr>
             <th>
-                <?= lang('Unit', 'Einheit') ?>
+                <?= lang('common.unit') ?>
             </th>
             <th>
                 <?= lang('Start', 'Start') ?>
@@ -45,7 +45,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                 <?= lang('Scientific', 'Wissenschaftlich') ?>
             </th>
             <th class="text-center">
-                <?= lang('Actions', 'Aktionen') ?>
+                <?= lang('common.actions') ?>
             </th>
         </tr>
     </thead>
@@ -86,7 +86,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     if (isset($unit['start'])) {
                         echo format_date($unit['start']);
                     } else {
-                        echo '<em class="text-danger">' . lang('unknown', 'unbekannt') . '</em>';
+                        echo '<em class="text-danger">' . lang('common.unknown') . '</em>';
                     }
                     ?>
                 </td>
@@ -214,7 +214,7 @@ function printTree($tree, $level = 0)
             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
                 <div class="form-group">
-                    <label for="unit"><?= lang('Unit', 'Einheit') ?></label>
+                    <label for="unit"><?= lang('common.unit') ?></label>
                     <select class="form-control" id="unit" name="values[unit]">
                         <option value=""><?= lang('Select unit', 'Einheit auswählen') ?></option>
                         <?php printTree($tree) ?>

@@ -62,7 +62,7 @@ if (empty($accounts)) {
                 <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Mail', 'E-Mail') ?></th>
                 <th><?= lang('Valid until', 'Gültig bis') ?></th>
-                <th class="w-100"><?= lang('Actions', 'Aktionen') ?></th>
+                <th class="w-100"><?= lang('common.actions') ?></th>
             </tr>
         </thead>
         <tbody>

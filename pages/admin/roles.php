@@ -79,7 +79,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                 <form action="<?= ROOTPATH ?>/crud/admin/roles" method="post">
                     <table class="table simple w-auto">
                         <thead>
-                            <th><?= lang('Role', 'Rolle') ?></th>
+                            <th><?= lang('common.role') ?></th>
                             <th><?= lang('Action', 'Aktion') ?></th>
                         </thead>
                         <tbody>
@@ -111,11 +111,11 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="<?= lang('Role', 'Rolle') ?>" id="newrole">
+                            <input type="text" class="form-control" placeholder="<?= lang('common.role') ?>" id="newrole">
                             <div class="input-group-append">
                                 <button class="btn success" type="button" onclick="addRole()">
                                     <i class="ph ph-plus"></i>
-                                    <?= lang('Add', 'Hinzufügen') ?>
+                                    <?= lang('common.add') ?>
                                 </button>
                             </div>
                         </div>

@@ -97,7 +97,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
                 <h6 class="m-0"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
             </form>
         </div>
 
@@ -109,7 +109,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
                 <h6 class="m-0"><?= lang('Change Reporting Period', 'Reportzeitraum ändern') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required />
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
             </form>
         </div>
     </div>
@@ -164,7 +164,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-by-type-table">
             <thead>
                 <tr>
-                    <th><?= lang('Category', 'Kategorie') ?></th>
+                    <th><?= lang('common.category') ?></th>
                     <th><?= lang('common.type') ?></th>
                     <th><?= lang('Count', 'Anzahl') ?></th>
                 </tr>

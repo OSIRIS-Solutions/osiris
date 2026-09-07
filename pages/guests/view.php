@@ -186,7 +186,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Telephone', 'Telefon') ?></th>
+                    <th class="w-300"><?= lang('common.telephone') ?></th>
                     <td>
                         <?= $form['guest']['phone'] ?? '-' ?>
                     </td>

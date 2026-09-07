@@ -100,7 +100,7 @@
                 <a href="<?= ROOTPATH ?>/activities/view/${it.id}" target="_blank" class="colorless link">${it.title}</a>
                 <p class="text-muted font-size-12 mb-0 d-flex align-items-center justify-content-between">
                     <span>
-                        <b>${lang('Completed', 'Abgeschlossen')}</b>: ${it.completed} | 
+                        <b>${lang('common.completed')}</b>: ${it.completed} | 
                         <b>${lang('Your Step', 'Dein Schritt')}</b>: ${it.step.label}
                     </span>
 

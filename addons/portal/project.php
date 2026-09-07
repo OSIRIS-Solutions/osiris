@@ -207,7 +207,7 @@
                     <a class="btn primary float-right" href="#cooperation-partners">Zeige Liste</a>
 
                     <h2>
-                        <?= lang('Collaborators', 'Kooperationspartner') ?>
+                        <?= lang('common.collaborators') ?>
                         (<?= count($data['collaborators']) ?>)
                     </h2>
 
@@ -451,7 +451,7 @@
                                 <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
                             </div> <?php if ($progress == 100) { ?>
                                 <small class="text-secondary">
-                                    <?= lang('Completed', 'Abgeschlossen') ?>
+                                    <?= lang('common.completed') ?>
                                 </small>
                             <?php } ?>
                         </td>
@@ -552,7 +552,7 @@
                     <?php } ?>
                     <?php if (!empty($data['collaborators'] ?? [])) { ?>
                         <a href="#collaborators">
-                            <?= lang('Collaborators', 'Kooperationspartner') ?>
+                            <?= lang('common.collaborators') ?>
                         </a>
                     <?php } ?>
 

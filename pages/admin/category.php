@@ -27,7 +27,7 @@ $id = $form['id'] ?? null;
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/categories/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
     $url = ROOTPATH . "/admin/categories/" . $id;
     $title = $name;
 

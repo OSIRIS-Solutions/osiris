@@ -207,7 +207,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td>
-                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
+                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('common.rejected') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
@@ -289,7 +289,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                 </div>
                 <input type="date" name="from" id="filter-from" class="form-control">
             </div>
@@ -356,11 +356,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'start_date'
         },
         {
-            title: lang('End date', 'Enddatum'),
+            title: lang('common.end_date'),
             key: 'end_date'
         },
         {
-            title: lang('Role', 'Rolle'),
+            title: lang('common.role'),
             key: 'role'
         },
         {
@@ -474,7 +474,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             case 'proposed':
                 return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
             case 'rejected':
-                return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
+                return `<span class='badge danger'>${lang('common.rejected')}</span>`;
             case 'withdrawn':
                 return `<span class='badge muted'>${lang('withdrawn', 'zurückgezogen')}</span>`;
             case 'expired':
@@ -614,7 +614,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('End date', 'Enddatum')
+                    header: lang('common.end_date')
                 },
                 {
                     target: 5,
@@ -622,7 +622,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Role', 'Rolle')
+                    header: lang('common.role')
                 },
                 {
                     target: 6,

@@ -22,7 +22,7 @@
     <table class="table simple">
         <thead>
             <tr>
-                <th><?= lang('Entity', 'Entität') ?></th>
+                <th><?= lang('common.entity') ?></th>
                 <th><?= lang('Name') ?></th>
                 <th><?= lang('Link') ?></th>
                 <th></th>

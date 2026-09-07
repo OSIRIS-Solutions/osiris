@@ -252,25 +252,25 @@ if ($topicsEnabled) {
         if (count($parent['collaborators'] ?? []) > 0) { ?>
             <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
                 <i class="ph ph-handshake" aria-hidden="true"></i>
-                <?= lang('Collaborators', 'Kooperationspartner') ?>
+                <?= lang('common.collaborators') ?>
                 <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
             </a>
         <?php  }
     } elseif (count($project['collaborators'] ?? []) > 0) { ?>
         <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
             <i class="ph ph-handshake" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
             <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
         </a>
     <?php } elseif ($edit_perm) { ?>
         <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" id="btn-collabs" class="btn">
             <i class="ph ph-plus-circle" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
         </a>
     <?php } else { ?>
         <a id="btn-collabs" class="btn disabled">
             <i class="ph ph-handshake" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
             <span class="index">0</span>
         </a>
     <?php } ?>
@@ -571,7 +571,7 @@ if ($topicsEnabled) {
 <section id="collabs" style="display:none">
 
     <h2>
-        <?= lang('Collaborators', 'Kooperationspartner') ?>
+        <?= lang('common.collaborators') ?>
     </h2>
 
     <?php if ($edit_perm && !$is_subproject) { ?>

@@ -79,7 +79,7 @@ class EventFields extends Fields
             [
                 "id" => "end",
                 "module_of" => ['general'],
-                "label" => lang("End date", "Enddatum"),
+                "label" => lang('common.end_date'),
                 'type' => 'date',
                 'usage' => [
                     'aggregate',

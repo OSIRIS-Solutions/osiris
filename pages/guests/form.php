@@ -35,7 +35,7 @@
                     </label>
                     <div class="input-group" id="date-range-picker">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><?= lang('from', 'von') ?></span>
+                            <span class="input-group-text"><?= lang('common.from') ?></span>
                         </div>
                         <input type="date" class="form-control" name="values[start]" id="date_start" value="<?= valueFromDateArray($form['start'] ?? null) ?>" required>
 
@@ -165,7 +165,7 @@
                 </h5>
 
                 <div class="form-group">
-                    <label for="guest-phone" class="element-other"><?= lang('Telephone', 'Telefon') ?></label>
+                    <label for="guest-phone" class="element-other"><?= lang('common.telephone') ?></label>
                     <input type="text" class="form-control" name="values[guest][phone]" id="guest-phone" value="<?= $form['guest']['phone'] ?? '' ?>">
                 </div>
 

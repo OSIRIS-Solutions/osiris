@@ -92,8 +92,25 @@ return [
     'roles' => 'Roles',
     'close' => 'Close',
     'activity' => 'Activity',
-
-
-
-
+    'role' => 'Role',
+    'go_back_activity' => 'Go back to activity',
+    'add' => 'Add',
+    'category' => 'Category',
+    'label' => 'Label',
+    'unknown' => 'Unknown',
+    'affiliated' => 'Affiliated',
+    'entity' => 'Entity',
+    'update' => 'Update',
+    'collaborators' => 'Collaborators',
+    'guests' => 'Guests',
+    'actions' => 'Actions',
+    'end_date' => 'End date',
+    'rejected' => 'Rejected',
+    'persons' => 'Persons',
+    'unit' => 'Unit',
+    'completed' => 'Completed',
+    'claim' => 'Claim',
+    'from' => 'From',
+    'date' => 'Date',
+    
 ];

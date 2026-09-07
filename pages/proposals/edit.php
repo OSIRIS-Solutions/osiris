@@ -270,7 +270,7 @@ if ($is_subproject) {
             <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
             <i class="ph ph-arrow-right"></i>
             <?php if ($phase == 'rejected') { ?>
-                <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
+                <span class="badge danger"><?= lang('common.rejected') ?></span>
             <?php } else if ($phase == 'withdrawn') { ?>
                 <span class="badge muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></span>
             <?php } ?>
@@ -593,7 +593,7 @@ if ($is_subproject) {
 
             <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
                 <h5>
-                    <?= lang('Persons', 'Personen') ?>
+                    <?= lang('common.persons') ?>
                 </h5>
 
                 <?php if (array_key_exists('applicants', $fields)) { ?>
@@ -717,7 +717,7 @@ if ($is_subproject) {
 
                         <div id="scholarship-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
@@ -778,14 +778,14 @@ if ($is_subproject) {
 
                         <div id="university-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
@@ -863,14 +863,14 @@ if ($is_subproject) {
 
                         <div id="funding-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>

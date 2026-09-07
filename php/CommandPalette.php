@@ -329,7 +329,7 @@ class CommandPalette
                 "url" => "/guests",
                 "type" => "Navigation",
                 "icon" => "user-switch",
-                "label" => lang("Guests", "Gäste"),
+                "label" => lang('common.guests'),
                 "feature" => "guests",
                 "keywords" => ["guests", "gäste"],
                 "priority" => 20
@@ -493,7 +493,7 @@ class CommandPalette
         foreach ($this->settings->activityCategories as $cat) {
             $this->add([
                 "url" => "/activities#type=" . $cat['id'],
-                "type" => lang("Category", "Kategorie"),
+                "type" => lang('common.category'),
                 "icon" => "bookmarks",
                 "label" => lang($cat['name'], $cat['name_de'] ?? null),
                 "keywords" => [$cat['name'], $cat['name_de'] ?? $cat['name'], $cat['id']],
@@ -516,7 +516,7 @@ class CommandPalette
             'proposals' => lang('Proposals', 'Anträge'),
             'conferences' => lang('Events', 'Veranstaltungen'),
             'journals' => lang('Journals', 'Zeitschriften'),
-            'persons' => lang('Persons', 'Personen')
+            'persons' => lang('common.persons')
         ];
         foreach ($queries as $query) {
             $this->add([

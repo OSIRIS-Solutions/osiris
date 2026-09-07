@@ -1096,7 +1096,7 @@ function lockedPage($id)
     $html .= lang('This activity is locked and cannot be edited or deleted due to our reporting rules. Please contact the OSIRIS editors if there are any issues.', 'Diese Aktivität ist aufgrund unserer Report-Richtlinien gesperrt und kann nicht bearbeitet oder gelöscht werden. Bitte kontaktiere die OSIRIS-Redaktion, falls dadurch irgendwelche Probleme entstehen.');
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
-    $html .= lang('Go back to activity', 'Zurück zur Aktivität');
+    $html .= lang('common.go_back_activity');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';

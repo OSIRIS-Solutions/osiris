@@ -283,7 +283,7 @@ $name = $data['name'];
                         <?php if (!empty($data['category'])): ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang("Category", "Kategorie"); ?></span>
+                                    <span class="key"><?= lang('common.category'); ?></span>
                                     <?= e($data['category']) ?>
                                 </td>
                             </tr>

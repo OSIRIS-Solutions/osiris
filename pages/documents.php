@@ -43,7 +43,7 @@
                 <tr>
                     <th><?= lang('File', 'Datei') ?></th>
                     <th><?= lang('Linked to', 'Verknüpft mit') ?></th>
-                    <th class="text-end"><?= lang('Actions', 'Aktionen') ?></th>
+                    <th class="text-end"><?= lang('common.actions') ?></th>
                     <th><?= lang('Document type', 'Dokumententyp') ?></th>
                     <th><?= lang('File type', 'Dateityp') ?></th>
                     <th><?= lang('Linked entity', 'Verknüpfte Entität') ?></th>
@@ -89,7 +89,7 @@
                     $filename = $doc['filename'] ?? '';
                     $desc = trim($doc['description'] ?? '');
                     $entityType = ucfirst($con['type'] ?? $doc['type']);
-                    $entityName = $con['name'] ?? lang('Unknown', 'Unbekannt');
+                    $entityName = $con['name'] ?? lang('common.unknown');
                 ?>
                     <tr>
                         <!-- FILE -->
@@ -225,7 +225,7 @@
         },
         {
             key: 'actions',
-            title: '<?= lang("Actions", "Aktionen") ?>'
+            title: '<?= lang('common.actions') ?>'
         },
         {
             key: 'document_type',

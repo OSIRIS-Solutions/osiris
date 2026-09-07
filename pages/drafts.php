@@ -26,7 +26,7 @@
         <tr>
             <th><?= lang('common.title') ?></th>
             <th><?= lang('Created', 'Erstellt') ?></th>
-            <th><?= lang('Actions', 'Aktionen') ?></th>
+            <th><?= lang('common.actions') ?></th>
         </tr>
     </thead>
     <tbody>
