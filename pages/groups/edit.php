@@ -140,7 +140,7 @@ function sel($index, $value)
     </a>
     <a onclick="navigate('settings')" id="btn-settings" class="btn">
         <i class="ph ph-trash" aria-hidden="true"></i>
-        <?= lang('Delete', 'Löschen') ?>
+        <?= lang('system.delete') ?>
     </a>
 
 </nav>
@@ -294,7 +294,7 @@ function sel($index, $value)
         </fieldset>
 
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+            <i class="ph ph-check"></i> <?= lang('system.save') ?>
         </button>
 
     </section>
@@ -338,7 +338,7 @@ function sel($index, $value)
                                     <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
-                                        <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('Title', 'Titel') ?></label>
+                                        <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('system.title') ?></label>
                                     </div>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
@@ -357,7 +357,7 @@ function sel($index, $value)
                                     <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
-                                        <label for="values[research][<?= $i ?>][title_de]"><?= lang('Title', 'Titel') ?></label>
+                                        <label for="values[research][<?= $i ?>][title_de]"><?= lang('system.title') ?></label>
                                     </div>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
@@ -427,7 +427,7 @@ function sel($index, $value)
         ?>
 
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+            <i class="ph ph-check"></i> <?= lang('system.save') ?>
         </button>
 
 
@@ -488,7 +488,7 @@ function sel($index, $value)
             </div>
         </div>
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+            <i class="ph ph-check"></i> <?= lang('system.save') ?>
         </button>
 
     </section>
@@ -500,7 +500,7 @@ function sel($index, $value)
     <div class="alert danger mt-20">
         <form action="<?= ROOTPATH ?>/crud/groups/delete/<?= $group['_id'] ?>" method="post">
             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/groups">
-            <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+            <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
             <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
         </form>
     </div>

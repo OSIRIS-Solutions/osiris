@@ -292,7 +292,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if ($Settings->hasPermission('news.edit')) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
+                <?= lang('system.edit') ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>
@@ -304,7 +304,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
-                    <?= lang('Delete', 'Löschen') ?>
+                    <?= lang('system.delete') ?>
                 </button>
             </form>
         <?php } ?>

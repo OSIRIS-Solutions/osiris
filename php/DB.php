@@ -201,7 +201,7 @@ class DB
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
-                    'name' => lang('Activities', 'Aktivitäten'),
+                    'name' => lang('navigation.activities'),
                     'count' => 0,
                     'key' => 'activity',
                     'values' => []

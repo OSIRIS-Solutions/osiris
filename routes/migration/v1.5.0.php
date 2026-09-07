@@ -546,7 +546,7 @@ $count = count($activities);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('Activities', 'Aktivitäten') ?>
+        <?= lang('navigation.activities') ?>
     </h4>
     <p>
         <?= lang('We have found ' . $count . ' activities with projects. We will now migrate the projects to use the ObjectId instead of the name string.', 'Wir haben ' . $count . ' Aktivitäten mit Projekten gefunden. Wir werden jetzt die Projekte migrieren, um die ObjectId anstelle des Namensstrings zu verwenden.') ?>

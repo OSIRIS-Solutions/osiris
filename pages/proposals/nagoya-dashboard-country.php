@@ -29,7 +29,7 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-clipboard-text"></i>
-                <?= lang('Projects', 'Projekte') ?>
+                <?= lang('navigation.projects') ?>
             </h3>
             <p class="mb-5">
                 <span class="badge"><?= $projectCount ?></span>

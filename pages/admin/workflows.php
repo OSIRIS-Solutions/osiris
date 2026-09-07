@@ -36,7 +36,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
             <th>ID</th>
             <th>Name</th>
             <th><?=lang('Steps', 'Schritte')?></th>
-            <th># <?=lang('Activities', 'Aktivitäten')?></th>
+            <th># <?=lang('navigation.activities')?></th>
             <th><?=lang('Action', 'Aktion')?></th>
         </tr>
     </thead>

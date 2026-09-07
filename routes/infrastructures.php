@@ -131,7 +131,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('system.edit')]
     ];
 
     include BASEPATH . "/header.php";

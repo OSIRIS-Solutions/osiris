@@ -177,7 +177,7 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="projects-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('system.type') ?></th>
                 <th><?= lang('Count', 'Anzahl') ?></th>
                 <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
             </tr>
@@ -259,7 +259,7 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="proposals-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('system.type') ?></th>
                 <th><?= lang('Submitted', 'Eingereicht') ?></th>
                 <th><?= lang('Approved', 'Genehmigt') ?></th>
                 <th><?= lang('Rejected', 'Abgelehnt') ?></th>
@@ -331,7 +331,7 @@ $all = $osiris->projects->count();
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('system.type') ?></th>
                 <th><?= lang('Location', 'Standort') ?></th>
                 <th><?= lang('Number of projects', 'Anzahl der Projekte') ?></th>
             </tr>
@@ -407,7 +407,7 @@ $all = $osiris->projects->count();
             <table class="table" id="collaborative-partners-by-type">
                 <thead>
                     <tr>
-                        <th><?= lang('Type', 'Typ') ?></th>
+                        <th><?= lang('system.type') ?></th>
                         <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
                     </tr>
                 </thead>

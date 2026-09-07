@@ -231,7 +231,7 @@ $persons = $osiris->adminPersons->find();
                                         <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
                                         <code class="code mx-10"><?= e($field['format']) ?></code>
                                         <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
-                                            <i class="ph ph-pencil" title="<?= lang('edit', 'bearbeiten') ?>"></i>
+                                            <i class="ph ph-pencil" title="<?= lang('system.edit') ?>"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -383,7 +383,7 @@ $persons = $osiris->adminPersons->find();
 
                 <button class="btn success large">
                     <i class="ph ph-floppy-disk"></i>
-                    <?= lang('Save', 'Speichern') ?>
+                    <?= lang('system.save') ?>
                 </button>
 
                 <a class="btn light large" href="<?= ROOTPATH ?>/admin/persons">

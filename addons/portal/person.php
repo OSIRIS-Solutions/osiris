@@ -192,7 +192,7 @@
                         <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-table="teaching">
                             <thead>
                                 <tr>
-                                    <th data-><?= lang('Title', 'Titel') ?></th>
+                                    <th data-><?= lang('system.title') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -487,7 +487,7 @@
                                 </a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['projects'])): ?>
-                                <a href="#projects"><?= lang("Projects", "Projekte") ?></a>
+                                <a href="#projects"><?= lang('navigation.projects') ?></a>
                             <?php endif; ?>
                         </div>
                     </nav>

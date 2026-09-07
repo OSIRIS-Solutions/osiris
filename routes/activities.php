@@ -56,10 +56,10 @@ Route::get('/(activities|projects|proposals|conferences|journals|persons)/search
 
     switch ($collection) {
         case 'activities':
-            $colName = lang('Activities', "Aktivitäten");
+            $colName = lang('navigation.activities');
             break;
         case 'projects':
-            $colName = lang('Projects', "Projekte");
+            $colName = lang('navigation.projects');
             break;
         case 'proposals':
             $colName = lang('Proposals', "Anträge");
@@ -87,7 +87,7 @@ Route::get('/activities/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Statistics", "Statistiken")]
     ];
     include BASEPATH . "/header.php";
@@ -123,7 +123,7 @@ Route::get('/add-activity', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Add new", "Neu hinzufügen")]
     ];
     include BASEPATH . "/header.php";
@@ -157,7 +157,7 @@ Route::get('/activities/drafts', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Drafts", "Entwürfe")]
     ];
     include BASEPATH . "/header.php";
@@ -187,7 +187,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Drafts", "Entwürfe"), 'path' => "/activities/drafts"],
         ['name' => $draft['title'] ?? $id]
     ];
@@ -213,7 +213,7 @@ Route::post('/crud/activities/add-activity', function () {
         $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
     $name = ucfirst($form['type']) . ": " . $name;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("New from Import", "Neu aus Import")]
     ];
 
@@ -227,7 +227,7 @@ Route::get('/activities/online-search', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Search in Pubmed", "Suche in Pubmed")]
     ];
     include BASEPATH . "/header.php";
@@ -276,7 +276,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $name = $activity['rendered']['title'] ?? $id;
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => $name]
     ];
     if ($Format->hasSchema()) {
@@ -451,7 +451,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
         ['name' => lang("Connections", "Verknüpfungen")]
     ];
@@ -491,9 +491,9 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
         $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
     $name = ucfirst($form['type']) . ": " . $name;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('system.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -508,7 +508,7 @@ Route::get('/activities/locking', function () {
         abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities', lang('Go back to activities', 'Zurück zu Aktivitäten'));
     }
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Locking", "Sperren")]
     ];
 
@@ -526,7 +526,7 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
     $Modules = new Modules();
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Doublet", "Dublette")]
     ];
 
@@ -592,7 +592,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
     $copy = true;
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Copy", "Kopieren")]
     ];
 
@@ -627,7 +627,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 
     $name = $form['title'] ?? $id;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"]
     ];
     if ($role == "authors") {
@@ -1530,7 +1530,7 @@ Route::post('/crud/activities/lock', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('navigation.activities'), 'path' => "/activities"],
         ['name' => lang("Locking", "Sperren")]
     ];
 

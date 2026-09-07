@@ -460,7 +460,7 @@ if ($level == 'topic') {
                 <table class="table dataTable responsive" id="publications-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Type', 'Typ') ?></th>
+                            <th><?= lang('system.type') ?></th>
                             <th><?= lang('Publication', 'Publikation') ?></th>
                             <th></th>
                         </tr>

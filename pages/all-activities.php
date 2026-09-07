@@ -92,7 +92,7 @@ $cart = readCart();
             <thead>
                 <tr>
                     <th><?= lang('Quarter', 'Quartal') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
@@ -100,9 +100,9 @@ $cart = readCart();
                     <th><?= lang('End', 'Ende') ?></th>
                     <th><?= lang('Units', 'Einheiten') ?></th>
                     <th><?= lang('Online ahead of print') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Subtype', 'Subtyp') ?></th>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('system.title') ?></th>
                     <th><?= lang('Authors', 'Autoren') ?></th>
                     <th><?= lang('Year', 'Jahr') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
@@ -127,7 +127,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-type')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('system.type') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <style>
@@ -373,7 +373,7 @@ $cart = readCart();
             'key': 'quarter'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('system.type'),
             'key': 'type'
         },
         {
@@ -405,7 +405,7 @@ $cart = readCart();
             'key': 'epub'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('system.type'),
             'key': 'type'
         },
         {
@@ -413,7 +413,7 @@ $cart = readCart();
             'key': 'subtype'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('system.title'),
             'key': 'title'
         },
         {

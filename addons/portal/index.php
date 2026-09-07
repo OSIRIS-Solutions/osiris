@@ -95,7 +95,7 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
     ];
     switch ($pagename) {
         case 'activities':
-            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/$section/activities"];
+            $breadcrumb[] = ['name' => lang('navigation.activities'), 'path' => "/$section/activities"];
             break;
 
         case 'publications':
@@ -107,7 +107,7 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
             break;
 
         case 'projects':
-            $breadcrumb[] = ['name' => lang('Projects', 'Projekte'), 'path' => "/$section/projects"];
+            $breadcrumb[] = ['name' => lang('navigation.projects'), 'path' => "/$section/projects"];
             break;
 
         case 'units':
@@ -308,7 +308,7 @@ Route::get('/portfolio-index', function () {
 //     switch ($type) {
 //         case 'activities':
 //             $breadcrumb = [
-//                 ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+//                 ['name' => lang('navigation.activities'), 'path' => "/activities"],
 //             ];
 //             break;
 
@@ -320,7 +320,7 @@ Route::get('/portfolio-index', function () {
 
 //         case 'projects':
 //             $breadcrumb = [
-//                 ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+//                 ['name' => lang('navigation.projects'), 'path' => "/projects"],
 //             ];
 //             break;
 

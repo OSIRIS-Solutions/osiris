@@ -215,7 +215,7 @@ krsort($rows);
             <tr>
                 <th></th>
                 <th style="width:90px;"><?= lang('Year', 'Jahr') ?></th>
-                <th class="text-right"><?= lang('Projects', 'Projekte') ?></th>
+                <th class="text-right"><?= lang('navigation.projects') ?></th>
 
                 <th class="text-right"><?= lang('Income proposed', 'Einnahmen beantragt') ?> (EUR)</th>
                 <th class="text-right"><?= lang('Income approved', 'Einnahmen bewilligt') ?> (EUR)</th>
@@ -374,7 +374,7 @@ krsort($rows);
                     y: rate,
                     type: 'scatter',
                     mode: 'markers',
-                    name: lang('Projects', 'Projekte'),
+                    name: lang('navigation.projects'),
                     yaxis: 'y2',
                     marker: {
                         size: bubbleSize,
@@ -387,7 +387,7 @@ krsort($rows);
                     },
                     customdata: projects,
                     hovertemplate: lang('Year', 'Jahr') + ' %{x}<br>' +
-                        lang('Projects', 'Projekte') + ' : %{customdata}<extra></extra>'
+                        lang('navigation.projects') + ' : %{customdata}<extra></extra>'
                 }
             ];
 

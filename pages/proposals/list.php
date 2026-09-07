@@ -344,7 +344,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'name'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('system.type'),
             key: 'type'
         },
         {
@@ -388,7 +388,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'name'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('system.title'),
             key: 'title'
         },
         {
@@ -589,7 +589,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('Type', 'Typ')
+                    header: lang('system.type')
                 },
                 {
                     target: 2,
@@ -683,7 +683,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Title', 'Titel')
+                    header: lang('system.title')
                 },
                 {
                     target: 13,

@@ -98,14 +98,14 @@ $conferences = $osiris->conferences->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('system.title') ?></th>
                     <th><?= lang('Location', 'Ort') ?></th>
                     <th><?= lang('Start', 'Anfang') ?></th>
                     <th><?= lang('End', 'Ende') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= $Settings->tagLabel() ?></th>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('system.title') ?></th>
                     <th><?= lang('Full title', 'Voller Titel') ?></th>
                 </tr>
             </thead>
@@ -242,7 +242,7 @@ $conferences = $osiris->conferences->find(
 
     let headers = [{
             'key': 'title',
-            'title': lang('Title', 'Titel')
+            'title': lang('system.title')
         },
         {
             'key': 'location',
@@ -258,7 +258,7 @@ $conferences = $osiris->conferences->find(
         },
         {
             'key': 'type',
-            'title': lang('Type', 'Typ')
+            'title': lang('system.type')
         },
         {
             title: '<?= $Settings->topicLabel() ?>',
@@ -378,7 +378,7 @@ $conferences = $osiris->conferences->find(
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: '<?= lang('Title', 'Titel') ?>',
+                    header: '<?= lang('system.title') ?>',
                 },
                 {
                     target: 8,

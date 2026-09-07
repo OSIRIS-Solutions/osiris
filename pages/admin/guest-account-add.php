@@ -52,7 +52,7 @@ include_once BASEPATH . '/header-editor.php';
                 <option value="PD" <?= $title == 'PD' ? 'selected' : '' ?>>PD</option>
                 <!-- <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option> -->
             </select>
-            <label for="academic_title"><?= lang('Title', 'Titel') ?></label>
+            <label for="academic_title"><?= lang('system.title') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">

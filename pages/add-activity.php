@@ -54,7 +54,7 @@ if (!empty($form) && isset($form['_id']) && !$copy) {
     $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
     $redirect = ROOTPATH . "/activities/view/*";
 }
 if (isset($_GET['redirect']) && !empty($_GET['redirect']) && str_starts_with($_GET['redirect'], ROOTPATH)) {
@@ -189,7 +189,7 @@ function val($index, $default = '')
                         <?php } ?>
                     </select>
                     <label for="event-type" class="required">
-                        <?= lang('Type', 'Typ') ?>
+                        <?= lang('system.type') ?>
                     </label>
                 </div>
 

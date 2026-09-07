@@ -116,7 +116,7 @@ $active = function ($field) use ($data_fields) {
                 <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Title', 'Titel') ?> (EN)
+                        <?= lang('system.title') ?> (EN)
                         <span class="badge kdsf">KDSF-B-13-2</span>
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
@@ -135,7 +135,7 @@ $active = function ($field) use ($data_fields) {
                 <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Title', 'Titel') ?> (DE)
+                        <?= lang('system.title') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" value="<?= $form['name_de'] ?? '' ?>">
                 </div>
@@ -499,5 +499,5 @@ $active = function ($field) use ($data_fields) {
     <?php } ?>
     
 
-    <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
+    <button type="submit" class="btn secondary"><?= lang('system.save') ?></button>
 </form>

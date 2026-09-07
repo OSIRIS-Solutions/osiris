@@ -179,7 +179,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('system.save') ?>
         </button>
     </div>
 

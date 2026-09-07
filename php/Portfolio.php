@@ -328,7 +328,7 @@ class Portfolio extends Settings
             switch ($type) {
                 case 'activity':
                     $breadcrumb = [
-                        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+                        ['name' => lang('navigation.activities'), 'path' => "/activities"],
                         ['name' => $name, 'path' => "/activities/view/$id"],
                     ];
                     break;
@@ -342,7 +342,7 @@ class Portfolio extends Settings
 
                 case 'project':
                     $breadcrumb = [
-                        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+                        ['name' => lang('navigation.projects'), 'path' => "/projects"],
                         ['name' => $name, 'path' => "/projects/view/$id"],
                     ];
                     break;

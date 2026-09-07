@@ -57,7 +57,7 @@
                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                           <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                          <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
                         </form>
                       </div>
                     </div>
@@ -162,7 +162,7 @@
 
           <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('system.save') ?>
           </button>
         </form>
       <?php } ?>
@@ -251,7 +251,7 @@
           <div class="modal-footer">
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
-              <?= lang('Save', 'Speichern') ?>
+              <?= lang('system.save') ?>
             </button>
             <a href="#close-modal" class="btn" role="button"><?= lang('Cancel', 'Abbrechen') ?></a>
           </div>

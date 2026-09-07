@@ -225,7 +225,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <span><?= lang('Edit', 'Bearbeiten') ?></span>
+                <span><?= lang('system.edit') ?></span>
             </a>
         <?php } ?>
     </div>
@@ -371,7 +371,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/persons/<?= $id ?>" class="font-size-16">
                 <i class="ph ph-edit"></i>
-                <span class="sr-only"><?= lang('Edit', 'Bearbeiten') ?></span>
+                <span class="sr-only"><?= lang('system.edit') ?></span>
             </a>
         <?php } ?>
     </h2>
@@ -440,7 +440,7 @@ if ($edit_perm) { ?>
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -587,7 +587,7 @@ if ($edit_perm) { ?>
 
                 <button class="btn btn-primary">
                     <i class="ph ph-save"></i>
-                    <?= lang('Save', 'Speichern') ?>
+                    <?= lang('system.save') ?>
                 </button>
             </form>
         </div>
@@ -940,7 +940,7 @@ if ($edit_perm) { ?>
 
         <button class="btn danger" type="button" id="delete-infrastructure" aria-haspopup="true" aria-expanded="false" onclick="$(this).next().slideToggle()">
             <i class="ph ph-trash"></i>
-            <?= lang('Delete', 'Löschen') ?>
+            <?= lang('system.delete') ?>
             <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
         </button>
         <div aria-labelledby="delete-infrastructure" style="display: none;">

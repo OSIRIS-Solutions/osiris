@@ -35,7 +35,7 @@ function val($index, $default = '')
     return $val;
 }
 
-$pagetitle = lang('Projects', 'Projekte');
+$pagetitle = lang('navigation.projects');
 $filter = [];
 if (!$Settings->hasPermission('projects.view')) {
     $filter = [
@@ -411,7 +411,7 @@ $Vocabulary = new Vocabulary();
             key: 'name'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('system.type'),
             key: 'type'
         },
         {
@@ -455,7 +455,7 @@ $Vocabulary = new Vocabulary();
             key: 'name'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('system.title'),
             key: 'title'
         },
         {
@@ -688,7 +688,7 @@ $Vocabulary = new Vocabulary();
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('Type', 'Typ')
+                    header: lang('system.type')
                 },
                 {
                     target: 2,
@@ -780,7 +780,7 @@ $Vocabulary = new Vocabulary();
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Title', 'Titel')
+                    header: lang('system.title')
                 },
                 {
                     target: 13,

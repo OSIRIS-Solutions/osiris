@@ -171,7 +171,7 @@
                     <tr>
                         <td>
                             <a onclick="filterDataTable(this, 'activities', 5)">
-                                <?= lang('Activities', 'Aktivitäten') ?>
+                                <?= lang('navigation.activities') ?>
                             </a>
                         </td>
                     </tr>

@@ -20,7 +20,7 @@ Route::get('/admin', function () {
     $userSyncPerm = $Settings->hasPermission('user.synchronize');
     $reportPerm = $Settings->hasPermission('report.templates');
     if (!$adminPerm && !$userSyncPerm && !$reportPerm) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $breadcrumb = [
         ['name' => lang("Settings", "Einstellungen")],
@@ -37,7 +37,7 @@ include_once BASEPATH . "/routes/admin.fields.php";
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -58,7 +58,7 @@ Route::get('/admin/users', function () {
 Route::get('/admin/guest-account', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -80,7 +80,7 @@ Route::get('/admin/guest-account', function () {
 Route::get('/admin/guest-account/add', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -105,7 +105,7 @@ Route::get('/admin/roles/distribute', function () {
     include_once BASEPATH . "/php/init.php";
     $page = 'admin/roles';
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -148,7 +148,7 @@ Route::get('/admin/module-helper', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Modules.php";
     $breadcrumb = [
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")],
         ['name' => lang("Data fields", "Datenfelder")]
     ];
@@ -161,12 +161,12 @@ Route::get('/admin/module-helper', function () {
 Route::get('/admin/types/(.*)/fields', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
-        abortwith(404, lang("Type", "Typ"), "/admin/categories");
+        abortwith(404, lang('system.type'), "/admin/categories");
     }
     $name = lang($type['name'], $type['name_de']);
 
@@ -194,13 +194,13 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
 Route::get('/admin/doi-mappings', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => lang("DOI Mappings", "DOI Zuordnungen")]
     ];
     include BASEPATH . "/header.php";
@@ -211,13 +211,13 @@ Route::get('/admin/doi-mappings', function () {
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten")]
+        ['name' => lang('navigation.activities')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/categories.php";
@@ -227,13 +227,13 @@ Route::get('/admin/categories', function () {
 Route::get('/admin/categories/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -245,7 +245,7 @@ Route::get('/admin/categories/new', function () {
 Route::get('/admin/categories/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
@@ -261,7 +261,7 @@ Route::get('/admin/categories/(.*)', function ($id) {
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
 
@@ -278,14 +278,14 @@ Route::get('/admin/categories/(.*)', function ($id) {
 Route::get('/admin/types/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => lang("New Type", "Neuer Typ")]
     ];
     $t = $_GET['parent'] ?? '';
@@ -321,14 +321,14 @@ Route::get('/admin/types/new', function () {
 Route::get('/admin/types/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
-        abortwith(404, lang("Type", "Typ"), "/admin/categories");
+        abortwith(404, lang('system.type'), "/admin/categories");
     }
     $name = lang($type['name'], $type['name_de']);
 
@@ -340,7 +340,7 @@ Route::get('/admin/types/(.*)', function ($id) {
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('navigation.activities'), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
@@ -378,7 +378,7 @@ Route::get('/settings/activities', function () {
 Route::get('/admin/vocabulary', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/Vocabulary.php";
     $Vocabulary = new Vocabulary();
@@ -396,7 +396,7 @@ Route::get('/admin/vocabulary', function () {
 Route::get('/admin/vocabulary/([a-z\-_]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/Vocabulary.php";
     $Vocabulary = new Vocabulary();
@@ -444,7 +444,7 @@ Route::get('/settings/modules', function () {
 Route::get('/admin/persons', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -459,7 +459,7 @@ Route::get('/admin/persons', function () {
 Route::get('/admin/infrastructures', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
@@ -476,12 +476,12 @@ Route::get('/admin/projects', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Projects", "Projekte")]
+        ['name' => lang('navigation.projects')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/projects.php";
@@ -493,7 +493,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (DB::is_ObjectID($id)) {
@@ -510,7 +510,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
+        ['name' => lang('navigation.projects'), 'path' => '/admin/projects'],
         ['name' => $type . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
@@ -523,7 +523,7 @@ Route::get('/admin/projects/new', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $stage = 1;
@@ -532,7 +532,7 @@ Route::get('/admin/projects/new', function () {
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Projects", "Projekte"), 'path' => '/admin/projects'],
+        ['name' => lang('navigation.projects'), 'path' => '/admin/projects'],
         ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
@@ -546,7 +546,7 @@ Route::get('/admin/projects/new', function () {
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $breadcrumb = [
         ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
@@ -572,7 +572,7 @@ Route::get('/admin/(.*)', function ($path) {
 Route::post('/crud/admin/general', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $msg = 'settings-saved';
@@ -710,7 +710,7 @@ Route::post('/crud/admin/general', function () {
 Route::post('/crud/admin/roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (isset($_POST['values'])) {
@@ -754,7 +754,7 @@ Route::post('/crud/admin/roles', function () {
 Route::post('/crud/admin/update-user-roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $roles = $_POST['roles'] ?? [];
@@ -788,7 +788,7 @@ Route::post('/crud/admin/update-user-roles', function () {
 // Route::post('/crud/admin/features', function () {
 //     include_once BASEPATH . "/php/init.php";
 //     if (!$Settings->hasPermission('admin.see')) {
-//         abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+//         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
 //     }
 
 
@@ -826,7 +826,7 @@ Route::post('/crud/admin/update-user-roles', function () {
 Route::post('/crud/(categories|types)/create', function ($col) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
@@ -884,7 +884,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
 Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
@@ -963,7 +963,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
 Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     // select the right collection
@@ -1079,7 +1079,7 @@ Route::post('/crud/admin/mail-test', function () {
 
     // include_once BASEPATH . "/php/mail.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $to = $_POST['email'];
@@ -1098,7 +1098,7 @@ Route::post('/crud/admin/mail-test', function () {
 Route::post('/crud/admin/add-user', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
@@ -1180,7 +1180,7 @@ Route::post('/crud/admin/add-user', function () {
 Route::post('/crud/admin/projects/create', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
@@ -1211,7 +1211,7 @@ Route::post('/crud/admin/projects/create', function () {
 Route::post('/crud/admin/guest-account/update', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $valid_until = $_POST['valid_until'] ?? null;
@@ -1231,7 +1231,7 @@ Route::post('/crud/admin/guest-account/update', function () {
 Route::post('/crud/admin/guest-account/delete', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $osiris->guestAccounts->deleteOne(
@@ -1257,7 +1257,7 @@ Route::post('/crud/admin/guest-account/delete', function () {
 Route::post('/crud/admin/guest-account/generate-link', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $token = bin2hex(random_bytes(16));
@@ -1275,7 +1275,7 @@ Route::post('/crud/admin/guest-account/generate-link', function () {
 Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     include_once BASEPATH . "/php/Project.php";
@@ -1399,7 +1399,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $collection = $osiris->adminProjects;
@@ -1435,7 +1435,7 @@ Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/admin/vocabularies/([a-z\-_]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));

@@ -16,7 +16,7 @@
 
 $categories = [
     'Project' => [
-        'label' => lang('Projects', 'Projekte'),
+        'label' => lang('navigation.projects'),
         'icon' => 'ph ph-tree-structure'
     ],
     'Infrastructure' => [
@@ -28,7 +28,7 @@ $categories = [
         'icon' => 'ph ph-calendar'
     ],
     'Activity' => [
-        'label' => lang('Activities', 'Aktivitäten'),
+        'label' => lang('navigation.activities'),
         'icon' => 'ph ph-folder'
     ],
 ];

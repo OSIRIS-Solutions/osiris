@@ -97,7 +97,7 @@ $topicLabel = $Settings->topicLabel();
                 <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Title', 'Titel') ?> (EN)
+                        <?= lang('system.title') ?> (EN)
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
                 </div>
@@ -126,7 +126,7 @@ $topicLabel = $Settings->topicLabel();
                 <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Title', 'Titel') ?> (DE)
+                        <?= lang('system.title') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" value="<?= $form['name_de'] ?? '' ?>">
                 </div>
@@ -165,7 +165,7 @@ $topicLabel = $Settings->topicLabel();
         </div>
     </div>
 
-    <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
+    <button type="submit" class="btn secondary"><?= lang('system.save') ?></button>
 </form>
 
 
@@ -174,7 +174,7 @@ $topicLabel = $Settings->topicLabel();
     <br>
     <div class="alert danger mt-20">
         <a onclick="$('#delete').slideToggle()">
-            <?= lang('Delete', 'Löschen') ?>
+            <?= lang('system.delete') ?>
             <i class="ph ph-caret-down"></i>
         </a>
 
@@ -186,7 +186,7 @@ $topicLabel = $Settings->topicLabel();
                         'Möchten Sie diesen ' . $topicLabel . ' wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
                     ) ?>
                 </p>
-                <button type="submit" class="btn danger"><?= lang('Delete', 'Löschen') ?></button>
+                <button type="submit" class="btn danger"><?= lang('system.delete') ?></button>
             </form>
         </div>
     </div>

@@ -48,4 +48,9 @@ return [
     'register_contact_admin' => 'Um dich zu registrieren, kontaktiere bitte den Administrator.',
     'auth_token' => 'AUTH-Token',
     'continue' => 'Weiter',
+    'save' => 'Speichern',
+    'type' => 'Typ',
+    'title' => 'Titel',
+    'edit' => 'Bearbeiten',
+    'delete' => 'Löschen',
 ];

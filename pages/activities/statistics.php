@@ -135,7 +135,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 
         <h2 id="activities-by-type">
-            <?= lang('Activities', 'Aktivitäten') ?> <?= $phrase ?>:
+            <?= lang('navigation.activities') ?> <?= $phrase ?>:
         </h2>
         <p class="text-muted">
             <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
@@ -165,7 +165,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <thead>
                 <tr>
                     <th><?= lang('Category', 'Kategorie') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Count', 'Anzahl') ?></th>
                 </tr>
             </thead>
@@ -222,7 +222,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-started-before-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Subtype', 'Untertyp') ?></th>
                     <th><?= lang('Count', 'Anzahl') ?></th>
                 </tr>

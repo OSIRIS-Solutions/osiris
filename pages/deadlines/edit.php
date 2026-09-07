@@ -28,7 +28,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-group floating-form">
             <input type="text" name="values[title]" class="form-control" value="<?= e($form['title'] ?? '') ?>" placeholder="title" required>
-            <label for="title" class="required"><?= lang('Title', 'Titel') ?></label>
+            <label for="title" class="required"><?= lang('system.title') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -46,7 +46,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <?php } ?>
             </select>
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('system.type') ?>
             </label>
         </div>
 

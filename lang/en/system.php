@@ -48,4 +48,9 @@ return [
     'register_contact_admin' => 'To register, please contact the administrator.',
     'auth_token' => 'AUTH Token',
     'continue' => 'Continue',
+    'save' => 'Save',
+    'type' => 'Type',
+    'title' => 'Title',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
 ];

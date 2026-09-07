@@ -29,7 +29,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'activities',
-                        'label' => lang('Activities', 'Aktivitäten'),
+                        'label' => lang('navigation.activities'),
                         'icon' => 'folders',
                         'url' => '/activities',
                         'active' => ['^/activities($|/)'],
@@ -54,7 +54,7 @@ class SidebarNav
 
                     [
                         'id' => 'projects',
-                        'label' => lang('Projects', 'Projekte'),
+                        'label' => lang('navigation.projects'),
                         'icon' => 'tree-structure',
                         'url' => '/projects',
                         'active' => ['^/projects($|/)'],

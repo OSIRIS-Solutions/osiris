@@ -86,7 +86,7 @@ Route::get('/teaching/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('Teaching', 'Lehrveranstaltungen'), 'path' => '/teaching'],
         ['name' => $form['title'], 'path' => "/teaching/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('system.edit')]
     ];
 
     $activities = $osiris->activities->find(['module_id' => $id], ['sort' => ['start_date' => -1]])->toArray();

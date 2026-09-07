@@ -104,7 +104,7 @@
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <details class="collapse-panel project-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('navigation.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -299,7 +299,7 @@
 
         <details class="collapse-panel activity-panel" open>
             <summary class="collapse-header">
-                <?= lang('Activities', 'Aktivitäten') ?>
+                <?= lang('navigation.activities') ?>
             </summary>
             <div class="collapse-content">
 
@@ -358,7 +358,7 @@
         <div class="bottom-buttons">
             <button id="save-button" type="submit" class="btn large success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('system.save') ?>
             </button>
             <a id="cancel-button" type="button" class="btn large light ml-5" href="<?= ROOTPATH ?>/activities/view/<?= $id ?>#edit-activities">
                 <i class="ph ph-x"></i>

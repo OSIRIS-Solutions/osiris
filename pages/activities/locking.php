@@ -43,7 +43,7 @@
     <p>
         <?=lang('The following roles can still edit or delete locked activities:', 'Die folgenden Rollen können weiterhin gesperrte Aktivitäten bearbeiten oder löschen:')?>
         <br>
-        <b><?=lang('Edit', 'Bearbeiten')?>:</b>
+        <b><?=lang('system.edit')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.edit-locked',
@@ -52,7 +52,7 @@
             echo implode(', ', array_column($roles, 'role'));
         ?>
         <br>
-        <b><?=lang('Delete', 'Löschen')?>:</b>
+        <b><?=lang('system.delete')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.delete-locked',

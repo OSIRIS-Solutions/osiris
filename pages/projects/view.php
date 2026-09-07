@@ -278,7 +278,7 @@ if ($topicsEnabled) {
     <?php if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('navigation.activities') ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
@@ -289,7 +289,7 @@ if ($topicsEnabled) {
     <?php } else { ?>
         <a id="btn-activities" class="btn disabled">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('navigation.activities') ?>
             <span class="index">0</span>
         </a>
     <?php } ?>
@@ -350,7 +350,7 @@ if ($topicsEnabled) {
                 <?php if ($edit_perm) { ?>
                     <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('system.edit') ?>
                     </a>
                 <?php } ?>
 
@@ -359,7 +359,7 @@ if ($topicsEnabled) {
                     <div class="dropdown">
                         <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-trash"></i>
-                            <span class="sr-only"><?= lang('Delete', 'Löschen') ?></span>
+                            <span class="sr-only"><?= lang('system.delete') ?></span>
                             <i class="ph ph-caret-down" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
@@ -451,7 +451,7 @@ if ($topicsEnabled) {
                                     <br>
                                     <a href="#edit-image" data-toggle="modal">
                                         <i class="ph ph-image"></i>
-                                        <?= lang('Edit', 'Bearbeiten') ?>
+                                        <?= lang('system.edit') ?>
                                     </a>
                                 <?php }
                                 ?>
@@ -486,7 +486,7 @@ if ($topicsEnabled) {
                 <div class="btn-toolbar mb-10">
                     <a href="<?= ROOTPATH ?>/projects/persons/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('system.edit') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -578,7 +578,7 @@ if ($topicsEnabled) {
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
+                <?= lang('system.edit') ?>
             </a>
         </div>
     <?php } ?>
@@ -780,7 +780,7 @@ if ($topicsEnabled) {
                 <table class="table dataTable responsive" id="activities-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Type', 'Typ') ?></th>
+                            <th><?= lang('system.type') ?></th>
                             <th><?= lang('Activity', 'Aktivität') ?></th>
                             <th></th>
                         </tr>

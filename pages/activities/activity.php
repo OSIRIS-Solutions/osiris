@@ -84,7 +84,7 @@ if ($edit_perm) {
                 <br>
                 <a href="#projects" class="btn success">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('navigation.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -132,7 +132,7 @@ if ($edit_perm) {
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
+                    <?= lang('system.edit') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
@@ -440,12 +440,12 @@ if ($edit_perm) {
 
         <?php if (!empty($projects)) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Projects', 'Projekte') ?>: </small>
+                <small><?= lang('navigation.projects') ?>: </small>
                 <br />
                 <a href="#projects" class="badge primary outline">
                     <i class="ph ph-tree-structure"></i>
                     <?= count($projects) ?>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('navigation.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -588,7 +588,7 @@ if ($edit_perm) {
 
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-plugs" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('navigation.activities') ?>
             <span class="index"><?= count($connected_activities) ?></span>
         </a>
 
@@ -599,7 +599,7 @@ if ($edit_perm) {
             ?>
                 <a onclick="navigate('projects')" id="btn-projects" class="btn">
                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('navigation.projects') ?>
                     <span class="index"><?= $count_projects ?></span>
                 </a>
 
@@ -697,7 +697,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
-                            <?= lang('Edit', 'Bearbeiten') ?>
+                            <?= lang('system.edit') ?>
                         </a>
                     <?php } ?>
 
@@ -724,7 +724,7 @@ if ($edit_perm) {
                                         <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
-                                    <button class="btn btn-block" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                    <button class="btn btn-block" type="submit"><?= lang('system.save') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -926,7 +926,7 @@ if ($edit_perm) {
                                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                     <a href="#add-tags" class="btn small float-right">
                                         <i class="ph ph-edit"></i>
-                                        <?= lang('Edit', 'Bearbeiten') ?>
+                                        <?= lang('system.edit') ?>
                                     </a>
                                 <?php } ?>
                                 <span class="key"><?= $tagLabel ?></span>
@@ -986,7 +986,7 @@ if ($edit_perm) {
 
                 <div class="alert danger mt-20 py-20">
                     <h2 class="title">
-                        <?= lang('Delete', 'Löschen') ?>
+                        <?= lang('system.delete') ?>
                     </h2>
                     <?php
 
@@ -1164,7 +1164,7 @@ if ($edit_perm) {
                         <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                <?= lang("Edit", "Bearbeiten") ?>
+                                <?= lang('system.edit') ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -1609,7 +1609,7 @@ if ($edit_perm) {
             </div>
 
             <h2 class="title">
-                <?= lang('Projects', 'Projekte') ?>
+                <?= lang('navigation.projects') ?>
             </h2>
 
             <?php if (!empty($projects)) {
@@ -1794,7 +1794,7 @@ if ($edit_perm) {
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                             <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1903,7 +1903,7 @@ if ($edit_perm) {
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>
-                            <?= lang('Save', 'Speichern') ?>
+                            <?= lang('system.save') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -1960,7 +1960,7 @@ if ($edit_perm) {
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('system.edit') ?>
         </a>
         <div class="row row-eq-spacing">
             <div class="col-md-6 flex-grow-0" style="max-width: 40rem">

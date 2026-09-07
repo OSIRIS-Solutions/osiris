@@ -79,9 +79,9 @@ $deadlines = $osiris->deadlines->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('system.title') ?></th>
                     <th><?= lang('Date', 'Datum') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Relevance', 'Relevanz') ?></th>
                 </tr>
             </thead>
@@ -185,7 +185,7 @@ $deadlines = $osiris->deadlines->find(
 
     let headers = [{
             'key': 'title',
-            'title': lang('Title', 'Titel')
+            'title': lang('system.title')
         },
         {
             'key': 'date',
@@ -193,7 +193,7 @@ $deadlines = $osiris->deadlines->find(
         },
         {
             'key': 'type',
-            'title': lang('Type', 'Typ')
+            'title': lang('system.type')
         },
         {
             'key': 'relevance',

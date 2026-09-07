@@ -202,7 +202,7 @@ if ($nagoyaRelevant) {
             <div class="dropdown">
                 <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-trash"></i>
-                    <?= lang('Delete', 'Löschen') ?>
+                    <?= lang('system.delete') ?>
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdown-1">
@@ -609,7 +609,7 @@ if ($nagoyaRelevant) {
                                                             <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                                 <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                                 <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
-                                                                <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                                <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -717,7 +717,7 @@ if ($nagoyaRelevant) {
                     <div class="btn-toolbar mb-10">
                         <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                            <?= lang('Edit', 'Bearbeiten') ?>
+                            <?= lang('system.edit') ?>
                         </a>
                     </div>
                 <?php } ?>

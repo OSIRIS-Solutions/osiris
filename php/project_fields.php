@@ -85,7 +85,7 @@ class ProjectFields extends Fields
             [
                 "id" => "type",
                 "module_of" => $typeModules["type"] ?? [],
-                "label" => lang("Type", "Typ"),
+                "label" => lang('system.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

@@ -24,7 +24,7 @@ class EventFields extends Fields
             [
                 "id" => "title",
                 "module_of" => ['general'],
-                "label" => lang("Title", "Titel"),
+                "label" => lang('system.title'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -46,7 +46,7 @@ class EventFields extends Fields
             [
                 "id" => "type",
                 "module_of" => ['general'],
-                "label" => lang("Type", "Typ"),
+                "label" => lang('system.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

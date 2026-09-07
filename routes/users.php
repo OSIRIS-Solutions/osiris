@@ -61,7 +61,7 @@ Route::get('/user/edit/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('system.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -168,7 +168,7 @@ Route::get('/user/delete/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang("Delete", "Löschen")]
+        ['name' => lang('system.delete')]
     ];
 
     include BASEPATH . "/header.php";

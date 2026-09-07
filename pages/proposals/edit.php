@@ -1613,7 +1613,7 @@ if ($is_subproject) {
 
             <br>
             <button class="btn secondary" type="button" id="submit-btn">
-                <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+                <i class="ph ph-check"></i> <?= lang('system.save') ?>
             </button>
 
             <script>

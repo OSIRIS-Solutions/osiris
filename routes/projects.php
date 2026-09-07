@@ -19,7 +19,7 @@ Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge')]
+        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/list.php";
@@ -30,7 +30,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -43,7 +43,7 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     $user = $_SESSION['username'];
     $collection = 'projects';
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => lang('navigation.projects'), 'path' => "/projects"],
         ['name' => lang("New", "Neu")]
     ];
     if (DB::is_ObjectID($id)) {
@@ -67,7 +67,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -102,7 +102,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => $project['acronym'] ?? $project['name']]
     ];
 
@@ -142,12 +142,12 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
             $name = lang("Persons", "Personen");
             break;
         default:
-            $name = lang("Edit", "Bearbeiten");
+            $name = lang('system.edit');
             break;
     }
 
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
@@ -196,7 +196,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
 
     // set breadcrumb
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => lang('navigation.projects'), 'path' => "/projects"],
         ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
         ['name' => lang("Add subproject", "Teilprojekt hinzufügen")]
     ];

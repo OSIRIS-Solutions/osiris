@@ -1865,7 +1865,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'projects',
-                'label' => lang('Projects', 'Projekte'),
+                'label' => lang('navigation.projects'),
                 'items' => $items
             ];
         }

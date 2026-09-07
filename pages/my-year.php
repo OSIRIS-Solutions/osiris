@@ -485,7 +485,7 @@ if (!$Settings->featureEnabled('coins')) {
         <div class="col-lg-3 d-none d-lg-block">
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <div class="title"><?= lang('Activities', 'Aktivitäten') ?></div>
+                    <div class="title"><?= lang('navigation.activities') ?></div>
                     <?php foreach ($groups as $col => $data) {
                         $type = $Settings->getActivities($col);
                     ?>

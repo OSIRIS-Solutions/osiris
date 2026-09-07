@@ -137,7 +137,7 @@
                 <?php if ($canEdit) { ?>
                     <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary filled">
                         <i class="ph ph-pencil-simple-line mr-5"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('system.edit') ?>
                     </a>
                 <?php } ?>
                 <?php if ($user_activity && $locked && empty($doc['end'] ?? null) && $ongoing) { ?>
@@ -153,7 +153,7 @@
                                     <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                 </div>
-                                <button class="btn btn-block" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                <button class="btn btn-block" type="submit"><?= lang('system.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -549,7 +549,7 @@
                                         <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                             <a href="#edit-tags" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang('Edit', 'Bearbeiten') ?></span>
+                                                <span class="sr-only"><?= lang('system.edit') ?></span>
                                             </a>
                                         <?php } ?>
                                     </h3>
@@ -581,7 +581,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="#edit-files" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                                <span class="sr-only"><?= lang('system.edit') ?></span>
                                             </a>
                                         <?php endif; ?>
                                     </h3>
@@ -646,7 +646,7 @@
                                     <?php if ($edit_perm) { ?>
                                         <a href="<?= ROOTPATH ?>/activities/edit-connections/<?= $id ?>" class="ml-10">
                                             <i class="ph ph-edit"></i>
-                                            <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                            <span class="sr-only"><?= lang('system.edit') ?></span>
                                         </a>
                                     <?php } ?>
                                 </h3>
@@ -658,7 +658,7 @@
                                             <?= lang('You can connect', 'Du kannst folgendes verknüpfen') ?>:
                                             <ul class="horizontal mb-10">
                                                 <?php if (isset($connections['projects'])) { ?>
-                                                    <li><?= lang('Projects', 'Projekte') ?></li>
+                                                    <li><?= lang('navigation.projects') ?></li>
                                                 <?php } ?>
                                                 <?php if (isset($connections['infrastructures'])) { ?>
                                                     <li><?= lang('Infrastructures', 'Infrastrukturen') ?></li>
@@ -674,12 +674,12 @@
                                 <?php } else { ?>
                                     <p>
                                         <?php if (isset($connections['projects'])) { ?>
-                                            <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('Projects', 'Projekte') ?> <b><?= $connections['projects'] ?></b></span>
+                                            <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('navigation.projects') ?> <b><?= $connections['projects'] ?></b></span>
                                         <?php } ?>
                                         <?php if (isset($connections['infrastructures'])) { ?>
                                             <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('Infrastructures', 'Infrastrukturen') ?> <b><?= $connections['infrastructures'] ?></b></span>
                                         <?php } ?>
-                                        <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('Activities', 'Aktivitäten') ?> <b><?= $connections['activities'] ?></b></span>
+                                        <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('navigation.activities') ?> <b><?= $connections['activities'] ?></b></span>
                                         <?php if (isset($connections['news'])) { ?>
                                             <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('News', 'News') ?> <b><?= $connections['news'] ?></b></span>
                                         <?php } ?>
@@ -1202,7 +1202,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn primary small">
                                                 <i class="ph ph-edit"></i>
-                                                <?= lang("Edit", "Bearbeiten") ?>
+                                                <?= lang('system.edit') ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>

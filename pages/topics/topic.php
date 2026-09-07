@@ -227,7 +227,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('system.edit') ?>
         </a>
     <?php } ?>
 </div>
@@ -272,7 +272,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn  <?= $active_page == 'activities' ? 'active' : '' ?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten')  ?>
+            <?= lang('navigation.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -282,7 +282,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_projects > 0) { ?>
         <a onclick="navigate('projects')" id="btn-projects" class="btn <?= $active_page == 'projects' ? 'active' : '' ?>">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
-            <?= lang('Projects', 'Projekte')  ?>
+            <?= lang('navigation.projects')  ?>
             <span class="index"><?= $count_projects ?></span>
         </a>
     <?php } ?>
@@ -442,7 +442,7 @@ if ($Settings->featureEnabled('spectrum')) {
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -456,7 +456,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="activities" style="display: none;">
-    <h2><?= lang('Activities', 'Aktivitäten') ?></h2>
+    <h2><?= lang('navigation.activities') ?></h2>
 
     <div class="btn-toolbar justify-content-between">
         <div id="event-selector"></div>
@@ -476,7 +476,7 @@ if ($Settings->featureEnabled('spectrum')) {
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>

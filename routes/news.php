@@ -132,7 +132,7 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     $breadcrumb = [
         ['path' => '/news', 'name' => lang('News', 'News')],
         ['path' => '/news/view/' . e($id), 'name' => lang($news['title'] ?? '', $news['title_de'] ?? null)],
-        ['path' => '/news/edit/' . e($id), 'name' => lang('Edit', 'Bearbeiten')]
+        ['path' => '/news/edit/' . e($id), 'name' => lang('system.edit')]
     ];
 
     include BASEPATH . "/header.php";

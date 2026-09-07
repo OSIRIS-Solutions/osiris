@@ -107,6 +107,6 @@ $kdsf_mapping = [
 
     <button class="btn btn-primary">
         <i class="ph ph-save"></i>
-        <?= lang('Save', 'Speichern') ?>
+        <?= lang('system.save') ?>
     </button>
 </form>

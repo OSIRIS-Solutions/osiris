@@ -316,6 +316,6 @@ if (empty($form) || !isset($form['_id'])) {
             }
         </script>
 
-        <button type="submit" class="btn secondary" id="submit"><?= lang('Save', 'Speichern') ?></button>
+        <button type="submit" class="btn secondary" id="submit"><?= lang('system.save') ?></button>
     </form>
 </div>

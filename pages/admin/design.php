@@ -571,7 +571,7 @@ $design = $Settings->get('design');
         <div class="bottom-buttons mt-10">
             <button class="btn primary">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('system.save') ?>
             </button>
         </div>
     </div>

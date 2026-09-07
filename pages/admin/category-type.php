@@ -34,7 +34,7 @@ if (!empty($form) && isset($form['_id'])) {
 } else {
     $new = true;
     $formaction .= "/crud/types/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
     $url = ROOTPATH . "/admin/types/*";
     $title = lang('New category', 'Neue Kategorie');
     $member = 0;
@@ -230,7 +230,7 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
+                    <?= lang('system.edit') ?>
                 </a>
             <?php } ?>
 
@@ -429,7 +429,7 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

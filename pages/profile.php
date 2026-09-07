@@ -637,7 +637,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-briefcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten')  ?>
+            <?= lang('navigation.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -683,7 +683,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_projects > 0) { ?>
             <a onclick="navigate('projects')" id="btn-projects" class="btn">
                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Projects', 'Projekte')  ?>
+                <?= lang('navigation.projects')  ?>
                 <span class="index"><?= $count_projects ?></span>
             </a>
         <?php } ?>
@@ -1111,7 +1111,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -1172,7 +1172,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>

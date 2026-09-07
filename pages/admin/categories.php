@@ -122,7 +122,7 @@ foreach ($Categories->categories as $type) {
         </h3>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('system.edit') ?>
         </a>
         <div class="d-flex align-items-baseline flex-wrap">
             <h5><?= lang('Types', 'Typen') ?>:</h5>

@@ -198,7 +198,7 @@ if (isset($news) && isset($news['_id'])) {
         <div class="box padded">
             <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2 class="title">
             <div class="form-group">
-                <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
+                <label for="news-title" class="required"><?= lang('system.title') ?></label>
                 <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
@@ -222,7 +222,7 @@ if (isset($news) && isset($news['_id'])) {
                     <h2 class="title d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h2 class="title">
 
                     <div class="form-group">
-                        <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
+                        <label for="news-title" class="required"><?= lang('system.title') ?></label>
                         <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
                     </div>
 
@@ -248,7 +248,7 @@ if (isset($news) && isset($news['_id'])) {
                     <h2 class="title d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h2 class="title">
 
                     <div class="form-group">
-                        <label for="news-title-de"><?= lang('Title', 'Titel') ?></label>
+                        <label for="news-title-de"><?= lang('system.title') ?></label>
                         <input type="text" name="news[title_de]" id="news-title-de" class="form-control large" value="<?= $news['title_de'] ?? '' ?>">
                     </div>
 
@@ -356,7 +356,7 @@ if (isset($news) && isset($news['_id'])) {
 
         <details class="collapse-panel activity-panel" open id="activity-panel">
             <summary class="collapse-header">
-                <?= lang('Activities', 'Aktivitäten') ?>
+                <?= lang('navigation.activities') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
@@ -406,7 +406,7 @@ if (isset($news) && isset($news['_id'])) {
         ?>
             <details class="collapse-panel project-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('navigation.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -773,7 +773,7 @@ if (isset($news) && isset($news['_id'])) {
 
         <div class="form-group">
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('system.type') ?>
             </label>
             <select name="news[type]" id="type" class="form-control w-auto" required>
                 <?php
@@ -808,7 +808,7 @@ if (isset($news) && isset($news['_id'])) {
 
     <button type="submit" class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('Save', 'Speichern') ?>
+        <?= lang('system.save') ?>
     </button>
 </form>
 
@@ -869,8 +869,8 @@ if (isset($news) && isset($news['_id'])) {
         const featuredTextFields = $('#featured-text-fields');
         const typeLabels = {
             person: <?= json_encode(lang('People', 'Personen')) ?>,
-            activity: <?= json_encode(lang('Activities', 'Aktivitäten')) ?>,
-            project: <?= json_encode(lang('Projects', 'Projekte')) ?>,
+            activity: <?= json_encode(lang('navigation.activities')) ?>,
+            project: <?= json_encode(lang('navigation.projects')) ?>,
             event: <?= json_encode(lang('Events', 'Veranstaltungen')) ?>,
             infrastructure: <?= json_encode($Settings->infrastructureLabel()) ?>
         };

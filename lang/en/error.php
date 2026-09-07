@@ -7,5 +7,5 @@ return [
     'user_not_found' => 'User not found.',
     'username_already_taken' => 'The username is already taken. Please try again.',
     'password_no_permission' => 'You do not have permission to reset passwords.',
-
+    'admin_no_permission' => 'You do not have permission to access the admin area.'
 ];

@@ -291,7 +291,7 @@ $name = $data['name'];
                             <?php if (!empty($data['type'])): ?>
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang("Type", "Typ"); ?></span>
+                                        <span class="key"><?= lang('system.type'); ?></span>
                                         <?= e($data['type']) ?>
                                     </td>
                                 </tr>
@@ -317,7 +317,7 @@ $name = $data['name'];
                             <a href="#staff"> <?= lang('Staff', 'Mitarbeitende') ?></a>
                         <?php endif; ?>
                         <?php if (($data['n_activities'] ?? 0) > 0): ?>
-                            <a href="#activities"> <?= lang('Activities', 'Aktivitäten') ?></a>
+                            <a href="#activities"> <?= lang('navigation.activities') ?></a>
                         <?php endif; ?>
                         <?php if ($data['collaborative'] ?? false): ?>
                             <a href="#collaborative"> <?= lang('Collaborative Infrastructure', 'Kollaborative Infrastruktur') ?></a>

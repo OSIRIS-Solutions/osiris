@@ -191,7 +191,7 @@ if ($edit_perm) { ?>
                 <tbody>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('Type', 'Typ') ?></span>
+                            <span class="key"><?= lang('system.type') ?></span>
                             <div class="d-flex justify-content-between align-items-center">
                                 <?= ucfirst($organization['type']) ?>
                                 <?= Organization::getIcon($organization['type'], 'ph-fw ph-2x m-0') ?>
@@ -435,7 +435,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('system.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                 </tr>
             </thead>
@@ -479,7 +479,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
         <table class="table dataTable responsive" id="projects-table">
             <thead>
                 <tr>
-                    <th class="w-100"><?= lang('Type', 'Typ') ?></th>
+                    <th class="w-100"><?= lang('system.type') ?></th>
                     <th><?= lang('Project', 'Projekt') ?></th>
                 </tr>
             </thead>
@@ -563,7 +563,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
             <thead>
                 <tr>
                     <th><?= lang('Module No.', 'Modulnummer') ?></th>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('system.title') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -606,7 +606,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
                 <?= lang('Are you sure you want to delete this organization?', 'Sind Sie sicher, dass Sie diese Organisation löschen möchten?') ?>
             </p>
             <button type="submit" class="btn danger">
-                <?= lang('Delete', 'Löschen') ?>
+                <?= lang('system.delete') ?>
             </button>
         </form>
     </div>

@@ -362,7 +362,7 @@ $totalProjects     = count($projects ?? []);
                                     <strong><?= e($name) ?></strong>
                                 </a><br>
                                 <small class="text-muted">
-                                    <?= $projectsN ?> <?= lang('projects', 'Projekte') ?>
+                                    <?= $projectsN ?> <?= lang('navigation.projects') ?>
                                     <?php if ($labels['A'] ?? 0): ?>
                                         · <span class="badge tiny danger">A: <?= $labels['A'] ?></span>
                                     <?php endif; ?>

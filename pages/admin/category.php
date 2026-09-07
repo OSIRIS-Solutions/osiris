@@ -34,7 +34,7 @@ if (!empty($form) && isset($form['id'])) {
     $member = $osiris->activities->count(['type' => $id]);
 } else {
     $formaction .= "/crud/categories/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
     $url = ROOTPATH . "/admin/categories/*";
     $title = lang('New category', 'Neue Kategorie');
 }
@@ -313,7 +313,7 @@ $member = $osiris->activities->count(['type' => $t]);
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/categories/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

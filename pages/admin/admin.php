@@ -170,14 +170,14 @@
             <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('Data Model & Content', 'Datenmodell & Inhalte') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                 <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
-                <b><?= lang('Activities', 'Aktivitäten') ?></b>
+                <b><?= lang('navigation.activities') ?></b>
                 <p><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></p>
             </a>
 
             <?php if ($Settings->featureEnabled('projects')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/projects">
                     <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
-                    <b><?= lang('Projects', 'Projekte') ?></b>
+                    <b><?= lang('navigation.projects') ?></b>
                     <p><?= lang('Manage projects and proposals', 'Verwalte Projekte und Anträge') ?></p>
                 </a>
             <?php } ?>

@@ -114,7 +114,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Type', 'Typ'),
+                'label' => lang('system.type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $subtypes
@@ -126,7 +126,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Title', 'Titel'),
+                'label' => lang('system.title'),
                 'type' => 'string'
             ],
             [

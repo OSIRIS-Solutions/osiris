@@ -2,6 +2,7 @@
 return [
     'home' => 'Home',
     'go_home' => 'Go to homepage',
+    'go_back_home' => 'Go back to homepage',
     'news_and_help' => 'News & Help',
     'news' => 'News',
     'documentation' => 'Documentation',
@@ -12,4 +13,6 @@ return [
     'license' => 'License',
     'impress' => 'Impressum',
     'privacy_policy' => 'Privacy Policy',
+    'activities' => 'Activities',
+    'projects' => 'Projects'
 ];

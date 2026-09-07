@@ -111,7 +111,7 @@
 
         <button type="submit" class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('system.save') ?>
         </button>
     </form>
 </div>

@@ -141,7 +141,7 @@ $mail = $Settings->get('mail');
         <div class="bottom-buttons mb-20">
             <button class="btn success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('system.save') ?>
             </button>
         </div>
 

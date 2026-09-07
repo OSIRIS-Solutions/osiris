@@ -201,7 +201,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['activities'] > 0) { ?>
                     <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
                         <i class="ph ph-briefcase" aria-hidden="true"></i>
-                        <?= lang('Activities', 'Aktivitäten')  ?>
+                        <?= lang('navigation.activities')  ?>
                         <span class="index"><?= $numbers['activities'] ?></span>
                     </a>
                 <?php } ?>
@@ -210,7 +210,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['projects'] > 0) { ?>
                     <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
                         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('Projects', 'Projekte')  ?>
+                        <?= lang('navigation.projects')  ?>
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
@@ -369,7 +369,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('Projects', 'Projekte') ?>">
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('navigation.projects') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>

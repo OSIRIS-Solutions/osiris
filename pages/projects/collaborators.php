@@ -108,7 +108,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                     </small>
                 </fieldset>
                 <br><br>
-                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('Save', 'Speichern') ?></button>
+                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('system.save') ?></button>
 
             </div>
         </div>

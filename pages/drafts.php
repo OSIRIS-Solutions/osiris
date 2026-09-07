@@ -24,7 +24,7 @@
 <table class="table" id="draft-table">
     <thead>
         <tr>
-            <th><?= lang('Title', 'Titel') ?></th>
+            <th><?= lang('system.title') ?></th>
             <th><?= lang('Created', 'Erstellt') ?></th>
             <th><?= lang('Actions', 'Aktionen') ?></th>
         </tr>

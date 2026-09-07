@@ -50,7 +50,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <?php } ?>
             </select>
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('system.type') ?>
             </label>
         </div>
 

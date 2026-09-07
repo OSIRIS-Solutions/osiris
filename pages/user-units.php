@@ -140,7 +140,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                         <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('no', 'nein') ?></option>
                                     </select>
                                 </div>
-                                <button class="btn block primary" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                <button class="btn block primary" type="submit"><?= lang('system.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -238,7 +238,7 @@ function printTree($tree, $level = 0)
                         <option value="0"><?= lang('no', 'nein') ?></option>
                     </select>
                 </div>
-                <button class="btn primary" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                <button class="btn primary" type="submit"><?= lang('system.save') ?></button>
             </form>
             <script>
 

@@ -151,7 +151,7 @@ $oa = $data['oa'] ?? false;
 
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('system.save') ?>
         </button>
     </form>
 </div>

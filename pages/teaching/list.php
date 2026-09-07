@@ -72,7 +72,7 @@ $teaching = $osiris->teaching->aggregate([
         <thead>
             <tr>
                 <th><?= lang('Module No.', 'Modulnummer') ?></th>
-                <th><?= lang('Title', 'Titel') ?></th>
+                <th><?= lang('system.title') ?></th>
                 <th><?= lang('Teaching venue / University', 'Lehrort / Hochschule') ?></th>
                 <th><?= lang('Number of Activities', 'Anzahl der Aktivitäten') ?></th>
             </tr>

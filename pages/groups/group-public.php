@@ -170,7 +170,7 @@ function sel($index, $value)
                             <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
-                                <label for="values[research][<?= $i ?>][title]" class="required"><?=lang('Title', 'Titel')?></label>
+                                <label for="values[research][<?= $i ?>][title]" class="required"><?=lang('system.title')?></label>
                             </div>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
@@ -189,7 +189,7 @@ function sel($index, $value)
                             <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
-                                <label for="values[research][<?= $i ?>][title_de]"><?=lang('Title', 'Titel')?></label>
+                                <label for="values[research][<?= $i ?>][title_de]"><?=lang('system.title')?></label>
                             </div>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
@@ -233,7 +233,7 @@ function sel($index, $value)
 
                     </div>
 
-                    <button class="btn danger small my-10" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                    <button class="btn danger small my-10" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
                 </div>
         <?php }
         } ?>
@@ -309,7 +309,7 @@ function sel($index, $value)
                     </div>
                 </div>
                 ${lang('Please save once to add more information.', 'Bitte speichere einmal, um weitere Informationen hinzuzufügen.')}<br>
-                <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('Delete', 'Löschen')}</button>
+                <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('system.delete')}</button>
             </div>
 
                 `;
@@ -330,7 +330,7 @@ function sel($index, $value)
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+        <i class="ph ph-check"></i> <?= lang('system.save') ?>
     </button>
 
 </form>
