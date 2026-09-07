@@ -40,7 +40,7 @@ Route::get('/docs/([\w-]+)', function ($doc) {
     include BASEPATH . "/php/init.php";
     // SassCompiler::run("scss/", "css/");
 
-    $language = lang('en', 'de');
+    $language = lang('common.this_language');
 
     $breadcrumb = [
         ['name' => lang('Documentation', 'Dokumentation'), 'path' => '/docs'],

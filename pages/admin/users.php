@@ -87,11 +87,11 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
-                <label class="required" for="first"><?= lang('First name', 'Vorname') ?></label>
+                <label class="required" for="first"><?= lang('common.name_first') ?></label>
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required placeholder="last name">
-                <label class="required" for="last"><?= lang('Last name', 'Nachname') ?></label>
+                <label class="required" for="last"><?= lang('common.name_last') ?></label>
             </div>
         </div>
 

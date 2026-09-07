@@ -45,7 +45,7 @@ class Infrastructure extends DB
     public function getRoles()
     {
         // map roles to current language
-        $lang = lang('en', 'de');
+        $lang = lang('common.this_language');
         $roles = [];
         foreach ($this->roles as $key => $role) {
             $roles[$key] = $role[$lang];
@@ -58,7 +58,7 @@ class Infrastructure extends DB
         if ($raw) {
             return $this->roles[$role] ?? $role;
         }
-        return $this->roles[$role][lang('en', 'de')] ?? $role;
+        return $this->roles[$role][lang('common.this_language')] ?? $role;
     }
 
 

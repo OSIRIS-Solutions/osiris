@@ -39,7 +39,7 @@ $reports = $osiris->adminReports->find();
 
             <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report['_id'] ?>" class="btn mr-10">
                 <i class="ph ph-eye"></i>
-                <?= lang('Preview', 'Vorschau') ?>
+                <?= lang('common.preview') ?>
             </a>
             <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn">
                 <i class="ph ph-edit"></i>

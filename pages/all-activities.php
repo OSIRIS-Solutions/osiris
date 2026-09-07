@@ -97,7 +97,7 @@ $cart = readCart();
                     <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
                     <th>Start</th>
-                    <th><?= lang('End', 'Ende') ?></th>
+                    <th><?= lang('common.end') ?></th>
                     <th><?= lang('common.units') ?></th>
                     <th><?= lang('Online ahead of print') ?></th>
                     <th><?= lang('common.type') ?></th>
@@ -393,7 +393,7 @@ $cart = readCart();
             'key': 'start'
         },
         {
-            title: lang('End', 'Ende'),
+            title: lang('common.end'),
             'key': 'end'
         },
         {

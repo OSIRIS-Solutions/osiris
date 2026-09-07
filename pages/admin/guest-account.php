@@ -58,8 +58,8 @@ if (empty($accounts)) {
         <thead>
             <tr>
                 <th><?= lang('Username', 'Benutzername') ?></th>
-                <th><?= lang('First name', 'Vorname') ?></th>
-                <th><?= lang('Last name', 'Nachname') ?></th>
+                <th><?= lang('common.name_first') ?></th>
+                <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Mail', 'E-Mail') ?></th>
                 <th><?= lang('Valid until', 'Gültig bis') ?></th>
                 <th class="w-100"><?= lang('Actions', 'Aktionen') ?></th>

@@ -132,7 +132,7 @@ foreach ($countries as $c) {
                         <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                     </div>
                     <div>
-                        <strong><?= lang('Comment', 'Kommentar') ?>:</strong><br>
+                        <strong><?= lang('common.comment') ?>:</strong><br>
                         <span><?= nl2br(e($review['comment'] ?? lang('No comment provided.', 'Kein Kommentar hinterlegt.'))) ?></span>
                     </div>
                 </div>
@@ -301,8 +301,8 @@ foreach ($countries as $c) {
                                 <thead>
                                     <tr>
                                         <th><?= lang('Permit name', 'Genehmigungsname') ?></th>
-                                        <th><?= lang('Status', 'Status') ?></th>
-                                        <th><?= lang('Comment', 'Kommentar') ?></th>
+                                        <th><?= lang('common.status') ?></th>
+                                        <th><?= lang('common.comment') ?></th>
                                         <th></th>
                                     </tr>
                                 </thead>

@@ -101,7 +101,7 @@ $conferences = $osiris->conferences->find(
                     <th><?= lang('common.title') ?></th>
                     <th><?= lang('Location', 'Ort') ?></th>
                     <th><?= lang('Start', 'Anfang') ?></th>
-                    <th><?= lang('End', 'Ende') ?></th>
+                    <th><?= lang('common.end') ?></th>
                     <th><?= lang('common.type') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= $Settings->tagLabel() ?></th>
@@ -254,7 +254,7 @@ $conferences = $osiris->conferences->find(
         },
         {
             'key': 'end',
-            'title': lang('End', 'Ende')
+            'title': lang('common.end')
         },
         {
             'key': 'type',

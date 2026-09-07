@@ -6,7 +6,7 @@ function renderActivities($filter = [], $return_updated = false)
     global $Settings;
     $Format = new Document(true);
     $updated = 0;
-    $renderLang = $Settings->get('render_language', lang('en', 'de'));
+    $renderLang = $Settings->get('render_language', lang('common.this_language'));
     $DB = new DB;
     $cursor = $DB->db->activities->find($filter);
     $rendered = [

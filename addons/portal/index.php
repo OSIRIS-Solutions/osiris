@@ -30,7 +30,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     }
 
     // Call Portfolio API to get entity details
-    $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
+    $data = $Portfolio->fetch_entity($type, $id, '', lang('common.this_language'));
 
     // display correct breadcrumb
     $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
@@ -333,7 +333,7 @@ Route::get('/portfolio-index', function () {
 //             # code...
 //             break;
 //     }
-//     $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
+//     $breadcrumb[] = ['name' => lang('common.preview')];
 
 //     // important: NO database connection
 //     include BASEPATH . "/header.php";

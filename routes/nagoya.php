@@ -246,7 +246,7 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
@@ -272,7 +272,7 @@ Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
@@ -298,7 +298,7 @@ Route::get('/proposals/nagoya-scope/([A-Za-z0-9]*)', function ($id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
@@ -329,7 +329,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
@@ -356,7 +356,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)', function ($id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
@@ -383,7 +383,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals");
+        abortwith(404, lang('common.proposal'), "/proposals");
     }
     $nagoya = DB::doc2Arr($project['nagoya'] ?? []);
     $countries = DB::doc2Arr($nagoya['countries'] ?? []);
@@ -424,7 +424,7 @@ Route::post('/crud/nagoya/remove-country/([A-Za-z0-9]*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
     }
 
     $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
@@ -479,7 +479,7 @@ Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
     }
 
     $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
@@ -604,7 +604,7 @@ Route::post('/crud/nagoya/notify-researchers', function () {
     $mongo_id = $DB->to_ObjectID($project_id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals/view/$project_id");
+        abortwith(404, lang('common.proposal'), "/proposals/view/$project_id");
         die;
     }
 
@@ -649,7 +649,7 @@ Route::post('/crud/nagoya/add-abs-scope/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
     }
 
     $nagoya        = DB::doc2Arr($project['nagoya']);
@@ -841,7 +841,7 @@ Route::post('/crud/nagoya/evaluate-abs/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        abortwith(404, lang("Proposal", "Antrag"), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
     }
 
     $nagoya      = DB::doc2Arr($project['nagoya']);

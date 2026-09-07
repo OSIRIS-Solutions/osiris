@@ -35,7 +35,7 @@ $nagoya = $project['nagoya'] ?? [];
                 <th><?= lang('common.country') ?></th>
                 <th><?= lang('Party to Nagoya?', 'Nagoya-Protokoll?') ?></th>
                 <th><?= lang('Own ABS measures?', 'Eigene ABS-Maßnahmen?') ?></th>
-                <th><?= lang('Comment', 'Kommentar') ?></th>
+                <th><?= lang('common.comment') ?></th>
                 <th><?= lang('Decision', 'Entscheidung') ?></th>
             </tr>
         </thead>

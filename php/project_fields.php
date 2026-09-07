@@ -194,7 +194,7 @@ class ProjectFields extends Fields
             [
                 "id" => "status",
                 "module_of" => $typeModules["status"] ?? [],
-                "label" => lang("Status", "Status"),
+                "label" => lang('common.status'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
@@ -737,7 +737,7 @@ class ProjectFields extends Fields
             [
                 "id" => "comment",
                 "module_of" => $typeModules["comment"] ?? [],
-                "label" => lang("Comment", "Kommentar"),
+                "label" => lang('common.comment'),
                 'type' => 'string',
                 'usage' => [
                     'filter',

@@ -77,7 +77,7 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
         ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
         ['name' => lang('Builder', 'Editor'), 'path' => "/admin/reports/builder/$id"],
-        ['name' => lang("Preview", "Vorschau")]
+        ['name' => lang('common.preview')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
         abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('Go back', 'Zurück'));

@@ -205,7 +205,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <a class="btn float-md-right mb-10" href="<?= ROOTPATH ?>/preview/topic/<?= $topic['id'] ?>">
             <i class="ph ph-eye"></i>
-            <?= lang('Preview', 'Vorschau') ?>
+            <?= lang('common.preview') ?>
         </a>
     <?php } ?>
 
@@ -345,7 +345,7 @@ if ($Settings->featureEnabled('spectrum')) {
     ?>
         <div class="col-md">
             <h3>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                <?= lang('common.research_spectrum') ?>
             </h3>
             <?php
             if (!empty($spectrum)) :

@@ -97,7 +97,7 @@ $name = $data['name'];
                                                 <?= $person['displayname'] ?>
                                             </a>
                                         </h5>
-                                        <?= $person['role'][lang('en', 'de')] ?? '' ?>
+                                        <?= $person['role'][lang('common.this_language')] ?? '' ?>
                                         <?php
                                         if (!empty($person['depts'])) {
                                             foreach ($person['depts'] as $d => $dept) {
@@ -126,7 +126,7 @@ $name = $data['name'];
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>

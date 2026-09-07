@@ -663,7 +663,7 @@ function printRules($rules)
 
         var mongoQuery = $('#builder').queryBuilder({
             filters: filters,
-            'lang_code': lang('en', 'de'),
+            'lang_code': lang('common.this_language'),
             'icons': {
                 add_group: 'ph ph-plus-circle text-success',
                 add_rule: 'ph ph-plus text-success',

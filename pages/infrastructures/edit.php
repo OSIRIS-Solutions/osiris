@@ -104,7 +104,7 @@ $active = function ($field) use ($data_fields) {
         </div>
         <div class="col-md-6">
             <label for="end_date">
-                <?= lang('End', 'Ende') ?> <span class="badge kdsf">KDSF-B-13-4</span>
+                <?= lang('common.end') ?> <span class="badge kdsf">KDSF-B-13-4</span>
             </label>
             <input type="date" class="form-control" name="values[end_date]" id="end_date" value="<?= $form['end_date'] ?? '' ?>">
         </div>
@@ -303,7 +303,7 @@ $active = function ($field) use ($data_fields) {
                     <table class="table simple">
                         <thead>
                             <tr>
-                                <th><?= lang('Name', 'Name') ?></th>
+                                <th><?= lang('common.name') ?></th>
                                 <th><?= lang('Coordinator', 'Koordinator') ?></th>
                                 <th></th>
                             </tr>

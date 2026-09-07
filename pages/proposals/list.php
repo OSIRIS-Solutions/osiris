@@ -368,7 +368,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'applicant'
         },
         {
-            title: lang('Status', 'Status'),
+            title: lang('common.status'),
             key: 'status'
         },
         {
@@ -637,7 +637,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'status',
                     searchable: true,
                     visible: false,
-                    header: lang('Status', 'Status'),
+                    header: lang('common.status'),
                     defaultContent: 'proposed'
                 },
                 {

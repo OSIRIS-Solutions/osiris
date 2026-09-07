@@ -105,7 +105,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <p class="lead">
         <?= lang('Number of infrastructures on the reporting date', 'Anzahl der Infrastrukturen zum Stichtag') ?>:
         <b class="badge signal"><?= count($infrastructures) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
     <h3>
@@ -114,7 +114,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <table class="table" id="infrastructures">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><?= lang('Category', 'Kategorie') ?></th>
                 <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
                 <th><?= lang('Type', 'Art') ?></th>
@@ -153,12 +153,12 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <table class="table" id="user-stats">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
                 <th class="text-right"><?= lang('Internal', 'Intern') ?></th>
                 <th class="text-right"><?= lang('National', 'National') ?></th>
                 <th class="text-right"><?= lang('International', 'International') ?></th>
-                <th class="text-right"><?= lang('Total', 'Gesamt') ?></th>
+                <th class="text-right"><?= lang('common.total') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -227,7 +227,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         </tbody>
         <tfoot>
             <tr>
-                <th><?= lang('Total', 'Gesamt') ?></th>
+                <th><?= lang('common.total') ?></th>
                 <th>-</th>
                 <th class="text-right">
                     <?= $stats['internal'] ?>
@@ -308,7 +308,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         </tbody>
         <tfoot>
             <tr>
-                <th><?= lang('Total', 'Gesamt') ?></th>
+                <th><?= lang('common.total') ?></th>
                 <th>-</th>
                 <th class="text-right">
                     <?= $stats['hours'] ?>
@@ -401,7 +401,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <tfoot>
             <tr>
                 <th>
-                    <?= lang('Total', 'Gesamt') ?>
+                    <?= lang('common.total') ?>
                     <?= $counts['total'] ?>
                 </th>
                 <th>-</th>
@@ -470,7 +470,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <table class="table" id="collaborations">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
                 <th><?= lang('Coordinator', 'Koordinator') ?></th>
             </tr>
@@ -544,7 +544,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <table class="table" id="collaborative-partners">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
                 <th><?= lang('Location', 'Standort') ?></th>
                 <th><?= lang('Number of infrastructures', 'Anzahl der Infrastrukturen') ?></th>

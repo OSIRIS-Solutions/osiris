@@ -51,7 +51,7 @@ $oa = $data['oa'] ?? false;
 
         <div class="form-group floating-form">
             <input type="text" name="values[journal]" id="journal" class="form-control" value="<?= $data['journal'] ?? '' ?>" required placeholder="Journal name">
-            <label for="journal" class="required"><?= lang('Name', 'Name') ?></label>
+            <label for="journal" class="required"><?= lang('common.name') ?></label>
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[abbr]" id="abbr" class="form-control" value="<?= $data['abbr'] ?? '' ?>" placeholder="Abbreviation">

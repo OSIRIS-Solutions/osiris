@@ -277,9 +277,9 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
         <tr>
             <th><?= lang('Element', 'Element') ?></th>
             <th><?= lang('Start', 'Start') ?></th>
-            <th><?= lang('End', 'Ende') ?></th>
+            <th><?= lang('common.end') ?></th>
             <th><?= lang('Change', 'Veränderung') ?></th>
-            <th><?= lang('Total', 'Gesamt') ?></th>
+            <th><?= lang('common.total') ?></th>
         </tr>
     </thead>
     <tbody>

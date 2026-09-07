@@ -348,7 +348,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     // res: { total, withWorkflow, withoutWorkflow, willUpdate, updatedCount, skippedCount }
                     if (dryrun) {
                         $('#mig-counts').html(
-                            '<?= lang('Total', 'Gesamt') ?>: <b>' + res.total +
+                            '<?= lang('common.total') ?>: <b>' + res.total +
                             '</b> — <?= lang('with workflow', 'mit Workflow') ?>: <b>' + res.withWorkflow +
                             '</b> — <?= lang('without', 'ohne') ?>: <b>' + res.withoutWorkflow + '</b><br>' +
                             '<?= lang('Will attach to', 'Wird anhängen an') ?>: <b>' + res.willUpdate + '</b>'

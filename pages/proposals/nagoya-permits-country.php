@@ -192,13 +192,13 @@ $countryLabel = $evaluation['label'] ?? '';
 
                                 <div class="text-right small">
                                     <label class="mb-1 font-weight-bold">
-                                        <?= lang('Status', 'Status') ?>
+                                        <?= lang('common.status') ?>
                                     </label>
                                     <?php if ($canEditBasic): ?>
                                         <select
                                             name="permits[<?= e($pid) ?>][status]"
                                             class="form-control d-inline-block w-auto">
-                                            <option value="" disabled><?= lang('Status', 'Status') ?></option>
+                                            <option value="" disabled><?= lang('common.status') ?></option>
                                             <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                             <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
                                             <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
@@ -603,7 +603,7 @@ $countryLabel = $evaluation['label'] ?? '';
             <input type="text" class="form-control" name="permits[**][name]" value="" placeholder="<?= lang('e.g. PIC, MAT, ABS permit…', 'z.B. PIC, MAT, ABS-Genehmigung…') ?>">
         </div>
         <div class="text-right small">
-            <label class="small mb-1"><?= lang('Status', 'Status') ?></label>
+            <label class="small mb-1"><?= lang('common.status') ?></label>
             <select name="permits[**][status]" class="form-control">
                 <option value="" disabled="">Status</option>
                 <option value="needed" selected>Erforderlich</option>

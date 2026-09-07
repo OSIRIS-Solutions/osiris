@@ -166,7 +166,7 @@ class Document extends Settings
         $this->custom_fields = array_column($fields, null, 'id');
         $this->custom_field_values = array_column($fields, 'values', 'id');
 
-        $this->lang = lang('en', 'de');
+        $this->lang = lang('common.this_language');
 
         $this->field_ids = array_keys($this->templates);
         foreach ($this->custom_fields as $field) {
@@ -1813,7 +1813,7 @@ class Document extends Settings
             $line .= "<br><small style='color:#878787;'>" . $this->appendix . "</small>";
         }
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }
@@ -1851,7 +1851,7 @@ class Document extends Settings
         $line .= $this->get_field('file-icons');
         $line .= "</small>";
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }
@@ -1880,7 +1880,7 @@ class Document extends Settings
         $line .= $this->getSubtitle();
         $line .= "</small>";
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }

@@ -168,13 +168,13 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('First name', 'Vorname') ?></th>
+                    <th class="w-300"><?= lang('common.name_first') ?></th>
                     <td>
                         <?= $form['guest']['first'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Last name', 'Nachname') ?></th>
+                    <th class="w-300"><?= lang('common.name_last') ?></th>
                     <td>
                         <?= $form['guest']['last'] ?? '-' ?>
                     </td>

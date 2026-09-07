@@ -209,7 +209,7 @@ function updateCalendar(el, unit) {
         var calendarEl = document.getElementById('calendar');
         Calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: lang('en', 'de'),
+            locale: lang('common.this_language'),
             events: function(fetchInfo, successCallback, failureCallback) {
                 // start and end as ISO dates
                 var start = fetchInfo.startStr.split('T')[0];

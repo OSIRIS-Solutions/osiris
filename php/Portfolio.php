@@ -34,7 +34,7 @@ class Portfolio extends Settings
         // basepath for links depends on portfolio settings
         if ($this->preview) {
             $this->basepath = ROOTPATH . '/preview';
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         } else {
             $this->basepath = $this->get('portfolio_url', ROOTPATH . '/');
             if (substr($this->basepath, -1) === '/') {
@@ -362,7 +362,7 @@ class Portfolio extends Settings
                 default:
                     break;
             }
-            $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
+            $breadcrumb[] = ['name' => lang('common.preview')];
             return $breadcrumb;
         }
         // Type-specific

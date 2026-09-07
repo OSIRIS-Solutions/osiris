@@ -45,7 +45,7 @@ if ($active('keywords')) {
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
-    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
+    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('common.preview') ?></a>
 <?php } ?>
 <?php if ($Settings->hasPermission('user.synchronize') && strtoupper(USER_MANAGEMENT) === 'LDAP') { ?>
     <a href="<?= ROOTPATH ?>/synchronize-users" class="btn float-right"><i class="ph ph-sync"></i> <?= lang('Synchronize users', 'Nutzende synchronisieren') ?></a>
@@ -67,8 +67,8 @@ if ($active('keywords')) {
                 <th><?= lang('Active', 'Aktiv') ?></th>
                 <th><?= lang('Names', 'Namen') ?></th>
                 <th><?= lang('Research topics', 'Forschungsbereiche') ?></th>
-                <th><?= lang('First name', 'Vorname') ?></th>
-                <th><?= lang('Last name', 'Nachname') ?></th>
+                <th><?= lang('common.name_first') ?></th>
+                <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Academic title', 'Akad. Titel') ?></th>
                 <th><?= lang('Email', 'E-Mail') ?></th>
                 <th><?= lang('Telephone', 'Telefon') ?></th>
@@ -216,11 +216,11 @@ if ($active('keywords')) {
             'key': 'topics'
         },
         {
-            title: lang('First name', 'Vorname'),
+            title: lang('common.name_first'),
             'key': 'first'
         },
         {
-            title: lang('Last name', 'Nachname'),
+            title: lang('common.name_last'),
             'key': 'last'
         },
         {
@@ -365,14 +365,14 @@ if ($active('keywords')) {
                 {
                     target: 6,
                     data: 'first',
-                    title: lang('First name', 'Vorname'),
+                    title: lang('common.name_first'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 7,
                     data: 'last',
-                    title: lang('Last name', 'Nachname'),
+                    title: lang('common.name_last'),
                     visible: false,
                     defaultContent: ''
                 },

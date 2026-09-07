@@ -211,7 +211,7 @@ $projectCount = count($projectsForCountry);
                     <tr>
                         <th><?= lang('common.project') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
-                        <th><?= lang('Status', 'Status') ?></th>
+                        <th><?= lang('common.status') ?></th>
                         <th><?= lang('Docs', 'Dokumente') ?></th>
                         <th><?= lang('ABS check', 'ABS-Prüfung') ?></th>
                     </tr>

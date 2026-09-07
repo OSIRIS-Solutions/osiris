@@ -388,7 +388,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('en', 'de'),     // je nach gewünschter Sprache
+                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];
@@ -496,7 +496,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('en', 'de'),     // je nach gewünschter Sprache
+                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];

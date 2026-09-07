@@ -58,7 +58,7 @@ if (!$new_project) {
             }
             if (isset($form['end_proposed'])) {
                 $form['end'] = $form['end_proposed'];
-                $prefilled[] = lang('End', 'Ende');
+                $prefilled[] = lang('common.end');
             }
             if (isset($form['grant_sum_proposed'])) {
                 $form['grant_sum'] = $form['grant_sum_proposed'];
@@ -365,7 +365,7 @@ if ($is_subproject) {
                 <div class="form-group floating-form">
                     <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment" <?= $req('comment') ?>><?= val('comment') ?></textarea>
                     <label for="comment <?= $req('comment') ?>">
-                        <?= lang('Comment', 'Kommentar') ?>
+                        <?= lang('common.comment') ?>
                     </label>
                 </div>
             <?php } ?>
@@ -413,7 +413,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('title', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="title" class="required floating-title">
                                 <?= lang('Full title of the project', 'Voller Titel des Projekts') ?>
                             </label>
@@ -433,7 +433,7 @@ if ($is_subproject) {
                 <?php } ?>
                 <?php if (array_key_exists('title_de', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="title_de" class="floating-title <?= $req('title_de') ?>">
                                 <?= lang('Full title of the project (German)', 'Voller Titel des Projekts (Deutsch)') ?>
                             </label>
@@ -1087,7 +1087,7 @@ if ($is_subproject) {
                         <div class="col floating-form">
                             <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= val('grant_sum_proposed') ?>" placeholder="112345">
                             <label for="grant_sum_proposed" class="<?= $req('grant_sum_proposed') ?>">
-                                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
+                                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('common.total') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -1116,7 +1116,7 @@ if ($is_subproject) {
                         <div class="col floating-form">
                             <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= val('grant_sum') ?>" placeholder="1234">
                             <label for="grant_sum" class="<?= $req('grant_sum') ?>">
-                                <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
+                                <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('common.total') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -1160,7 +1160,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('abstract', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="abstract" class="floating-title  <?= $req('abstract') ?>">
                                 <?= lang('Abstract', 'Kurzbeschreibung') ?>
                             </label>
@@ -1180,7 +1180,7 @@ if ($is_subproject) {
                 <?php } ?>
                 <?php if (array_key_exists('abstract_de', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="abstract_de" class="floating-title <?= $req('abstract_de') ?>">
                                 <?= lang('Abstract (German)', 'Kurzbeschreibung (Deutsch)') ?>
                             </label>

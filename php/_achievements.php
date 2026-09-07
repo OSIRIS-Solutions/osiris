@@ -29,7 +29,7 @@ class Achievement
         foreach ($achievements as $ac) {
             $this->achievements[$ac['id']] = $ac;
         }
-        $this->lang = lang('en', 'de');
+        $this->lang = lang('common.this_language');
         $this->lang_g = $this->lang;
     }
 

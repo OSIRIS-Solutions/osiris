@@ -187,7 +187,7 @@ if ($edit_perm) { ?>
 
     <a href="<?= ROOTPATH ?>/preview/infrastructure/<?= $infrastructure['id'] ?>" class="btn float-right">
         <i class="ph ph-eye"></i>
-        <?= lang('Preview', 'Vorschau') ?>
+        <?= lang('common.preview') ?>
     </a>
 
     <div class="row align-items-center my-0">
@@ -576,7 +576,7 @@ if ($edit_perm) { ?>
                 <?php } ?>
                 <!-- comment -->
                 <div class="form-group d-flex align-items-center mr-20 mb-10">
-                    <label for="comment" class="w-300 font-weight-bold"><?= lang('Comment', 'Kommentar') ?>:</label>
+                    <label for="comment" class="w-300 font-weight-bold"><?= lang('common.comment') ?>:</label>
                     <input type="text" name="comment" id="comment" class="form-control w-400" />
                 </div>
 
@@ -627,7 +627,7 @@ if ($edit_perm) { ?>
                                 <th><?= lang('Field', 'Feld') ?></th>
                                 <th class="text-right"><?= lang('Value', 'Wert') ?></th>
                                 <th><?= lang('Entered by', 'Eingegeben von') ?></th>
-                                <th><?= lang('Comment', 'Kommentar') ?></th>
+                                <th><?= lang('common.comment') ?></th>
                             </tr>
                         </thead>
                         <tbody>

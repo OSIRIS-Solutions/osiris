@@ -78,7 +78,7 @@ if (!$permission) {
 
     <button class="btn secondary">
         <i class="ph ph-check"></i>
-        <?= lang('Submit', 'Bestätigen') ?>
+        <?= lang('common.submit') ?>
     </button>
 </form>
 

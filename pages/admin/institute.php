@@ -28,7 +28,7 @@
                 <input type="text" class="form-control" name="general[affiliation][id]" required value="<?= $affiliation['id'] ?>">
             </div>
             <div class="col-sm">
-                <label for="name" class="required "><?= lang('Name', 'Name') ?></label>
+                <label for="name" class="required "><?= lang('common.name') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][name]" required value="<?= $affiliation['name'] ?? '' ?>">
             </div>
             <div class="col-sm">

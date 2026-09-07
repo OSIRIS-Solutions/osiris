@@ -130,7 +130,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <p class="lead">
             <?= lang('Number of activities', 'Anzahl der Aktivitäten') ?> <?= $phrase ?>:
             <b class="badge signal"><?= count($activities) ?></b>
-            <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+            <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
         </p>
 
 
@@ -180,7 +180,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="2"><?= lang('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -238,7 +238,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="2"><?= lang('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -340,7 +340,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="1"><?= lang('common.total') ?></th>
                     <th><?= $counts['all'] ?></th>
                     <th><?= $counts['affiliated'] ?></th>
                     <th><?= $counts['epub'] ?></th>
@@ -387,7 +387,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="oa-publications-table">
             <thead>
                 <tr>
-                    <th><?= lang('Status', 'Status') ?></th>
+                    <th><?= lang('common.status') ?></th>
                     <th><?= lang('Count', 'Anzahl') ?></th>
                 </tr>
             </thead>
@@ -434,7 +434,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th><?= lang('Total', 'Gesamt') ?></th>
+                    <th><?= lang('common.total') ?></th>
                     <th><?= $count_all ?></th>
                 </tr>
             </tfoot>

@@ -262,7 +262,7 @@ function val($index, $default = '')
             <h5 class="modal-title">
                 <?= lang('How to edit the author list', 'Wie bearbeite ich die Autorenliste') ?>?
             </h5>
-            <?php if (lang("en", "de") == "en") { ?>
+            <?php if (lang('common.this_language') == "en") { ?>
                 <p>
                     To <b>add an author</b>, you have to enter him in the field marked "Add author ...". Please use the format <code>last name, first name</code>, so that OSIRIS can assign the authors correctly. <?= $Settings->get('affiliation') ?> authors are suggested in a list. An author from the list will be automatically assigned to <?= $Settings->get('affiliation') ?>.
                 </p>
@@ -697,7 +697,7 @@ function val($index, $default = '')
                 </div>
             <?php } else { ?>
                 <div class="form-group">
-                    <label for="comment"><?= lang('Comment', 'Kommentar') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)</label>
+                    <label for="comment"><?= lang('common.comment') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)</label>
                     <textarea name="values[comment]" id="comment" cols="30" rows="2" class="form-control"><?php if (!$copy) {
                                                                                                                 echo val('comment');
                                                                                                             } ?></textarea>

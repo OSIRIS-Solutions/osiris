@@ -130,7 +130,7 @@ if ($topicsEnabled) {
                     <b class="badge <?= ($in_past ? 'danger' : 'success') ?>"><?= $days ?></b>
                 </td>
                 <td>
-                    <span class="key"><?= lang('End', 'Ende') ?></span>
+                    <span class="key"><?= lang('common.end') ?></span>
                     <?= format_date($conference['end']) ?>
                 </td>
             </tr>

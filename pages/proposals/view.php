@@ -74,7 +74,7 @@ if ($nagoyaRelevant) {
 
     <div class="d-flex align-items-center justify-content-between">
         <div class="title">
-            <b class="badge text-uppercase primary"><?= lang('Proposal', 'Antrag') ?></b>
+            <b class="badge text-uppercase primary"><?= lang('common.proposal') ?></b>
             <h1 class="mt-0">
                 <?php if (isset($project['acronym'])) { ?>
                     <?= e($project['acronym']) ?> –
@@ -298,7 +298,7 @@ if ($nagoyaRelevant) {
                 <div class="tabs" id="status-tabs">
                     <button class="btn font-weight-bold active" style="--primary-color: var(--signal-color);--primary-color-20: var(--signal-color-20);" onclick="selectTab('proposal')" id="proposal-btn">
                         <i class="ph ph-file-text"></i>
-                        <?= lang('Proposal', 'Antrag') ?>
+                        <?= lang('common.proposal') ?>
                     </button>
                     <?php if ($status == 'approved') { ?>
                         <button class="btn font-weight-bold" style="--primary-color: var(--success-color);--primary-color-20: var(--success-color-20);" onclick="selectTab('approval')" id="approval-btn">

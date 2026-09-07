@@ -523,7 +523,7 @@ function sel($index, $value)
     <table class="table mt-20">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><?= lang('Position', 'Position') ?></th>
                 <th><?= lang('Since', 'seit') ?></th>
                 <th><?= lang('Actions', 'Aktionen') ?></th>

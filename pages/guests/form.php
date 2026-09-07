@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="form-group" data-module="title">
-                    <div class="lang-<?= lang('en', 'de') ?>">
+                    <div class="lang-<?= lang('common.this_language') ?>">
                         <label for="title" class="required">
                             <?= lang('Title / Topic / Description', 'Titel / Thema / Beschreibung') ?>
                         </label>
@@ -137,13 +137,13 @@
                     </div>
                     <div class="col-sm-5">
                         <label for="first-name" class="element-other">
-                            <?= lang('First name', 'Vorname') ?>
+                            <?= lang('common.name_first') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][first]" id="first-name" value="<?= $form['guest']['first'] ?? '' ?>">
                     </div>
                     <div class="col-sm-5">
                         <label for="last-name" class="element-other">
-                            <?= lang('Last name', 'Nachname') ?>
+                            <?= lang('common.name_last') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][last]" id="last-name" value="<?= $form['guest']['last'] ?? '' ?>">
                     </div>
@@ -189,7 +189,7 @@
                 </h5>
 
                 <div class="form-group">
-                    <label for="guest-affiliation" class="element-other"><?= lang('Name', 'Name') ?></label>
+                    <label for="guest-affiliation" class="element-other"><?= lang('common.name') ?></label>
                     <input type="text" class="form-control" name="values[affiliation][name]" id="guest-affiliation" value="<?= $form['affiliation']['name'] ?? '' ?>">
                 </div>
 

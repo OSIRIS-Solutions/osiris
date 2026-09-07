@@ -59,7 +59,7 @@ $user_in_project = false;
                             </span>
                         </th>
                         <th>
-                            <?= lang('End', 'Ende') ?><br>
+                            <?= lang('common.end') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-D
                             </span>
@@ -170,7 +170,7 @@ $user_in_project = false;
 
         <button class="btn primary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('Submit', 'Bestätigen') ?>
+            <?= lang('common.submit') ?>
         </button>
     </form>
 </div>

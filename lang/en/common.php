@@ -76,5 +76,19 @@ return [
     'publications' => 'Publications',
     'units' => 'Units',
     'country' => 'Country',
-    'other' => 'Other'
+    'other' => 'Other',
+    'end' => 'End',
+    'name' => 'Name',
+    'total' => 'Total',
+    'submit' => 'Submit',
+    'this_language' => 'en',
+    'preview' => 'Preview',
+    'research_spectrum' => 'Research Spectrum',
+    'proposal' => 'Proposal',
+    'status' => 'Status',
+    'comment' => 'Comment',
+
+
+
+
 ];

@@ -417,7 +417,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
                     <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -517,7 +517,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -742,7 +742,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_spectrum > 0) { ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum')  ?>
+                <?= lang('common.research_spectrum')  ?>
             </a>
     <?php }
     } ?>
@@ -806,13 +806,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php } ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Last name', 'Nachname') ?></span>
+                                <span class="key"><?= lang('common.name_last') ?></span>
                                 <?= $scientist['last'] ?? '' ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('First name', 'Vorname') ?></span>
+                                <span class="key"><?= lang('common.name_first') ?></span>
                                 <?= $scientist['first'] ?? '' ?>
                             </td>
                         </tr>

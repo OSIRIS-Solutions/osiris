@@ -101,8 +101,8 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         <table class="table" id="infrastructure-table">
             <thead>
                 <tr>
-                    <th><?= lang('Name', 'Name') ?></th>
-                    <th><?= lang('Name', 'Name') ?></th>
+                    <th><?= lang('common.name') ?></th>
+                    <th><?= lang('common.name') ?></th>
                     <th><?= lang('Start Date', 'Startdatum') ?></th>
                     <th><?= lang('End Date', 'Enddatum') ?></th>
                     <th><?= lang('Category', 'Kategorie') ?></th>

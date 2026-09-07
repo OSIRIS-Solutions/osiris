@@ -148,7 +148,7 @@
                     <table class="table datatable responsive" id="activities-table"
                         data-table="activities"
                         data-source="./all-activities.json"
-                        data-lang="<?= lang('en', 'de') ?>">
+                        data-lang="<?= lang('common.this_language') ?>">
                         <thead>
                             <tr>
                                 <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
@@ -218,7 +218,7 @@
                             class="portfolio-map map h-500 w-full"
                             data-source="./collaborators-map.json"
                             data-context="project"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                         </div>
                     </div>
                     <p>
@@ -443,7 +443,7 @@
                                     <b><?= format_date($data['start_date']) ?></b>
                                 </div>
                                 <div>
-                                    <span class="key"><?= lang('End', 'Ende') ?></span>
+                                    <span class="key"><?= lang('common.end') ?></span>
                                     <b><?= format_date($data['end_date']) ?></b>
                                 </div>
                             </div>

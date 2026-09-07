@@ -253,7 +253,7 @@ include_once BASEPATH . "/php/Modules.php";
         <tr class="text-muted">
             <td>
                 <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
-                    <?= lang('Comment', 'Kommentar') ?>:
+                    <?= lang('common.comment') ?>:
                 </span>
 
                 <?= $draft['comment'] ?>

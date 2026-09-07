@@ -217,7 +217,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
     <table class="table">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
+                <th><?= lang('common.name') ?></th>
                 <th><label class="required" for="lead"><?= lang('Role', 'Rolle') ?></label></th>
                 <th></th>
             </tr>

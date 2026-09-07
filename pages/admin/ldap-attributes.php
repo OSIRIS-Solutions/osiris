@@ -34,11 +34,11 @@ $attributeMappings = array_merge($attributeMappings, $availableLdapFields ?? [])
 
 $fields = [
     'first' => [
-        'name' => lang('First Name', 'Vorname'),
+        'name' => lang('common.name_first'),
         'example' => 'givenname', // Beispiel: "John"
     ],
     'last' => [
-        'name' => lang('Last Name', 'Nachname'),
+        'name' => lang('common.name_last'),
         'example' => 'sn', // Beispiel: "Doe"
     ],
     'academic_title' => [

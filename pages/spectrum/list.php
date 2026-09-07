@@ -169,7 +169,7 @@ unset($s);
                 <span aria-hidden="true">&times;</span>
             </a>
 
-            <?php if (lang('en', 'de') == 'de') { ?>
+            <?php if (lang('common.this_language') == 'de') { ?>
                 <h2>Forschungs-Spektrum – Methodik & Hintergrund</h2>
                 <hr>
                 <h3>Was zeigt das Forschungs-Spektrum?</h3>
@@ -318,7 +318,7 @@ unset($s);
 
 <h1>
     <i class="ph-duotone ph-lightbulb" aria-hidden="true"></i>
-    <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+    <?= lang('common.research_spectrum') ?>
 </h1>
 
 

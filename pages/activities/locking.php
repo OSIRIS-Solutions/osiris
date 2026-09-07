@@ -80,7 +80,7 @@
                 </div>
                 <div class="col-sm">
                     <label class="required" for="end">
-                        <?= lang('End', 'Ende') ?>
+                        <?= lang('common.end') ?>
                     </label>
                     <input type="date" class="form-control" name="end" id="end" value="<?= CURRENTYEAR ?>-06-30" required>
                 </div>
@@ -97,7 +97,7 @@
                     <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
                 </div>
             </div>
-            <button class="btn" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+            <button class="btn" type="submit"><?= lang('common.submit') ?></button>
 
         </form>
     </div>

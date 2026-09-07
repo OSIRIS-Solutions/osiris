@@ -900,7 +900,7 @@ $tagLabels = [
                     </button>
                     <button class="btn" type="button" id="preview-button">
                         <i class="ph ph-eye"></i>
-                        <?= lang('Preview', 'Vorschau') ?>
+                        <?= lang('common.preview') ?>
                     </button>
                 </div>
             </div>

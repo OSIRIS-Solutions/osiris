@@ -89,7 +89,7 @@
                             id="publication-table"
                             data-table="publications"
                             data-source="./publications.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
@@ -141,7 +141,7 @@
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
@@ -189,7 +189,7 @@
                 <?php if (!empty($data['numbers']['teaching'])): ?>
                     <div class="pb-10">
                         <h2 id="teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></h2>
-                        <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-table="teaching">
+                        <table class="table" id="teaching-table" data-lang="<?= lang('common.this_language') ?>" data-table="teaching">
                             <thead>
                                 <tr>
                                     <th data-><?= lang('common.title') ?></th>
@@ -197,7 +197,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('en', 'de'));
+                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('common.this_language'));
                                 foreach (($teaching) as $t):
                                     $title = str_replace("href='/", "href='" . $base . "/",  $t['title']);
                                 ?>

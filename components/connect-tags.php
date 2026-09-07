@@ -70,7 +70,7 @@
     </datalist>
     <button class="btn secondary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('Submit', 'Bestätigen') ?>
+        <?= lang('common.submit') ?>
     </button>
 </form>
 

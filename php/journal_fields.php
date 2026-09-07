@@ -26,7 +26,7 @@ class JournalFields extends Fields
             [
                 "id" => "journal",
                 "module_of" => ['general'],
-                "label" => lang("Name", "Name"),
+                "label" => lang('common.name'),
                 'type' => 'string',
                 'usage' => [
                     'filter',

@@ -358,7 +358,7 @@ if (array_sum($a) === 0) { ?>
                                 if (isset($h['comment']) && !empty($h['comment'])) { ?>
                                     <blockquote class="alert signal without-icon">
                                         <div class="title">
-                                            <?= lang('Comment', 'Kommentar') ?>
+                                            <?= lang('common.comment') ?>
                                         </div>
                                         <?= $h['comment'] ?>
                                     </blockquote>
@@ -532,7 +532,7 @@ if (array_sum($a) === 0) { ?>
                                         <label for="status-aborted-<?= $id ?>"><?= lang('Aborted', 'Abgebrochen') ?></label>
                                     </div>
                                 </div>
-                                <button class="btn" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+                                <button class="btn" type="submit"><?= lang('common.submit') ?></button>
                             </form>
                         </div>
                     </td>
@@ -658,7 +658,7 @@ if (array_sum($a) === 0) { ?>
                                             <option value="finished"><?= lang('finished', 'abgeschlossen') ?></option>
                                         </select>
                                     </div>
-                                    <button class="btn ml-10" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+                                    <button class="btn ml-10" type="submit"><?= lang('common.submit') ?></button>
                                 </form>
 
                             </div>

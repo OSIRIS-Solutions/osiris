@@ -541,7 +541,7 @@
 
                 <div class="box padded">
                     <h4 class="title" id="spectrum">
-                        <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                        <?= lang('common.research_spectrum') ?>
                     </h4>
 
                     <?= badgeBeta() ?>
@@ -688,7 +688,7 @@
                     <a href="#imports-external-features"><?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?></a>
                     <a href="#imports" class="submenu"><?= lang('Imports', 'Importe') ?></a>
                     <a href="#altmetrics" class="submenu"><?= lang('Altmetrics', 'Altmetriken') ?></a>
-                    <a href="#spectrum" class="submenu"><?= lang('Research Spectrum', 'Forschungs-Spektrum') ?></a>
+                    <a href="#spectrum" class="submenu"><?= lang('common.research_spectrum') ?></a>
 
                     <a href="#guest-management-features"><?= lang('Profiles and Guests', 'Profile und Gäste') ?></a>
                     <a href="#home-page" class="submenu"><?= lang('Home Page', 'Startseite') ?></a>

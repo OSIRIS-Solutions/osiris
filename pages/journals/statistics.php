@@ -626,7 +626,7 @@ foreach ($oa_distribution as $name => $counts) {
             <span class="value"><?= $number($used_journal_count) ?></span>
             <span class="label">
                 <?= lang("$label used", "Verwendete $label") ?>
-                <small class="d-block">(<?= $number($total_journals) ?> <?= lang('total', 'gesamt') ?>)</small>
+                <small class="d-block">(<?= $number($total_journals) ?> <?= lang('common.total') ?>)</small>
             </span>
         </div>
         <div class="tile">
@@ -720,7 +720,7 @@ foreach ($oa_distribution as $name => $counts) {
                 <table class="table w-auto" id="journal-oa-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Status', 'Status') ?></th>
+                            <th><?= lang('common.status') ?></th>
                             <th><?= $label ?></th>
                             <th><?= lang('common.publications') ?></th>
                         </tr>

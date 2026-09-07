@@ -180,7 +180,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <div class="btn-group">
                 <a class="btn" href="<?= ROOTPATH ?>/preview/group/<?= $id ?>">
                     <i class="ph ph-eye ph-fw"></i>
-                    <?= lang('Preview', 'Vorschau') ?>
+                    <?= lang('common.preview') ?>
                 </a>
             </div>
         <?php } ?>
@@ -533,7 +533,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             ?>
                 <div class="col-md">
                     <h3>
-                        <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                        <?= lang('common.research_spectrum') ?>
                     </h3>
                     <?php
                     if (!empty($spectrum)) :

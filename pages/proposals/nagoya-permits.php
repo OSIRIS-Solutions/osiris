@@ -163,7 +163,7 @@ $canAddNotes = true; // later
                                         <thead>
                                             <tr>
                                                 <th><?= lang('Permit', 'Genehmigung') ?></th>
-                                                <th><?= lang('Status', 'Status') ?></th>
+                                                <th><?= lang('common.status') ?></th>
                                                 <th><?= lang('IRCC / Permit number', 'IRCC / Genehmigungsnummer') ?></th>
                                                 <th><?= lang('Docs', 'Dokumente') ?></th>
                                                 <?php if ($Settings->hasPermission('nagoya.view')): ?>

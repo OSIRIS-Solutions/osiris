@@ -123,7 +123,7 @@ $all = $osiris->activities->count(
     <p class="lead">
         <?= lang('Number of courses in the selected semester', 'Anzahl der Lehrveranstaltungen im gewählten Semester') ?>:
         <b class="badge signal"><?= count($teaching) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
 
@@ -212,7 +212,7 @@ $all = $osiris->activities->count(
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
+                <th colspan="6" class="text-end"><?= lang('common.total') ?>:</th>
                 <th><?= $counts['total'] ?></th>
                 <th><?= $counts['affiliation'] ?></th>
             </tr>

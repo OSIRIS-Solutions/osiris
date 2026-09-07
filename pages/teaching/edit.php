@@ -66,7 +66,7 @@ include_once BASEPATH . "/header-editor.php";
             <input type="text" class="form-control" name="values[module]" id="module" required value="<?= val('module') ?>" placeholder="MB05">
         </div>
 
-        <div class="form-group lang-<?= lang('en', 'de') ?>">
+        <div class="form-group lang-<?= lang('common.this_language') ?>">
             <label for="title" class="required element-title">
                 <?= lang('Name of the module', 'Name des Moduls') ?>
             </label>

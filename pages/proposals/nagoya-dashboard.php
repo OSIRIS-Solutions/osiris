@@ -435,7 +435,7 @@ $totalProjects     = count($projects ?? []);
                         <th><?= lang('common.project') ?></th>
                         <th><?= lang('common.country') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
-                        <th><?= lang('Status', 'Status') ?></th>
+                        <th><?= lang('common.status') ?></th>
                         <th><?= lang('IRCC', 'IRCC') ?> / <?= lang('Identifier', 'Kennung') ?></th>
                     </tr>
                 </thead>

@@ -62,7 +62,7 @@ $end = $form['end_date'] ?? '';
                     </span>
                 </th>
                 <th>
-                    <?= lang('End', 'Ende') ?>
+                    <?= lang('common.end') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-C
                     </span>
@@ -135,7 +135,7 @@ $end = $form['end_date'] ?? '';
     <br>
     <button class="btn primary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('Submit', 'Bestätigen') ?>
+        <?= lang('common.submit') ?>
     </button>
 </form>
 

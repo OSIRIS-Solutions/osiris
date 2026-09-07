@@ -18,7 +18,7 @@
 Route::get('/spectrum', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Research Spectrum", "Forschungs-Spektrum"), 'path' => "/spectrum"]
+        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/spectrum/list.php";
@@ -28,7 +28,7 @@ Route::get('/spectrum', function () {
 Route::get('/spectrum/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Research Spectrum", "Forschungs-Spektrum"), 'path' => "/spectrum"],
+        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
         ['name' => lang("Visualize", "Visualisieren")]
     ];
     include BASEPATH . "/header.php";
@@ -40,7 +40,7 @@ Route::get('/spectrum/visualize', function () {
 Route::get('/spectrum/evolution', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Research Spectrum", "Forschungs-Spektrum"), 'path' => "/spectrum"],
+        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
         ['name' => lang("Evolution", "Entwicklung")]
     ];
     include BASEPATH . "/header.php";
@@ -51,7 +51,7 @@ Route::get('/spectrum/evolution', function () {
 Route::get('/spectrum/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Research Spectrum", "Forschungs-Spektrum"), 'path' => "/spectrum"],
+        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
         ['name' => lang("Visualize", "Visualisieren")]
     ];
     include BASEPATH . "/header.php";
@@ -90,7 +90,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
         'projection' => ['openalex.topics' => 1]
     ]);
     if (!$topicMeta || !isset($topicMeta['openalex']['topics']) || count($topicMeta['openalex']['topics']) == 0) {
-        abortwith(404, lang("Research Spectrum", "Forschungs-Spektrum"), "/spectrum", lang("Back to spectrum overview", "Zurück zur Spektrum Übersicht"));
+        abortwith(404, lang('common.research_spectrum'), "/spectrum", lang("Back to spectrum overview", "Zurück zur Spektrum Übersicht"));
     }
     $spectrum = null;
     $name = '';
@@ -103,7 +103,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
     }
 
     if (!$spectrum) {
-        abortwith(404, lang("Research Spectrum", "Forschungs-Spektrum"), "/spectrum", lang("Back to spectrum overview", "Zurück zur Spektrum Übersicht"));
+        abortwith(404, lang('common.research_spectrum'), "/spectrum", lang("Back to spectrum overview", "Zurück zur Spektrum Übersicht"));
     }
 
     $totalPublications = $osiris->activities->count($match);
@@ -116,7 +116,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
     $share = $instituteTotal > 0 ? $totalPublications / $instituteTotal : 0;
 
     $breadcrumb = [
-        ['name' => lang("Research Spectrum", "Forschungs-Spektrum"), 'path' => "/spectrum"],
+        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
         ['name' => $name]
     ];
     include BASEPATH . "/header.php";

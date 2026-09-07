@@ -76,8 +76,8 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                 <tr>
                     <th></th>
                     <th>Username</th>
-                    <th><?= lang('Last name', 'Nachname') ?> <span class="text-danger">*</span></th>
-                    <th><?= lang('First name', 'Vorname') ?></th>
+                    <th><?= lang('common.name_last') ?> <span class="text-danger">*</span></th>
+                    <th><?= lang('common.name_first') ?></th>
                     <?php if ($sws) : ?>
                         <th>SWS</th>
                     <?php elseif ($supervisorThesis) : ?>
@@ -216,7 +216,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         </table>
         <button class="btn secondary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('Submit', 'Bestätigen') ?>
+            <?= lang('common.submit') ?>
         </button>
 
 

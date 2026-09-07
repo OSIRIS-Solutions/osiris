@@ -200,7 +200,7 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('Name', 'Name') ?></span>
+                            <span class="key"><?= lang('common.name') ?></span>
                             <?= $organization['name'] ?>
                         </td>
                     </tr>

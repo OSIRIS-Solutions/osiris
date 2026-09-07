@@ -133,7 +133,7 @@ $scope = $Project->getScope($collaborators);
 <?php if ($Settings->featureEnabled('portal') && ($project['public'] ?? true)) { ?>
     <a class="btn float-right" href="<?= ROOTPATH ?>/preview/project/<?= $id ?>">
         <i class="ph ph-eye ph-fw"></i>
-        <?= lang('Preview', 'Vorschau') ?>
+        <?= lang('common.preview') ?>
     </a>
 <?php } ?>
 
@@ -298,12 +298,12 @@ if ($topicsEnabled) {
         } else if ($Settings->hasPermission('proposals.view') || ($edit_perm)) { ?>
             <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="btn">
                 <i class="ph ph-link m-0"></i>
-                <?= lang('Proposal', 'Antrag') ?>
+                <?= lang('common.proposal') ?>
             </a>
         <?php } else { ?>
             <button type="button" class="disabled btn" disabled>
                 <i class="ph ph-link m-0"></i>
-                <?= lang('Proposal', 'Antrag') ?>
+                <?= lang('common.proposal') ?>
             </button>
         <?php } ?>
         <?php if ($nagoyaRelevant) { ?>
@@ -833,7 +833,7 @@ if ($topicsEnabled) {
         ?>
             <div class="col-md">
                 <h3>
-                    <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                    <?= lang('common.research_spectrum') ?>
                 </h3>
                 <?php
                 if (!empty($spectrum)) :
@@ -880,7 +880,7 @@ if ($topicsEnabled) {
                         </div>
                         <button class="btn primary mt-20">
                             <i class="ph ph-check"></i>
-                            <?= lang('Submit', 'Bestätigen') ?>
+                            <?= lang('common.submit') ?>
                         </button>
                     </form>
                 </div>
@@ -918,7 +918,7 @@ if ($topicsEnabled) {
 
                     <button class="btn primary">
                         <i class="ph ph-check"></i>
-                        <?= lang('Submit', 'Bestätigen') ?>
+                        <?= lang('common.submit') ?>
                     </button>
                 </form>
 

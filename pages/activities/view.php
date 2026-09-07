@@ -163,7 +163,7 @@
                 <?php if ($Settings->featureEnabled('portal')) { ?>
                     <a class="btn secondary outline" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                         <i class="ph ph-eye mr-5"></i>
-                        <?= lang('Preview', 'Vorschau') ?>
+                        <?= lang('common.preview') ?>
                     </a>
                 <?php } ?>
 
@@ -1057,7 +1057,7 @@
 
                         <?php if ($Settings->featureEnabled('spectrum') && isset($doc['doi']) && $doc['type'] == 'publication') : ?>
                             <h4 class="table-title">
-                                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                                <?= lang('common.research_spectrum') ?>
                                 <?php if ($edit_perm) { ?>
                                     <a href="#spectrum-editor" class="ml-10" title="<?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>">
                                         <i class="ph ph-edit"></i>

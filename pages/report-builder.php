@@ -500,7 +500,7 @@ if ($Settings->featureEnabled('projects')) {
 
         <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">
             <i class="ph ph-eye"></i>
-            <?= lang('Preview', 'Vorschau') ?>
+            <?= lang('common.preview') ?>
         </a>
     </div>
 </form>
@@ -562,7 +562,7 @@ if ($Settings->featureEnabled('projects')) {
                 <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
 
-                <div class="form-group lang-<?= lang('en', 'de') ?> mb-0">
+                <div class="form-group lang-<?= lang('common.this_language') ?> mb-0">
                     <div class="title-editor form-group"></div>
                     <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
                 </div>

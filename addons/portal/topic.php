@@ -330,7 +330,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                     data-tab="publications"
                     data-source="./publications.json"
                     data-page-length="20"
-                    data-lang="<?= lang('en', 'de') ?>">
+                    data-lang="<?= lang('common.this_language') ?>">
                     <thead>
                         <tr>
                             <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
@@ -354,7 +354,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         data-tab="activities"
                         data-source="./activities.json"
                         data-page-length="20"
-                        data-lang="<?= lang('en', 'de') ?>">
+                        data-lang="<?= lang('common.this_language') ?>">
                         <thead>
                             <tr>
                                 <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
@@ -380,7 +380,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             data-tab="projects"
                             data-source="./projects.json"
                             data-page-length="8"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data><?= lang('common.project') ?></th>
@@ -400,7 +400,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                 data-source="./collaborators-map.json"
                                 data-tab="projects"
                                 data-context="unit"
-                                data-lang="<?= lang('en', 'de') ?>">
+                                data-lang="<?= lang('common.this_language') ?>">
                             </div>
                         </div>
                         <p>

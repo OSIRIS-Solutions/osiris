@@ -379,7 +379,7 @@ $numbers = $data['numbers'] ?? [
                             data-tab="publications"
                             data-source="./publications.json"
                             data-page-length="20"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
@@ -434,7 +434,7 @@ $numbers = $data['numbers'] ?? [
                         data-tab="activities"
                         data-source="./activities.json"
                         data-page-length="20"
-                        data-lang="<?= lang('en', 'de') ?>">
+                        data-lang="<?= lang('common.this_language') ?>">
                         <thead>
                             <tr>
                                 <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
@@ -492,7 +492,7 @@ $numbers = $data['numbers'] ?? [
                             data-tab="projects"
                             data-source="./projects.json"
                             data-page-length="8"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data><?= lang('common.project') ?></th>
@@ -519,7 +519,7 @@ $numbers = $data['numbers'] ?? [
                                 data-source="./collaborators-map.json"
                                 data-tab="projects"
                                 data-context="unit"
-                                data-lang="<?= lang('en', 'de') ?>">
+                                data-lang="<?= lang('common.this_language') ?>">
                             </div>
                         </div>
                         <p>
@@ -541,7 +541,7 @@ $numbers = $data['numbers'] ?? [
                     <!-- infrastructures -->
                     <div class="w-full">
                         <table class="table datatable responsive" id="infrastructures-table"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead class="hidden">
                                 <tr>
                                     <th data><?= lang('Infrastructure', 'Infrastruktur') ?></th>

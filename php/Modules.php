@@ -1421,7 +1421,7 @@ class Modules
                     justify-content: space-between;
                 }
             </style>
-            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
                     placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
@@ -1453,7 +1453,7 @@ class Modules
         if ($field['format'] == 'text-format') {
             $id = rand(1000, 9999);
         ?>
-            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                 <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
                 <textarea name="values[<?= $module ?>]" id="<?= $module ?>" class="d-none" readonly><?= $value ?></textarea>
@@ -1831,7 +1831,7 @@ class Modules
                 $id = rand(1000, 9999);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="title">
-                    <div class="lang-<?= lang('en', 'de') ?>">
+                    <div class="lang-<?= lang('common.this_language') ?>">
                         <label for="title" class="<?= $labelClass ?> floating-title">
                             <?= $label ?>
                         </label>
@@ -1924,8 +1924,8 @@ class Modules
                             <thead>
                                 <tr>
                                     <th><label for="user">Username</label></th>
-                                    <th><label for="last" class="required"><?= lang('Last name', 'Nachname') ?></label></th>
-                                    <th><label for="first" class="required"><?= lang('First name', 'Vorname') ?></label></th>
+                                    <th><label for="last" class="required"><?= lang('common.name_last') ?></label></th>
+                                    <th><label for="first" class="required"><?= lang('common.name_first') ?></label></th>
                                     <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
                                     <th><label for="aoi"><?= lang('Affiliated', 'Affiliiert') ?></label></th>
                                     <th></th>
@@ -2067,8 +2067,8 @@ class Modules
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th><?= lang('Last name', 'Nachname') ?></th>
-                                    <th><?= lang('First name', 'Vorname') ?></th>
+                                    <th><?= lang('common.name_last') ?></th>
+                                    <th><?= lang('common.name_first') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
@@ -2186,8 +2186,8 @@ class Modules
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th><?= lang('Last name', 'Nachname') ?></th>
-                                    <th><?= lang('First name', 'Vorname') ?></th>
+                                    <th><?= lang('common.name_last') ?></th>
+                                    <th><?= lang('common.name_first') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
                                     <th></th>

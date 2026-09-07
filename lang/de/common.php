@@ -76,5 +76,15 @@ return [
     'publications' => 'Publikationen',
     'units' => 'Einheiten',
     'country' => 'Land',
-    'other' => 'Sonstiges'
+    'other' => 'Sonstiges',
+    'end' => 'Ende',
+    'name' => 'Name',
+    'total' => 'Gesamt',
+    'submit' => 'Bestätigen',
+    'this_language' => 'de',
+    'preview' => 'Vorschau',
+    'research_spectrum' => 'Forschungs-Spektrum',
+    'proposal' => 'Antrag',
+    'status' => 'Status',
+    'comment' => 'Kommentar',
 ];

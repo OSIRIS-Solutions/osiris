@@ -237,7 +237,7 @@ if ($edit_perm) {
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <a class="btn primary outline ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                 <i class="ph ph-eye ph-fw"></i>
-                <?= lang('Preview', 'Vorschau') ?>
+                <?= lang('common.preview') ?>
             </a>
         <?php } ?>
     </div>
@@ -647,7 +647,7 @@ if ($edit_perm) {
             ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                <?= lang('common.research_spectrum') ?>
                 <span class="index"><?= $count_spectrum ?></span>
             </a>
         <?php } ?>
@@ -972,7 +972,7 @@ if ($edit_perm) {
                         <tr class="text-muted">
                             <td>
                                 <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
-                                    <?= lang('Comment', 'Kommentar') ?>:
+                                    <?= lang('common.comment') ?>:
                                 </span>
 
                                 <?= $doc['comment'] ?>

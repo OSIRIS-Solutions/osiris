@@ -39,7 +39,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                 <?= lang('Start', 'Start') ?>
             </th>
             <th>
-                <?= lang('End', 'Ende') ?>
+                <?= lang('common.end') ?>
             </th>
             <th>
                 <?= lang('Scientific', 'Wissenschaftlich') ?>
@@ -127,7 +127,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                     <input type="date" class="form-control" id="start" name="values[start]" value="<?= $unit['start'] ?? '' ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="end"><?= lang('End', 'Ende') ?></label>
+                                    <label for="end"><?= lang('common.end') ?></label>
                                     <input type="date" class="form-control" id="end" name="values[end]" value="<?= $unit['end'] ?? '' ?>">
                                     <small class="text-muted">
                                         <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>
@@ -225,7 +225,7 @@ function printTree($tree, $level = 0)
                     <input type="date" class="form-control" id="start" name="values[start]">
                 </div>
                 <div class="form-group">
-                    <label for="end"><?= lang('End', 'Ende') ?></label>
+                    <label for="end"><?= lang('common.end') ?></label>
                     <input type="date" class="form-control" id="end" name="values[end]">
                     <small class="text-muted">
                         <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>

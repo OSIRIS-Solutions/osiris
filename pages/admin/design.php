@@ -328,7 +328,7 @@ $design = $Settings->get('design');
             </script>
             <!-- preview -->
             <tr>
-                <td><?= lang('Preview', 'Vorschau') ?></td>
+                <td><?= lang('common.preview') ?></td>
                 <td>
                     <div id="design_font_preview" class="p-10 rounded bg-light">
                         <div class="mb-5" style="font-size: 20px; font-weight: 600;">

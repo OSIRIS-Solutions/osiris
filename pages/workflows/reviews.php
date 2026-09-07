@@ -134,7 +134,7 @@
             const $tr = $(this).closest('tr'),
                 id = $tr.data('id'),
                 step = $tr.data('step');
-            const comment = prompt("<?= lang('Comment', 'Kommentar') ?>");
+            const comment = prompt("<?= lang('common.comment') ?>");
             if (comment === null) return;
             $.post('<?= ROOTPATH ?>/crud/activities/workflow/reject/' + id, {
                 stepId: step,

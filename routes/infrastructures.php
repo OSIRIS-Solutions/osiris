@@ -462,7 +462,7 @@ Route::get('/api/infrastructure/stats', function () {
 
     echo json_encode([
         'data' => array_values($data),
-        'labels' => array_column($fields, lang('en', 'de'), 'id'),
+        'labels' => array_column($fields, lang('common.this_language'), 'id'),
     ]);
 });
 

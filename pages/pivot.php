@@ -175,7 +175,7 @@ $mode = $_GET['mode'] ?? 'standard';
                         // menuLimit: 9999
                         unusedAttrsVertical: false,
 
-                    }, false, lang('en', 'de'));
+                    }, false, lang('common.this_language'));
                     $('.loader').hide();
                 },
                 error: function(xhr, status, error) {

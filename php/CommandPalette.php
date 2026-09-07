@@ -288,7 +288,7 @@ class CommandPalette
                 "url" => "/spectrum",
                 "type" => "Navigation",
                 "icon" => "lightbulb",
-                "label" => lang("Research Spectrum", "Forschungs-Spektrum"),
+                "label" => lang('common.research_spectrum'),
                 "feature" => "spectrum",
                 "keywords" => ["research spectrum", "forschungs-spektrum", "spectrum", "spektrum", "topics", "openalex topics", "openalex themen"],
                 "priority" => 0

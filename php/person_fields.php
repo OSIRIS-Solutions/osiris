@@ -42,7 +42,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "first",
-                'label' => lang('First name', 'Vorname'),
+                'label' => lang('common.name_first'),
                 'module_of' => $typeModules['first'] ?? [],
                 'usage' => [
                     'filter',
@@ -53,7 +53,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "last",
-                'label' => lang('Last name', 'Nachname'),
+                'label' => lang('common.name_last'),
                 'module_of' => $typeModules['last'] ?? [],
                 'usage' => [
                     'filter',
