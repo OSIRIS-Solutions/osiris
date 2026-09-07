@@ -966,13 +966,13 @@ if ($is_subproject) {
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_yes" name="values[joint_project]" value="true" <?= val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_yes">
-                                <?= lang('Yes', 'Ja') ?>
+                                <?= lang('common.yes') ?>
                             </label>
                         </div>
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_no" name="values[joint_project]" value="false" <?= !val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_no">
-                                <?= lang('No', 'Nein') ?>
+                                <?= lang('common.no') ?>
                             </label>
                         </div>
 
@@ -1286,7 +1286,7 @@ if ($is_subproject) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('common.country') ?></th>
                             <th><?= lang('Research', 'Forschung') ?></th>
                             <th><?= lang('Action', 'Aktion') ?></th>
                         </tr>
@@ -1527,9 +1527,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= $material ? 'checked' : '' ?>>
-                                <label for="material-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="material-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= $material ? '' : 'checked' ?>>
-                                <label for="material-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="material-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= $material ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
@@ -1549,9 +1549,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= $personnel ? 'checked' : '' ?>>
-                                <label for="personnel-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="personnel-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= $personnel ? '' : 'checked' ?>>
-                                <label for="personnel-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="personnel-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= $personnel ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
@@ -1570,9 +1570,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= $room ? 'checked' : '' ?>>
-                                <label for="room-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="room-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= $room ? '' : 'checked' ?>>
-                                <label for="room-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="room-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= $room ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
@@ -1592,9 +1592,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= $other ? 'checked' : '' ?>>
-                                <label for="other-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="other-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= $other ? '' : 'checked' ?>>
-                                <label for="other-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="other-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= $other ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>
@@ -1613,7 +1613,7 @@ if ($is_subproject) {
 
             <br>
             <button class="btn secondary" type="button" id="submit-btn">
-                <i class="ph ph-check"></i> <?= lang('system.save') ?>
+                <i class="ph ph-check"></i> <?= lang('common.save') ?>
             </button>
 
             <script>

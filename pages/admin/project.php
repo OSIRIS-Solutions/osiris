@@ -544,7 +544,7 @@ if ($process == 'project') {
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button> -->
-        <button type="submit" class="btn success" id="submitBtn"><?= lang('system.save') ?></button>
+        <button type="submit" class="btn success" id="submitBtn"><?= lang('common.save') ?></button>
 
     <?php } ?>
 
@@ -590,7 +590,7 @@ if ($process == 'project') {
     if ($member == 0) { ?>
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/admin/projects/delete/<?= $project['_id'] ?>" method="post">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('common.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

@@ -99,7 +99,7 @@ if (empty($accounts)) {
                                     </div>
                                     <button type="submit" class="btn primary mt-10">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('system.save') ?>
+                                        <?= lang('common.save') ?>
                                     </button>
                                 </form>
                             </div>
@@ -134,7 +134,7 @@ if (empty($accounts)) {
                                         <b><?= lang('Note:', 'Anmerkung:') ?></b>
                                         <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP. Otherwise, it will appear as removed in the LDAP synchronization, thus being deactivated by default. The "guest account" flag will also be removed.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden. Andernfalls erscheint er bei der LDAP-Synchronisation als entfernt und wird somit standardmäßig deaktiviert. Der Flag "Gästeaccount" wird ebenfalls entfern.') ?>
                                     </small><br>
-                                    <button type="submit" class="btn danger" title="<?= lang('system.delete') ?>">
+                                    <button type="submit" class="btn danger" title="<?= lang('common.delete') ?>">
                                         <i class="ph ph-trash"></i>
                                         <?= lang('Delete account', 'Account löschen') ?>
                                     </button>

@@ -88,7 +88,7 @@ class JournalFields extends Fields
             [
                 "id" => "country",
                 "module_of" => ['general'],
-                "label" => lang("Country", "Land"),
+                "label" => lang('common.country'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

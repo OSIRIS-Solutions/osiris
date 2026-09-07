@@ -643,7 +643,7 @@ function flatten(array $array)
 //     $diff = $now->diff($ago);
 
 //     $string = array(
-//         'y' => lang('year', 'Jahr'),
+//         'y' => lang('common.year'),
 //         'm' => lang('month', 'Monat'),
 //         'w' => lang('week', 'Woche'),
 //         'd' => lang('day', 'Tag'),
@@ -695,7 +695,7 @@ function time_elapsed_string(string $date): string
     }
 
     $units = [
-        'y' => [lang('year', 'Jahr'), lang('years', 'Jahre')],
+        'y' => [lang('common.year'), lang('years', 'Jahre')],
         'm' => [lang('month', 'Monat'), lang('months', 'Monaten')],
         'w' => [lang('week', 'Woche'), lang('weeks', 'Wochen')],
         'd' => [lang('day', 'Tag'), lang('days', 'Tagen')],

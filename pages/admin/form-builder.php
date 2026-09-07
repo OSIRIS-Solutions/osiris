@@ -896,7 +896,7 @@ $tagLabels = [
                 <div class="sticky-footer text-end">
                     <button class="btn primary" type="submit" id="saveBtn">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('system.save') ?>
+                        <?= lang('common.save') ?>
                     </button>
                     <button class="btn" type="button" id="preview-button">
                         <i class="ph ph-eye"></i>

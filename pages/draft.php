@@ -32,7 +32,7 @@
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/add-activity?draft=<?= $draft['_id'] ?>" class="btn primary">
         <i class="ph ph-pencil"></i>
-        <?= lang('system.edit') ?>
+        <?= lang('common.edit') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">
@@ -74,7 +74,7 @@
     <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
         <button type="submit" class="btn danger" onclick="return confirm('<?= lang('Are you sure you want to delete this draft?', 'Sind Sie sicher, dass Sie diesen Entwurf löschen möchten?') ?>');">
             <i class="ph ph-trash"></i>
-            <?= lang('system.delete') ?>
+            <?= lang('common.delete') ?>
         </button>
     </form>
 </div>
@@ -122,7 +122,7 @@ include_once BASEPATH . "/php/Modules.php";
         ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('navigation.projects') ?></span>
+                    <span class="key"><?= lang('common.projects') ?></span>
                     <?php foreach ($projects as $project) { ?>
                         <a class="module " href="<?= ROOTPATH ?>/projects/view/<?= $project['_id'] ?>">
                             <h5 class="m-0"><?= $project['name'] ?></h5>

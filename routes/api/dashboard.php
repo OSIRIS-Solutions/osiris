@@ -1865,7 +1865,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'projects',
-                'label' => lang('navigation.projects'),
+                'label' => lang('common.projects'),
                 'items' => $items
             ];
         }
@@ -2280,7 +2280,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'units',
-            'label' => lang('Units', 'Einheiten'),
+            'label' => lang('common.units'),
             'items' => $items
         ];
     }

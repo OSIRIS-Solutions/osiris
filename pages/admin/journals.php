@@ -47,13 +47,13 @@
             <div class="custom-radio d-inline-block mr-20">
                 <input type="radio" id="no-journal-metrics-true" value="1" name="features[no-journal-metrics]" <?= $enabled ? 'checked' : '' ?>>
                 <label for="no-journal-metrics-true">
-                    <?= lang('Yes', 'Ja') ?>
+                    <?= lang('common.yes') ?>
                 </label>
             </div>
             <div class="custom-radio d-inline-block">
                 <input type="radio" id="no-journal-metrics-false" value="0" name="features[no-journal-metrics]" <?= $enabled ? '' : 'checked' ?>>
                 <label for="no-journal-metrics-false">
-                    <?= lang('No', 'Nein') ?>
+                    <?= lang('common.no') ?>
                 </label>
             </div>
             <p class="description">
@@ -138,7 +138,7 @@
                                     <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
                                     <code class="code mx-10"><?= e($field['format']) ?></code>
                                     <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
-                                        <i class="ph ph-pencil" title="<?= lang('system.edit') ?>"></i>
+                                        <i class="ph ph-pencil" title="<?= lang('common.edit') ?>"></i>
                                     </a>
                                 </td>
 
@@ -162,7 +162,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
         </button>
 
     </form>

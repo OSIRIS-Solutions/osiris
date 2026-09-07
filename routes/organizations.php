@@ -94,7 +94,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
         ['name' => $form['name'], 'path' => "/organizations/view/$id"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -126,7 +126,7 @@ Route::post('/crud/organizations/create', function () {
         abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
     }
 
-    if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
@@ -210,7 +210,7 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     if (!$Settings->hasPermission('organizations.edit')) {
         abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);

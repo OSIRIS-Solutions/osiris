@@ -101,7 +101,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -341,7 +341,7 @@ Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
 
 Route::post('/crud/journal/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->journals;
 
     $values = validateValues($_POST['values'], $DB);

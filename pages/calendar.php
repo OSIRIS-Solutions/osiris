@@ -302,7 +302,7 @@ function updateCalendar(el, unit) {
                         link = ROOTPATH + '/activities/view/' + info.event.id;
                         break;
                     case 'project':
-                        label = lang('Project', 'Projekt');
+                        label = lang('common.project');
                         link = ROOTPATH + '/projects/view/' + info.event.id;
                         break;
                     case 'guest':
@@ -321,7 +321,7 @@ function updateCalendar(el, unit) {
                     content: `
                         <div class="calendar-tooltip">
                             <h3>${info.event.title}</h3>
-                            <p><strong>${lang('system.type')}:</strong> <span class="badge ${type}">${label}</span></p>
+                            <p><strong>${lang('common.type')}:</strong> <span class="badge ${type}">${label}</span></p>
                             <p><strong>${lang('Date', 'Datum')}:</strong> ${date}</p>
                             <a class="btn small" href="${link}">${lang('More details', 'Mehr Details')}</a>
                             <button class="btn small" onclick="$('.popover').remove()">

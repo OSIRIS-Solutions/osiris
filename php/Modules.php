@@ -1349,11 +1349,11 @@ class Modules
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('Yes', 'Ja') . '</label>
+                    <label for="' . $module . '-true">' . lang('common.yes') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
+                    <label for="' . $module . '-false">' . lang('common.no') . '</label>
                 </div>';
             echo $this->render_help($help);
             echo '</div>';
@@ -2224,7 +2224,7 @@ class Modules
                                                 <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
                                                 <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
                                                 <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
-                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                             </select>
                                         </td>
                                         <td>
@@ -2294,7 +2294,7 @@ class Modules
                                 'committee-member': lang('Committee member', 'Ausschussmitglied'),
                                 'chair': lang('Chair', 'Vorsitzender'),
                                 'mentor': lang('Mentor', 'Mentor'),
-                                'other': lang('Other', 'Sonstiges')
+                                'other': lang('common.other')
                             }
                             for (const [key, value] of Object.entries(roles)) {
                                 select.append('<option value="' + key + '">' + value + '</option>')
@@ -2330,7 +2330,7 @@ class Modules
                         <option value="lecture-seminar" <?= $this->val('category') == 'lecture-seminar' ? 'selected' : '' ?>><?= lang('Lecture and seminar', 'Vorlesung und Seminar') ?></option>
                         <option value="lecture-practical-seminar" <?= $this->val('category') == 'lecture-practical-seminar' ? 'selected' : '' ?>><?= lang('Lecture, seminar, practical course', 'Vorlesung, Seminar und Praktikum') ?></option>
                         <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('Seminar') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="teaching-cat" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2696,7 +2696,7 @@ class Modules
                         <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
                         <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelorstudent') ?></option>
                         <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-students" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2780,7 +2780,7 @@ class Modules
                         <option value="guest scientist" <?= $this->val('category') == 'guest scientist' ? 'selected' : '' ?>><?= lang('Guest Scientist', 'Gastwissenschaftler:in') ?></option>
                         <option value="lecture internship" <?= $this->val('category') == 'lecture internship' ? 'selected' : '' ?>><?= lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium') ?></option>
                         <option value="student internship" <?= $this->val('category') == 'student internship' ? 'selected' : '' ?>><?= lang('Student Internship', 'Schülerpraktikum') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-guest" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2805,7 +2805,7 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?> row" data-module="date">
                     <div class="col-sm floating-form">
                         <input type="number" min="1901" max="2155" step="1" class="form-control" name="values[year]" id="year" <?= $labelClass ?> value="<?= $this->val('year') ?>" placeholder="2024">
-                        <label for="year" class="<?= $labelClass ?> element-time"><?= lang('Year', 'Jahr') ?></label>
+                        <label for="year" class="<?= $labelClass ?> element-time"><?= lang('common.year') ?></label>
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="month" <?= $labelClass ?> value="<?= $this->val('month') ?>" placeholder="12">
@@ -2853,8 +2853,8 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="lecture-invited">
                     <select name="values[invited_lecture]" id="invited_lecture" class="form-control" autocomplete="off" <?= $labelClass ?>>
-                        <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('No', 'Nein') ?></option>
-                        <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('Yes', 'Ja') ?></option>
+                        <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('common.no') ?></option>
+                        <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="lecture_type"><?= lang('Invited lecture') ?></label>
                     <?= $this->render_help($help) ?>
@@ -3190,11 +3190,11 @@ class Modules
                     <label for="peer_reviewed" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                     <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> <?= lang('Yes', 'Ja') ?></label>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> <?= lang('common.yes') ?></label>
                     </div>
                     <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> <?= lang('No', 'Nein') ?></label>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> <?= lang('common.no') ?></label>
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>

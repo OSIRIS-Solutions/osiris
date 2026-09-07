@@ -123,7 +123,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
                     <button class="btn success">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('system.save') ?>
+                        <?= lang('common.save') ?>
                     </button>
                 </form>
                 <script>
@@ -256,7 +256,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
         <button class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
         </button>
     </form>
 

@@ -91,11 +91,11 @@ $if_label = $Settings->impactLabel();
         <td>
             <?php
             if (!($data['oa'] ?? false)) {
-                echo lang('No', 'Nein');
+                echo lang('common.no');
             } elseif ($data['oa'] > 1900) {
                 echo lang('since ', 'seit ') . $data['oa'];
             } else {
-                echo lang('Yes', 'Ja');
+                echo lang('common.yes');
             }
             ?>
         </td>
@@ -189,7 +189,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     </div>
                     <button type="button" class="btn" id="add-category" onclick="addCategory()"><i class="ph ph-plus"></i></button>
                     <br><br>
-                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('system.save') ?></button>
+                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('common.save') ?></button>
                 </form>
                 <datalist id="categories-list">
                     <?php foreach ($osiris->journals->distinct('categories.name') as $cat) { ?>
@@ -224,7 +224,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="publication-table">
     <thead>
-        <th><?= lang('Year', 'Jahr') ?></th>
+        <th><?= lang('common.year') ?></th>
         <th><?= lang('Publication', 'Publikation') ?></th>
         <th>Link</th>
     </thead>
@@ -368,7 +368,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <div class="form-row">
-                                <label for="year"><?= lang('Year', 'Jahr') ?></label>
+                                <label for="year"><?= lang('common.year') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
@@ -481,7 +481,7 @@ foreach ($metrics as $metric) {
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <div class="form-row">
-                                <label for="year"><?= lang('Year', 'Jahr') ?></label>
+                                <label for="year"><?= lang('common.year') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
@@ -604,7 +604,7 @@ foreach ($metrics as $metric) {
     } else { ?>
         <table class="table small">
             <thead>
-                <th><?= lang('Year', 'Jahr') ?></th>
+                <th><?= lang('common.year') ?></th>
                 <th>SJR</th>
                 <th>IF (2Y)</th>
                 <th>IF (3Y)</th>

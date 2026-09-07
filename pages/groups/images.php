@@ -277,7 +277,7 @@ foreach ($groupImages as $image) {
                                     </div>
                                     <button type="submit" class="btn secondary small">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('system.save') ?>
+                                        <?= lang('common.save') ?>
                                     </button>
                                 </form>
 
@@ -289,7 +289,7 @@ foreach ($groupImages as $image) {
                                 >
                                     <button type="submit" class="btn danger small mt-10">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('system.delete') ?>
+                                        <?= lang('common.delete') ?>
                                     </button>
                                 </form>
                             </div>

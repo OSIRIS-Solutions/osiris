@@ -131,7 +131,7 @@
 
                 <div class="form-row row-eq-spacing" data-module="person">
                     <div class="col-sm-2">
-                        <label for="academic-title"><?= lang('system.title') ?>
+                        <label for="academic-title"><?= lang('common.title') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][academic_title]" id="academic-title" value="<?= $form['guest']['academic_title'] ?? '' ?>">
                     </div>
@@ -199,7 +199,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guest-country" class="element-other"><?= lang('Country', 'Land') ?></label>
+                    <label for="guest-country" class="element-other"><?= lang('common.country') ?></label>
                     <input type="text" class="form-control" name="values[affiliation][country]" id="guest-country" value="<?= $form['affiliation']['country'] ?? '' ?>">
                 </div>
             </div>

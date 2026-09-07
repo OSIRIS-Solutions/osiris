@@ -54,7 +54,7 @@ if (!empty($form) && isset($form['_id']) && !$copy) {
     $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
     $redirect = ROOTPATH . "/activities/view/*";
 }
 if (isset($_GET['redirect']) && !empty($_GET['redirect']) && str_starts_with($_GET['redirect'], ROOTPATH)) {
@@ -189,7 +189,7 @@ function val($index, $default = '')
                         <?php } ?>
                     </select>
                     <label for="event-type" class="required">
-                        <?= lang('system.type') ?>
+                        <?= lang('common.type') ?>
                     </label>
                 </div>
 
@@ -210,7 +210,7 @@ function val($index, $default = '')
                         <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
                     </div>
                     <div class="col">
-                        <label for="event-country"><?= lang('Country', 'Land') ?></label>
+                        <label for="event-country"><?= lang('common.country') ?></label>
                         <select id="event-country" class="form-control">
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                             <!-- germany first -->

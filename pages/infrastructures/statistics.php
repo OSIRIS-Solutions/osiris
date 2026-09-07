@@ -118,7 +118,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <th><?= lang('Category', 'Kategorie') ?></th>
                 <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
                 <th><?= lang('Type', 'Art') ?></th>
-                <th><?= lang('Description', 'Beschreibung') ?></th>
+                <th><?= lang('common.description') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -154,7 +154,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th class="text-right"><?= lang('Internal', 'Intern') ?></th>
                 <th class="text-right"><?= lang('National', 'National') ?></th>
                 <th class="text-right"><?= lang('International', 'International') ?></th>
@@ -471,7 +471,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Coordinator', 'Koordinator') ?></th>
             </tr>
         </thead>
@@ -545,7 +545,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Location', 'Standort') ?></th>
                 <th><?= lang('Number of infrastructures', 'Anzahl der Infrastrukturen') ?></th>
             </tr>

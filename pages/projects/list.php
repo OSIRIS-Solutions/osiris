@@ -35,7 +35,7 @@ function val($index, $default = '')
     return $val;
 }
 
-$pagetitle = lang('navigation.projects');
+$pagetitle = lang('common.projects');
 $filter = [];
 if (!$Settings->hasPermission('projects.view')) {
     $filter = [
@@ -407,11 +407,11 @@ $Vocabulary = new Vocabulary();
 
     const activeFilters = $('#active-filters')
     const headers = [{
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('system.type'),
+            title: lang('common.type'),
             key: 'type'
         },
         {
@@ -439,7 +439,7 @@ $Vocabulary = new Vocabulary();
             key: 'proposal_id'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             key: 'units'
         },
         {
@@ -451,11 +451,11 @@ $Vocabulary = new Vocabulary();
             key: 'funding_organization'
         },
         {
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('system.title'),
+            title: lang('common.title'),
             key: 'title'
         },
         {
@@ -688,7 +688,7 @@ $Vocabulary = new Vocabulary();
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('system.type')
+                    header: lang('common.type')
                 },
                 {
                     target: 2,
@@ -743,7 +743,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Units', 'Einheiten')
+                    header: lang('common.units')
                 },
                 {
                     target: 9,
@@ -772,7 +772,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Project', 'Projekt')
+                    header: lang('common.project')
                 },
                 {
                     target: 12,
@@ -780,7 +780,7 @@ $Vocabulary = new Vocabulary();
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('system.title')
+                    header: lang('common.title')
                 },
                 {
                     target: 13,

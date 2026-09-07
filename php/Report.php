@@ -558,7 +558,7 @@ class Report
                     if ($f == 'datetime' && !empty($cell)) {
                         $cell = date('d.m.Y', strtotime($cell));
                     } elseif ($f == 'boolean') {
-                        $cell = $cell ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                        $cell = $cell ? lang('common.yes') : lang('common.no');
                     } elseif ($f == 'list' && is_array($cell)) {
                         $cell = implode(', ', $cell);
                     } elseif ($f == 'list' && $cell instanceof MongoDB\Model\BSONArray) {

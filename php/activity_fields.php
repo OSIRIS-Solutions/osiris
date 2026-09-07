@@ -114,7 +114,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('system.type'),
+                'label' => lang('common.type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $subtypes
@@ -126,7 +126,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('system.title'),
+                'label' => lang('common.title'),
                 'type' => 'string'
             ],
             [
@@ -473,7 +473,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Year', 'Jahr'),
+                'label' => lang('common.year'),
                 'type' => 'integer',
                 'default_value' => CURRENTYEAR
             ],
@@ -784,7 +784,7 @@ class ActivityFields extends Fields
                     'guest scientist' => lang('Guest Scientist', 'Gastwissenschaftler:in'),
                     'lecture internship' => lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium'),
                     'student internship' => lang('Student Internship', 'Schülerpraktikum'),
-                    'other' => lang('Other', 'Sonstiges'),
+                    'other' => lang('common.other'),
                     'doctoral thesis' => lang('Doctoral Thesis', 'Doktorand:in'),
                     'master thesis' => lang('Master Thesis', 'Master-Thesis'),
                     'bachelor thesis' => lang('Bachelor Thesis', 'Bachelor-Thesis')
@@ -893,7 +893,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Country', 'Land'),
+                'label' => lang('common.country'),
                 'type' => 'string'
             ],
             [

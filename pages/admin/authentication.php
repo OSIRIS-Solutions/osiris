@@ -66,7 +66,7 @@
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
         </button>
 
     </form>

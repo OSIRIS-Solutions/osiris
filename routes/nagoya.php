@@ -397,7 +397,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
         }
     }
     if (!$found) {
-        abortwith(404, lang("Country", "Land"), "/proposals/nagoya-permits/$id");
+        abortwith(404, lang('common.country'), "/proposals/nagoya-permits/$id");
     }
 
     $breadcrumb = [
@@ -440,7 +440,7 @@ Route::post('/crud/nagoya/remove-country/([A-Za-z0-9]*)', function ($id) {
         $newCountries[] = $c;
     }
     if (!$found) {
-        abortwith(404, lang("Country", "Land"), "/proposals/nagoya-countries-edit/$id");
+        abortwith(404, lang('common.country'), "/proposals/nagoya-countries-edit/$id");
     }
 
     // save

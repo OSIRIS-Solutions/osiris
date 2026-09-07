@@ -124,7 +124,7 @@ if (empty($form) || !isset($form['_id'])) {
                 <option value="nonprofit" <?= sel('type', 'nonprofit') ?>><?= lang('Non-profit', 'Gemeinnützig') ?></option>
                 <option value="government" <?= sel('type', 'government') ?>><?= lang('Government', 'Regierung') ?></option>
                 <option value="facility" <?= sel('type', 'facility') ?>><?= lang('Facility', 'Einrichtung') ?></option>
-                <option value="other" <?= sel('type', 'other') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                <option value="other" <?= sel('type', 'other') ?>><?= lang('common.other') ?></option>
             </select>
         </div>
         <!-- <div class="col-sm">
@@ -140,7 +140,7 @@ if (empty($form) || !isset($form['_id'])) {
                  <option value="funder" <?= sel('type_kdsf', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
                 <option value="healthcare" <?= sel('type_kdsf', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
                 <option value="company" <?= sel('type_kdsf', 'company') ?>><?= lang('Company', 'Wirtschaft') ?></option>
-                <option value="other" <?= sel('type_kdsf', 'other') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                <option value="other" <?= sel('type_kdsf', 'other') ?>><?= lang('common.other') ?></option>
             </select>
         </div>
         </div> -->
@@ -161,7 +161,7 @@ if (empty($form) || !isset($form['_id'])) {
 
             <div class="col-sm">
                 <label for="country">
-                    <?= lang('Country', 'Land') ?>
+                    <?= lang('common.country') ?>
                     <span class="badge kdsf">KDSF-B-15-3</span>
                 </label>
                 <select name="values[country]" id="country" class="form-control">
@@ -212,8 +212,8 @@ if (empty($form) || !isset($form['_id'])) {
             </label>
             <select name="values[is_collaborator]" id="is_collaborator" class="form-control" onchange="$('#collaborator-details').toggle(this.value === 'true')">
                 <option value="" disabled <?= sel('is_collaborator', '') ?>><?= lang('Select option', 'Option auswählen') ?></option>
-                <option value="true" <?= sel('is_collaborator', true) ?>><?= lang('Yes', 'Ja') ?></option>
-                <option value="false" <?= sel('is_collaborator', false) ?>><?= lang('No', 'Nein') ?></option>
+                <option value="true" <?= sel('is_collaborator', true) ?>><?= lang('common.yes') ?></option>
+                <option value="false" <?= sel('is_collaborator', false) ?>><?= lang('common.no') ?></option>
             </select>
         </div>
 
@@ -316,6 +316,6 @@ if (empty($form) || !isset($form['_id'])) {
             }
         </script>
 
-        <button type="submit" class="btn secondary" id="submit"><?= lang('system.save') ?></button>
+        <button type="submit" class="btn secondary" id="submit"><?= lang('common.save') ?></button>
     </form>
 </div>

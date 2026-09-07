@@ -202,7 +202,7 @@ if ($nagoyaRelevant) {
             <div class="dropdown">
                 <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-trash"></i>
-                    <?= lang('system.delete') ?>
+                    <?= lang('common.delete') ?>
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdown-1">
@@ -242,7 +242,7 @@ if ($nagoyaRelevant) {
         <?php if (!empty($connected_project)) { ?>
             <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">
                 <i class="ph ph-link m-0"></i>
-                <?= lang('Project', 'Projekt') ?>
+                <?= lang('common.project') ?>
             </a>
         <?php } ?>
 
@@ -445,7 +445,7 @@ if ($nagoyaRelevant) {
 
                         <table class="table">
                             <thead>
-                                <th style="width:90px;"><?= lang('Year', 'Jahr') ?></th>
+                                <th style="width:90px;"><?= lang('common.year') ?></th>
                                 <th class="text-right"><?= lang('Planned', 'Soll') ?> in EUR</th>
                                 <th class="text-right"><?= lang('Actual', 'Ist') ?> in EUR</th>
                                 <th class="text-right"><?= lang('Delta', 'Delta') ?> in EUR</th>
@@ -609,7 +609,7 @@ if ($nagoyaRelevant) {
                                                             <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                                 <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                                 <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
-                                                                <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
+                                                                <button class="btn btn-block danger" type="submit"><?= lang('common.delete') ?></button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -617,9 +617,9 @@ if ($nagoyaRelevant) {
                                                 <a href="<?= $file_url ?>" class="">
                                                     <h6 class="m-0">
                                                         <?php if (isset($doc['permit_id'])) {
-                                                            echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', lang('Other', 'Sonstiges'));
+                                                            echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', lang('common.other'));
                                                         } else {
-                                                            echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('Other', 'Sonstiges'));
+                                                            echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('common.other'));
                                                         } ?>
                                                         <i class="ph ph-download"></i>
                                                     </h6>
@@ -673,8 +673,8 @@ if ($nagoyaRelevant) {
                                     <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
                                 </div>
                                 <div class="form-group floating-form">
-                                    <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-                                    <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                                    <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
+                                    <label for="description"><?= lang('common.description') ?></label>
                                 </div>
                                 <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
                             </form>
@@ -717,7 +717,7 @@ if ($nagoyaRelevant) {
                     <div class="btn-toolbar mb-10">
                         <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                            <?= lang('system.edit') ?>
+                            <?= lang('common.edit') ?>
                         </a>
                     </div>
                 <?php } ?>
@@ -760,7 +760,7 @@ if ($nagoyaRelevant) {
                 </table>
 
                 <h2>
-                    <?= lang('Units', 'Einheiten') ?>
+                    <?= lang('common.units') ?>
                 </h2>
                 <table class="table unit-table w-full">
                     <tbody>

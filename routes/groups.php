@@ -69,7 +69,7 @@ Route::get('/groups', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten")]
+        ['name' => lang('common.units')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/groups.php";
@@ -80,7 +80,7 @@ Route::get('/groups/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
+        ['name' => lang('common.units'), 'path' => "/groups"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -106,7 +106,7 @@ Route::get('/groups/view/(.*)', function ($id) {
         abortwith(404, lang("Unit", "Einheit"), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
+        ['name' => lang('common.units'), 'path' => "/groups"],
         ['name' => $group['id']]
     ];
 
@@ -132,11 +132,11 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         abortwith(404, lang("Unit", "Einheit"), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
+        ['name' => lang('common.units'), 'path' => "/groups"],
         ['name' =>  $group['id'], 'path' => "/groups/view/$id"],
     ];
     if ($page == 'edit') {
-        $breadcrumb[] = ['name' => lang('system.edit')];
+        $breadcrumb[] = ['name' => lang('common.edit')];
     }
 
     global $form;
@@ -151,7 +151,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
 
 Route::post('/crud/groups/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->groups;
 
     $values = validateValues($_POST['values'], $DB);
@@ -216,7 +216,7 @@ Route::post('/crud/groups/create', function () {
 
 Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $id = $DB->to_ObjectID($id);
 

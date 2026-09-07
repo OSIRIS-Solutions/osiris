@@ -39,8 +39,8 @@
                             <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
                           </div>
                           <div class="form-group">
-                            <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                            <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $file['description'] ?? '' ?></textarea>
+                            <label for="description"><?= lang('common.description') ?></label>
+                            <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                           </div>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                           <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
@@ -57,7 +57,7 @@
                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                           <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
+                          <button class="btn btn-block danger" type="submit"><?= lang('common.delete') ?></button>
                         </form>
                       </div>
                     </div>
@@ -65,7 +65,7 @@
                 </div>
                 <h6 class="m-0">
                   <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
                     <i class="ph ph-download"></i>
                   </a>
                 </h6>
@@ -109,8 +109,8 @@
           <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
         </div>
         <div class="form-group floating-form">
-          <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-          <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+          <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
+          <label for="description"><?= lang('common.description') ?></label>
         </div>
         <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
       </form>
@@ -162,7 +162,7 @@
 
           <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
           </button>
         </form>
       <?php } ?>
@@ -251,7 +251,7 @@
           <div class="modal-footer">
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
-              <?= lang('system.save') ?>
+              <?= lang('common.save') ?>
             </button>
             <a href="#close-modal" class="btn" role="button"><?= lang('Cancel', 'Abbrechen') ?></a>
           </div>

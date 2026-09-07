@@ -31,7 +31,7 @@ $headers = [];
                         <?php if (!empty($report['description'])) { ?>
                             <tr>
                                 <td colspan="2">
-                                    <span class="key"><?= lang('Description', 'Beschreibung') ?></span>
+                                    <span class="key"><?= lang('common.description') ?></span>
                                     <?= $report['description'] ?>
                                 </td>
                             </tr>

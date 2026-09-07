@@ -84,7 +84,7 @@ if ($edit_perm) {
                 <br>
                 <a href="#projects" class="btn success">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang('navigation.projects') ?>
+                    <?= lang('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -132,7 +132,7 @@ if ($edit_perm) {
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
-                    <?= lang('system.edit') ?>
+                    <?= lang('common.edit') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
@@ -440,12 +440,12 @@ if ($edit_perm) {
 
         <?php if (!empty($projects)) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('navigation.projects') ?>: </small>
+                <small><?= lang('common.projects') ?>: </small>
                 <br />
                 <a href="#projects" class="badge primary outline">
                     <i class="ph ph-tree-structure"></i>
                     <?= count($projects) ?>
-                    <?= lang('navigation.projects') ?>
+                    <?= lang('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -588,7 +588,7 @@ if ($edit_perm) {
 
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-plugs" aria-hidden="true"></i>
-            <?= lang('navigation.activities') ?>
+            <?= lang('common.activities') ?>
             <span class="index"><?= count($connected_activities) ?></span>
         </a>
 
@@ -599,7 +599,7 @@ if ($edit_perm) {
             ?>
                 <a onclick="navigate('projects')" id="btn-projects" class="btn">
                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('navigation.projects') ?>
+                    <?= lang('common.projects') ?>
                     <span class="index"><?= $count_projects ?></span>
                 </a>
 
@@ -697,7 +697,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
-                            <?= lang('system.edit') ?>
+                            <?= lang('common.edit') ?>
                         </a>
                     <?php } ?>
 
@@ -724,7 +724,7 @@ if ($edit_perm) {
                                         <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
-                                    <button class="btn btn-block" type="submit"><?= lang('system.save') ?></button>
+                                    <button class="btn btn-block" type="submit"><?= lang('common.save') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -926,7 +926,7 @@ if ($edit_perm) {
                                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                     <a href="#add-tags" class="btn small float-right">
                                         <i class="ph ph-edit"></i>
-                                        <?= lang('system.edit') ?>
+                                        <?= lang('common.edit') ?>
                                     </a>
                                 <?php } ?>
                                 <span class="key"><?= $tagLabel ?></span>
@@ -986,7 +986,7 @@ if ($edit_perm) {
 
                 <div class="alert danger mt-20 py-20">
                     <h2 class="title">
-                        <?= lang('system.delete') ?>
+                        <?= lang('common.delete') ?>
                     </h2>
                     <?php
 
@@ -1164,7 +1164,7 @@ if ($edit_perm) {
                         <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                <?= lang('system.edit') ?>
+                                <?= lang('common.edit') ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -1609,7 +1609,7 @@ if ($edit_perm) {
             </div>
 
             <h2 class="title">
-                <?= lang('navigation.projects') ?>
+                <?= lang('common.projects') ?>
             </h2>
 
             <?php if (!empty($projects)) {
@@ -1776,8 +1776,8 @@ if ($edit_perm) {
                                                                 <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                                                                <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $file['description'] ?? '' ?></textarea>
+                                                                <label for="description"><?= lang('common.description') ?></label>
+                                                                <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                                                             </div>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                                                             <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
@@ -1794,7 +1794,7 @@ if ($edit_perm) {
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                             <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block danger" type="submit"><?= lang('system.delete') ?></button>
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('common.delete') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1803,7 +1803,7 @@ if ($edit_perm) {
                                     <?php endif; ?>
                                     <h6 class="m-0">
                                         <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
                                             <i class="ph ph-download"></i>
                                         </a>
                                     </h6>
@@ -1851,8 +1851,8 @@ if ($edit_perm) {
                         <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
                     </div>
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-                        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
+                        <label for="description"><?= lang('common.description') ?></label>
                     </div>
                     <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
                 </form>
@@ -1903,7 +1903,7 @@ if ($edit_perm) {
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>
-                            <?= lang('system.save') ?>
+                            <?= lang('common.save') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -1960,7 +1960,7 @@ if ($edit_perm) {
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
-            <?= lang('system.edit') ?>
+            <?= lang('common.edit') ?>
         </a>
         <div class="row row-eq-spacing">
             <div class="col-md-6 flex-grow-0" style="max-width: 40rem">

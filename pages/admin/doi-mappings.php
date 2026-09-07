@@ -231,7 +231,7 @@ $fields = [
 
     <button type="submit" class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('system.save') ?>
+        <?= lang('common.save') ?>
     </button>
 </form>
 

@@ -60,7 +60,7 @@ if (empty($fields)) {
         <th>ISSN</th>
         <th>OA</th>
         <th><span data-toggle="tooltip" data-title="Latest <?= $Settings->impactLabel() ?> if available"><?= $Settings->impactLabel() ?></span></th>
-        <th><span data-toggle="tooltip" data-title="Publications, Reviews and Editorials"><?= lang('navigation.activities') ?></span></th>
+        <th><span data-toggle="tooltip" data-title="Publications, Reviews and Editorials"><?= lang('common.activities') ?></span></th>
         <?php foreach ($fields as $f) {
             echo "<th>$f</th>";
         } ?>
@@ -127,9 +127,9 @@ if (empty($fields)) {
                             return data;
                         }
                         if (data === 'Nein' || data == 'No' || data === 'false' || data === false)
-                            return `<span class="text-danger">${lang('No', 'Nein')}</span>`;
+                            return `<span class="text-danger">${lang('common.no')}</span>`;
                         if (data === 'Ja' || data == 'Yes' || data === 'true' || data === true)
-                            return `<span class="text-success">${lang('Yes', 'Ja')}</span>`;
+                            return `<span class="text-success">${lang('common.yes')}</span>`;
                         return data;
                     },
                     className: 'unbreakable'

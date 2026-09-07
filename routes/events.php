@@ -204,10 +204,10 @@ Route::post('/crud/conferences/add', function () {
     if (!isset($_POST['values'])) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('No values provided.', 'Keine Werte angegeben.')]);
+            echo json_encode(['status' => 'error', 'msg' => lang('error.no_values')]);
             exit;
         }
-        abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+        abortwith(500, lang('error.no_values'));
     }
     $values = $_POST['values'];
 
@@ -368,10 +368,10 @@ Route::post('/crud/deadlines/add', function () {
     if (!isset($_POST['values'])) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('No values provided.', 'Keine Werte angegeben.')]);
+            echo json_encode(['status' => 'error', 'msg' => lang('error.no_values')]);
             exit;
         }
-        abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+        abortwith(500, lang('error.no_values'));
     }
     $values = $_POST['values'];
 

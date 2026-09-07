@@ -131,7 +131,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -198,7 +198,7 @@ Route::post('/crud/infrastructures/create', function () {
         abortwith(403, lang('You do not have permission to create a new infrastructure.', 'Du hast keine Berechtigung, eine neue Infrastruktur zu erstellen.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -274,7 +274,7 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
             abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -325,7 +325,7 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     if (empty($infrastructure)) {
         abortwith(404, lang('Infrastructure not found', 'Infrastruktur nicht gefunden'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $year = intval($_POST['year'] ?? 0);
     $base = [

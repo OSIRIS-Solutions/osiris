@@ -54,7 +54,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         <option value="nonprofit"><?= lang('Non-profit', 'Gemeinnützig') ?></option>
                         <option value="government"><?= lang('Government', 'Regierung') ?></option>
                         <option value="facility"><?= lang('Facility', 'Einrichtung') ?></option>
-                        <option value="other"><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other"><?= lang('common.other') ?></option>
                     </select>
                 </div>
 
@@ -70,7 +70,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
                     <div class="col-sm">
                         <label for="country" class="required">
-                            <?= lang('Country', 'Land') ?>
+                            <?= lang('common.country') ?>
                         </label>
                         <select id="org-country" class="form-control" required>
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
@@ -108,7 +108,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                     </small>
                 </fieldset>
                 <br><br>
-                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('system.save') ?></button>
+                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('common.save') ?></button>
 
             </div>
         </div>

@@ -106,7 +106,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <th><?= lang('Start Date', 'Startdatum') ?></th>
                     <th><?= lang('End Date', 'Enddatum') ?></th>
                     <th><?= lang('Category', 'Kategorie') ?></th>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Access', 'Zugang') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                 </tr>

@@ -66,7 +66,7 @@ $user_in_project = false;
                         </th>
                     <?php } ?>
                     <th>
-                        <?= lang('Units', 'Einheiten') ?>
+                        <?= lang('common.units') ?>
                     </th>
                     <th></th>
                 </tr>

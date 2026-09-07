@@ -92,7 +92,7 @@ Route::post('/crud/workflows/create', function () {
         abortwith(403, lang("You don't have permission to create workflows.", "Du hast keine Berechtigung, Workflows zu erstellen."), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -119,7 +119,7 @@ Route::post('/crud/workflows/update/(.*)', function ($id) {
         abortwith(403, lang("You don't have permission to update workflows.", "Du hast keine Berechtigung, Workflows zu aktualisieren."), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $values = validateValues($_POST['values'], $DB);
 
     /**

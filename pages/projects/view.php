@@ -143,7 +143,7 @@ $scope = $Project->getScope($collaborators);
         <?php if ($is_subproject) { ?>
             <?= lang('Subproject', 'Teilprojekt') ?>
         <?php } else { ?>
-            <?= lang('Project', 'Projekt') ?>
+            <?= lang('common.project') ?>
         <?php } ?>
     </b>
     <h1 class="mt-0">
@@ -278,7 +278,7 @@ if ($topicsEnabled) {
     <?php if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('navigation.activities') ?>
+            <?= lang('common.activities') ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
@@ -289,7 +289,7 @@ if ($topicsEnabled) {
     <?php } else { ?>
         <a id="btn-activities" class="btn disabled">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('navigation.activities') ?>
+            <?= lang('common.activities') ?>
             <span class="index">0</span>
         </a>
     <?php } ?>
@@ -350,7 +350,7 @@ if ($topicsEnabled) {
                 <?php if ($edit_perm) { ?>
                     <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('system.edit') ?>
+                        <?= lang('common.edit') ?>
                     </a>
                 <?php } ?>
 
@@ -359,7 +359,7 @@ if ($topicsEnabled) {
                     <div class="dropdown">
                         <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-trash"></i>
-                            <span class="sr-only"><?= lang('system.delete') ?></span>
+                            <span class="sr-only"><?= lang('common.delete') ?></span>
                             <i class="ph ph-caret-down" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
@@ -451,7 +451,7 @@ if ($topicsEnabled) {
                                     <br>
                                     <a href="#edit-image" data-toggle="modal">
                                         <i class="ph ph-image"></i>
-                                        <?= lang('system.edit') ?>
+                                        <?= lang('common.edit') ?>
                                     </a>
                                 <?php }
                                 ?>
@@ -486,7 +486,7 @@ if ($topicsEnabled) {
                 <div class="btn-toolbar mb-10">
                     <a href="<?= ROOTPATH ?>/projects/persons/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('system.edit') ?>
+                        <?= lang('common.edit') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -532,7 +532,7 @@ if ($topicsEnabled) {
             </table>
 
             <h2>
-                <?= lang('Units', 'Einheiten') ?>
+                <?= lang('common.units') ?>
             </h2>
             <table class="table unit-table w-full">
                 <tbody>
@@ -578,7 +578,7 @@ if ($topicsEnabled) {
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('system.edit') ?>
+                <?= lang('common.edit') ?>
             </a>
         </div>
     <?php } ?>
@@ -762,7 +762,7 @@ if ($topicsEnabled) {
                         <div class="input-group-prepend">
                             <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                         </div>
-                        <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'projects':  PROJECT})">
+                        <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'projects':  PROJECT})">
                         <div class="input-group-append">
                             <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                         </div>
@@ -780,7 +780,7 @@ if ($topicsEnabled) {
                 <table class="table dataTable responsive" id="activities-table">
                     <thead>
                         <tr>
-                            <th><?= lang('system.type') ?></th>
+                            <th><?= lang('common.type') ?></th>
                             <th><?= lang('Activity', 'Aktivität') ?></th>
                             <th></th>
                         </tr>

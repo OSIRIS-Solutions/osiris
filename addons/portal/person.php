@@ -83,7 +83,7 @@
 
                 <?php if (!empty($data['numbers']['publications'])): ?>
                     <div class="pb-10">
-                        <h2 id="publications"><?= lang("Publications", "Publikationen") ?></h2>
+                        <h2 id="publications"><?= lang('common.publications') ?></h2>
 
                         <table class="table datatable"
                             id="publication-table"
@@ -192,7 +192,7 @@
                         <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-table="teaching">
                             <thead>
                                 <tr>
-                                    <th data-><?= lang('system.title') ?></th>
+                                    <th data-><?= lang('common.title') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -473,7 +473,7 @@
                                 <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['publications'])): ?>
-                                <a href="#publications"><?= lang("Publications", "Publikationen") ?></a>
+                                <a href="#publications"><?= lang('common.publications') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['activities'])): ?>
                                 <a href="#activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></a>
@@ -487,7 +487,7 @@
                                 </a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['projects'])): ?>
-                                <a href="#projects"><?= lang('navigation.projects') ?></a>
+                                <a href="#projects"><?= lang('common.projects') ?></a>
                             <?php endif; ?>
                         </div>
                     </nav>

@@ -63,7 +63,7 @@ $deadlines = $osiris->deadlines->find(
                     <div class="input-group-prepend">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                     </div>
-                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
+                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
                     <div class="input-group-append">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                     </div>
@@ -79,9 +79,9 @@ $deadlines = $osiris->deadlines->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.title') ?></th>
+                    <th><?= lang('common.title') ?></th>
                     <th><?= lang('Date', 'Datum') ?></th>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Relevance', 'Relevanz') ?></th>
                 </tr>
             </thead>
@@ -185,7 +185,7 @@ $deadlines = $osiris->deadlines->find(
 
     let headers = [{
             'key': 'title',
-            'title': lang('system.title')
+            'title': lang('common.title')
         },
         {
             'key': 'date',
@@ -193,7 +193,7 @@ $deadlines = $osiris->deadlines->find(
         },
         {
             'key': 'type',
-            'title': lang('system.type')
+            'title': lang('common.type')
         },
         {
             'key': 'relevance',

@@ -61,7 +61,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->projects->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['type_label'] = lang('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
                 $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . ($entity['name'] ?? '');
                 $featuredCard['subtitle'] = lang($entity['title'] ?? null, $entity['title_de'] ?? null);
@@ -292,7 +292,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if ($Settings->hasPermission('news.edit')) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
-                <?= lang('system.edit') ?>
+                <?= lang('common.edit') ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>
@@ -304,7 +304,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
-                    <?= lang('system.delete') ?>
+                    <?= lang('common.delete') ?>
                 </button>
             </form>
         <?php } ?>
@@ -431,7 +431,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($projects)): ?>
             <?php foreach ($projects as $project): ?>
                 <div class="connection">
-                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
+                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.project') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
                     </h5>

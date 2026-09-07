@@ -47,7 +47,7 @@
              <td><?= $module['module'] ?></td>
          </tr>
          <tr>
-             <th><?= lang('system.title') ?></th>
+             <th><?= lang('common.title') ?></th>
              <td><?= $module['title'] ?></td>
          </tr>
          <tr>
@@ -160,7 +160,7 @@
              <thead>
                  <tr>
                      <th></th>
-                     <th><?= lang('system.type') ?></th>
+                     <th><?= lang('common.type') ?></th>
                      <th><?= lang('Activity', 'Aktivität') ?></th>
                  </tr>
              </thead>
@@ -200,7 +200,7 @@
                  <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                  <button class="btn danger small">
                      <i class="ph ph-trash"></i>
-                     <?= lang('system.delete') ?>
+                     <?= lang('common.delete') ?>
                  </button>
              </form>
          <?php } else { ?>

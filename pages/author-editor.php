@@ -86,7 +86,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                         <th>Position</th>
                     <?php endif; ?>
                     <th><?= $Settings->get('affiliation') ?></th>
-                    <th><?= lang('Units', 'Einheiten') ?> *</th>
+                    <th><?= lang('common.units') ?> *</th>
                     <th></th>
                 </tr>
             </thead>
@@ -122,7 +122,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                     <option value="committee-member" <?= ($thesisRole == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
                                     <option value="chair" <?= ($thesisRole == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
                                     <option value="mentor" <?= ($thesisRole == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
-                                    <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                    <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                 </select>
                             </td>
                         <?php elseif ($role == 'authors') :
@@ -256,7 +256,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         <?php if ($sws) : ?>
             tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
-            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('Other', 'Sonstiges') ?></option></select></td>')
+            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('common.other') ?></option></select></td>')
         <?php elseif ($role == 'authors') : ?>
             tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         <?php endif; ?>

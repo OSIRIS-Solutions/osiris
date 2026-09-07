@@ -15,7 +15,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
 <table class="table">
     <thead>
         <tr>
-            <th><?= lang('Country', 'Land') ?></th>
+            <th><?= lang('common.country') ?></th>
             <th><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></th>
             <th><?= lang('Scope Overview', 'Übersicht Umfang') ?></th>
             <th><?= lang('ABS Classification', 'ABS-Klassifikation') ?></th>

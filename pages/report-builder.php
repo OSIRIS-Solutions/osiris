@@ -60,14 +60,14 @@ $report_id = $report['_id'] ?? null;
 
 
 $collections = [
-    'activities' => lang('navigation.activities'),
+    'activities' => lang('common.activities'),
     // 'persons' => lang('Persons', 'Personen')
 ];
 if ($Settings->featureEnabled('events')) {
     $collections['conferences'] = lang('Events', 'Ereignisse');
 }
 if ($Settings->featureEnabled('projects')) {
-    $collections['projects'] = lang('navigation.projects');
+    $collections['projects'] = lang('common.projects');
     $collections['proposals'] = lang('Proposals', 'Anträge');
 }
 ?>
@@ -347,7 +347,7 @@ if ($Settings->featureEnabled('projects')) {
                 <input type="text" class="form-control" name="title" value="<?= $report['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
-                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                <label for="description"><?= lang('common.description') ?></label>
                 <textarea type="text" class="form-control" name="description"><?= $report['description'] ?? '' ?></textarea>
             </div>
 
@@ -395,7 +395,7 @@ if ($Settings->featureEnabled('projects')) {
                         <thead>
                             <tr>
                                 <th style="width:18%"><?= lang('Key', 'Key') ?></th>
-                                <th style="width:18%"><?= lang('system.type') ?></th>
+                                <th style="width:18%"><?= lang('common.type') ?></th>
                                 <th><?= lang('Label', 'Bezeichnung') ?></th>
                                 <th style="width:22%"><?= lang('Default value', 'Standardwert') ?></th>
                                 <th style="width:10%"></th>
@@ -446,7 +446,7 @@ if ($Settings->featureEnabled('projects')) {
 
                     <div class="modal-footer">
                         <!-- save -->
-                        <button type="submit" class="btn success"><?= lang('system.save') ?></button>
+                        <button type="submit" class="btn success"><?= lang('common.save') ?></button>
 
                         <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
                     </div>
@@ -495,7 +495,7 @@ if ($Settings->featureEnabled('projects')) {
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
         </button>
 
         <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">
@@ -631,7 +631,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
-            <span class="step-title"><?= lang('navigation.activities') ?></span>
+            <span class="step-title"><?= lang('common.activities') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>

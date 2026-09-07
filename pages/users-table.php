@@ -63,7 +63,7 @@ if ($active('keywords')) {
             <thead>
                 <th><?= lang('Image', 'Bild') ?></th>
                 <th></th>
-                <th><?= lang('Units', 'Einheiten') ?></th>
+                <th><?= lang('common.units') ?></th>
                 <th><?= lang('Active', 'Aktiv') ?></th>
                 <th><?= lang('Names', 'Namen') ?></th>
                 <th><?= lang('Research topics', 'Forschungsbereiche') ?></th>
@@ -200,7 +200,7 @@ if ($active('keywords')) {
             'key': 'html'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             'key': 'dept'
         },
         {

@@ -214,8 +214,8 @@ krsort($rows);
         <thead>
             <tr>
                 <th></th>
-                <th style="width:90px;"><?= lang('Year', 'Jahr') ?></th>
-                <th class="text-right"><?= lang('navigation.projects') ?></th>
+                <th style="width:90px;"><?= lang('common.year') ?></th>
+                <th class="text-right"><?= lang('common.projects') ?></th>
 
                 <th class="text-right"><?= lang('Income proposed', 'Einnahmen beantragt') ?> (EUR)</th>
                 <th class="text-right"><?= lang('Income approved', 'Einnahmen bewilligt') ?> (EUR)</th>
@@ -259,7 +259,7 @@ krsort($rows);
                         <table class="table small simple">
                             <thead>
                                 <tr>
-                                    <th><?= lang('Project', 'Projekt') ?></th>
+                                    <th><?= lang('common.project') ?></th>
                                     <th class="text-right"><?= lang('Income (proposed/approved)', 'Einnahmen (beantragt/bewilligt)') ?></th>
                                     <th class="text-right"><?= lang('Volume (proposed/approved)', 'Volumen (beantragt/bewilligt)') ?></th>
                                 </tr>
@@ -341,7 +341,7 @@ krsort($rows);
                     marker: {
                         color: OSIRIS_PRIMARY + 'CC'
                     },
-                    hovertemplate: lang('Year', 'Jahr') + ' %{x}<br>' +
+                    hovertemplate: lang('common.year') + ' %{x}<br>' +
                         lang('Approved volume', 'Volumen bewilligt') + ': %{y:,.0f} €<extra></extra>'
                 },
                 {
@@ -352,7 +352,7 @@ krsort($rows);
                     marker: {
                         color: OSIRIS_SUCCESS + 'CC'
                     },
-                    hovertemplate: lang('Year', 'Jahr') + ' %{x}<br>' +
+                    hovertemplate: lang('common.year') + ' %{x}<br>' +
                         lang('Approved income', 'Einnahmen bewilligt') + ': %{y:,.0f} €<extra></extra>'
                 },
                 {
@@ -366,7 +366,7 @@ krsort($rows);
                         size: 7,
                         color: OSIRIS_ACCENT
                     },
-                    hovertemplate: lang('Year', 'Jahr') + ' %{x}<br>' +
+                    hovertemplate: lang('common.year') + ' %{x}<br>' +
                         lang('Approval rate', 'Bewilligungsquote') + ': %{y:.1f}%<extra></extra>'
                 },
                 {
@@ -374,7 +374,7 @@ krsort($rows);
                     y: rate,
                     type: 'scatter',
                     mode: 'markers',
-                    name: lang('navigation.projects'),
+                    name: lang('common.projects'),
                     yaxis: 'y2',
                     marker: {
                         size: bubbleSize,
@@ -386,8 +386,8 @@ krsort($rows);
                         }
                     },
                     customdata: projects,
-                    hovertemplate: lang('Year', 'Jahr') + ' %{x}<br>' +
-                        lang('navigation.projects') + ' : %{customdata}<extra></extra>'
+                    hovertemplate: lang('common.year') + ' %{x}<br>' +
+                        lang('common.projects') + ' : %{customdata}<extra></extra>'
                 }
             ];
 
@@ -484,7 +484,7 @@ $fundingByYear = $osiris->proposals->aggregate([
     <table class="table" id="funding-by-year">
         <thead>
             <tr>
-                <th style="width:90px;"><?= lang('Year', 'Jahr') ?></th>
+                <th style="width:90px;"><?= lang('common.year') ?></th>
                 <th class="text-right"><?= lang('Planned', 'Soll') ?> (EUR)</th>
                 <th class="text-right"><?= lang('Actual', 'Ist') ?> (EUR)</th>
                 <th class="text-right"><?= lang('Delta', 'Delta') ?> (EUR)</th>
@@ -608,7 +608,7 @@ $fundingByYear = $osiris->proposals->aggregate([
                 y: -0.2
             },
             xaxis: {
-                title: lang('Year', 'Jahr'),
+                title: lang('common.year'),
                 // no decimals
                 tickformat: 'd',
                 dtick: 1

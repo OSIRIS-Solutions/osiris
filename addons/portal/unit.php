@@ -188,7 +188,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['publications'] > 0) { ?>
                     <a onclick="navigate('publications')" id="btn-publications" class="<?= $preselect === 'publications' ? 'active' : '' ?>">
                         <i class="ph ph-books" aria-hidden="true"></i>
-                        <?= lang('Publications', 'Publikationen')  ?>
+                        <?= lang('common.publications')  ?>
                         <span class="index"><?= $numbers['publications'] ?></span>
                     </a>
                 <?php } ?>
@@ -197,7 +197,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['activities'] > 0) { ?>
                     <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
                         <i class="ph ph-briefcase" aria-hidden="true"></i>
-                        <?= lang('navigation.activities')  ?>
+                        <?= lang('common.activities')  ?>
                         <span class="index"><?= $numbers['activities'] ?></span>
                     </a>
                 <?php } ?>
@@ -206,7 +206,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['projects'] > 0) { ?>
                     <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
                         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('navigation.projects')  ?>
+                        <?= lang('common.projects')  ?>
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
@@ -368,9 +368,9 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('Publications', 'Publikationen') ?>">
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.publications') ?>">
 
-                <!-- <h2><?= lang('Publications', 'Publikationen') ?></h2> -->
+                <!-- <h2><?= lang('common.publications') ?></h2> -->
 
                 <div class="row row-eq-spacing">
                     <div class="col-md">
@@ -481,7 +481,7 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('navigation.projects') ?>">
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.projects') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>
@@ -495,7 +495,7 @@ $numbers = $data['numbers'] ?? [
                             data-lang="<?= lang('en', 'de') ?>">
                             <thead>
                                 <tr>
-                                    <th data><?= lang('Project', 'Projekt') ?></th>
+                                    <th data><?= lang('common.project') ?></th>
                                 </tr>
                             </thead>
                             <tbody>

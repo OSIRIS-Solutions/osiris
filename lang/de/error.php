@@ -7,5 +7,6 @@ return [
     'user_not_found' => 'Benutzer nicht gefunden.',
     'username_already_taken' => 'Der Nutzername ist bereits vergeben. Versuche es erneut.',
     'password_reset_no_permission' => 'Du hast keine Berechtigung, Passwörter zurückzusetzen.',
-    'admin_no_permission' => 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'
+    'admin_no_permission' => 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.',
+    'no_values' => 'Keine Werte angegeben.'
 ];

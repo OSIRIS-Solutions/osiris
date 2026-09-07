@@ -178,7 +178,7 @@ $Format = new Document(true);
             <tr>
                 <th><?= lang('Added', 'Hinzugefügt') ?></th>
                 <th><?= lang('By', 'Von') ?></th>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Activity', 'Aktivität') ?></th>
                 <th></th>
             </tr>

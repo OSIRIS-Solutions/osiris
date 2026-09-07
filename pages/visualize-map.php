@@ -224,7 +224,7 @@ if (empty($lat) || empty($lng)) {
                     data.marker.color.push(item.color ?? 'rgba(0, 128, 131, 0.7)')
                     data.lon.push(item.data.lng)
                     data.lat.push(item.data.lat)
-                    data.text.push(`<b>${item.data.name}</b><br>${item.data.location}<br>${item.count} <?= lang('navigation.projects') ?>`)
+                    data.text.push(`<b>${item.data.name}</b><br>${item.data.location}<br>${item.count} <?= lang('common.projects') ?>`)
 
                 });
                 console.log(data);

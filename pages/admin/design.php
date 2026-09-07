@@ -208,7 +208,7 @@ $design = $Settings->get('design');
                     <?php $fontHeaders = $design['font_headers'] ?? 'no'; ?>
                     <select class="form-control" name="general[design][font_headers]" id="design_font_headers">
                         <option value="no" <?= $fontHeaders == 'no' ? 'selected' : '' ?>><?= lang('No (default)', 'Nein (Standard)') ?></option>
-                        <option value="yes" <?= $fontHeaders == 'yes' ? 'selected' : '' ?>><?= lang('Yes', 'Ja') ?></option>
+                        <option value="yes" <?= $fontHeaders == 'yes' ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                     </select>
                     <small class="text-muted">
                         <?= lang('Default font for headers is TikTok Sans.', 'Standard-Schriftart für Überschriften ist TikTok Sans.') ?>
@@ -571,7 +571,7 @@ $design = $Settings->get('design');
         <div class="bottom-buttons mt-10">
             <button class="btn primary">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('system.save') ?>
+                <?= lang('common.save') ?>
             </button>
         </div>
     </div>

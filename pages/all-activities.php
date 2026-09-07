@@ -92,19 +92,19 @@ $cart = readCart();
             <thead>
                 <tr>
                     <th><?= lang('Quarter', 'Quartal') ?></th>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
                     <th>Start</th>
                     <th><?= lang('End', 'Ende') ?></th>
-                    <th><?= lang('Units', 'Einheiten') ?></th>
+                    <th><?= lang('common.units') ?></th>
                     <th><?= lang('Online ahead of print') ?></th>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Subtype', 'Subtyp') ?></th>
-                    <th><?= lang('system.title') ?></th>
+                    <th><?= lang('common.title') ?></th>
                     <th><?= lang('Authors', 'Autoren') ?></th>
-                    <th><?= lang('Year', 'Jahr') ?></th>
+                    <th><?= lang('common.year') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                 </tr>
@@ -127,7 +127,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-type')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('system.type') ?>
+                <?= lang('common.type') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <style>
@@ -373,7 +373,7 @@ $cart = readCart();
             'key': 'quarter'
         },
         {
-            title: lang('system.type'),
+            title: lang('common.type'),
             'key': 'type'
         },
         {
@@ -397,7 +397,7 @@ $cart = readCart();
             'key': 'end'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             'key': 'unit'
         },
         {
@@ -405,7 +405,7 @@ $cart = readCart();
             'key': 'epub'
         },
         {
-            title: lang('system.type'),
+            title: lang('common.type'),
             'key': 'type'
         },
         {
@@ -413,7 +413,7 @@ $cart = readCart();
             'key': 'subtype'
         },
         {
-            title: lang('system.title'),
+            title: lang('common.title'),
             'key': 'title'
         },
         {
@@ -421,7 +421,7 @@ $cart = readCart();
             'key': 'authors'
         },
         {
-            title: lang('Year', 'Jahr'),
+            title: lang('common.year'),
             'key': 'year'
         },
         {
@@ -706,7 +706,7 @@ $cart = readCart();
                     // searchPanes: {
                     //     show: true,
                     //     name: 'year',
-                    //     header: lang('Year', 'Jahr')
+                    //     header: lang('common.year')
                     // },
                 },
                 {

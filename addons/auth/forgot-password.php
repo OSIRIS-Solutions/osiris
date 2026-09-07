@@ -1,5 +1,5 @@
 <h1>
-    <?= lang('system.password_forgot') ?>
+    <?= lang('common.password_forgot') ?>
 </h1>
 
 <form action="#" method="post">
@@ -8,5 +8,5 @@
         <input type="text" name="mail" id="mail" class="form-control" value="" required>
     </div>
 
-    <button class="btn"><?= lang('system.password_reset') ?></button>
+    <button class="btn"><?= lang('common.password_reset') ?></button>
 </form>

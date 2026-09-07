@@ -183,7 +183,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['units'] > 0) { ?>
                     <a onclick="navigate('units')" id="btn-units" class="<?= $preselect === 'units' ? 'active' : '' ?>">
                         <i class="ph ph-users-three" aria-hidden="true"></i>
-                        <?= lang('Units', 'Einheiten')  ?>
+                        <?= lang('common.units')  ?>
                         <span class="index"><?= $numbers['units'] ?></span>
                     </a>
                 <?php } ?>
@@ -192,7 +192,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['publications'] > 0) { ?>
                     <a onclick="navigate('publications')" id="btn-publications" class="<?= $preselect === 'publications' ? 'active' : '' ?>">
                         <i class="ph ph-books" aria-hidden="true"></i>
-                        <?= lang('Publications', 'Publikationen')  ?>
+                        <?= lang('common.publications')  ?>
                         <span class="index"><?= $numbers['publications'] ?></span>
                     </a>
                 <?php } ?>
@@ -201,7 +201,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['activities'] > 0) { ?>
                     <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
                         <i class="ph ph-briefcase" aria-hidden="true"></i>
-                        <?= lang('navigation.activities')  ?>
+                        <?= lang('common.activities')  ?>
                         <span class="index"><?= $numbers['activities'] ?></span>
                     </a>
                 <?php } ?>
@@ -210,7 +210,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['projects'] > 0) { ?>
                     <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
                         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('navigation.projects')  ?>
+                        <?= lang('common.projects')  ?>
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
@@ -293,7 +293,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
 
 
 
-            <section id="units" <?= $preselect === 'units' ? '' : 'style="display:none"' ?> data-title="<?= lang('Units', 'Einheiten') ?>">
+            <section id="units" <?= $preselect === 'units' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.units') ?>">
 
                 <table class="table cards w-full datatable" id="units-table" data-page-length="18">
                     <thead>
@@ -323,7 +323,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 </table>
             </section>
 
-            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('Publications', 'Publikationen') ?>">
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.publications') ?>">
 
                 <table class="table datatable" id="publication-table"
                     data-table="publications"
@@ -369,7 +369,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('navigation.projects') ?>">
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.projects') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>
@@ -383,7 +383,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             data-lang="<?= lang('en', 'de') ?>">
                             <thead>
                                 <tr>
-                                    <th data><?= lang('Project', 'Projekt') ?></th>
+                                    <th data><?= lang('common.project') ?></th>
                                 </tr>
                             </thead>
                             <tbody>

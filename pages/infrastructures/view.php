@@ -225,7 +225,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <span><?= lang('system.edit') ?></span>
+                <span><?= lang('common.edit') ?></span>
             </a>
         <?php } ?>
     </div>
@@ -371,7 +371,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/persons/<?= $id ?>" class="font-size-16">
                 <i class="ph ph-edit"></i>
-                <span class="sr-only"><?= lang('system.edit') ?></span>
+                <span class="sr-only"><?= lang('common.edit') ?></span>
             </a>
         <?php } ?>
     </h2>
@@ -440,7 +440,7 @@ if ($edit_perm) { ?>
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -528,7 +528,7 @@ if ($edit_perm) { ?>
                     <?php
                     switch ($stat_frequency) {
                         case 'annual': ?>
-                            <label for="year" class="w-300 font-weight-bold"><?= lang('Year', 'Jahr') ?>:</label>
+                            <label for="year" class="w-300 font-weight-bold"><?= lang('common.year') ?>:</label>
                             <input type="number" name="year" id="add-stat-year" class="form-control w-200" value="<?= CURRENTYEAR - 1 ?>" min="1900" max="<?= CURRENTYEAR + 1 ?>" />
                         <?php
                             break;
@@ -587,7 +587,7 @@ if ($edit_perm) { ?>
 
                 <button class="btn btn-primary">
                     <i class="ph ph-save"></i>
-                    <?= lang('system.save') ?>
+                    <?= lang('common.save') ?>
                 </button>
             </form>
         </div>
@@ -616,7 +616,7 @@ if ($edit_perm) { ?>
                     <table class="table" id="detailed-statistics">
                         <thead>
                             <tr>
-                                <th><?= lang('Year', 'Jahr') ?></th>
+                                <th><?= lang('common.year') ?></th>
                                 <?php if ($stat_frequency == 'monthly') { ?>
                                     <th><?= lang('Month', 'Monat') ?></th>
                                 <?php } elseif ($stat_frequency == 'quarterly') { ?>
@@ -721,7 +721,7 @@ if ($edit_perm) { ?>
             <table class="table small my-20 w-auto" id="yearly-statistics">
                 <thead>
                     <tr>
-                        <th><?= lang('Year', 'Jahr') ?></th>
+                        <th><?= lang('common.year') ?></th>
                         <?php foreach ($fields as $field) { ?>
                             <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
                         <?php } ?>
@@ -940,7 +940,7 @@ if ($edit_perm) { ?>
 
         <button class="btn danger" type="button" id="delete-infrastructure" aria-haspopup="true" aria-expanded="false" onclick="$(this).next().slideToggle()">
             <i class="ph ph-trash"></i>
-            <?= lang('system.delete') ?>
+            <?= lang('common.delete') ?>
             <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
         </button>
         <div aria-labelledby="delete-infrastructure" style="display: none;">

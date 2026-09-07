@@ -50,12 +50,12 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <?php } ?>
             </select>
             <label for="type" class="required">
-                <?= lang('system.type') ?>
+                <?= lang('common.type') ?>
             </label>
         </div>
 
         <div class="form-group">
-            <label for="description" class="floating-title"><?= lang('Description', 'Beschreibung') ?></label>
+            <label for="description" class="floating-title"><?= lang('common.description') ?></label>
 
             <div class="form-group title-editor" id="description-quill"><?= $form['description'] ?? '' ?></div>
             <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
@@ -91,7 +91,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                     <?php } ?>
                 </select>
-                <label for="country"><?= lang('Country', 'Land') ?></label>
+                <label for="country"><?= lang('common.country') ?></label>
             </div>
         </div>
 

@@ -86,7 +86,7 @@ Route::get('/teaching/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('Teaching', 'Lehrveranstaltungen'), 'path' => '/teaching'],
         ['name' => $form['title'], 'path' => "/teaching/view/$id"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     $activities = $osiris->activities->find(['module_id' => $id], ['sort' => ['start_date' => -1]])->toArray();
@@ -115,7 +115,7 @@ Route::get('/teaching/statistics', function () {
 
  Route::post('/crud/teaching/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     if (!$Settings->hasPermission('teaching.edit')) {
         abortwith(403, lang("You do not have permission to edit teaching modules.", "Du hast keine Berechtigung, Lehrveranstaltungen zu bearbeiten."), "/teaching", lang('Go back to teaching modules', 'Zurück zu Lehrveranstaltungen'));
     }

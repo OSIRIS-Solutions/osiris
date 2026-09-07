@@ -601,7 +601,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('Publications', 'Publikationen')  ?>
+            <?= lang('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -637,7 +637,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-briefcase" aria-hidden="true"></i>
-            <?= lang('navigation.activities')  ?>
+            <?= lang('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -683,7 +683,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_projects > 0) { ?>
             <a onclick="navigate('projects')" id="btn-projects" class="btn">
                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('navigation.projects')  ?>
+                <?= lang('common.projects')  ?>
                 <span class="index"><?= $count_projects ?></span>
             </a>
         <?php } ?>
@@ -1105,13 +1105,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <section id="publications" style="display:none">
 
-    <h2><?= lang('Publications', 'Publikationen') ?></h2>
+    <h2><?= lang('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -1172,7 +1172,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>

@@ -34,7 +34,7 @@ if (!empty($form) && isset($form['_id'])) {
 } else {
     $new = true;
     $formaction .= "/crud/types/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
     $url = ROOTPATH . "/admin/types/*";
     $title = lang('New category', 'Neue Kategorie');
     $member = 0;
@@ -171,11 +171,11 @@ if (!empty($form) && isset($form['_id'])) {
 
             <div class="row row-eq-spacing">
                 <div class="col-sm">
-                    <label for="description"><?= lang('Description', 'Beschreibung') ?> (en)</label>
+                    <label for="description"><?= lang('common.description') ?> (en)</label>
                     <textarea class="form-control" name="values[description]"><?= e($type['description'] ?? '') ?></textarea>
                 </div>
                 <div class="col-sm">
-                    <label for="description_de" class=""><?= lang('Description', 'Beschreibung') ?> (de)</label>
+                    <label for="description_de" class=""><?= lang('common.description') ?> (de)</label>
                     <textarea class="form-control" name="values[description_de]"><?= e($type['description_de'] ?? '') ?></textarea>
                 </div>
             </div>
@@ -230,7 +230,7 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
-                    <?= lang('system.edit') ?>
+                    <?= lang('common.edit') ?>
                 </a>
             <?php } ?>
 
@@ -429,7 +429,7 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('system.delete') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('common.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

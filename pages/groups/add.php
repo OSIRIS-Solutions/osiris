@@ -22,7 +22,7 @@ if (!$Settings->hasPermission('units.add')) {
 }
 
 $formaction = ROOTPATH . "/crud/groups/create";
-$btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
+$btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
 $url = ROOTPATH . "/groups/edit/*";
 $title = lang('New group', 'Neue Gruppe');
 
@@ -161,7 +161,7 @@ $title = lang('New group', 'Neue Gruppe');
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang('system.save') ?>
+        <i class="ph ph-check"></i> <?= lang('common.save') ?>
     </button>
 
     <datalist id="unit-list">

@@ -36,7 +36,7 @@ $type = $_GET['type'] ?? 'publication';
 
         <div class="pills">
             <button id="btn-units" class="btn <?= ($entity == 'units') ? 'active' : '' ?>" onclick="showForm('units')">
-                <?= lang('Units', 'Einheiten') ?>
+                <?= lang('common.units') ?>
             </button>
             <?php if ($Settings->featureEnabled('topics')) { ?>
                 <button id="btn-topics" class="btn <?= ($entity == 'topics') ? 'active' : '' ?>" onclick="showForm('topics')">

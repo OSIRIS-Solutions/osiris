@@ -113,8 +113,8 @@ class PersonFields extends Fields
                 ],
                 'type' => 'boolean',
                 'values' => [
-                    'true' => lang('yes', 'ja'),
-                    'false' => lang('no', 'nein')
+                    'true' => lang('common.yes'),
+                    'false' => lang('common.no')
                 ],
                 'input' => 'radio',
                 'default_value' => true

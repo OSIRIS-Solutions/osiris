@@ -236,7 +236,7 @@ class Project extends Vocabulary
     {
         $isJoint = $this->project['joint_project'] ?? false;
         if (!$isJoint) {
-            return lang('No', 'Nein');
+            return lang('common.no');
         }
         $identifier = $this->project['joint_project_identifier'] ?? '-';
         $title = $this->project['joint_project_title'] ?? '-';
@@ -244,7 +244,7 @@ class Project extends Vocabulary
         $return = '<div class="module">';
         $return .= '<h5 class="title m-0">' . e($title) . '</h5>';
         $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . e($identifier) . '<br>';
-        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('Yes', 'Ja') : lang('No', 'Nein')) . '<br>';
+        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('common.yes') : lang('common.no')) . '<br>';
         $return .= '</div>';
         return $return;
     }
@@ -357,9 +357,9 @@ class Project extends Vocabulary
                 return $return . '</ul>';
             case 'public':
                 if ($value) {
-                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('yes', 'ja') . '</span>';
+                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('common.yes') . '</span>';
                 } else {
-                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('no', 'nein') . '</span>';
+                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('common.no') . '</span>';
                 }
             case 'image':
                 if (empty($value)) return '-';
@@ -525,7 +525,7 @@ class Project extends Vocabulary
         <?php } else { ?>
             <span class="badge text-muted no-wrap <?= $cls ?>">
                 <i class="ph ph-coin"></i>
-                <?= lang('Other', 'Sonstiges') ?>
+                <?= lang('common.other') ?>
             </span>
 <?php }
     }

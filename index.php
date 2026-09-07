@@ -274,7 +274,7 @@ if (
             $name = $scientist['displayname'];
 
             $breadcrumb = [
-                ['name' => lang('system.users'), 'path' => "/user/browse"],
+                ['name' => lang('common.users'), 'path' => "/user/browse"],
                 ['name' => $name]
             ];
 
@@ -282,7 +282,7 @@ if (
             include BASEPATH . "/pages/profile.php";
         } else {
             $breadcrumb = [
-                ['name' => lang('system.home')]
+                ['name' => lang('common.home')]
             ];
             include BASEPATH . "/header.php";
             include BASEPATH . "/pages/home.php";

@@ -328,7 +328,7 @@ class Portfolio extends Settings
             switch ($type) {
                 case 'activity':
                     $breadcrumb = [
-                        ['name' => lang('navigation.activities'), 'path' => "/activities"],
+                        ['name' => lang('common.activities'), 'path' => "/activities"],
                         ['name' => $name, 'path' => "/activities/view/$id"],
                     ];
                     break;
@@ -342,14 +342,14 @@ class Portfolio extends Settings
 
                 case 'project':
                     $breadcrumb = [
-                        ['name' => lang('navigation.projects'), 'path' => "/projects"],
+                        ['name' => lang('common.projects'), 'path' => "/projects"],
                         ['name' => $name, 'path' => "/projects/view/$id"],
                     ];
                     break;
 
                 case 'unit':
                     $breadcrumb = [
-                        ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
+                        ['name' => lang('common.units'), 'path' => "/groups"],
                         ['name' => $name, 'path' => "/groups/view/$id"],
                     ];
                     break;
@@ -387,7 +387,7 @@ class Portfolio extends Settings
                 break;
 
             case 'unit':
-                // $items[] = ['name' => lang('Units', 'Einheiten'), 'path' => $base."/groups"];
+                // $items[] = ['name' => lang('common.units'), 'path' => $base."/groups"];
                 $items[] = ['name' => $name, 'path' => $base . "/groups/view/$id"];
                 break;
 

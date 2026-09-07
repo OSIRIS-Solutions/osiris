@@ -78,7 +78,7 @@ $filters = array_map(function ($f) {
     }
     if ($f['type'] == 'boolean') {
         $f['input'] = 'radio';
-        $f['values'] = ['true' => lang('Yes', 'Ja'), 'false' => lang('No', 'Nein')];
+        $f['values'] = ['true' => lang('common.yes'), 'false' => lang('common.no')];
     }
     if ($f['type'] == 'list') {
         $f['type'] = 'string';

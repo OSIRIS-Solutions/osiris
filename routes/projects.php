@@ -19,7 +19,7 @@ Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge')]
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/list.php";
@@ -30,7 +30,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("New", "Neu")]
     ];
     include BASEPATH . "/header.php";
@@ -43,7 +43,7 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     $user = $_SESSION['username'];
     $collection = 'projects';
     $breadcrumb = [
-        ['name' => lang('navigation.projects'), 'path' => "/projects"],
+        ['name' => lang('common.projects'), 'path' => "/projects"],
         ['name' => lang("New", "Neu")]
     ];
     if (DB::is_ObjectID($id)) {
@@ -67,7 +67,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -99,10 +99,10 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' => $project['acronym'] ?? $project['name']]
     ];
 
@@ -121,7 +121,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $Project = new Project($project);
 
@@ -142,12 +142,12 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
             $name = lang("Persons", "Personen");
             break;
         default:
-            $name = lang('system.edit');
+            $name = lang('common.edit');
             break;
     }
 
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('navigation.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
         ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
@@ -191,12 +191,12 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
     // check if project exists
     if (empty($project)) {
-        abortwith(404, lang('Project', 'Projekt'), "/projects");
+        abortwith(404, lang('common.project'), "/projects");
     }
 
     // set breadcrumb
     $breadcrumb = [
-        ['name' => lang('navigation.projects'), 'path' => "/projects"],
+        ['name' => lang('common.projects'), 'path' => "/projects"],
         ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
         ['name' => lang("Add subproject", "Teilprojekt hinzufügen")]
     ];
@@ -343,14 +343,14 @@ Route::post('/proposals/download/(.*)', function ($id) {
         "personnel" => $project['personnel'] ?? 'NA',
         "countries" => isset($project['countries']) ? implode(', ', $project['countries']) : 'NA',
         "in-kind" => $project['in-kind'] ?? 'NA',
-        "public" => $project['public'] ? lang("Yes", "Ja") : lang("No", "Nein"),
-        "res:material" => ($res['material'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "public" => $project['public'] ? lang('common.yes') : lang('common.no'),
+        "res:material" => ($res['material'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:material_details" => $res['material_details'] ?? 'NA',
-        "res:personnel" => ($res['personnel'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:personnel" => ($res['personnel'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:personnel_details" => $res['personnel_details'] ?? 'NA',
-        "res:room" => ($res['room'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:room" => ($res['room'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:room_details" => $res['room_details'] ?? 'NA',
-        "res:other" => ($res['other'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:other" => ($res['other'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:other_details" => $res['other_details'] ?? 'NA',
         "coordinator" => $project['coordinator'] ?? 'NA',
         "purpose" => $project['purpose'] ?? 'NA',
@@ -385,7 +385,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
 Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
 
     $values = validateValues($_POST['values'], $DB);
@@ -644,7 +644,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     /**
      * Combine values[grant_years] && values[grant_amounts] to associative array
@@ -696,11 +696,11 @@ Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $
 Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
 
     $values = validateValues($_POST['values'], $DB);
@@ -1045,7 +1045,7 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
     // get project
     $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, lang('Project', 'Projekt'), "/projects");
+        abortwith(404, lang('common.project'), "/projects");
     }
     $Project = new Project();
 

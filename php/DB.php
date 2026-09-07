@@ -162,7 +162,7 @@ class DB
     {
         $notifications = [
             'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
-            'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
+            'epub' => '<em>Online ahead of print</em>-' . lang('common.publications'),
             'status' => lang('Expired status', 'Abgelaufener Status'),
             'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
             'project-open' => lang('Open project applications', 'Offene Projektanträge'),
@@ -201,7 +201,7 @@ class DB
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
-                    'name' => lang('navigation.activities'),
+                    'name' => lang('common.activities'),
                     'count' => 0,
                     'key' => 'activity',
                     'values' => []

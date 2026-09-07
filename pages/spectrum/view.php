@@ -149,7 +149,7 @@ if ($level == 'topic') {
 
     <div class="spectrum-meta">
         <div class="stats">
-            <div><strong><?= $totalPublications ?></strong> <?= lang('Publications', 'Publikationen') ?></div>
+            <div><strong><?= $totalPublications ?></strong> <?= lang('common.publications') ?></div>
             <div><strong><?= round($share * 100, 1) ?> %</strong> <?= lang('of institutional output', 'des Gesamtoutputs') ?></div>
         </div>
     </div>
@@ -460,7 +460,7 @@ if ($level == 'topic') {
                 <table class="table dataTable responsive" id="publications-table">
                     <thead>
                         <tr>
-                            <th><?= lang('system.type') ?></th>
+                            <th><?= lang('common.type') ?></th>
                             <th><?= lang('Publication', 'Publikation') ?></th>
                             <th></th>
                         </tr>

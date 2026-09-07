@@ -564,8 +564,8 @@ $countryLabel = $evaluation['label'] ?? '';
                     </div>
 
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>">
-                        <label><?= lang('Description', 'Beschreibung') ?></label>
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>">
+                        <label><?= lang('common.description') ?></label>
                     </div>
 
                     <!-- Kontext-Felder für Nagoya -->

@@ -408,8 +408,8 @@ foreach ($custom_field_ids as $field_id) {
 
         if (in_array($format, ['bool', 'bool-check'])) {
             $value = filter_var($value, FILTER_VALIDATE_BOOLEAN)
-                ? lang('Yes', 'Ja')
-                : lang('No', 'Nein');
+                ? lang('common.yes')
+                : lang('common.no');
         }
 
         $values = DB::doc2Arr($value);
@@ -460,8 +460,8 @@ $render_custom_field_value = function ($journal, $field) use ($number) {
         $enabled = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         return [
             'display' => $enabled
-                ? '<span class="text-success">' . lang('Yes', 'Ja') . '</span>'
-                : '<span class="text-danger">' . lang('No', 'Nein') . '</span>',
+                ? '<span class="text-success">' . lang('common.yes') . '</span>'
+                : '<span class="text-danger">' . lang('common.no') . '</span>',
             'order' => $enabled ? 1 : 0,
         ];
     }
@@ -667,7 +667,7 @@ foreach ($oa_distribution as $name => $counts) {
                             <th><?= $label ?></th>
                             <th><?= lang('Publisher', 'Verlag') ?></th>
                             <th><?= lang('Open Access', 'Open Access') ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                             <th><?= lang('Other activities', 'Weitere Aktivitäten') ?></th>
                             <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                         </tr>
@@ -688,9 +688,9 @@ foreach ($oa_distribution as $name => $counts) {
                                     <?php
                                     $oa = $journal['oa'] ?? null;
                                     if ($oa === true || (is_numeric($oa) && intval($oa) <= $report_end_year)) {
-                                        echo lang('Yes', 'Ja');
+                                        echo lang('common.yes');
                                     } elseif ($oa === false || (is_numeric($oa) && intval($oa) > $report_end_year)) {
-                                        echo lang('No', 'Nein');
+                                        echo lang('common.no');
                                     } else {
                                         echo '-';
                                     }
@@ -722,7 +722,7 @@ foreach ($oa_distribution as $name => $counts) {
                         <tr>
                             <th><?= lang('Status', 'Status') ?></th>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -749,7 +749,7 @@ foreach ($oa_distribution as $name => $counts) {
                         <tr>
                             <th><?= lang('Publisher', 'Verlag') ?></th>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -768,9 +768,9 @@ foreach ($oa_distribution as $name => $counts) {
                 <table class="table" id="journal-country-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('common.country') ?></th>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -799,7 +799,7 @@ foreach ($oa_distribution as $name => $counts) {
                     <tr>
                         <th><?= lang('Category', 'Kategorie') ?></th>
                         <th><?= $label ?></th>
-                        <th><?= lang('Publications', 'Publikationen') ?></th>
+                        <th><?= lang('common.publications') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -836,7 +836,7 @@ foreach ($oa_distribution as $name => $counts) {
                         <tr>
                             <th><?= lang('Quartile', 'Quartil') ?></th>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -915,7 +915,7 @@ foreach ($oa_distribution as $name => $counts) {
                     <thead>
                         <tr>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publications', 'Publikationen') ?></th>
+                            <th><?= lang('common.publications') ?></th>
                             <?php foreach ($custom_field_ids as $field_id) {
                                 if (!isset($custom_field_definitions[$field_id])) continue;
                                 $field = $custom_field_definitions[$field_id];
@@ -1005,7 +1005,7 @@ foreach ($oa_distribution as $name => $counts) {
                                 <tr>
                                     <th><?= lang('Value', 'Wert') ?></th>
                                     <th><?= $label ?></th>
-                                    <th><?= lang('Publications', 'Publikationen') ?></th>
+                                    <th><?= lang('common.publications') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1107,7 +1107,7 @@ foreach ($oa_distribution as $name => $counts) {
                     l: 170
                 },
                 xaxis: {
-                    title: lang('Publications', 'Publikationen'),
+                    title: lang('common.publications'),
                     rangemode: 'tozero'
                 },
                 height: 520

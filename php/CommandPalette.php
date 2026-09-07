@@ -181,7 +181,7 @@ class CommandPalette
                 "url" => "/projects",
                 "type" => "Navigation",
                 "icon" => "tree-structure",
-                "label" => lang('navigation.projects'),
+                "label" => lang('common.projects'),
                 "feature" => "projects",
                 "keywords" => ["project", "projekt", "research project", "forschungsprojekt", "projects", "projekte", "drittmittelprojekte", "third-party projects"],
                 "priority" => 90
@@ -511,8 +511,8 @@ class CommandPalette
         ];
         $queries = $this->settings->osiris->queries->find($filter);
         $collectionMap = [
-            'activities' => lang('navigation.activities'),
-            'projects' => lang('navigation.projects'),
+            'activities' => lang('common.activities'),
+            'projects' => lang('common.projects'),
             'proposals' => lang('Proposals', 'Anträge'),
             'conferences' => lang('Events', 'Veranstaltungen'),
             'journals' => lang('Journals', 'Zeitschriften'),

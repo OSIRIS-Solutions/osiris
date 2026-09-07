@@ -24,7 +24,7 @@ if (!empty($form) && isset($form['id'])) {
     $title = $name;
 } else {
     $formaction .= "/crud/fields/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('system.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
     $url = ROOTPATH . "/admin/fields";
     $title = lang('New field', 'Neues Feld');
 }
@@ -258,7 +258,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
         <tbody>
             <tr>
                 <th class="w-200">
-                    <?= lang('navigation.activities') ?>
+                    <?= lang('common.activities') ?>
                 </th>
                 <td>
                     <?php if (!empty($activities)) { ?>
@@ -275,7 +275,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('navigation.projects') ?>
+                    <?= lang('common.projects') ?>
                 </th>
                 <td>
                     <?php if (!empty($projects)) { ?>
@@ -336,7 +336,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
             </p>
 
-            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('system.delete') ?></button>
+            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('common.delete') ?></button>
 
         </form>
     </div>

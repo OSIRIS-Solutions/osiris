@@ -87,7 +87,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $form['name'], 'path' => "/topics/view/$id"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -106,7 +106,7 @@ Route::post('/crud/topics/create', function () {
         abortwith(403, lang("You do not have permission to create a new topics.", "Du hast keine Berechtigung, Themen zu erstellen."), "/topics", lang('Go back to topics', 'Zurück zu Themen'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);
@@ -218,7 +218,7 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     if (!$Settings->hasPermission('topics.edit')) {
         abortwith(403, lang("You do not have permission to edit topics.", "Du hast keine Berechtigung, Themen zu bearbeiten."), "/topics/view/$id", lang('Go back to topic', 'Zurück zu dem Thema'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);

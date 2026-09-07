@@ -162,7 +162,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             <table class="table simple">
 
                 <tr>
-                    <th class="w-300"><?= lang('system.title') ?></th>
+                    <th class="w-300"><?= lang('common.title') ?></th>
                     <td>
                         <?= $form['guest']['academic_title'] ?? '-' ?>
                     </td>
@@ -216,7 +216,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Country', 'Land') ?></th>
+                    <th class="w-300"><?= lang('common.country') ?></th>
                     <td>
                         <?= $form['affiliation']['country'] ?? '-' ?>
                     </td>
@@ -238,7 +238,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('system.title') ?></th>
+                    <th class="w-300"><?= lang('common.title') ?></th>
                     <td>
                         <?= $form['title'] ?? '-' ?>
                     </td>

@@ -279,7 +279,7 @@ foreach ($countries as $iso => $data) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('common.country') ?></th>
                             <?php foreach ($statuses as $key => $name) {
                                 $numbers[$key] = [
                                     'days' => 0,

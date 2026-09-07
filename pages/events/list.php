@@ -82,7 +82,7 @@ $conferences = $osiris->conferences->find(
                     <div class="input-group-prepend">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                     </div>
-                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
+                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
                     <div class="input-group-append">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                     </div>
@@ -98,14 +98,14 @@ $conferences = $osiris->conferences->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.title') ?></th>
+                    <th><?= lang('common.title') ?></th>
                     <th><?= lang('Location', 'Ort') ?></th>
                     <th><?= lang('Start', 'Anfang') ?></th>
                     <th><?= lang('End', 'Ende') ?></th>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= $Settings->tagLabel() ?></th>
-                    <th><?= lang('system.title') ?></th>
+                    <th><?= lang('common.title') ?></th>
                     <th><?= lang('Full title', 'Voller Titel') ?></th>
                 </tr>
             </thead>
@@ -242,7 +242,7 @@ $conferences = $osiris->conferences->find(
 
     let headers = [{
             'key': 'title',
-            'title': lang('system.title')
+            'title': lang('common.title')
         },
         {
             'key': 'location',
@@ -258,7 +258,7 @@ $conferences = $osiris->conferences->find(
         },
         {
             'key': 'type',
-            'title': lang('system.type')
+            'title': lang('common.type')
         },
         {
             title: '<?= $Settings->topicLabel() ?>',
@@ -378,7 +378,7 @@ $conferences = $osiris->conferences->find(
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: '<?= lang('system.title') ?>',
+                    header: '<?= lang('common.title') ?>',
                 },
                 {
                     target: 8,

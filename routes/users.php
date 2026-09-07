@@ -61,7 +61,7 @@ Route::get('/user/edit/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('system.edit')]
+        ['name' => lang('common.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -168,7 +168,7 @@ Route::get('/user/delete/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('system.delete')]
+        ['name' => lang('common.delete')]
     ];
 
     include BASEPATH . "/header.php";
@@ -542,7 +542,7 @@ Route::post('/switch-user', function () {
 
 Route::post('/crud/users/update/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
         $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
         $_SESSION['msg_type'] = "error";

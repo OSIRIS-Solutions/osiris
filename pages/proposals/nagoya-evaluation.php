@@ -107,9 +107,9 @@ foreach ($countries as $c) {
                         <?php
                         $nagoyaParty = $review['nagoyaParty'] ?? 'unknown';
                         if ($nagoyaParty === 'yes') {
-                            echo '<span class="badge success">' . lang('Yes', 'Ja') . '</span>';
+                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
                         } elseif ($nagoyaParty === 'no') {
-                            echo '<span class="badge danger">' . lang('No', 'Nein') . '</span>';
+                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
                             echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
                         }
@@ -120,9 +120,9 @@ foreach ($countries as $c) {
                         <?php
                         $ownABSMeasures = $review['ownABSMeasures'] ?? 'unknown';
                         if ($ownABSMeasures === 'yes') {
-                            echo '<span class="badge success">' . lang('Yes', 'Ja') . '</span>';
+                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
                         } elseif ($ownABSMeasures === 'no') {
-                            echo '<span class="badge danger">' . lang('No', 'Nein') . '</span>';
+                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
                             echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
                         }

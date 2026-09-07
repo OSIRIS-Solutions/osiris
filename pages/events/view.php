@@ -80,7 +80,7 @@ if ($topicsEnabled) {
                 <form action="<?= ROOTPATH ?>/crud/conferences/delete/<?= $conference['_id'] ?>" method="post" class="content">
                     <?= lang('Do you want to delete this event?', 'Möchten Sie diese Event löschen?') ?>
                     <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
-                    <button class="btn danger" type="submit"><?= lang('system.delete') ?></button>
+                    <button class="btn danger" type="submit"><?= lang('common.delete') ?></button>
                 </form>
             </div>
         </div>
@@ -101,14 +101,14 @@ if ($topicsEnabled) {
             </tr>
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('Country', 'Land') ?></span>
+                    <span class="key"><?= lang('common.country') ?></span>
                     <?= $DB->getCountry($conference['country'] ?? '', lang('name', 'name_de')) ?>
                 </td>
             </tr>
             <?php if (isset($conference['type'])) { ?>
                 <tr>
                     <td colspan="2">
-                        <span class="key"><?= lang('system.type') ?></span>
+                        <span class="key"><?= lang('common.type') ?></span>
                         <?= $Vocabulary->getValue('event-type', $conference['type']) ?>
                     </td>
                 </tr>
@@ -270,7 +270,7 @@ if ($topicsEnabled) {
 </div>
 
 
-<h2><?= lang('navigation.activities') ?></h2>
+<h2><?= lang('common.activities') ?></h2>
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=lecture&conference=<?= $id ?>">
         <i class="ph ph-plus-circle"></i>
@@ -287,7 +287,7 @@ if ($topicsEnabled) {
     <table class="table" id="result-table">
         <thead>
             <tr>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Activity', 'Aktivität') ?></th>
                 <th></th>
             </tr>

@@ -340,11 +340,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
     const activeFilters = $('#active-filters')
     const headers = [{
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('system.type'),
+            title: lang('common.type'),
             key: 'type'
         },
         {
@@ -372,7 +372,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'status'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             key: 'units'
         },
         {
@@ -384,11 +384,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'funding_organization'
         },
         {
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('system.title'),
+            title: lang('common.title'),
             key: 'title'
         },
         {
@@ -589,7 +589,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('system.type')
+                    header: lang('common.type')
                 },
                 {
                     target: 2,
@@ -646,7 +646,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Units', 'Einheiten')
+                    header: lang('common.units')
                 },
                 {
                     target: 9,
@@ -675,7 +675,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Project', 'Projekt')
+                    header: lang('common.project')
                 },
                 {
                     target: 12,
@@ -683,7 +683,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('system.title')
+                    header: lang('common.title')
                 },
                 {
                     target: 13,

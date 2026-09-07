@@ -177,7 +177,7 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="projects-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Count', 'Anzahl') ?></th>
                 <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
             </tr>
@@ -259,7 +259,7 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="proposals-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Submitted', 'Eingereicht') ?></th>
                 <th><?= lang('Approved', 'Genehmigt') ?></th>
                 <th><?= lang('Rejected', 'Abgelehnt') ?></th>
@@ -331,7 +331,7 @@ $all = $osiris->projects->count();
         <thead>
             <tr>
                 <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('system.type') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Location', 'Standort') ?></th>
                 <th><?= lang('Number of projects', 'Anzahl der Projekte') ?></th>
             </tr>
@@ -407,7 +407,7 @@ $all = $osiris->projects->count();
             <table class="table" id="collaborative-partners-by-type">
                 <thead>
                     <tr>
-                        <th><?= lang('system.type') ?></th>
+                        <th><?= lang('common.type') ?></th>
                         <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
                     </tr>
                 </thead>
@@ -524,7 +524,7 @@ $all = $osiris->projects->count();
             <table class="table" id="collaborative-partners-by-country">
                 <thead>
                     <tr>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.country') ?></th>
                         <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
                     </tr>
                 </thead>
@@ -695,7 +695,7 @@ $all = $osiris->projects->count();
                 <table class="table" id="research-countries-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('common.country') ?></th>
                             <th><?= lang('Research in the country', 'Forschung in dem Land') ?></th>
                             <th><?= lang('Research about the country', 'Forschung über das Land') ?></th>
                         </tr>

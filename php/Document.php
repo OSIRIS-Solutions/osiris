@@ -464,7 +464,7 @@ class Document extends Settings
 
     function activity_subtype()
     {
-        $name = $this->lang("Other", "Sonstiges");
+        $name = $this->lang('common.other');
         if (!empty($this->subtypeArr) && isset($this->subtypeArr['name'])) {
             $name = $this->lang(
                 $this->subtypeArr['name'],
@@ -482,7 +482,7 @@ class Document extends Settings
     }
     function activity_type()
     {
-        $name = $this->lang("Other", "Sonstiges");
+        $name = $this->lang('common.other');
         if (!empty($this->typeArr) && isset($this->typeArr['name'])) {
             $name = $this->lang(
                 $this->typeArr['name'],
@@ -1220,7 +1220,7 @@ class Document extends Settings
             case 'seminar':
                 return $this->lang('Seminar');
             case 'other':
-                return $this->lang('Other', 'Sonstiges');
+                return $this->lang('common.other');
             case "doctoral student":
                 return $this->lang('Doctoral Student', 'Doktorand:in');
             case "master student":
@@ -1244,7 +1244,7 @@ class Document extends Settings
             'committee-member' => $this->lang('Committee member', 'Ausschussmitglied'),
             'chair' => $this->lang('Chair', 'Vorsitzender'),
             'mentor' => $this->lang('Mentor', 'Mentor'),
-            'other' => $this->lang('Other', 'Sonstiges')
+            'other' => $this->lang('common.other')
         ];
         if (isset($roles[$role])) {
             return $roles[$role];
@@ -1299,7 +1299,7 @@ class Document extends Settings
             case "correction": // ["correction"],
                 $val = $this->getVal('correction', false);
                 if ($this->usecase == 'list')
-                    return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    return $val ? lang('common.yes') : lang('common.no');
                 if ($val)
                     return "<span style='color:#B61F29;'>[Correction]</span>";
                 else return '';
@@ -1449,7 +1449,7 @@ class Document extends Settings
                 return $this->getVal('magazine');
             case "online-ahead-of-print": // ["epub"],
                 if ($this->usecase == 'list')
-                    return $this->getVal('epub', false) ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    return $this->getVal('epub', false) ? lang('common.yes') : lang('common.no');
                 if ($this->getVal('epub', false))
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
@@ -1765,7 +1765,7 @@ class Document extends Settings
                 }
 
                 if ($val === true || $val === false) {
-                    if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    if ($this->usecase == 'list') return $val ? lang('common.yes') : lang('common.no');
                     $field = $this->custom_fields[$module];
                     if (!isset($field['name'])) {
                         $field['name'] = $module;

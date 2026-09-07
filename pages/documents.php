@@ -81,7 +81,7 @@
                         continue;
                     }
 
-                    $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('Other', 'Sonstiges'));
+                    $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('common.other'));
 
                     $uploader = $DB->getNameFromId($doc['uploaded_by']);
                     $date = !empty($doc['uploaded']) ? date('d.m.Y', strtotime($doc['uploaded'])) : '';
@@ -171,7 +171,7 @@
                     <tr>
                         <td>
                             <a onclick="filterDataTable(this, 'activities', 5)">
-                                <?= lang('navigation.activities') ?>
+                                <?= lang('common.activities') ?>
                             </a>
                         </td>
                     </tr>

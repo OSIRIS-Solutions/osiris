@@ -102,12 +102,12 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     <?php if ($unit['scientific']) { ?>
                         <span class="badge primary">
                             <i class="ph ph-lightning"></i>
-                            <?= lang('yes', 'ja') ?>
+                            <?= lang('common.yes') ?>
                         </span>
                     <?php } else { ?>
                         <span class="badge secondary">
                             <i class="ph ph-lightning-slash"></i>
-                            <?= lang('no', 'nein') ?>
+                            <?= lang('common.no') ?>
                         </span>
                     <?php } ?>
                 </td>
@@ -136,11 +136,11 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                 <div class="form-group">
                                     <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
                                     <select class="form-control" id="scientific" name="values[scientific]">
-                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('yes', 'ja') ?></option>
-                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('no', 'nein') ?></option>
+                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
+                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('common.no') ?></option>
                                     </select>
                                 </div>
-                                <button class="btn block primary" type="submit"><?= lang('system.save') ?></button>
+                                <button class="btn block primary" type="submit"><?= lang('common.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -234,11 +234,11 @@ function printTree($tree, $level = 0)
                 <div class="form-group">
                     <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
                     <select class="form-control" id="scientific" name="values[scientific]">
-                        <option value="1"><?= lang('yes', 'ja') ?></option>
-                        <option value="0"><?= lang('no', 'nein') ?></option>
+                        <option value="1"><?= lang('common.yes') ?></option>
+                        <option value="0"><?= lang('common.no') ?></option>
                     </select>
                 </div>
-                <button class="btn primary" type="submit"><?= lang('system.save') ?></button>
+                <button class="btn primary" type="submit"><?= lang('common.save') ?></button>
             </form>
             <script>
 

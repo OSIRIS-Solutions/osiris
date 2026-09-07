@@ -245,7 +245,7 @@ $totalProjects     = count($projects ?? []);
     <table class="table small" id="nagoya-projects-overview-table">
         <thead>
             <tr>
-                <th><?= lang('Project', 'Projekt') ?></th>
+                <th><?= lang('common.project') ?></th>
                 <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
                 <th><?= lang('Label', 'Label') ?></th>
                 <th><?= lang('Countries (ABS)', 'Länder (ABS)') ?></th>
@@ -339,7 +339,7 @@ $totalProjects     = count($projects ?? []);
             <table class="table small" id="country-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.country') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -362,7 +362,7 @@ $totalProjects     = count($projects ?? []);
                                     <strong><?= e($name) ?></strong>
                                 </a><br>
                                 <small class="text-muted">
-                                    <?= $projectsN ?> <?= lang('navigation.projects') ?>
+                                    <?= $projectsN ?> <?= lang('common.projects') ?>
                                     <?php if ($labels['A'] ?? 0): ?>
                                         · <span class="badge tiny danger">A: <?= $labels['A'] ?></span>
                                     <?php endif; ?>
@@ -432,8 +432,8 @@ $totalProjects     = count($projects ?? []);
             <table class="table small" id="permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Project', 'Projekt') ?></th>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.project') ?></th>
+                        <th><?= lang('common.country') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
                         <th><?= lang('Status', 'Status') ?></th>
                         <th><?= lang('IRCC', 'IRCC') ?> / <?= lang('Identifier', 'Kennung') ?></th>

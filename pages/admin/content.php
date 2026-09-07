@@ -25,14 +25,14 @@
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/categories" class="">
         <i class="ph-duotone ph-bookmarks text-secondary" aria-hidden="true"></i>
-        <?= lang('navigation.activities') ?>
+        <?= lang('common.activities') ?>
         <br>
         <small class="text-muted"><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></small>
     </a>
     <?php if ($Settings->featureEnabled('projects')) { ?>
         <a href="<?= ROOTPATH ?>/admin/projects" class="">
             <i class="ph-duotone ph-tree-structure text-secondary" aria-hidden="true"></i>
-            <?= lang('navigation.projects') ?>
+            <?= lang('common.projects') ?>
             <br>
             <small class="text-muted"><?= lang('Manage projects and proposals', 'Verwalte Projekte und Anträge') ?></small>
         </a>

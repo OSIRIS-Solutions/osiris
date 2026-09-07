@@ -109,8 +109,8 @@ $end = $form['end_date'] ?? '';
                         $reporter = $con['reporter'] ?? 0;
                         ?>
                         <select name="persons[<?= $i ?>][reporter]" id="persons-<?= $i ?>-reporter" class="form-control" required>
-                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('No', 'Nein') ?></option>
-                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('Yes', 'Ja') ?></option>
+                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('common.no') ?></option>
+                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('common.yes') ?></option>
                         </select>
                     </td>
                     <td>

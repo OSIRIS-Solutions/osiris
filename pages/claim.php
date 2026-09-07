@@ -84,7 +84,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
     <table class="table mb-10">
         <thead>
             <th>
-                <?= lang('navigation.activities') ?>
+                <?= lang('common.activities') ?>
             </th>
             <th>
                 <?= lang('Matched author', 'Übereinstimmende:r Autor:in') ?>

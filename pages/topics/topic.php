@@ -227,7 +227,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
             <i class="ph ph-edit"></i>
-            <?= lang('system.edit') ?>
+            <?= lang('common.edit') ?>
         </a>
     <?php } ?>
 </div>
@@ -262,7 +262,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn <?= $active_page == 'publications' ? 'active' : '' ?>">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('Publications', 'Publikationen')  ?>
+            <?= lang('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -272,7 +272,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn  <?= $active_page == 'activities' ? 'active' : '' ?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
-            <?= lang('navigation.activities')  ?>
+            <?= lang('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -282,7 +282,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_projects > 0) { ?>
         <a onclick="navigate('projects')" id="btn-projects" class="btn <?= $active_page == 'projects' ? 'active' : '' ?>">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
-            <?= lang('navigation.projects')  ?>
+            <?= lang('common.projects')  ?>
             <span class="index"><?= $count_projects ?></span>
         </a>
     <?php } ?>
@@ -436,13 +436,13 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="publications" style="display: none;">
 
-    <h2><?= lang('Publications', 'Publikationen') ?></h2>
+    <h2><?= lang('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>
@@ -456,7 +456,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="activities" style="display: none;">
-    <h2><?= lang('navigation.activities') ?></h2>
+    <h2><?= lang('common.activities') ?></h2>
 
     <div class="btn-toolbar justify-content-between">
         <div id="event-selector"></div>
@@ -464,7 +464,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <div class="input-group-prepend">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
             </div>
-            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
+            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
             <div class="input-group-append">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
             </div>
@@ -476,7 +476,7 @@ if ($Settings->featureEnabled('spectrum')) {
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('system.type') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Activity', 'Aktivität') ?></th>
                     <th></th>
                 </tr>

@@ -407,7 +407,7 @@ unset($s);
     <thead>
         <tr>
             <th><?= lang('Research focus', 'Schwerpunkt') ?></th>
-            <th><?= lang('Publications', 'Publikationen') ?></th>
+            <th><?= lang('common.publications') ?></th>
             <th><?= lang('Share', 'Anteil') ?></th>
             <th><?= lang('Avg. topic score', 'Ø Topic-Score') ?></th>
             <th><?= lang('Avg. citations', 'Ø Zitationen') ?></th>

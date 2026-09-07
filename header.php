@@ -221,9 +221,9 @@ $pageactive = function ($p) use ($page) {
                 <div class="maintenance-msg">
                     <div class="title">
                         <i class="ph ph-barricade"></i>
-                        <?= lang('system.maintenance') ?>.
+                        <?= lang('common.maintenance') ?>.
                     </div>
-                    <?= lang('system.maintenance_message') ?>
+                    <?= lang('common.maintenance_message') ?>
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
@@ -268,16 +268,16 @@ $pageactive = function ($p) use ($page) {
             <div class="dropdown modal-sm">
                 <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-translate"></i>
-                    <span class="sr-only"><?= lang('system.change_language') ?></span>
+                    <span class="sr-only"><?= lang('common.change_language') ?></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
-                    <h6 class="header text-primary"><?= lang('system.change_language') ?></h6>
+                    <h6 class="header text-primary"><?= lang('common.change_language') ?></h6>
                     <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                         <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                         <button type="submit" class="btn primary block ">
                             <i class="ph ph-translate" aria-hidden="true"></i>
-                            <span class="sr-only"><?= lang('system.change_language') ?></span>
+                            <span class="sr-only"><?= lang('common.change_language') ?></span>
                             <?= lang('Deutsch', 'English') ?>
                         </button>
                     </form>
@@ -288,18 +288,18 @@ $pageactive = function ($p) use ($page) {
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
                 <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
-                    <?= lang('system.login') ?>
+                    <?= lang('common.login') ?>
                 </a>
             <?php } else { ?>
                 <!-- fake search input for command palette -->
                 <div id="navbar-cp-trigger" class="d-none d-md-block">
-                    <button type="button" class="cp-trigger" aria-label="<?= lang('system.open_search') ?>">
+                    <button type="button" class="cp-trigger" aria-label="<?= lang('common.open_search') ?>">
                         <i class="ph ph-magnifying-glass cp-trigger__icon" aria-hidden="true"></i>
                         <span class="cp-trigger__placeholder">
-                            <?= lang('system.search_in_osiris') ?>
+                            <?= lang('common.search_in_osiris') ?>
                         </span>
                         <span class="cp-trigger__kbd" aria-hidden="true">
-                            <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('system.ctrl') ?></span>
+                            <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('common.ctrl') ?></span>
                             <span class="os-kbd">K</span>
                         </span>
                     </button>

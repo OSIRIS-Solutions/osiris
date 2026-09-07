@@ -29,7 +29,7 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-clipboard-text"></i>
-                <?= lang('navigation.projects') ?>
+                <?= lang('common.projects') ?>
             </h3>
             <p class="mb-5">
                 <span class="badge"><?= $projectCount ?></span>
@@ -123,7 +123,7 @@ $projectCount = count($projectsForCountry);
                 <table class="table" id="nagoya-projects-overview-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Project', 'Projekt') ?></th>
+                            <th><?= lang('common.project') ?></th>
                             <th><?= lang('Label', 'Label') ?></th>
                             <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
                             <th><?= lang('Permits', 'Genehmigungen') ?></th>
@@ -209,7 +209,7 @@ $projectCount = count($projectsForCountry);
             <table class="table table-sm font-size-12" id="nagoya-permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Project', 'Projekt') ?></th>
+                        <th><?= lang('common.project') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
                         <th><?= lang('Status', 'Status') ?></th>
                         <th><?= lang('Docs', 'Dokumente') ?></th>

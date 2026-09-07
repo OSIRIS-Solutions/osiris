@@ -104,7 +104,7 @@ $oa = $data['oa'] ?? false;
                     <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                 <?php } ?>
             </select>
-            <label for="country"><?= lang('Country', 'Land') ?></label>
+            <label for="country"><?= lang('common.country') ?></label>
         </div>
 
         <div class="form-group">
@@ -151,7 +151,7 @@ $oa = $data['oa'] ?? false;
 
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('system.save') ?>
+            <?= lang('common.save') ?>
         </button>
     </form>
 </div>

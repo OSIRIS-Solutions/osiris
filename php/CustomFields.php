@@ -74,7 +74,7 @@ class CustomFields
         }
 
         if ($val === true || $val === false) {
-            if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+            if ($this->usecase == 'list') return $val ? lang('common.yes') : lang('common.no');
             if (!isset($field['name'])) {
                 $field['name'] = $module;
             }
@@ -154,11 +154,11 @@ class CustomFields
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('Yes', 'Ja') . '</label>
+                    <label for="' . $module . '-true">' . lang('common.yes') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
+                    <label for="' . $module . '-false">' . lang('common.no') . '</label>
                 </div>';
             echo $this->render_help($help);
             echo '</div>';

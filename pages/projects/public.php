@@ -38,7 +38,7 @@
                     <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('system.title') ?> (EN)
+                            <?= lang('common.title') ?> (EN)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title]" id="public_title" required value="<?= $project['public_title'] ?? $project['name'] ?>">
                     </div>
@@ -56,7 +56,7 @@
                     <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('system.title') ?> (DE)
+                            <?= lang('common.title') ?> (DE)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title_de]" id="public_title_de" value="<?= $project['public_title_de'] ?? '' ?>">
                     </div>
@@ -126,6 +126,6 @@
                 quillEditor('public_abstract_de');
             </script>
         </div>
-        <button type="submit" class="btn secondary"><?= lang('system.save') ?></button>
+        <button type="submit" class="btn secondary"><?= lang('common.save') ?></button>
     </form>
 </div>

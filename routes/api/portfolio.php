@@ -3179,7 +3179,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'project' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['type_label'] = lang('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
                 $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . ($doc['name'] ?? '');
                 $featuredCard['subtitle'] = ($doc['title'] ?? '');

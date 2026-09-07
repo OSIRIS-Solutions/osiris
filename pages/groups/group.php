@@ -162,7 +162,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <div class="btn-group">
                 <a class="btn" href="<?= ROOTPATH ?>/groups/edit/<?= $id ?>">
                     <i class="ph ph-note-pencil ph-fw"></i>
-                    <?= lang('system.edit') ?>
+                    <?= lang('common.edit') ?>
                 </a>
                 <!-- <a class="btn" href="#add-person-modal">
                     <i class="ph ph-user-plus ph-fw"></i>
@@ -233,7 +233,7 @@ if ($Settings->featureEnabled('wordcloud')) {
         if ($count_publications > 0) { ?>
             <a onclick="navigate('publications')" id="btn-publications" class="btn">
                 <i class="ph ph-books" aria-hidden="true"></i>
-                <?= lang('Publications', 'Publikationen')  ?>
+                <?= lang('common.publications')  ?>
                 <span class="index"><?= $count_publications ?></span>
             </a>
         <?php } ?>
@@ -242,7 +242,7 @@ if ($Settings->featureEnabled('wordcloud')) {
         if ($count_activities > 0) { ?>
             <a onclick="navigate('activities')" id="btn-activities" class="btn">
                 <i class="ph ph-briefcase" aria-hidden="true"></i>
-                <?= lang('navigation.activities')  ?>
+                <?= lang('common.activities')  ?>
                 <span class="index"><?= $count_activities ?></span>
             </a>
         <?php } ?>
@@ -251,7 +251,7 @@ if ($Settings->featureEnabled('wordcloud')) {
         if ($count_projects > 0) { ?>
             <a onclick="navigate('projects')" id="btn-projects" class="btn">
                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('navigation.projects')  ?>
+                <?= lang('common.projects')  ?>
                 <span class="index"><?= $count_projects ?></span>
             </a>
         <?php } ?>
@@ -299,7 +299,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                                     </li>
                                 <?php } ?>
                             </ul>
-                            <button type="submit" class="btn"><?= lang('system.save') ?></button>
+                            <button type="submit" class="btn"><?= lang('common.save') ?></button>
                         </form>
                         <script>
                             $('#reorder-list').sortable({
@@ -450,7 +450,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <?php if ($edit_perm) { ?>
                             <a class="font-size-16" href="<?= ROOTPATH ?>/groups/public/<?= $id ?>#section-research-interest">
                                 <i class="ph ph-note-pencil ph-fw"></i>
-                                <span class="sr-only"><?= lang('system.edit') ?></span>
+                                <span class="sr-only"><?= lang('common.edit') ?></span>
                             </a>
                         <?php } ?>
                     </h3>
@@ -568,13 +568,13 @@ if ($Settings->featureEnabled('wordcloud')) {
 
     <section id="publications" style="display:none">
 
-        <h2><?= lang('Publications', 'Publikationen') ?></h2>
+        <h2><?= lang('common.publications') ?></h2>
 
         <div class="mt-20 w-full">
             <table class="table dataTable responsive" id="publication-table">
                 <thead>
                     <tr>
-                        <th><?= lang('system.type') ?></th>
+                        <th><?= lang('common.type') ?></th>
                         <th><?= lang('Activity', 'Aktivität') ?></th>
                         <th></th>
                     </tr>
@@ -599,7 +599,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                             <div class="input-group-prepend">
                                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                             </div>
-                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'units': DEPT})">
+                            <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'units': DEPT})">
                             <div class="input-group-append">
                                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                             </div>
@@ -614,7 +614,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <table class="table dataTable responsive" id="activities-table">
                 <thead>
                     <tr>
-                        <th><?= lang('system.type') ?></th>
+                        <th><?= lang('common.type') ?></th>
                         <th><?= lang('Activity', 'Aktivität') ?></th>
                         <th></th>
                     </tr>
