@@ -4,7 +4,7 @@ $data = $_POST['values'] ?? [];
 
 <h1>
     <i class="ph ph-user-plus" aria-hidden="true"></i>
-    <?= lang('Register', 'Registrieren') ?>
+    <?= lang('system.register') ?>
 </h1>
 
 <form action="#" method="post">
@@ -39,11 +39,11 @@ $data = $_POST['values'] ?? [];
             </select>
         </div>
         <div class="col-sm">
-            <label class="required" for="first"><?= lang('First name', 'Vorname') ?></label>
+            <label class="required" for="first"><?= lang('system.name_first') ?></label>
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required>
         </div>
         <div class="col-sm">
-            <label class="required" for="last"><?= lang('Last name', 'Nachname') ?></label>
+            <label class="required" for="last"><?= lang('system.name_last') ?></label>
             <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required>
         </div>
     </div>
@@ -52,11 +52,11 @@ $data = $_POST['values'] ?? [];
 
     <div class="form-row row-eq-spacing">
         <div class="col-sm">
-            <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+            <label for="telephone"><?= lang('system.telephone') ?></label>
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>">
         </div>
         <div class="col-sm">
-            <label for="mail" class="required">Mail</label>
+            <label for="mail" class="required"><?= lang('system.mail') ?></label>
             <input type="email" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required>
         </div>
 
@@ -65,26 +65,26 @@ $data = $_POST['values'] ?? [];
 
 
     <div class="form-group">
-        <span><?= lang('Gender', 'Geschlecht') ?>:</span>
+        <span><?= lang('system.gender') ?>:</span>
         <?php
         $gender = $data['gender'] ?? 'n';
         ?>
 
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-            <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+            <label for="gender-m"><?= lang('system.gender_male') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-            <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+            <label for="gender-f"><?= lang('system.gender_female') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-            <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+            <label for="gender-d"><?= lang('system.gender_non_binary') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-            <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+            <label for="gender-n"><?= lang('system.gender_not_specified') ?></label>
         </div>
 
     </div>
@@ -93,7 +93,7 @@ $data = $_POST['values'] ?? [];
     <div>
         <div class="form-group custom-checkbox d-inline-block ml-10">
             <input type="checkbox" id="is_scientist" value="1" name="values[is_scientist]" <?= ($data['is_scientist'] ?? false) ? 'checked' : '' ?>>
-            <label for="is_scientist"><?= lang('I am a scientist', 'Ich bin Wissenschaftler_in') ?></label>
+            <label for="is_scientist"><?= lang('system.i_am_a_scientist') ?></label>
         </div>
 
     </div>

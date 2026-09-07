@@ -17,21 +17,21 @@
 
 <h1>
     <i class="ph ph-user-plus" aria-hidden="true"></i>
-    <?= lang('Register', 'Registrieren') ?>
+    <?= lang('system.register') ?>
 </h1>
 
 <p>
-    <?= lang('To register, please contact the administrator.', 'Um dich zu registrieren, kontaktiere bitte den Administrator.') ?>
+    <?= lang('system.register_contact_admin') ?>
 </p>
 
 
 <form action="#" method="get">
     <div class="form-group">
-        <label for="token"><?= lang('AUTH Token', 'AUTH-Token') ?></label>
+        <label for="token"><?= lang('system.auth_token') ?></label>
         <input type="text" class="form-control" name="token" id="token" value="<?= $_GET['token'] ?? '' ?>" required>
     </div>
 
     <button type="submit" class="btn primary">
-        <?= lang('Continue', 'Weiter') ?>
+        <?= lang('system.continue') ?>
     </button>
 </form>
