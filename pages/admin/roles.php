@@ -210,7 +210,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
             <a class="btn float-right" href="#role-modal">
                 <i class="ph ph-edit" aria-hidden="true"></i>
-                <?= lang('Roles', 'Rollen') ?>
+                <?= lang('common.roles') ?>
             </a>
         </div>
         <?php foreach ($roles as $role) { ?>
@@ -353,7 +353,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                 <th>
                     <a class="btn small" href="#role-modal">
                         <i class="ph ph-edit" aria-hidden="true"></i>
-                        <?= lang('Roles', 'Rollen') ?>
+                        <?= lang('common.roles') ?>
                     </a>
                 </th>
                 <?php foreach ($roles as $role) { ?>

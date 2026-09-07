@@ -827,7 +827,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Roles', 'Rollen') ?></span>
+                                <span class="key"><?= lang('common.roles') ?></span>
 
                                 <?php foreach (($scientist['roles'] ?? []) as $role) { ?>
                                     <span class="badge">
@@ -1112,7 +1112,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <thead>
                 <tr>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -1173,7 +1173,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <thead>
                 <tr>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>

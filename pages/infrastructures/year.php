@@ -85,7 +85,7 @@ $kdsf_mapping = [
 ?>
 
 <h1>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
     <?= $year ?>
 </h1>
 

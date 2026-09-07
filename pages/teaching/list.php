@@ -34,7 +34,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     <!-- Statistics -->
     <a href="<?= ROOTPATH ?>/teaching/statistics" class="mr-20">
         <i class="ph ph-chart-bar"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
 
     <?php if ($Settings->hasPermission('teaching.edit')) { ?>

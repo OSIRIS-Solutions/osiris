@@ -85,7 +85,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/proposals/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <?php if ($Settings->hasPermission('proposals.finance')) { ?>
     <a href="<?= ROOTPATH ?>/proposals/finances" class="btn">

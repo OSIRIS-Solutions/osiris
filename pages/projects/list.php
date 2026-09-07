@@ -103,7 +103,7 @@ $Vocabulary = new Vocabulary();
     <div class="btn-group">
         <a href="<?= ROOTPATH ?>/projects/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
-            <?= lang('Statistics', 'Statistiken') ?>
+            <?= lang('common.statistics') ?>
         </a>
         <a href="<?= ROOTPATH ?>/visualize/map" class="btn">
             <i class="ph ph-map-pin-line"></i>

@@ -436,7 +436,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
             <thead>
                 <tr>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                 </tr>
             </thead>
             <tbody>

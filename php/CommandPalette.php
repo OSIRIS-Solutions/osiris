@@ -305,7 +305,7 @@ class CommandPalette
                 "url" => "/user/browse",
                 "type" => "Navigation",
                 "icon" => "users",
-                "label" => lang("Users", "Personen"),
+                "label" => lang('common.users'),
                 "keywords" => ["users", "personen", "nutzer", "wissenschaftler", "scientists"],
                 "priority" => 90
             ],

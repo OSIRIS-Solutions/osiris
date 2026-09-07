@@ -70,7 +70,7 @@ $nagoya = $project['nagoya'] ?? [];
                                 <?= lang('Last reviewed by', 'Zuletzt bewertet von') ?><br>
                                 <?= $DB->getNameFromId($r['reviewed_by']) ?>
                                 <?php if (!empty($r['reviewed'] ?? '')) { ?>
-                                    <?= lang('on', 'am') ?> <?= format_date($r['reviewed']) ?>
+                                    <?= lang('common.on') ?> <?= format_date($r['reviewed']) ?>
                                 <?php } ?>
                             </small>
                         <?php } ?>

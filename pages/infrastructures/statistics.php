@@ -77,7 +77,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
 </h1>
 
 <div class="btn-toolbar">

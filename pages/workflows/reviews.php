@@ -48,7 +48,7 @@
         <thead>
             <tr>
                 <th style="width:28px"></th>
-                <th><?= lang('Activity', 'Aktivität') ?></th>
+                <th><?= lang('common.activity') ?></th>
             </tr>
         </thead>
         <tbody></tbody>

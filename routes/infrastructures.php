@@ -32,7 +32,7 @@ Route::get('/infrastructures/statistics', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => lang("Statistics", "Statistiken")]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/statistics.php";

@@ -76,7 +76,7 @@
                     <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                     <br>
                     <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                    <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                    <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                   </div>
                 </div>
               </td>
@@ -127,7 +127,7 @@
       </script>
 
       <div class="text-right mt-20">
-        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
       </div>
     </div>
   </div>

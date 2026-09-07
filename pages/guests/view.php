@@ -32,7 +32,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             <a href="<?= ROOTPATH ?>/profile/<?= $form['cancelled_by'] ?? '' ?>">
                 <?= $DB->getNameFromId($form['cancelled_by'] ?? '') ?>
             </a>
-            <?= lang('on', 'am') ?>
+            <?= lang('common.on') ?>
             <?= format_date($form['cancelled_date' ?? '']) ?>.
         </p>
     </div>

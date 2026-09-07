@@ -114,7 +114,7 @@ $Vocabulary = new Vocabulary();
                         <?php } else { ?>
                             <?= lang('Published', 'Veröffentlicht'); ?>
                         <?php } ?>
-                        <?= lang('on', 'am') ?>
+                        <?= lang('common.on') ?>
                         <?= date('d.m.Y', strtotime($news['date'])) ?>
 
                     </span>

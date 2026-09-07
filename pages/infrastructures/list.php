@@ -85,7 +85,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/infrastructures/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <?php if ($Settings->hasPermission('infrastructures.edit')) { ?>
         <a href="<?= ROOTPATH ?>/infrastructures/new">

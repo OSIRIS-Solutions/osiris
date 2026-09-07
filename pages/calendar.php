@@ -298,7 +298,7 @@ function updateCalendar(el, unit) {
                         link = ROOTPATH + '/research-trips/' + info.event.id;
                         break;
                     case 'activity':
-                        label = lang('Activity', 'Aktivität');
+                        label = lang('common.activity');
                         link = ROOTPATH + '/activities/view/' + info.event.id;
                         break;
                     case 'project':

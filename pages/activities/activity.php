@@ -1814,7 +1814,7 @@ if ($edit_perm) {
                                             <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                                             <br>
                                             <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                                            <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                                            <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                                         </div>
                                     </div>
                                 </td>

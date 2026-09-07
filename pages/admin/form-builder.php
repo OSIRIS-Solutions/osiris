@@ -362,7 +362,7 @@ $tagLabels = [
             </button>
             <div id="field-preview"></div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
             </div>
         </div>
     </div>
@@ -397,7 +397,7 @@ $tagLabels = [
             </p>
 
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
             </div>
         </div>
     </div>
@@ -415,7 +415,7 @@ $tagLabels = [
             <div id="data-modules" class="row row-eq-spacing">
             </div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
             </div>
         </div>
     </div>
@@ -458,7 +458,7 @@ $tagLabels = [
                 </button>
             </form>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
             </div>
         </div>
     </div>

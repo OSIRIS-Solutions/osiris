@@ -781,7 +781,7 @@ if ($topicsEnabled) {
                     <thead>
                         <tr>
                             <th><?= lang('common.type') ?></th>
-                            <th><?= lang('Activity', 'Aktivität') ?></th>
+                            <th><?= lang('common.activity') ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -908,7 +908,7 @@ if ($topicsEnabled) {
 
                     <!-- input field with suggesting activities -->
                     <div class="form-group" id="activity-suggest">
-                        <!-- <label for="activity-suggested"><?= lang('Activity', 'Aktivität') ?></label> -->
+                        <!-- <label for="activity-suggested"><?= lang('common.activity') ?></label> -->
                         <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="...">
                         <div class="suggestions on-focus">
                             <div class="content"><?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?></div>

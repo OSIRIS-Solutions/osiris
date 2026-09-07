@@ -29,7 +29,7 @@ Route::get('/journals?/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journals"],
-        ['name' => lang('Statistics', 'Statistiken')]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/statistics.php";

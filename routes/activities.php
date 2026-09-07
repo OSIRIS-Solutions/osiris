@@ -88,7 +88,7 @@ Route::get('/activities/statistics', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Statistics", "Statistiken")]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/activities/statistics.php";
@@ -111,7 +111,7 @@ Route::get('/add-activity', function () {
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
             if (empty($draft)) {
-                abortwith(404, lang('Activity', "Aktivität"), '/activities');
+                abortwith(404, lang('common.activity'), '/activities');
             }
             $form = DB::doc2Arr($draft);
             unset($form['created']);
@@ -178,7 +178,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($draft)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities/drafts');
+        abortwith(404, lang('common.activity'), '/activities/drafts');
     }
 
     if (isset($_GET['frame'])) {
@@ -257,7 +257,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
     if (empty($activity)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
@@ -409,7 +409,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $doc = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
     if (empty($doc)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     $user_activity = $DB->isUserActivity($doc, $user);
@@ -587,7 +587,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
     global $form;
     $form = $osiris->activities->findOne(['_id' => $id]);
     if (!$form) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
     $copy = true;
 
@@ -609,7 +609,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 
     $form = $osiris->activities->findOne(['_id' => $id]);
     if (!$form) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     if (($form['locked'] ?? false) && !$Settings->hasPermission('activities.edit-locked')) {
@@ -978,7 +978,7 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     // check permissions
     $doc = $osiris->activities->findOne(['_id' => $id]);
     if (empty($doc)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     if (!$user_activity && !$Settings->hasPermission('activities.delete')) {

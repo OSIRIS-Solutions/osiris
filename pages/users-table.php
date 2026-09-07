@@ -53,7 +53,7 @@ if ($active('keywords')) {
 
 <h1>
     <i class="ph-duotone ph-student"></i>
-    <?= lang('Users', 'Personen') ?>
+    <?= lang('common.users') ?>
 </h1>
 
 <div class="row row-eq-spacing">
@@ -252,7 +252,7 @@ if ($active('keywords')) {
             'key': 'keywords'
         },
         {
-            title: lang('Roles', 'Rollen'),
+            title: lang('common.roles'),
             'key': 'roles'
         }
     ]
@@ -428,7 +428,7 @@ if ($active('keywords')) {
                 {
                     target: 15,
                     data: 'roles',
-                    title: '<?= lang('Roles', 'Rollen') ?>',
+                    title: '<?= lang('common.roles') ?>',
                     visible: false,
                     defaultContent: ''
                 }

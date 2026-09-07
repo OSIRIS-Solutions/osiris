@@ -99,7 +99,7 @@ foreach ($countries as $c) {
                         <small class="text-muted">
                             <?= lang('Review of countries as part of the ABS evaluation process was conducted by:', 'Die Bewertung der Länder im Rahmen des ABS-Bewertungsprozesses wurde durchgeführt von:') ?>
                             <strong><?= e($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
-                            <?= lang('on', 'am') ?> <?= format_date($review['reviewed'] ?? '') ?>
+                            <?= lang('common.on') ?> <?= format_date($review['reviewed'] ?? '') ?>
                         </small>
                     <?php } ?>
                     <div class="mb-10">
@@ -154,7 +154,7 @@ foreach ($countries as $c) {
                                     <?= lang('Country review by', 'Länderbewertung von') ?>
                                     <?= e($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?>
                                     <?php if (!empty($review['reviewed'])): ?>
-                                        <?= lang('on', 'am') ?> <?= format_date($review['reviewed']) ?>
+                                        <?= lang('common.on') ?> <?= format_date($review['reviewed']) ?>
                                     <?php endif; ?>
                                 </p>
                             <?php endif; ?>
@@ -356,7 +356,7 @@ foreach ($countries as $c) {
                             <div class="small text-muted mt-5">
                                 <?= lang('Last evaluation for this country by', 'Letzte Bewertung für dieses Land von') ?>
                                 <?= e($DB->getNameFromId($eval['by']) ?? $eval['by']) ?>
-                                <?= lang('on', 'am') ?> <?= format_date($eval['at']) ?>
+                                <?= lang('common.on') ?> <?= format_date($eval['at']) ?>
                             </div>
                         <?php endif; ?>
                         </div>

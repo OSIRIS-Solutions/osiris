@@ -336,7 +336,7 @@ if ($process == 'project') {
 
                     <select name="values[notification_created]" id="notification" class="form-control">
                         <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
-                        <option value="" disabled>--- <?= lang('Roles', 'Rollen') ?> ---</option>
+                        <option value="" disabled>--- <?= lang('common.roles') ?> ---</option>
                         <?php
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification  == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>

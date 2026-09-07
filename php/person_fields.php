@@ -143,7 +143,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'roles',
-                'label' => lang('Roles', 'Rollen'),
+                'label' => lang('common.roles'),
                 'module_of' => $typeModules['roles'] ?? [],
                 'usage' => [
                     'aggregate',

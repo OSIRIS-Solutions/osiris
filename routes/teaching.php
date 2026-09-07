@@ -101,7 +101,7 @@ Route::get('/teaching/statistics', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang("Teaching", "Lehrveranstaltungen"), 'path' => "/teaching"],
-        ['name' => lang("Statistics", "Statistiken")]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/teaching/statistics.php";

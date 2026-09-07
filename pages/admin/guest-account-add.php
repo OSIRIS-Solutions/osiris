@@ -165,7 +165,7 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div>
-        <h5><?= lang('Roles', 'Rollen') ?></h5>
+        <h5><?= lang('common.roles') ?></h5>
         <?php
         $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
         $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));

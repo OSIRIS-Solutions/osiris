@@ -113,7 +113,7 @@
                                     <div class="text-muted font-size-12 mt-5">
                                         <?= lang('File name', 'Dateiname') ?>: <?= e($filename) ?> <br>
                                         <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= e($uploader) ?>
-                                        <?= lang('on', 'am') ?> <?= e($date) ?>
+                                        <?= lang('common.on') ?> <?= e($date) ?>
                                         · <?= e($size) ?> <?= lang('Bytes', 'Bytes') ?>
                                     </div>
                                 </div>

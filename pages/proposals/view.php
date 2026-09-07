@@ -631,7 +631,7 @@ if ($nagoyaRelevant) {
                                                         <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
                                                         <br>
                                                         <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
-                                                        <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                                        <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                     </div>
                                                     <?php if (isset($doc['country_code'])) { ?>
 

@@ -180,7 +180,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'users',
-                        'label' => lang('Users', 'Personen'),
+                        'label' => lang('common.users'),
                         'icon' => 'users',
                         'url' => '/user/browse',
                         'active' => ['^/(user|profile)($|/)'],

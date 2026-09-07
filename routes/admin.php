@@ -110,7 +110,7 @@ Route::get('/admin/roles/distribute', function () {
 
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Roles", "Rollen"), 'path' => '/admin/roles'],
+        ['name' => lang('common.roles'), 'path' => '/admin/roles'],
         ['name' => lang("Distribute roles", "Rollen verteilen")]
     ];
     include BASEPATH . "/header.php";

@@ -375,7 +375,7 @@ function printRules($rules)
             </script>
 
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
             </div>
         </div>
     </div>
@@ -407,7 +407,7 @@ function printRules($rules)
                 <pre id="result" class="code p-20"></pre>
             </div>
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
             </div>
         </div>
     </div>
@@ -497,7 +497,7 @@ function printRules($rules)
                 <?php } ?>
             </div>
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
                 <a class="btn secondary" role="button" onclick="getResult()"><?= lang('Apply', 'Anwenden') ?></a>
             </div>
             <script>

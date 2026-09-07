@@ -70,7 +70,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
 
         <div class="form-group">
-            <b class="floating-title"><?= lang('Roles', 'Rollen') ?></b><br>
+            <b class="floating-title"><?= lang('common.roles') ?></b><br>
             <?php
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));

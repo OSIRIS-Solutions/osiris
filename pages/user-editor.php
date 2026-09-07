@@ -758,7 +758,7 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($Settings->hasPermission('user.roles')) { ?>
 
-            <h5><?= lang('Roles', 'Rollen') ?></h5>
+            <h5><?= lang('common.roles') ?></h5>
             <!-- ensure that empty roles are saved too -->
             <input type="hidden" name="values[roles][]" value="">
             <?php

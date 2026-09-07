@@ -75,7 +75,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
@@ -446,7 +446,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
     <div class="col-lg-3 d-none d-lg-block">
         <nav class="on-this-page-nav">
             <div class="content">
-                <div href="#statistics" class="title"><?= lang('Statistics', 'Statistiken') ?></div>
+                <div href="#statistics" class="title"><?= lang('common.statistics') ?></div>
 
                 <a href="#activities-by-type">
                     <?= lang('Activities by type', 'Aktivitäten nach Typ') ?>

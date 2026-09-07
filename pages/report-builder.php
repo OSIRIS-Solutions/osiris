@@ -448,7 +448,7 @@ if ($Settings->featureEnabled('projects')) {
                         <!-- save -->
                         <button type="submit" class="btn success"><?= lang('common.save') ?></button>
 
-                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
                     </div>
                 </div>
             </div>

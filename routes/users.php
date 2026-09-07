@@ -17,7 +17,7 @@
 Route::get('/user/browse', function () {
     // if ($page == 'users') 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen')]
+        ['name' => lang('common.users')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -59,7 +59,7 @@ Route::get('/user/edit/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang('common.edit')]
     ];
@@ -84,7 +84,7 @@ Route::get('/user/units/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Edit units", "Einheiten bearbeiten")]
     ];
@@ -111,7 +111,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Configure web view", "Webansicht Konfigurieren")]
     ];
@@ -138,7 +138,7 @@ Route::get('/user/inactivate/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Inactivate", "Inaktivieren")]
     ];
@@ -166,7 +166,7 @@ Route::get('/user/delete/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang('common.delete')]
     ];
@@ -189,7 +189,7 @@ Route::get('/user/ldap-example', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("LDAP Example", "LDAP Beispiel")]
     ];
 
@@ -225,7 +225,7 @@ Route::get('/profile/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $name]
     ];
 
@@ -246,7 +246,7 @@ Route::get('/my-year/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
         ['name' => lang("The Year", "Das Jahr")]
     ];
@@ -286,7 +286,7 @@ Route::get('/messages', function () {
 Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"]
+        ['name' => lang('common.users'), 'path' => "/user/browse"]
     ];
     if ($collection == 'keywords') {
         $breadcrumb[] = ['name' => lang('Keywords', 'Schlagwörter')];
@@ -309,7 +309,7 @@ Route::get('/achievements/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $name, 'path' => "/profile/$user"],
         ['name' => lang('Achievements', 'Errungenschaften')]
 
@@ -1121,7 +1121,7 @@ Route::get('/claim/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
         ['name' => lang("Claim", "Beanspruchen")]
     ];

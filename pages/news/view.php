@@ -459,7 +459,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($activities)) : ?>
             <?php foreach ($activities as $con) { ?>
                 <div class="connection">
-                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
+                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang('common.activity') ?></span>
                     <p><?= $con['rendered']['web'] ?? '' ?></p>
                 </div>
             <?php } ?>
@@ -488,7 +488,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
             <div>
                 <?= lang('Created by', 'Erstellt von') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
-                <?= lang('on', 'am') ?>
+                <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['created'])) ?>
             </div>
         <?php } ?>
@@ -497,7 +497,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
             <div>
                 <?= lang('Last updated by', 'Aktualisiert von') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['updated_by']) ?>"><?= e($DB->getNameFromId($news['updated_by'])) ?></a>
-                <?= lang('on', 'am') ?>
+                <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['updated'])) ?>
             </div>
         <?php } ?>

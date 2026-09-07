@@ -87,6 +87,11 @@ return [
     'proposal' => 'Proposal',
     'status' => 'Status',
     'comment' => 'Comment',
+    'on' => 'on',
+    'statistics' => 'Statistics',
+    'roles' => 'Roles',
+    'close' => 'Close',
+    'activity' => 'Activity',
 
 
 

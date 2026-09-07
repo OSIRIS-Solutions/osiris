@@ -420,7 +420,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                                                 <small class="text-muted">
                                                                     <?= lang('Uploaded by', 'Hochgeladen von') ?>
                                                                     <?= $DB->getNameFromId($doc['uploaded_by']) ?>
-                                                                    <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                                                    <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                                 </small>
                                                             </div>
                                                             <?= e($doc['description'] ?? '') ?><br>

@@ -441,7 +441,7 @@ if ($edit_perm) { ?>
             <thead>
                 <tr>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -501,7 +501,7 @@ if ($edit_perm) { ?>
 
     <h2 id="statistics">
         <i class="ph ph-chart-line-up text-primary"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </h2>
 
     <?php if ($reporter || $Settings->hasPermission('infrastructures.statistics') || $edit_perm) {

@@ -87,4 +87,9 @@ return [
     'proposal' => 'Antrag',
     'status' => 'Status',
     'comment' => 'Kommentar',
+    'on' => 'am',
+    'statistics' => 'Statistiken',
+    'roles' => 'Rollen',
+    'close' => 'Schließen',
+    'activity' => 'Aktivität',
 ];

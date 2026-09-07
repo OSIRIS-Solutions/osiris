@@ -438,7 +438,7 @@ $numbers = $data['numbers'] ?? [
                         <thead>
                             <tr>
                                 <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('Type', 'Art') ?></th>
-                                <th data-col="html" data-search-col="search"><?= lang('Activity', 'Aktivität') ?></th>
+                                <th data-col="html" data-search-col="search"><?= lang('common.activity') ?></th>
                             </tr>
                         </thead>
                         <tbody></tbody>

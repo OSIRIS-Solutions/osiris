@@ -610,7 +610,7 @@
                                                         <ul class="horizontal">
                                                             <li><?= $file_size ?></li>
                                                             <li><?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?></li>
-                                                            <li><?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?></li>
+                                                            <li><?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?></li>
                                                         </ul>
                                                     </div>
                                                     <div class="ml-auto">
@@ -728,7 +728,7 @@
                                             $conLabel = $Format->getRelationshipLabel($con['relationship'], $reverse);
                                             ?>
                                             <div class="connection">
-                                                <span class="badge activity-badge"><?= $activity['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
+                                                <span class="badge activity-badge"><?= $activity['rendered']['icon'] ?> <?= lang('common.activity') ?></span>
                                                 <div><?= lang($conLabel['en'], $conLabel['de']) ?></div>
                                                 <?= $activity['rendered']['web'] ?? '' ?>
                                             </div>

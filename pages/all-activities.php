@@ -58,7 +58,7 @@ $cart = readCart();
     <?php } ?>
     <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <a href="<?= ROOTPATH ?>/activities/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
@@ -93,7 +93,7 @@ $cart = readCart();
                 <tr>
                     <th><?= lang('Quarter', 'Quartal') ?></th>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
                     <th>Start</th>
@@ -377,7 +377,7 @@ $cart = readCart();
             'key': 'type'
         },
         {
-            title: lang('Activity', 'Aktivität'),
+            title: lang('common.activity'),
             'key': 'activity'
         },
         {

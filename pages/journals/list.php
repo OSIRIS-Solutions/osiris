@@ -41,7 +41,7 @@ if (empty($fields)) {
         </a>
         <a href="<?= ROOTPATH ?>/journals/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
-            <?= lang('Statistics', 'Statistiken') ?>
+            <?= lang('common.statistics') ?>
         </a>
         <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
             <a href="<?= ROOTPATH ?>/journal/metrics">
