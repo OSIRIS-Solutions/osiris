@@ -125,7 +125,7 @@ $footer = $export['footer'] ?? [];
                                    name="general[export-design][headings][h<?= $i ?>][color]"
                                    value="<?= e($h['color'] ?? '#000000') ?>"
                                    data-toggle="tooltip"
-                                   data-title="<?= lang('Color', 'Farbe') ?>">
+                                   data-title="<?= lang('common.color') ?>">
 
                             <label class="">
                                 <input type="checkbox"

@@ -533,7 +533,7 @@ if ($edit_perm) { ?>
                         <?php
                             break;
                         case 'monthly': ?>
-                            <label for="month" class="w-300 font-weight-bold"><?= lang('Month', 'Monat') ?>:</label>
+                            <label for="month" class="w-300 font-weight-bold"><?= lang('common.month') ?>:</label>
                             <input type="month" name="month" id="add-stat-month" class="form-control w-200" value="<?= date('Y-m', strtotime('-1 month')) ?>" />
                         <?php
                             break;
@@ -618,7 +618,7 @@ if ($edit_perm) { ?>
                             <tr>
                                 <th><?= lang('common.year') ?></th>
                                 <?php if ($stat_frequency == 'monthly') { ?>
-                                    <th><?= lang('Month', 'Monat') ?></th>
+                                    <th><?= lang('common.month') ?></th>
                                 <?php } elseif ($stat_frequency == 'quarterly') { ?>
                                     <th><?= lang('Quarter', 'Quartal') ?></th>
                                 <?php } elseif ($stat_frequency == 'irregularly') { ?>

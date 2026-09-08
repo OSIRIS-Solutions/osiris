@@ -386,7 +386,7 @@ Route::get('/admin/vocabulary', function () {
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang("Vocabulary", "Vokabular")]
+        ['name' => lang('common.vocabulary')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/vocabulary.php";
@@ -402,12 +402,12 @@ Route::get('/admin/vocabulary/([a-z\-_]*)', function ($id) {
     $Vocabulary = new Vocabulary();
     $vocab = $Vocabulary->getVocabulary($id);
     if (empty($vocab)) {
-        abortwith(404, lang("Vocabulary", "Vokabular"), "/admin/vocabulary");
+        abortwith(404, lang('common.vocabulary'), "/admin/vocabulary");
     }
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang("Vocabulary", "Vokabular"), 'path' => '/admin/vocabulary'],
+        ['name' => lang('common.vocabulary'), 'path' => '/admin/vocabulary'],
         ['name' => lang($vocab['name'], $vocab['name_de'] ?? null)]
     ];
     include BASEPATH . "/header.php";

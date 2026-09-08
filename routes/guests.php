@@ -378,7 +378,7 @@ Route::post('/guests/upload-files/(.*)', function ($id) {
             );
             // $files[] = $values;
         } else {
-            $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
+            $_SESSION['msg'] = lang('error.file_upload_generic');
             $_SESSION['msg_type'] = 'error';
         }
 

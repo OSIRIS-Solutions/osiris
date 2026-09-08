@@ -236,7 +236,7 @@ if ($process == 'project') {
                         </div>
                     </div>
                     <div class="col-sm">
-                        <label for="color" class="required "><?= lang('Color', 'Farbe') ?></label>
+                        <label for="color" class="required "><?= lang('common.color') ?></label>
                         <input type="color" class="form-control" name="values[color]" required value="<?= $project['color'] ?? '' ?>">
                     </div>
                 </div>

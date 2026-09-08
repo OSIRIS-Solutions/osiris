@@ -65,7 +65,7 @@ class ProjectFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',

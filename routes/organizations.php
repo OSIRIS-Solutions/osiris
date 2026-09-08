@@ -314,7 +314,7 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/organizations/view/$id");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $osiris->organizations->updateOne(

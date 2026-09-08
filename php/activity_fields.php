@@ -58,7 +58,7 @@ class ActivityFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -517,7 +517,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Month', 'Monat'),
+                'label' => lang('common.month'),
                 'type' => 'integer'
             ],
             [

@@ -38,7 +38,7 @@ $categories = [
 
     <h1>
         <i class="ph ph-book-bookmark text-primary"></i>
-        <?= lang('Vocabulary', 'Vokabular') ?>
+        <?= lang('common.vocabulary') ?>
     </h1>
 
     <p>

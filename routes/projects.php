@@ -1113,7 +1113,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
                 ['$set' => ["image" => "projects/" . $filename]]
             );
         } else {
-            $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
+            $_SESSION['msg'] = lang('error.file_upload_generic');
             $_SESSION['msg_type'] = "error";
         }
     } else if (isset($_POST['delete'])) {

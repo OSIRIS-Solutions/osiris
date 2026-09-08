@@ -80,7 +80,7 @@ $title = lang('New group', 'Neue Gruppe');
 
         </div>
         <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
-            <label for="color" class=""><?= lang('Color', 'Farbe') ?></label>
+            <label for="color" class=""><?= lang('common.color') ?></label>
             <input type="color" class="form-control w-50" name="values[color]" required>
             <span><?= lang('Note that only level 1 groups can have a color.', 'Bitte beachte, dass nur Level 1-Gruppen eine eigene Farbe haben können.') ?></span>
         </div>

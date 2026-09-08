@@ -88,7 +88,7 @@ $topicLabel = $Settings->topicLabel();
         </div> -->
         <div class="col-md-6 floating-form">
             <input type="color" id="color" class="form-control" name="values[color]" value="<?= $form['color'] ?? '' ?>" placeholder="color">
-            <label for="color"><?= lang('Color', 'Farbe') ?></label>
+            <label for="color"><?= lang('common.color') ?></label>
         </div>
     </div>
     <div class="row row-eq-spacing mb-0">

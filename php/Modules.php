@@ -2809,7 +2809,7 @@ class Modules
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="month" <?= $labelClass ?> value="<?= $this->val('month') ?>" placeholder="12">
-                        <label for="month" class="<?= $labelClass ?> element-time"><?= lang('Month', 'Monat') ?></label>
+                        <label for="month" class="<?= $labelClass ?> element-time"><?= lang('common.month') ?></label>
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="31" step="1" class="form-control" name="values[day]" id="day" value="<?= $this->val('day') ?>" placeholder="24">

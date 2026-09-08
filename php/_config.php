@@ -644,7 +644,7 @@ function flatten(array $array)
 
 //     $string = array(
 //         'y' => lang('common.year'),
-//         'm' => lang('month', 'Monat'),
+//         'm' => lang('common.month'),
 //         'w' => lang('week', 'Woche'),
 //         'd' => lang('day', 'Tag'),
 //         'h' => lang('hour', 'Stunde'),
@@ -696,7 +696,7 @@ function time_elapsed_string(string $date): string
 
     $units = [
         'y' => [lang('common.year'), lang('years', 'Jahre')],
-        'm' => [lang('month', 'Monat'), lang('months', 'Monaten')],
+        'm' => [lang('common.month'), lang('months', 'Monaten')],
         'w' => [lang('week', 'Woche'), lang('weeks', 'Wochen')],
         'd' => [lang('day', 'Tag'), lang('days', 'Tagen')],
     ];

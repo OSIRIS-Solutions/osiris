@@ -175,7 +175,7 @@ if ($nagoyaRelevant) {
             <div class="dropdown">
                 <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-download"></i>
-                    <?= lang('Download', 'Herunterladen') ?>
+                    <?= lang('common.download') ?>
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu p-10" aria-labelledby="dropdown-download">
@@ -187,7 +187,7 @@ if ($nagoyaRelevant) {
                         </select>
                         <button class="btn primary" type="submit">
                             <i class="ph ph-download"></i>
-                            <?= lang('Download', 'Herunterladen') ?>
+                            <?= lang('common.download') ?>
                         </button>
                     </form>
                 </div>

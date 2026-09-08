@@ -299,7 +299,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/news/view/$id");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $osiris->news->updateOne(

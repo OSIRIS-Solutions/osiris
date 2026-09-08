@@ -171,7 +171,7 @@
                 <div class="dropdown">
                     <button class="btn" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-download mr-5"></i>
-                        <?= lang('Download', 'Herunterladen') ?>
+                        <?= lang('common.download') ?>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdown-1">
                         <div class="content">
@@ -216,7 +216,7 @@
 
                             <button class="btn block primary">
                                 <i class="ph ph-download mr-5"></i>
-                                <?= lang('Download', 'Herunterladen') ?>
+                                <?= lang('common.download') ?>
                             </button>
                         </form>
                     </div>

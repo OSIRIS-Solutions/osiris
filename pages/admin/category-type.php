@@ -99,7 +99,7 @@ if (!empty($form) && isset($form['_id'])) {
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <input type="hidden" class="hidden" name="id" value="<?= $id ?>">
-    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('Download', 'Herunterladen') ?></button>
+    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('common.download') ?></button>
  </form> -->
 
 <form action="<?= $formaction ?>" method="post" id="group-form">

@@ -1010,7 +1010,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
             }
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $filename = "$user.jpg";
