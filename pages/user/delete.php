@@ -148,7 +148,7 @@
 
     <button class="btn danger">
         <i class="ph ph-trash"></i>
-        <?= lang('common.delete') ?>
+        <?= lang('action.delete') ?>
     </button>
 
 </form>

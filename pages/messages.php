@@ -124,7 +124,7 @@ $types = [
                                 </button>
                             <?php } ?>
                             <!-- delete message -->
-                            <button class="btn danger small" type="button" onclick="deleteMessage('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('common.delete') ?>">
+                            <button class="btn danger small" type="button" onclick="deleteMessage('<?= $message['id'] ?>')" data-toggle="tooltip" data-title="<?= lang('action.delete') ?>">
                                 <i class="ph ph-trash"></i>
                             </button>
                         </span>

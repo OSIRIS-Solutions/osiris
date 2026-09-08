@@ -56,7 +56,7 @@ $reports = $osiris->adminReports->find();
                         <input type="hidden" name="id" value="<?= $report['_id'] ?>">
                         <button type="submit" class="text-danger btn block link">
                             <i class="ph ph-trash"></i>
-                            <?= lang('common.delete') ?>
+                            <?= lang('action.delete') ?>
                         </button>
                     </form>
 

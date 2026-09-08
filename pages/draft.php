@@ -74,7 +74,7 @@
     <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
         <button type="submit" class="btn danger" onclick="return confirm('<?= lang('Are you sure you want to delete this draft?', 'Sind Sie sicher, dass Sie diesen Entwurf löschen möchten?') ?>');">
             <i class="ph ph-trash"></i>
-            <?= lang('common.delete') ?>
+            <?= lang('action.delete') ?>
         </button>
     </form>
 </div>

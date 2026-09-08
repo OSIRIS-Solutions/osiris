@@ -940,7 +940,7 @@ if ($edit_perm) { ?>
 
         <button class="btn danger" type="button" id="delete-infrastructure" aria-haspopup="true" aria-expanded="false" onclick="$(this).next().slideToggle()">
             <i class="ph ph-trash"></i>
-            <?= lang('common.delete') ?>
+            <?= lang('action.delete') ?>
             <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
         </button>
         <div aria-labelledby="delete-infrastructure" style="display: none;">

@@ -986,7 +986,7 @@ if ($edit_perm) {
 
                 <div class="alert danger mt-20 py-20">
                     <h2 class="title">
-                        <?= lang('common.delete') ?>
+                        <?= lang('action.delete') ?>
                     </h2>
                     <?php
 
@@ -1794,7 +1794,7 @@ if ($edit_perm) {
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                             <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block danger" type="submit"><?= lang('common.delete') ?></button>
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>

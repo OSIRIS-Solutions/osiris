@@ -590,7 +590,7 @@ if ($process == 'project') {
     if ($member == 0) { ?>
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/admin/projects/delete/<?= $project['_id'] ?>" method="post">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('common.delete') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

@@ -28,13 +28,13 @@ $Vocabulary = new Vocabulary();
     <?php if ($deadline['created_by'] == $_SESSION['username'] || $Settings->hasPermission('deadlines.delete')) { ?>
         <div class="dropdown">
             <button class="btn text-danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                <i class="ph ph-trash"></i> <?= lang('common.delete') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                <i class="ph ph-trash"></i> <?= lang('action.delete') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <form action="<?= ROOTPATH ?>/crud/deadlines/delete/<?= $deadline['_id'] ?>" method="post" class="content">
                     <?= lang('Do you want to delete this deadline?', 'Möchten Sie diese Deadline löschen?') ?>
                     <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
-                    <button class="btn danger" type="submit"><?= lang('common.delete') ?></button>
+                    <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
                 </form>
             </div>
         </div>

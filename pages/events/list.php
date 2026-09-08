@@ -51,7 +51,7 @@ foreach ($eventTypes as $v) {
         <?php if ($Settings->hasPermission('conferences.edit')) { ?>
             <a href="<?= ROOTPATH ?>/conferences/new" class="">
                 <i class="ph ph-plus"></i>
-                <?= lang('Add event', 'Event hinzufügen') ?>
+                <?= lang('action.add_event') ?>
             </a>
         <?php } ?>
     </div>

@@ -168,7 +168,7 @@ Route::get('/user/delete/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('common.delete')]
+        ['name' => lang('action.delete')]
     ];
 
     include BASEPATH . "/header.php";

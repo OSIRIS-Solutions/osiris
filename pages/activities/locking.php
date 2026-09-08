@@ -52,7 +52,7 @@
             echo implode(', ', array_column($roles, 'role'));
         ?>
         <br>
-        <b><?=lang('common.delete')?>:</b>
+        <b><?=lang('action.delete')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.delete-locked',

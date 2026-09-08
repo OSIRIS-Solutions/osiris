@@ -606,7 +606,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
                 <?= lang('Are you sure you want to delete this organization?', 'Sind Sie sicher, dass Sie diese Organisation löschen möchten?') ?>
             </p>
             <button type="submit" class="btn danger">
-                <?= lang('common.delete') ?>
+                <?= lang('action.delete') ?>
             </button>
         </form>
     </div>

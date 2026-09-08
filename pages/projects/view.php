@@ -359,7 +359,7 @@ if ($topicsEnabled) {
                     <div class="dropdown">
                         <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-trash"></i>
-                            <span class="sr-only"><?= lang('common.delete') ?></span>
+                            <span class="sr-only"><?= lang('action.delete') ?></span>
                             <i class="ph ph-caret-down" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">

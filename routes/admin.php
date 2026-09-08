@@ -87,7 +87,7 @@ Route::get('/admin/guest-account/add', function () {
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
         ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
-        ['name' => lang('common.add')]
+        ['name' => lang('action.add')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";

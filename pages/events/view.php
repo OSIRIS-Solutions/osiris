@@ -80,7 +80,7 @@ if ($topicsEnabled) {
                 <form action="<?= ROOTPATH ?>/crud/conferences/delete/<?= $conference['_id'] ?>" method="post" class="content">
                     <?= lang('Do you want to delete this event?', 'Möchten Sie diese Event löschen?') ?>
                     <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
-                    <button class="btn danger" type="submit"><?= lang('common.delete') ?></button>
+                    <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
                 </form>
             </div>
         </div>

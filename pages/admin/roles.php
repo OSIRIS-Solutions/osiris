@@ -115,7 +115,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                             <div class="input-group-append">
                                 <button class="btn success" type="button" onclick="addRole()">
                                     <i class="ph ph-plus"></i>
-                                    <?= lang('common.add') ?>
+                                    <?= lang('action.add') ?>
                                 </button>
                             </div>
                         </div>

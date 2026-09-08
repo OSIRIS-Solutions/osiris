@@ -81,7 +81,7 @@ class CommandPalette
                 "url" => "/conferences/new",
                 "type" => lang('common.action'),
                 "icon" => "calendar-plus",
-                "label" => lang("Add event", "Event hinzufügen"),
+                "label" => lang('action.add_event'),
                 "feature" => "events",
                 "permission" => "conferences.edit",
                 "keywords" => ["add event", "new event", "create event", "neues event", "event erstellen"],

@@ -174,7 +174,7 @@ $topicLabel = $Settings->topicLabel();
     <br>
     <div class="alert danger mt-20">
         <a onclick="$('#delete').slideToggle()">
-            <?= lang('common.delete') ?>
+            <?= lang('action.delete') ?>
             <i class="ph ph-caret-down"></i>
         </a>
 
@@ -186,7 +186,7 @@ $topicLabel = $Settings->topicLabel();
                         'Möchten Sie diesen ' . $topicLabel . ' wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
                     ) ?>
                 </p>
-                <button type="submit" class="btn danger"><?= lang('common.delete') ?></button>
+                <button type="submit" class="btn danger"><?= lang('action.delete') ?></button>
             </form>
         </div>
     </div>

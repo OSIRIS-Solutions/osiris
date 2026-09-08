@@ -291,7 +291,7 @@ if (isset($news) && isset($news['_id'])) {
                             <option value="<?= $s['_id'] ?>"><?= $s['displayname'] ?></option>
                         <?php } ?>
                     </select>
-                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= lang('common.add') ?></button>
+                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                 </div>
 
                 <!-- Make sure that empty person connections are also submitted. -->
@@ -429,7 +429,7 @@ if (isset($news) && isset($news['_id'])) {
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('common.add') ?></button>
+                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
                     <!-- make sure that empty projects are also submitted -->
                     <input type="hidden" name="news[projects]" value="">
@@ -548,7 +548,7 @@ if (isset($news) && isset($news['_id'])) {
                                 </option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= lang('common.add') ?></button>
+                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
                     <!-- make sure that empty events are also submitted -->
                     <input type="hidden" name="news[events]" value="">
@@ -647,7 +647,7 @@ if (isset($news) && isset($news['_id'])) {
                                 <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('common.add') ?></button>
+                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
 
                     <!-- make sure that empty infrastructures are also submitted -->

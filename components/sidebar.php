@@ -131,7 +131,7 @@ $cart = readCart();
                 <?php if ($Settings->hasPermission('conferences.edit') && $Settings->featureEnabled('events', true)) { ?>
                     <a href="<?= ROOTPATH ?>/conferences/new">
                         <i class="ph ph-calendar-plus"></i>
-                        <?= lang('Add event', 'Event hinzufügen') ?>
+                        <?= lang('action.add_event') ?>
                     </a>
                 <?php } ?>
                 <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) {

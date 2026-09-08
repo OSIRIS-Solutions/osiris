@@ -304,7 +304,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
-                    <?= lang('common.delete') ?>
+                    <?= lang('action.delete') ?>
                 </button>
             </form>
         <?php } ?>

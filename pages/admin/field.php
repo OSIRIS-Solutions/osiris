@@ -336,7 +336,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
             </p>
 
-            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('common.delete') ?></button>
+            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('action.delete') ?></button>
 
         </form>
     </div>

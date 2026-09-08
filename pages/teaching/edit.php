@@ -159,7 +159,7 @@ include_once BASEPATH . "/header-editor.php";
                 </a>
                 <label for="org-organization-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                     <div class="input-group-append">
                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'organization')"><i class="ph ph-magnifying-glass"></i></button>
                     </div>

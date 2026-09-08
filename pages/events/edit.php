@@ -3,7 +3,7 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $action = ROOTPATH . "/crud/conferences/add";
-$btn = lang('Add event', 'Event hinzufügen');
+$btn = lang('action.add_event');
 if (!empty($form ?? []) && isset($form['_id'])) {
     $action = ROOTPATH . "/crud/conferences/update/" . $form['_id'];
     $btn = lang('Save event', 'Event speichern');
@@ -17,7 +17,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <h1>
         <i class="ph-duotone ph-calendar-plus"></i>
-        <?= lang('Add event', 'Event hinzufügen') ?>
+        <?= lang('action.add_event') ?>
     </h1>
 
     <blockquote>

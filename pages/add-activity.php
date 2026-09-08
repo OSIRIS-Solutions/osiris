@@ -167,7 +167,7 @@ function val($index, $default = '')
             <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('Add event', 'Event hinzufügen') ?></h5>
+            <h5 class="title"><?= lang('action.add_event') ?></h5>
             <div id="content" id="new-event">
 
                 <div class="form-group mb-10">
@@ -233,7 +233,7 @@ function val($index, $default = '')
                     <label for="event-attended" class="blank"><?= lang('I have attended', 'Ich habe teilgenommen') ?></label>
                 </div>
 
-                <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('Add event', 'Event hinzufügen') ?></button>
+                <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('action.add_event') ?></button>
             </div>
         </div>
     </div>

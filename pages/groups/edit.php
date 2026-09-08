@@ -140,7 +140,7 @@ function sel($index, $value)
     </a>
     <a onclick="navigate('settings')" id="btn-settings" class="btn">
         <i class="ph ph-trash" aria-hidden="true"></i>
-        <?= lang('common.delete') ?>
+        <?= lang('action.delete') ?>
     </a>
 
 </nav>
@@ -500,7 +500,7 @@ function sel($index, $value)
     <div class="alert danger mt-20">
         <form action="<?= ROOTPATH ?>/crud/groups/delete/<?= $group['_id'] ?>" method="post">
             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/groups">
-            <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('common.delete') ?></button>
+            <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
             <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
         </form>
     </div>
@@ -691,7 +691,7 @@ function sel($index, $value)
                         <div class="custom-radio">
                             <input type="radio" name="change-or-add" id="person-add" value="add" checked="checked">
                             <label for="person-add">
-                                <b><?= lang('common.add') ?>:</b>
+                                <b><?= lang('action.add') ?>:</b>
                                 <?= lang('Add this unit as additional unit and keep other units unchanged.', 'Füge diese Einheit der Person zusätzlich hinzu und behalte die vorhandenen Einheiten ungeändert.') ?>
                             </label>
                         </div>
@@ -712,7 +712,7 @@ function sel($index, $value)
                     </div>
                 </div>
 
-                <button type="submit" class="btn"><?= lang('common.add') ?></button>
+                <button type="submit" class="btn"><?= lang('action.add') ?></button>
             </form>
 
             <script>

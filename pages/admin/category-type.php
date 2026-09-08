@@ -429,7 +429,7 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('common.delete') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>
