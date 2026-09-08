@@ -176,7 +176,7 @@ function sel($index, $value)
             </div>
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                     <div class="form-group">
                         <label for="name_de" class="required">
                             <?= lang('Full Name', 'Voller Name') ?> (DE)
@@ -342,7 +342,7 @@ function sel($index, $value)
                                     </div>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
-                                        <label for="values[research][<?= $i ?>][subtitle]"><?= lang('Subtitle', 'Untertitel') ?></label>
+                                        <label for="values[research][<?= $i ?>][subtitle]"><?= lang('common.subtitle') ?></label>
                                     </div>
                                     <div class="form-group mb-0">
                                         <div id="info-<?= $i ?>-quill"><?= $con['info'] ?? '' ?></div>
@@ -361,7 +361,7 @@ function sel($index, $value)
                                     </div>
                                     <div class="form-group floating-form">
                                         <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
-                                        <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('Subtitle', 'Untertitel') ?></label>
+                                        <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('common.subtitle') ?></label>
                                     </div>
                                     <div class="form-group mb-0">
                                         <div id="info_de-<?= $i ?>-quill"><?= $con['info_de'] ?? '' ?></div>
@@ -524,7 +524,7 @@ function sel($index, $value)
         <thead>
             <tr>
                 <th><?= lang('common.name') ?></th>
-                <th><?= lang('Position', 'Position') ?></th>
+                <th><?= lang('common.position') ?></th>
                 <th><?= lang('Since', 'seit') ?></th>
                 <th><?= lang('common.actions') ?></th>
             </tr>

@@ -164,7 +164,7 @@ class CommandPalette
                 "url" => "/proposals",
                 "type" => "Navigation",
                 "icon" => "tree-structure",
-                "label" => lang("Proposals", "Anträge"),
+                "label" => lang('common.proposals'),
                 "feature" => "projects",
                 "keywords" => ["proposals", "anträge"],
                 "priority" => 70
@@ -225,7 +225,7 @@ class CommandPalette
                 "url" => "/conferences",
                 "type" => "Navigation",
                 "icon" => "calendar-dots",
-                "label" => lang("Events", "Veranstaltungen"),
+                "label" => lang('common.events'),
                 "feature" => "events",
                 "keywords" => ["events", "veranstaltungen", "conferences", "konferenzen"],
                 "priority" => 50
@@ -513,8 +513,8 @@ class CommandPalette
         $collectionMap = [
             'activities' => lang('common.activities'),
             'projects' => lang('common.projects'),
-            'proposals' => lang('Proposals', 'Anträge'),
-            'conferences' => lang('Events', 'Veranstaltungen'),
+            'proposals' => lang('common.proposals'),
+            'conferences' => lang('common.events'),
             'journals' => lang('Journals', 'Zeitschriften'),
             'persons' => lang('common.persons')
         ];

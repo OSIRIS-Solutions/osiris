@@ -206,7 +206,7 @@ function val($index, $default = '')
 
                 <div class="form-row row-eq-spacing">
                     <div class="col">
-                        <label for="event-location" class="required"><?= lang('Location', 'Ort') ?></label>
+                        <label for="event-location" class="required"><?= lang('common.location') ?></label>
                         <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
                     </div>
                     <div class="col">
@@ -216,7 +216,7 @@ function val($index, $default = '')
                             <!-- germany first -->
                             <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
                             <?php
-                            foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                            foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
                             <?php } ?>
                         </select>

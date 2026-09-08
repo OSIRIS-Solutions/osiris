@@ -152,7 +152,7 @@ $utilizationOptions = [
             <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                 <h2>
                     <i class="ph-duotone ph-globe-stand"></i>
-                    <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
+                    <?= $DB->getCountry($country['code'], lang('common.field_name_language')) ?>
                 </h2>
                 <small class="code badge primary"><?= e($cid) ?></small>
             </div>
@@ -428,7 +428,7 @@ $utilizationOptions = [
     <?php foreach ($out_of_scope as $country): ?>
         <span class="badge bg-white border mr-5 mb-5">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= $DB->getCountry($country['code'], lang('name', 'name_de')) ?>
+            <?= $DB->getCountry($country['code'], lang('common.field_name_language')) ?>
         </span>
     <?php endforeach; ?>
 

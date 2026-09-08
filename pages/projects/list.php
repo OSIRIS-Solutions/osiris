@@ -361,7 +361,7 @@ $Vocabulary = new Vocabulary();
                     </tr>
                     <tr>
                         <td>
-                            <a data-type="true" onclick="filterProjects(this, '<?= lang('Subproject', 'Teilprojekt') ?>', 14)" class="item" id="subproject-true-btn">
+                            <a data-type="true" onclick="filterProjects(this, '<?= lang('common.subproject') ?>', 14)" class="item" id="subproject-true-btn">
                                 <span>
                                     <i class="ph ph-git-merge"></i>&nbsp;
                                     <?= lang('Subprojects', 'Teilprojekte') ?>
@@ -463,7 +463,7 @@ $Vocabulary = new Vocabulary();
             key: 'persons'
         },
         {
-            title: lang('Subproject', 'Teilprojekt'),
+            title: lang('common.subproject'),
             key: 'subproject'
         },
         {
@@ -508,7 +508,7 @@ $Vocabulary = new Vocabulary();
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.subproject')}
                         </span>`
         }
         return data;
@@ -802,10 +802,10 @@ $Vocabulary = new Vocabulary();
                     defaultContent: false,
                     searchable: true,
                     visible: false,
-                    header: lang('Subproject', 'Teilprojekt'),
+                    header: lang('common.subproject'),
                     render: (data, type, row) => {
                         if (data) {
-                            return lang('Subproject', 'Teilprojekt');
+                            return lang('common.subproject');
                         }
                         return lang('Main project', 'Hauptprojekt');
                     }

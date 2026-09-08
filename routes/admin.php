@@ -23,7 +23,7 @@ Route::get('/admin', function () {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('common.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen")],
+        ['name' => lang('common.settings')],
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/admin.php";
@@ -41,7 +41,7 @@ Route::get('/admin/users', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen")]
     ];
     $page = 'users';
@@ -62,7 +62,7 @@ Route::get('/admin/guest-account', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
         ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account']
     ];
@@ -84,7 +84,7 @@ Route::get('/admin/guest-account/add', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
         ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
         ['name' => lang('common.add')]
@@ -109,7 +109,7 @@ Route::get('/admin/roles/distribute', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.roles'), 'path' => '/admin/roles'],
         ['name' => lang("Distribute roles", "Rollen verteilen")]
     ];
@@ -177,7 +177,7 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name, 'path' => "/admin/types/" . $id],
         ['name' => lang("Data fields", "Datenfelder")]
@@ -199,7 +199,7 @@ Route::get('/admin/doi-mappings', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang("DOI Mappings", "DOI Zuordnungen")]
     ];
@@ -216,7 +216,7 @@ Route::get('/admin/categories', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities')]
     ];
     include BASEPATH . "/header.php";
@@ -232,7 +232,7 @@ Route::get('/admin/categories/new', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang('common.new')]
     ];
@@ -260,7 +260,7 @@ Route::get('/admin/categories/(.*)', function ($id) {
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
@@ -284,7 +284,7 @@ Route::get('/admin/types/new', function () {
     $user = $_SESSION['username'];
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang("New Type", "Neuer Typ")]
     ];
@@ -339,7 +339,7 @@ Route::get('/admin/types/(.*)', function ($id) {
     $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
@@ -385,7 +385,7 @@ Route::get('/admin/vocabulary', function () {
     $vocabularies = $Vocabulary->getVocabularies();
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Vocabulary", "Vokabular")]
     ];
     include BASEPATH . "/header.php";
@@ -406,7 +406,7 @@ Route::get('/admin/vocabulary/([a-z\-_]*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Vocabulary", "Vokabular"), 'path' => '/admin/vocabulary'],
         ['name' => lang($vocab['name'], $vocab['name_de'] ?? null)]
     ];
@@ -448,7 +448,7 @@ Route::get('/admin/persons', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.persons')]
     ];
     include BASEPATH . "/header.php";
@@ -463,8 +463,8 @@ Route::get('/admin/infrastructures', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang("Infrastructures", "Infrastrukturen")]
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('common.infrastructures')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/infrastructures.php";
@@ -480,7 +480,7 @@ Route::get('/admin/projects', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.projects')]
     ];
     include BASEPATH . "/header.php";
@@ -509,7 +509,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     $type = $project['id'];
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.projects'), 'path' => '/admin/projects'],
         ['name' => $type . ' - ' . $stage . '/2']
     ];
@@ -531,7 +531,7 @@ Route::get('/admin/projects/new', function () {
     $type = null;
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.projects'), 'path' => '/admin/projects'],
         ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
     ];
@@ -549,11 +549,11 @@ Route::get('/admin/(.*)', function ($path) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('common.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang(ucfirst($path), ucfirst($path))]
     ];
     if (!file_exists(BASEPATH . "/pages/admin/$path.php")) {
-        abortwith(404, lang("Settings", "Einstellungen"), "/admin");
+        abortwith(404, lang('common.settings'), "/admin");
     }
     include BASEPATH . "/header.php";
     $affiliation = $Settings->get('affiliation_details');

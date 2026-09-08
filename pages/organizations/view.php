@@ -141,7 +141,7 @@ if ($edit_perm) { ?>
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('Upload', 'Hochladen') ?>
+                        <?= lang('common.upload') ?>
                     </button>
                 </form>
 
@@ -212,13 +212,13 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('Location', 'Ort') ?></span>
+                            <span class="key"><?= lang('common.location') ?></span>
                             <?= $organization['location'] ?? '-' ?>
                         </td>
                         <td>
                             <span class="key"><?= lang('common.country') ?></span>
                             <?php if (!empty($organization['country'] ?? '')) { ?>
-                                <?= $DB->getCountry($organization['country'], lang('name', 'name_de')) ?>
+                                <?= $DB->getCountry($organization['country'], lang('common.field_name_language')) ?>
                             <?php } else { ?>
                                 -
                             <?php } ?>

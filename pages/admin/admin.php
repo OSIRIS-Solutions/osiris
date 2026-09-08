@@ -19,7 +19,7 @@
 
 <h1>
     <i class="ph-duotone ph-sliders"></i>
-    <?= lang('Settings', 'Einstellungen') ?>
+    <?= lang('common.settings') ?>
 </h1>
 
 <!-- search -->
@@ -184,7 +184,7 @@
             <?php if ($Settings->featureEnabled('infrastructures')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/infrastructures">
                     <i class="ph-duotone ph-cube-transparent" aria-hidden="true"></i>
-                    <b><?= lang('Infrastructures', 'Infrastrukturen') ?></b>
+                    <b><?= lang('common.infrastructures') ?></b>
                     <p><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></p>
                 </a>
             <?php } ?>

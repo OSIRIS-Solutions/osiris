@@ -100,7 +100,7 @@ $oa = $data['oa'] ?? false;
                 <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                 <?php
                 $c = $form['country'] ?? '';
-                foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                     <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                 <?php } ?>
             </select>

@@ -80,14 +80,14 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
                 <input type="text" name="values[location]" required class="form-control" value="<?= e($form['location'] ?? '') ?>" placeholder="location">
-                <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
+                <label for="location" class="required"><?= lang('common.location') ?></label>
             </div>
             <div class="col floating-form">
                 <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                     <?php
                     $c = $form['country'] ?? '';
-                    foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                    foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                     <?php } ?>
                 </select>

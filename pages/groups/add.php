@@ -102,7 +102,7 @@ $title = lang('New group', 'Neue Gruppe');
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de" class="required">
                         <?= lang('Full Name', 'Voller Name') ?> (DE)

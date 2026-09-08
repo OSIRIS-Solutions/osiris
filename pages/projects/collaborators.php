@@ -74,7 +74,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         </label>
                         <select id="org-country" class="form-control" required>
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                            <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
                             <?php } ?>
                         </select>

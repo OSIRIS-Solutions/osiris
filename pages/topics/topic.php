@@ -183,7 +183,7 @@ if ($Settings->featureEnabled('spectrum')) {
                     <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
                     <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
                 </div>
-                <button type="submit" class="btn"><?= lang('Upload', 'Hochladen') ?></button>
+                <button type="submit" class="btn"><?= lang('common.upload') ?></button>
             </form>
         </div>
     </div>

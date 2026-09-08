@@ -68,7 +68,7 @@ if ($Settings->featureEnabled('events')) {
 }
 if ($Settings->featureEnabled('projects')) {
     $collections['projects'] = lang('common.projects');
-    $collections['proposals'] = lang('Proposals', 'Anträge');
+    $collections['proposals'] = lang('common.proposals');
 }
 ?>
 

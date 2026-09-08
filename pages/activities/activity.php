@@ -659,7 +659,7 @@ if ($edit_perm) {
         ?>
             <a onclick="navigate('history')" id="btn-history" class="btn">
                 <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-                <?= lang('History', 'Historie') ?>
+                <?= lang('common.history') ?>
                 <span class="index"><?= $count_history ?></span>
             </a>
         <?php endif; ?>
@@ -884,7 +884,7 @@ if ($edit_perm) {
                                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                                             <ul class="horizontal mb-0">
                                                 <li>
-                                                    <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
+                                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
                                                 </li>
                                                 <li>
                                                     <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
@@ -1152,7 +1152,7 @@ if ($edit_perm) {
                         ];
                     } elseif ($role === 'authors') {
                         $thirdCol = [
-                            'label' => lang('Position', 'Position'),
+                            'label' => lang('common.position'),
                             'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
                         ];
                     }
@@ -1854,7 +1854,7 @@ if ($edit_perm) {
                         <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
                         <label for="description"><?= lang('common.description') ?></label>
                     </div>
-                    <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                    <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
                 </form>
 
                 <script>
@@ -1979,7 +1979,7 @@ if ($edit_perm) {
     <!-- new section with history -->
     <section id="history" style="display: none;">
         <h2 class="title">
-            <?= lang('History', 'Historie') ?>
+            <?= lang('common.history') ?>
         </h2>
         <p>
             <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>

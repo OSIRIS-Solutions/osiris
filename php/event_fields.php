@@ -90,7 +90,7 @@ class EventFields extends Fields
             [
                 "id" => "location",
                 "module_of" => ['general'],
-                "label" => lang("Location", "Ort"),
+                "label" => lang('common.location'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

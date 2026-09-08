@@ -211,7 +211,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Position", "Position"),
+                "label" => lang('common.position'),
             ],
             [
                 "id" => "room",
@@ -328,8 +328,8 @@ class PersonFields extends Fields
                     ]
                 ];
         }
-        $units = $osiris->groups->find([], ['sort' => [lang('name', 'name_de') => 1]])->toArray();
-        $units = array_column($units, lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find([], ['sort' => [lang('common.field_name_language') => 1]])->toArray();
+        $units = array_column($units, lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units.unit',
             'module_of' => ['general'],

@@ -1260,7 +1260,7 @@ $lastquarter = $Y . "Q" . $Q;
                         <div class="widget-header">
                             <h2>
                                 <i class="ph-duotone ph-megaphone"></i>
-                                <?= lang('News', 'News') ?>
+                                <?= lang('common.news') ?>
                             </h2>
                             <a href="<?= ROOTPATH ?>/news" class="link-sm">
                                 <?= lang('common.view_all') ?>

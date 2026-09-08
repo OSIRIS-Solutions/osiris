@@ -46,7 +46,7 @@
     <?php if ($Settings->featureEnabled('infrastructures')) { ?>
         <a href="<?= ROOTPATH ?>/admin/infrastructures" class="">
             <i class="ph-duotone ph-cube-transparent text-secondary" aria-hidden="true"></i>
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= lang('common.infrastructures') ?>
             <br>
             <small class="text-muted"><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></small>
         </a>

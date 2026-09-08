@@ -389,7 +389,7 @@ $cart = readCart();
             'key': 'search-text'
         },
         {
-            title: lang('Start', 'Start'),
+            title: lang('common.start'),
             'key': 'start'
         },
         {

@@ -11,10 +11,10 @@ class ActivityFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $types = $osiris->adminCategories->find()->toArray();
-        $types = array_column($types, lang('name', 'name_de'), 'id');
+        $types = array_column($types, lang('common.field_name_language'), 'id');
 
         $subtypes = $osiris->adminTypes->find()->toArray();
-        $subtypes = array_column($subtypes, lang('name', 'name_de'), 'id');
+        $subtypes = array_column($subtypes, lang('common.field_name_language'), 'id');
 
 
         $adminCategories = $osiris->adminCategories->find()->toArray();
@@ -882,7 +882,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Location', 'Ort'),
+                'label' => lang('common.location'),
                 'type' => 'string'
             ],
             [
@@ -1075,8 +1075,8 @@ class ActivityFields extends Fields
             ]
         ];
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1], 'projection' => ['_id' => 1, 'id'=> 1, 'name' => 1, 'name_de' => 1]])->toArray();
-        $units = array_column(DB::doc2Arr($units), lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('common.field_name_language') => 1], 'projection' => ['_id' => 1, 'id'=> 1, 'name' => 1, 'name_de' => 1]])->toArray();
+        $units = array_column(DB::doc2Arr($units), lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units',
             'module_of' => ['general'],

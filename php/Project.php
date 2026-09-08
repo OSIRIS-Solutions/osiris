@@ -278,7 +278,7 @@ class Project extends Vocabulary
                 return $this->getJointProject();
             case 'countries':
             case 'research-countries':
-                $lang = lang('name', 'name_de');
+                $lang = lang('common.field_name_language');
                 $countriesList = '';
 
                 foreach ($value ?? [] as $c) {
@@ -520,7 +520,7 @@ class Project extends Vocabulary
         <?php } else if ($type == 'Teilprojekt') { ?>
             <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
-                <?= lang('Subproject', 'Teilprojekt') ?>
+                <?= lang('common.subproject') ?>
             </span>
         <?php } else { ?>
             <span class="badge text-muted no-wrap <?= $cls ?>">

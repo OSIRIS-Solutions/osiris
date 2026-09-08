@@ -1679,7 +1679,7 @@ class Document extends Settings
                 $topics = DB::doc2Arr($this->getVal('topics', []));
                 if (empty($topics)) return '';
                 $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
-                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('name', 'name_de'));
+                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('common.field_name_language'));
                 return implode(', ', $topics_arr);
             case "university": // ["publisher"],
                 return $this->getVal('publisher');
@@ -1692,12 +1692,12 @@ class Document extends Settings
             case "country":
             case "nationality":
                 $code = $this->getVal('country');
-                return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
+                return $this->DB->getCountry($code, $this->lang('common.field_name_language'));
             case 'countries':
                 $countries = DB::doc2Arr($this->getVal('countries', []));
                 if (empty($countries)) return '';
                 $country_names = array_map(function ($code) {
-                    return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
+                    return $this->DB->getCountry($code, $this->lang('common.field_name_language'));
                 }, $countries);
                 return implode(', ', $country_names);
             case "gender":

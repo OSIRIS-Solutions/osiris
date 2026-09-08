@@ -1231,7 +1231,7 @@ if ($is_subproject) {
                 <div class="author-widget" id="author-widget">
                     <div class="author-list p-10" id="author-list">
                         <?php
-                        $lang = lang('name', 'name_de');
+                        $lang = lang('common.field_name_language');
                         foreach ($countries as $iso) { ?>
                             <div class='author'>
                                 <input type='hidden' name='values[countries][]' value='<?= $iso ?>'>
@@ -1245,7 +1245,7 @@ if ($is_subproject) {
                         <div class="input-group sm d-inline-flex w-auto">
                             <select id="add-country">
                                 <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                     <option value="<?= $iso ?>"><?= $name ?></option>
                                 <?php } ?>
                             </select>
@@ -1298,7 +1298,7 @@ if ($is_subproject) {
                             $role = $country['role'] ?? 'both';
                         ?>
                             <tr>
-                                <td><?= $DB->getCountry($iso, lang('name', 'name_de')) ?></td>
+                                <td><?= $DB->getCountry($iso, lang('common.field_name_language')) ?></td>
                                 <td><?= $role ?></td>
                                 <td>
                                     <a onclick="$(this).closest('tr').remove()"><?= lang('common.remove') ?></a>
@@ -1313,7 +1313,7 @@ if ($is_subproject) {
                                 <div class="input-group small d-inline-flex w-auto">
                                     <select id="add-research-country" class="form-control">
                                         <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                        <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                             <option value="<?= $iso ?>"><?= $name ?></option>
                                         <?php } ?>
                                     </select>
@@ -1424,7 +1424,7 @@ if ($is_subproject) {
                             <div class="author-widget" id="author-widget">
                                 <div class="author-list p-10" id="nagoya-countries-list">
                                     <?php
-                                    $lang = lang('name', 'name_de');
+                                    $lang = lang('common.field_name_language');
                                     foreach ($countries as $country) {
                                         $iso = $country['code'] ?? '';
                                     ?>
@@ -1440,7 +1440,7 @@ if ($is_subproject) {
                                     <div class="input-group sm d-inline-flex w-auto">
                                         <select id="add-nagoya-country">
                                             <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                            <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                                 <option value="<?= $iso ?>"><?= $name ?></option>
                                             <?php } ?>
                                         </select>

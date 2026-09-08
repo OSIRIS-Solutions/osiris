@@ -95,14 +95,14 @@ if ($topicsEnabled) {
         <table class="table">
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('Location', 'Ort') ?></span>
+                    <span class="key"><?= lang('common.location') ?></span>
                     <?= $conference['location'] ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <span class="key"><?= lang('common.country') ?></span>
-                    <?= $DB->getCountry($conference['country'] ?? '', lang('name', 'name_de')) ?>
+                    <?= $DB->getCountry($conference['country'] ?? '', lang('common.field_name_language')) ?>
                 </td>
             </tr>
             <?php if (isset($conference['type'])) { ?>

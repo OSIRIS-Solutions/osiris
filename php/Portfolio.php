@@ -355,7 +355,7 @@ class Portfolio extends Settings
                     break;
                 case 'infrastructure':
                     $breadcrumb = [
-                        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+                        ['name' => lang('common.infrastructures'), 'path' => "/infrastructures"],
                         ['name' => $name, 'path' => "/infrastructures/view/$id"],
                     ];
                     break;

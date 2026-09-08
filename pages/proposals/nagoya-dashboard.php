@@ -71,7 +71,7 @@ $totalProjects     = count($projects ?? []);
                             </a><br>
                             <span>
                                 <i class="ph ph-globe"></i>
-                                <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                                <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
@@ -354,7 +354,7 @@ $totalProjects     = count($projects ?? []);
                         $projectsN = $cs['projects'] ?? 0;
                         $labels    = $cs['labels'] ?? ['A' => 0, 'B' => 0, 'C' => 0];
                         $permOpen  = $cs['permits_pending'] ?? 0;
-                        $name      = $DB->getCountry($code, lang('name', 'name_de'));
+                        $name      = $DB->getCountry($code, lang('common.field_name_language'));
                     ?>
                         <tr>
                             <td>
@@ -452,7 +452,7 @@ $totalProjects     = count($projects ?? []);
                             </td>
                             <td class="font-size-12">
                                 <?php
-                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('name', 'name_de'));
+                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('common.field_name_language'));
                                 ?>
                                 <i class="ph ph-globe"></i>
                                 <?= e($countryName) ?>

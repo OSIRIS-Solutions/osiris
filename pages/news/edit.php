@@ -524,7 +524,7 @@ if (isset($news) && isset($news['_id'])) {
         ?>
             <details class="collapse-panel event-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Events', 'Veranstaltungen') ?>
+                    <?= lang('common.events') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -871,7 +871,7 @@ if (isset($news) && isset($news['_id'])) {
             person: <?= json_encode(lang('common.people')) ?>,
             activity: <?= json_encode(lang('common.activities')) ?>,
             project: <?= json_encode(lang('common.projects')) ?>,
-            event: <?= json_encode(lang('Events', 'Veranstaltungen')) ?>,
+            event: <?= json_encode(lang('common.events')) ?>,
             infrastructure: <?= json_encode($Settings->infrastructureLabel()) ?>
         };
 

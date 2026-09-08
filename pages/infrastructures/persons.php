@@ -56,7 +56,7 @@ $end = $form['end_date'] ?? '';
                     </span>
                 </th>
                 <th>
-                    <?= lang('Start', 'Start') ?>
+                    <?= lang('common.start') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-B
                     </span>

@@ -43,7 +43,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
         $countryId = $c['id'] ?? null;
     ?>
         <tr>
-            <th><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></th>
+            <th><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></th>
             <td>
                 <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
             </td>
@@ -103,7 +103,7 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
                 <form action="<?= ROOTPATH ?>/crud/nagoya/add-country/<?= $project['_id'] ?>" method="post">
                     <select id="add-nagoya-country" name="countryCode" class="form-control d-inline-block w-auto mr-10">
                         <option value="" disabled selected><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                        <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                             <option value="<?= $iso ?>"><?= $name ?></option>
                         <?php } ?>
                     </select>

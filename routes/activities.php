@@ -62,10 +62,10 @@ Route::get('/(activities|projects|proposals|conferences|journals|persons)/search
             $colName = lang('common.projects');
             break;
         case 'proposals':
-            $colName = lang('Proposals', "Anträge");
+            $colName = lang('common.proposals');
             break;
         case 'conferences':
-            $colName = lang('Events', "Veranstaltungen");
+            $colName = lang('common.events');
             break;
         case 'journals':
             $colName = $Settings->journalLabel();

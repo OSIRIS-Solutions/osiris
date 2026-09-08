@@ -361,7 +361,7 @@ $active = function ($field) use ($data_fields) {
                             <?= lang('common.unit') ?>
                         </th>
                         <th>
-                            <?= lang('Start', 'Start') ?>
+                            <?= lang('common.start') ?>
                         </th>
                         <th>
                             <?= lang('common.end') ?>

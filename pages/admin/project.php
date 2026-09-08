@@ -284,7 +284,7 @@ if ($process == 'project') {
             <div class="content">
 
                 <h5>
-                    <?= lang('Proposals', 'Anträge') ?>
+                    <?= lang('common.proposals') ?>
                 </h5>
 
                 <p class="text-muted">

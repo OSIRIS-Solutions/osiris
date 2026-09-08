@@ -53,7 +53,7 @@ $user_in_project = false;
                     </th>
                     <?php if ($collection == 'projects') { ?>
                         <th>
-                            <?= lang('Start', 'Start') ?><br>
+                            <?= lang('common.start') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-C
                             </span>

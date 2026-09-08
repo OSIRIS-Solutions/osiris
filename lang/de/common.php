@@ -52,7 +52,7 @@ return [
     'mail' => 'Mail',
     'maintenance_message' => 'Bitte keine Daten hinzufügen, bearbeiten oder löschen. Änderungen werden evtl. überschrieben.',
     'maintenance' => 'Wartungsarbeiten',
-    'name_field_language' => 'name_de',
+    'field_name_language' => 'name_de',
     'name_first' => 'Vorname',
     'name_last' => 'Nachname',
     'name' => 'Name',
@@ -112,4 +112,18 @@ return [
     'people' => 'Personen',
     'approved' => 'Bestätigt',
     'event' => 'Veranstaltung',
+    'subproject' => 'Teilprojekt',
+    'settings' => 'Einstellungen',
+    'infrastructures' => 'Infrastrukturen',
+    'location' => 'Ort',
+    'subtitle' => 'Untertitel',
+    'position' => 'Position',
+    'start' => 'Start',
+    'proposals' => 'Anträge',
+    'history' => 'Historie',
+    'events' => 'Veranstaltungen',
+    'german' => 'Deutsch',
+    'upload' => 'Hochladen',
+    
+    
 ];

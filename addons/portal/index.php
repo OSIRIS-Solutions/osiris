@@ -115,7 +115,7 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
             break;
 
         case 'infrastructures':
-            $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/$section/infrastructures"];
+            $breadcrumb[] = ['name' => lang('common.infrastructures'), 'path' => "/$section/infrastructures"];
             break;
     }
 

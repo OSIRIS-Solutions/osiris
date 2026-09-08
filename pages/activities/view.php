@@ -301,7 +301,7 @@
                     if (!empty($doc['history'])) :
                     ?>
                         <a onclick="navigate('history')" id="btn-history" class="btn">
-                            <?= lang('History', 'Historie') ?>
+                            <?= lang('common.history') ?>
                         </a>
                     <?php endif; ?>
 
@@ -661,7 +661,7 @@
                                                     <li><?= lang('common.projects') ?></li>
                                                 <?php } ?>
                                                 <?php if (isset($connections['infrastructures'])) { ?>
-                                                    <li><?= lang('Infrastructures', 'Infrastrukturen') ?></li>
+                                                    <li><?= lang('common.infrastructures') ?></li>
                                                 <?php } ?>
                                                 <li><?= lang('Other activities', 'Andere Aktivitäten') ?></li>
                                             </ul>
@@ -677,11 +677,11 @@
                                             <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.projects') ?> <b><?= $connections['projects'] ?></b></span>
                                         <?php } ?>
                                         <?php if (isset($connections['infrastructures'])) { ?>
-                                            <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('Infrastructures', 'Infrastrukturen') ?> <b><?= $connections['infrastructures'] ?></b></span>
+                                            <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructures') ?> <b><?= $connections['infrastructures'] ?></b></span>
                                         <?php } ?>
                                         <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('common.activities') ?> <b><?= $connections['activities'] ?></b></span>
                                         <?php if (isset($connections['news'])) { ?>
-                                            <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('News', 'News') ?> <b><?= $connections['news'] ?></b></span>
+                                            <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('common.news') ?> <b><?= $connections['news'] ?></b></span>
                                         <?php } ?>
                                     </p>
                                 <?php } ?>
@@ -738,7 +738,7 @@
                                     <?php if (!empty($connected_news)) : ?>
                                         <?php foreach ($connected_news as $news) { ?>
                                             <div class="connection">
-                                                <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang("News", "News") ?></span>
+                                                <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('common.news') ?></span>
                                                 <h5>
                                                     <a href="<?= ROOTPATH ?>/news/view/<?= $news['_id']; ?>"> <?= $news['title']; ?> </a>
                                                 </h5>
@@ -1018,7 +1018,7 @@
                             [
                                 'bibliography' => lang('Bibliography', 'Bibliographie'),
                                 'locations' => lang('Locations', 'Orte'),
-                                'events' => lang('Events', 'Veranstaltungen'),
+                                'events' => lang('common.events'),
                                 'people' => lang('People and Organizations', 'Personen und Organisationen'),
                                 'software' => lang('Software', 'Software'),
                                 'others' => lang('Other data', 'Weitere Daten')
@@ -1182,7 +1182,7 @@
                                     ];
                                 } elseif ($role === 'authors') {
                                     $thirdCol = [
-                                        'label' => lang('Position', 'Position'),
+                                        'label' => lang('common.position'),
                                         'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
                                     ];
                                 }
@@ -1548,7 +1548,7 @@
             <!-- new section with history -->
             <section id="history" style="display: none;" class="box padded tab-box">
                 <h2 class="mt-0">
-                    <?= lang('History', 'Historie') ?>
+                    <?= lang('common.history') ?>
                 </h2>
                 <p>
                     <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>

@@ -197,7 +197,7 @@ include_once BASEPATH . "/php/Modules.php";
                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                             <ul class="horizontal mb-0">
                                 <li>
-                                    <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
+                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
                                 </li>
                                 <li>
                                     <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>

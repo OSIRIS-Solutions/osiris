@@ -41,7 +41,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'proposals',
-                        'label' => lang('Proposals', 'Anträge'),
+                        'label' => lang('common.proposals'),
                         'icon' => 'tree-structure',
                         'url' => '/proposals',
                         'active' => ['^/proposals($|/)'],
@@ -367,7 +367,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'settings',
-                        'label' => lang('Settings', 'Einstellungen'),
+                        'label' => lang('common.settings'),
                         'icon' => 'faders',
                         'url' => '/admin',
                         'active' => ['^/admin($|/)'],

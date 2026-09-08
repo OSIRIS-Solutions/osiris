@@ -1752,7 +1752,7 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country">
                     <select name="values[country]" id="country" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
-                        <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
+                        <?php foreach ($this->DB->getCountries(lang('common.field_name_language')) as $code => $country) { ?>
                             <option value="<?= $code ?>" <?= $val == $code ? 'selected' : '' ?>><?= $country ?></option>
                         <?php } ?>
                     </select>
@@ -1775,7 +1775,7 @@ class Modules
                             <?php
                             foreach ($countries as $k) { ?>
                                 <div class='author'>
-                                    <?= $this->DB->getCountry($k, lang('name', 'name_de')) ?>
+                                    <?= $this->DB->getCountry($k, lang('common.field_name_language')) ?>
                                     <input type='hidden' name='values[countries][]' value='<?= $k ?>'>
                                     <a onclick='$(this).parent().remove()'>&times;</a>
                                 </div>
@@ -1785,7 +1785,7 @@ class Modules
                             <div class="input-group small d-inline-flex w-auto">
                                 <select class="form-control" id="country-select">
                                     <option value="" disabled selected><?= lang("Add country ...", "Füge Land hinzu ...") ?></option>
-                                    <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                    <?php foreach ($this->DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                         <option value="<?= $iso ?>"><?= $name ?></option>
                                     <?php } ?>
                                 </select>
@@ -1926,7 +1926,7 @@ class Modules
                                     <th><label for="user">Username</label></th>
                                     <th><label for="last" class="required"><?= lang('common.name_last') ?></label></th>
                                     <th><label for="first" class="required"><?= lang('common.name_first') ?></label></th>
-                                    <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
+                                    <th><label for="position"><?= lang('common.position') ?></label></th>
                                     <th><label for="aoi"><?= lang('common.affiliated') ?></label></th>
                                     <th></th>
                                 </tr>

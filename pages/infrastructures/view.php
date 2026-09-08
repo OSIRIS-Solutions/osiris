@@ -164,7 +164,7 @@ if ($edit_perm) { ?>
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('Upload', 'Hochladen') ?>
+                        <?= lang('common.upload') ?>
                     </button>
                 </form>
 

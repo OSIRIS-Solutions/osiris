@@ -128,7 +128,7 @@
             $n = $osiris->proposals->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Proposals', 'Anträge') ?></th>
+                    <th><?= lang('common.proposals') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -137,7 +137,7 @@
             $n = $osiris->infrastructures->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Infrastructures', 'Infrastrukturen') ?></th>
+                    <th><?= lang('common.infrastructures') ?></th>
                     <td>
                         <?= $n ?>
                     </td>

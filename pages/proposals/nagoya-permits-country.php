@@ -62,7 +62,7 @@ $countryLabel = $evaluation['label'] ?? '';
 <h1 class="mb-0">
     <i class="ph-duotone ph-file-text"></i>
     <?= lang('ABS permits for', 'ABS-Genehmigungen für') ?>
-    <?= ($DB->getCountry($code, lang('name', 'name_de'))) ?>
+    <?= ($DB->getCountry($code, lang('common.field_name_language'))) ?>
 </h1>
 <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
     <i class="ph ph-arrow-left"></i>

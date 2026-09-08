@@ -20,11 +20,11 @@ $categories = [
         'icon' => 'ph ph-tree-structure'
     ],
     'Infrastructure' => [
-        'label' => lang('Infrastructures', 'Infrastrukturen'),
+        'label' => lang('common.infrastructures'),
         'icon' => 'ph ph-cube-transparent'
     ],
     'Event' => [
-        'label' => lang('Events', 'Veranstaltungen'),
+        'label' => lang('common.events'),
         'icon' => 'ph ph-calendar'
     ],
     'Activity' => [

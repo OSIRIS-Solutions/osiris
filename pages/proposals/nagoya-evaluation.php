@@ -88,7 +88,7 @@ foreach ($countries as $c) {
                 <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                     <h2>
                         <i class="ph-duotone ph-globe-stand"></i>
-                        <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                        <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                     </h2>
                 </div>
 

@@ -112,7 +112,7 @@
           <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
           <label for="description"><?= lang('common.description') ?></label>
         </div>
-        <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+        <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
       </form>
 
       <script>

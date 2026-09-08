@@ -45,7 +45,7 @@
 
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('Subtitle', 'Untertitel') ?> (EN)
+                            <?= lang('common.subtitle') ?> (EN)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle]" id="public_subtitle" required value="<?= $project['public_subtitle'] ?? $project['title'] ?? ''  ?>">
                     </div>
@@ -53,7 +53,7 @@
             </div>
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                     <div class="form-group">
                         <label for="name_de">
                             <?= lang('common.title') ?> (DE)
@@ -63,7 +63,7 @@
 
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('Subtitle', 'Untertitel') ?> (DE)
+                            <?= lang('common.subtitle') ?> (DE)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle_de]" id="public_subtitle_de" value="<?= $project['public_subtitle_de'] ?? '' ?>">
                     </div>
@@ -116,7 +116,7 @@
 
         <h4>
             <?= lang('Abstract', 'Zusammenfassung') ?>
-            in <span class="d-inline-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
+            in <span class="d-inline-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract_de-quill"><?= $project['public_abstract_de'] ?? '' ?></div>

@@ -533,7 +533,7 @@ $numbers = $data['numbers'] ?? [
 
 
 
-            <section id="infrastructures" <?= $preselect === 'infrastructures' ? '' : 'style="display:none"' ?> data-title="<?= lang('Infrastructures', 'Infrastrukturen') ?>">
+            <section id="infrastructures" <?= $preselect === 'infrastructures' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.infrastructures') ?>">
 
                 <?php if ($numbers['infrastructures'] > 0) {
                     $infrastructures = $Portfolio->fetch_entity('infrastructures');

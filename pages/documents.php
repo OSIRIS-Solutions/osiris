@@ -178,7 +178,7 @@
                     <tr>
                         <td>
                             <a onclick="filterDataTable(this, 'proposals', 5)">
-                                <?= lang('Proposals', 'Anträge') ?>
+                                <?= lang('common.proposals') ?>
                             </a>
                         </td>
                     </tr>

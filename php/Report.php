@@ -539,7 +539,7 @@ class Report
                 $formats[$n] = $fieldsInfo[$field]['type'] ?? 'text';
                 $transforms[$n] = $fieldsInfo[$field]['values'] ?? null;
                 if ($field == 'country' || $field == 'countries') {
-                    $transforms[$n] = $this->DB->getCountries(lang('name', 'name_de'));
+                    $transforms[$n] = $this->DB->getCountries(lang('common.field_name_language'));
                 }
             }
         }
@@ -683,7 +683,7 @@ class Report
             if (isset($f['values']) && is_array($f['values']) && array_keys($f['values']) !== range(0, count($f['values']) - 1)) {
                 $transform = $f['values'];
             } elseif ($f['id'] == 'country' || $f['id'] == 'countries') {
-                $transform = $this->DB->getCountries(lang('name', 'name_de'));
+                $transform = $this->DB->getCountries(lang('common.field_name_language'));
             }
             if ($f['type'] == 'list') {
                 $unwind = true;

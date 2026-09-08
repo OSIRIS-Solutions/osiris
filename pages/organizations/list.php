@@ -46,7 +46,7 @@ $organizations  = $osiris->organizations->find(
             <th><?= lang('Organisation', 'Organisation') ?></th>
             <th><?= lang('common.name') ?></th>
             <th><?= lang('common.type') ?></th>
-            <th><?= lang('Location', 'Ort') ?></th>
+            <th><?= lang('common.location') ?></th>
             <th>ROR</th>
             <th><?= lang('Synonyms', 'Synonyme') ?></th>
         </tr>

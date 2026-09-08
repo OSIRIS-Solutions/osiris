@@ -58,7 +58,7 @@ $fields = [
         'example' => 'mobile', // Beispiel: "+1 555 987 654"
     ],
     'position' => [
-        'name' => lang('Position', 'Position'),
+        'name' => lang('common.position'),
         'example' => 'title', // Beispiel: "Software Engineer"
     ],
     'department' => [

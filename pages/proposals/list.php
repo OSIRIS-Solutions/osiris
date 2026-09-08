@@ -426,7 +426,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.subproject')}
                         </span>`
         }
         return data;

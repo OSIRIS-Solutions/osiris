@@ -64,7 +64,7 @@ Route::get('/news', function () {
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('News', 'News')]
+        ['path' => '/news', 'name' => lang('common.news')]
     ];
 
     include BASEPATH . "/header.php";
@@ -84,7 +84,7 @@ Route::get('/news/add', function () {
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('News', 'News')],
+        ['path' => '/news', 'name' => lang('common.news')],
         ['path' => '/news/add', 'name' => lang('Create news item', 'Nachricht erstellen')]
     ];
 
@@ -107,7 +107,7 @@ Route::get('/news/view/([a-f0-9]{24})', function ($id) {
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('News', 'News')],
+        ['path' => '/news', 'name' => lang('common.news')],
         ['path' => '/news/view/' . e($id), 'name' => lang($news['title'] ?? '', $news['title_de'] ?? null)]
     ];
 
@@ -130,7 +130,7 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('News', 'News')],
+        ['path' => '/news', 'name' => lang('common.news')],
         ['path' => '/news/view/' . e($id), 'name' => lang($news['title'] ?? '', $news['title_de'] ?? null)],
         ['path' => '/news/edit/' . e($id), 'name' => lang('common.edit')]
     ];

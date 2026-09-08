@@ -128,7 +128,7 @@ $canAddNotes = true; // later
                         <div class="box padded">
                             <h3 class="title">
                                 <i class="ph-duotone ph-globe-stand"></i>
-                                <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                                <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                             </h3>
                             <div class="d-flex justify-content-between align-items-center mb-10">
                                 <div>

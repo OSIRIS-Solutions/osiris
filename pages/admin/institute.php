@@ -75,7 +75,7 @@
         </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
-                <label for="location"><?= lang('Location', 'Ort') ?></label>
+                <label for="location"><?= lang('common.location') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][location]" value="<?= $affiliation['location'] ?? '' ?>">
             </div>
             <div class="col-sm">

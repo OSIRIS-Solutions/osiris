@@ -2086,7 +2086,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'infrastructures',
-                'label' => lang('Infrastructures', 'Infrastrukturen'),
+                'label' => lang('common.infrastructures'),
                 'items' => $items
             ];
         }
@@ -2149,7 +2149,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'events',
-                'label' => lang('Events', 'Veranstaltungen'),
+                'label' => lang('common.events'),
                 'items' => $items
             ];
         }

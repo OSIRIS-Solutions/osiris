@@ -166,7 +166,7 @@ if (empty($form) || !isset($form['_id'])) {
                 </label>
                 <select name="values[country]" id="country" class="form-control">
                     <option value="" disabled <?= sel('country', '') ?>><?= lang('Select country', 'Land auswählen') ?></option>
-                    <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                    <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                         <option value="<?= $key ?>" <?= sel('country', $key) ?>><?= $value ?></option>
                     <?php } ?>
                 </select>

@@ -13,7 +13,7 @@ class ProjectFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $adminCategories = $osiris->adminProjects->find()->toArray();
-        $types = array_column($adminCategories, lang('name', 'name_de'), 'id');
+        $types = array_column($adminCategories, lang('common.field_name_language'), 'id');
 
         $proposalTypes = [];
 
@@ -934,8 +934,8 @@ class ProjectFields extends Fields
             });
         }
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1]])->toArray();
-        $units = array_column($units, lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('common.field_name_language') => 1]])->toArray();
+        $units = array_column($units, lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units',
             'module_of' => ['general'],

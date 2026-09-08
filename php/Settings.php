@@ -702,7 +702,7 @@ class Settings
     {
         if (!$this->featureEnabled('infrastructures')) return '';
         $settings = $this->get('infrastructures_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('Infrastructures', 'Infrastrukturen');
+        if (empty($settings) || !isset($settings['en'])) return lang('common.infrastructures');
         return lang($settings['en'], $settings['de'] ?? null);
     }
 

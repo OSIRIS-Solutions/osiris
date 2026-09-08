@@ -46,7 +46,7 @@ $nagoya = $project['nagoya'] ?? [];
                 <tr>
                     <th>
                         <input type="hidden" name="id[]" value="<?= $c['id'] ?>">
-                        <?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?>
+                        <?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?>
                     </th>
                     <td>
                         <select name="nagoyaParty[]" class="form-control form-control-sm">

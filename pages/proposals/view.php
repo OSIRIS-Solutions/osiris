@@ -252,7 +252,7 @@ if ($nagoyaRelevant) {
         ?>
             <button onclick="navigate('history')" id="btn-history" class="btn">
                 <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-                <?= lang('History', 'Historie') ?>
+                <?= lang('common.history') ?>
                 <span class="index"><?= $count_history ?></span>
             </button>
         <?php endif; ?>
@@ -637,7 +637,7 @@ if ($nagoyaRelevant) {
 
                                                         <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>/<?= $doc['country_code'] ?>">
                                                             <i class="ph ph-certificate"></i>
-                                                            <?= lang('Nagoya permit for', 'Nagoya-Genehmigung für') ?> <?= $DB->getCountry($doc['country_code'], lang('name', 'name_de')) ?>
+                                                            <?= lang('Nagoya permit for', 'Nagoya-Genehmigung für') ?> <?= $DB->getCountry($doc['country_code'], lang('common.field_name_language')) ?>
                                                         </a>
                                                     <?php } ?>
                                                 </div>
@@ -676,7 +676,7 @@ if ($nagoyaRelevant) {
                                     <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
                                     <label for="description"><?= lang('common.description') ?></label>
                                 </div>
-                                <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                                <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
                             </form>
                         <?php } ?>
                     </div>
@@ -812,7 +812,7 @@ if ($nagoyaRelevant) {
     <!-- new section with history -->
     <section id="history" style="display: none;">
         <h2 class="title">
-            <?= lang('History', 'Historie') ?>
+            <?= lang('common.history') ?>
         </h2>
         <p>
             <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>

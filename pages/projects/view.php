@@ -141,7 +141,7 @@ $scope = $Project->getScope($collaborators);
 
     <b class="badge text-uppercase primary">
         <?php if ($is_subproject) { ?>
-            <?= lang('Subproject', 'Teilprojekt') ?>
+            <?= lang('common.subproject') ?>
         <?php } else { ?>
             <?= lang('common.project') ?>
         <?php } ?>
@@ -321,7 +321,7 @@ if ($topicsEnabled) {
     ?>
         <a onclick="navigate('history')" id="btn-history" class="btn">
             <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-            <?= lang('History', 'Historie') ?>
+            <?= lang('common.history') ?>
             <span class="index"><?= $count_history ?></span>
         </a>
     <?php endif; ?>
@@ -999,7 +999,7 @@ if ($topicsEnabled) {
 <!-- new section with history -->
 <section id="history" style="display: none;">
     <h2 class="title">
-        <?= lang('History', 'Historie') ?>
+        <?= lang('common.history') ?>
     </h2>
     <p>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>

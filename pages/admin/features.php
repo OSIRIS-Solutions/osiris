@@ -673,7 +673,7 @@
                     <a href="#projects" class="submenu"><?= lang('Projects and Proposals', 'Projekte und Anträge') ?></a>
                     <a href="#teaching-modules" class="submenu"><?= lang('Teaching modules', 'Lehrveranstaltungen') ?></a>
                     <a href="#research-topics" class="submenu"><?= lang('Research Topics', 'Forschungsbereiche') ?></a>
-                    <a href="#infrastructures" class="submenu"><?= lang('Infrastructures', 'Infrastrukturen') ?></a>
+                    <a href="#infrastructures" class="submenu"><?= lang('common.infrastructures') ?></a>
                     <a href="#calendar" class="submenu"><?= lang('Calendar and Events', 'Kalender und Events') ?></a>
                     <a href="#tags" class="submenu"><?= lang('common.tags') ?></a>
                     <a href="#trips" class="submenu"><?= lang('Research Trips', 'Forschungsreisen') ?></a>

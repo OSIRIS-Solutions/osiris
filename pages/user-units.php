@@ -36,7 +36,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                 <?= lang('common.unit') ?>
             </th>
             <th>
-                <?= lang('Start', 'Start') ?>
+                <?= lang('common.start') ?>
             </th>
             <th>
                 <?= lang('common.end') ?>
@@ -123,7 +123,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                 <input type="hidden" name="values[unit]" value="<?= $unit['unit'] ?>">
 
                                 <div class="form-group">
-                                    <label for="start"><?= lang('Start', 'Start') ?></label>
+                                    <label for="start"><?= lang('common.start') ?></label>
                                     <input type="date" class="form-control" id="start" name="values[start]" value="<?= $unit['start'] ?? '' ?>">
                                 </div>
                                 <div class="form-group">
@@ -221,7 +221,7 @@ function printTree($tree, $level = 0)
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="start"><?= lang('Start', 'Start') ?></label>
+                    <label for="start"><?= lang('common.start') ?></label>
                     <input type="date" class="form-control" id="start" name="values[start]">
                 </div>
                 <div class="form-group">

@@ -224,7 +224,7 @@ Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
     }
     $permitStats['docs'] = $docsTotal;
 
-    $countryName = $DB->getCountry($code, lang('name', 'name_de'));
+    $countryName = $DB->getCountry($code, lang('common.field_name_language'));
 
     // hand off to view
     include BASEPATH . "/header.php";
@@ -404,7 +404,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
         ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Permits', 'Nagoya-Genehmigungen'), 'path' => "/proposals/nagoya-permits/$id"],
-        ['name' => $DB->getCountry($country['code'], lang('name', 'name_de'))]
+        ['name' => $DB->getCountry($country['code'], lang('common.field_name_language'))]
     ];
 
     include BASEPATH . "/header.php";

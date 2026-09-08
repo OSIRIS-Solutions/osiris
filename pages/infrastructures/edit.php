@@ -124,7 +124,7 @@ $active = function ($field) use ($data_fields) {
 
                 <div class="form-group">
                     <label for="subtitle">
-                        <?= lang('Subtitle', 'Untertitel') ?> (EN)
+                        <?= lang('common.subtitle') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle]" id="subtitle" value="<?= $form['subtitle'] ?? ''  ?>">
                 </div>
@@ -132,7 +132,7 @@ $active = function ($field) use ($data_fields) {
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
                         <?= lang('common.title') ?> (DE)
@@ -142,7 +142,7 @@ $active = function ($field) use ($data_fields) {
 
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Subtitle', 'Untertitel') ?> (DE)
+                        <?= lang('common.subtitle') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle_de]" id="subtitle_de" value="<?= $form['subtitle_de'] ?? '' ?>">
                 </div>

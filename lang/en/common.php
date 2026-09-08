@@ -52,7 +52,7 @@ return [
     'mail' => 'Mail',
     'maintenance_message' => 'Please do not add, edit or remove data. Changes might be overwritten.',
     'maintenance' => 'System maintenance',
-    'name_field_language' => 'name',
+    'field_name_language' => 'name',
     'name_first' => 'First name',
     'name_last' => 'Last name',
     'name' => 'Name',
@@ -111,5 +111,18 @@ return [
     'english' => 'English',
     'people' => 'People',
     'approved' => 'Approved',
-    'event' => 'Event'
+    'event' => 'Event',
+    'subproject' => 'Subproject',
+    'settings' => 'Settings',
+    'infrastructures' => 'Infrastructures',
+    'location' => 'Location',
+    'subtitle' => 'Subtitle',
+    'position' => 'Position',
+    'start' => 'Start',
+    'proposals' => 'Proposals',
+    'history' => 'History',
+    'events' => 'Events',
+    'german' => 'German',
+    'upload' => 'Upload',
+    
 ];
