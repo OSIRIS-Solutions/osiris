@@ -475,7 +475,7 @@ function val($index, $default = '')
     if (
         !empty($orcid['client_id'])
         && !empty($orcid['client_secret'])
-        && $user['orcid_validated']
+        && (isset($user['orcid_validated']) && $user['orcid_validated'])
     ) { ?>
         <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('Import from ORCID', 'Von ORCID importieren') ?></a>
     <?php } ?>
