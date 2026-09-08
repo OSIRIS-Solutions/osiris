@@ -49,7 +49,7 @@ if (!is_null($data)) {
         <table class="table w-auto small mb-10">
             <thead>
                 <tr>
-                    <th><?= lang('Active', 'Aktiv') ?></th>
+                    <th><?= lang('common.active') ?></th>
                     <th><?= lang('Field name', 'Feldname') ?></th>
                 </tr>
             </thead>

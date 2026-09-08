@@ -792,7 +792,7 @@ function printRules($rules)
 
                 columns = [{
                         data: 'value',
-                        title: lang('Value', 'Wert')
+                        title: lang('common.value')
                     },
                     {
                         data: 'result',

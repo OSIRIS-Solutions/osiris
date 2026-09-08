@@ -127,7 +127,7 @@ function sel($index, $value)
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-gear" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
+        <?= lang('common.general') ?>
     </a>
     <a onclick="navigate('personnel')" id="btn-personnel" class="btn">
         <i class="ph ph-users" aria-hidden="true"></i>
@@ -155,7 +155,7 @@ function sel($index, $value)
         <div class="row row-eq-spacing mb-0">
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                     <div class="form-group">
                         <label for="name" class="required">
                             <?= lang('Full Name', 'Voller Name') ?> (EN)
@@ -197,7 +197,7 @@ function sel($index, $value)
         </div>
 
 
-        <h3 class="mt-0"><?= lang('General', 'Allgemein') ?></h3>
+        <h3 class="mt-0"><?= lang('common.general') ?></h3>
         <fieldset>
             <?php if ($Settings->featureEnabled('portal') && $level != 0) { ?>
                 <h5 class="mt-0">
@@ -402,7 +402,7 @@ function sel($index, $value)
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search for Activity" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
                                 <div class="input-group-append">
-                                    <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('Search', 'Suchen') ?></button>
+                                    <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('common.search') ?></button>
                                 </div>
                             </div>
 
@@ -584,7 +584,7 @@ function sel($index, $value)
                         </a>
                         <form action="<?= ROOTPATH ?>/crud/groups/removeperson/<?= $id ?>" method="post" class="d-inline">
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
-                            <button class="btn danger small"><i class="ph ph-trash"></i> <?= lang('Remove', 'Entfernen') ?></button>
+                            <button class="btn danger small"><i class="ph ph-trash"></i> <?= lang('common.remove') ?></button>
                         </form>
                         <!-- delegate editing rights -->
                         <form action="<?= ROOTPATH ?>/crud/groups/editorperson/<?= $id ?>" method="post" class="d-inline">
@@ -642,7 +642,7 @@ function sel($index, $value)
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/groups/edit/<?= $id ?>#section-personnel">
 
                 <div class="form-group">
-                    <label for="person-username"><?= lang('Person', 'Person') ?></label>
+                    <label for="person-username"><?= lang('common.person') ?></label>
                     <!-- select for distinct user names from DB -->
                     <select name="username" id="person-username" class="form-control" required>
                         <option value="" disabled selected><?= lang('Select person', 'Person auswählen') ?></option>

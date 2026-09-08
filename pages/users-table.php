@@ -61,10 +61,10 @@ if ($active('keywords')) {
 
         <table class="table cards w-full" id="user-table">
             <thead>
-                <th><?= lang('Image', 'Bild') ?></th>
+                <th><?= lang('common.image') ?></th>
                 <th></th>
                 <th><?= lang('common.units') ?></th>
-                <th><?= lang('Active', 'Aktiv') ?></th>
+                <th><?= lang('common.active') ?></th>
                 <th><?= lang('Names', 'Namen') ?></th>
                 <th><?= lang('Research topics', 'Forschungsbereiche') ?></th>
                 <th><?= lang('common.name_first') ?></th>
@@ -192,7 +192,7 @@ if ($active('keywords')) {
 
 <script>
     const headers = [{
-            title: lang('Image', 'Bild'),
+            title: lang('common.image'),
             'key': 'img'
         },
         {
@@ -204,7 +204,7 @@ if ($active('keywords')) {
             'key': 'dept'
         },
         {
-            title: lang('Active', 'Aktiv'),
+            title: lang('common.active'),
             'key': 'active'
         },
         {
@@ -321,7 +321,7 @@ if ($active('keywords')) {
             columnDefs: [{
                     targets: 0,
                     data: 'img',
-                    title: lang('Image', 'Bild'),
+                    title: lang('common.image'),
                     searchable: false,
                     sortable: false,
                     visible: true
@@ -343,7 +343,7 @@ if ($active('keywords')) {
                 {
                     targets: 3,
                     data: 'active',
-                    title: lang('Active', 'Aktiv'),
+                    title: lang('common.active'),
                     searchable: true,
                     sortable: false,
                     visible: false

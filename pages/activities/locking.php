@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="my-20">
-                <span><?= lang('Action', 'Aktion') ?>:</span>
+                <span><?= lang('common.action') ?>:</span>
 
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--danger-color);">
                     <input type="radio" name="action" id="action-lock" value="lock" checked="">

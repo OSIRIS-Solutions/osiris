@@ -36,7 +36,7 @@ Route::get('/organizations/new', function () {
 
     $breadcrumb = [
         ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/edit.php";

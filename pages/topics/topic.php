@@ -235,7 +235,7 @@ if ($Settings->featureEnabled('spectrum')) {
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
+        <?= lang('common.general') ?>
     </a>
 
     <?php

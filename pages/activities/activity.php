@@ -403,7 +403,7 @@ if ($edit_perm) {
                     break;
                 default: ?>
                     <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
-                        <?= lang('None', 'Keine') ?>
+                        <?= lang('common.none') ?>
                     </span>
             <?php
                     break;
@@ -566,7 +566,7 @@ if ($edit_perm) {
     <nav class="pills mt-20 mb-0" id="navigation">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
             <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('General', 'Allgemein') ?>
+            <?= lang('common.general') ?>
         </a>
 
         <?php if ($guests_involved) { ?>
@@ -667,7 +667,7 @@ if ($edit_perm) {
         <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
             <a onclick="navigate('raw')" id="btn-raw" class="btn">
                 <i class="ph ph-code" aria-hidden="true"></i>
-                <?= lang('Raw data', 'Rohdaten')  ?>
+                <?= lang('common.raw_data')  ?>
             </a>
         <?php } ?>
 
@@ -678,7 +678,7 @@ if ($edit_perm) {
     <section id="raw" style="display:none">
 
         <h2 class="title">
-            <?= lang('Raw data', 'Rohdaten') ?>
+            <?= lang('common.raw_data') ?>
         </h2>
 
         <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
@@ -745,7 +745,7 @@ if ($edit_perm) {
 
                     <tr>
                         <td>
-                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                             </button>
 
@@ -1172,7 +1172,7 @@ if ($edit_perm) {
                     <table class="table mb-20">
                         <thead>
                             <tr>
-                                <th><?= lang('Person', 'Person') ?></th>
+                                <th><?= lang('common.person') ?></th>
                                 <!-- <th><?= lang('Details', 'Details') ?></th> -->
                                 <?php if (!empty($thirdCol)): ?>
                                     <th><?= $thirdCol['label'] ?></th>
@@ -1232,7 +1232,7 @@ if ($edit_perm) {
                                                         data-toggle="tooltip"
                                                         data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
                                                         <?= bool_icon(true) ?>
-                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                        <?= lang('common.approved') ?>
                                                     </span>
                                                 <?php } else { ?>
                                                     <span class="author-chip neutral"
@@ -2304,10 +2304,10 @@ if ($edit_perm) {
                                             echo '<span class="badge primary">' . lang('Pending', 'Ausstehend') . '</span>';
                                             break;
                                         case 'approved':
-                                            echo '<span class="badge success">' . lang('Approved', 'Bestätigt') . '</span>';
+                                            echo '<span class="badge success">' . lang('common.approved') . '</span>';
                                             break;
                                         case 'new':
-                                            echo '<span class="badge signal">' . lang('New', 'Neu') . '</span>';
+                                            echo '<span class="badge signal">' . lang('common.new') . '</span>';
                                             $new_guests = true;
                                             break;
                                         default:

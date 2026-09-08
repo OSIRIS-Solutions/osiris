@@ -203,7 +203,7 @@ if ($Settings->featureEnabled('wordcloud')) {
     <nav class="pills mt-20 mb-0">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
             <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('General', 'Allgemein') ?>
+            <?= lang('common.general') ?>
         </a>
         <a onclick="navigate('persons')" id="btn-persons" class="btn <?= !$show_general ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>

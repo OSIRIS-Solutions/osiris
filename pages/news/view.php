@@ -39,7 +39,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->persons->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['type_label'] = lang('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = $entity['displayname'] ?? '';
                 if (!empty($entity['username'])) {
@@ -73,7 +73,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->conferences->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['type_label'] = lang('common.event');
                 $featuredCard['icon'] = 'ph-calendar-blank';
                 $featuredCard['title'] = $entity['title'] ?? '';
                 $eventDetails = [];
@@ -419,7 +419,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($persons)) : ?>
             <?php foreach ($persons as $person) { ?>
                 <div class="connection">
-                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang("People", "Personen") ?></span>
+                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang('common.people') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/profile/<?= $person['_id']; ?>"> <?= $person['displayname']; ?> </a>
                     </h5>
@@ -468,7 +468,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($events)) : ?>
             <?php foreach ($events as $event) { ?>
                 <div class="connection">
-                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang("Event", "Veranstaltung") ?></span>
+                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang('common.event') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/conferences/view/<?= $event['_id']; ?>"> <?= $event['title']; ?> </a>
                     </h5>

@@ -595,7 +595,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Gender', 'Geschlecht'),
+                'label' => lang('common.gender'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['f', 'm', 'd']

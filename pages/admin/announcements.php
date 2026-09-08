@@ -79,7 +79,7 @@
         <div class="form-group">
             <input type="hidden" name="general[announcement][active]" value="0">
             <label for="announcement_active"><input type="checkbox" class="form-check-input" name="general[announcement][active]" id="announcement_active" <?= !empty($announcement['active']) ? 'checked' : '' ?>>
-                <?= lang('Active', 'Aktiv') ?></label>
+                <?= lang('common.active') ?></label>
             <small class="text-muted">
                 <?= lang('If the announcement is not active, it will not be shown on the website, but you can still save it for later use.', 'Wenn die Ankündigung nicht aktiv ist, wird sie nicht auf der Website angezeigt, aber du kannst sie trotzdem für die spätere Verwendung speichern.') ?>
             </small>

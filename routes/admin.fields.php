@@ -36,7 +36,7 @@ Route::get('/admin/fields/new', function () {
     $form = [];
     $breadcrumb = [
         ['name' => lang("fields", "Kategorien"), 'path' => "/admin/fields"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/field.php";

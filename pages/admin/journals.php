@@ -106,7 +106,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th><?= lang('Active', 'Aktiv') ?></th>
+                        <th><?= lang('common.active') ?></th>
                         <th><?= lang('Field name', 'Feldname') ?></th>
                     </tr>
                 </thead>

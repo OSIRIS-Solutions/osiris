@@ -290,7 +290,7 @@ function updateCalendar(el, unit) {
 
                 switch (type) {
                     case 'event':
-                        label = lang('Event', 'Veranstaltung');
+                        label = lang('common.event');
                         link = ROOTPATH + '/conferences/view/' + info.event.id;
                         break;
                     case 'research_trip':

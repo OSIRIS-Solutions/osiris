@@ -138,26 +138,26 @@ $um = strtoupper(USER_MANAGEMENT);
 
 
         <div class="form-group">
-            <span><?= lang('Gender', 'Geschlecht') ?>:</span>
+            <span><?= lang('common.gender') ?>:</span>
             <?php
             $gender = $data['gender'] ?? 'n';
             ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+                <label for="gender-m"><?= lang('common.gender_male') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+                <label for="gender-f"><?= lang('common.gender_female') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+                <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+                <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
             </div>
 
         </div>
@@ -211,14 +211,14 @@ $um = strtoupper(USER_MANAGEMENT);
             <div class="box padded">
                 <?= lang('To allow users to register, share the following token with them:', 'Um Nutzern die Registrierung zu ermöglichen, teile ihnen folgendes Token mit:') ?>
                 <code id="auth-token" class="code"><?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
                 <br>
                 <!-- or share the link -->
                 <?= lang('or share the link', 'oder teile den Link') ?>
                 <code id="auth-token" class="code"><?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
             </div>

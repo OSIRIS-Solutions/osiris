@@ -279,7 +279,7 @@ if (isset($news) && isset($news['_id'])) {
 
         <details class="collapse-panel person-panel" open>
             <summary class="collapse-header">
-                <?= lang('People', 'Personen') ?>
+                <?= lang('common.people') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
@@ -361,7 +361,7 @@ if (isset($news) && isset($news['_id'])) {
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
                     <input type="text" id="activity-search" class="form-control" placeholder="<?= lang('Search for an activity', 'Nach einer Aktivität suchen') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
-                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('Search', 'Suchen') ?></button>
+                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('common.search') ?></button>
                 </div>
 
                 <div class="suggestions" style="display:none;"></div>
@@ -422,8 +422,8 @@ if (isset($news) && isset($news['_id'])) {
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= lang('common.project_select') ?>">
+                            <option value=""><?= lang('common.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -485,7 +485,7 @@ if (isset($news) && isset($news['_id'])) {
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert('<?= lang('common.project_select') ?>');
                                 return;
                             }
                             // check if project already exists
@@ -868,7 +868,7 @@ if (isset($news) && isset($news['_id'])) {
         const featuredEditor = $('#featured-editor');
         const featuredTextFields = $('#featured-text-fields');
         const typeLabels = {
-            person: <?= json_encode(lang('People', 'Personen')) ?>,
+            person: <?= json_encode(lang('common.people')) ?>,
             activity: <?= json_encode(lang('common.activities')) ?>,
             project: <?= json_encode(lang('common.projects')) ?>,
             event: <?= json_encode(lang('Events', 'Veranstaltungen')) ?>,

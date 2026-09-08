@@ -38,7 +38,7 @@ $end = $form['end_date'] ?? '';
         <thead>
             <tr>
                 <th>
-                    <?= lang('Person', 'Person') ?><br>
+                    <?= lang('common.person') ?><br>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-A
                     </span>

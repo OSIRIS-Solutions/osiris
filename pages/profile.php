@@ -588,7 +588,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
+        <?= lang('common.general') ?>
     </a>
 
     <?php

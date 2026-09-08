@@ -227,7 +227,7 @@
                         <li>
                           <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                             <i class="ph ph-trash"></i>
-                            <?= lang('Remove', 'Entfernen') ?>
+                            <?= lang('common.remove') ?>
                           </button>
                         </li>
                       </ul>
@@ -331,7 +331,7 @@
               <h5 class="mt-0">${topicName}</h5>
               <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                 <i class="ph ph-trash"></i>
-                <?= lang('Remove', 'Entfernen') ?>
+                <?= lang('common.remove') ?>
               </button>
             </div>
           </div>

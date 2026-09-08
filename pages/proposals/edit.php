@@ -1288,7 +1288,7 @@ if ($is_subproject) {
                         <tr>
                             <th><?= lang('common.country') ?></th>
                             <th><?= lang('Research', 'Forschung') ?></th>
-                            <th><?= lang('Action', 'Aktion') ?></th>
+                            <th><?= lang('common.action') ?></th>
                         </tr>
                     </thead>
                     <tbody id="country-list">
@@ -1301,7 +1301,7 @@ if ($is_subproject) {
                                 <td><?= $DB->getCountry($iso, lang('name', 'name_de')) ?></td>
                                 <td><?= $role ?></td>
                                 <td>
-                                    <a onclick="$(this).closest('tr').remove()"><?= lang('Remove', 'Entfernen') ?></a>
+                                    <a onclick="$(this).closest('tr').remove()"><?= lang('common.remove') ?></a>
                                     <input type="text" name="values[research-countries][]" value="<?= $iso ?>;<?= $role ?>" hidden>
                                 </td>
                             </tr>
@@ -1345,7 +1345,7 @@ if ($is_subproject) {
                                 let tr = $('<tr>')
                                 tr.append('<td>' + el.find('option:selected').text() + '</td>')
                                 tr.append('<td>' + type + '</td>')
-                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('Remove', 'Entfernen') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('common.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
                                 $('#country-list').append(tr)
                             }
                             $(el).val('')

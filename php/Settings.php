@@ -718,7 +718,7 @@ class Settings
     {
         if (!$this->featureEnabled('tags')) return '';
         $settings = $this->get('tags_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('Tags', 'Schlagwörter');
+        if (empty($settings) || !isset($settings['en'])) return lang('common.tags');
         return lang($settings['en'], $settings['de'] ?? null);
     }
 

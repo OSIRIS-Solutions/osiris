@@ -330,7 +330,7 @@ if ($topicsEnabled) {
     <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
         <a onclick="navigate('raw-data')" id="btn-raw" class="btn">
             <i class="ph ph-code" aria-hidden="true"></i>
-            <?= lang('Raw data', 'Rohdaten')  ?>
+            <?= lang('common.raw_data')  ?>
         </a>
     <?php } ?>
 
@@ -1102,7 +1102,7 @@ if ($topicsEnabled) {
 <!-- raw data -->
 <section id="raw-data" style="display: none;">
     <h2 class="title">
-        <?= lang('Raw data', 'Rohdaten') ?>
+        <?= lang('common.raw_data') ?>
     </h2>
     <p>
         <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>

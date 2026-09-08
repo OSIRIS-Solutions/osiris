@@ -21,13 +21,13 @@
 </h1>
 
 <p>
-    <?= lang('common.register_contact_admin') ?>
+    <?= lang('auth.register_contact_admin') ?>
 </p>
 
 
 <form action="#" method="get">
     <div class="form-group">
-        <label for="token"><?= lang('common.auth_token') ?></label>
+        <label for="token"><?= lang('auth.auth_token') ?></label>
         <input type="text" class="form-control" name="token" id="token" value="<?= $_GET['token'] ?? '' ?>" required>
     </div>
 

@@ -52,7 +52,7 @@
 
         <div class="form-group">
             <label for="auth-token"><?= lang('AUTH Token', 'AUTH-Token') ?></label>
-            <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+            <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
             </button>
             <div class="input-group">

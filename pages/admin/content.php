@@ -39,7 +39,7 @@
     <?php } ?>
     <a href="<?= ROOTPATH ?>/admin/persons" class="">
         <i class="ph-duotone ph-user text-secondary" aria-hidden="true"></i>
-        <?= lang('People', 'Personen') ?>
+        <?= lang('common.people') ?>
         <br>
         <small class="text-muted"><?= lang('Manage data of people and login', 'Verwalte Personendaten und Login-Informationen') ?></small>
     </a>
@@ -80,7 +80,7 @@
     <?php if ($Settings->featureEnabled('tags')) { ?>
         <a href="<?= ROOTPATH ?>/admin/tags" style="--secondary-color: var(--primary-color)">
             <i class="ph-duotone ph-tag text-secondary" aria-hidden="true"></i>
-            <?= lang('Tags', 'Schlagwörter') ?>
+            <?= lang('common.tags') ?>
             <br>
             <small class="text-muted"><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></small>
         </a>

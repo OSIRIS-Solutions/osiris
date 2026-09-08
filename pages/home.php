@@ -513,7 +513,7 @@ $lastquarter = $Y . "Q" . $Q;
                             <?= $title ?>
                         </h2>
                         <a href="<?= ROOTPATH ?>/conferences" class="link-sm">
-                            <?= lang('View all', 'Zeige alle') ?>
+                            <?= lang('common.view_all') ?>
                         </a>
                     </div>
                     <div id="timeline"></div>
@@ -1005,7 +1005,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     <?= lang('Events', 'Events') ?>
                                 </h2>
                                 <a href="<?= ROOTPATH ?>/conferences" class="link-sm">
-                                    <?= lang('View all', 'Zeige alle') ?>
+                                    <?= lang('common.view_all') ?>
                                 </a>
                             </div>
 
@@ -1157,7 +1157,7 @@ $lastquarter = $Y . "Q" . $Q;
                                         <?= lang('Upcoming Deadlines', 'Bevorstehende Fristen') ?>
                                     </h2>
                                     <a href="<?= ROOTPATH ?>/deadlines" class="link-sm">
-                                        <?= lang('View all', 'Zeige alle') ?>
+                                        <?= lang('common.view_all') ?>
                                     </a>
                                 </div>
                                 <?php
@@ -1263,7 +1263,7 @@ $lastquarter = $Y . "Q" . $Q;
                                 <?= lang('News', 'News') ?>
                             </h2>
                             <a href="<?= ROOTPATH ?>/news" class="link-sm">
-                                <?= lang('View all', 'Zeige alle') ?>
+                                <?= lang('common.view_all') ?>
                             </a>
                         </div>
                         <?php foreach ($osiris->news->find(['date' => ['$lte' => date('Y-m-d')]], ['sort' => ['date' => -1], 'limit' => 4]) as $news) { ?>
@@ -1308,7 +1308,7 @@ $lastquarter = $Y . "Q" . $Q;
                                 <?= lang('New Colleagues', 'Neue Kolleg:innen') ?>
                             </h2>
                             <a href="<?= ROOTPATH ?>/user/browse" class="link-sm">
-                                <?= lang('View all', 'Zeige alle') ?>
+                                <?= lang('common.view_all') ?>
                             </a>
                         </div>
                         <?php
@@ -1352,7 +1352,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     <?= lang('Newest publications', 'Neueste Veröffentlichungen') ?>
                                 </h2>
                                 <a href="<?= ROOTPATH ?>/activities#type=publication" class="link-sm">
-                                    <?= lang('View all', 'Zeige alle') ?>
+                                    <?= lang('common.view_all') ?>
                                 </a>
                             </div>
                             <?php

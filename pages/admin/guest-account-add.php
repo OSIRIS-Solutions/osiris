@@ -106,26 +106,26 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div class="form-group">
-        <span><?= lang('Gender', 'Geschlecht') ?>:</span>
+        <span><?= lang('common.gender') ?>:</span>
         <?php
         $gender = $data['gender'] ?? 'n';
         ?>
 
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-            <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+            <label for="gender-m"><?= lang('common.gender_male') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-            <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+            <label for="gender-f"><?= lang('common.gender_female') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-            <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+            <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-            <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+            <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
         </div>
 
     </div>

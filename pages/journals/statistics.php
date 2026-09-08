@@ -1003,7 +1003,7 @@ foreach ($oa_distribution as $name => $counts) {
                         <table class="table journal-custom-categorical-table">
                             <thead>
                                 <tr>
-                                    <th><?= lang('Value', 'Wert') ?></th>
+                                    <th><?= lang('common.value') ?></th>
                                     <th><?= $label ?></th>
                                     <th><?= lang('common.publications') ?></th>
                                 </tr>
@@ -1174,7 +1174,7 @@ foreach ($oa_distribution as $name => $counts) {
                     },
                     height: Math.max(350, numericCustomFields.length * 90 + 120),
                     xaxis: {
-                        title: lang('Value', 'Wert'),
+                        title: lang('common.value'),
                         rangemode: 'tozero'
                     },
                     showlegend: false

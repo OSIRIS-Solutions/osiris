@@ -328,7 +328,7 @@
 
                 <div class="box padded">
                     <h4 class="title" id="tags">
-                        <?= lang('Tags', 'Schlagwörter') ?>
+                        <?= lang('common.tags') ?>
                     </h4>
                     <p class="description">
                         <?= lang('Tags can be used to label and categorize activities, projects and events. By enabling this feature, you can create and manage tags within OSIRIS. Once activated, you can manage tags in the content section of the admin panel.', 'Schlagwörter können verwendet werden, um Aktivitäten, Projekte und Events zu kennzeichnen und zu kategorisieren. Durch die Aktivierung dieser Funktion kannst du Schlagwörter innerhalb von OSIRIS erstellen und verwalten. Nach der Aktivierung kannst du Schlagwörter im Inhalte-Bereich des Admin-Panels verwalten.') ?>
@@ -675,7 +675,7 @@
                     <a href="#research-topics" class="submenu"><?= lang('Research Topics', 'Forschungsbereiche') ?></a>
                     <a href="#infrastructures" class="submenu"><?= lang('Infrastructures', 'Infrastrukturen') ?></a>
                     <a href="#calendar" class="submenu"><?= lang('Calendar and Events', 'Kalender und Events') ?></a>
-                    <a href="#tags" class="submenu"><?= lang('Tags', 'Schlagwörter') ?></a>
+                    <a href="#tags" class="submenu"><?= lang('common.tags') ?></a>
                     <a href="#trips" class="submenu"><?= lang('Research Trips', 'Forschungsreisen') ?></a>
                     <a href="#wordcloud" class="submenu"><?= lang('Word Clouds', 'Word Clouds') ?></a>
 

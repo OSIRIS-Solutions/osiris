@@ -81,7 +81,7 @@ Route::get('/groups/new', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('common.units'), 'path' => "/groups"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/add.php";
@@ -542,7 +542,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
             break;
         }
     }
-    if (!$imageExists) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+    if (!$imageExists) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
 
     $takenAt = trim($_POST['taken_at'] ?? '');
     if ($takenAt !== '') {
@@ -596,7 +596,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
             break;
         }
     }
-    if ($selectedImage === null) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+    if ($selectedImage === null) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
 
     $allowedMimeTypes = [
         'image/jpeg' => 'jpg',

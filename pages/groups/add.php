@@ -36,7 +36,7 @@ $title = lang('New group', 'Neue Gruppe');
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <fieldset>
-        <legend><?= lang('General', 'Allgemein') ?></legend>
+        <legend><?= lang('common.general') ?></legend>
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-2">
                 <label for="id" class="required">
@@ -91,7 +91,7 @@ $title = lang('New group', 'Neue Gruppe');
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
                         <?= lang('Full Name', 'Voller Name') ?> (EN)

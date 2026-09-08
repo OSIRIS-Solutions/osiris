@@ -266,7 +266,7 @@ foreach ($countries as $iso => $data) {
         <div class="pills">
             <button class="btn active" onclick="showData(this,'days')"><?= lang('Days', 'Tage') ?></button>
             <button class="btn" onclick="showData(this,'trips')"><?= lang('Trips', 'Reisen') ?></button>
-            <button class="btn" onclick="showData(this,'people')"><?= lang('People', 'Personen') ?></button>
+            <button class="btn" onclick="showData(this,'people')"><?= lang('common.people') ?></button>
         </div>
 
         <h4><?= lang('Countries', 'Länder') ?></h4>
@@ -333,14 +333,14 @@ foreach ($countries as $iso => $data) {
         </div>
 
 
-        <h4><?= lang('People', 'Personen') ?></h4>
+        <h4><?= lang('common.people') ?></h4>
         <?php
         $numbers = [];
         ?>
         <table class="table">
             <thead>
                 <tr>
-                    <th><?= lang('Person', 'Person') ?></th>
+                    <th><?= lang('common.person') ?></th>
                     <?php foreach ($statuses as $key => $name) {
                         $numbers[$key] = [
                             'days' => 0,
@@ -710,7 +710,7 @@ $unique_number = count($uniques);
                 label = lang('Days', 'Tage');
                 break;
             case 'people':
-                label = lang('People', 'Personen');
+                label = lang('common.people');
                 break;
             case 'trips':
                 label = lang('Trips', 'Reisen');

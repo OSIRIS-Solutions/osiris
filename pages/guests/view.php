@@ -491,7 +491,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                             </label>
                             <input type="date" class="form-control" id="registered" name="values[chip][end]" autocomplete="off" value="<?= $chip['end'] ?? '' ?>">
                         </div>
-                        <button type="submit" class="btn secondary"><?= lang('Register', 'Registrieren') ?></button>
+                        <button type="submit" class="btn secondary"><?= lang('common.register') ?></button>
                     </form>
                 </div>
             </div>

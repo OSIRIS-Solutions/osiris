@@ -32,7 +32,7 @@ Route::get('/topics/new', function () {
     }
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/topics/edit.php";

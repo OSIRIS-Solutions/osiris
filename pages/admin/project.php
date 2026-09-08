@@ -187,13 +187,13 @@ if ($process == 'project') {
     >
     <span class="text-primary">
         <?php if ($stage == '1') { ?>
-            <?= lang('General', 'Allgemein') ?>
+            <?= lang('common.general') ?>
         <?php } else if ($stage == '2') { ?>
             <?= lang('Phases', 'Phasen') ?>
         <?php } else if ($stage == '3') { ?>
             <?= lang('Subprojects', 'Teilprojekte') ?>
         <?php } else { ?>
-            <?= lang('New', 'Neu') ?>
+            <?= lang('common.new') ?>
         <?php } ?>
     </span>
 </h1>
@@ -335,7 +335,7 @@ if ($process == 'project') {
                     ?>
 
                     <select name="values[notification_created]" id="notification" class="form-control">
-                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                         <option value="" disabled>--- <?= lang('common.roles') ?> ---</option>
                         <?php
                         foreach ($Settings->get('roles') as $role) { ?>
@@ -361,7 +361,7 @@ if ($process == 'project') {
                     ?>
 
                     <select name="values[notification_changed]" id="notification" class="form-control">
-                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                         <?php
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>

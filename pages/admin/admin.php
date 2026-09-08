@@ -212,7 +212,7 @@
             <?php if ($Settings->featureEnabled('tags')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/tags">
                     <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-                    <b><?= lang('Tags', 'Schlagwörter') ?></b>
+                    <b><?= lang('common.tags') ?></b>
                     <p><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></p>
                 </a>
             <?php } ?>

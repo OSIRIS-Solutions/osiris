@@ -548,7 +548,7 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
                     .html(`
                     <strong>${d.name}</strong><br>
                     ${d.year}<br>
-                    <?= lang('Value', 'Wert') ?>: ${valueText}
+                    <?= lang('common.value') ?>: ${valueText}
                 `)
                     .style("left", (event.pageX + 12) + "px")
                     .style("top", (event.pageY + 12) + "px");

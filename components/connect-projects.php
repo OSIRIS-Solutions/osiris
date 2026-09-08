@@ -63,8 +63,8 @@ $project_list = $osiris->projects->find($filter, [
 
     <p class="font-weight-bold"><?= lang('Connect other project', 'Verknüpfe weiteres Projekt') ?>:</p>
     <div class="input-group">
-        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+        <select id="project-select" class="form-control" placeholder="<?= lang('common.project_select') ?>">
+            <option value=""><?= lang('common.project_select') ?></option>
             <?php
             foreach ($project_list as $s) { ?>
                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -99,7 +99,7 @@ $project_list = $osiris->projects->find($filter, [
         const projectId = $('#project-select').val();
         const projectName = $('#project-select option:selected').text();
         if (!projectId) {
-            alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+            alert('<?= lang('common.project_select') ?>');
             return;
         }
         // check if project already exists

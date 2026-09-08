@@ -149,7 +149,7 @@ Route::get('/admin/module-helper', function () {
     include_once BASEPATH . "/php/Modules.php";
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang("New", "Neu")],
+        ['name' => lang('common.new')],
         ['name' => lang("Data fields", "Datenfelder")]
     ];
     include BASEPATH . "/header.php";
@@ -234,7 +234,7 @@ Route::get('/admin/categories/new', function () {
     $breadcrumb = [
         ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/category.php";

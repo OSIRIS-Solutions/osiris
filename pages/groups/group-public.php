@@ -114,7 +114,7 @@ function sel($index, $value)
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
                         <?= lang('Full Name', 'Voller Name') ?> (EN)
@@ -225,7 +225,7 @@ function sel($index, $value)
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search for Activity">
                             <div class="input-group-append">
-                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('Search', 'Suchen') ?></button>
+                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('common.search') ?></button>
                             </div>
                         </div>
 

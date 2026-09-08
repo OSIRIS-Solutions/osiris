@@ -15,7 +15,7 @@ $cart = readCart();
         <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && $Settings->get('auth-self-registration', true)) { ?>
             <a href="<?= ROOTPATH ?>/auth/new-user" class="with-icon <?= $pageactive('auth/new-user') ?>">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('Register', 'Registrieren') ?>
+                <?= lang('common.register') ?>
             </a>
         <?php } ?>
 

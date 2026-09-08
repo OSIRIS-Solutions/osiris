@@ -49,7 +49,7 @@
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
-                                // labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
+                                // labels: ['<?= lang('common.approved') ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
                                 labels: <?= json_encode($d_labels) ?>,
                                 datasets: [{
                                     data: Object.values(raw_data),
@@ -119,7 +119,7 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
                         var myChart = new Chart(ctx, {
                             type: 'doughnut',
                             data: {
-                                labels: ['<?= lang("Approved", "Bestätigt") ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
+                                labels: ['<?= lang('common.approved') ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
                                 datasets: [{
                                     label: '# of Scientists',
                                     data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],

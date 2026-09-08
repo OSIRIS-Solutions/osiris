@@ -159,7 +159,7 @@ class PersonFields extends Fields
                 'usage' => [
                     'aggregate',
                 ],
-                "label" => lang("Gender", "Geschlecht"),
+                "label" => lang('common.gender'),
                 "type" => "string",
                 "input" => "select",
                 "values" => [

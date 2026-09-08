@@ -35,7 +35,7 @@
         <div class="row row-eq-spacing mb-0">
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                     <div class="form-group">
                         <label for="name" class="required">
                             <?= lang('common.title') ?> (EN)
@@ -82,7 +82,7 @@
 
         <div class="form-group">
             <h5>
-                <?= lang('Image', 'Bild') ?>
+                <?= lang('common.image') ?>
             </h5>
             <p>
                 <?= lang('Upload an image (e.g.) Logo for the project. The image will be displayed in the metadata.', 'Lade ein Bild (z.B. ein Logo) für das Projekt hoch, das bei den Metadaten auf der Projektseite gezeigt wird.') ?>
@@ -103,7 +103,7 @@
 
         <h4>
             <?= lang('Abstract', 'Zusammenfassung') ?>
-            in <span class="d-inline-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
+            in <span class="d-inline-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract-quill"><?= $project['public_abstract'] ?? $project['abstract'] ?? '' ?></div>

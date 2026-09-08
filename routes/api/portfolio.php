@@ -3152,7 +3152,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'person' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['type_label'] = lang('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = ($doc['displayname'] ?? '');
                 $featuredCard['subtitle'] = ($doc['position'] ?? '');
@@ -3230,7 +3230,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'event' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['type_label'] = lang('common.event');
                 $featuredCard['icon'] = 'ph-calendar-blank';
                 $featuredCard['title'] = ($doc['title'] ?? '');
                 $eventDetails = [];

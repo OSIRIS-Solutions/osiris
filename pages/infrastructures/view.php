@@ -625,7 +625,7 @@ if ($edit_perm) { ?>
                                     <th><?= lang('common.date') ?></th>
                                 <?php } ?>
                                 <th><?= lang('Field', 'Feld') ?></th>
-                                <th class="text-right"><?= lang('Value', 'Wert') ?></th>
+                                <th class="text-right"><?= lang('common.value') ?></th>
                                 <th><?= lang('Entered by', 'Eingegeben von') ?></th>
                                 <th><?= lang('common.comment') ?></th>
                             </tr>

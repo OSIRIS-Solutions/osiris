@@ -20,7 +20,7 @@
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-        <?= lang('Tags', 'Schlagwörter') ?>
+        <?= lang('common.tags') ?>
     </h1>
 
     <p>

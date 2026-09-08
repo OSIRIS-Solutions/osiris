@@ -43,7 +43,7 @@ class CommandPalette
             ],
             [
                 "url" => "/user/edit/" . $_SESSION['username'],
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "label" => lang("User Settings", "Benutzereinstellungen"),
                 "icon" => "gear",
                 "keywords" => ["settings", "preferences", "account", "einstellungen", "präferenzen", "konto"],
@@ -51,7 +51,7 @@ class CommandPalette
             ],
             [
                 "url" => "/add-activity",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "plus-circle",
                 "label" => lang("Add activity", "Aktivität hinzufügen"),
                 "keywords" => ["add activity", "new activity", "create activity", "neue aktivität", "aktivität erstellen"],
@@ -59,7 +59,7 @@ class CommandPalette
             ],
             [
                 "url" => "/proposals/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "tree-structure",
                 "label" => lang("Add project proposal", "Projektantrag hinzufügen"),
                 "feature" => "projects",
@@ -69,7 +69,7 @@ class CommandPalette
             ],
             [
                 "url" => "/projects/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "tree-structure",
                 "label" => lang("Add project", "Projekt hinzufügen"),
                 "feature" => "projects",
@@ -79,7 +79,7 @@ class CommandPalette
             ],
             [
                 "url" => "/conferences/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "calendar-plus",
                 "label" => lang("Add event", "Event hinzufügen"),
                 "feature" => "events",
@@ -138,7 +138,7 @@ class CommandPalette
             ],
             [
                 "url" => "/activities/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search activities", "Aktivitäten durchsuchen"),
                 "keywords" => ["search activities", "find activities", "aktivitäten durchsuchen", "aktivitäten finden"],
@@ -154,7 +154,7 @@ class CommandPalette
             ],
             [
                 "url" => "/proposals/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search proposals", "Anträge durchsuchen"),
                 "keywords" => ["search proposals", "find proposals", "anträge durchsuchen", "anträge finden"],
@@ -171,7 +171,7 @@ class CommandPalette
             ],
             [
                 "url" => "/projects/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search projects", "Projekte durchsuchen"),
                 "keywords" => ["search projects", "find projects", "projekte durchsuchen", "projekte finden"],
@@ -198,7 +198,7 @@ class CommandPalette
             ],
             [
                 "url" => "/journals/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search journals", "Zeitschriften durchsuchen"),
                 "keywords" => ["search journals", "find journals", "zeitschriften durchsuchen", "zeitschriften finden"],
@@ -214,7 +214,7 @@ class CommandPalette
             ],
             [
                 "url" => "/conferences/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search events", "Veranstaltungen durchsuchen"),
                 "feature" => "events",
@@ -250,7 +250,7 @@ class CommandPalette
             ],
             [
                 "url" => "/teaching/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "chalkboard-simple",
                 "label" => lang("Add teaching module", "Lehrveranstaltung hinzufügen"),
                 "feature" => "teaching-modules",
@@ -295,7 +295,7 @@ class CommandPalette
             ],
             [
                 "url" => "/persons/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('common.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search persons", "Personen durchsuchen"),
                 "keywords" => ["search persons", "find persons", "personen durchsuchen", "personen finden"],
@@ -429,7 +429,7 @@ class CommandPalette
             ],
             [
                 "url" => "/admin/general",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "gear",
                 "label" => lang("Admin Settings", "Admin-Einstellungen"),
                 "permission" => "admin.see",

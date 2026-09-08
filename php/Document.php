@@ -1703,13 +1703,13 @@ class Document extends Settings
             case "gender":
                 switch ($this->getVal('gender')) {
                     case 'f':
-                        return $this->lang('female', 'weiblich');
+                        return $this->lang('common.gender_female');
                     case 'm':
-                        return $this->lang('male', 'männlich');
+                        return $this->lang('common.gender_male');
                     case 'd':
-                        return $this->lang('non-binary', 'divers');
+                        return $this->lang('common.gender_non_binary');
                     case '-':
-                        return $this->lang('not specified', 'keine Angabe');
+                        return $this->lang('common.gender_not_specified');
                     default:
                         return '';
                 }

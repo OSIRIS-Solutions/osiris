@@ -2017,7 +2017,7 @@ Route::get('/api/command-palette/search', function () {
     if (!empty($items)) {
         $groups[] = [
             'id' => 'persons',
-            'label' => lang('People', 'Personen'),
+            'label' => lang('common.people'),
             'items' => $items
         ];
     }

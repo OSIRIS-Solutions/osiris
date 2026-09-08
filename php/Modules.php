@@ -1735,10 +1735,10 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
                         <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
-                        <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('female', 'weiblich') ?></option>
-                        <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('male', 'männlich') ?></option>
-                        <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('non-binary', 'divers') ?></option>
-                        <option value="-" <?= $val == '-' ? 'selected' : '' ?>><?= lang('not specified', 'keine Angabe') ?></option>
+                        <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('common.gender_female') ?></option>
+                        <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('common.gender_male') ?></option>
+                        <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('common.gender_non_binary') ?></option>
+                        <option value="-" <?= $val == '-' ? 'selected' : '' ?>><?= lang('common.gender_not_specified') ?></option>
                     </select>
                     <label for="gender" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -3733,8 +3733,8 @@ class Modules
                                         <?= lang('Connect a project', 'Verknüpfe ein Projekt') ?>:
                                     </b>
                                     <div class="input-group">
-                                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                                        <select id="project-select" class="form-control" placeholder="<?= lang('common.project_select') ?>">
+                                            <option value=""><?= lang('common.project_select') ?></option>
                                             <?php
                                             foreach ($project_list as $s) { ?>
                                                 <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -3766,7 +3766,7 @@ class Modules
                             if (!projectName) projectName = $('#project-select option:selected').text();
 
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert('<?= lang('common.project_select') ?>');
                                 return;
                             }
                             // check if project already exists

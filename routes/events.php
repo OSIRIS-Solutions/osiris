@@ -78,7 +78,7 @@ Route::get('/conferences/view/(.*)', function ($id) {
     // get conference
     $conference = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$conference) {
-        abortwith(404, lang('Event', "Veranstaltung"), '/conferences');
+        abortwith(404, lang('common.event'), '/conferences');
     }
 
     $breadcrumb = [
@@ -102,7 +102,7 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     $new = false;
     $form = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$form) {
-        abortwith(404, lang('Event', "Veranstaltung"), '/conferences');
+        abortwith(404, lang('common.event'), '/conferences');
     }
 
     $breadcrumb = [
@@ -317,7 +317,7 @@ Route::post('/crud/conferences/delete/(.*)', function ($id) {
     }
     $data = $osiris->conferences->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
-        abortwith(404, lang('Event', "Veranstaltung"), '/conferences');
+        abortwith(404, lang('common.event'), '/conferences');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('conferences.delete')) {
         abortwith(403, lang('You do not have permission to delete this event.', 'Sie haben keine Berechtigung, diese Veranstaltung zu löschen.'));
@@ -480,7 +480,7 @@ Route::post('/crud/deadlines/delete/(.*)', function ($id) {
     }
     $data = $osiris->deadlines->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
-        abortwith(404, lang('Event', "Veranstaltung"), '/deadlines');
+        abortwith(404, lang('common.event'), '/deadlines');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('deadlines.delete')) {
         abortwith(403, lang('You do not have permission to delete this event.', 'Sie haben keine Berechtigung, diese Veranstaltung zu löschen.'));

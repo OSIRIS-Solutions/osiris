@@ -398,7 +398,7 @@ $design = $Settings->get('design');
                     <select class="form-control" name="general[design][border_width]" id="design_border">
                         <option value="normal" <?= $borderWidth == 'normal' ? 'selected' : '' ?>><?= lang('Normal (default)', 'Normal (Standard)') ?></option>
                         <option value="thick" <?= $borderWidth == 'thick' ? 'selected' : '' ?>><?= lang('Thick', 'Dick') ?></option>
-                        <option value="none" <?= $borderWidth == 'none' ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="none" <?= $borderWidth == 'none' ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                     </select>
                     <small class="text-muted">
                         <?= lang(

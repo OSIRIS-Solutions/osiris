@@ -66,7 +66,7 @@ $fields = [
         'example' => 'department', // Beispiel: "IT Department"
     ], //description
     'is_active' => [
-        'name' => lang('Active', 'Aktiv'),
+        'name' => lang('common.active'),
         'example' => 'useraccountcontrol', // Beispiel: "512" (Aktiv) oder "514" (Deaktiviert)
     ],
     'room' => [

@@ -259,7 +259,7 @@ if ($nagoyaRelevant) {
         <?php if ($Settings->hasPermission('raw-data')) { ?>
             <button class="btn" style="--primary-color: var(--muted-color);--primary-color-20: var(--muted-color-20);" onclick="navigate('raw-data')" id="raw-data-btn">
                 <i class="ph ph-code"></i>
-                <?= lang('Raw data', 'Rohdaten') ?>
+                <?= lang('common.raw_data') ?>
             </button>
         <?php } ?>
     </nav>
@@ -797,7 +797,7 @@ if ($nagoyaRelevant) {
     <!-- raw data -->
     <section id="raw-data" style="display: none;">
         <h2 class="title">
-            <?= lang('Raw data', 'Rohdaten') ?>
+            <?= lang('common.raw_data') ?>
         </h2>
         <p>
             <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>

@@ -361,7 +361,7 @@
             <section id="raw" style="display:none" class="box padded tab-box">
 
                 <h2 class="title">
-                    <?= lang('Raw data', 'Rohdaten') ?>
+                    <?= lang('common.raw_data') ?>
                 </h2>
 
                 <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
@@ -1152,7 +1152,7 @@
                                         break;
                                     default: ?>
                                         <span class="badge" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
-                                            <?= lang('None', 'Keine') ?>
+                                            <?= lang('common.none') ?>
                                         </span>
                                 <?php
                                         break;
@@ -1285,7 +1285,7 @@
                                                                         data-toggle="tooltip"
                                                                         data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
                                                                         <?= bool_icon(true) ?>
-                                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                                        <?= lang('common.approved') ?>
                                                                     </span>
                                                                 <?php } else { ?>
                                                                     <span class="author-chip neutral"
@@ -1644,7 +1644,7 @@
 
                 <h3><?= lang("Citation", "Zitation") ?></h3>
                 <div class="connection" id="citation-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#citation')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#citation')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <span id="citation"><?= $print ?></span>
@@ -1652,7 +1652,7 @@
 
                 <h3>BibTeX</h3>
                 <div class="connection" id="bibtex-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#bibtex')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#bibtex')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <div class="overflow-x-scroll">
@@ -1662,7 +1662,7 @@
 
                 <h3>RIS</h3>
                 <div class="connection" id="ris-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#ris')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#ris')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <div class="overflow-x-scroll">

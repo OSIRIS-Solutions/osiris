@@ -31,7 +31,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/proposals/edit.php";
@@ -44,7 +44,7 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     $collection = 'projects';
     $breadcrumb = [
         ['name' => lang('common.projects'), 'path' => "/projects"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);

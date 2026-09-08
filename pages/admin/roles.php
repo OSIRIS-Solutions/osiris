@@ -80,7 +80,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                     <table class="table simple w-auto">
                         <thead>
                             <th><?= lang('common.role') ?></th>
-                            <th><?= lang('Action', 'Aktion') ?></th>
+                            <th><?= lang('common.action') ?></th>
                         </thead>
                         <tbody>
                             <?php foreach ($roles as $role) { ?>
@@ -93,12 +93,12 @@ foreach ($osiris->adminRights->find([]) as $row) {
                                         <?php if (!in_array($role, ['user', 'scientist', 'admin', 'editor'])) { ?>
                                             <button class="btn danger" role="button" onclick="$(this).closest('tr').remove()">
                                                 <i class="ph ph-x"></i>
-                                                <?= lang('Remove', 'Entfernen') ?>
+                                                <?= lang('common.remove') ?>
                                             </button>
                                         <?php } else { ?>
                                             <button class="btn disabled" role="button" disabled>
                                                 <i class="ph ph-x"></i>
-                                                <?= lang('Remove', 'Entfernen') ?>
+                                                <?= lang('common.remove') ?>
                                             </button>
                                         <?php } ?>
 
@@ -138,7 +138,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                                 <td>
                                     <button class="btn danger" role="button" onclick="$(this).closest('tr').remove()">
                                         <i class="ph ph-x"></i>
-                                        <?= lang('Remove', 'Entfernen') ?>
+                                        <?= lang('common.remove') ?>
                                     </button>
                                 </td>
                             </tr>`);
@@ -195,7 +195,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
     <!-- search -->
     <div class="form-group with-icon">
-        <input type="text" class="form-control" placeholder="<?= lang('Search', 'Suchen') ?>" id="search-role" onkeyup="filterRoles()">
+        <input type="text" class="form-control" placeholder="<?= lang('common.search') ?>" id="search-role" onkeyup="filterRoles()">
         <i class="ph ph-x" onclick="$('#search-role').val('').trigger('keyup')"></i>
     </div>
 
