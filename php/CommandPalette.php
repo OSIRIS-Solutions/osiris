@@ -404,7 +404,7 @@ class CommandPalette
                 "url" => "/reports",
                 "type" => "Navigation",
                 "icon" => "printer",
-                "label" => lang("Reports", "Berichte"),
+                "label" => lang('common.reports'),
                 "permission" => "report.generate",
                 "keywords" => ["reports", "berichte"],
                 "priority" => 30

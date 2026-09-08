@@ -1952,7 +1952,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'proposals',
-                'label' => lang('Project Proposals', 'Projektanträge'),
+                'label' => lang('common.project_proposals'),
                 'items' => $items
             ];
         }

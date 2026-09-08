@@ -337,7 +337,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'reports',
-                        'label' => lang('Reports', 'Berichte'),
+                        'label' => lang('common.reports'),
                         'icon' => 'printer',
                         'url' => '/reports',
                         'active' => ['^/reports($|/)'],

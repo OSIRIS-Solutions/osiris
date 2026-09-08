@@ -124,5 +124,9 @@ return [
     'events' => 'Events',
     'german' => 'German',
     'upload' => 'Upload',
-    
+    'cancel' => 'Cancel',
+    'reports' => 'Reports',
+    'understand' => 'I Understand',
+    'data_fields' => 'Data fields',
+    'project_proposals' => 'Project proposals',
 ];

@@ -95,7 +95,7 @@
         <div class="box padded">
             <h2 class="title" id="datafields">
                 <i class="ph-duotone ph-database" aria-hidden="true"></i>
-                <?= lang('Data fields', 'Datenfelder') ?>
+                <?= lang('common.data_fields') ?>
             </h2>
 
             <p class="text-muted">

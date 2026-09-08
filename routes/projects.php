@@ -19,7 +19,7 @@ Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge')]
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/list.php";
@@ -30,7 +30,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
@@ -67,7 +67,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -78,7 +78,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
 Route::get('/proposals/finances', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => lang("Finances overview", "Finanzübersicht")]
     ];
     include BASEPATH . "/header.php";
@@ -102,7 +102,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' => $project['acronym'] ?? $project['name']]
     ];
 
@@ -147,7 +147,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     }
 
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];

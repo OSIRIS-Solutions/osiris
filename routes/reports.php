@@ -19,7 +19,7 @@ Route::get('/reports', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         // ['name' => 'Export', 'path' => "/export"],
-        ['name' => lang("Reports", "Berichte")]
+        ['name' => lang('common.reports')]
     ];
     if (!$Settings->hasPermission('report.generate')) {
         abortwith(403, lang('You do not have permission to generate reports.', 'Du hast keine Berechtigung, Berichte zu erstellen.'), "/", lang('Go back', 'Zurück'));
@@ -33,7 +33,7 @@ Route::get('/reports', function () {
 Route::get('/admin/reports', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
+        ['name' => lang('common.reports'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen')],
     ];
     if (!$Settings->hasPermission('report.templates')) {
@@ -47,7 +47,7 @@ Route::get('/admin/reports', function () {
 Route::get('/admin/reports/builder/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
+        ['name' => lang('common.reports'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
         ['name' => lang("Builder", "Editor")]
     ];
@@ -74,7 +74,7 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
 Route::get('/admin/reports/preview/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Reports', 'Berichte'), 'path' => "/reports"],
+        ['name' => lang('common.reports'), 'path' => "/reports"],
         ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
         ['name' => lang('Builder', 'Editor'), 'path' => "/admin/reports/builder/$id"],
         ['name' => lang('common.preview')]

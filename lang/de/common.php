@@ -124,6 +124,11 @@ return [
     'events' => 'Veranstaltungen',
     'german' => 'Deutsch',
     'upload' => 'Hochladen',
+    'cancel' => 'Abbrechen',
+    'reports' => 'Berichte',
+    'understand' => 'Ich verstehe',
+    'data_fields' => 'Datenfelder',
+    'project_proposals' => 'Projektanträge',
     
     
 ];

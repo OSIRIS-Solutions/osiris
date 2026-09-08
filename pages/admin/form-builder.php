@@ -472,7 +472,7 @@ $tagLabels = [
     </a>
     <a class="btn" href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
         <i class="ph ph-x"></i>
-        <?= lang('Cancel', 'Abbrechen') ?>
+        <?= lang('common.cancel') ?>
     </a>
 </div>
 
@@ -568,7 +568,7 @@ $tagLabels = [
 
                     </ul>
 
-                    <div class="font-size-12 text-muted mt-10"><?= lang('Data fields', 'Datenfelder') ?></div>
+                    <div class="font-size-12 text-muted mt-10"><?= lang('common.data_fields') ?></div>
                     <ul id="catalog-list" class="list-group mb-10">
                         <?php foreach ($Modules->all_modules as $id => $def):
                             // skip elements that are in the form already

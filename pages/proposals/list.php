@@ -76,7 +76,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1 class="mt-0">
     <i class="ph-duotone ph-tree-structure"></i>
-    <?= lang('Project proposals', 'Projektanträge') ?>
+    <?= lang('common.project_proposals') ?>
 </h1>
 
 <button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>

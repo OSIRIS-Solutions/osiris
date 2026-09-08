@@ -183,7 +183,7 @@ $persons = $osiris->adminPersons->find();
             <div class="box padded">
                 <h2 class="title" id="datafields">
                     <i class="ph-duotone ph-database" aria-hidden="true"></i>
-                    <?= lang('Data fields', 'Datenfelder') ?>
+                    <?= lang('common.data_fields') ?>
                 </h2>
 
                 <table class="table simple w-auto small mb-10">
@@ -388,7 +388,7 @@ $persons = $osiris->adminPersons->find();
 
                 <a class="btn light large" href="<?= ROOTPATH ?>/admin/persons">
                     <i class="ph ph-x"></i>
-                    <?= lang('Cancel', 'Abbrechen') ?>
+                    <?= lang('common.cancel') ?>
                 </a>
 
             </div>
@@ -402,7 +402,7 @@ $persons = $osiris->adminPersons->find();
                 <div class="title"><?= lang('Features', 'Funktionen') ?></div>
 
                 <a href="#general"><?= lang('General settings', 'Allgemeine Einstellungen') ?></a>
-                <a href="#datafields"><?= lang('Data fields', 'Datenfelder') ?></a>
+                <a href="#datafields"><?= lang('common.data_fields') ?></a>
                 <a href="#positions"><?= lang('Possible Positions', 'Mögliche Positionen') ?></a>
                 <a href="#keywords"><?= lang('Keywords', 'Schlagwörter') ?></a>
             </div>

@@ -176,7 +176,7 @@ if ($process == 'project') {
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>

@@ -95,7 +95,7 @@ if ($wf) {
                 <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                 <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                 <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
-                <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('Cancel', 'Abbrechen') ?></button>
+                <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('common.cancel') ?></button>
             </form>
         </div>
     <?php } ?>

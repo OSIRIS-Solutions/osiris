@@ -69,7 +69,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -152,7 +152,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -236,7 +236,7 @@ if (array_sum($a) === 0) { ?>
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                             <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
-                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('Cancel', 'Abbrechen') ?></button>
+                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('common.cancel') ?></button>
                         </form>
                     </div>
                 </div>

@@ -362,7 +362,7 @@
             </button>
             <a id="cancel-button" type="button" class="btn large light ml-5" href="<?= ROOTPATH ?>/activities/view/<?= $id ?>#edit-activities">
                 <i class="ph ph-x"></i>
-                <?= lang('Cancel', 'Abbrechen') ?>
+                <?= lang('common.cancel') ?>
             </a>
         </div>
 

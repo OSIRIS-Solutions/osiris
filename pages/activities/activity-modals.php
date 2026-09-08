@@ -253,7 +253,7 @@
               <i class="ph ph-floppy-disk"></i>
               <?= lang('common.save') ?>
             </button>
-            <a href="#close-modal" class="btn" role="button"><?= lang('Cancel', 'Abbrechen') ?></a>
+            <a href="#close-modal" class="btn" role="button"><?= lang('common.cancel') ?></a>
           </div>
         </form>
 

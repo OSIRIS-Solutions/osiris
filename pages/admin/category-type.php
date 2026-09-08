@@ -88,7 +88,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -221,7 +221,7 @@ if (!empty($form) && isset($form['_id'])) {
         <hr>
 
         <div class="content">
-            <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
+            <label for="module" class="font-weight-bold"><?= lang('common.data_fields') ?>:</label>
 
             <?php if ($new) { ?>
                 <div class="text-signal">

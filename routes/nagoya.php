@@ -249,7 +249,7 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
         abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Review', 'Nagoya Bewertung')]
     ];
@@ -275,7 +275,7 @@ Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
         abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Edit Nagoya Countries', 'Nagoya-Länder bearbeiten')]
     ];
@@ -301,7 +301,7 @@ Route::get('/proposals/nagoya-scope/([A-Za-z0-9]*)', function ($id) {
         abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll')]
     ];
@@ -332,7 +332,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
         abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Evaluation', 'Nagoya-Bewertung')]
     ];
@@ -359,7 +359,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)', function ($id) {
         abortwith(404, lang('common.proposal'), "/proposals");
     }
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Permits', 'Nagoya-Genehmigungen')]
     ];
@@ -401,7 +401,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
     }
 
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
         ['name' => lang('Nagoya Permits', 'Nagoya-Genehmigungen'), 'path' => "/proposals/nagoya-permits/$id"],
         ['name' => $DB->getCountry($country['code'], lang('common.field_name_language'))]

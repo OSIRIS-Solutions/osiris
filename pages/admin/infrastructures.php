@@ -43,7 +43,7 @@ if (!is_null($data)) {
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/infrastructures">
         <h3>
-            <?= lang('Data fields', 'Datenfelder') ?>
+            <?= lang('common.data_fields') ?>
         </h3>
 
         <table class="table w-auto small mb-10">

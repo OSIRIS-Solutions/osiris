@@ -83,7 +83,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
 
 <h1>
     <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('Reports', 'Berichte') ?>
+    <?= lang('common.reports') ?>
 </h1>
 
 <?php if ($Settings->hasPermission('report.templates')) { ?>

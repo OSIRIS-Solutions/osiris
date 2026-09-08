@@ -150,7 +150,7 @@ Route::get('/admin/module-helper', function () {
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang('common.new')],
-        ['name' => lang("Data fields", "Datenfelder")]
+        ['name' => lang('common.data_fields')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/module-helper.php";
@@ -180,7 +180,7 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name, 'path' => "/admin/types/" . $id],
-        ['name' => lang("Data fields", "Datenfelder")]
+        ['name' => lang('common.data_fields')]
     ];
 
     global $form;
