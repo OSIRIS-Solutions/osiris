@@ -799,7 +799,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('internal_id') && isset($scientist['internal_id'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
+                                    <span class="key"><?= lang('common.internal_id') ?></span>
                                     <?= $scientist['internal_id'] ?>
                                 </td>
                             </tr>

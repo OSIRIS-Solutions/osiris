@@ -656,7 +656,7 @@ function sel($index, $value)
                 </div>
 
                 <div class="form-group">
-                    <label for="start"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                    <label for="start"><?= lang('common.start_date') ?></label>
                     <input type="date" name="start" id="person-start" class="form-control">
                 </div>
 

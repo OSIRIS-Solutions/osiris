@@ -117,7 +117,7 @@ if ($topicsEnabled) {
             <?php if (isset($conference['internal_id'])) { ?>
                 <tr>
                     <td colspan="2">
-                        <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
+                        <span class="key"><?= lang('common.internal_id') ?></span>
                         <?= $conference['internal_id'] ?>
                     </td>
                 </tr>

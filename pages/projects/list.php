@@ -419,7 +419,7 @@ $Vocabulary = new Vocabulary();
             key: 'funder'
         },
         {
-            title: lang('Start date', 'Startdatum'),
+            title: lang('common.start_date'),
             key: 'start_date'
         },
         {
@@ -704,7 +704,7 @@ $Vocabulary = new Vocabulary();
                     data: 'start_date',
                     searchable: true,
                     visible: false,
-                    header: lang('Start date', 'Startdatum')
+                    header: lang('common.start_date')
                 },
                 {
                     target: 4,

@@ -252,7 +252,7 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <span class="badge signal"><?= lang('common.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
             <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
             <p class="text-danger">
@@ -267,7 +267,7 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <span class="badge signal"><?= lang('common.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
             <?php if ($phase == 'rejected') { ?>
                 <span class="badge danger"><?= lang('common.rejected') ?></span>
@@ -581,7 +581,7 @@ if ($is_subproject) {
                         <input type="text" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234" <?= $req('internal_number') ?>>
 
                         <label for="internal_number" class="<?= $req('internal_number') ?>">
-                            <?= lang('Internal ID', 'Interne ID') ?>
+                            <?= lang('common.internal_id') ?>
                         </label>
                     </div>
                 <?php } ?>

@@ -245,7 +245,7 @@ $active = function ($field) use ($data_fields) {
         <!-- internal_id -->
         <?php if ($active('internal_id')) { ?>
             <div class="form-group">
-                <label for="internal_id"><?= lang('Internal ID', 'Interne ID') ?></label>
+                <label for="internal_id"><?= lang('common.internal_id') ?></label>
                 <input type="text" name="values[internal_id]" id="internal_id" class="form-control w-auto" value="<?= $data['internal_id'] ?? '' ?>" <?= in_array('internal_id', $ldap_fields) ? 'disabled' : '' ?>>
                 <?php if (in_array('internal_id', $ldap_fields)) {
                     echo $ldap_msg;

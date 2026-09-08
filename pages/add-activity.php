@@ -195,7 +195,7 @@ function val($index, $default = '')
 
                 <div class="form-row row-eq-spacing mb-10">
                     <div class="col">
-                        <label for="start" class="required"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                        <label for="start" class="required"><?= lang('common.start_date') ?></label>
                         <input type="date" id="event-start" required class="form-control" onchange="$('#event-end').val(this.value)">
                     </div>
                     <div class="col">

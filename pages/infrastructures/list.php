@@ -103,7 +103,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                 <tr>
                     <th><?= lang('common.name') ?></th>
                     <th><?= lang('common.name') ?></th>
-                    <th><?= lang('Start Date', 'Startdatum') ?></th>
+                    <th><?= lang('common.start_date') ?></th>
                     <th><?= lang('common.end_date') ?></th>
                     <th><?= lang('common.category') ?></th>
                     <th><?= lang('common.type') ?></th>

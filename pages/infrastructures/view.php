@@ -241,7 +241,7 @@ if ($edit_perm) { ?>
                 </tr>
                 <tr>
                     <td>
-                        <span class="key"><?= lang('Start date', 'Anfangsdatum') ?>: </span>
+                        <span class="key"><?= lang('common.start_date') ?>: </span>
                         <?= format_date($infrastructure['start_date']) ?>
                     </td>
                 </tr>

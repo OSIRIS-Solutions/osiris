@@ -85,7 +85,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             <div class="dropdown-menu p-10" aria-labelledby="dropdownMenuButton">
                 <form action="<?= ROOTPATH ?>/guests/update/<?= $id ?>" method="post">
                 <div class="form-group">
-                <label for="end"><?=lang('End date', 'Neues End-Datum')?></label>
+                <label for="end"><?=lang('New end date', 'Neues End-Datum')?></label>
                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($form['end'] ?? null) ?>" required>
                 </div>
                     <button class="btn secondary small" type="submit">

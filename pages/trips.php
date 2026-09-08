@@ -620,8 +620,8 @@ $unique_number = count($uniques);
                 <h5 class="m-0 text-primary">${d.name ?? 'No country available'}</h5>
                 <b>${d.person ?? d.title}</b><br>
                 <b>${lang('common.status')}: </b>${cat(d.cat)}<br>
-                <b>${lang('Start date', 'Beginn')}: </b>${start.toLocaleDateString()}<br>
-                <b>${lang('End date', 'Ende')}: </b>${end.toLocaleDateString()}<br>
+                <b>${lang('common.start_date')}: </b>${start.toLocaleDateString()}<br>
+                <b>${lang('common.end_date')}: </b>${end.toLocaleDateString()}<br>
                 <b>${lang('Duration', 'Dauer')}: </b>${d.days} ${lang('days', 'Tage')}<br>
                 `
             }

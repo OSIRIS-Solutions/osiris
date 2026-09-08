@@ -200,7 +200,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Internal ID", "Interne ID")
+                "label" => lang('common.internal_id')
             ],
             [
                 "id" => "position",

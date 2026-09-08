@@ -74,7 +74,7 @@ $fields = [
         'example' => 'physicaldeliveryofficename', // Beispiel: "Room 101"
     ],
     'internal_id' => [
-        'name' => lang('Internal ID', 'Interne ID'),
+        'name' => lang('common.internal_id'),
         'example' => 'objectsid', // Beispiel: "12345"
     ],
 ];

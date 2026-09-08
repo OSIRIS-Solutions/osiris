@@ -198,7 +198,7 @@ class ProjectFields extends Fields
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'proposed' => lang('Proposed', 'Beantragt'),
+                    'proposed' => lang('common.proposed'),
                     'approved' => lang('Approved', 'Bewilligt'),
                     'rejected' => lang('common.rejected'),
                     'withdrawn' => lang('Withdrawn', 'Zurückgezogen'),
@@ -612,7 +612,7 @@ class ProjectFields extends Fields
             [
                 "id" => "internal_number",
                 "module_of" => $typeModules["internal_number"] ?? [],
-                "label" => lang("Internal ID", "Interne ID"),
+                "label" => lang('common.internal_id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',

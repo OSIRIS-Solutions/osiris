@@ -465,7 +465,7 @@ class Project extends Vocabulary
         switch ($this->project['status'] ?? $status) {
             case 'applied':
             case 'proposed':
-                return "<span class='badge signal'>" . lang('proposed', 'beantragt') . "</span>";
+                return "<span class='badge signal'>" . lang('common.proposed') . "</span>";
             case 'approved':
             case 'accepted':
                 if ($this->inPast())

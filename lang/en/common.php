@@ -137,4 +137,7 @@ return [
     'research' => 'Research',
     'research_interests' => 'Research interest',
     'research_interest' => 'Research interest',
+    'start_date' => 'Start date',
+    'proposed' => 'Proposed',
+    'internal_id' => 'Internal ID'
 ];

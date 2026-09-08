@@ -101,7 +101,7 @@ if ($nagoyaRelevant) {
                     <div class="dropdown">
                         <button class="badge status signal text-uppercase cursor-pointer" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-edit" aria-hidden="true"></i>
-                            <?= lang('Proposed', 'Beantragt') ?>
+                            <?= lang('common.proposed') ?>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
                             <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
@@ -133,7 +133,7 @@ if ($nagoyaRelevant) {
                     <?php
                     switch ($status) {
                         case 'proposed':
-                            echo "<span class='badge status signal'>" . lang('Proposed', 'Beantragt') . "</span>";
+                            echo "<span class='badge status signal'>" . lang('common.proposed') . "</span>";
                             break;
                         case 'approved':
                             echo "<span class='badge status success'>" . lang('Approved', 'Bewilligt') . "</span>";

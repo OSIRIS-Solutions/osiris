@@ -352,7 +352,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'funder'
         },
         {
-            title: lang('Start date', 'Startdatum'),
+            title: lang('common.start_date'),
             key: 'start_date'
         },
         {
@@ -472,7 +472,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
             case 'applied':
             case 'proposed':
-                return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
+                return `<span class='badge signal'>${lang('common.proposed')}</span>`;
             case 'rejected':
                 return `<span class='badge danger'>${lang('common.rejected')}</span>`;
             case 'withdrawn':
@@ -606,7 +606,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Start date', 'Startdatum')
+                    header: lang('common.start_date')
                 },
                 {
                     target: 4,

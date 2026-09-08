@@ -90,7 +90,7 @@
                      <th></th>
                      <th><?= lang('Supervisors', 'Betreuende') ?></th>
                      <th><?= lang('common.category') ?></th>
-                     <th><?= lang('Start Date', 'Anfangsdatum') ?></th>
+                     <th><?= lang('common.start_date') ?></th>
                      <th><?= lang('common.end_date') ?></th>
                      <th><?= lang('Affiliated', 'Zugehörig') ?></th>
                      <th><?= lang('Total SWS', 'Gesamt SWS') ?></th>

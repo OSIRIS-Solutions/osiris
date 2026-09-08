@@ -137,5 +137,7 @@ return [
     'research' => 'Forschung',
     'research_interests' => 'Forschungsinteressen',
     'research_interest' => 'Forschungsinteresse',
-    
+    'start_date' => 'Startdatum',
+    'proposed' => 'Beantragt',
+    'internal_id' => 'Interne ID'
 ];

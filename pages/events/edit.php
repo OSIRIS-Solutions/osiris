@@ -68,7 +68,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
                 <input type="date" name="values[start]" required class="form-control" onchange="$('#conference-end-date').val(this.value)" value="<?= $form['start'] ?? '' ?>" placeholder="start">
-                <label for="start" class="required"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                <label for="start" class="required"><?= lang('common.start_date') ?></label>
             </div>
             <div class="col floating-form">
                 <input type="date" name="values[end]" class="form-control" id="conference-end-date" value="<?= $form['end'] ?? '' ?>" placeholder="end">

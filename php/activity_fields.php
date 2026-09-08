@@ -136,7 +136,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Start date', 'Startdatum'),
+                'label' => lang('common.start_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
