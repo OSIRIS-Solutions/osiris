@@ -136,7 +136,7 @@ function sel($index, $value)
 
     <a onclick="navigate('research-interest')" id="btn-research-interest" class="btn">
         <i class="ph ph-flask" aria-hidden="true"></i>
-        <?= lang('Research', 'Forschung') ?>
+        <?= lang('common.research') ?>
     </a>
     <a onclick="navigate('settings')" id="btn-settings" class="btn">
         <i class="ph ph-trash" aria-hidden="true"></i>
@@ -302,7 +302,7 @@ function sel($index, $value)
 
     <section id="research-interest" style="display:none;">
 
-        <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
+        <h3><?= lang('common.research_interests') ?></h3>
 
         <!-- ensure empty list gets still submitted -->
         <input type="hidden" name="values[research]" value="">
@@ -324,7 +324,7 @@ function sel($index, $value)
 
                     <div class="box">
                         <div class="header">
-                            <h4 class="m-0"><q><?= e($con['title'] ?? lang('Research interest', 'Forschungsinteresse')) ?></q></h4>
+                            <h4 class="m-0"><q><?= e($con['title'] ?? lang('common.research_interest')) ?></q></h4>
                             <div class="btn-group ml-auto">
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>

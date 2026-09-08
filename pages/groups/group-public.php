@@ -156,7 +156,7 @@ function sel($index, $value)
     </div>
 
 
-    <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
+    <h3><?= lang('common.research_interests') ?></h3>
     <div id="research-list">
         <?php
         if (isset($form['research']) && !empty($form['research'])) {

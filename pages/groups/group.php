@@ -216,7 +216,7 @@ if ($Settings->featureEnabled('wordcloud')) {
 
             <a onclick="navigate('research')" id="btn-research" class="btn <?= !$show_general ? 'active' : '' ?>">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research', 'Forschung') ?>
+                <?= lang('common.research') ?>
             </a>
         <?php } ?>
 

@@ -191,7 +191,7 @@ Route::get('/documents', function () {
     $Vocabulary = new Vocabulary();
     $documents = $osiris->uploads->find([], ['sort' => ['uploaded' => -1]])->toArray();
     $breadcrumb = [
-        ['name' => lang('Documents', 'Dokumente')]
+        ['name' => lang('common.documents')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/documents.php";

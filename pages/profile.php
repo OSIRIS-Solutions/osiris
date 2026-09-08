@@ -176,7 +176,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <form action="<?= ROOTPATH ?>/crud/users/profile-picture/<?= $user ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
                         <label for="profile-input"><?= lang('Upload new profile image', 'Lade ein neues Profilbild hoch') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
@@ -979,7 +979,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <div class="content">
 
                         <h4 class="title">
-                            <?= lang('Research interest', 'Forschungsinteressen') ?>
+                            <?= lang('common.research_interests') ?>
                             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                                 <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research">
                                     <i class="ph ph-note-pencil ph-lg"></i>

@@ -97,12 +97,12 @@ $active = function ($field) use ($data_fields) {
 
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
-        <?= lang('Organisation', 'Organisation') ?>
+        <?= lang('common.organization') ?>
     </a>
 
     <a onclick="navigate('research')" id="btn-research" class="btn">
         <i class="ph ph-flask" aria-hidden="true"></i>
-        <?= lang('Research', 'Forschung') ?>
+        <?= lang('common.research') ?>
     </a>
 
     <a onclick="navigate('biography')" id="btn-biography" class="btn">
@@ -1177,7 +1177,7 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('research')) { ?>
             <h2 class="title">
-                <?= lang('Research interest', 'Forschungsinteressen') ?>
+                <?= lang('common.research_interests') ?>
             </h2>
 
             <!-- ensure to save empty research interests -->

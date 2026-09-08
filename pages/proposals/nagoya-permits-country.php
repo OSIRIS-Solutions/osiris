@@ -202,7 +202,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                             <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                             <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
                                             <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
-                                            <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('Not applicable', 'Nicht zutreffend') ?></option>
+                                            <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
                                         </select>
                                     <?php else: ?>
                                         <?= Nagoya::permitStatusBadge($status) ?>
@@ -400,7 +400,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <div class="mb-5">
                                     <h5 class="mb-5">
                                         <i class="ph-duotone ph-paperclip"></i>
-                                        <?= lang('Documents', 'Dokumente') ?>
+                                        <?= lang('common.documents') ?>
                                     </h5>
                                     <?php if (!empty($docs)): ?>
                                         <table class="table table-sm mb-5">

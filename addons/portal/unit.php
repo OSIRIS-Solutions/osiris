@@ -174,7 +174,7 @@ $numbers = $data['numbers'] ?? [
                 <?php if (!empty($data['research'] ?? null)) { ?>
                     <a onclick="navigate('research')" id="btn-research">
                         <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                        <?= lang('Research', 'Forschung') ?>
+                        <?= lang('common.research') ?>
                     </a>
                 <?php } ?>
 

@@ -322,7 +322,7 @@ if ($nagoyaRelevant) {
                     <?php if ($Settings->hasPermission('proposals.view-documents') || $user_project) { ?>
                         <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
                             <i class="ph ph-file-text"></i>
-                            <?= lang('Documents', 'Dokumente') ?>
+                            <?= lang('common.documents') ?>
                             <span class="index"><?= count($documents) ?></span>
                         </button>
                     <?php } ?>

@@ -178,7 +178,7 @@ $all = $osiris->projects->count();
         <thead>
             <tr>
                 <th><?= lang('common.type') ?></th>
-                <th><?= lang('Count', 'Anzahl') ?></th>
+                <th><?= lang('common.count') ?></th>
                 <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
             </tr>
         </thead>

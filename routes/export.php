@@ -371,7 +371,7 @@ Route::post('/download', function () {
             $filename = "CV_" . str_replace(' ', '', $scientist['last']);
 
             if (isset($scientist['research']) && !empty($scientist['research'])) {
-                $section->addTitle(lang('Research interest', 'Forschungsinteressen'), 2);
+                $section->addTitle(lang('common.research_interests'), 2);
                 foreach ($scientist['research'] as $key) {
                     $paragraph = $section->addListItemRun(0);
                     $line = clean_comment_export($key, false);

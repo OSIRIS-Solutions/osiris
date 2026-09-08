@@ -316,7 +316,7 @@ class Portfolio extends Settings
         // Home
         if ($usecase === 'portfolio') {
             $items[] = [
-                'name' => lang('Research', 'Forschung'),
+                'name' => lang('common.research'),
                 'path' => $base . '/',
             ];
         } else if ($usecase === 'portal') {

@@ -61,7 +61,7 @@ if ($collection == 'projects' || $collection == 'proposals') {
 
 $field_by_id = array_column($FIELDS->fields, null, 'id');
 $aggregation_function_labels = [
-    'count' => lang('Count', 'Anzahl'),
+    'count' => lang('common.count'),
     'sum' => lang('Sum', 'Summe'),
     'mean' => lang('Mean', 'Mittelwert'),
     'median' => lang('Median', 'Median')
@@ -740,7 +740,7 @@ function printRules($rules)
 
         function aggregationResultLabel() {
             const functionLabels = {
-                count: lang('Count', 'Anzahl'),
+                count: lang('common.count'),
                 sum: lang('Sum', 'Summe'),
                 mean: lang('Mean', 'Mittelwert'),
                 median: lang('Median', 'Median')

@@ -241,7 +241,7 @@ $projectCount = count($projectsForCountry);
                                 $statusLabel = lang('Granted', 'Erteilt');
                                 $statusClass = 'badge tiny success';
                             } elseif ($status === 'not-applicable') {
-                                $statusLabel = lang('Not applicable', 'Nicht zutreffend');
+                                $statusLabel = lang('common.not_applicable');
                                 $statusClass = 'badge tiny muted';
                             } else {
                                 $statusLabel = lang('common.unknown');

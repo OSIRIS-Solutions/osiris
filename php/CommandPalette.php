@@ -279,7 +279,7 @@ class CommandPalette
                 "url" => "/documents",
                 "type" => "Navigation",
                 "icon" => "files",
-                "label" => lang("Documents", "Dokumente"),
+                "label" => lang('common.documents'),
                 "permission" => "documents",
                 "keywords" => ["documents", "dokumente"],
                 "priority" => 30

@@ -1287,7 +1287,7 @@ if ($is_subproject) {
                     <thead>
                         <tr>
                             <th><?= lang('common.country') ?></th>
-                            <th><?= lang('Research', 'Forschung') ?></th>
+                            <th><?= lang('common.research') ?></th>
                             <th><?= lang('common.action') ?></th>
                         </tr>
                     </thead>

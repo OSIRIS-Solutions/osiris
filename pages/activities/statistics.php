@@ -166,7 +166,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
                 <tr>
                     <th><?= lang('common.category') ?></th>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -224,7 +224,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
                 <tr>
                     <th><?= lang('common.type') ?></th>
                     <th><?= lang('Subtype', 'Untertyp') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -388,7 +388,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <thead>
                 <tr>
                     <th><?= lang('common.status') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>

@@ -668,17 +668,17 @@ Route::post('/crud/admin/general', function () {
 
         if ($_FILES['logo']['error'] != UPLOAD_ERR_OK) {
             $msg = match ($_FILES['logo']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
                 3 => lang('error.file_partially_uploaded'),
                 4 => lang('error.no_file_uploaded'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
+                6 => lang('error.file_upload_missing_temp'),
                 7 => lang('error.file_upload_write_failed'),
                 8 => lang('error.file_upload_stopped'),
                 default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
         } else if ($filesize > 2000000) {
-            $msg = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $msg = lang('error.file_too_big_max_2MB');
         } else {
             $val = new MongoDB\BSON\Binary(file_get_contents($_FILES["logo"]["tmp_name"]), MongoDB\BSON\Binary::TYPE_GENERIC);
             // first: delete logo, then: insert new one

@@ -1090,11 +1090,11 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
                 3 => lang('error.file_partially_uploaded'),
                 4 => lang('error.no_file_uploaded'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
+                6 => lang('error.file_upload_missing_temp'),
                 7 => lang('error.file_upload_write_failed'),
                 8 => lang('error.file_upload_stopped'),
                 default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
@@ -1102,7 +1102,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = lang('error.file_upload_to_large', replace:['max' => '16 MB']);
+            $_SESSION['msg'] = lang('error.file_upload_too_large', replace:['max' => '16 MB']);
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");

@@ -44,7 +44,7 @@
             <div class="col-sm-8 order-sm-first order-last" id="research">
                 <?php if (!empty($data['research'])): ?>
                     <h2 class="title" id="research">
-                        <?= lang("Research interest", "Forschungsinteressen") ?>
+                        <?= lang('common.research_interests') ?>
                     </h2>
                     <ul class="list">
                         <?php foreach ($data['research'] as $item): ?>
@@ -467,7 +467,7 @@
                         <div class="content">
                             <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
                             <?php if (!empty($data['research'])): ?>
-                                <a href="#research"><?= lang("Research interest", "Forschungsinteressen") ?></a>
+                                <a href="#research"><?= lang('common.research_interests') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['cv'])): ?>
                                 <a href="#cv"><?= lang("Curriculum Vitae") ?></a>

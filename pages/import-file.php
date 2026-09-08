@@ -43,7 +43,7 @@ use \LibRIS\RISReader;
         <form action="<?= ROOTPATH ?>/crud/import/file" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
             <div class="custom-file mb-20" id="file-input-div" >
-                <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
                 <label for="file-input"><?= lang('Upload a BibTeX file', 'Lade eine BibTeX-Datei hoch') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>
             </div>
@@ -102,11 +102,11 @@ if (isset($_FILES["file"])) {
 
     if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
         $errorMsg = match ($_FILES['file']['error']) {
-            1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-            2 => lang('error.file_upload_to_large', replace:['max' => '16 MB']),
+            1 => lang('error.file_upload_exceeds_limit'),
+            2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
             3 => lang('error.file_partially_uploaded'),
             4 => lang('error.no_file_uploaded'),
-            6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
+            6 => lang('error.file_upload_missing_temp'),
             7 => lang('error.file_upload_write_failed'),
             8 => lang('error.file_upload_stopped'),
             default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"

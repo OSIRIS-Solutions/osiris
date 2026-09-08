@@ -33,7 +33,7 @@
 </style>
 <h1>
     <i class="ph-duotone ph-files"></i>
-    <?= lang("Documents", "Dokumente") ?>
+    <?= lang('common.documents') ?>
 </h1>
 
 <div class="row row-eq-spacing">

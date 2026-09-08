@@ -389,7 +389,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     <form action="<?= ROOTPATH ?>/guests/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                         <div class="custom-file mb-20" id="file-input-div" >
-                            <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                            <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
                             <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
                             <br><small class="text-danger">Max. 16 MB.</small>
                         </div>

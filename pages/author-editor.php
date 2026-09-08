@@ -186,7 +186,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                 }
                             } else { ?>
                                 <small>
-                                    <?= lang('Not applicable', 'Nicht zutreffend') ?>
+                                    <?= lang('common.not_applicable') ?>
                                 </small>
                             <?php } ?>
                             <div class="unit-override mt-5 font-size-12">
@@ -261,7 +261,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
             tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         <?php endif; ?>
         tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1" class="aoi-checkbox"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-        tr.append('<td class="units"><small>' + <?= json_encode(lang('Not applicable', 'Nicht zutreffend')) ?> + '</small></td>')
+        tr.append('<td class="units"><small>' + <?= json_encode(lang('common.not_applicable')) ?> + '</small></td>')
         var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
             $(this).closest('tr').remove();
         });
@@ -297,12 +297,12 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         let counter = tr.data('attr');
         td.html('<i class="ph ph-spinner ph-spin"></i>');
         if (!username) {
-            td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+            td.html('<small class="text-muted"><?= lang('common.not_applicable') ?></small>');
             return;
         }
         $.getJSON(`${ROOTPATH}/api/user-units/${username}`, function(resp) {
             if (resp.status !== 200) {
-                td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+                td.html('<small class="text-muted"><?= lang('common.not_applicable') ?></small>');
                 toastError(resp.msg || 'Error fetching user units');
                 $(el).val('');
                 return;

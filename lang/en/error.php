@@ -13,7 +13,11 @@ return [
     'file_partially_uploaded' => 'The uploaded file was only partially uploaded.',
     'file_upload_stopped' => 'A PHP extension stopped the file upload.',
     'organization_select_missing' => 'No organization selected',
-    'file_upload_to_large' => 'The file is too large: max {{max}} is allowed.',
+    'file_upload_too_large' => 'The file is too large: max {{max}} is allowed.',
     'file_upload_write_failed' => 'Failed to write file to disk.',
     'something_went_wrong' => 'Something went wrong.',
+    'file_upload_exceeds_limit' => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+    'file_upload_missing_temp' => 'Missing a temporary folder.',
+    'file_too_big_max_2MB' => 'The file is too big: max 2 MB is allowed.'
+
 ];

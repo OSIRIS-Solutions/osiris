@@ -129,4 +129,12 @@ return [
     'understand' => 'I Understand',
     'data_fields' => 'Data fields',
     'project_proposals' => 'Project proposals',
+    'no_file_chosen' => 'No file chosen',
+    'not_applicable' => 'Not applicable',
+    'count' => 'Count',
+    'documents' => 'Documents',
+    'organization' => 'Organisation',
+    'research' => 'Research',
+    'research_interests' => 'Research interest',
+    'research_interest' => 'Research interest',
 ];

@@ -325,7 +325,7 @@ foreach ($countries as $c) {
                                                     <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                                     <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
                                                     <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
-                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('Not applicable', 'Nicht zutreffend') ?></option>
+                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
                                                 </select>
                                             </td>
                                             <td>

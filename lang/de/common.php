@@ -129,6 +129,13 @@ return [
     'understand' => 'Ich verstehe',
     'data_fields' => 'Datenfelder',
     'project_proposals' => 'Projektanträge',
-    
+    'no_file_chosen' => 'Keine Datei ausgewählt',
+    'not_applicable' => 'Nicht zutreffend',
+    'count' => 'Anzahl',
+    'documents' => 'Dokumente',
+    'organization' => 'Organisation',
+    'research' => 'Forschung',
+    'research_interests' => 'Forschungsinteressen',
+    'research_interest' => 'Forschungsinteresse',
     
 ];

@@ -249,7 +249,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
                         <label for="profile-input"><?= lang('Select new image', 'Wähle ein neues Bild') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>

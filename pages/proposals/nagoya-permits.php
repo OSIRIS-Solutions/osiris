@@ -207,7 +207,7 @@ $canAddNotes = true; // later
                                                             // } 
                                                             $statusClass = 'badge success';
                                                         } elseif ($status === 'not-applicable') {
-                                                            $statusLabel = lang('Not applicable', 'Nicht zutreffend');
+                                                            $statusLabel = lang('common.not_applicable');
                                                             $statusClass = 'badge muted';
                                                         } else {
                                                             $statusLabel = lang('common.unknown');

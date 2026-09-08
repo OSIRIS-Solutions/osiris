@@ -150,7 +150,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'documents',
-                        'label' => lang('Documents', 'Dokumente'),
+                        'label' => lang('common.documents'),
                         'icon' => 'files',
                         'url' => '/documents',
                         'active' => ['^/documents($|/)'],
