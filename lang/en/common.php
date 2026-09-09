@@ -94,7 +94,6 @@ return [
     'projects' => 'Projects',
     'proposal' => 'Proposal',
     'proposals' => 'Proposals',
-    'proposed' => 'Proposed',
     'publications' => 'Publications',
     'raw_data' => 'Raw data',
     'reduce_motion_description' => 'Reduce motion and animations on the page.',

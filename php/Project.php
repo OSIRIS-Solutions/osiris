@@ -465,22 +465,22 @@ class Project extends Vocabulary
         switch ($this->project['status'] ?? $status) {
             case 'applied':
             case 'proposed':
-                return "<span class='badge signal'>" . lang('common.proposed') . "</span>";
+                return "<span class='badge signal'>" . lang('projects.proposed') . "</span>";
             case 'approved':
             case 'accepted':
                 if ($this->inPast())
-                    return "<span class='badge success'>" . lang('ended', 'beendet') . "</span>";
-                return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
+                    return "<span class='badge success'>" . lang('projects.ended') . "</span>";
+                return "<span class='badge success'>" . lang('projects.approved') . "</span>";
             case 'rejected':
-                return "<span class='badge danger'>" . lang('common.rejected') . "</span>";
+                return "<span class='badge danger'>" . lang('projects.rejected') . "</span>";
             case 'finished':
-                return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
+                return "<span class='badge success'>" . lang('projects.finished') . "</span>";
             case 'withdrawn':
-                return "<span class='badge muted'>" . lang('withdrawn', 'zurückgezogen') . "</span>";
+                return "<span class='badge muted'>" . lang('projects.withdrawn') . "</span>";
             case 'project':
                 if ($this->inPast())
-                    return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
-                return "<span class='badge primary'>" . lang('ongoing', 'laufend') . "</span>";
+                    return "<span class='badge dark'>" . lang('projects.ended') . "</span>";
+                return "<span class='badge primary'>" . lang('projects.ongoing') . "</span>";
             default:
                 return "<span class='badge'>" . lang('common.unknown') . "</span>";
         }

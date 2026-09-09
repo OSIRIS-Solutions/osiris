@@ -252,9 +252,9 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('common.proposed') ?></span>
+            <span class="badge signal"><?= lang('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
-            <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
+            <span class="badge success"><?= lang('projects.approved') ?></span>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
@@ -267,12 +267,12 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('common.proposed') ?></span>
+            <span class="badge signal"><?= lang('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
             <?php if ($phase == 'rejected') { ?>
-                <span class="badge danger"><?= lang('common.rejected') ?></span>
+                <span class="badge danger"><?= lang('projects.rejected') ?></span>
             <?php } else if ($phase == 'withdrawn') { ?>
-                <span class="badge muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></span>
+                <span class="badge muted"><?= lang('projects.withdrawn') ?></span>
             <?php } ?>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>

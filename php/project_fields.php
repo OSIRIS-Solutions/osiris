@@ -198,10 +198,10 @@ class ProjectFields extends Fields
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'proposed' => lang('common.proposed'),
-                    'approved' => lang('Approved', 'Bewilligt'),
-                    'rejected' => lang('common.rejected'),
-                    'withdrawn' => lang('Withdrawn', 'Zurückgezogen'),
+                    'proposed' => lang('projects.proposed'),
+                    'approved' => lang('projects.approved'),
+                    'rejected' => lang('projects.rejected'),
+                    'withdrawn' => lang('projects.withdrawn'),
                 ],
                 'usage' => [
                     'aggregate',

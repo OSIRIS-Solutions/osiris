@@ -652,10 +652,10 @@ if (array_sum($a) === 0) { ?>
                                     <input type="date" class="form-control w-200" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? '') ?>" required>
                                     <div>
                                         <select class="form-control" id="status-<?= $id ?>" name="values[status]" required>
-                                            <option value="applied"><?= lang('applied', 'beantragt') ?></option>
-                                            <option value="approved" selected><?= lang('approved', 'bewilligt') ?></option>
-                                            <option value="rejected"><?= lang('common.rejected') ?></option>
-                                            <option value="finished"><?= lang('finished', 'abgeschlossen') ?></option>
+                                            <option value="applied"><?= lang('projects.applied') ?></option>
+                                            <option value="approved" selected><?= lang('projects.approved') ?></option>
+                                            <option value="rejected"><?= lang('projects.rejected') ?></option>
+                                            <option value="finished"><?= lang('projects.finished') ?></option>
                                         </select>
                                     </div>
                                     <button class="btn ml-10" type="submit"><?= lang('common.submit') ?></button>

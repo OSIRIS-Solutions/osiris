@@ -69,8 +69,8 @@ $totals = $fundingTotals[0] ?? null;
         <thead>
             <tr>
                 <th><?= lang('Metric', 'Kennzahl') ?></th>
-                <th class="text-right"><?= lang('common.proposed') ?> (EUR)</th>
-                <th class="text-right"><?= lang('Approved', 'Bewilligt') ?> (EUR)</th>
+                <th class="text-right"><?= lang('projects.proposed') ?> (EUR)</th>
+                <th class="text-right"><?= lang('projects.approved') ?> (EUR)</th>
                 <th class="text-right"><?= lang('Delta', 'Delta') ?> (EUR)</th>
             </tr>
         </thead>

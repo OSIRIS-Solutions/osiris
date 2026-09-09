@@ -197,22 +197,22 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
                         <td>
-                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a>
+                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('projects.approved') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
                         <td>
-                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a>
+                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('projects.applied') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td>
-                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('common.rejected') ?></a>
+                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('projects.rejected') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
                         <td>
-                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('withdrawn', 'zurückgezogen') ?></a>
+                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('projects.withdrawn') ?></a>
                         </td>
                     </tr>
                 </table>
@@ -467,18 +467,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     function renderStatus(data) {
         switch (data) {
             case 'approved':
-                return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
+                return `<span class='badge success'><?= lang('projects.approved') ?></span>`;
             case 'finished':
-                return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
+                return `<span class='badge success filled'><?= lang('projects.finished') ?></span>`;
             case 'applied':
             case 'proposed':
-                return `<span class='badge signal'>${lang('common.proposed')}</span>`;
+                return `<span class='badge signal'><?= lang('projects.proposed') ?></span>`;
             case 'rejected':
-                return `<span class='badge danger'>${lang('common.rejected')}</span>`;
+                return `<span class='badge danger'><?= lang('projects.rejected') ?></span>`;
             case 'withdrawn':
-                return `<span class='badge muted'>${lang('withdrawn', 'zurückgezogen')}</span>`;
+                return `<span class='badge muted'><?= lang('projects.withdrawn') ?></span>`;
             case 'expired':
-                return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
+                return `<span class='badge dark'><?= lang('projects.expired') ?></span>`;
         }
     }
 

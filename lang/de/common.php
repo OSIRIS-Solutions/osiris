@@ -94,7 +94,6 @@ return [
     'projects' => 'Projekte',
     'proposal' => 'Antrag',
     'proposals' => 'Anträge',
-    'proposed' => 'Beantragt',
     'publications' => 'Publikationen',
     'raw_data' => 'Rohdaten',
     'reduce_motion_description' => 'Verringert Animationen und Bewegungen auf der Seite.',

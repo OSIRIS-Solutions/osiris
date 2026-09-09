@@ -101,28 +101,28 @@ if ($nagoyaRelevant) {
                     <div class="dropdown">
                         <button class="badge status signal text-uppercase cursor-pointer" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-edit" aria-hidden="true"></i>
-                            <?= lang('common.proposed') ?>
+                            <?= lang('projects.proposed') ?>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('Approved', 'Bewilligt') ?></a>
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('common.rejected') ?></a>
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('projects.approved') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('projects.rejected') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('projects.withdrawn') ?></a>
                         </div>
                     </div>
                 <?php } else if ($status == 'approved') { ?>
                     <span class="badge status success">
                         <i class="ph ph-check-circle" aria-hidden="true"></i>
-                        <?= lang('Approved', 'Bewilligt') ?>
+                        <?= lang('projects.approved') ?>
                     </span>
                 <?php } else if ($status == 'rejected') { ?>
                     <span class="badge status danger">
                         <i class="ph ph-x-circle" aria-hidden="true"></i>
-                        <?= lang('common.rejected') ?>
+                        <?= lang('projects.rejected') ?>
                     </span>
                 <?php } else if ($status == 'withdrawn') { ?>
                     <span class="badge status muted">
                         <i class="ph ph-x-circle" aria-hidden="true"></i>
-                        <?= lang('Withdrawn', 'Zurückgezogen') ?>
+                        <?= lang('projects.withdrawn') ?>
                     </span>
                 <?php } ?>
 
@@ -133,13 +133,13 @@ if ($nagoyaRelevant) {
                     <?php
                     switch ($status) {
                         case 'proposed':
-                            echo "<span class='badge status signal'>" . lang('common.proposed') . "</span>";
+                            echo "<span class='badge status signal'>" . lang('projects.proposed') . "</span>";
                             break;
                         case 'approved':
-                            echo "<span class='badge status success'>" . lang('Approved', 'Bewilligt') . "</span>";
+                            echo "<span class='badge status success'>" . lang('projects.approved') . "</span>";
                             break;
                         case 'rejected':
-                            echo "<span class='badge status danger'>" . lang('common.rejected') . "</span>";
+                            echo "<span class='badge status danger'>" . lang('projects.rejected') . "</span>";
                             break;
                         default:
                             break;
