@@ -2670,15 +2670,17 @@ class Modules
                                         </script>
                                     <?php } ?>
                                     <p>
-                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                        <?php } else { ?>
-                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                            </a>
-                                        <?php } ?>
+                                        <?php 
+                                        if ($Settings->hasPermission('organizations.edit')) {
+                                            lang('forms.organization_not_found_add_new', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                            ]);
+                                        } else { 
+                                            lang('forms.organization_not_found_contact', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                            ]);
+                                        } 
+                                        ?>
                                     </p>
                                 </div>
                             </div>
@@ -3578,15 +3580,17 @@ class Modules
                                 <?php } ?>
 
                                 <p>
-                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                    <?php } else { ?>
-                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                        </a>
-                                    <?php } ?>
+                                    <?php 
+                                    if ($Settings->hasPermission('organizations.edit')) {
+                                        lang('forms.organization_not_found_add_new', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                        ]);
+                                    } else { 
+                                        lang('forms.organization_not_found_contact', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                        ]);
+                                    } 
+                                    ?>
                                 </p>
                             </div>
                         </div>
@@ -3644,15 +3648,17 @@ class Modules
                                     </table>
                                     <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                     <p>
-                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                        <?php } else { ?>
-                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                            </a>
-                                        <?php } ?>
+                                        <?php 
+                                        if ($Settings->hasPermission('organizations.edit')) {
+                                            lang('forms.organization_not_found_add_new', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                            ]);
+                                        } else { 
+                                            lang('forms.organization_not_found_contact', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                            ]);
+                                        } 
+                                        ?>
                                     </p>
                                     <script>
                                         $(document).ready(function() {
