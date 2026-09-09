@@ -115,7 +115,7 @@
                 <div class="custom-radio">
                     <input type="radio" id="portfolio-workflow-visibility-all" value="all" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'all' ? 'checked' : '' ?>>
                     <label for="portfolio-workflow-visibility-all">
-                        <?= lang('All activities', 'Alle Aktivitäten') ?>
+                        <?= lang('common.all_activities') ?>
                     </label>
                 </div>
             </div>

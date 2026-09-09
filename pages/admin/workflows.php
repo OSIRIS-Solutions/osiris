@@ -89,7 +89,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
         </div>
         <div class="form-group floating-form">
             <select name="activity" id="activity-type" class="form-control" required>
-                <option value="all"><?= lang('All activities', 'Alle Aktivitäten') ?></option>
+                <option value="all"><?= lang('common.all_activities') ?></option>
                 <?php
                 $activity_types = $osiris->adminCategories->find(['workflow' => ['$exists' => true]]);
                 foreach ($activity_types as $atype) {

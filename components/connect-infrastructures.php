@@ -45,7 +45,7 @@ if (!$permission) {
                 <tr>
                     <td class="w-full">
                         <select name="infrastructures[<?= $i ?>]" id="infrastructures-<?= $i ?>" class="form-control" required>
-                            <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?> --</option>
+                            <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('forms.select_infrastructure') ?> --</option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option <?= $con == $s['id'] ? 'selected' : '' ?> value="<?=$s['id']?>"><?= $s['name'] ?></option>

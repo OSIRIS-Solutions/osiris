@@ -371,7 +371,7 @@ class Portfolio extends Settings
                 if ($data['type'] == 'publication') {
                     $items[] = ['name' => lang('All Publications', "Alle Publikationen"), 'path' => $base . "/publications"];
                 } else {
-                    $items[] = ['name' => lang('All Activities', "Alle Aktivitäten"), 'path' => $base . "/activities"];
+                    $items[] = ['name' => lang('common.all_activities'), 'path' => $base . "/activities"];
                 }
                 $items[] = ['name' => $name, 'path' => $base . "/activities/view/$id"];
                 break;

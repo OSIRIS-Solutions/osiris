@@ -204,7 +204,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'organizations',
-                        'label' => lang('Organisations', 'Organisationen'),
+                        'label' => lang('common.organizations'),
                         'icon' => 'building',
                         'url' => '/organizations',
                         'active' => ['^/organizations($|/)'],

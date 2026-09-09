@@ -221,8 +221,8 @@
                     )->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>">
-                            <option value=""><?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?></option>
+                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('forms.select_infrastructure') ?>">
+                            <option value=""><?= lang('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
@@ -270,7 +270,7 @@
                         const infraId = $('#infrastructure-select').val();
                         const infraName = $('#infrastructure-select option:selected').text();
                         if (!infraId) {
-                            alert('<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>');
+                            alert('<?= lang('forms.select_infrastructure') ?>');
                             return;
                         }
                         // check if infrastructure already exists

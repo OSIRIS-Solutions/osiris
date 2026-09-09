@@ -860,7 +860,7 @@ if ($is_subproject) {
                 ?>
                     <a id="funding" class="box py-5 px-10 mt-0 d-block colorless" href="#funding-org-modal">
                         <label for="funding_organization" class="floating-title <?= $req('funding_organization') ?>">
-                            <?= lang('Funding organization', 'Förderorganisation') ?>
+                            <?= lang('common.funding_organizations') ?>
                         </label>
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[funding_organization]" value="<?= $org_id ?>" <?= $req('funding_organization') ?> readonly />

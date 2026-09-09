@@ -22,7 +22,7 @@ Route::get('/(activities|my-activities)', function ($page) {
     $path = $page;
     if ($page == 'activities') {
         $breadcrumb = [
-            ['name' => lang("All activities", "Alle Aktivitäten")]
+            ['name' => lang('common.all_activities')]
         ];
     } elseif (isset($_GET['user'])) {
         $user = $_GET['user'];

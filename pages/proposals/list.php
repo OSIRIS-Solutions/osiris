@@ -380,7 +380,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'topics'
         },
         {
-            title: lang('Funding organization', 'Förderorganisation'),
+            title: lang('common.funding_organizations'),
             key: 'funding_organization'
         },
         {
@@ -667,7 +667,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Funding organization', 'Förderorganisation')
+                    header: lang('common.funding_organizations')
                 },
                 {
                     target: 11,

@@ -491,7 +491,7 @@
                     <?php if (isset($data['funding_organization'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Funding organization', 'Förderorganisation') ?></span>
+                                <span class="key"><?= lang('common.funding_organizations') ?></span>
                                 <b><?= $data['funding_organization'] ?? '-' ?></b>
                             </td>
                         </tr>

@@ -144,4 +144,7 @@ return [
     'month' => 'Monat',
     'id' => 'ID',
     'go_back' => 'Zurück',
+    'organizations' => 'Organisationen',
+    'funding_organizations' => 'Förderorganisationen',
+    'all_activities' => 'Alle Aktivitäten',
 ];

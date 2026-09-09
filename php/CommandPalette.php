@@ -148,7 +148,7 @@ class CommandPalette
                 "url" => "/activities",
                 "type" => "Navigation",
                 "icon" => "folders",
-                "label" => lang("All activities", "Alle Aktivitäten"),
+                "label" => lang('common.all_activities'),
                 "keywords" => ["all activities", "all aktivitäten", "alle aktivitäten", "publications", "publikationen", "transfer"],
                 "priority" => 100
             ],
@@ -321,7 +321,7 @@ class CommandPalette
                 "url" => "/organizations",
                 "type" => "Navigation",
                 "icon" => "building-office",
-                "label" => lang("Organisations", "Organisationen"),
+                "label" => lang('common.organizations'),
                 "keywords" => ["organizations", "organisations", "institution", "institutions", "company", "companies", "organisationen", "externe organisationen"],
                 "priority" => 60
             ],

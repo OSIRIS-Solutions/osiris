@@ -19,7 +19,7 @@ Route::get('/organizations', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Organisations", "Organisationen")]
+        ['name' => lang('common.organizations')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/list.php";
@@ -35,7 +35,7 @@ Route::get('/organizations/new', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
@@ -61,7 +61,7 @@ Route::get('/organizations/view/(.*)', function ($id) {
         abortwith(404, lang('common.organization'), '/organizations');
     }
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => $organization['name']]
     ];
 
@@ -92,7 +92,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
         abortwith(404, lang('common.organization'), '/organizations');
     }
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => $form['name'], 'path' => "/organizations/view/$id"],
         ['name' => lang('common.edit')]
     ];
@@ -107,7 +107,7 @@ Route::get('/organizations/map', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Organisations", "Organisationen"), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => lang("Map", "Karte")]
     ];
     include BASEPATH . "/header.php";

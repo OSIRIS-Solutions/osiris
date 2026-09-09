@@ -2339,7 +2339,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'organizations',
-            'label' => lang('Organizations', 'Organisationen'),
+            'label' => lang('common.organizations'),
             'items' => $items
         ];
     }

@@ -34,7 +34,7 @@ $cart = readCart();
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
     <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
         <i class="ph-duotone ph-book-open"></i>
-        <?= lang("All activities", "Alle Aktivitäten") ?>
+        <?= lang('common.all_activities') ?>
     <?php
     } elseif ($page == 'my-activities') { ?>
         <i class="ph-duotone ph-folder-user"></i>

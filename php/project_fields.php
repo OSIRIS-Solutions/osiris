@@ -348,7 +348,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_organization",
                 "module_of" => $typeModules["funding_organization"] ?? [],
-                "label" => lang("Funding organization", "Förderorganisation"),
+                "label" => lang('common.funding_organizations'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

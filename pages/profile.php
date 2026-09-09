@@ -1188,7 +1188,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="box">
                 <div class="chart content">
                     <h4 class="title mb-0">
-                        <?= lang('All activities', 'Alle Aktivitäten') ?>
+                        <?= lang('common.all_activities') ?>
                     </h4>
                     <p class="text-muted mt-0"><?= lang('in which ' . $scientist['first'] . ' was involved', 'an denen ' . $scientist['first'] . ' beteiligt war') ?></p>
 
@@ -1626,7 +1626,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </p>
         <div class="btn-group mt-20">
             <button class="btn small" id="toggle-wordcloud-activities" disabled>
-                <?= lang('All activities', 'Alle Aktivitäten') ?>
+                <?= lang('common.all_activities') ?>
             </button>
             <button class="btn small" id="toggle-wordcloud-publications">
                 <?= lang('Only publications', 'Nur Publikationen') ?>
