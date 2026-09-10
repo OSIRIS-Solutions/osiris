@@ -71,7 +71,7 @@ $member = $osiris->activities->count(['type' => $t]);
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -280,7 +280,7 @@ $member = $osiris->activities->count(['type' => $t]);
             <div class="content">
                 <a class="btn float-right" href="#order">
                     <i class="ph ph-list-numbers"></i>
-                    <?= lang('Change order', 'Reihenfolge ändern') ?>
+                    <?= lang('common.change_order') ?>
                 </a>
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>

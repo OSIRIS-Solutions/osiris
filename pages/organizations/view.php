@@ -429,7 +429,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 <?php if (!empty($activities)) { ?>
 
     <h2>
-        <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
+        <?= lang('common.connected_activities') ?>
     </h2>
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">

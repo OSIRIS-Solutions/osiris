@@ -201,7 +201,7 @@
             <h2><i class="ph-duotone ph-database"></i> <?= lang('Custom data', 'Benutzerdefinierte Daten') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/fields">
                 <i class="ph-duotone ph-textbox" aria-hidden="true"></i>
-                <b><?= lang('Custom fields', 'Benutzerdefinierte Felder') ?></b>
+                <b><?= lang('common.custom_fields') ?></b>
                 <p><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/vocabulary">

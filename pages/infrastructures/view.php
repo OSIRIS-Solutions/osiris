@@ -429,7 +429,7 @@ if ($edit_perm) { ?>
 
     <h2>
         <i class="ph ph-book-bookmark text-primary"></i>
-        <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
+        <?= lang('common.connected_activities') ?>
     </h2>
 
     <small>

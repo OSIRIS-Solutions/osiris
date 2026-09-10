@@ -550,7 +550,7 @@ $tagLabels = [
                         </li>
                     </ul>
 
-                    <div class="font-size-12 text-muted"><?= lang('Custom Fields', 'Benutzerdefinierte Felder') ?></div>
+                    <div class="font-size-12 text-muted"><?= lang('common.custom_fields') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($custom_fields as $field) { ?>
                             <li class="drag-item"

@@ -1398,7 +1398,7 @@ if ($edit_perm) {
 
     <section id="activities" style="display: none;">
         <h2 class="title">
-            <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+            <?= lang('common.connected_activities') ?>
         </h2>
 
 
@@ -1773,7 +1773,7 @@ if ($edit_perm) {
                                                                         <option value="<?= $v['id'] ?>" <?= ($file['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                                                <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="description"><?= lang('common.description') ?></label>
@@ -1848,7 +1848,7 @@ if ($edit_perm) {
                                 <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                        <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                     </div>
                     <div class="form-group floating-form">
                         <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">

@@ -112,7 +112,7 @@ class EventFields extends Fields
             [
                 "id" => "url",
                 "module_of" => ['general'],
-                "label" => lang("URL", "URL"),
+                "label" => lang('common.url'),
                 'type' => 'string',
                 'usage' => [
                     'columns'

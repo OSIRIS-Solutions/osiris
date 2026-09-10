@@ -136,7 +136,7 @@ if ($topicsEnabled) {
             </tr>
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('URL', 'URL') ?></span>
+                    <span class="key"><?= lang('common.url') ?></span>
                     <?php if (!empty($conference['url'])) {
                         $short_url = str_replace('https://', '', $conference['url']);
                         if (strlen($short_url) > 50) {

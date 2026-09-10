@@ -902,7 +902,7 @@ foreach ($oa_distribution as $name => $counts) {
             <br>
             <hr>
 
-            <h2><?= lang('Custom fields', 'Benutzerdefinierte Felder') ?></h2>
+            <h2><?= lang('common.custom_fields') ?></h2>
             <p class="text-muted">
                 <?= lang(
                     'The table contains the current custom-field values of all journals used in the reporting period.',

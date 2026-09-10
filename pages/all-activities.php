@@ -62,7 +62,7 @@ $cart = readCart();
     </a>
     <a href="<?= ROOTPATH ?>/activities/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
     <?php if ($Settings->hasPermission('activities.lock')) { ?>
         <a href="<?= ROOTPATH ?>/activities/locking" class="btn">

@@ -527,7 +527,7 @@ function printRules($rules)
     <a href="https://wiki.osiris-app.de/users/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
         <?= lang('in', 'in') ?> <?= $colName ?? $collection ?>
     </h1>
 

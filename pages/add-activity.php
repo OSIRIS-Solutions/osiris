@@ -224,7 +224,7 @@ function val($index, $default = '')
                 </div>
 
                 <div class="form-group mb-10">
-                    <label for="url"><?= lang('URL', 'URL') ?></label>
+                    <label for="url"><?= lang('common.url') ?></label>
                     <input type="url" id="event-url" class="form-control">
                 </div>
 

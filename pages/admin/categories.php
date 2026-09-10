@@ -26,7 +26,7 @@
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -108,7 +108,7 @@
     </div>
     <a class="btn ml-auto" href="#order">
         <i class="ph ph-list-numbers"></i>
-        <?= lang('Change order', 'Reihenfolge ändern') ?>
+        <?= lang('common.change_order') ?>
     </a>
 </div>
 

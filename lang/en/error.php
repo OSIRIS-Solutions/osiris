@@ -20,4 +20,5 @@ return [
     'something_went_wrong' => 'Something went wrong.',
     'user_not_found' => 'User not found.',
     'username_already_taken' => 'The username is already taken. Please try again.',
+    'news_not_enabled' => 'News are not enabled.'
 ];

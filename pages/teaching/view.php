@@ -76,7 +76,7 @@
 
  <div class="">
      <h2>
-         <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+         <?= lang('common.connected_activities') ?>
      </h2>
      <?php
         if (count($activities) != 0) {

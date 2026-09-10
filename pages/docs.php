@@ -46,7 +46,7 @@
 
     <a href="https://wiki.osiris-app.de/users/advanced-search/" target="_blank">
         <i class="ph mr-10 text-secondary ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
 
     <a href="https://wiki.osiris-app.de/users/issues/" target="_blank">

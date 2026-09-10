@@ -76,7 +76,7 @@ Route::get('/(activities|projects|proposals|conferences|journals|persons)/search
     }
     $breadcrumb = [
         ['name' => $colName, 'path' => "/" . $collection],
-        ['name' => lang("Advanced search", "Erweiterte Suche")]
+        ['name' => lang('navigation.advanced_search')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/advanced-search.php";

@@ -97,7 +97,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-group floating-form">
             <input type="url" name="values[url]" class="form-control" value="<?= e($form['url'] ?? '') ?>" placeholder="url">
-            <label for="url"><?= lang('URL', 'URL') ?></label>
+            <label for="url"><?= lang('common.url') ?></label>
         </div>
 
         <?php if ($Settings->featureEnabled('topics') && $osiris->topics->count() > 0) {

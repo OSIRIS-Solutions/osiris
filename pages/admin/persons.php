@@ -214,7 +214,7 @@ $persons = $osiris->adminPersons->find();
                             <tr>
                                 <td colspan="2">
                                     <h5>
-                                        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+                                        <?= lang('common.custom_fields') ?>
                                     </h5>
                                 </td>
                             </tr>

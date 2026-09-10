@@ -97,7 +97,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     
     <a href="<?= ROOTPATH ?>/proposals/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
     
 

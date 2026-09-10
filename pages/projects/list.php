@@ -112,7 +112,7 @@ $Vocabulary = new Vocabulary();
     </div>
     <a href="<?= ROOTPATH ?>/projects/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
 
     <?php if ($Settings->canProjectsBeCreated()) { ?>
@@ -611,7 +611,7 @@ $Vocabulary = new Vocabulary();
             deferRender: true,
             responsive: true,
             buttons: [{
-                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
+                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('navigation.advanced_search') ?>',
                     className: 'btn small text-primary mr-10',
                     action: function(e, dt, node, config) {
                         window.location.href = '<?= ROOTPATH ?>/projects/search';

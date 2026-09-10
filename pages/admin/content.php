@@ -59,7 +59,7 @@
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/fields" style="--secondary-color: var(--primary-color)">
         <i class="ph-duotone ph-textbox text-secondary" aria-hidden="true"></i>
-        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+        <?= lang('common.custom_fields') ?>
         <br>
         <small class="text-muted"><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></small>
     </a>

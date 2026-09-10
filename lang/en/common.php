@@ -146,4 +146,9 @@ return [
     'organizations' => 'Organisations',
     'funding_organizations' => 'Funding organisations',
     'all_activities' => 'All activities',
+    'connected_activities' => 'Connected activities',
+    'change_order' => 'Change order',
+    'url' => 'URL',
+    'doc_type' => 'Document type',
+    'custom_fields' => 'Custom fields'
 ];

@@ -71,7 +71,7 @@ $Vocabulary = new Vocabulary();
             </tr>
             <tr>
                 <td>
-                    <span class="key"><?= lang('URL', 'URL') ?></span>
+                    <span class="key"><?= lang('common.url') ?></span>
                     <?php if (!empty($deadline['url'])) {
                         $short_url = str_replace('https://', '', $deadline['url']);
                         if (strlen($short_url) > 50) {

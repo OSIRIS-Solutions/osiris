@@ -31,7 +31,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -98,7 +98,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
         </a>
         <a href="#order" class="btn " data-toggle="modal">
             <i class="ph ph-list-numbers"></i>
-            <?= lang('Change order', 'Reihenfolge ändern') ?>
+            <?= lang('common.change_order') ?>
         </a>
     </div>
 <?php } ?>

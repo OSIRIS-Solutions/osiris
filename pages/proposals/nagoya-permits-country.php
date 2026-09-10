@@ -560,7 +560,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                        <label class="required"><?= lang('common.doc_type') ?></label>
                     </div>
 
                     <div class="form-group floating-form">

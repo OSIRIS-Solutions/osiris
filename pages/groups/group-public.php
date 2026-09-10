@@ -207,7 +207,7 @@ function sel($index, $value)
                     </div>
 
                     <div id="activities-<?= $i ?>">
-                        <h5><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?></h5>
+                        <h5><?= lang('common.connected_activities') ?></h5>
 
                         <ul>
                             <?php foreach ($con['activities'] ?? [] as $res) {

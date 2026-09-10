@@ -146,4 +146,9 @@ return [
     'organizations' => 'Organisationen',
     'funding_organizations' => 'Förderorganisationen',
     'all_activities' => 'Alle Aktivitäten',
+    'connected_activities' => 'Verknüpfte Aktivitäten',
+    'change_order' => 'Reihenfolge ändern',
+    'url' => 'URL',
+    'doc_type' => 'Dokumenttyp',
+    'custom_fields' => 'Benutzerdefinierte Felder'
 ];

@@ -23,7 +23,7 @@ $fields = $osiris->adminFields->find()->toArray();
 
     <h1>
         <i class="ph-duotone ph-textbox"></i>
-        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+        <?= lang('common.custom_fields') ?>
     </h1>
 
     <div class="btn-toolbar">

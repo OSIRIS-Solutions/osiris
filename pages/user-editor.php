@@ -638,7 +638,7 @@ $active = function ($field) use ($data_fields) {
                                     <?= ucfirst($t) ?>
                                 </span>
                             </div>
-                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('common.url') ?>">
                             <div class="input-group-append">
                                 <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
                             </div>

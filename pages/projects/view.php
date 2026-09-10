@@ -684,7 +684,7 @@ if ($topicsEnabled) {
 <section id="activities" style="display:none">
 
     <h2>
-        <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
+        <?= lang('common.connected_activities') ?>
         (<?= $count_activities ?>)
     </h2>
 

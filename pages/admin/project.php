@@ -507,7 +507,7 @@ if ($process == 'project') {
                         if (empty($field)) $field = ['en' => $m, 'de' => null];
                         if (($field['custom'] ?? false) && !$custom) {
                             echo "<p>
-                            <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
+                            <b>" . lang('common.custom_fields') . "</b>
                             <br>
                             <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
                             </p>";

@@ -670,7 +670,7 @@ if ($nagoyaRelevant) {
                                             <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                                         <?php } ?>
                                     </select>
-                                    <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                    <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                                 </div>
                                 <div class="form-group floating-form">
                                     <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">

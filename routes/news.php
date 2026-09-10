@@ -60,7 +60,7 @@ Route::get('/news', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     $breadcrumb = [
@@ -76,7 +76,7 @@ Route::get('/news/add', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     if (!$Settings->hasPermission('news.edit')) {
@@ -97,7 +97,7 @@ Route::get('/news/view/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
@@ -120,7 +120,7 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
@@ -145,7 +145,7 @@ Route::post('/crud/news/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     if (!$Settings->hasPermission('news.edit')) {
@@ -202,7 +202,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     if (!$Settings->hasPermission('news.edit')) {
@@ -321,7 +321,7 @@ Route::post('/crud/news/delete', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        abortwith(500, lang('error.news_not_enabled'));
     }
 
     if (!$Settings->hasPermission('news.delete')) {

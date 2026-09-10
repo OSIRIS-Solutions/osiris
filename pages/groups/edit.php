@@ -375,7 +375,7 @@ function sel($index, $value)
                         </div>
                         <hr>
                         <div id="activities-<?= $i ?>" class="content">
-                            <h5><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?></h5>
+                            <h5><?= lang('common.connected_activities') ?></h5>
 
                             <table class="table simple small">
                                 <tbody class="activity-list">

@@ -311,7 +311,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>:</th>
+                            <th><?= lang('common.connected_activities') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
