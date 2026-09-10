@@ -34,14 +34,11 @@
 
         <h1>
             <i class="ph-duotone ph-megaphone"></i>
-            <?= lang('Announcement', 'Ankündigung') ?>
+            <?= lang('common.announcement') ?>
         </h1>
 
         <p class="text-muted">
-            <?= lang(
-                'Announcements are displayed in the news section of the home page. Use them for important information such as maintenance or specific notices.',
-                'Ankündigungen erscheinen im News-Bereich der Startseite. Nutze sie für wichtige Infos wie Wartungen oder spezifische Hinweise.'
-            ) ?>
+            <?= lang('admin.announcement_description') ?>
         </p>
 
         <input type="hidden" name="general[announcement][updated_at]" value="<?= date('Y-m-d H:i:s') ?>">
@@ -70,10 +67,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="announcement_expires"><?= lang('Expires at', 'Läuft ab am') ?></label>
+            <label for="announcement_expires"><?= lang('admin.announcement_expires_at') ?></label>
             <input type="datetime-local" class="form-control" name="general[announcement][expires]" id="announcement_expires" value="<?= !empty($announcement['expires']) ? date('Y-m-d\TH:i', strtotime($announcement['expires'])) : '' ?>">
             <small class="text-muted">
-                <?= lang('The announcement will automatically disappear after this date or when you manually set it to inactive.', 'Die Ankündigung verschwindet automatisch nach diesem Datum oder wenn du sie manuell auf inaktiv setzt.') ?>
+                <?= lang('admin.announcement_expires_description') ?>
             </small>
         </div>
         <div class="form-group">
@@ -81,7 +78,7 @@
             <label for="announcement_active"><input type="checkbox" class="form-check-input" name="general[announcement][active]" id="announcement_active" <?= !empty($announcement['active']) ? 'checked' : '' ?>>
                 <?= lang('common.active') ?></label>
             <small class="text-muted">
-                <?= lang('If the announcement is not active, it will not be shown on the website, but you can still save it for later use.', 'Wenn die Ankündigung nicht aktiv ist, wird sie nicht auf der Website angezeigt, aber du kannst sie trotzdem für die spätere Verwendung speichern.') ?>
+                <?= lang('admin.announcement_active_description') ?>
             </small>
         </div>
         <button class="btn primary">

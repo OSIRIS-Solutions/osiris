@@ -64,4 +64,15 @@ return [
     'orcid_setting_description' => 'Einstellungen zur Verwaltung der ORCID-Integration',
     'doi_mappings' => 'DOI Zuordnungen',
     'doi_mappings_description' => 'Verwalte Typ-Zuordnungen für importierte Aktivitäten',
+    'announcement_description' => 'Ankündigungen erscheinen im News-Bereich der Startseite. Nutze sie für wichtige Infos wie Wartungen oder spezifische Hinweise.',
+    'announcement_expires_at' => 'Läuft ab am',
+    'announcement_expires_description' => 'Die Ankündigung verschwindet automatisch nach diesem Datum oder wenn du sie manuell auf inaktiv setzt.',
+    'announcement_active_description' => 'Wenn die Ankündigung nicht aktiv ist, wird sie nicht auf der Website angezeigt, aber du kannst sie trotzdem für die spätere Verwendung speichern.',
+    'authentication' => 'Authentifizierung',
+    'self_registration' => 'Selbstregistrierung',
+    'self_registration_description_long' => 'Wenn aktiviert, können Nutzer:innen ein eigenes Konto erstellen. Bitte beachte, dass diese Option für öffentlich verfügbare Produktionsinstanzen nicht empfohlen wird, da sie zu unautorisiertem Zugriff führen kann. Wenn du möchtest, dass Nutzer:innen ihr eigenes Profil erstellen können, richte bitte ein Registrierungstoken ein und teile es nur mit autorisierten Personen.',
+    'self_registration_description' => 'Erlaube Benutzern, ein eigenes Konto zu erstellen',
+    'authentication_token' => 'Authentifizierungs-Token',
+    'authentication_token_description' => 'Du kannst hier ein sogenanntes AUTH-Token generieren, das Nutzende verwenden können, um sich zu registrieren. Teile dieses Token nur mit Personen, die sich registrieren dürfen! Wenn du das Token änderst, verlieren alle Personen, die das alte Token haben, die Möglichkeit, sich zu registrieren. Es gilt immer nur das aktuell hinterlegte Token. Wenn kein Token hinterlegt ist, ist eine Registrierung ohne Token möglich.',
+    'auth_token' => 'AUTH-Token'
 ];

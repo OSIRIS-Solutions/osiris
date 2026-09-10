@@ -19,39 +19,36 @@
 <div class="container w-800 mw-full" id="custom-authentication">
     <h1>
         <i class="ph-duotone ph-lock" aria-hidden="true"></i>
-        <?= lang('Authentication', 'Authentifizierung') ?>
+        <?= lang('admin.authentication') ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/authentication">
 
         <h5>
-            <?= lang('Self-registration', 'Selbstregistrierung') ?>
+            <?= lang('admin.self_registration') ?>
         </h5>
         <p class="text-muted">
-            <?= lang('If enabled, users can create their own account. Please note that this option is not recommended for publicly available production instances, as it may lead to unauthorized access. If you want users to create their own profile, please set up a registration token below and share it only with authorized individuals.', 'Wenn aktiviert, können Nutzer:innen ein eigenes Konto erstellen. Bitte beachte, dass diese Option für öffentlich verfügbare Produktionsinstanzen nicht empfohlen wird, da sie zu unautorisiertem Zugriff führen kann. Wenn du möchtest, dass Nutzer:innen ihr eigenes Profil erstellen können, richte bitte ein Registrierungstoken ein und teile es nur mit autorisierten Personen.') ?>
+            <?= lang('admin.self_registration_description_long') ?>
         </p>
         <input type="hidden" name="general[auth-self-registration]" value="0">
         <div class="form-group">
             <div class="custom-checkbox">
                 <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration', true) ? 'checked' : '' ?>>
-                <label for="auth-self-registration-1"><?= lang('Allow users to create their own account', 'Erlaube Benutzern, ein eigenes Konto zu erstellen') ?></label>
+                <label for="auth-self-registration-1"><?= lang('admin.self_registration_description') ?></label>
             </div>
         </div>
 
         <hr>
 
         <h5>
-            <?= lang('Authentication token', 'Authentifizierungs-Token') ?>
+            <?= lang('admin.authentication_token') ?>
         </h5>
         <p class="text-muted">
-            <?= lang(
-                'Here you can generate a so-called AUTH token that users can use to register. Only share this token with people who are allowed to register! If you change the token, anyone who has the old token will lose the ability to register. Only the currently stored token is valid. If no token is stored, registration without a token is possible.',
-                'Du kannst hier ein sogenanntes AUTH-Token generieren, das Nutzende verwenden können, um sich zu registrieren. Teile dieses Token nur mit Personen, die sich registrieren dürfen! Wenn du das Token änderst, verlieren alle Personen, die das alte Token haben, die Möglichkeit, sich zu registrieren. Es gilt immer nur das aktuell hinterlegte Token. Wenn kein Token hinterlegt ist, ist eine Registrierung ohne Token möglich.'
-            ) ?>
+            <?= lang('admin.authentication_token_description') ?>
         </p>
 
         <div class="form-group">
-            <label for="auth-token"><?= lang('AUTH Token', 'AUTH-Token') ?></label>
+            <label for="auth-token"><?= lang('admin.auth_token') ?></label>
             <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
             </button>

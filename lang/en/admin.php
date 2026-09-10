@@ -64,4 +64,15 @@ return [
     'orcid_setting_description' => 'Settings for managing ORCID integration',
     'doi_mappings' => 'DOI Mappings',
     'doi_mappings_description' => 'Manage type mappings for imported activities',
+    'announcement_description' => 'Announcements are displayed in the news section of the home page. Use them for important information such as maintenance or specific notices.',
+    'announcement_expires_at' => 'Expires at',
+    'announcement_expires_description' => 'The announcement will automatically disappear after this date or when you manually set it to inactive.',
+    'announcement_active_description' => 'If the announcement is not active, it will not be shown on the website, but you can still save it for later use.',
+    'authentication' => 'Authentication',
+    'self_registration' => 'Self-registration',
+    'self_registration_description_long' => 'If enabled, users can create their own account. Please note that this option is not recommended for publicly available production instances, as it may lead to unauthorized access. If you want users to create their own profile, please set up a registration token below and share it only with authorized individuals.',
+    'self_registration_description' => 'Allow users to create their own account',
+    'authentication_token' => 'Authentication token',
+    'authentication_token_description' => 'Here you can generate a so-called AUTH token that users can use to register. Only share this token with people who are allowed to register! If you change the token, anyone who has the old token will lose the ability to register. Only the currently stored token is valid. If no token is stored, registration without a token is possible.',
+    'auth_token' => 'AUTH token'
 ];

@@ -124,4 +124,5 @@ return [
     'password' => 'Password',
     'orcid' => 'ORCID',
     'journals' => 'Journals',
+    'announcement' => 'Announcement',
 ];
