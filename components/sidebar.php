@@ -22,7 +22,7 @@ $cart = readCart();
         <?php if ($Settings->featureEnabled('portal-public')) { ?>
             <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
                 <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
-                <?= lang('Go to portal', 'Zum Portal') ?>
+                <?= lang('navigation.go_to_portal') ?>
             </a>
         <?php } ?>
 

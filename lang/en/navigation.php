@@ -6,4 +6,5 @@ return [
     'go_back_to_activity' => 'Go back to activity',
     'home' => 'Home',
     'go_back' => 'Go back',
+    'go_to_portal' => 'Go to portal',
 ];

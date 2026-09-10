@@ -270,7 +270,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'portal-public',
-                        'label' => lang('Go to portal', 'Zum Portal'),
+                        'label' => lang('navigation.go_to_portal'),
                         'icon' => 'globe-hemisphere-west',
                         'url' => ROOTPATH . '/portal/info',
                         'active' => ['^/portal($|/)'],

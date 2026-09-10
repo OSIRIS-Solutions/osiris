@@ -6,4 +6,5 @@ return [
     'go_back_to_activity' => 'Zurück zur Aktivität',
     'home' => 'Startseite',
     'go_back' => 'Zurück',
+    'go_to_portal' => 'Zum Portal'
 ];
