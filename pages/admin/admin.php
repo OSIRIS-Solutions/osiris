@@ -24,7 +24,7 @@
 
 <!-- search -->
 <div id="search">
-    <input type="text" class="form-control" id="search-input" placeholder="<?= lang('Search settings...', 'Einstellungen durchsuchen...') ?>">
+    <input type="text" class="form-control" id="search-input" placeholder="<?= lang('admin.search_settings') ?>">
 </div>
 
 <script>
@@ -53,75 +53,75 @@
             <h2><i class="ph-duotone ph-faders"></i> System</h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/general">
                 <i class="ph-duotone ph-gear"></i>
-                <b><?= lang('General Settings', 'Allgemeine Einstellungen') ?></b>
-                <p><?= lang('General setting for OSIRIS', 'Allgemeine Einstellungen für OSIRIS') ?></p>
+                <b><?= lang('admin.general_settings') ?></b>
+                <p><?= lang('admin.general_setting_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/features">
                 <i class="ph-duotone ph-wrench"></i>
-                <b><?= lang('Features', 'Funktionen') ?></b>
-                <p><?= lang('Enable, disable or configure features', 'Funktionen aktivieren, deaktivieren oder konfigurieren') ?></p>
+                <b><?= lang('admin.features') ?></b>
+                <p><?= lang('admin.features_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/announcements">
                 <i class="ph-duotone ph-megaphone"></i>
-                <b><?= lang('Announcements', 'Ankündigungen') ?></b>
-                <p><?= lang('Settings for managing announcements', 'Einstellungen zur Verwaltung von Ankündigungen') ?></p>
+                <b><?= lang('admin.announcements') ?></b>
+                <p><?= lang('admin.announcements_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/mail">
                 <i class="ph-duotone ph-envelope"></i>
-                <b><?= lang('Email Settings', 'E-Mail-Einstellungen') ?></b>
-                <p><?= lang('Settings for managing email configurations', 'Einstellungen zur Verwaltung von E-Mail-Konfigurationen') ?></p>
+                <b><?= lang('admin.email_settings') ?></b>
+                <p><?= lang('admin.email_settings_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('portal')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/portfolio">
                     <i class="ph-duotone ph-globe"></i>
-                    <b><?= lang('Portfolio', 'Portfolio') ?></b>
-                    <p><?= lang('Settings for the public portfolio', 'Einstellungen für das öffentliche Portfolio') ?></p>
+                    <b><?= lang('admin.portfolio') ?></b>
+                    <p><?= lang('admin.portfolio_description') ?></p>
                 </a>
             <?php } ?>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="design-settings">
-            <h2><i class="ph-duotone ph-palette"></i> <?= lang('Design & Branding', 'Darstellung & Branding') ?></h2>
+            <h2><i class="ph-duotone ph-palette"></i> <?= lang('admin.design_and_branding') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/logo">
                 <i class="ph-duotone ph-image"></i>
-                <b><?= lang('Logo', 'Logo') ?></b>
-                <p><?= lang('Upload the logo to be displayed in the header', 'Lade das Logo hoch, das im Header angezeigt werden soll') ?></p>
+                <b><?= lang('admin.logo') ?></b>
+                <p><?= lang('admin.logo_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/institute">
                 <i class="ph-duotone ph-building" aria-hidden="true"></i>
-                <b><?= lang('Institution', 'Einrichtung') ?></b>
-                <p><?= lang('Manage the name and contact details of your institution', 'Verwalte den Namen und die Kontaktdaten deiner Einrichtung') ?></p>
+                <b><?= lang('admin.institution') ?></b>
+                <p><?= lang('admin.institution_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/design">
                 <i class="ph-duotone ph-palette"></i>
-                <b><?= lang('Design', 'Design') ?></b>
-                <p><?= lang('Manage the corporate design of your OSIRIS installation', 'Verwalte das Corporate Design deiner OSIRIS-Installation') ?></p>
+                <b><?= lang('admin.design') ?></b>
+                <p><?= lang('admin.design_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/footer">
                 <i class="ph-duotone ph-scales"></i>
-                <b><?= lang('Footer', 'Footer') ?></b>
-                <p><?= lang('Adjust the imprint and privacy policy and add links to the footer', 'Passe das Impressum und die Datenschutzerklärung an und füge Links zum Footer hinzu') ?></p>
+                <b><?= lang('admin.footer') ?></b>
+                <p><?= lang('admin.footer_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
     <?php if ($userSyncPerm) : ?>
         <div class="col-md-6 col-lg-4" id="user-settings">
-            <h2><i class="ph-duotone ph-users"></i> <?= lang('Users & Roles', 'Benutzer & Rollen') ?></h2>
+            <h2><i class="ph-duotone ph-users"></i> <?= lang('admin.users_and_roles') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/persons">
                 <i class="ph-duotone ph-user" aria-hidden="true"></i>
-                <b><?= lang('Person data', 'Personendaten') ?></b>
-                <p><?= lang('Manage data fields of people', 'Verwalte Datenfelder von Personen') ?></p>
+                <b><?= lang('admin.person_data') ?></b>
+                <p><?= lang('admin.person_data_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/roles">
                 <i class="ph-duotone ph-shield"></i>
-                <b><?= lang('Roles & Permissions', 'Rollen & Rechte') ?></b>
-                <p><?= lang('Settings for managing roles and permissions', 'Einstellungen zur Verwaltung von Rollen und Rechten') ?></p>
+                <b><?= lang('admin.roles_permissions') ?></b>
+                <p><?= lang('admin.roles_permissions_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/roles/distribute">
                 <i class="ph-duotone ph-shield-check"></i>
-                <b><?= lang('Distribute Roles', 'Rollen verteilen') ?></b>
-                <p><?= lang('Easily distribute roles to users', 'Verteile Rollen einfach an Nutzer:innen') ?></p>
+                <b><?= lang('admin.distribute_roles') ?></b>
+                <p><?= lang('admin.distribute_roles_description') ?></p>
             </a>
             <?php
             switch (strtoupper(USER_MANAGEMENT)) {
@@ -129,8 +129,8 @@
             ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/authentication">
                         <i class="ph-duotone ph-users"></i>
-                        <b><?= lang('Manage authentication', 'Authentifizierung verwalten') ?></b>
-                        <p><?= lang('Set up how users can log in to OSIRIS', 'Lege fest, wie sich Nutzer:innen bei OSIRIS anmelden können') ?></p>
+                        <b><?= lang('admin.manage_authentication') ?></b>
+                        <p><?= lang('admin.manage_authentication_description') ?></p>
                     </a>
 
                 <?php
@@ -139,18 +139,18 @@
                 ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/ldap-users">
                         <i class="ph-duotone ph-arrows-clockwise"></i>
-                        <b><?= lang('Synchronize users', 'Nutzer:innen synchronisieren') ?></b>
-                        <p><?= lang('Synchronize new users from your LDAP directory to OSIRIS.', 'Synchronisiere neue Nutzer:innen aus deinem LDAP-Verzeichnis mit OSIRIS.') ?></p>
+                        <b><?= lang('admin.synchronize_users') ?></b>
+                        <p><?= lang('admin.synchronize_users_description') ?></p>
                     </a>
                     <a class="card" href="<?= ROOTPATH ?>/admin/ldap-attributes">
                         <i class="ph-duotone ph-user-switch"></i>
-                        <b><?= lang('Attribute synchronization', 'Attribut-Synchronisation') ?></b>
-                        <p><?= lang('You can synchronize user attributes from your LDAP directory to OSIRIS.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren.') ?></p>
+                        <b><?= lang('admin.attribute_synchronization') ?></b>
+                        <p><?= lang('admin.attribute_synchronization_description') ?></p>
                     </a>
                     <a class="card" href="<?= ROOTPATH ?>/admin/guest-account">
                         <i class="ph-duotone ph-user-circle"></i>
-                        <b><?= lang('Guest Accounts', 'Gast-Accounts') ?></b>
-                        <p><?= lang('Settings for managing guest accounts', 'Einstellungen zur Verwaltung von Gast-Accounts') ?></p>
+                        <b><?= lang('admin.guest_accounts') ?></b>
+                        <p><?= lang('admin.guest_accounts_description') ?></p>
                     </a>
             <?php
                     break;
@@ -160,116 +160,116 @@
             ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/users">
                 <i class="ph-duotone ph-users"></i>
-                <b><?= lang('Add Users', 'Benutzer hinzufügen') ?></b>
-                <p><?= lang('Add new users to the system', 'Füge neue Benutzer zum System hinzu') ?></p>
+                <b><?= lang('admin.add_users') ?></b>
+                <p><?= lang('admin.add_users_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="content-settings">
-            <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('Data Model & Content', 'Datenmodell & Inhalte') ?></h2>
+            <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('admin.data_model_and_content') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                 <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
                 <b><?= lang('common.activities') ?></b>
-                <p><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></p>
+                <p><?= lang('admin.activities_description') ?></p>
             </a>
 
             <?php if ($Settings->featureEnabled('projects')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/projects">
                     <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
                     <b><?= lang('common.projects') ?></b>
-                    <p><?= lang('Manage projects and proposals', 'Verwalte Projekte und Anträge') ?></p>
+                    <p><?= lang('admin.projects_description') ?></p>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('infrastructures')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/infrastructures">
                     <i class="ph-duotone ph-cube-transparent" aria-hidden="true"></i>
                     <b><?= lang('common.infrastructures') ?></b>
-                    <p><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></p>
+                    <p><?= lang('admin.infrastructures_description') ?></p>
                 </a>
             <?php } ?>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/journals">
                 <i class="ph-duotone ph-stack" aria-hidden="true"></i>
-                <b><?= lang('Journals', 'Zeitschriften') ?></b>
-                <p><?= lang('Manage data fields of journals', 'Verwalte Datenfelder von Zeitschriften') ?></p>
+                <b><?= lang('common.journals') ?></b>
+                <p><?= lang('admin.journals_description') ?></p>
             </a>
         </div><?php endif; ?>
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="custom-data-settings">
-            <h2><i class="ph-duotone ph-database"></i> <?= lang('Custom data', 'Benutzerdefinierte Daten') ?></h2>
+            <h2><i class="ph-duotone ph-database"></i> <?= lang('admin.custom_data') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/fields">
                 <i class="ph-duotone ph-textbox" aria-hidden="true"></i>
                 <b><?= lang('common.custom_fields') ?></b>
-                <p><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></p>
+                <p><?= lang('admin.custom_fields_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/vocabulary">
                 <i class="ph-duotone ph-book-bookmark" aria-hidden="true"></i>
-                <b><?= lang('Vocabularies', 'Vokabular') ?></b>
-                <p><?= lang('Modify existing vocabularies for activities and projects', 'Bearbeite existierendes Vokabular für Aktivitäten und Projekte') ?></p>
+                <b><?= lang('admin.vocabularies') ?></b>
+                <p><?= lang('admin.vocabularies_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('tags')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/tags">
                     <i class="ph-duotone ph-tag" aria-hidden="true"></i>
                     <b><?= lang('common.tags') ?></b>
-                    <p><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></p>
+                    <p><?= lang('admin.tags_description') ?></p>
                 </a>
             <?php } ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/countries">
                 <i class="ph-duotone ph-globe-hemisphere-west"></i>
-                <b><?= lang('Country Settings', 'Ländereinstellungen') ?></b>
-                <p><?= lang('Update the list of countries', 'Aktualisiere die Liste der Länder') ?></p>
+                <b><?= lang('admin.country_settings') ?></b>
+                <p><?= lang('admin.country_settings_description') ?></p>
             </a>
 
         </div>
     <?php endif; ?>
     <?php if ($adminPerm || $reportPerm) : ?>
         <div class="col-md-6 col-lg-4" id="reporting-settings">
-            <h2><i class="ph-duotone ph-chart-bar"></i> <?= lang('Reports & Tools', 'Berichte & Werkzeuge') ?></h2>
+            <h2><i class="ph-duotone ph-chart-bar"></i> <?= lang('admin.reports_and_tools') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/reports">
                 <i class="ph-duotone ph-clipboard"></i>
-                <b><?= lang('Report Templates', 'Berichtsvorlagen') ?></b>
-                <p><?= lang('Settings for managing report templates', 'Einstellungen zur Verwaltung von Berichtsvorlagen') ?></p>
+                <b><?= lang('admin.report_templates') ?></b>
+                <p><?= lang('admin.report_templates_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/export-design">
                 <i class="ph-duotone ph-file-doc"></i>
-                <b><?= lang('Export Design', 'Export-Design') ?></b>
-                <p><?= lang('Customize the design of your Word exports', 'Passe das Design deiner Word-Exporte an') ?></p>
+                <b><?= lang('admin.export_design') ?></b>
+                <p><?= lang('admin.export_design_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('quality-workflow') && $adminPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/workflows">
                     <i class="ph-duotone ph-seal-check" aria-hidden="true"></i>
-                    <b><?= lang('Quality workflows', 'Qualitäts-Workflows') ?></b>
-                    <p><?= lang('Manage workflows to quality-check your activities', 'Verwalte Workflows, um Aktivitäten zu prüfen') ?></p>
+                    <b><?= lang('admin.quality_workflows') ?></b>
+                    <p><?= lang('admin.quality_workflows_description') ?></p>
                 </a>
             <?php } ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/module-helper">
                 <i class="ph-duotone ph-textbox" aria-hidden="true"></i>
-                <b><?= lang('Field overview', 'Datenfelder-Übersicht') ?></b>
-                <p><?= lang('Overview of all data fields and their usage', 'Übersicht über alle Datenfelder und deren Verwendung') ?></p>
+                <b><?= lang('admin.field_overview') ?></b>
+                <p><?= lang('admin.field_overview_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/templates">
                 <i class="ph-duotone ph-text-aa" aria-hidden="true"></i>
-                <b><?= lang('Template builder', 'Template-Baukasten') ?></b>
-                <p><?= lang('Create templates for exports and reports', 'Erstelle Vorlagen für Exporte und Berichte') ?></p>
+                <b><?= lang('admin.template_builder') ?></b>
+                <p><?= lang('admin.template_builder_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="integrations-settings">
-            <h2><i class="ph-duotone ph-link"></i> <?= lang('Integrations', 'Integrationen') ?></h2>
+            <h2><i class="ph-duotone ph-link"></i> <?= lang('admin.integrations') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
                 <i class="ph-duotone ph-student" aria-hidden="true"></i>
                 <b><?= lang('common.orcid') ?></b>
-                <p><?= lang('Settings for managing ORCID integration', 'Einstellungen zur Verwaltung der ORCID-Integration') ?></p>
+                <p><?= lang('admin.orcid_setting_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/doi-mappings">
                 <i class="ph-duotone ph-link"></i>
-                <b><?= lang('DOI Mappings', 'DOI Zuordnungen') ?></b>
-                <p><?= lang('Manage type mappings for imported activities', 'Verwalte Typ-Zuordnungen für importierte Aktivitäten') ?></p>
+                <b><?= lang('admin.doi_mappings') ?></b>
+                <p><?= lang('admin.doi_mappings_description') ?></p>
             </a>
 
         </div>

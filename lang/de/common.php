@@ -122,4 +122,5 @@ return [
     'custom_fields' => 'Benutzerdefinierte Felder',
     'password' => 'Passwort',
     'orcid' => 'ORCID',
+    'journals' => 'Zeitschriften',
 ];

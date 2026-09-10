@@ -123,4 +123,5 @@ return [
     'custom_fields' => 'Custom fields',
     'password' => 'Password',
     'orcid' => 'ORCID',
+    'journals' => 'Journals',
 ];
