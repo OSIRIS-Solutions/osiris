@@ -8,5 +8,5 @@ return [
     'go_back' => 'Zurück',
     'go_to_portal' => 'Zum Portal',
     'next' => 'Weiter',
-    'previous' => 'Zurück'
+    'previous' => 'Zurück',
 ];

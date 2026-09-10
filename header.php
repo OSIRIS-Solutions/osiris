@@ -221,9 +221,9 @@ $pageactive = function ($p) use ($page) {
                 <div class="maintenance-msg">
                     <div class="title">
                         <i class="ph ph-barricade"></i>
-                        <?= lang('common.maintenance') ?>.
+                        <?= lang('header.maintenance') ?>.
                     </div>
-                    <?= lang('common.maintenance_message') ?>
+                    <?= lang('header.maintenance_message') ?>
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
@@ -268,16 +268,16 @@ $pageactive = function ($p) use ($page) {
             <div class="dropdown modal-sm">
                 <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-translate"></i>
-                    <span class="sr-only"><?= lang('common.change_language') ?></span>
+                    <span class="sr-only"><?= lang('header.change_language') ?></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
-                    <h6 class="header text-primary"><?= lang('common.change_language') ?></h6>
+                    <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
                     <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                         <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                         <button type="submit" class="btn primary block ">
                             <i class="ph ph-translate" aria-hidden="true"></i>
-                            <span class="sr-only"><?= lang('common.change_language') ?></span>
+                            <span class="sr-only"><?= lang('header.change_language') ?></span>
                             <?= lang('Deutsch', 'English') ?>
                         </button>
                     </form>
@@ -288,7 +288,7 @@ $pageactive = function ($p) use ($page) {
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
                 <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
-                    <?= lang('common.login') ?>
+                    <?= lang('header.login') ?>
                 </a>
             <?php } else { ?>
                 <!-- fake search input for command palette -->
