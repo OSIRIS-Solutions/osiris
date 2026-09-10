@@ -124,10 +124,10 @@ foreach ($groupImages as $image) {
                         <div class="btn-group d-flex justify-content-center mt-10">
                             <button type="button" class="btn" onclick="changeGroupImage(-1)">
                                 <i class="ph ph-caret-left"></i>
-                                <?= lang('Previous', 'Zurück') ?>
+                                <?= lang('navigation.previous') ?>
                             </button>
                             <button type="button" class="btn" onclick="changeGroupImage(1)">
-                                <?= lang('Next', 'Weiter') ?>
+                                <?= lang('navigation.next') ?>
                                 <i class="ph ph-caret-right"></i>
                             </button>
                         </div>

@@ -387,7 +387,7 @@ if ($process == 'project') {
 
 
         <button type="submit" class="btn success">
-            <?= lang('Next', 'Weiter') ?>
+            <?= lang('navigation.next') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
 
@@ -541,7 +541,7 @@ if ($process == 'project') {
             <i class="ph ph-arrow-fat-line-left"></i>
         </a>
         <!-- <button type="submit" class="btn success">
-            <?= lang('Next', 'Weiter') ?>
+            <?= lang('navigation.next') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button> -->
         <button type="submit" class="btn success" id="submitBtn"><?= lang('action.save') ?></button>
